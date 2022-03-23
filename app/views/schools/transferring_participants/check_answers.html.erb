@@ -6,140 +6,76 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Check your answers</h1>
 
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Name
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div><%= @transferring_participant_form.full_name.titleize %></div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :full_name }) do %>
-            Change <span class="govuk-visually-hidden">name</span>
-          <% end %>
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          TRN
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div><%= @transferring_participant_form.trn %></div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :trn }) do %>
-            Change <span class="govuk-visually-hidden">email</span>
-          <% end %>
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Date of birth
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div>
-            <%= @transferring_participant_form.date_of_birth.to_date.to_s(:govuk) %>
-          </div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :dob}) do %>
-            Change <span class="govuk-visually-hidden">date of birth</span>
-          <% end %>
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Joining date
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div>
-            <%= @transferring_participant_form.start_date.to_date.to_s(:govuk) %>
-          </div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :teacher_start_date}) do %>
-            Change <span class="govuk-visually-hidden">start date</span>
-          <% end %>
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Email address
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div>
-            <%= @transferring_participant_form.email %>
-          </div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :email}) do %>
-            Change <span class="govuk-visually-hidden">email</span>
-          <% end %>
-        </dd>
-      </div>
-
-      <% if @transferring_participant_form.mentor_id %>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Mentor
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <div>
-            <%= User.find(@transferring_participant_form.mentor_id).full_name.titleize %>
-            </div>
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to({ action: :choose_mentor }) do %>
-              Change <span class="govuk-visually-hidden">mentor</span>
-            <% end %>
-          </dd>
-        </div>
+    <%= govuk_summary_list do |summary_list| %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Name" } %>
+        <% row.value { @transferring_participant_form.full_name.titleize } %>
+        <% row.action(text: :none) %>
       <% end %>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Training with
-        </dt>
+      <% summary_list.row do |row| %>
+        <% row.key { "TRN" } %>
+        <% row.value { @transferring_participant_form.trn } %>
+        <% row.action(text: :none) %>
+      <% end %>
 
-        <dd class="govuk-summary-list__value">
-          <div>
+      <% summary_list.row do |row| %>
+        <% row.key { "Date of birth" } %>
+        <% row.value { @transferring_participant_form.date_of_birth.to_date.to_s(:govuk) } %>
+        <% row.action(text: :none) %>
+      <% end %>
 
-            <% if @transferring_participant_form.schools_current_programme_choice == "yes" %>
-            <div>
-              <%= @school_cohort.default_induction_programme.lead_provider.name %>
-            </div>
-            <div>
-              <%= @school_cohort.default_induction_programme.delivery_partner&.name %>
-            </div>
-            <% else %>
-            <div>
-              <%= @latest_induction_record.induction_programme&.lead_provider.name %>
-            </div>
-            <div>
-              <%= @latest_induction_record.induction_programme&.delivery_partner.name %>
-            </div>
-            <% end %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Joining date" } %>
+        <% row.value { @transferring_participant_form.start_date.to_date.to_s(:govuk) } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "joining date",
+                      href: url_for({ action: :teacher_start_date})) %>
+      <% end %>
 
-          </div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <% if @transferring_participant_form.teachers_current_programme_choice == "yes" %>
-            <%= govuk_link_to({ action: :schools_current_programme}) do %>
-              Change <span class="govuk-visually-hidden">training_programme</span>
-            <% end %>
-          <% else %>
-            <%= govuk_link_to({ action: :teachers_current_programme}) do %>
-              Change <span class="govuk-visually-hidden">training_programme</span>
-           <% end %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Email address" } %>
+        <% row.value { @transferring_participant_form.email } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "email",
+                      href: url_for({ action: :email})) %>
+      <% end %>
+
+      <% if @transferring_participant_form.mentor_id %>
+        <% summary_list.row do |row| %>
+          <% row.key { "Mentor" } %>
+          <% row.value { @transferring_participant_form.mentor.full_name.titleize } %>
+          <% row.action(text: "Change",
+                        visually_hidden_text: "mentor",
+                        href: url_for({ action: :choose_mentor})) %>
+        <% end %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Training with" } %>
+        <% if @transferring_participant_form.using_schools_programme? %>
+          <% row.value do %>
+            <div><%= @school_cohort.default_induction_programme.lead_provider.name %></div>
+            <div><%= @school_cohort.default_induction_programme.delivery_partner&.name %></div>
           <% end %>
-        </dd>
-      </div>
-    </dl>
+          <% if @transferring_participant_form.switch_to_schools_programme? %>
+            <% row.action(text: "Change",
+                          visually_hidden_text: "training programme",
+                          href: url_for({ action: :teachers_current_programme})) %>
+          <% else %>
+            <% row.action(text: :none) %>
+          <% end %>
+        <% else %>
+          <% row.value do %>
+            <div><%= @latest_induction_record.induction_programme.lead_provider&.name %></div>
+            <div><%= @latest_induction_record.induction_programme.delivery_partner&.name %></div>
+          <% end %>
+          <% row.action(text: "Change",
+                        visually_hidden_text: "training programme",
+                        href: url_for({ action: :teachers_current_programme})) %>
+        <% end %>
+      <% end %>
+    <% end %>
 
     <%= form_for @transferring_participant_form, url: { action: :check_answers }, method: :put do |f| %>
       <%= f.govuk_submit "Confirm and add" %>

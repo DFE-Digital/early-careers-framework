@@ -12,9 +12,9 @@
   <h1 class="govuk-heading-xl"><%= title %></h1>
 
   <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-3">Lead provider</p>
-  <p class="govuk-!-margin-top-3"><%= @school_cohort.lead_provider.name %></p>
+  <p class="govuk-!-margin-top-3"><%= @school_cohort.default_induction_programme.lead_provider&.name %></p>
   <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-3 govuk-!-margin-left-0">Delivery partner</p>
-  <p class="govuk-!-margin-top-3"><%= @school_cohort.delivery_partner.name %></p>
+  <p class="govuk-!-margin-top-3"><%= @school_cohort.default_induction_programme.delivery_partner&.name %></p>
 
     <%= form_for @transferring_participant_form, url: { action: :schools_current_programme }, method: :put do |f| %>
       <%= f.govuk_collection_radio_buttons(

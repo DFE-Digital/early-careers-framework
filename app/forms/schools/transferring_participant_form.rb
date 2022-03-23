@@ -19,7 +19,7 @@ module Schools
     validates :delivery_partner_choice, presence: true, on: :delivery_partner_choice
     validate :schools_programme_choice, on: :schools_current_programme
     validate :teachers_programme_choice, on: :teachers_current_programme
-    validate :mentor, on: :choose_mentor
+    validate :check_mentor, on: :choose_mentor
     validate :dob, on: :dob
     validate :teacher_start_date, on: :teacher_start_date
 
@@ -60,12 +60,20 @@ module Schools
       ]
     end
 
+    def using_schools_programme?
+      same_programme || switch_to_schools_programme?
+    end
+
     def switch_to_schools_programme?
-      schools_current_programme_choice == "yes"
+      schools_current_programme_choice == "yes" && !continue_teachers_programme?
     end
 
     def continue_teachers_programme?
       teachers_current_programme_choice == "yes"
+    end
+
+    def mentor
+      User.find(mentor_id) if mentor_id.present?
     end
 
   private
@@ -100,7 +108,7 @@ module Schools
       errors.add(:teachers_current_programme_choice, :blank) unless teachers_current_programme_choices.map(&:id).include?(teachers_current_programme_choice)
     end
 
-    def mentor
+    def check_mentor
       @mentor_id = nil if mentor_id == "later"
     end
   end
