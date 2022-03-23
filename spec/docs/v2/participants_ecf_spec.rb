@@ -27,7 +27,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                 explode: true,
                 required: false,
                 description: "Refine ECF participants to return.",
-                example: { updated_since: "2020-11-13T11:21:55Z" }
+                example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       parameter name: :page,
                 in: :query,
@@ -38,7 +38,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                 style: :deepObject,
                 explode: true,
                 required: false,
-                example: { page: 1, per_page: 5 },
+                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of ECF participants."
 
       response "200", "A list of ECF participants" do
@@ -73,7 +73,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                 explode: true,
                 required: false,
                 description: "Refine ECF participants to return.",
-                example: { updated_since: "2020-11-13T11:21:55Z" }
+                example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       response "200", "A CSV file of ECF participants" do
         schema({ "$ref": "#/components/schemas/MultipleECFParticipantsCsvResponse" }, content_type: "text/csv")

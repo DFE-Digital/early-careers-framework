@@ -49,9 +49,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ applications to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -62,10 +60,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ applications."
           }
         ],
@@ -118,9 +113,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ applications to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           }
         ],
         "responses": {
@@ -272,9 +265,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           }
         ],
         "responses": {
@@ -326,9 +317,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -339,10 +328,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ participants."
           }
         ],
@@ -669,10 +655,7 @@
             "explode": true,
             "required": false,
             "description": "Refine participant declarations to return.",
-            "example": {
-              "participant_id": "ab3a7848-1208-7679-942a-b4a70eed400a",
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "participant_id=ab3a7848-1208-7679-942a-b4a70eed400a&updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -683,10 +666,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of participant declarations."
           }
         ],
@@ -877,9 +857,7 @@
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -890,10 +868,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of ECF participants."
           }
         ],
@@ -946,9 +921,7 @@
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           }
         ],
         "responses": {
