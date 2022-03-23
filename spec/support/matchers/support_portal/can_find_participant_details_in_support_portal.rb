@@ -16,14 +16,15 @@ module Support
 
         sign_in_as admin_user
 
-        click_on "Participants"
-
-        click_on participant_name
+        portal = Pages::AdminSupportPortal.new
+        list = portal.view_participant_list
+        participant_detail = list.view_participant participant_name
 
         @text = page.find("main").text
-        has_text? "#{participant_name} Eligible to start"
-        has_text? "Full name #{participant_name}"
-        has_text? "School #{@school_name}"
+
+        participant_detail.can_see_eligible_to_start? participant_name
+        participant_detail.can_see_full_name? participant_name
+        participant_detail.can_see_school? @school_name
 
         sign_out
 
