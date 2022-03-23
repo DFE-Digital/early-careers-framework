@@ -7,7 +7,7 @@ RSpec.describe CallOffContract, type: :model do
   let(:total_contract_value) { call_off_contract.recruitment_target * call_off_contract.band_a.per_participant }
 
   describe "associations" do
-    it { is_expected.to belong_to(:cohort).optional(true) }
+    it { is_expected.to belong_to(:cohort) }
     it { is_expected.to have_many(:participant_bands) }
 
     it "is expected to have band_a with the lowest minimum value" do
