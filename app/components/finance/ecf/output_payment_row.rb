@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class OutputPaymentRow < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
       attr_reader :band, :participants, :per_participant, :subtotal
 
       with_collection_parameter :output_payment

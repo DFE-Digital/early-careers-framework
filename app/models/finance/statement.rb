@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Finance::Statement < ApplicationRecord
-  include FinanceHelper
+  include Finance::ECFPaymentsHelper
 
   self.table_name = "statements"
 

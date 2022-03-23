@@ -4,24 +4,14 @@ module Finance
   module NPQ
     module PaymentOverviews
       class ServiceFeeRow < BaseComponent
-        include FinanceHelper
+        include NPQPaymentsHelper
 
         def initialize(service_fees, contract)
           @service_fees = service_fees
           @contract = contract
         end
 
-        def total
-          service_fees[:monthly]
-        end
-
-        def payment_per_trainee
-          service_fees[:per_participant]
-        end
-
-        def trainees
-          contract.recruitment_target
-        end
+        delegate :recruitment_target, to: :contract
 
       private
 

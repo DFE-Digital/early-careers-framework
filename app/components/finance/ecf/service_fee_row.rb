@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class ServiceFeeRow < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
       attr_reader :band, :participants, :per_participant, :monthly
 
       with_collection_parameter :service_fee
