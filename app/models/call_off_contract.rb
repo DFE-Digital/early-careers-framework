@@ -2,7 +2,7 @@
 
 class CallOffContract < ApplicationRecord
   belongs_to :lead_provider
-  belongs_to :cohort, optional: true
+  belongs_to :cohort
   delegate :total_contract_value, to: :bands
   has_many :participant_bands do
     def total_contract_value
