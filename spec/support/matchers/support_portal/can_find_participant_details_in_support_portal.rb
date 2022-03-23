@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Support
-  module CanFindParticipantDetailsInSupportPortal
+  module CanFindParticipantDetailsInAdminSupportPortal
     extend RSpec::Matchers::DSL
 
     RSpec::Matchers.define :be_able_to_find_participant_details_in_support_portal do |participant_name, sit_name|
