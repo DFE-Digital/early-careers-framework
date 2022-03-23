@@ -3,7 +3,7 @@
 module Schools
   class TransferringParticipantsController < ::Schools::BaseController
     before_action :load_joining_participant_form, except: %i[what_we_need]
-    before_action :latest_induction_record, only: %i[email choose_mentor schools_current_programme choose_delivery_partner check_answers]
+    before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers]
     before_action :set_school_cohort
     before_action :validate_request_or_render, except: %i[what_we_need]
 
@@ -61,6 +61,7 @@ module Schools
 
     def choose_mentor
       if matching_lead_provider_and_delivery_partner?
+        @transferring_participant_form.same_school = true
         store_form_redirect_to_next_step(:check_answers)
       else
         store_form_redirect_to_next_step(:teachers_current_programme)
@@ -92,7 +93,7 @@ module Schools
         transfer_fip_participant_to_schools_programme
         # TODO: comms to old provider + new?
       else
-        transfer_fip_participant_and_continue_induction
+        transfer_fip_participant_and_continue_existing_programme
         # TODO: comms?
       end
 
