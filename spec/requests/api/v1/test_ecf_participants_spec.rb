@@ -72,6 +72,46 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "when there is no mentor"
+
+        context "one profile with 2 induction records" do
+          let(:profile) do
+            create(
+              :ect_participant_profile,
+              mentor_profile: mentor_profile,
+              training_status: "deferred", # something different as should use InductionRecord#training_status
+            )
+          end
+
+          let(:induction_record) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              training_status: "withdrawn",
+            )
+          end
+
+          let!(:induction_record2) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              start_date: 1.week.ago,
+              training_status: "active",
+            )
+          end
+
+          it "returns only the most recent induction record" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"].size).to eql(1)
+            expect(parsed_response["data"][0]["attributes"]["training_status"]).to eql("active")
+          end
+        end
+
+        context "multiple profiles" do
+          it "only uses the active one"
+        end
       end
     end
   end

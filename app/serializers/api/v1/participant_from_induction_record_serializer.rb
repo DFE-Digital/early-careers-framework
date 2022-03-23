@@ -60,7 +60,11 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          induction_record.participant_profile.mentor&.id
+          # Quirk: test does not seem to pass with the following
+          # induction_record.participant_profile.mentor&.id
+          # so have to go the long way around
+          # not had time to determine why
+          induction_record.participant_profile&.mentor_profile&.user&.id
         end
       end
 
@@ -105,7 +109,7 @@ module Api
       end
 
       attribute :training_status do |induction_record|
-        induction_record.participant_profile.training_status
+        induction_record.training_status
       end
 
       attribute :schedule_identifier do |induction_record|

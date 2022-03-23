@@ -37,22 +37,8 @@ module Api
       end
 
       def induction_records
-        scope = default_scope
-
-        if updated_since.present?
-          scope = scope
-            .where(users: { updated_at: updated_since.. })
-            .order("users.updated_at, users.id")
-        end
-
-        scope.order("users.created_at")
-      end
-
-      def default_scope
-        @default_scope ||= InductionRecord
-          .joins(induction_programme: { partnership: :lead_provider })
-          .joins(participant_profile: %i[user participant_identity])
-          .where(partnerships: { lead_provider: lead_provider })
+        scope = InductionRecord
+          .where(id: induction_record_ids)
           .includes(participant_profile: %i[
             participant_identity
             user
@@ -64,6 +50,29 @@ module Api
             teacher_profile
             mentor
           ])
+
+        if updated_since.present?
+          scope = scope
+            .where(users: { updated_at: updated_since.. })
+            .order("users.updated_at, users.id")
+        end
+
+        scope.order("users.created_at")
+      end
+
+      # this query deals with the following scenario
+      # given one profile with 2 induction records
+      # we only want to return the latest induction record
+      def induction_record_ids
+        query = InductionRecord
+          .joins(induction_programme: { partnership: :lead_provider })
+          .joins(participant_profile: %i[user participant_identity])
+          .select("DISTINCT ON (participant_profiles.id) participant_profile_id, induction_records.id")
+          .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
+          .order("participant_profiles.id", start_date: :desc)
+          .to_sql
+
+        ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")
       end
     end
   end
