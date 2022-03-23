@@ -38,7 +38,7 @@ module Api
 
       def induction_records
         scope = InductionRecord
-          .where(id: induction_record_ids)
+          .where(id: induction_record_ids_with_deduped_profiles)
           .includes(participant_profile: %i[
             participant_identity
             user
@@ -60,16 +60,32 @@ module Api
         scope.order("users.created_at")
       end
 
+      # inner most query
       # this query deals with the following scenario
       # given one profile with 2 induction records
       # we only want to return the latest induction record
-      def induction_record_ids
+      def induction_record_ids_with_deduped_induction_records
         query = InductionRecord
           .joins(induction_programme: { partnership: :lead_provider })
           .joins(participant_profile: %i[user participant_identity])
           .select("DISTINCT ON (participant_profiles.id) participant_profile_id, induction_records.id")
           .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
           .order("participant_profiles.id", start_date: :desc)
+          .to_sql
+
+        ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")
+      end
+
+      # second inner most query
+      # this query deals with where a user can have multiple profiles
+      # the work to map one user to one profile has not been done
+      # therefore we must work around and select correct profile
+      def induction_record_ids_with_deduped_profiles
+        query = InductionRecord
+          .where(id: induction_record_ids_with_deduped_induction_records)
+          .joins(participant_profile: [:participant_identity])
+          .select("DISTINCT ON (participant_profiles.participant_identity_id) participant_identity_id, induction_records.training_status, participant_profiles.created_at, induction_records.id")
+          .order("participant_profiles.participant_identity_id", "induction_records.training_status ASC", "participant_profiles.created_at DESC")
           .to_sql
 
         ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")

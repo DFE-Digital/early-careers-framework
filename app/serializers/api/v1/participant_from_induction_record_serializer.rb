@@ -108,9 +108,7 @@ module Api
         induction_record.participant_profile.sparsity_uplift
       end
 
-      attribute :training_status do |induction_record|
-        induction_record.training_status
-      end
+      attribute :training_status, &:training_status
 
       attribute :schedule_identifier do |induction_record|
         induction_record.schedule&.schedule_identifier

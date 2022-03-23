@@ -20,6 +20,7 @@ RSpec.describe "Participants API", type: :request do
   let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile) }
   let(:profile) { create(:ect_participant_profile, mentor_profile: mentor_profile) }
   let(:user) { profile.user }
+  let(:teacher_profile) { profile.teacher_profile }
   let(:identity) { profile.participant_identity }
 
   let(:mentor) { create(:user, :mentor) }
@@ -45,6 +46,7 @@ RSpec.describe "Participants API", type: :request do
 
         it "returns all users" do
           get "/api/v1/test_ecf_participants"
+
           expect(parsed_response["data"].size).to eql(1)
         end
 
@@ -110,7 +112,14 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "multiple profiles" do
-          it "only uses the active one"
+          let!(:induction_record2) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile2) }
+          let(:profile2) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
+
+          it "returns one" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"].size).to eql(1)
+          end
         end
       end
     end
