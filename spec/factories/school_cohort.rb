@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :school_cohort do
-    cohort { create(:cohort, :current) }
+    cohort { Cohort.current || create(:cohort, :current) }
     school
     induction_programme_choice { %w[core_induction_programme full_induction_programme].sample }
 
