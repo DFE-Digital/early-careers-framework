@@ -76,27 +76,6 @@ jobs:
       - name: Run tests
         run: yarn percy exec --parallel -- bundle exec bin/rspec_ci
 
-  frontend-tests:
-    name: Run frontend JS unit tests
-
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node
-        uses: actions/setup-node@v2.5.1
-        with:
-          node-version: '16.x'
-          cache: 'yarn'
-
-      - name: Install node.js dependencies
-        run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
-
-      - name: run frontend tests and linting
-        run: yarn run test
-
   e2e-tests:
     name: Run Cypress
     runs-on: ubuntu-20.04

@@ -7,43 +7,34 @@
   },
   "dependencies": {
     "@rails/webpacker": "^5.4.3",
-    "@sentry/browser": "^6.17.9",
-    "@sentry/tracing": "^6.18.2",
+    "@sentry/browser": "^6.19.1",
+    "@sentry/tracing": "^6.19.1",
     "accessible-autocomplete": "^2.0.3",
     "es6-promise": "^4.2.8",
     "govuk-frontend": "^3.14.0",
-    "serialize-javascript": "^5.0.1",
-    "set-value": "^4.0.1",
     "whatwg-fetch": "^3.6.1"
   },
   "devDependencies": {
     "@percy/cli": "^1.0.0-beta.73",
     "@percy/cypress": "^3.1.1",
     "axe-core": "^4.3.5",
-    "cypress": "8.7.0",
+    "cypress": "9.5.2",
     "cypress-axe": "^0.14.0",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-intellij-reporter": "^0.0.7",
     "eslint": "^8.8.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-no-only-tests": "^2.6.0",
-    "jest": "^26.6.3",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.0",
     "webpack-dev-server": "^3.11.3"
   },
   "scripts": {
-    "test": "jest --passWithNoTests",
     "cypress:open": "cypress open --project ./spec",
     "cypress:run": "cypress run --project ./spec --config video=false,screenshotOnRunFailure=false",
     "lint": "eslint --max-warnings 0 '{app,spec}/**/*.js' && prettier --check '{app,spec}/**/*.js'"
-  },
-  "jest": {
-    "roots": [
-      "app"
-    ]
   }
 }
