@@ -24,7 +24,7 @@ RSpec.feature "Voided declaration in payment breakdown", type: :feature do
 private
 
   def and_call_off_contract_was_created_for_lead_provider
-    create(:call_off_contract, lead_provider: @cpd_lead_provider.lead_provider)
+    create(:call_off_contract, lead_provider: @cpd_lead_provider.lead_provider, cohort: @statement.cohort)
   end
 
   def and_breakdown_calculation_was_run
