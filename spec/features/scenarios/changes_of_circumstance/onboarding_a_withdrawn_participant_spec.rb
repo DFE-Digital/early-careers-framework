@@ -36,7 +36,7 @@ RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_s
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
     # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 2
+    # next unless index + 2 == 3
 
     context given_context(scenario) do
       let(:new_lead_provider_name) { scenario.transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider" }
@@ -58,6 +58,7 @@ RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_s
         end
 
         and_feature_flag_is_active :eligibility_notifications
+        # and_feature_flag_is_active :change_of_circumstances
 
         and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_type
         and_participant_has_completed_registration "the Participant"
@@ -121,12 +122,16 @@ RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_s
               expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
               expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
               expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
+              expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type, experimental: true
+              expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status, experimental: true
+              expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status, experimental: true
             when :OBFUSCATED
               # expect(subject).to be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "Original Lead Provider"
               # expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
               # expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
             else
               expect(subject).to_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
+              expect(subject).to_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type, experimental: true
             end
 
             if scenario.see_original_declarations.any?
@@ -146,6 +151,9 @@ RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_s
               expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
               expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_participant_status
               expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status
+              expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type, experimental: true
+              expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_participant_status, experimental: true
+              expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.new_training_status, experimental: true
             when :not_applicable
               # not applicable
             else

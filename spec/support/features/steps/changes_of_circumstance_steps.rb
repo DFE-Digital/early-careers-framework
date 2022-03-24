@@ -16,7 +16,8 @@ module Steps
              cpd_lead_provider: cpd_lead_provider
 
       token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
-                                                             lead_provider: lead_provider
+                                                             lead_provider: lead_provider,
+                                                             private_api_access: true
 
       tokens[lead_provider_name] = token
     end
