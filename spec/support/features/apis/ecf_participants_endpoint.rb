@@ -10,7 +10,7 @@ module APIs
     def initialize(token, experimental)
       @current_record = nil
       @current_id = nil
-      call_participants_endpoint(token, experimental)
+      call_participants_endpoint token, experimental
     end
 
     def get_participant(participant_id)
@@ -50,7 +50,7 @@ module APIs
 
     def call_participants_endpoint(token, experimental)
       url = experimental ? "/api/v1/test_ecf_participants" : "/api/v1/participants/ecf"
-      session = ActionDispatch::Integration::Session.new(Rails.application)
+      session = ActionDispatch::Integration::Session.new Rails.application
       session.get url,
                   headers: {
                     "Authorization": "Bearer #{token}",

@@ -12,11 +12,12 @@ module Support
         declarations_endpoint = APIs::ECFParticipantsEndpoint.new(tokens[lead_provider_name], options[:experimental])
         declarations_endpoint.get_participant user.id
 
+        @text = declarations_endpoint.response
+
         declarations_endpoint.has_status? status
 
         true
       rescue Capybara::ElementNotFound
-        @text = declarations_endpoint.response
         false
       end
 
