@@ -83,7 +83,8 @@ FROM ${BASE_RUBY_IMAGE} AS production
 
 ARG SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
-    SHA=${SHA}
+    SHA=${SHA} \
+    PATH=/usr/local/bundle/bin:/usr/local/bin:${PATH}
 
 RUN apk -U upgrade && \
     apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \
@@ -93,8 +94,6 @@ RUN apk -U upgrade && \
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
 COPY --from=middleman /public/ /app/public/
-
-RUN echo "cd /app && /usr/local/bundle/bin/bundle exec rails c" > /root/.ash_history
 
 WORKDIR /app
 
