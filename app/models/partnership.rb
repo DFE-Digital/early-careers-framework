@@ -31,6 +31,7 @@ class Partnership < ApplicationRecord
 
   scope :in_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
   scope :unchallenged, -> { where(challenged_at: nil, challenge_reason: nil) }
+  scope :relationships, -> { where(relationship: true) }
 
   def challenge!(reason)
     raise ArgumentError if reason.blank?
