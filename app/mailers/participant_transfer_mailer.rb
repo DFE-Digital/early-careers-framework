@@ -82,8 +82,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to the *outgoing* lead provider, when it changes.
   #
   # Reference: 3
-  def provider_transfer_out_notification(induction_record:, current_school:, lead_provider_profile:)
-    participant_profile = induction_record.participant_profile
+  def provider_transfer_out_notification(induction_record:, lead_provider_profile:)
     preferred_identity = new_induction_record.preferred_identity
 
     template_mail(
@@ -92,12 +91,8 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        transferring_ppt_name: participant_profile.user.full_name,
         joining_date: induction_record.start_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
-        ect_or_mentor: participant_profile_type(participant_profile),
-        current_school_name: current_school.name,
-        current_school_urn: current_school.urn,
       },
     ).tag(:provider_transfer_out_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -106,7 +101,6 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 4
   def provider_transfer_in_notification(induction_record:, lead_provider_profile:)
-    participant_profile = induction_record.participant_profile
     preferred_identity = new_induction_record.preferred_identity
 
     template_mail(
@@ -115,12 +109,8 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        transferring_ppt_name: participant_profile.user.full_name,
         joining_date: induction_record.start_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
-        ect_or_mentor: participant_profile_type(participant_profile),
-        new_school_name: induction_record.school.name,
-        new_school_urn: induction_record.school.urn,
       },
     ).tag(:provider_transfer_in_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -130,7 +120,6 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 9
   def provider_new_school_transfer_notification(induction_record:, lead_provider_profile:)
-    participant_profile = induction_record.participant_profile
     preferred_identity = new_induction_record.preferred_identity
 
     template_mail(
@@ -139,12 +128,8 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        new_school_name: new_school.name,
-        transferring_ppt_name: participant_profile.user.full_name,
         joining_date: induction_record.start_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
-        ect_or_mentor: participant_profile_type(participant_profile),
-        new_school_urn: induction_record.school.urn,
       },
     ).tag(:provider_new_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -152,8 +137,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to when the LP is already the *outgoing* and *incoming* lead provider at both schools.
   #
   # Reference: 10
-  def provider_existing_school_transfer_notification(induction_record:, old_school:, lead_provider_profile:)
-    participant_profile = induction_record.participant_profile
+  def provider_existing_school_transfer_notification(induction_record:, lead_provider_profile:)
     preferred_identity = new_induction_record.preferred_identity
 
     template_mail(
@@ -162,14 +146,8 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        transferring_ppt_name: participant_profile.user.full_name,
         joining_date: induction_record.start_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
-        ect_or_mentor: participant_profile_type(participant_profile),
-        new_school_name: induction_record.school.name,
-        new_school_urn: induction_record.school.urn,
-        old_school_name: old_school.name,
-        old_school_urn: old_school.urn,
       },
     ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_user, as: :lead_provider_profile)
   end
@@ -196,6 +174,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
+        sit_name: induction_coordinator_profile.user.name,
         transferring_ppt_name: participant_profile.user.full_name,
         new_school_name: induction_record.school.urn,
       },
