@@ -5,7 +5,7 @@ FactoryBot.define do
     school
     lead_provider
     delivery_partner
-    cohort
+    cohort { Cohort.current || create(:cohort, :current) }
 
     challenge_deadline { rand(-21..21).days.from_now }
     report_id { Random.uuid }

@@ -5,7 +5,7 @@ FactoryBot.define do
     name          { Time.zone.today.strftime "%B %Y" }
     deadline_date { (Time.zone.today - 1.month).end_of_month }
     payment_date  { Time.zone.today.end_of_month }
-    cohort
+    cohort        { Cohort.current || create(:cohort, :current) }
 
     factory :npq_statement, class: "Finance::Statement::NPQ" do
       association :cpd_lead_provider, :with_npq_lead_provider
