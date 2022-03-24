@@ -26,10 +26,10 @@ class InductionProgramme < ApplicationRecord
   delegate :school, to: :school_cohort
 
   def lead_provider
-    school_cohort&.lead_provider
+    partnership&.lead_provider
   end
 
   def delivery_partner
-    school_cohort&.delivery_partner
+    partnership&.delivery_partner
   end
 end
