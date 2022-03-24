@@ -38,8 +38,12 @@ module Schools
       }
     end
 
+    def formatted_full_name
+      full_name.split("-").map(&:titleize).join("-")
+    end
+
     def full_name_to_display
-      full_name.split("-").map(&:titleize).join("-") << (full_name[-1..].downcase == "s" ? "’" : "’s")
+      formatted_full_name << (full_name[-1..].downcase == "s" ? "’" : "’s")
     end
 
     def check_against_dqt?
@@ -74,6 +78,10 @@ module Schools
 
     def mentor
       User.find(mentor_id) if mentor_id.present?
+    end
+
+    def mentor_profile
+      mentor&.mentor_profile
     end
 
   private

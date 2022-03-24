@@ -25,4 +25,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "ECF"
   inflect.acronym "STI"
   inflect.acronym "BPN"
+  inflect.acronym "FIP"
+  inflect.acronym "CIP"
 end

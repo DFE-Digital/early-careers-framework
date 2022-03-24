@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_18_104242) do
+ActiveRecord::Schema.define(version: 2022_03_24_173802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -671,7 +671,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_104242) do
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["pending"], name: "index_partnerships_on_pending"
-    t.index ["school_id", "lead_provider_id", "cohort_id"], name: "unique_partnerships", unique: true
+    t.index ["school_id", "lead_provider_id", "delivery_partner_id", "cohort_id"], name: "unique_partnerships", unique: true
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 

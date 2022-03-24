@@ -3,7 +3,7 @@
 module Schools
   class TransferringParticipantsController < ::Schools::BaseController
     before_action :load_joining_participant_form, except: %i[what_we_need]
-    before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers]
+    before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
     before_action :set_school_cohort
     before_action :validate_request_or_render, except: %i[what_we_need]
 
@@ -61,7 +61,7 @@ module Schools
 
     def choose_mentor
       if matching_lead_provider_and_delivery_partner?
-        @transferring_participant_form.same_school = true
+        @transferring_participant_form.same_programme = true
         store_form_redirect_to_next_step(:check_answers)
       else
         store_form_redirect_to_next_step(:teachers_current_programme)
@@ -113,29 +113,24 @@ module Schools
   private
 
     def transfer_fip_participant_to_schools_programme
-      Induction::Enrol.call(
+      Induction::TransferToSchoolsProgramme.call(
         participant_profile: participant_profile,
         induction_programme: @school_cohort.default_induction_programme,
         start_date: @transferring_participant_form.start_date,
         preferred_identity: preferred_identity,
+        mentor_profile: @transferring_participant_form.mentor_profile,
       )
     end
 
     def transfer_fip_participant_and_continue_existing_programme
-      ActiveRecord::Base.transaction do
-        partnership = Induction::CreateRelationship.call(school_cohort: @school_cohort,
-                                                         lead_provider: participant_lead_provider,
-                                                         delivery_partner: participant_delivery_partner)
-
-        programme = InductionProgramme.create!(traning_programme: :full_induction_programme,
-                                               school_cohort: @school_cohort,
-                                               partnership: partnership)
-
-        Induction::Enrol.call(participant_profile: participant_profile,
-                              induction_programme: programme,
-                              start_date: @transferring_participant_form.start_date,
-                              preferred_identity: preferred_identity)
-      end
+      Induction::TransferAndContinueExistingFIP.call(
+        school_cohort: @school_cohort,
+        participant_profile: participant_profile,
+        preferred_identity: preferred_identity,
+        start_date: @transferring_participant_form.start_date,
+        end_date: @transferring_participant_form.start_date,
+        mentor_profile: @transferring_participant_form.mentor_profile,
+      )
     end
 
     def load_joining_participant_form
