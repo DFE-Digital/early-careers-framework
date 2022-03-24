@@ -8,6 +8,7 @@ FactoryBot.define do
     revised_target { nil }
     set_up_fee { 149_651 }
     lead_provider { build(:lead_provider, cpd_lead_provider: build(:cpd_lead_provider)) }
+    cohort
     raw do
       {
         "uplift_target": 0.33,
