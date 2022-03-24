@@ -25,12 +25,12 @@ class Induction::TransferAndContinueExistingFIP < BaseService
 
 private
 
-  attr_reader :school_cohort, :participant_profile, :preferred_identity, :start_date, :end_date, :mentor_profile
+  attr_reader :school_cohort, :participant_profile, :email, :start_date, :end_date, :mentor_profile
 
-  def initialize(school_cohort:, participant_profile:, preferred_identity: nil, start_date: Time.zone.now, end_date: nil, mentor_profile: nil)
+  def initialize(school_cohort:, participant_profile:, email: nil, start_date: Time.zone.now, end_date: nil, mentor_profile: nil)
     @school_cohort = school_cohort
     @participant_profile = participant_profile
-    @preferred_identity = preferred_identity
+    @email = email
     @start_date = start_date
     @end_date = end_date || start_date
     @mentor_profile = mentor_profile
@@ -58,6 +58,15 @@ private
 
   def participant_delivery_partner
     current_induction_programme&.delivery_partner
+  end
+
+  def preferred_identity
+    if email.present?
+      Identity::Create.call(user: participant_profile.participant_identity.user,
+                            email: email)
+    else
+      participant_profile.participant_identity
+    end
   end
 
   def check_fip_induction_and_different_school!

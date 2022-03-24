@@ -117,7 +117,7 @@ module Schools
         participant_profile: participant_profile,
         induction_programme: @school_cohort.default_induction_programme,
         start_date: @transferring_participant_form.start_date,
-        preferred_identity: preferred_identity,
+        email: @transferring_participant_form.email,
         mentor_profile: @transferring_participant_form.mentor_profile,
       )
     end
@@ -126,7 +126,7 @@ module Schools
       Induction::TransferAndContinueExistingFIP.call(
         school_cohort: @school_cohort,
         participant_profile: participant_profile,
-        preferred_identity: preferred_identity,
+        email: @transferring_participant_form.email,
         start_date: @transferring_participant_form.start_date,
         end_date: @transferring_participant_form.start_date,
         mentor_profile: @transferring_participant_form.mentor_profile,
@@ -191,10 +191,6 @@ module Schools
 
     def participant_delivery_partner
       latest_induction_record.induction_programme&.delivery_partner
-    end
-
-    def preferred_identity
-      @preferred_identity ||= Identity::Create.call(user: participant_profile.participant_identity.user, email: @transferring_participant_form.email)
     end
 
     def check_against_dqt?
