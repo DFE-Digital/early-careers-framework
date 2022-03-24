@@ -60,11 +60,7 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          # Quirk: test does not seem to pass with the following
-          # induction_record.participant_profile.mentor&.id
-          # so have to go the long way around
-          # not had time to determine why
-          induction_record.participant_profile&.mentor_profile&.user&.id
+          induction_record.participant_profile.mentor&.id
         end
       end
 

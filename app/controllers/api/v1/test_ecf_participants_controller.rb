@@ -39,16 +39,16 @@ module Api
       def induction_records
         scope = InductionRecord
           .where(id: induction_record_ids_with_deduped_profiles)
-          .includes(participant_profile: %i[
-            participant_identity
-            user
-            cohort
-            school
-            ecf_participant_eligibility
-            ecf_participant_validation_data
-            schedule
-            teacher_profile
-            mentor
+          .includes(participant_profile: [
+            :participant_identity,
+            :user,
+            :cohort,
+            :school,
+            :ecf_participant_eligibility,
+            :ecf_participant_validation_data,
+            :schedule,
+            :teacher_profile,
+            { mentor_profile: [:mentor] },
           ])
 
         if updated_since.present?
