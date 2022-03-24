@@ -4,7 +4,7 @@ module ParticipantDeclarationSteps
   include Capybara::DSL
 
   def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
-    cohort = create(:cohort, :current)
+    cohort = Cohort.current
     school_cohort = create(:school_cohort, cohort: cohort)
     @ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
     delivery_partner = create(:delivery_partner)
@@ -19,7 +19,7 @@ module ParticipantDeclarationSteps
   end
 
   def given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
-    cohort = create(:cohort, :current)
+    cohort = Cohort.current
     school_cohort = create(:school_cohort, cohort: cohort)
     partnership = create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
     @mentor_profile = create(:mentor_participant_profile, school: partnership.school, cohort: partnership.cohort)

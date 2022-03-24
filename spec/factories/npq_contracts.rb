@@ -11,6 +11,7 @@ FactoryBot.define do
     recruitment_target { 72 }
     course_identifier { "npq-leading-teaching" }
     service_fee_installments { 19 }
+    cohort { Cohort.current || create(:cohort, :current) }
   end
 
   trait :npq_leading_teaching do
