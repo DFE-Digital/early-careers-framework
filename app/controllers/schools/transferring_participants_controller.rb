@@ -85,18 +85,16 @@ module Schools
     end
 
     def check_answers
-      # Finish enroll process
-      if matching_lead_provider_and_delivery_partner?
-        transfer_fip_participant_to_schools_programme
-        # TODO: comms to provider ?
-      elsif @transferring_participant_form.switch_to_schools_programme?
-        transfer_fip_participant_to_schools_programme
-        # TODO: comms to old provider + new?
-      else
-        transfer_fip_participant_and_continue_existing_programme
-        # TODO: comms?
-      end
+      # Finish enroll process and send notification emails
+      induction_record = if matching_lead_provider_and_delivery_partner?
+                           transfer_fip_participant_to_schools_programme
+                         elsif @transferring_participant_form.switch_to_schools_programme?
+                           transfer_fip_participant_to_schools_programme
+                         else
+                           transfer_fip_participant_and_continue_existing_programme
+                         end
 
+      send_notification_emails!(induction_record)
       store_form_redirect_to_next_step(:complete)
     end
 
@@ -113,6 +111,62 @@ module Schools
     helper_method :with_same_provider_and_different_delivery_partner?
 
   private
+
+    # This methods assumes that all transfers are requested by the incoming school for now. There
+    # are three paths here:
+    #
+    # 1) Moving schools but lead provider is same at both schools:
+    #
+    #   a. Send email to existing lead provider notifying them that an internal
+    #      transfer is happening.
+    #   b. Send email to participant to notify them.
+    #
+    # 2) Moving to target schools lead provider and programme:
+    #
+    #   a. Send email to incoming lead provider.
+    #   b. Send email to outgoing lead provider, requesting that they withdraw them.
+    #   c. Send email to participant to notify them.
+    #
+    # 3) Moving to target school, but continuing with current lead provider.
+    #
+    #   a. Send email to current lead provider, notifying them to expect a new school.
+    #   b. Send email to participant to notify them.
+    #
+    def send_notification_emails!(induction_record)
+      current_lead_provider_users = current_lead_provider&.users || []
+      target_lead_provider_users = participant_lead_provider&.users | []
+
+      if matching_lead_provider_and_delivery_partner?
+        current_lead_provider_users.each do |user|
+          ParticipantTransferMailer.provider_existing_school_transfer_notification(
+            induction_record: induction_record,
+            lead_provider_profile: user.lead_provider_profile,
+          ).deliver_now
+        end
+      elsif @transferring_participant_form.switch_to_schools_programme?
+        target_lead_provider_users.each do |user|
+          ParticipantTransferMailer.provider_transfer_in_notification(
+            induction_record: induction_record,
+            lead_provider_profile: user.lead_provider_profile,
+          ).deliver_now
+        end
+        current_lead_provider_users.each do |user|
+          ParticipantTransferMailer.provider_transfer_out_notification(
+            induction_record: induction_record,
+            lead_provider_profile: user.lead_provider_profile,
+          ).deliver_now
+        end
+      else
+        target_lead_provider_users.each do |user|
+          ParticipantTransferMailer.provider_new_school_transfer_notification(
+            induction_record: induction_record,
+            lead_provider_profile: user.lead_provider_profile,
+          ).deliver_now
+        end
+      end
+
+      ParticipantTransferMailer.participant_transfer_in_notification(induction_record: induction_record).deliver_later
+    end
 
     def transfer_fip_participant_to_schools_programme
       Induction::TransferToSchoolsProgramme.call(
@@ -179,24 +233,34 @@ module Schools
       with_the_same_provider? && with_the_same_delivery_partner?
     end
 
-    def with_the_same_provider?
-      @school_cohort.default_induction_programme&.lead_provider == participant_lead_provider
+    def current_lead_provider
+      @school_cohort.default_induction_programme&.lead_provider
     end
 
-    def with_the_same_delivery_partner?
-      @school_cohort.default_induction_programme&.delivery_partner == participant_delivery_partner
+    def current_delivery_partner
+      @school_cohort.default_induction_programme&.delivery_partner
     end
 
     def with_same_provider_and_different_delivery_partner?
       with_the_same_provider? && !with_the_same_delivery_partner?
     end
 
+    # Target lead provider
     def participant_lead_provider
       latest_induction_record.induction_programme&.lead_provider
     end
 
+    # Target delivery partner
     def participant_delivery_partner
       latest_induction_record.induction_programme&.delivery_partner
+    end
+
+    def with_the_same_provider?
+      current_lead_provider == participant_lead_provider
+    end
+
+    def with_the_same_delivery_partner?
+      current_delivery_partner == participant_delivery_partner
     end
 
     def check_against_dqt?
