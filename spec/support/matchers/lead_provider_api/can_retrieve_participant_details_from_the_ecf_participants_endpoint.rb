@@ -26,11 +26,14 @@ module Support
         declarations_endpoint.has_participant_type? participant_type.to_s.downcase
 
         true
-      rescue Capybara::ElementNotFound
+      rescue Capybara::ElementNotFound => e
+        @error = e
         false
       end
 
       failure_message do |lead_provider_name|
+        return @error unless @error.nil?
+
         "'#{lead_provider_name}' Should have been able to retrieve the participant details for \"#{participant_name}\" within\n===\n#{@text}\n==="
       end
 

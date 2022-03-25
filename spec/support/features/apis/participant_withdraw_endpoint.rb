@@ -72,7 +72,7 @@ module APIs
       end
 
       value = @response.dig("attributes", attribute_name)
-      unless (expected_value.nil? && value.nil?) || value == expected_value.to_s
+      unless value == expected_value
         raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\" within \n===\n#{JSON.pretty_generate @response}\n===\n"
       end
 

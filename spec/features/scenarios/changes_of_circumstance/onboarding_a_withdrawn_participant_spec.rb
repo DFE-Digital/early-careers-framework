@@ -115,6 +115,28 @@ RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_s
 
         context "Then the Original Lead Provider" do
           subject(:original_lead_provider) { "Original Lead Provider" }
+          case scenario.see_original_details
+          when :ALL
+            it "should be able to see all participant details", :aggregate_failures do
+              expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
+              expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
+              expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
+              # expect(subject).to be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type, experimental: true
+              # expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status, experimental: true
+              # expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status, experimental: true
+            end
+          when :OBFUSCATED
+            it "should be able to see all the participant details obfuscated", :aggregate_failures do
+              # expect(subject).to be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant"
+              # expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
+              # expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
+            end
+          else
+            it "should not be able to see any of the participant details", :aggregate_failures do
+              expect(subject).to_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type
+              # expect(subject).to_not be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.participant_type, experimental: true
+            end
+          end
 
           it "should be able to see whether the participant is managed by them", :aggregate_failures do
             case scenario.see_original_details
@@ -126,7 +148,7 @@ RSpec.feature "Onboarding a withdrawn participant", type: :feature, end_to_end_s
               # expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status, experimental: true
               # expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status, experimental: true
             when :OBFUSCATED
-              # expect(subject).to be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "Original Lead Provider"
+              # expect(subject).to be_able_to_retrieve_the_obfuscated_details_of_the_participant_from_the_ecf_participants_endpoint "the Participant"
               # expect(subject).to be_able_to_retrieve_the_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_participant_status
               # expect(subject).to be_able_to_retrieve_the_training_status_of_the_participant_from_the_ecf_participants_endpoint "the Participant", scenario.prior_training_status
             else

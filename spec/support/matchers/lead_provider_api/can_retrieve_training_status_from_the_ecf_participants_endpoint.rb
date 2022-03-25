@@ -14,11 +14,7 @@ module Support
 
         @text = declarations_endpoint.response
 
-        declarations_endpoint.has_training_status? training_status
-
-        true
-      rescue Capybara::ElementNotFound
-        false
+        declarations_endpoint.has_training_status? training_status.to_s
       end
 
       failure_message do |lead_provider_name|

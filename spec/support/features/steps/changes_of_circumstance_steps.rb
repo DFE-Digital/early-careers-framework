@@ -77,34 +77,25 @@ module Steps
     end
 
     def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_name, declaration_type)
-      response = nil
-
-      participant = find_participant_profile participant_name
+      participant_profile = find_participant_profile participant_name
 
       case declaration_type
       when :started
-        timestamp = participant.schedule.milestones.first.start_date + 4.days
-        declaration_date = timestamp - 2.days
+        timestamp = participant_profile.schedule.milestones.first.start_date + 4.days
       when :retained_1
-        timestamp = participant.schedule.milestones.second.start_date + 4.days
-        declaration_date = timestamp - 2.days
+        timestamp = participant_profile.schedule.milestones.second.start_date + 4.days
       else
         puts "declaration type was actually #{declaration_type}"
       end
 
       travel_to(timestamp) do
-        declarations_endpoint = APIs::ParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
-        response = declarations_endpoint.post_training_declaration participant, declaration_type, declaration_date
-      end
+        declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+        declarations_endpoint.post_training_declaration participant_profile.user.id, declaration_type, timestamp - 2.days
 
-      unless !response.nil? &&
-          response["declaration_type"].to_sym == declaration_type &&
-          response["eligible_for_payment"] == true &&
-          response["voided"] == false &&
-          response["state"].to_sym == :eligible
-
-        text = JSON.pretty_generate(response)
-        raise "eligible training declaration '#{declaration_type}' for '#{participant_name}' by '#{lead_provider_name}' was not in the response\n===\n#{text}\n==="
+        declarations_endpoint.has_declaration_type? declaration_type.to_s
+        declarations_endpoint.has_eligible_for_payment? true
+        declarations_endpoint.has_voided? false
+        declarations_endpoint.has_state? "eligible"
       end
     end
 
@@ -112,20 +103,15 @@ module Steps
       participant_profile = find_participant_profile participant_name
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
-      text = nil
       travel_to(timestamp) do
         withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.new tokens[lead_provider_name]
         withdraw_endpoint.post_withdraw_notice participant_profile.user.id, "moved-school"
 
-        text = withdraw_endpoint.response
-
         withdraw_endpoint.responded_with_full_name? participant_name
         withdraw_endpoint.responded_with_obfuscated_email?
-        withdraw_endpoint.responded_with_status? :active
-        withdraw_endpoint.responded_with_training_status? :withdrawn
+        withdraw_endpoint.responded_with_status? "active"
+        withdraw_endpoint.responded_with_training_status? "withdrawn"
       end
-    rescue StandardError
-      raise "eligible withdraw notice for '#{participant_name}' by '#{lead_provider_name}' was not in the response\n===\n#{text}\n==="
     end
 
     def and_school_withdraws_participant(_sit_name, participant_name)

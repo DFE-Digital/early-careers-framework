@@ -72,7 +72,7 @@ module APIs
       @current_record = @response.select { |record| record["id"] == @current_id }.first
 
       if @current_record.nil?
-        raise Capybara::ElementNotFound, "Unable to find record for \"#{@current_id}\""
+        raise Capybara::ElementNotFound, "Unable to find record for \"#{@current_id}\" within \n===\n#{JSON.pretty_generate @response}\n===\n"
       end
     end
 
@@ -82,7 +82,7 @@ module APIs
       end
 
       value = @current_record.dig("attributes", attribute_name)
-      unless (expected_value.nil? && value.nil?) || value == expected_value.to_s
+      unless value == expected_value
         raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\" within \n===\n#{JSON.pretty_generate @response}\n===\n"
       end
 
