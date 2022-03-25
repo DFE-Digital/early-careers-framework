@@ -36,7 +36,7 @@ RSpec.shared_context "lead provider profiles and courses" do
       npq_application: npq_application,
       user: npq_application.user,
       teacher_profile: npq_application.user.teacher_profile,
-      schedule: Finance::Schedule::NPQLeadership.default,
+      schedule: create(:npq_specialist_schedule),
     )
   end
 end
