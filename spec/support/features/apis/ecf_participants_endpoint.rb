@@ -8,18 +8,14 @@ module APIs
     attr_reader :response
 
     def initialize(token, experimental)
-      @current_record = nil
-      @current_id = nil
-      call_participants_endpoint token, experimental
+      @token = token
+      @experimental = experimental
+      call_participants_endpoint
     end
 
     def get_participant(participant_id)
       @current_id = participant_id
       select_participant
-
-      if @current_record.nil?
-        raise Capybara::ElementNotFound, "Unable to find record for \"#{@current_id}\""
-      end
     end
 
     def has_full_name?(expected_value)
@@ -28,6 +24,10 @@ module APIs
 
     def has_email?(expected_value)
       has_attribute_value? "email", expected_value
+    end
+
+    def has_obfuscated_email?
+      has_attribute_value? "email", nil
     end
 
     def has_school_urn?(expected_value)
@@ -48,33 +48,42 @@ module APIs
 
   private
 
-    def call_participants_endpoint(token, experimental)
-      url = experimental ? "/api/v1/test_ecf_participants" : "/api/v1/participants/ecf"
+    def call_participants_endpoint
+      @current_record = nil
+      @current_id = nil
+      @response = nil
+
+      url = @experimental ? "/api/v1/test_ecf_participants" : "/api/v1/participants/ecf"
+      headers = {
+        "Authorization": "Bearer #{@token}",
+        "Content-type": "application/json",
+      }
       session = ActionDispatch::Integration::Session.new Rails.application
-      session.get url,
-                  headers: {
-                    "Authorization": "Bearer #{token}",
-                  }
+      session.get url, headers: headers
 
       @response = JSON.parse(session.response.body)["data"]
+      if @response.nil?
+        error = JSON.parse(session.response.body)
+        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+      end
     end
 
     def select_participant
       @current_record = @response.select { |record| record["id"] == @current_id }.first
+
+      if @current_record.nil?
+        raise Capybara::ElementNotFound, "Unable to find record for \"#{@current_id}\""
+      end
     end
 
     def has_attribute_value?(attribute_name, expected_value)
       if @current_record.nil?
-        raise "No record selected, Must call <APIs::ECFParticipantsEndpoint::select_participant> with a valid \"participant_id\" first"
+        raise "No record selected, Must call <APIs::ECFParticipantsEndpoint::get_participant> with a valid \"participant_id\" first"
       end
 
       value = @current_record.dig("attributes", attribute_name)
-      if value.nil?
-        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\""
-      end
-
-      unless value == expected_value.to_s
-        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\""
+      unless (expected_value.nil? && value.nil?) || value == expected_value.to_s
+        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\" within \n===\n#{JSON.pretty_generate @response}\n===\n"
       end
 
       true

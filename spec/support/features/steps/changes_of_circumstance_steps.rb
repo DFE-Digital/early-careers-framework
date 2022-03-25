@@ -109,25 +109,23 @@ module Steps
     end
 
     def and_lead_provider_withdraws_participant(lead_provider_name, participant_name)
-      response = nil
+      participant_profile = find_participant_profile participant_name
 
-      participant = find_participant_profile participant_name
-
-      timestamp = participant.schedule.milestones.first.start_date + 2.days
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
+      text = nil
       travel_to(timestamp) do
         withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.new tokens[lead_provider_name]
-        response = withdraw_endpoint.post_withdraw_notice participant
-      end
+        withdraw_endpoint.post_withdraw_notice participant_profile.user.id, "moved-school"
 
-      unless !response.nil? &&
-          response["full_name"] == participant.user.full_name &&
-          response["email"].nil? &&
-          response["status"].to_sym == :active &&
-          response["training_status"].to_sym == :withdrawn
+        text = withdraw_endpoint.response
 
-        text = JSON.pretty_generate(response)
-        raise "eligible withdraw notice for '#{participant_name}' by '#{lead_provider_name}' was not in the response\n===\n#{text}\n==="
+        withdraw_endpoint.responded_with_full_name? participant_name
+        withdraw_endpoint.responded_with_obfuscated_email?
+        withdraw_endpoint.responded_with_status? :active
+        withdraw_endpoint.responded_with_training_status? :withdrawn
       end
+    rescue StandardError
+      raise "eligible withdraw notice for '#{participant_name}' by '#{lead_provider_name}' was not in the response\n===\n#{text}\n==="
     end
 
     def and_school_withdraws_participant(_sit_name, participant_name)

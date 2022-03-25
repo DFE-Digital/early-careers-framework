@@ -9,18 +9,12 @@ module APIs
 
     def initialize
       @token = EngageAndLearnApiToken.create_with_random_token!
-      @current_record = nil
-      @current_id = nil
-      call_users_endpoint @token
+      call_users_endpoint
     end
 
     def get_user(user_id)
       @current_id = user_id
       select_user
-
-      if @current_record.nil?
-        raise Capybara::ElementNotFound, "Unable to find record for \"#{@current_id}\""
-      end
     end
 
     def has_full_name?(expected_value)
@@ -45,34 +39,43 @@ module APIs
 
   private
 
-    def call_users_endpoint(token)
+    def call_users_endpoint
+      @current_record = nil
+      @current_id = nil
+      @response = nil
+
       url = "/api/v1/ecf-users"
+      headers = {
+        user_agent: "Engage and Learn",
+        "Authorization": "Bearer #{@token}",
+        "Content-type": "application/json",
+      }
       session = ActionDispatch::Integration::Session.new Rails.application
-      session.get url,
-                  headers: {
-                    user_agent: "Engage and Learn",
-                    "Authorization": "Bearer #{token}",
-                  }
+      session.get url, headers: headers
 
       @response = JSON.parse(session.response.body)["data"]
+      if @response.nil?
+        error = JSON.parse(session.response.body)
+        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+      end
     end
 
     def select_user
       @current_record = @response.select { |record| record["id"] == @current_id }.first
+
+      if @current_record.nil?
+        raise Capybara::ElementNotFound, "Unable to find record for \"#{@current_id}\""
+      end
     end
 
     def has_attribute_value?(attribute_name, expected_value)
       if @current_record.nil?
-        raise "No record selected, Must call <APIs::ECFUsersEndpoint::select_user> with a valid \"user_id\" first"
+        raise "No record selected, Must call <APIs::ECFUsersEndpoint::get_user> with a valid \"participant_id\" first"
       end
 
       value = @current_record.dig("attributes", attribute_name)
-      if value.nil?
-        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\""
-      end
-
-      unless value == expected_value.to_s
-        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\""
+      unless (expected_value.nil? && value.nil?) || value == expected_value.to_s
+        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\" within \n===\n#{JSON.pretty_generate @response}\n===\n"
       end
 
       true

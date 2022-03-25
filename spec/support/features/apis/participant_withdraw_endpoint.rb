@@ -5,32 +5,56 @@ module APIs
     include Capybara::DSL
     include RSpec::Matchers
 
+    attr_reader :response
+
     def initialize(token)
       @token = token
-      @session = ActionDispatch::Integration::Session.new(Rails.application)
     end
 
-    def post_withdraw_notice(participant)
-      post_notice participant
+    def post_withdraw_notice(participant_id, reason_code)
+      @current_id = participant_id
+      post_request reason_code
+    end
+
+    def responded_with_full_name?(expected_value)
+      has_attribute_value? "full_name", expected_value
+    end
+
+    def responded_with_email?(expected_value)
+      has_attribute_value? "email", expected_value
+    end
+
+    def responded_with_obfuscated_email?
+      has_attribute_value? "email", nil
+    end
+
+    def responded_with_status?(expected_value)
+      has_attribute_value? "status", expected_value
+    end
+
+    def responded_with_training_status?(expected_value)
+      has_attribute_value? "training_status", expected_value
     end
 
   private
 
-    def post_notice(participant)
-      params = build_params({
-        reason: "moved-school",
-        course_identifier: "ecf-induction",
-      })
+    def post_request(reason_code)
+      @response = nil
 
-      @session.put "/api/v1/participants/#{participant.user.id}/withdraw",
-                   headers: {
-                     "Authorization": "Bearer #{@token}",
-                     "Content-type": "application/json",
-                   },
-                   params: params
+      url = "/api/v1/participants/#{@current_id}/withdraw"
+      params = build_params reason: reason_code, course_identifier: "ecf-induction"
+      headers = {
+        "Authorization": "Bearer #{@token}",
+        "Content-type": "application/json",
+      }
+      session = ActionDispatch::Integration::Session.new(Rails.application)
+      session.put url, headers: headers, params: params
 
-      data = JSON.parse(@session.response.body)["data"] || {}
-      data["attributes"] || {}
+      @response = JSON.parse(session.response.body)["data"]
+      if @response.nil?
+        error = JSON.parse(session.response.body)
+        raise "PUT request to <#{url}> failed due to \n===\n#{error}\n===\n"
+      end
     end
 
     def build_params(attributes)
@@ -40,6 +64,19 @@ module APIs
           attributes: attributes,
         },
       }.to_json
+    end
+
+    def has_attribute_value?(attribute_name, expected_value)
+      if @response.nil?
+        raise "No response found, Must call <APIs::ParticipantWithdrawEndpoint::post_withdraw_notice> with a valid \"participant_id\" and \"reason_code\" first"
+      end
+
+      value = @response.dig("attributes", attribute_name)
+      unless (expected_value.nil? && value.nil?) || value == expected_value.to_s
+        raise Capybara::ElementNotFound, "Unable to find attribute \"#{attribute_name}\" for \"#{@current_id}\" with value of \"#{expected_value}\" within \n===\n#{JSON.pretty_generate @response}\n===\n"
+      end
+
+      true
     end
   end
 end
