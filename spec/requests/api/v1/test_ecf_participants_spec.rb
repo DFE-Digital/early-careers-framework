@@ -121,6 +121,55 @@ RSpec.describe "Participants API", type: :request do
             expect(parsed_response["data"].size).to eql(1)
           end
         end
+
+        context "moving provider" do
+          let(:induction_record) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              training_status: "withdrawn",
+            )
+          end
+
+          let(:cpd_lead_provider2) { create(:cpd_lead_provider, :with_lead_provider) }
+          let(:lead_provider2) { cpd_lead_provider2.lead_provider }
+          let(:partnership2) { create(:partnership, lead_provider: lead_provider2) }
+          let(:induction_programme2) { create(:induction_programme, partnership: partnership2) }
+
+          let!(:induction_record2) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme2,
+              participant_profile: profile,
+              start_date: 1.week.ago,
+              training_status: "active",
+            )
+          end
+
+          context "as old provider" do
+            it "returns participant with nullified fields" do
+              get "/api/v1/test_ecf_participants"
+
+              expect(parsed_response["data"].size).to eql(1)
+              expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
+              expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
+            end
+          end
+
+          context "as new provider" do
+            let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider2, private_api_access: true) }
+            let(:bearer_token) { "Bearer #{token}" }
+
+            it "returns participant without nullification" do
+              get "/api/v1/test_ecf_participants"
+
+              expect(parsed_response["data"].size).to eql(1)
+              expect(parsed_response["data"][0]["attributes"]["email"]).to eql(identity.email)
+              expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
+            end
+          end
+        end
       end
     end
   end

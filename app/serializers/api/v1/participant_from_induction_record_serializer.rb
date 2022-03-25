@@ -11,7 +11,7 @@ module Api
       class << self
         def active_participant_attribute(attr, &blk)
           attribute attr do |induction_record, params|
-            if !induction_record.participant_profile.withdrawn_record? && !induction_record.participant_profile.training_status_withdrawn?
+            unless induction_record.training_status_withdrawn?
               if blk.parameters.count == 1
                 blk.call(induction_record)
               else
