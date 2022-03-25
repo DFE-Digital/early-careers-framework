@@ -22,7 +22,7 @@ module Finance
       output_payment[:per_participant]
     end
 
-    def total_declarations
+    def total_declarations(npq_lead_provider, contract)
       if statement.current?
         ParticipantDeclaration::NPQ
           .eligible_for_lead_provider(npq_lead_provider)
