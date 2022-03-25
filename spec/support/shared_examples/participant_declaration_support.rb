@@ -71,19 +71,19 @@ RSpec.shared_examples "a participant declaration service" do
     end
 
     it "raises ParameterMissing error" do
-      params = given_params.merge({ declaration_date: (cutoff_start_datetime - 1.day).rfc3339 })
+      params = given_params.merge({ declaration_date: (cutoff_start_datetime - 2.days).rfc3339 })
       expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 
   context "when at the milestone start" do
     before do
-      travel_to cutoff_start_datetime
+      travel_to cutoff_start_datetime + 2.days
     end
 
-    it "raises ParameterMissing error" do
-      params = given_params.merge({ declaration_date: cutoff_start_datetime.rfc3339 })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+    it "does not raise ParameterMissing error" do
+      params = given_params.merge({ declaration_date: (cutoff_start_datetime + 1.day).rfc3339 })
+      expect { described_class.call(params: params) }.not_to raise_error
     end
   end
 
@@ -99,24 +99,22 @@ RSpec.shared_examples "a participant declaration service" do
   end
 
   context "when at the milestone end" do
-    before do
-      travel_to cutoff_end_datetime
-    end
-
     it "does not raise ParameterMissing error" do
-      params = given_params.merge({ declaration_date: cutoff_end_datetime.rfc3339 })
-      expect { described_class.call(params: params) }.to_not raise_error
+      unless npq_profile.type == "ParticipantProfile::NPQ" # does not apply to NPQ or soft schedules
+        travel_to cutoff_end_datetime
+        params = given_params.merge({ declaration_date: cutoff_end_datetime.rfc3339 })
+        expect { described_class.call(params: params) }.to_not raise_error
+      end
     end
   end
 
   context "when after the milestone start" do
-    before do
-      travel_to cutoff_end_datetime + 1.day
-    end
-
     it "raises ParameterMissing error" do
-      params = given_params.merge({ declaration_date: (cutoff_end_datetime + 1.day).rfc3339 })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+      unless npq_profile.type == "ParticipantProfile::NPQ" # does not apply to NPQ or soft schedules
+        travel_to cutoff_end_datetime + 1.day
+        params = given_params.merge({ declaration_date: (cutoff_end_datetime + 1.day).rfc3339 })
+        expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+      end
     end
   end
 
