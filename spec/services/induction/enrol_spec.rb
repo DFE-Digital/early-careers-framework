@@ -40,16 +40,21 @@ RSpec.describe Induction::Enrol do
       end
     end
 
-    context "when a preferred identity is provided" do
-      let(:new_identity) { Identity::Create.call(user: teacher_profile.user, email: "newemail@example.com") }
+    context "when a preferred email is provided" do
+      let(:preferred_email) { "newemail@example.com" }
+
       let(:induction_record) do
         service.call(participant_profile: participant_profile,
                      induction_programme: induction_programme,
-                     preferred_identity: new_identity)
+                     preferred_email: preferred_email)
+      end
+
+      it "adds a new identity to the user" do
+        expect { induction_record }.to change { participant_profile.participant_identity.user.participant_identities.count }.by 1
       end
 
       it "sets the preferred identity" do
-        expect(induction_record.preferred_identity_id).to eq(new_identity.id)
+        expect(induction_record.preferred_identity.email).to eq(preferred_email)
       end
     end
   end

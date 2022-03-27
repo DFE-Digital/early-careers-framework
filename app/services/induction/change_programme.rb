@@ -8,7 +8,7 @@ class Induction::ChangeProgramme < BaseService
       Induction::Enrol.call(participant_profile: participant_profile,
                             induction_programme: new_induction_programme,
                             start_date: start_date,
-                            preferred_identity: preferred_identity)
+                            preferred_email: preferred_email)
     end
   end
 
@@ -31,7 +31,7 @@ private
     participant_profile.current_induction_record&.induction_programme
   end
 
-  def preferred_identity
-    current_induction_record&.preferred_identity || participant_profile.participant_identity
+  def preferred_email
+    current_induction_record&.preferred_identity&.email || participant_profile.participant_identity.email
   end
 end

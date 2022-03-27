@@ -11,15 +11,15 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
   let(:old_school_cohort) { create(:school_cohort, cohort: cohort, school: old_school, induction_programme_choice: "full_induction_programme") }
   let!(:delivery_partner) { create(:delivery_partner, name: "Amazing delivery partner") }
   let!(:lead_provider) { create(:lead_provider, name: "Big Provider Ltd") }
-  let(:induction_programme_one) { create(:induction_programme, :fip, school_cohort: school_cohort) }
-  let(:induction_programme_two) { create(:induction_programme, :fip, school_cohort: old_school_cohort) }
   let(:ect) { create(:ect_participant_profile, school_cohort: school_cohort, user: create(:user, full_name: "Darryn Binder")) }
-  let!(:induction_record) { create(:induction_record, induction_programme: induction_programme_two, participant_profile: ect) }
   let!(:ecf_participant_validation_data) { create(:ecf_participant_validation_data, full_name: ect.user.full_name, trn: "1001000", date_of_birth: Date.new(1990, 10, 24), participant_profile: ect) }
   let!(:school_cohort) { create(:school_cohort, cohort: cohort, school: school) }
   let!(:partnership) { create(:partnership, school: school, cohort: cohort, delivery_partner: delivery_partner, lead_provider: lead_provider) }
   let!(:old_partnership) { create(:partnership, school: old_school, cohort: cohort, delivery_partner: delivery_partner, lead_provider: lead_provider) }
-  let!(:current_induction_programme) { create(:induction_programme, :fip, school_cohort: old_school_cohort) }
+  let(:induction_programme_one) { create(:induction_programme, :fip, school_cohort: school_cohort, partnership: partnership) }
+  let(:induction_programme_two) { create(:induction_programme, :fip, school_cohort: old_school_cohort, partnership: old_partnership) }
+  let!(:induction_record) { Induction::Enrol.call(participant_profile: ect, induction_programme: induction_programme_two) }
+  # let!(:current_induction_programme) { create(:induction_programme, :fip, school_cohort: old_school_cohort) }
 
   subject { response }
 
@@ -201,7 +201,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/choose-mentor" do
     context "teacher is with matching lead provider and delivery partner" do
-      it "redirects to the schools current programme template" do
+      it "redirects to the check answers template" do
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/choose-mentor",
             params: { schools_transferring_participant_form: {
               full_name: ect.user.full_name,
@@ -209,7 +209,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
               date_of_birth: ecf_participant_validation_data.date_of_birth,
               mentor_id: "later",
             } }
-        expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/schools-current-programme"
+        expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/check-answers"
       end
     end
   end
@@ -278,7 +278,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
     context "teacher is with the same lead provider as new school but different delivery partner" do
       context "SIT selects for teacher to use the same delivery partner as the school" do
-        it "redirects to the choose delivery partner template" do
+        it "redirects to the check answers template" do
           old_partnership.update!(delivery_partner: create(:delivery_partner))
 
           put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/schools-current-programme",
@@ -289,36 +289,9 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
                 schools_current_programme_choice: "yes",
               } }
 
-          expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/choose-delivery-partner"
+          expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/check-answers"
         end
       end
-    end
-  end
-
-  describe "GET /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/choose-delivery-partner" do
-    it "renders the choose delivery partner template" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/choose-delivery-partner",
-          params: { schools_transferring_participant_form: {
-            full_name: ect.user.full_name,
-            trn: ecf_participant_validation_data.trn,
-            date_of_birth: ecf_participant_validation_data.date_of_birth,
-          } }
-
-      expect(subject).to render_template "schools/transferring_participants/choose_delivery_partner"
-    end
-  end
-
-  describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/choose-delivery-partner" do
-    it "renders the choose delivery partner template" do
-      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/choose-delivery-partner",
-          params: { schools_transferring_participant_form: {
-            full_name: ect.user.full_name,
-            trn: ecf_participant_validation_data.trn,
-            date_of_birth: ecf_participant_validation_data.date_of_birth,
-            delivery_partner_choice: "school",
-          } }
-
-      expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/check-answers"
     end
   end
 

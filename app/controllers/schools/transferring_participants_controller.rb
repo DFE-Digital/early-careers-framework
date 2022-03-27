@@ -52,8 +52,8 @@ module Schools
     def email
       if participant_profile.ect?
         store_form_redirect_to_next_step(:choose_mentor)
-      elsif with_the_same_provider?
-        store_form_redirect_to_next_step(:schools_current_programme)
+      elsif matching_lead_provider_and_delivery_partner?
+        store_form_redirect_to_next_step(:check_answers)
       else
         store_form_redirect_to_next_step(:teachers_current_programme)
       end
@@ -110,6 +110,8 @@ module Schools
 
     def cannot_add; end
 
+    helper_method :with_same_provider_and_different_delivery_partner?
+
   private
 
     def transfer_fip_participant_to_schools_programme
@@ -123,7 +125,7 @@ module Schools
     end
 
     def transfer_fip_participant_and_continue_existing_programme
-      Induction::TransferAndContinueExistingFIP.call(
+      Induction::TransferAndContinueExistingFip.call(
         school_cohort: @school_cohort,
         participant_profile: participant_profile,
         email: @transferring_participant_form.email,
@@ -183,6 +185,10 @@ module Schools
 
     def with_the_same_delivery_partner?
       @school_cohort.default_induction_programme&.delivery_partner == participant_delivery_partner
+    end
+
+    def with_same_provider_and_different_delivery_partner?
+      with_the_same_provider? && !with_the_same_delivery_partner?
     end
 
     def participant_lead_provider
