@@ -13,8 +13,8 @@
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,
         width: "three-quarters",
-        legend: { text: "Your date of birth", class: "govuk-visually-hidden" },
-        hint: { text: "For example 14 7 1990"} %>
+        legend: { text: title, class: "govuk-visually-hidden" },
+        hint: { text: "For example, 14 7 1990"} %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

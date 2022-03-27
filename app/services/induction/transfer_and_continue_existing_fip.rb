@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Induction::TransferAndContinueExistingFIP < BaseService
+class Induction::TransferAndContinueExistingFip < BaseService
   def call
     check_fip_induction_and_different_school!
 
@@ -18,7 +18,7 @@ class Induction::TransferAndContinueExistingFIP < BaseService
       Induction::Enrol.call(participant_profile: participant_profile,
                             induction_programme: programme,
                             start_date: start_date,
-                            preferred_identity: preferred_identity,
+                            preferred_email: email,
                             mentor_profile: mentor_profile)
     end
   end
@@ -58,15 +58,6 @@ private
 
   def participant_delivery_partner
     current_induction_programme&.delivery_partner
-  end
-
-  def preferred_identity
-    if email.present?
-      Identity::Create.call(user: participant_profile.participant_identity.user,
-                            email: email)
-    else
-      participant_profile.participant_identity
-    end
   end
 
   def check_fip_induction_and_different_school!

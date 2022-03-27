@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::TransferAndContinueExistingFIP do
+RSpec.describe Induction::TransferAndContinueExistingFip do
   describe "#call" do
     let(:school_1) { create(:school, name: "Transferring From School") }
     let(:school_2) { create(:school, name: "Transferring To School") }
@@ -59,7 +59,7 @@ RSpec.describe Induction::TransferAndContinueExistingFIP do
       before do
         service_call
       end
-      
+
       it "adds the new relationship to the new induction programme" do
         expect(new_induction_programme.partnership).to eq new_partnership
       end

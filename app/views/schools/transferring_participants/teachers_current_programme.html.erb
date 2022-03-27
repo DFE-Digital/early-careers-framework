@@ -11,10 +11,16 @@
 
   <h1 class="govuk-heading-xl"><%= title %></h1>
 
-  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-3">Lead provider</p>
-  <p class="govuk-!-margin-top-3"><%= @latest_induction_record.induction_programme.lead_provider&.name %></p>
-  <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-3 govuk-!-margin-left-0">Delivery partner</p>
-  <p class="govuk-!-margin-top-3"><%= @latest_induction_record.induction_programme.delivery_partner&.name %></p>
+  <% if with_same_provider_and_different_delivery_partner? %>
+    <p class="govuk-body">This is the same lead provider, but a different delivery partner to other ECT’s and mentors at your school.</p>
+  <% else %>
+    <p class="govuk-body">This is a different programme to other ECT’s and mentors at your school.</p>
+  <% end %>
+
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Lead provider</h2>
+  <p class="govuk-body govuk-!-margin-bottom-1"><%= @latest_induction_record.induction_programme.lead_provider&.name %></p>
+  <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery partner</h2>
+  <p class="govuk-body"><%= @latest_induction_record.induction_programme.delivery_partner&.name %></p>
 
     <%= form_for @transferring_participant_form, url: { action: :teachers_current_programme }, method: :put do |f| %>
       <%= f.govuk_collection_radio_buttons(

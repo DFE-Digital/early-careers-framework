@@ -17,17 +17,23 @@ module Schools
         add_participant_form.assign_attributes(type: type_param || who_to_add_param)
         store_form_in_session
 
-        case add_participant_form.type
-        when :self
+        if FeatureFlag.active?(:change_of_circumstances)
+          case add_participant_form.type
+          when :self
+            redirect_to action: :show, step: :yourself
+          when :teacher
+            redirect_to action: :show, step: :who
+          when :joining
+            redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year)
+          when :ect
+            redirect_to action: :show, step: :name
+          when :mentor
+            redirect_to action: :show, step: :name
+          else
+            redirect_to action: :show, step: :started
+          end
+        elsif add_participant_form.type == :self
           redirect_to action: :show, step: :yourself
-        when :teacher
-          redirect_to action: :show, step: :who
-        when :joining
-          redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year)
-        when :ect
-          redirect_to action: :show, step: :name
-        when :mentor
-          redirect_to action: :show, step: :name
         else
           redirect_to action: :show, step: :started
         end

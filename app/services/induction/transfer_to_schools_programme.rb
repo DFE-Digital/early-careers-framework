@@ -13,19 +13,19 @@ class Induction::TransferToSchoolsProgramme < BaseService
       Induction::Enrol.call(participant_profile: participant_profile,
                             induction_programme: induction_programme,
                             start_date: start_date,
-                            preferred_identity: preferred_identity,
+                            preferred_email: email,
                             mentor_profile: mentor_profile)
     end
   end
 
 private
 
-  attr_reader :participant_profile, :induction_programme, :preferred_identity, :start_date, :end_date, :mentor_profile
+  attr_reader :participant_profile, :induction_programme, :email, :start_date, :end_date, :mentor_profile
 
-  def initialize(participant_profile:, induction_programme:, preferred_identity: nil, start_date: Time.zone.now, end_date: nil, mentor_profile: nil)
+  def initialize(participant_profile:, induction_programme:, email: nil, start_date: Time.zone.now, end_date: nil, mentor_profile: nil)
     @participant_profile = participant_profile
     @induction_programme = induction_programme
-    @preferred_identity = preferred_identity
+    @email = email
     @start_date = start_date
     @end_date = end_date || start_date
     @mentor_profile = mentor_profile

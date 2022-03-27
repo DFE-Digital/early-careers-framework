@@ -18,6 +18,7 @@ module ManageTrainingSteps
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
@@ -33,6 +34,7 @@ module ManageTrainingSteps
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
     @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
@@ -104,89 +106,89 @@ module ManageTrainingSteps
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
     teacher_profile = create(:teacher_profile, user: user)
     @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @participant_profile_ect)
+    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_mentor
     user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
     teacher_profile = create(:teacher_profile, user: user)
     @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @participant_profile_mentor)
+    Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
     user = create(:user, full_name: "Eligible With-mentor")
     teacher_profile = create(:teacher_profile, user: user)
     @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @eligible_ect_with_mentor)
+    Induction::Enrol.call(participant_profile: @eligible_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect_without_mentor
     user = create(:user, full_name: "Eligible Without-mentor")
     teacher_profile = create(:teacher_profile, user: user)
     @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @eligible_ect_without_mentor)
+    Induction::Enrol.call(participant_profile: @eligible_ect_without_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect
     @eligible_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible ect"), school_cohort: @school_cohort)
-    @induction_record = create(:induction_record, induction_programme: @induction_programme, participant_profile: @eligible_ect)
+    @induction_record = Induction::Enrol.call(participant_profile: @eligible_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ineligible_ect
     @ineligible_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible ect"), school_cohort: @school_cohort)
     @ineligible_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "active_flags")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @ineligible_ect)
+    Induction::Enrol.call(participant_profile: @ineligible_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ineligible_ect_without_mentor
     @ineligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible Without-mentor"), school_cohort: @school_cohort)
     @ineligible_ect_without_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @ineligible_ect_without_mentor)
+    Induction::Enrol.call(participant_profile: @ineligible_ect_without_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_mentor
     @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible mentor"), school_cohort: @school_cohort, start_term: "summer_2022")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @eligible_mentor)
+    Induction::Enrol.call(participant_profile: @eligible_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ineligible_ect_with_mentor
     @ineligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible With-mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     @ineligible_ect_with_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @ineligible_ect_with_mentor)
+    Induction::Enrol.call(participant_profile: @ineligible_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ineligible_mentor
     @ineligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible mentor"), school_cohort: @school_cohort)
     @ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @ineligible_mentor)
+    Induction::Enrol.call(participant_profile: @ineligible_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_contacted_for_info_ect_with_mentor
     @contacted_for_info_ect_with_mentor = create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI With-mentor"), mentor_profile_id: @participant_profile_mentor.id, school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @contacted_for_info_ect_with_mentor)
+    Induction::Enrol.call(participant_profile: @contacted_for_info_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ero_mentor
     @ero_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "ero mentor"), school_cohort: @school_cohort)
     @ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @ero_mentor)
+    Induction::Enrol.call(participant_profile: @ero_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_contacted_for_info_ect_without_mentor
     @contacted_for_info_ect_without_mentor = create(:ect_participant_profile, :email_bounced, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Without-mentor"), school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @contacted_for_info_ect_without_mentor)
+    Induction::Enrol.call(participant_profile: @contacted_for_info_ect_without_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ect_contacted_for_info
     @contacted_for_info_ect = create(:ect_participant_profile, request_for_details_sent_at: 5.days.ago, school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @contacted_for_info_ect)
+    Induction::Enrol.call(participant_profile: @contacted_for_info_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_ect_whose_details_are_being_checked
     @details_being_checked_ect = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: @school_cohort)
     @details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @details_being_checked_ect)
+    Induction::Enrol.call(participant_profile: @details_being_checked_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_transferring_in_participant
@@ -287,7 +289,7 @@ module ManageTrainingSteps
 
   def and_i_have_added_a_contacted_for_info_mentor
     @contacted_for_info_mentor = create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, user: create(:user, full_name: "CFI Mentor"), school_cohort: @school_cohort)
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @contacted_for_info_mentor)
+    Induction::Enrol.call(participant_profile: @contacted_for_info_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_am_signed_in_as_an_induction_coordinator_for_multiple_schools
@@ -315,19 +317,19 @@ module ManageTrainingSteps
   def and_i_have_added_a_details_being_checked_ect_with_mentor
     @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, start_term: "Spring 2022")
     @details_being_checked_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @details_being_checked_ect_with_mentor)
+    Induction::Enrol.call(participant_profile: @details_being_checked_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_details_being_checked_ect_without_mentor
     @details_being_checked_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Without-Mentor"), school_cohort: @school_cohort)
     @details_being_checked_ect_without_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @details_being_checked_ect_without_mentor)
+    Induction::Enrol.call(participant_profile: @details_being_checked_ect_without_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_details_being_checked_mentor
     @details_being_checked_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Mentor"), school_cohort: @school_cohort)
     @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    create(:induction_record, induction_programme: @induction_programme, participant_profile: @details_being_checked_mentor)
+    Induction::Enrol.call(participant_profile: @details_being_checked_mentor, induction_programme: @induction_programme)
   end
 
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
@@ -488,9 +490,13 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_your_ect_and_mentors_page
     expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-    expect(page).to have_text("Add a new ECT")
-    expect(page).to have_text("Add a new mentor")
-    expect(page).to have_text("Add yourself as a mentor")
+    if FeatureFlag.active?(:change_of_circumstances)
+      expect(page).to have_link("Add an ECT or mentor")
+    else
+      expect(page).to have_link("Add a new ECT")
+      expect(page).to have_link("Add a new mentor")
+    end
+    expect(page).to have_link("Add yourself as a mentor")
   end
 
   def then_i_am_taken_to_are_you_sure_page

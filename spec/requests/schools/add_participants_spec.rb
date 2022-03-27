@@ -25,7 +25,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     end
   end
 
-  describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add/who" do
+  describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active" } do
     context "when session has not been set up with the form" do
       before do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who"
