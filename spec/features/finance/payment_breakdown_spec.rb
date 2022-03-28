@@ -58,15 +58,12 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     then_i_should_see_the_correct_output_fees
     then_i_should_see_the_correct_uplift_fee
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (eligible)")
 
     when_i_click_on_view_contract_link
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named("Contract breakdown for an ECF provider")
 
     click_link("Back")
     then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Payment breakdown for an ECF provider (latest)")
 
     click_link("November 2021")
     click_link("View voided declarations")
