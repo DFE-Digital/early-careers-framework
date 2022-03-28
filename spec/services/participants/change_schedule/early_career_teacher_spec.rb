@@ -40,7 +40,24 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
       let(:school_cohort) { create(:school_cohort) }
       let(:school) { school_cohort.school }
       let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, cohort: school_cohort.cohort) }
-      let(:schedule) { create(:ecf_schedule) }
+      let(:original_schedule) { profile.schedule }
+      let(:schedule) { create(:ecf_schedule, schedule_identifier: "new-schedule") }
+      let!(:induction_record) do
+        create(
+          :induction_record,
+          participant_profile: profile,
+          schedule: original_schedule,
+          induction_programme: induction_programme,
+        )
+      end
+      let(:induction_programme) do
+        create(
+          :induction_programme,
+          :fip,
+          school_cohort: school_cohort,
+          partnership: partnership,
+        )
+      end
 
       subject do
         described_class.new(params: {
@@ -53,6 +70,14 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
 
       it "should not have an error" do
         expect { subject.call }.not_to raise_error
+      end
+
+      it "updates the profile#schedule" do
+        expect { subject.call }.to change { profile.reload.schedule }.from(original_schedule).to(schedule)
+      end
+
+      it "updates induction_record#schedule" do
+        expect { subject.call }.to change { induction_record.reload.schedule }.from(original_schedule).to(schedule)
       end
     end
 
