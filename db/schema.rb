@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_23_175037) do
+ActiveRecord::Schema.define(version: 2022_03_28_115143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -895,7 +895,6 @@ ActiveRecord::Schema.define(version: 2022_03_23_175037) do
   add_foreign_key "api_requests", "cpd_lead_providers"
   add_foreign_key "api_tokens", "cpd_lead_providers"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
-  add_foreign_key "call_off_contracts", "cohorts"
   add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"
@@ -926,7 +925,6 @@ ActiveRecord::Schema.define(version: 2022_03_23_175037) do
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
   add_foreign_key "npq_applications", "participant_identities"
-  add_foreign_key "npq_contracts", "cohorts"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
@@ -966,7 +964,6 @@ ActiveRecord::Schema.define(version: 2022_03_23_175037) do
   add_foreign_key "school_local_authority_districts", "local_authority_districts"
   add_foreign_key "school_local_authority_districts", "schools"
   add_foreign_key "schools", "networks"
-  add_foreign_key "statements", "cohorts"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"
 end

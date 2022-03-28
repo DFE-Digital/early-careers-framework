@@ -98,7 +98,7 @@ private
   end
 
   def multiple_ineligible_declarations_are_submitted_jan_statement
-    participant_profiles = create_list(:ect_participant_profile, 3, school_cohort: school_cohort, cohort: cohort)
+    participant_profiles = create_list(:ect_participant_profile, 3, school_cohort: school_cohort, cohort: contract.cohort)
     participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     participant_profiles.map { |participant| create_ineligible_declarations_jan(participant) }
