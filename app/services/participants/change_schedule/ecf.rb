@@ -30,6 +30,8 @@ module Participants
         ActiveRecord::Base.transaction do
           ParticipantProfileSchedule.create!(participant_profile: user_profile, schedule: schedule)
           user_profile.update_schedule!(schedule)
+
+          relevant_induction_record.update!(schedule: schedule) if relevant_induction_record
         end
 
         user_profile
@@ -38,6 +40,19 @@ module Participants
     private
 
       attr_reader :schedule_identifier, :cohort_year
+
+      def relevant_induction_record
+        user_profile
+          .induction_records
+          .joins(induction_programme: { partnership: [:lead_provider] })
+          .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
+          .order(start_date: :desc)
+          .first
+      end
+
+      def lead_provider
+        cpd_lead_provider.lead_provider
+      end
 
       def participant_profile_state
         user_profile&.participant_profile_state
