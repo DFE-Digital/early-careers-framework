@@ -22,7 +22,7 @@
 4. Run `mkdir log && touch log/mail.log`
 5. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
 6. Run `bundle exec rails server` to launch the app on http://localhost:3000
-7. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
+7. Run `./bin/webpacker-dev-server` in a separate shell for faster compilation of assets
 8. For most work, you will need to seed the database with `rails db:seed`. For school data, see [Importing School data](#importing-school-data)
 
 ### With docker
