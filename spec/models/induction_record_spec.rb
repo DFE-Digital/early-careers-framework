@@ -8,6 +8,9 @@ RSpec.describe InductionRecord, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:induction_programme) }
     it { is_expected.to belong_to(:participant_profile) }
+    it { is_expected.to belong_to(:schedule) }
+    it { is_expected.to belong_to(:preferred_identity).optional }
+    it { is_expected.to belong_to(:mentor_profile).optional }
   end
 
   describe "validations" do

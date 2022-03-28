@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
-  include FinanceHelper
+  include Finance::NPQPaymentsHelper
+
   let(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
   let(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Lead Provider") }
@@ -31,6 +32,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     and_choose_to_see_npq_payment_breakdown
     and_i_select_an_npq_lead_provider
 
+    then_i_should_see_correct_statement_summary
     then_i_should_see_correct_course_summary
     then_i_should_see_correct_output_payment_breakdown
     then_i_should_see_correct_service_fee_payment_breakdown
@@ -98,6 +100,13 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
         .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_voided!)
 
+      create_list(:user, 2)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
+        .map(&JSON.method(:parse))
+        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
+        .each(&:make_ineligible!)
+
       create_list(:user, 5)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
@@ -108,19 +117,52 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
 
     ParticipantDeclaration::NPQ
-      .where(state: "voided", cpd_lead_provider: cpd_lead_provider)
+      .where(state: %w[ineligible voided], cpd_lead_provider: cpd_lead_provider)
       .update_all(statement_id: statement.id) # voided payable
     ParticipantDeclaration::NPQ
       .where(state: %w[eligible payable], cpd_lead_provider: cpd_lead_provider)
       .update_all(statement_id: statement.id)
   end
 
+  def then_i_should_see_correct_statement_summary
+    then_i_should_see_correct_overall_payments
+    then_i_should_see_correct_cut_off_date
+    then_i_should_see_correct_overall_declarations
+  end
+
+  def then_i_should_see_correct_overall_payments
+    within(".app-application__panel__summary") do
+      expect(page).to have_content("Output payment #{number_to_pounds total_output_payment}")
+      expect(page).to have_content("Service fee #{number_to_pounds total_service_fees_monthly}")
+      expect(page).to have_content("VAT #{number_to_pounds overall_vat}")
+    end
+  end
+
+  def then_i_should_see_correct_cut_off_date
+    within(".app-application__panel__summary") do
+      expect(page).to have_content(statement.deadline_date.to_s(:govuk))
+    end
+  end
+
+  def then_i_should_see_correct_overall_declarations
+    within(".app-application__panel__summary") do
+      expect(page).to have_content("Total starts")
+      expect(page).to have_content(total_starts)
+      expect(page).to have_content("Total retained")
+      expect(page).to have_content(total_retained)
+      expect(page).to have_content("Total completed")
+      expect(page).to have_content(total_completed)
+      expect(page).to have_content("Total voids")
+      expect(page).to have_content(total_voided)
+    end
+  end
+
   def then_i_should_see_correct_output_payment_breakdown
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: current_trainees)
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(payment_per_trainee))
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(total))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(output_payment_per_participant))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(output_payment_subtotal))
     end
   end
 
@@ -143,13 +185,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       expect(page).to have_content("Started")
       expect(page).to have_content(total_participants_for(npq_specialist_schedule.milestones.first))
       expect(page).to have_content("Total declarations")
-      expect(page).to have_content(current_trainees)
-    end
-  end
-
-  def then_i_should_have_the_correct_payment_breakdown_per_npq_lead_provider
-    within first(".app-application__card") do
-      expect(page).to have_content("Started")
+      expect(page).to have_content(total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
     end
   end
 
@@ -169,8 +205,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Service fee")
       expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: npq_leading_behaviour_culture_contract.recruitment_target)
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(service_fee_payment_per_trainee))
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(service_fee_total))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(service_fees_per_participant))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(monthly_service_fees))
     end
   end
 
@@ -196,51 +232,51 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
   end
 
-  def expected_service_fee_payment(npq_contract)
-    npq_contract.recruitment_target * expected_service_fee_portion_per_participant(npq_contract)
-  end
-
-  def participant_per_declaration_type
-    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).where.not(state: :voided).group(:declaration_type).count
+  def participants_per_declaration_type
+    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.group(:declaration_type).count
   end
 
   def total_participants_for(milestone)
-    participant_per_declaration_type.fetch(milestone.declaration_type, 0)
+    participants_per_declaration_type.fetch(milestone.declaration_type, 0)
   end
 
-  def current_trainees
-    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count
-  end
-
-  def total
-    output_payments[:subtotal]
-  end
-
-  def payment_per_trainee
-    output_payments[:per_participant]
-  end
-
-  def output_payments
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: statement.participant_declarations.where(course_identifier: npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count)
+  def output_payment
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
   end
 
   def service_fees
     PaymentCalculator::NPQ::ServiceFees.call(contract: npq_leading_behaviour_culture_contract)
   end
 
-  def service_fee_total
-    service_fees[:monthly]
+  def contracts
+    npq_lead_provider.npq_contracts
   end
 
-  def service_fee_payment_per_trainee
-    service_fees[:per_participant]
+  def output_payment_per_contract
+    contracts.map { |contract| PaymentCalculator::NPQ::OutputPayment.call(contract: contract, total_participants: statement_declarations_per_contract(contract)) }
   end
 
-  def course_total
-    course_payment
+  def service_fees_per_contract
+    contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract: contract) }.compact
   end
 
-  def course_payment
-    service_fee_total + total
+  def total_service_fees_monthly
+    service_fees_per_contract.sum { |service_fee| service_fee[:monthly] }
+  end
+
+  def total_output_payment
+    output_payment_per_contract.sum { |output_payment| output_payment[:subtotal] }
+  end
+
+  def total_payment
+    total_service_fees_monthly + total_output_payment
+  end
+
+  def overall_vat
+    total_payment * (npq_lead_provider.vat_chargeable ? 0.2 : 0.0)
+  end
+
+  def overall_total
+    total_payment + overall_vat
   end
 end

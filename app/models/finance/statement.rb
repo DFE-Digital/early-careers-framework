@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class Finance::Statement < ApplicationRecord
-  include FinanceHelper
+  include Finance::ECFPaymentsHelper
 
   self.table_name = "statements"
 
   belongs_to :cpd_lead_provider
-
+  belongs_to :cohort, optional: true
   has_many :participant_declarations
   scope :payable, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,  -> { where("payment_date < ?", Date.current) }

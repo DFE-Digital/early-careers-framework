@@ -26,7 +26,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 explode: true,
                 required: false,
                 description: "Refine NPQ participants to return.",
-                example: { updated_since: "2020-11-13T11:21:55Z" }
+                example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       response "200", "A list of NPQ enrollments" do
         schema({ "$ref": "#/components/schemas/MultipleNPQEnrollmentsCsvResponse" }, content_type: "text/csv")

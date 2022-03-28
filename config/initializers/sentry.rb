@@ -28,6 +28,8 @@ Sentry.init do |config|
       case transaction_name
       when /check/
         0.0 # ignore healthcheck requests
+      when /test_ecf_participants/
+        1.0
       else
         0.01
       end

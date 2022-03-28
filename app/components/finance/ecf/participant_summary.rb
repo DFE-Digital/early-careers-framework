@@ -3,7 +3,7 @@
 module Finance
   module ECF
     class ParticipantSummary < BaseComponent
-      include FinanceHelper
+      include ECFPaymentsHelper
       attr_reader :breakdown_started_summary, :breakdown_retained_1_summary
 
       def initialize(breakdown_started_summary:, breakdown_retained_1_summary:)

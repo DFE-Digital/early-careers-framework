@@ -26,7 +26,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 explode: true,
                 required: false,
                 description: "Refine NPQ applications to return.",
-                example: { updated_since: "2020-11-13T11:21:55Z" }
+                example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       parameter name: :page,
                 in: :query,
@@ -37,7 +37,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 style: :deepObject,
                 explode: true,
                 required: false,
-                example: { page: 1, per_page: 5 },
+                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of NPQ applications."
 
       response "200", "A list of NPQ applications" do
@@ -72,7 +72,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 explode: true,
                 required: false,
                 description: "Refine NPQ applications to return.",
-                example: { updated_since: "2020-11-13T11:21:55Z" }
+                example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       response "200", "A CSV file of NPQ application" do
         schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse" }, content_type: "text/csv")

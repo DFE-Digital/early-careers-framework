@@ -35,13 +35,59 @@ module Api
           let(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, mentor_profile: mentor_profile) }
 
           it "outputs correctly formatted serialized Mentors" do
-            expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":null,\"mentor_id\":null,\"school_urn\":null,\"participant_type\":null,\"cohort\":null,\"status\":\"withdrawn\",\"teacher_reference_number\":null,\"teacher_reference_number_validated\":null,\"eligible_for_funding\":null,\"pupil_premium_uplift\":null,\"sparsity_uplift\":null,\"training_status\":null,\"schedule_identifier\":null,\"updated_at\":\"#{mentor.updated_at.rfc3339}\"}}}"
-            expect(ParticipantSerializer.new(mentor_profile).serializable_hash.to_json).to eq expected_json_string
+            expected_json = {
+              data: {
+                id: mentor_profile.user.id,
+                type: "participant",
+                attributes: {
+                  email: nil,
+                  full_name: mentor_profile.user.full_name,
+                  mentor_id: nil,
+                  school_urn: mentor_profile.school.urn,
+                  participant_type: mentor_profile.participant_type,
+                  cohort: mentor_profile.cohort.start_year.to_s,
+                  status: "withdrawn",
+                  teacher_reference_number: mentor_profile.teacher_profile.trn,
+                  teacher_reference_number_validated: false,
+                  eligible_for_funding: nil,
+                  pupil_premium_uplift: mentor_profile.pupil_premium_uplift,
+                  sparsity_uplift: mentor_profile.sparsity_uplift,
+                  training_status: mentor_profile.training_status,
+                  schedule_identifier: mentor_profile.schedule.schedule_identifier,
+                  updated_at: mentor_profile.reload.updated_at.rfc3339,
+                },
+              },
+            }.to_json
+
+            expect(ParticipantSerializer.new(mentor_profile).serializable_hash.to_json).to eql(expected_json)
           end
 
           it "outputs correctly formatted serialized ECTs" do
-            expected_json_string = "{\"data\":{\"id\":\"#{ect_profile.user_id}\",\"type\":\"participant\",\"attributes\":{\"email\":null,\"full_name\":null,\"mentor_id\":null,\"school_urn\":null,\"participant_type\":null,\"cohort\":null,\"status\":\"withdrawn\",\"teacher_reference_number\":null,\"teacher_reference_number_validated\":null,\"eligible_for_funding\":null,\"pupil_premium_uplift\":null,\"sparsity_uplift\":null,\"training_status\":null,\"schedule_identifier\":null,\"updated_at\":\"#{ect.updated_at.rfc3339}\"}}}"
-            expect(ParticipantSerializer.new(ect_profile).serializable_hash.to_json).to eq expected_json_string
+            expected_json = {
+              data: {
+                id: ect_profile.user.id,
+                type: "participant",
+                attributes: {
+                  email: nil,
+                  full_name: ect_profile.user.full_name,
+                  mentor_id: ect_profile.mentor.id,
+                  school_urn: ect_profile.school.urn,
+                  participant_type: ect_profile.participant_type,
+                  cohort: ect_profile.cohort.start_year.to_s,
+                  status: "withdrawn",
+                  teacher_reference_number: ect_profile.teacher_profile.trn,
+                  teacher_reference_number_validated: false,
+                  eligible_for_funding: nil,
+                  pupil_premium_uplift: ect_profile.pupil_premium_uplift,
+                  sparsity_uplift: ect_profile.sparsity_uplift,
+                  training_status: ect_profile.training_status,
+                  schedule_identifier: ect_profile.schedule.schedule_identifier,
+                  updated_at: ect_profile.updated_at.rfc3339,
+                },
+              },
+            }.to_json
+
+            expect(ParticipantSerializer.new(ect_profile).serializable_hash.to_json).to eql(expected_json)
           end
         end
 
@@ -261,6 +307,16 @@ module Api
                 expect(result[:data][:attributes][:sparsity_uplift]).to be false
               end
             end
+          end
+        end
+
+        context "when training_status is withdrawn" do
+          subject { ParticipantSerializer.new(ect_profile) }
+
+          let(:ect_profile) { create(:ect_participant_profile, training_status: "withdrawn") }
+
+          it "nullifies email" do
+            expect(subject.serializable_hash[:data][:attributes][:email]).to be_nil
           end
         end
       end

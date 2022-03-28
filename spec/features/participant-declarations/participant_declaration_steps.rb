@@ -136,10 +136,6 @@ module ParticipantDeclarationSteps
     @declaration_date = @npq_application.reload.profile.schedule.milestones.first.start_date - 1.day
   end
 
-  def and_the_npq_declaration_date_is_late
-    @declaration_date = @npq_application.reload.profile.schedule.milestones.first.milestone_date + 1.day
-  end
-
   def and_the_ect_declaration_date_is_early
     @declaration_date = @ect_profile.schedule.milestones.first.start_date - 1.day
   end

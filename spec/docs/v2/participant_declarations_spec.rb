@@ -111,10 +111,10 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
                 explode: true,
                 required: false,
                 description: "Refine participant declarations to return.",
-                example: {
+                example: CGI.unescape({
                   participant_id: "ab3a7848-1208-7679-942a-b4a70eed400a",
                   updated_since: "2020-11-13T11:21:55Z",
-                }
+                }.to_param)
 
       parameter name: :page,
                 in: :query,
@@ -125,7 +125,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
                 style: :deepObject,
                 explode: true,
                 required: false,
-                example: { page: 1, per_page: 5 },
+                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of participant declarations."
 
       response "200", "A list of participant declarations" do

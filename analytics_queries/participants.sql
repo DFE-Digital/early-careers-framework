@@ -12,6 +12,7 @@ SELECT u.id                                                    as participant_id
        c.start_year                                            as cohort,
        pp.status                                               as status,
        pp.training_status                                      as training_status,
+       pps.reason                                              as training_status_reason,
        s.name                                                  as schedule,
        s.schedule_identifier                                   as schedule_identifier,
        tp.trn                                                  as trn,
@@ -32,5 +33,8 @@ FROM participant_profiles pp
          JOIN users u on tp.user_id = u.id
          LEFT OUTER JOIN ecf_participant_validation_data epvd on pp.id = epvd.participant_profile_id
          LEFT OUTER JOIN ecf_participant_eligibilities epe on pp.id = epe.participant_profile_id
+         LEFT OUTER JOIN participant_profile_states pps on pp.id = pps.participant_profile_id AND pps.id = (
+          SELECT id from participant_profile_states _pps WHERE _pps.participant_profile_id = pp.id AND _pps.state = pp.training_status ORDER BY created_at desc LIMIT 1
+         )
 WHERE pp.type IN ('ParticipantProfile::ECT', 'ParticipantProfile::Mentor')
   AND c.start_year > 2020;

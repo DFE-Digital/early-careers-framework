@@ -55,6 +55,7 @@ Rails.application.routes.draw do
       resources :ecf_participants, path: "participants/ecf", only: %i[index] do
         concerns :participant_actions
       end
+      resources :test_ecf_participants, only: %i[index]
       resources :participants, only: %i[index], controller: "ecf_participants"
       resources :participants, only: [] do
         concerns :participant_actions

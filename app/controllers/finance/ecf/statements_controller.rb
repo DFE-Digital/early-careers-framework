@@ -15,7 +15,7 @@ module Finance
 
         aggregator = ParticipantAggregator.new(
           statement: @statement,
-          recorder: ParticipantDeclaration::ECF.where.not(state: %w[voided]),
+          recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
         )
 
         orchestrator = Finance::ECF::CalculationOrchestrator.new(

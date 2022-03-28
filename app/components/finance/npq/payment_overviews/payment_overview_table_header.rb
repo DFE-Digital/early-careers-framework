@@ -4,6 +4,7 @@ module Finance
   module NPQ
     module PaymentOverviews
       class PaymentOverviewTableHeader < BaseComponent
+        include NPQPaymentsHelper
         delegate :recruitment_target, to: :contract
 
         attr_accessor :contract, :statement, :npq_lead_provider
@@ -18,26 +19,7 @@ module Finance
           NPQCourse.schedule_for(course).milestones
         end
 
-        def current_trainees
-          if statement.current?
-            ParticipantDeclaration::NPQ
-              .for_lead_provider(npq_lead_provider)
-              .where(statement_id: nil)
-              .for_course_identifier(contract.course_identifier)
-              .where.not(state: "submitted")
-              .unique_id
-              .count
-          else
-            statement
-              .participant_declarations
-              .for_course_identifier(contract.course_identifier)
-              .where.not(state: "submitted")
-              .unique_id
-              .count
-          end
-        end
-
-        def total_not_paid
+        def not_eligible_declarations
           if statement.current?
             ParticipantDeclaration::NPQ
               .for_lead_provider(npq_lead_provider)
@@ -56,7 +38,7 @@ module Finance
         end
 
         def total_participants_for(milestone)
-          participant_per_declaration_type.fetch(milestone.declaration_type, 0)
+          participants_per_declaration_type.fetch(milestone.declaration_type, 0)
         end
 
       private
@@ -65,8 +47,8 @@ module Finance
           @course ||= NPQCourse.find_by!(identifier: contract.course_identifier)
         end
 
-        def participant_per_declaration_type
-          @participant_per_declaration_type ||= statement.participant_declarations
+        def participants_per_declaration_type
+          @participants_per_declaration_type ||= statement.participant_declarations
             .for_course_identifier(contract.course_identifier)
             .paid_payable_or_eligible
             .group(:declaration_type)

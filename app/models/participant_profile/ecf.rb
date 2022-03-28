@@ -14,6 +14,9 @@ class ParticipantProfile < ApplicationRecord
     has_one :ecf_participant_eligibility, foreign_key: :participant_profile_id
     has_one :ecf_participant_validation_data, foreign_key: :participant_profile_id
 
+    belongs_to :mentor_profile, -> { where(id: 0) }, class_name: "Mentor", optional: true
+    has_one :mentor, through: :mentor_profile, source: :user
+
     scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: %i[previous_participation duplicate_profile] }) }
     scope :eligible_status, lambda {
       joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
@@ -68,8 +71,10 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def sync_status_with_induction_record
-      current_induction_record&.update!(induction_status: status) if saved_change_to_status?
-      current_induction_record&.update!(training_status: training_status) if saved_change_to_training_status?
+      induction_record = induction_records.latest
+      induction_record&.update!(induction_status: status) if saved_change_to_status?
+      induction_record&.update!(training_status: training_status) if saved_change_to_training_status?
+      induction_record&.update!(mentor_profile: mentor_profile) if saved_change_to_mentor_profile_id?
     end
   end
 end

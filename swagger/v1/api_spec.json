@@ -49,9 +49,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ applications to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -62,10 +60,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ applications."
           }
         ],
@@ -118,9 +113,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ applications to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           }
         ],
         "responses": {
@@ -272,9 +265,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -285,10 +276,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ participants."
           }
         ],
@@ -615,10 +603,7 @@
             "explode": true,
             "required": false,
             "description": "Refine participant declarations to return.",
-            "example": {
-              "participant_id": "ab3a7848-1208-7679-942a-b4a70eed400a",
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "participant_id=ab3a7848-1208-7679-942a-b4a70eed400a&updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -629,10 +614,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of participant declarations."
           }
         ],
@@ -823,9 +805,7 @@
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -836,10 +816,7 @@
             "style": "deepObject",
             "explode": true,
             "required": false,
-            "example": {
-              "page": 1,
-              "per_page": 5
-            },
+            "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of ECF participants."
           }
         ],
@@ -892,9 +869,7 @@
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": {
-              "updated_since": "2020-11-13T11:21:55Z"
-            }
+            "example": "updated_since=2020-11-13T11:21:55Z"
           }
         ],
         "responses": {
@@ -1408,6 +1383,7 @@
           "email": {
             "description": "The email address registered for this ECF participant",
             "type": "string",
+            "nullable": true,
             "example": "jane.smith@some-school.example.com"
           },
           "full_name": {
@@ -1418,9 +1394,9 @@
           "mentor_id": {
             "description": "The unique identifier of this ECF participants mentor",
             "type": "string",
+            "nullable": true,
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "school_urn": {
             "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
@@ -1453,13 +1429,11 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "nullable": true,
             "example": "1234567"
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "eligible_for_funding": {
@@ -1471,13 +1445,11 @@
           "pupil_premium_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to pupil premium",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "sparsity_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to sparsity",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "training_status": {
@@ -1645,6 +1617,7 @@
           "email": {
             "description": "The email registered for this ECF participant",
             "type": "string",
+            "nullable": true,
             "example": "jane.smith@some-school.example.com"
           },
           "full_name": {
@@ -1689,31 +1662,26 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "nullable": true,
             "example": "1234567"
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "eligible_for_funding": {
             "description": "Indicates whether this participant is eligible to receive DfE funded induction",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "pupil_premium_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to pupil premium",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "sparsity_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to sparsity",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "training_status": {
@@ -1817,6 +1785,7 @@
           "email": {
             "description": "The email address registered for this ECF participant",
             "type": "string",
+            "nullable": true,
             "example": "jane.smith@some-school.example.com"
           },
           "full_name": {
@@ -1827,9 +1796,9 @@
           "mentor_id": {
             "description": "The unique identifier of this ECF participants mentor",
             "type": "string",
+            "nullable": true,
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "school_urn": {
             "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
@@ -1862,13 +1831,11 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "nullable": true,
             "example": "1234567"
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "eligible_for_funding": {
@@ -1880,13 +1847,11 @@
           "pupil_premium_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to pupil premium",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "sparsity_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to sparsity",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "training_status": {
@@ -2062,6 +2027,7 @@
           "email": {
             "description": "The email address registered for this ECF participant",
             "type": "string",
+            "nullable": true,
             "example": "jane.smith@some-school.example.com"
           },
           "full_name": {
@@ -2072,9 +2038,9 @@
           "mentor_id": {
             "description": "The unique identifier of this ECF participants mentor",
             "type": "string",
+            "nullable": true,
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "school_urn": {
             "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
@@ -2107,13 +2073,11 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "nullable": true,
             "example": "1234567"
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "eligible_for_funding": {
@@ -2125,13 +2089,11 @@
           "pupil_premium_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to pupil premium",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "sparsity_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to sparsity",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "training_status": {
@@ -2456,6 +2418,7 @@
           "email": {
             "description": "The email address registered for this ECF participant",
             "type": "string",
+            "nullable": true,
             "example": "jane.smith@some-school.example.com"
           },
           "full_name": {
@@ -2466,9 +2429,9 @@
           "mentor_id": {
             "description": "The unique identifier of this ECF participants mentor",
             "type": "string",
+            "nullable": true,
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid",
-            "nullable": true
+            "format": "uuid"
           },
           "school_urn": {
             "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
@@ -2501,13 +2464,11 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "nullable": true,
             "example": "1234567"
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "eligible_for_funding": {
@@ -2519,13 +2480,11 @@
           "pupil_premium_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to pupil premium",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "sparsity_uplift": {
             "description": "Indicates whether this participant qualifies for an uplift payment due to sparsity",
             "type": "boolean",
-            "nullable": true,
             "example": true
           },
           "training_status": {
@@ -3290,6 +3249,7 @@
           "email": {
             "description": "The email address registered for this NPQ participant",
             "type": "string",
+            "nullable": true,
             "example": "isabelle.macdonald2@some-school.example.com"
           },
           "teacher_reference_number": {

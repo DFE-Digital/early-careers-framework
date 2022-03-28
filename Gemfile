@@ -3,33 +3,33 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby File.read(".ruby-version").chomp
+ruby File.read(".ruby-version").strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.4", ">= 6.1.4.2"
+gem "rails", "~> 6.1.5"
 
 # User management and rbac
 gem "devise", ">= 4.8.0"
 gem "paper_trail"
-gem "pretender", ">= 0.3.4"
+gem "pretender", ">= 0.4.0"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-rails", ">= 4.8.1"
-gem "sentry-ruby", ">= 4.6.4"
+gem "sentry-rails", "~> 5.2"
+gem "sentry-ruby", "~> 5.2"
 gem "sentry-sidekiq"
 
 # Pagination
-gem "kaminari", ">= 1.2.0"
+gem "kaminari", "~> 1.2"
 
 gem "secure_headers"
 
 # Cleaner logs, one line per request
-gem "lograge", ">= 0.11.2"
+gem "lograge", "~> 0.11.2"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
-gem "pg", ">= 0.18", "< 2.0"
+gem "pg", "~> 1.3"
 
 # Use UUIDs as db primary key by default
 gem "ar-uuid", "~> 0.2.2"
@@ -44,26 +44,26 @@ gem "webpacker", ">= 5.4.3"
 gem "discard", "~> 1.2", ">= 1.2.0"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", ">= 1.1.0", require: false
+gem "bootsnap", "~> 1.11", require: false
 
 # Manage multiple processes i.e. web server and webpack
 gem "foreman"
 
 # Canonical meta tag
-gem "canonical-rails", ">= 0.2.13"
+gem "canonical-rails", "~> 0.2.14"
 
-gem "listen", ">= 3.0.5", "< 3.8"
-gem "rack-attack", ">=6.5.0"
+gem "listen", "~> 3.7"
+gem "rack-attack", "~> 6.6"
 
 # GOV.UK Notify
-gem "mail-notify", ">= 1.0.4"
+gem "mail-notify", "~> 1.0", ">= 1.0.4"
 
 # do not rely on host's timezone data, which can be inconsistent
 gem "tzinfo-data"
 
-gem "govuk-components", ">= 2.1.5"
+gem "govuk-components", "~> 3.0", ">= 3.0.3"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
-gem "govuk_markdown", "~> 0.4.0"
+gem "govuk_markdown", "~> 1.0"
 gem "view_component", require: "view_component/engine"
 
 # Fetching from APIs
@@ -72,13 +72,13 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.12", ">= 2.12.1"
 
 # Strong migration checker for database migrations
-gem "strong_migrations"
+gem "strong_migrations", "~> 1.0"
 
 # Acts as State Machine for participant and declaration states
 gem "aasm"
 
 # Pagination for API
-gem "pagy", "~> 5.10.1"
+gem "pagy", "~> 5.10", ">= 5.10.1"
 
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"
@@ -86,9 +86,9 @@ gem "json-schema", ">= 2.8.1"
 gem "jsonapi-serializer"
 
 # OpenApi Swagger
-gem "openapi3_parser", "0.9.1"
-gem "open_api-rswag-api", ">= 0.1.0"
-gem "open_api-rswag-ui", ">= 0.1.0"
+gem "openapi3_parser", "~> 0.9.2"
+gem "open_api-rswag-api", "~> 0.1.0"
+gem "open_api-rswag-ui", "~> 0.1.0"
 gem "rouge"
 
 gem "ransack"
@@ -96,16 +96,16 @@ gem "ransack"
 # Payment breakdown
 gem "terminal-table"
 
-gem "friendly_id", "~> 5.4.0"
+gem "friendly_id", "~> 5.4", ">= 5.4.2"
 
 platform :mswin, :mingw, :x64_mingw do
-  gem "wdm", ">= 0.1.0"
+  gem "wdm", "~> 0.1"
 end
 
 # S3 adapter for active storage
 gem "aws-sdk-s3", require: false
 
-gem "activerecord-session_store", ">= 2.0.0"
+gem "activerecord-session_store", "~> 2.0"
 
 gem "google-cloud-bigquery"
 
@@ -117,40 +117,44 @@ group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
 
   # GOV.UK interpretation of rubocop for linting Ruby
-  gem "rubocop-govuk", ">= 3.17.2"
+  gem "rubocop-govuk", ">= 4.3"
+
   gem "scss_lint-govuk"
 
   # Debugging
   gem "pry-byebug"
 
   # Testing framework
-  gem "rspec-rails", "~> 5.0.2"
+  gem "rspec-rails", "~> 5.1", ">= 5.1.1"
 
   gem "cypress-on-rails", "~> 1.12"
   gem "database_cleaner-active_record"
 
-  gem "dotenv-rails", ">= 2.7.6"
+  gem "dotenv-rails", "~> 2.7.6"
 
   # Swagger generator
   gem "multi_json"
-  gem "open_api-rswag-specs", ">= 0.1.0"
+  gem "open_api-rswag-specs", "~> 0.1.0"
 
   gem "parallel_tests"
 end
 
 group :development, :deployed_development, :test, :sandbox do
-  gem "factory_bot_rails", ">= 6.2.0"
+  gem "factory_bot_rails", "~> 6.2.0"
   gem "faker"
   gem "timecop"
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "web-console", ">= 4.2.0"
+  gem "web-console", "~> 4.2.0"
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
-  gem "spring-watcher-listen", "~> 2.0.0"
+  gem "spring-watcher-listen", "~> 2.0"
+
+  # autocompletion backend for development
+  gem "solargraph"
 
   # State machine diagrams - https://github.com/Katee/aasm-diagram
   gem "aasm-diagram"
@@ -163,17 +167,17 @@ end
 
 group :test do
   gem "axe-core-rspec"
-  gem "capybara", ">= 3.35.3"
+  gem "capybara", "~> 3.36"
   gem "jsonapi-rspec"
   gem "launchy"
   gem "percy-capybara"
   gem "pundit-matchers", "~> 1.7.0"
-  gem "rails-controller-testing", ">= 1.0.5"
-  gem "rspec-default_http_header", ">= 0.0.6"
+  gem "rails-controller-testing", "~> 1.0.5"
+  gem "rspec-default_http_header", "~> 0.0.6"
   gem "selenium-webdriver"
-  gem "shoulda-matchers", "~> 4.5"
+  gem "shoulda-matchers", "~> 5.1"
   gem "simplecov"
-  gem "webdrivers", "~> 4.6"
-  gem "webmock", ">= 3.10.0"
+  gem "webdrivers", "~> 5.0"
+  gem "webmock", "~> 3.14"
   gem "with_model"
 end

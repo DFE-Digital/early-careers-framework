@@ -126,13 +126,4 @@ RSpec.feature "Submit participant declarations", type: :feature do
     then_the_declaration_made_is_invalid
     and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
   end
-
-  scenario "NPQ participant details sent to provider, declaration sent using same unique ID, declaration_date too late" do
-    given_an_npq_participant_has_been_entered_onto_the_dfe_service
-    when_the_npq_participant_details_are_passed_to_the_lead_provider
-    and_the_npq_declaration_date_is_late
-    and_the_lead_provider_submits_a_declaration_for_the_npq_using_their_id
-    then_the_declaration_made_is_invalid
-    and_the_lead_provider_receives_a_response_to_confirm_that_the_declaration_has_a_validation_error
-  end
 end

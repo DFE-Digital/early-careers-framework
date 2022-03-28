@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::ChangeSchedule::Base do
+RSpec.describe Participants::ChangeSchedule::ECF do
   let(:klass) do
     Class.new(described_class) do
       def self.model_name

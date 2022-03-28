@@ -6,6 +6,7 @@ class InductionRecord < ApplicationRecord
   belongs_to :induction_programme
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF"
   belongs_to :schedule, class_name: "Finance::Schedule"
+  belongs_to :mentor_profile, class_name: "ParticipantProfile::Mentor", optional: true
 
   has_one :school_cohort, through: :induction_programme
   has_one :school, through: :school_cohort
