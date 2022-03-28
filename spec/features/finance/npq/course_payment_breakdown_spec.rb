@@ -100,6 +100,13 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
         .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_voided!)
 
+      create_list(:user, 2)
+        .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
+        .map { |npq_application| create_started_declarations(npq_application) }
+        .map(&JSON.method(:parse))
+        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
+        .each(&:make_ineligible!)
+
       create_list(:user, 5)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
@@ -110,7 +117,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
 
     ParticipantDeclaration::NPQ
-      .where(state: "voided", cpd_lead_provider: cpd_lead_provider)
+      .where(state: %w[ineligible voided], cpd_lead_provider: cpd_lead_provider)
       .update_all(statement_id: statement.id) # voided payable
     ParticipantDeclaration::NPQ
       .where(state: %w[eligible payable], cpd_lead_provider: cpd_lead_provider)
@@ -153,7 +160,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def then_i_should_see_correct_output_payment_breakdown
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations)
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(output_payment_per_participant))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(output_payment_subtotal))
     end
@@ -178,7 +185,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       expect(page).to have_content("Started")
       expect(page).to have_content(total_participants_for(npq_specialist_schedule.milestones.first))
       expect(page).to have_content("Total declarations")
-      expect(page).to have_content(total_declarations)
+      expect(page).to have_content(total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
     end
   end
 
@@ -225,20 +232,16 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
   end
 
-  def participant_per_declaration_type
-    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).where.not(state: :voided).group(:declaration_type).count
+  def participants_per_declaration_type
+    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.group(:declaration_type).count
   end
 
   def total_participants_for(milestone)
-    participant_per_declaration_type.fetch(milestone.declaration_type, 0)
-  end
-
-  def total_declarations
-    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count
+    participants_per_declaration_type.fetch(milestone.declaration_type, 0)
   end
 
   def output_payment
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: statement.participant_declarations.where(course_identifier: npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.unique_id.count)
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
   end
 
   def service_fees
