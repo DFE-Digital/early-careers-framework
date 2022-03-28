@@ -89,7 +89,7 @@ RSpec.shared_examples "a participant declaration service" do
 
   context "when in the middle of milestone" do
     before do
-      travel_to cutoff_start_datetime + 2.days
+      travel_to cutoff_start_datetime + 3.days
     end
 
     it "does not raise ParameterMissing error" do
