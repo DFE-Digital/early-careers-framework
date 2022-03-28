@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template">
   <head>
     <%= tag :meta, charset: 'utf-8' %>
-    <% if Rails.env.to_s.in? Sentry.configuration.enabled_environments %>
+    <% if Rails.env.to_s.in?(Sentry.configuration.enabled_environments) && ENV['RAILS_ENV'] != 'test' %>
       <%= tag :meta, name: :release, content: Sentry.configuration.release %>
       <%= tag :meta, name: :"sentry-dsn", content: Sentry.configuration.dsn.to_s %>
       <%= tag :meta, name: :"sentry-trace", content: Sentry.get_current_scope&.span&.to_sentry_trace %>
