@@ -118,11 +118,7 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
     let(:schedule) { create(:ecf_mentor_schedule) }
 
     let(:schedule) do
-      Finance::Schedule.create!(
-        cohort: cohort,
-        schedule_identifier: "soft-schedule",
-        name: "soft-schedule",
-      )
+      create(:schedule, cohort: cohort, schedule_identifier: "soft-schedule", name: "soft-schdule")
     end
 
     let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule: schedule) }
