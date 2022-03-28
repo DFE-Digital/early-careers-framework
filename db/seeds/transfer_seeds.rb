@@ -24,10 +24,6 @@ induction_programme = InductionProgramme.find_or_create_by!(
 )
 school_cohort.update!(default_induction_programme: induction_programme)
 
-# FIP ECT to be transfered to *INCOMING* school
-fip_ect = User.find_by!(email: "fip-ect@example.com")
-fip_ect_profile = fip_ect.teacher_profile.ecf_profiles.first
-
 old_school = School.find_by(urn: "000103")
 old_school_cohort = old_school.school_cohorts.find_by(cohort: Cohort.current)
 
@@ -44,6 +40,10 @@ old_school_cohort.update!(
   default_induction_programme: old_school_induction_programme,
 )
 
+# FIP ECT to be transfered to *INCOMING* school
+fip_ect = User.find_by!(email: "fip-ect@example.com")
+fip_ect_profile = fip_ect.teacher_profile.ecf_profiles.first
+
 Induction::Enrol.call(participant_profile: fip_ect_profile, induction_programme: old_school_cohort.default_induction_programme)
 
 # This is fake
@@ -51,5 +51,18 @@ fip_ect_profile.create_ecf_participant_validation_data(
   full_name: "VLAD IMPALOR",
   date_of_birth: Date.parse("01/07/1987"),
   trn: "1000864",
+  nino: nil,
+)
+
+# FIP mentor to be transfered to *INCOMING* school
+fip_mentor = User.find_by!(email: "fip-mentor@example.com")
+fip_mentor_profile = fip_mentor.teacher_profile.ecf_profiles.first
+
+Induction::Enrol.call(participant_profile: fip_mentor_profile, induction_programme: old_school_cohort.default_induction_programme)
+
+fip_mentor_profile.create_ecf_participant_validation_data(
+  full_name: "TERRI BAUER",
+  date_of_birth: Date.parse("02/04/1978"),
+  trn: "1000475",
   nino: nil,
 )
