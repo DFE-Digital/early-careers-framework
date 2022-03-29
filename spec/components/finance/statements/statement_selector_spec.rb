@@ -24,7 +24,7 @@ RSpec.describe Finance::Statements::StatementSelector, type: :component do
   end
 
   it "has submit button" do
-    expect(rendered).to have_selector("input[type=submit]")
+    expect(rendered).to have_selector("button[type=submit]")
   end
 
   it "defaults selected lead provider to current lead provider" do
