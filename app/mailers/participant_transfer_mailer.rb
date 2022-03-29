@@ -32,7 +32,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # Reference: 1, 2
   def participant_transfer_out_notification(induction_record:, current_school:)
     participant_profile = induction_record.participant_profile
-    preferred_identity_email = new_induction_record.preferred_identity.email
+    preferred_identity_email = induction_record.preferred_identity.email
 
     template_id = if participant_profile.ect?
                     TRANSFER_OUT_FOR_ECT_TEMPLATE
@@ -58,7 +58,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # Reference: 5, 6
   def participant_transfer_in_notification(induction_record:)
     participant_profile = induction_record.participant_profile
-    preferred_identity_email = new_induction_record.preferred_identity.email
+    preferred_identity_email = induction_record.preferred_identity.email
 
     template_id = if participant_profile.ect?
                     TRANSFER_IN_FOR_ECT_TEMPLATE
@@ -83,7 +83,7 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 3
   def provider_transfer_out_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = new_induction_record.preferred_identity
+    preferred_identity = induction_record.preferred_identity
 
     template_mail(
       TRANSFER_OUT_FOR_PROVIDER_TEMPLATE,
@@ -101,7 +101,7 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 4
   def provider_transfer_in_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = new_induction_record.preferred_identity
+    preferred_identity = induction_record.preferred_identity
 
     template_mail(
       TRANSFER_IN_FOR_PROVIDER_TEMPLATE,
@@ -120,7 +120,7 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 9
   def provider_new_school_transfer_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = new_induction_record.preferred_identity
+    preferred_identity = induction_record.preferred_identity
 
     template_mail(
       EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER,
@@ -138,7 +138,7 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 10
   def provider_existing_school_transfer_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = new_induction_record.preferred_identity
+    preferred_identity = induction_record.preferred_identity
 
     template_mail(
       NEW_SCHOOL_TRANSFER_FOR_PROVIDER,
@@ -149,7 +149,7 @@ class ParticipantTransferMailer < ApplicationMailer
         joining_date: induction_record.start_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
       },
-    ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_user, as: :lead_provider_profile)
+    ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
 
   # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
