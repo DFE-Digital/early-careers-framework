@@ -4,8 +4,9 @@ require "rails_helper"
 
 RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true do
   context "Transferring a Mentor to a school" do
-    context "Mentor has matching lead provider and different delivery partner" do
+    context "Mentor is with different lead provider" do
       before do
+        allow_participant_transfer_mailers
         set_participant_data
         set_dqt_validation_result
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
@@ -57,6 +58,9 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         click_on "Confirm and add"
         then_i_should_be_on_the_complete_page
+        and_the_participant_should_be_notified_with(:participant_transfer_in_notification)
+        and_the_schools_current_provider_is_notified_with(:provider_transfer_in_notification)
+        and_the_participants_current_provider_is_notified_with(:provider_transfer_out_notification)
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
@@ -103,6 +107,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         click_on "Confirm and add"
         then_i_should_be_on_the_complete_page_for_an_existing_induction
+        and_the_participant_should_be_notified_with(:participant_transfer_in_notification)
+        and_the_participants_current_provider_is_notified_with(:provider_new_school_transfer_notification)
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
@@ -119,11 +125,14 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+        @lead_provider_two = create(:lead_provider, name: "Massive Provider Ltd")
+        @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
+        @lead_provider_two_profile = create(:lead_provider_profile, lead_provider: @lead_provider_two)
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
         @other_delivery_partner = create(:delivery_partner, name: "Average Delivery Provider")
         @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
         @partnership_one = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
-        @partnership_two = create(:partnership, school: @school_two, lead_provider: @lead_provider, delivery_partner: @other_delivery_partner, cohort: @cohort)
+        @partnership_two = create(:partnership, school: @school_two, lead_provider: @lead_provider_two, delivery_partner: @other_delivery_partner, cohort: @cohort)
         @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_one)
         @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_two)
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
@@ -211,7 +220,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def then_i_should_be_taken_to_the_teachers_current_programme_page
         expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
-        expect(page).to have_text(@lead_provider.name)
+        expect(page).to have_text(@lead_provider_two.name)
         expect(page).to have_text(@other_delivery_partner.name)
       end
 
@@ -229,7 +238,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def then_i_should_be_taken_to_the_check_your_answers_page_for_an_existing_induction
         expect(page).to have_selector("h1", text: "Check your answers")
-        expect(page).to have_selector("dd", text: @lead_provider.name)
+        expect(page).to have_selector("dd", text: @lead_provider_two.name)
         expect(page).to have_selector("dd", text: @other_delivery_partner.name)
       end
 
@@ -241,7 +250,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       def then_i_should_be_on_the_complete_page_for_an_existing_induction
         expect(page).to have_selector("h2", text: "What happens next")
         expect(page).to have_text("We’ll let #{@participant_data[:full_name]} know you’ve registered them for ECF-based training at your school.")
-        expect(page).to have_text("We’ll contact their training lead provider, #{@lead_provider.name}, and their delivery partner #{@other_delivery_partner.name}, to let them know that you’ve reported their transfer too.")
+        expect(page).to have_text("We’ll contact their training lead provider, #{@lead_provider_two.name}, and their delivery partner #{@other_delivery_partner.name}, to let them know that you’ve reported their transfer too.")
       end
 
       def then_i_should_see_the_transferring_participant
@@ -257,7 +266,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         expect(page).to have_selector("h2", text: "Transferring to your school")
         within(:xpath, "//table[@data-test='transferring_in']/tbody/tr[1]") do
           expect(page).to have_xpath(".//td[1]", text: @participant_data[:full_name])
-          expect(page).to have_xpath(".//td[2]", text: @lead_provider.name)
+          expect(page).to have_xpath(".//td[2]", text: @lead_provider_two.name)
           expect(page).to have_xpath(".//td[3]", text: @other_delivery_partner.name)
         end
       end
@@ -276,6 +285,35 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme_two)
 
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_mentor, full_name: "Sally Mentor", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
+      end
+
+      def and_the_participant_should_be_notified_with(notification_method)
+        expect(ParticipantTransferMailer).to have_received(notification_method).with(induction_record: @participant_profile_mentor.induction_records.latest)
+      end
+
+      def and_the_participants_current_provider_is_notified_with(notification_method)
+        induction_record = @participant_profile_mentor.induction_records.latest
+        expect(ParticipantTransferMailer).to have_received(notification_method)
+                                               .with(hash_including(
+                                                       induction_record: induction_record,
+                                                       lead_provider_profile: @lead_provider_two_profile,
+                                                     ))
+      end
+
+      def and_the_schools_current_provider_is_notified_with(notification_method)
+        induction_record = @participant_profile_mentor.induction_records.latest
+        expect(ParticipantTransferMailer).to have_received(notification_method)
+                                               .with(hash_including(
+                                                       induction_record: induction_record,
+                                                       lead_provider_profile: @lead_provider_profile,
+                                                     ))
+      end
+
+      def allow_participant_transfer_mailers
+        allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_call_original
+        allow(ParticipantTransferMailer).to receive(:provider_new_school_transfer_notification).and_call_original
+        allow(ParticipantTransferMailer).to receive(:provider_transfer_in_notification).and_call_original
+        allow(ParticipantTransferMailer).to receive(:provider_transfer_out_notification).and_call_original
       end
 
       def set_dqt_validation_result

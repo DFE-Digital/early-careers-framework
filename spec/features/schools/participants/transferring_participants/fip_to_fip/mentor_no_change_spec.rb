@@ -6,6 +6,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
   context "Transferring a Mentor to a school" do
     context "Mentor has matching lead provider and delivery partner" do
       before do
+        allow_participant_transfer_mailers
         set_participant_data
         set_dqt_validation_result
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
@@ -49,6 +50,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         click_on "Confirm and add"
         then_i_should_be_on_the_complete_page
+        and_the_participant_should_be_notified_with(:participant_transfer_in_notification)
+        and_the_schools_current_provider_is_notified_with(:provider_existing_school_transfer_notification)
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
@@ -66,6 +69,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+        @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
         @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
         @partnership_one = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
@@ -193,6 +197,23 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme_two)
 
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_mentor, full_name: "Sally Mentor", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
+      end
+
+      def and_the_participant_should_be_notified_with(notification_method)
+        expect(ParticipantTransferMailer).to have_received(notification_method).with(induction_record: @participant_profile_mentor.induction_records.latest)
+      end
+
+      def and_the_schools_current_provider_is_notified_with(notification_method)
+        expect(ParticipantTransferMailer).to have_received(notification_method)
+                                               .with(hash_including(
+                                                       induction_record: @participant_profile_mentor.induction_records.latest,
+                                                       lead_provider_profile: @lead_provider_profile,
+                                                     ))
+      end
+
+      def allow_participant_transfer_mailers
+        allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_call_original
+        allow(ParticipantTransferMailer).to receive(:provider_existing_school_transfer_notification).and_call_original
       end
 
       def set_dqt_validation_result

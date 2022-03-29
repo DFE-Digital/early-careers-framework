@@ -6,6 +6,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
   context "Transferring an ECT to a school" do
     context "ECT has matching lead provider and delivery" do
       before do
+        allow_participant_transfer_mailers
         set_participant_data
         set_dqt_validation_result
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
@@ -96,6 +97,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+        @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
         @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
         @partnership_1 = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
@@ -211,7 +213,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def then_i_should_be_on_the_complete_page
         expect(page).to have_selector("h2", text: "What happens next")
-        expect(page).to have_text("We’ll let this person know you’ve registered them for ECF-based training at your school")
+        expect(page).to have_text("We’ll let #{@participant_profile_ect.user.full_name}")
       end
 
       def then_i_receive_a_missing_name_error_message
@@ -254,6 +256,15 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         expect(page).to have_text("Select an option")
       end
 
+      def then_i_should_see_the_transferring_participant
+        expect(page).to have_selector("h2", text: "Transferring to your school")
+        within(:xpath, "//table[@data-test='transferring_in']/tbody/tr[1]") do
+          expect(page).to have_xpath(".//td[1]", text: @participant_data[:full_name])
+          expect(page).to have_xpath(".//td[2]", text: @lead_provider.name)
+          expect(page).to have_xpath(".//td[3]", text: @delivery_partner.name)
+        end
+      end
+
       # and
 
       def and_i_am_signed_in_as_an_induction_coordinator
@@ -271,6 +282,27 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def and_it_should_list_the_schools_mentors
         expect(page).to have_text(@mentor.user.full_name)
+      end
+
+      def and_the_participant_should_be_notified_with(notification_method)
+        expect(ParticipantTransferMailer).to have_received(notification_method)
+                                               .with(hash_including(
+                                                       induction_record: @participant_profile_ect.induction_records.latest,
+                                                     ))
+      end
+
+      def and_the_schools_current_provider_is_notified_with(notification_method)
+        induction_record = @participant_profile_ect.induction_records.latest
+        expect(ParticipantTransferMailer).to have_received(notification_method)
+                                               .with(hash_including(
+                                                       induction_record: induction_record,
+                                                       lead_provider_profile: @lead_provider_profile,
+                                                     ))
+      end
+
+      def allow_participant_transfer_mailers
+        allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_call_original
+        allow(ParticipantTransferMailer).to receive(:provider_existing_school_transfer_notification).and_call_original
       end
 
       def set_dqt_validation_result
