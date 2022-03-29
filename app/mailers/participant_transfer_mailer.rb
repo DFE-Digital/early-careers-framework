@@ -123,7 +123,7 @@ class ParticipantTransferMailer < ApplicationMailer
     preferred_identity = induction_record.preferred_identity
 
     template_mail(
-      EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER,
+      NEW_SCHOOL_TRANSFER_FOR_PROVIDER,
       to: lead_provider_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
@@ -141,7 +141,7 @@ class ParticipantTransferMailer < ApplicationMailer
     preferred_identity = induction_record.preferred_identity
 
     template_mail(
-      NEW_SCHOOL_TRANSFER_FOR_PROVIDER,
+      EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER,
       to: lead_provider_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,

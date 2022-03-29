@@ -144,13 +144,13 @@ module Schools
           ).deliver_later
         end
       elsif @transferring_participant_form.switch_to_schools_programme?
-        target_lead_provider_users.each do |user|
+        current_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_transfer_in_notification(
             induction_record: induction_record,
             lead_provider_profile: user.lead_provider_profile,
           ).deliver_later
         end
-        current_lead_provider_users.each do |user|
+        target_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_transfer_out_notification(
             induction_record: induction_record,
             lead_provider_profile: user.lead_provider_profile,
