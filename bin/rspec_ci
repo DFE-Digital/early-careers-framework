@@ -9,6 +9,6 @@ tests = Dir["spec/**/*_spec.rb"].
     i % ENV["CI_NODE_TOTAL"].to_i == ENV["CI_NODE_INDEX"].to_i
   end
 
-STDOUT.puts "bundle exec rspec #{tests.join(" ")}  --format documentation --profile"
+File.open("log/debug.log", "a+").puts "bundle exec rspec #{tests.join(" ")}  --format documentation --profile"
 
 exec "bundle exec rspec #{tests.join(" ")}  --format documentation --profile"

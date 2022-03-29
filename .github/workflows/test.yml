@@ -74,7 +74,13 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: yarn percy exec --parallel -- bundle exec bin/rspec_ci
+        continue-on-error: true
+        run: yarn percy exec --verbose --parallel -- bundle exec bin/rspec_ci
+
+      - name: debug tests
+        run: |
+          ls -la log/
+          cat logs/debug.log
 
   e2e-tests:
     name: Run Cypress
