@@ -53,10 +53,16 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
 
         then_i_should_be_taken_to_the_teachers_current_programme_page
+        then_the_page_should_be_accessible
+        then_percy_should_be_sent_a_snapshot_named "Transfer journey - teachers current programme"
+
         when_i_select "No"
         click_on "Continue"
 
         then_i_should_be_taken_to_the_schools_current_programme_page
+        then_the_page_should_be_accessible
+        then_percy_should_be_sent_a_snapshot_named "Transfer journey - schools current programme"
+
         when_i_select "Yes"
         click_on "Continue"
 
@@ -64,6 +70,9 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         click_on "Confirm and add"
         then_i_should_be_on_the_complete_page
+        and_the_participant_should_be_notified_with(:participant_transfer_in_notification)
+        and_the_schools_current_provider_is_notified_with(:provider_transfer_in_notification)
+        and_the_participants_current_provider_is_notified_with(:provider_transfer_out_notification)
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
