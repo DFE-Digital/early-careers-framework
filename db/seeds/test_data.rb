@@ -125,7 +125,7 @@ School.find_or_create_by!(urn: "181815") do |school|
   SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
 end
 
-30.times do |idx|
+10.times do |idx|
   urn = (100 + idx).to_s.rjust(6, "0")
   item_num = 7 + idx
   School.find_or_create_by!(urn: urn) do |school|
@@ -439,7 +439,7 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
 end
 
 # SIT also a mentor
-user = User.find_by(email: "cpd-test+tutor-17@example.com")
+user = User.find_by(email: "cpd-test+tutor-7@example.com")
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
@@ -483,7 +483,7 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
 end
 # TODO: add validation data and eligibility records when merged
 
-(200..210).each do |index|
+(200..206).each do |index|
   School.find_or_create_by!(urn: sprintf("%06d", index)) do |school|
     school.update!(
       name: "ZZ Test School #{index}",
@@ -596,7 +596,7 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
 end
 
 # SIT also a mentor
-user = User.find_by(email: "cip-tutor-206@example.com")
+user = User.find_by(email: "cip-tutor-201@example.com")
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
@@ -611,32 +611,10 @@ user = User.find_or_create_by!(email: "cip-ect2@example.com") do |u|
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
 ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
-  ect_profile.school_cohort = School.find_by(urn: "000207").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.school_cohort = School.find_by(urn: "000206").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
   ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
-end
-
-user = User.find_or_create_by!(email: "cip-mentor4@example.com") do |u|
-  u.full_name = "CIP Mentor"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
-  mentor_profile.school_cohort = School.find_by(urn: "000208").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
-  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
-end
-
-user = User.find_or_create_by!(email: "cip-mentor5@example.com") do |u|
-  u.full_name = "CIP Mentor"
-end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
-  mentor_profile.school_cohort = School.find_by(urn: "000209").school_cohorts.find_by(cohort: Cohort.current)
-  mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
-  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 def create_fip_ect_with_eligibility(type, *args)
@@ -737,11 +715,11 @@ create_cip_mentor_with_eligibility("Different TRN", { different_trn: true })
 create_cip_mentor_with_eligibility("Active Flags", { active_flags: true })
 
 LeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 10)
+  ValidTestDataGenerator::LeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 3)
 end
 
 NPQLeadProvider.all.map(&:name).each do |provider|
-  ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 10)
+  ValidTestDataGenerator::NPQLeadProviderPopulater.call(name: provider, total_schools: 1, participants_per_school: 3)
 end
 
 # NPQ declarations
