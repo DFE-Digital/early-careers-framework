@@ -15,6 +15,12 @@ module InteractionHelper
 
   alias_method :and_i_select, :when_i_select
 
+  def when_i_click_the_save_button
+    click_button "Save", class: "govuk-button", type: "submit"
+  end
+
+  alias_method :and_i_click_the_save_button, :when_i_click_the_save_button
+
   def when_i_click_the_continue_button
     click_button "Continue", class: "govuk-button", type: "submit"
   end
