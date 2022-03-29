@@ -8,19 +8,21 @@ class Induction::ChangeProgramme < BaseService
       Induction::Enrol.call(participant_profile: participant_profile,
                             induction_programme: new_induction_programme,
                             start_date: start_date,
-                            preferred_email: preferred_email)
+                            preferred_email: preferred_email,
+                            mentor_profile: mentor_profile)
     end
   end
 
 private
 
-  attr_reader :participant_profile, :new_induction_programme, :start_date, :end_date
+  attr_reader :participant_profile, :new_induction_programme, :start_date, :end_date, :mentor_profile
 
-  def initialize(participant_profile:, end_date:, new_induction_programme:, start_date: Time.zone.now)
+  def initialize(participant_profile:, end_date:, new_induction_programme:, start_date: Time.zone.now, mentor_profile: nil)
     @participant_profile = participant_profile
     @new_induction_programme = new_induction_programme
     @start_date = start_date
     @end_date = end_date
+    @mentor_profile = mentor_profile
   end
 
   def current_induction_record

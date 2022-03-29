@@ -8,6 +8,7 @@ RSpec.describe Induction::ChangeProgramme do
     let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
     let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: participant_profile, status: :active, start_date: 6.months.ago) }
     let(:action_date) { Time.zone.now }
+    let(:mentor_profile) { create(:mentor_participant_profile) }
 
     subject(:service) { described_class }
 
@@ -22,7 +23,7 @@ RSpec.describe Induction::ChangeProgramme do
 
     describe "induction records" do
       before do
-        service.call(participant_profile: participant_profile, end_date: action_date, new_induction_programme: new_induction_programme, start_date: action_date)
+        service.call(participant_profile: participant_profile, end_date: action_date, new_induction_programme: new_induction_programme, start_date: action_date, mentor_profile: mentor_profile)
       end
 
       it "updates the current induction record with status :changed" do
@@ -34,9 +35,11 @@ RSpec.describe Induction::ChangeProgramme do
       end
 
       it "sets the new induction record data correctly" do
-        expect(new_induction_programme.induction_records.first).to be_active_induction_status
-        expect(new_induction_programme.induction_records.first.start_date).to be_within(1.second).of action_date
-        expect(new_induction_programme.induction_records.first.participant_profile).to eq participant_profile
+        induction_record = new_induction_programme.induction_records.first
+        expect(induction_record).to be_active_induction_status
+        expect(induction_record.start_date).to be_within(1.second).of action_date
+        expect(induction_record.participant_profile).to eq participant_profile
+        expect(induction_record.mentor_profile).to eq mentor_profile
       end
     end
   end

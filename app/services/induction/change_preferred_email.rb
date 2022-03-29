@@ -14,7 +14,8 @@ class Induction::ChangePreferredEmail < BaseService
       Induction::Enrol.call(participant_profile: induction_record.participant_profile,
                             induction_programme: induction_record.induction_programme,
                             start_date: time_now,
-                            preferred_email: preferred_email)
+                            preferred_email: preferred_email,
+                            mentor_profile: induction_record.mentor_profile)
     end
   end
 
