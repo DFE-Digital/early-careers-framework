@@ -78,6 +78,10 @@ class Schools::ParticipantsController < Schools::BaseController
     else
       render "schools/participants/edit_start_term"
     end
+
+  rescue ActionController::ParameterMissing
+    flash[:warning] = I18n.t('errors.start_term.blank')
+    render "schools/participants/edit_start_term"
   end
 
   def edit_mentor; end
