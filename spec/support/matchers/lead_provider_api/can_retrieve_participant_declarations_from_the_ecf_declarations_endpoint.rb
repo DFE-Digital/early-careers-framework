@@ -24,16 +24,16 @@ module Support
       end
 
       failure_message do |lead_provider_name|
-        "'#{lead_provider_name}' should have been able to retrieve the declarations #{declarations} for the training of '#{participant_name}' within:\n===\n#{@text}\n==="
+        "'#{lead_provider_name}' should have been able to retrieve the declarations #{declaration_types} for the training of '#{participant_name}' within:\n===\n#{@text}\n==="
       end
 
       failure_message_when_negated do |lead_provider_name|
-        "'#{lead_provider_name}' should not have been able to retrieve the declarations #{declarations} for the training of '#{participant_name}' within:\n===\n#{@text}\n==="
+        "'#{lead_provider_name}' should not have been able to retrieve the declarations #{declaration_types} for the training of '#{participant_name}' within:\n===\n#{@text}\n==="
       end
 
       description do
-        if declarations.any?
-          "be able to retrieve the declarations #{declarations} for the training of '#{participant_name}' from the ecf declarations endpoint"
+        if declaration_types.any?
+          "be able to retrieve the declarations #{declaration_types} for the training of '#{participant_name}' from the ecf declarations endpoint"
         else
           "be able to retrieve no declarations for the training of '#{participant_name}' from the ecf declarations endpoint"
         end
