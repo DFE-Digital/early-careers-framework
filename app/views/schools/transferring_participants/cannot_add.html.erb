@@ -1,6 +1,6 @@
 <% content_for :title, "You cannot add #{@transferring_participant_form.full_name}" %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: {action: :full_name }) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

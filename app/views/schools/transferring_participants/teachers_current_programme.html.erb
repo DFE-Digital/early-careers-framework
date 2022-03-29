@@ -2,7 +2,7 @@
 
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: @participant_profile.ect? ? :choose_mentor : :email}) %>
 
 <span class="govuk-caption-xl"><%= @school.name %></span>
 

@@ -1,6 +1,6 @@
 <% content_for :title, "We cannot find #{@transferring_participant_form.full_name_to_display}" %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: { action: :dob }) %>
 
 
 <div class="govuk-grid-row">
