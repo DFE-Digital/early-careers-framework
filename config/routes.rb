@@ -424,8 +424,6 @@ Rails.application.routes.draw do
             put "teachers-current-programme", to: "transferring_participants#teachers_current_programme"
             get "schools-current-programme", to: "transferring_participants#schools_current_programme", as: :schools_current_programme
             put "schools-current-programme", to: "transferring_participants#schools_current_programme"
-            get "choose-delivery-partner", to: "transferring_participants#choose_delivery_partner", as: :choose_delivery_partner
-            put "choose-delivery-partner", to: "transferring_participants#choose_delivery_partner"
             get "contact-support", to: "transferring_participants#contact_support"
             get "check-answers", to: "transferring_participants#check_answers", as: :check_answers
             put "check-answers", to: "transferring_participants#check_answers"
