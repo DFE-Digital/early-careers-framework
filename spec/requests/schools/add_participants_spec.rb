@@ -4,11 +4,10 @@ require "rails_helper"
 
 RSpec.describe "Schools::AddParticipant", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
-  let(:school_cohort) { create(:school_cohort, :fip, school: school) }
+  let!(:school_cohort) { create(:school_cohort, :fip, school: school, cohort: cohort) }
   let(:school) { user.induction_coordinator_profile.schools.sample }
   let(:cohort) { create(:cohort, :current) }
 
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort, school: school) }
   subject { response }
 
   before do
