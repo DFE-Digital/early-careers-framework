@@ -27,6 +27,20 @@ RSpec.describe Induction::Enrol do
       end
     end
 
+    context "when a mentor_profile is provided" do
+      let(:mentor_profile) { create(:mentor_participant_profile) }
+
+      let(:induction_record) do
+        service.call(participant_profile: participant_profile,
+                     induction_programme: induction_programme,
+                     mentor_profile: mentor_profile)
+      end
+
+      it "sets the mentor for the participant" do
+        expect(induction_record.mentor_profile).to eq mentor_profile
+      end
+    end
+
     context "when a start_date is provided" do
       let(:start_date) { 1.week.from_now }
       let(:induction_record) do

@@ -8,8 +8,7 @@ class Induction::Enrol < BaseService
       status: :active,
       schedule: participant_profile.schedule,
       preferred_identity: preferred_identity,
-      # FIXME: waiting for rebase
-      # mentor_profile: mentor_profile,
+      mentor_profile: mentor_profile,
     )
   end
 
