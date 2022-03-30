@@ -29,7 +29,7 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-no-only-tests": "^2.6.0",
-    "prettier": "^2.6.0",
+    "prettier": "^2.6.1",
     "webpack-dev-server": "^3.11.3"
   },
   "scripts": {
