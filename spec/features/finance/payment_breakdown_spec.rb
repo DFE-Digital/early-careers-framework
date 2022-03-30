@@ -10,8 +10,10 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   let!(:statement)        { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider) }
   let!(:contract)         { create(:call_off_contract, lead_provider: lead_provider) }
   let(:school)            { create(:school) }
-  let!(:school_cohort)    { create(:school_cohort, school: school, cohort: contract.cohort) }
-  let!(:partnership)      { create(:partnership, school: school_cohort.school, lead_provider: lead_provider, cohort: contract.cohort) }
+  let(:cohort)            { contract.cohort }
+  let!(:school_cohort)    { create(:school_cohort, school: school, cohort: cohort) }
+  let!(:partnership)      { create(:partnership, school: school_cohort.school, lead_provider: lead_provider, cohort: cohort) }
+  let(:induction_programme) { create(:induction_programme, partnership: partnership) }
   let(:nov_statement)     { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider: cpd_lead_provider) }
   let(:jan_statement)     { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider: cpd_lead_provider) }
   let(:voided_declarations) do
@@ -127,6 +129,8 @@ private
   end
 
   def create_start_declarations_nov(participant)
+    Induction::Enrol.call(participant_profile: participant, induction_programme: induction_programme)
+
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
       serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
@@ -150,6 +154,8 @@ private
   end
 
   def create_voided_declarations_nov(participant)
+    Induction::Enrol.call(participant_profile: participant, induction_programme: induction_programme)
+
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
       serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
@@ -175,6 +181,8 @@ private
   end
 
   def create_retained_declarations_nov(participant)
+    Induction::Enrol.call(participant_profile: participant, induction_programme: induction_programme)
+
     timestamp = participant.schedule.milestones.second.start_date + 1.day
     travel_to(timestamp) do
       serialized_started_declaration = RecordDeclarations::Retained::EarlyCareerTeacher.call(
@@ -198,6 +206,8 @@ private
   end
 
   def create_retained_declarations_jan_mentor(participant)
+    Induction::Enrol.call(participant_profile: participant, induction_programme: induction_programme)
+
     timestamp = participant.schedule.milestones.second.start_date + 1.day
     travel_to(timestamp) do
       serialized_started_declaration = RecordDeclarations::Retained::Mentor.call(
@@ -221,6 +231,8 @@ private
   end
 
   def create_retained_declarations_jan_ect(participant)
+    Induction::Enrol.call(participant_profile: participant, induction_programme: induction_programme)
+
     timestamp = participant.schedule.milestones.second.start_date + 1.day
     travel_to(timestamp) do
       serialized_started_declaration = RecordDeclarations::Retained::EarlyCareerTeacher.call(
@@ -243,6 +255,8 @@ private
   end
 
   def create_ineligible_declarations_jan(participant)
+    Induction::Enrol.call(participant_profile: participant, induction_programme: induction_programme)
+
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
       serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(

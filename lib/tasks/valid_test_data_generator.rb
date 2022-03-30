@@ -13,6 +13,7 @@ module ValidTestDataGenerator
 
     def call(total_schools: 10, participants_per_school: 100)
       generate_new_schools(count: total_schools - lead_provider.schools.count) if lead_provider.schools.count < total_schools
+
       lead_provider.schools.order("created_at desc").limit(total_schools).each do |school|
         sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
         pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
@@ -61,9 +62,25 @@ module ValidTestDataGenerator
       participant_identity = Identity::Create.call(user: user, origin: :ecf)
 
       cpd_lead_provider = school_cohort.lead_provider.cpd_lead_provider
+      lead_provider = cpd_lead_provider.lead_provider
       november_statement = Finance::Statement::ECF.find_by(
         cpd_lead_provider: cpd_lead_provider,
         name: "November 2021",
+      )
+
+      delivery_partner = lead_provider.delivery_partners.first
+
+      partnership = Partnership.find_or_create_by!(
+        cohort: school_cohort.cohort,
+        delivery_partner: delivery_partner,
+        school: school_cohort.school,
+        lead_provider: lead_provider,
+      )
+
+      InductionProgramme.find_or_create_by!(
+        school_cohort: school_cohort,
+        partnership: partnership,
+        training_programme: "full_induction_programme",
       )
 
       if profile_type == :ect
@@ -71,6 +88,11 @@ module ValidTestDataGenerator
           ParticipantProfileState.create!(participant_profile: pp)
           ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
+
+        induction_programme = profile.school_cohort.induction_programmes.first
+        raise unless induction_programme
+
+        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 
         return unless profile.active_record?
 
@@ -110,6 +132,11 @@ module ValidTestDataGenerator
           ParticipantProfileState.create!(participant_profile: pp)
           ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
+
+        induction_programme = profile.school_cohort.induction_programmes.first
+        raise unless induction_programme
+
+        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 
         return profile unless profile.active_record?
 
@@ -167,8 +194,13 @@ module ValidTestDataGenerator
         s.address_line1 = Faker::Address.street_address
         s.postcode = Faker::Address.postcode
       end
-      school_cohort(school: school)
-      attach_partnership_to_school(school: school)
+      school_cohort = school_cohort(school: school)
+      partnership = attach_partnership_to_school(school: school)
+      InductionProgramme.find_or_create_by!(
+        partnership: partnership,
+        training_programme: "full_induction_programme",
+        school_cohort: school_cohort,
+      )
     end
 
     def attach_partnership_to_school(school:)
