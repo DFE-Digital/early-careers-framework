@@ -3,13 +3,16 @@
 class ChangesOfCircumstanceScenario
   attr_reader :number,
               :participant_type,
+              :participant_email,
               :original_programme,
               :new_programme,
               :transfer,
               :withdrawn_by,
+              :new_lead_provider_name,
               :prior_declarations,
               :new_declarations,
               :duplicate_declarations,
+              :all_declarations,
               :starting_school_status,
               :prior_school_status,
               :new_school_status,
@@ -32,6 +35,7 @@ class ChangesOfCircumstanceScenario
     scenario = fixture_data.to_h.with_indifferent_access.freeze
 
     @number = num
+    @participant_email = "the-participant-#{num}@example.com"
     @participant_type = (scenario[:participant_type] || "").to_s
     @original_programme = (scenario[:original_programme] || "").to_s
     @new_programme = (scenario[:new_programme] || "").to_s
@@ -39,9 +43,12 @@ class ChangesOfCircumstanceScenario
     @transfer = (scenario[:transfer] || "not_applicable").to_sym
     @withdrawn_by = (scenario[:withdrawn_by] || "not_applicable").to_sym
 
+    @new_lead_provider_name = @transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider"
+
     @prior_declarations = (scenario[:prior_declarations] || "").split(",").map(&:to_sym)
     @new_declarations = (scenario[:new_declarations] || "").split(",").map(&:to_sym)
     @duplicate_declarations = (scenario[:duplicate_declarations] || "").split(",").map(&:to_sym)
+    @all_declarations = @prior_declarations + @new_declarations
 
     @starting_school_status = (scenario[:starting_school_status] || "not_applicable").to_sym
 

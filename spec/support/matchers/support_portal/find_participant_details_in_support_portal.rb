@@ -4,7 +4,7 @@ module Support
   module CanFindParticipantDetailsInAdminSupportPortal
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_find_participant_details_in_support_portal do |participant_name, sit_name|
+    RSpec::Matchers.define :find_participant_details_in_support_portal do |participant_name, sit_name|
       match do |admin_user|
         sit = User.find_by(full_name: sit_name)
         raise "Could not find User for #{sit_name}" if sit.nil?

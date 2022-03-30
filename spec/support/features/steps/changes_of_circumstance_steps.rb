@@ -34,15 +34,27 @@ module Steps
       choose_programme_wizard = Pages::SITReportProgrammeWizard.new
       choose_programme_wizard.complete(programme)
       sign_out
+
+      # TODO: This needs to be automated as part of the Report Programme Task
+      create :induction_programme, programme.downcase.to_s,
+             school_cohort: school.school_cohorts.first
     end
 
-    def and_sit_reported_participant(sit_name, participant_name, participant_type)
+    def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
       user = find_user sit_name
+      school = user.induction_coordinator_profile.schools.first
 
       sign_in_as user
       inductions_dashboard = Pages::SITInductionDashboard.new
       wizard = inductions_dashboard.start_add_participant_wizard
-      wizard.complete(participant_name, participant_type)
+      wizard.complete(participant_name, participant_email, participant_type)
+
+      # TODO: This needs to be automated as part of the Add Participant Task
+      create :induction_record,
+             induction_programme: school.school_cohorts.first.induction_programmes.first,
+             participant_profile: school.ecf_participant_profiles.first,
+             induction_status: "active"
+
       participants_dashboard = wizard.view_participants_dashboard
       participants_dashboard.view_participant participant_name
       sign_out
@@ -111,15 +123,26 @@ module Steps
         withdraw_endpoint.responded_with_obfuscated_email?
         withdraw_endpoint.responded_with_status? "active"
         withdraw_endpoint.responded_with_training_status? "withdrawn"
+
+        # TODO: This needs to be automated through the withdraw API
+        current_induction_record = participant_profile.induction_records.select { |x| x.induction_status == "active" }.first
+        current_induction_record.training_status_withdrawn! unless current_induction_record.nil?
       end
     end
 
     def and_school_withdraws_participant(_sit_name, participant_name)
-      participant = find_participant_profile participant_name
+      participant_profile = find_participant_profile participant_name
+      current_induction_record = participant_profile.induction_records
+                                                    .select { |x| x.induction_status == "active" }
+                                                    .first
 
-      timestamp = participant.schedule.milestones.first.start_date + 2.days
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
-        participant.update! status: :withdrawn
+        # OLD way
+        participant_profile.withdrawn_record!
+
+        # TODO: This needs to be automated through the inductions portal
+        current_induction_record.withdrawing! unless current_induction_record.nil?
       end
     end
 
@@ -128,15 +151,53 @@ module Steps
 
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
+      induction_programme = school_cohort.induction_programmes.first
 
-      participant = find_participant_profile participant_name
+      participant_profile = find_participant_profile participant_name
+      current_induction_record = participant_profile.induction_records
+                                                    .select { |x| x.induction_status == "active" }
+                                                    .first
 
-      timestamp = participant.schedule.milestones.first.start_date + 2.days
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
-        participant.teacher_profile.update! school: school
-        participant.update! school_cohort: school_cohort
-        participant.update! status: :active
-        participant.update! training_status: :active
+        # OLD way
+        participant_profile.teacher_profile.update! school: school
+        participant_profile.active_record!
+        participant_profile.training_status_active!
+        participant_profile.update! school_cohort: school_cohort
+
+        # NEW way
+        current_induction_record.withdrawing! unless current_induction_record.nil?
+
+        create :induction_record,
+               induction_programme: induction_programme,
+               participant_profile: participant_profile,
+               induction_status: "active"
+      end
+    end
+
+    def when_school_takes_on_the_withdrawn_participant(sit_name, participant_name)
+      # TODO: This needs to be automated through the inductions portal
+
+      school = find_school_for_sit sit_name
+      school_cohort = school.school_cohorts.first
+      induction_programme = school_cohort.induction_programmes.first
+
+      participant_profile = find_participant_profile participant_name
+
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
+      travel_to(timestamp) do
+        # OLD way
+        participant_profile.teacher_profile.update! school: school
+        participant_profile.active_record!
+        participant_profile.training_status_active!
+        participant_profile.update! school_cohort: school_cohort
+
+        # NEW way
+        create :induction_record,
+               induction_programme: induction_programme,
+               participant_profile: participant_profile,
+               induction_status: "active"
       end
     end
 

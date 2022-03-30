@@ -4,7 +4,7 @@ module Support
   module BeReportedToSupportForECTsAs
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_users_endpoint do |participant_name, programme, participant_type|
+    RSpec::Matchers.define :find_participant_details_in_the_ecf_users_endpoint do |participant_name, participant_email, programme, participant_type|
       match do |_service_name|
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
@@ -15,7 +15,7 @@ module Support
         @text = user_endpoint.response
 
         user_endpoint.has_full_name? participant_name
-        user_endpoint.has_email? user.email
+        user_endpoint.has_email? participant_email
         user_endpoint.has_user_type? participant_type == "ECT" ? "early_career_teacher" : "mentor"
         user_endpoint.has_core_induction_programme? "none"
         user_endpoint.has_induction_programme_choice? programme == "CIP" ? "core_induction_programme" : "full_induction_programme"

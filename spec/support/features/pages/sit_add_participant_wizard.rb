@@ -4,14 +4,14 @@ module Pages
   class SITAddParticipantWizard
     include Capybara::DSL
 
-    def complete(participant_name, participant_type)
+    def complete(participant_name, participant_email, participant_type)
       click_on "Continue"
 
       case participant_type.downcase.to_sym
       when :ect
         start_to_add_a_new_ect
         add_full_name participant_name
-        add_email_address "#{participant_name.gsub(' ', '-')}@example.com"
+        add_email_address participant_email
         choose_start_date
         confirm_and_add
       when :mentor

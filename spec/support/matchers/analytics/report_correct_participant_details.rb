@@ -4,7 +4,7 @@ module Support
   module ReportTheCorrectParticipantDetails
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :report_the_correct_participant_details do |participant_name|
+    RSpec::Matchers.define :report_correct_participant_details do |participant_name|
       match do |_analytics|
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?

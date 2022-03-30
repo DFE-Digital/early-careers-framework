@@ -4,7 +4,7 @@ module Support
   module CanRetrieveParticipantDetailsFromTheEcfParticipantsEndpoint
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint do |participant_name, participant_type, participant_status, training_status, options = {}|
+    RSpec::Matchers.define :find_participant_details_in_ecf_participants_endpoint do |participant_name, participant_email, participant_type, participant_status, training_status, options = {}|
       match do |lead_provider_name|
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
@@ -21,7 +21,7 @@ module Support
         @text = declarations_endpoint.response
 
         declarations_endpoint.has_full_name? participant_name
-        declarations_endpoint.has_email? user.email
+        declarations_endpoint.has_email? participant_email
         declarations_endpoint.has_school_urn? school.urn
         declarations_endpoint.has_participant_type? participant_type.to_s.downcase
 
@@ -45,7 +45,7 @@ module Support
       end
 
       description do
-        "be able to retrieve the participant details for \"#{participant_name}\" from the ecf participants endpoint"
+        "be able to retrieve the #{participant_email.nil? ? 'obfuscated ' : ''}participant details for \"#{participant_name}\" from the ecf participants endpoint"
       end
     end
   end

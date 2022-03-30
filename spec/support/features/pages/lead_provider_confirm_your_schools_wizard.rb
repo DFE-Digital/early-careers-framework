@@ -17,12 +17,14 @@ module Pages
     end
 
     def upload_school_urns(school_urns)
-      CSV.open("school_urns.csv", "w") do |csv|
+      csv_filepath = "temp/school_urns.csv"
+
+      CSV.open(csv_filepath, "w") do |csv|
         school_urns.each { |urn| csv << [urn] }
       end
-      attach_file("CSV file", "school_urns.csv")
+      attach_file("CSV file", csv_filepath)
       click_on "Continue"
-      File.delete("school_urns.csv")
+      File.delete(csv_filepath)
     end
   end
 end

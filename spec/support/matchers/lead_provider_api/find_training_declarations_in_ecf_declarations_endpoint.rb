@@ -4,7 +4,7 @@ module Support
   module HaveTheirDeclarationsMadeAvailableToLeadProvider
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_retrieve_the_training_declarations_for_the_participant_from_the_ecf_declarations_endpoint do |participant_name, declaration_types|
+    RSpec::Matchers.define :find_training_declarations_in_ecf_declarations_endpoint do |participant_name, declaration_types|
       match do |lead_provider_name|
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
@@ -42,7 +42,7 @@ module Support
         if declaration_types.any?
           "be able to retrieve the declarations #{declaration_types} for the training of '#{participant_name}' from the ecf declarations endpoint"
         else
-          "be able to retrieve no declarations for the training of '#{participant_name}' from the ecf declarations endpoint"
+          "not be able to retrieve any declarations for the training of '#{participant_name}' from the ecf declarations endpoint"
         end
       end
     end
