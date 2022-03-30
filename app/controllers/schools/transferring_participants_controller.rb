@@ -199,13 +199,13 @@ module Schools
 
       params.require(:schools_transferring_participant_form)
             .permit(:full_name,
-                    :trn, :date_of_birth,
+                    :trn,
+                    :date_of_birth,
                     :start_date,
                     :email,
                     :mentor_id,
                     :schools_current_programme_choice,
-                    :teachers_current_programme_choice,
-                    :delivery_partner_choice)
+                    :teachers_current_programme_choice)
     end
 
     def validate_request_or_render

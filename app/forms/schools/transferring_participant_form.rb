@@ -6,7 +6,7 @@ module Schools
     include ActiveRecord::AttributeAssignment
     include ActiveModel::Serialization
 
-    attr_accessor :full_name, :trn, :date_of_birth, :start_date, :email, :mentor_id, :school_cohort, :schools_current_programme_choice, :teachers_current_programme_choice, :delivery_partner_choice, :same_programme
+    attr_accessor :full_name, :trn, :date_of_birth, :start_date, :email, :mentor_id, :schools_current_programme_choice, :teachers_current_programme_choice, :same_programme
 
     validates :full_name, presence: true, on: :full_name
     validates :trn,
@@ -16,7 +16,6 @@ module Schools
               on: :trn
     validates :email, presence: true, notify_email: true, on: :email
     validates :mentor_id, presence: true, on: :choose_mentor
-    validates :delivery_partner_choice, presence: true, on: :delivery_partner_choice
     validate :schools_programme_choice, on: :schools_current_programme
     validate :teachers_programme_choice, on: :teachers_current_programme
     validate :check_mentor, on: :choose_mentor
@@ -33,7 +32,6 @@ module Schools
         mentor_id: mentor_id,
         schools_current_programme_choice: schools_current_programme_choice,
         teachers_current_programme_choice: teachers_current_programme_choice,
-        school_cohort: school_cohort,
         same_programme: same_programme,
       }
     end
@@ -44,10 +42,6 @@ module Schools
 
     def full_name_to_display
       formatted_full_name << (full_name[-1..].downcase == "s" ? "’" : "’s")
-    end
-
-    def check_against_dqt?
-      full_name.present? && trn.present? && date_of_birth.present?
     end
 
     def schools_current_programme_choices
