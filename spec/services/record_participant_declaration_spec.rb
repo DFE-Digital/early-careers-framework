@@ -11,7 +11,7 @@ RSpec.describe RecordParticipantDeclaration do
     let(:user) { profile.user }
     let(:npq_course) { profile.npq_course }
 
-    let(:declaration_date) { profile.schedule.milestones.first.start_date + 3.days }
+    let(:declaration_date) { profile.schedule.milestones.where(declaration_type: "started").first.start_date + 3.days }
 
     let(:params) do
       {
@@ -68,7 +68,7 @@ RSpec.describe RecordParticipantDeclaration do
       )
     end
 
-    let(:declaration_date) { profile.schedule.milestones.first.start_date + 5.days }
+    let(:declaration_date) { profile.schedule.milestones.where(declaration_type: "started").first.start_date + 5.days }
 
     let(:params) do
       {
@@ -81,7 +81,7 @@ RSpec.describe RecordParticipantDeclaration do
     end
 
     before do
-      travel_to profile.schedule.milestones.first.start_date + 10.days
+      travel_to profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days
     end
 
     context "happy path" do
@@ -98,7 +98,7 @@ RSpec.describe RecordParticipantDeclaration do
           cpd_lead_provider: cpd_lead_provider,
           course_identifier: "ecf-induction",
           user: user,
-          declaration_date: profile.schedule.milestones.first.start_date + 3.days,
+          declaration_date: profile.schedule.milestones.where(declaration_type: "started").first.start_date + 3.days,
           declaration_type: "started",
           state: "voided",
         )
