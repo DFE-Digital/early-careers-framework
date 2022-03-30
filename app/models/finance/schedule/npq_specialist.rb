@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
-class Finance::Schedule::NPQSpecialist < Finance::Schedule
-  IDENTIFIERS = %w[
-    npq-leading-teaching
-    npq-leading-behaviour-culture
-    npq-leading-teaching-development
-  ].freeze
+module Finance
+  class Schedule < ApplicationRecord
+    class NPQSpecialist < NPQ
+      IDENTIFIERS = %w[
+        npq-leading-teaching
+        npq-leading-behaviour-culture
+        npq-leading-teaching-development
+      ].freeze
 
-  PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS
+      PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS
 
-  def self.default
-    find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring")
+      def self.default
+        find_by(cohort: Cohort.current, schedule_identifier: "npq-specialist-spring")
+      end
+    end
   end
 end

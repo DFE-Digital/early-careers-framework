@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "finance/schedule"
-
 module Finance
   class Schedule < ApplicationRecord
-    class NPQLeadership < Schedule
+    class NPQLeadership < NPQ
       IDENTIFIERS = %w[
         npq-senior-leadership
         npq-headship
