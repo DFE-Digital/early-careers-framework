@@ -3,6 +3,7 @@
 require "tasks/valid_test_data_generator"
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
+cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
 cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 
 local_authority = LocalAuthority.find_or_create_by!(name: "ZZ Test Local Authority", code: "ZZTEST")
@@ -235,6 +236,7 @@ LeadProvider.all.each do |lp|
     revised_target: example_contract_data[:revised_target],
     set_up_fee: example_contract_data[:set_up_fee],
     raw: example_contract_data.to_json,
+    cohort: cohort_2021,
   )
 
   %i[band_a band_b band_c band_d].each do |band|
@@ -324,7 +326,7 @@ npq_specifics = [
 # NPQ contracts
 NPQLeadProvider.all.each do |npq_lead_provider|
   npq_specifics.each do |npq_contract|
-    attributes = npq_contract.merge(npq_lead_provider: npq_lead_provider)
+    attributes = npq_contract.merge(npq_lead_provider: npq_lead_provider, cohort: cohort_2021)
     attributes.merge!(raw: attributes.to_json)
     NPQContract.create!(attributes)
   end

@@ -25,12 +25,11 @@ RSpec.feature "NPQ view contract" do
     @npq_lead_provider = @npq_lt.npq_lead_provider
     @npq_lbc = create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider: @npq_lead_provider)
 
-    Finance::Statement::NPQ.create!(
-      name: "January 2022",
-      deadline_date: Date.new(2022, 1, 31),
-      payment_date: Date.new(2022, 2, 16),
-      cpd_lead_provider: @npq_lead_provider.cpd_lead_provider,
-    )
+    create(:npq_statement,
+           name: "January 2022",
+           deadline_date: Date.new(2022, 1, 31),
+           payment_date: Date.new(2022, 2, 16),
+           cpd_lead_provider: @npq_lead_provider.cpd_lead_provider)
   end
 
   def when_i_visit_the_payment_breakdown_page

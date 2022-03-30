@@ -232,7 +232,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let(:user) { create(:user, :induction_coordinator) }
       let(:teacher_profile) { create :teacher_profile, user: user }
       let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: teacher_profile }
-      let!(:cohort) { create :cohort, :current }
+      let!(:cohort) { participant_profile.cohort }
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }

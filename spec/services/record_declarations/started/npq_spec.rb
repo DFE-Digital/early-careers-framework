@@ -9,7 +9,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
-  let(:cutoff_start_datetime) { npq_profile.schedule.milestones.first.start_date.beginning_of_day }
+  let(:cutoff_start_datetime) { npq_profile.schedule.milestones.first.start_date.beginning_of_day + 2.minutes }
   let(:cutoff_end_datetime) { npq_profile.schedule.milestones.first.milestone_date.end_of_day }
 
   before do

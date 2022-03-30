@@ -17,12 +17,11 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   let(:npq_course_leading_teaching_development) { create(:npq_course, identifier: npq_leading_teaching_development_contract.course_identifier, name: "Leading Teaching Development") }
 
   let!(:statement) do
-    Finance::Statement::NPQ.create!(
-      name: "January 2022",
-      deadline_date: Date.new(2022, 1, 31),
-      payment_date: Date.new(2022, 2, 16),
-      cpd_lead_provider: cpd_lead_provider,
-    )
+    create(:npq_statement,
+           name: "January 2022",
+           deadline_date: Date.new(2022, 1, 31),
+           payment_date: Date.new(2022, 2, 16),
+           cpd_lead_provider: cpd_lead_provider)
   end
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do

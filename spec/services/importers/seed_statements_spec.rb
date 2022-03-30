@@ -5,6 +5,8 @@ RSpec.describe Importers::SeedStatements do
     create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider)
   end
 
+  before { create(:cohort, :current) }
+
   describe "#call" do
     it "creates ECF statements idempotently" do
       expect {
