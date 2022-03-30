@@ -10,6 +10,11 @@
       <%= f.govuk_radio_buttons_fieldset :start_term,
           legend: { text: add_participant_form.start_term_legend, tag: 'h1', size: 'xl' } do %>
 
+        <div class="govuk-inset-text">
+          You’ll be able to add Autumn 2022 starters from May.
+          We’ll email schools as soon as the new term is added.
+        </div>
+
         <% ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS.each do |term| %>
           <%= f.govuk_radio_button :start_term, term, label: { text: term.humanize } %>
         <% end %>

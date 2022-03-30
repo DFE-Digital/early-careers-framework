@@ -13,6 +13,9 @@
       to <%= govuk_link_to "explain their role", roles_schools_cohort_path(info: true), class: "govuk-link--no-visited-state" %> and
       what they need to do next.</p>
 
+    <h2 class="govuk-heading-m">ECTs and mentors starting in the next academic year</h2>
+    <p>You’ll be able to add Autumn 2022 starters from May. We’ll email schools as soon as the new term is added.</p>
+
     <div class="govuk-inset-text">
       <ul class="govuk-list">
         <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
