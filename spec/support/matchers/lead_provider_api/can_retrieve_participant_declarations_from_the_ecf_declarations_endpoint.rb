@@ -21,9 +21,16 @@ module Support
         declaration_types.each do |declaration_type|
           declarations_endpoint.get_declaration declaration_type.to_s
         end
+
+        true
+      rescue Capybara::ElementNotFound => e
+        @error = e
+        false
       end
 
       failure_message do |lead_provider_name|
+        return @error unless @error.nil?
+
         "'#{lead_provider_name}' should have been able to retrieve the declarations #{declaration_types} for the training of '#{participant_name}' within:\n===\n#{@text}\n==="
       end
 

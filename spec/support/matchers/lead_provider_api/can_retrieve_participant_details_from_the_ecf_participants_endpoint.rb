@@ -4,7 +4,7 @@ module Support
   module CanRetrieveParticipantDetailsFromTheEcfParticipantsEndpoint
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint do |participant_name, participant_type, options = {}|
+    RSpec::Matchers.define :be_able_to_retrieve_the_details_of_the_participant_from_the_ecf_participants_endpoint do |participant_name, participant_type, participant_status, training_status, options = {}|
       match do |lead_provider_name|
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
@@ -24,6 +24,9 @@ module Support
         declarations_endpoint.has_email? user.email
         declarations_endpoint.has_school_urn? school.urn
         declarations_endpoint.has_participant_type? participant_type.to_s.downcase
+
+        declarations_endpoint.has_status? participant_status.to_s unless participant_status.nil?
+        declarations_endpoint.has_training_status? training_status.to_s unless training_status.nil?
 
         true
       rescue Capybara::ElementNotFound => e

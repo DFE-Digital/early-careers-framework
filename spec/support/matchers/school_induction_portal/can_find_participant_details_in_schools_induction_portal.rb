@@ -4,7 +4,7 @@ module Support
   module FindingParticipantDetailsInSchoolsInductionPortal
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal do |participant_name|
+    RSpec::Matchers.define :be_able_to_find_the_details_of_the_participant_in_the_school_induction_portal do |participant_name, participant_status|
       match do |sit_name|
         user = User.find_by(full_name: sit_name)
         raise "Could not find User for #{sit_name}" if user.nil?
@@ -15,18 +15,23 @@ module Support
         participants_dashboard = induction_dashboard.view_participant_dashboard
         participant_details = participants_dashboard.view_participant participant_name
 
-        participant_details.can_see_email? email_for(participant_name)
+        @text = page.find("main").text
+
+        participant_details.can_see_email? email_for participant_name
         participant_details.can_see_full_name? participant_name
+        participant_details.can_see_status? participant_status.to_s unless participant_status.nil?
 
         sign_out
 
         true
-      rescue Capybara::ElementNotFound
-        @text = page.find("main").text
+      rescue Capybara::ElementNotFound => e
+        @error = e
         false
       end
 
       failure_message do |sit_name|
+        return @error unless @error.nil?
+
         "the details of '#{participant_name}' cannot be found by '#{sit_name}' within:\n===\n#{@text}\n==="
       end
 

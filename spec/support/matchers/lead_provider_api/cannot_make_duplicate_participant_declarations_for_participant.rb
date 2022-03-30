@@ -32,9 +32,16 @@ module Support
           declarations_endpoint.has_voided? false
           declarations_endpoint.has_state? "ineligible"
         end
+
+        true
+      rescue Capybara::ElementNotFound => e
+        @error = e
+        false
       end
 
       failure_message do |lead_provider_name|
+        return @error unless @error.nil?
+
         "'#{lead_provider_name}' Should have been blocked from making the declaration '#{declaration_type}' for the training of '#{participant_name}' through the ecf declarations endpoint"
       end
 
