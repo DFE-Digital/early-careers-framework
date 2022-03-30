@@ -27,7 +27,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
   fixture_data_path = File.join(File.dirname(__FILE__), "./transferring_a_participant_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
     # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 3
+    # next unless index + 2 == 2
 
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
@@ -70,13 +70,13 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
       context when_context(scenario) do
         before do
           scenario.prior_declarations.each do |declaration_type|
-            and_lead_provider_has_made_training_declaration "Original Lead Provider", "the Participant", declaration_type
+            and_lead_provider_has_made_training_declaration "Original Lead Provider", scenario.participant_type, "the Participant", declaration_type
           end
 
           when_school_takes_on_the_participant "New SIT", "the Participant"
 
           scenario.new_declarations.each do |declaration_type|
-            and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, "the Participant", declaration_type
+            and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
           end
 
           and_eligible_training_declarations_are_made_payable
@@ -163,7 +163,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             if scenario.duplicate_declarations.any?
               it "should not be able to make duplicate declarations", :aggregate_failures do
                 scenario.duplicate_declarations.each do |declaration_type|
-                  expect(subject).to be_blocked_from_making_a_duplicate_training_declaration_for_the_participant "the Participant", declaration_type
+                  expect(subject).to be_blocked_from_making_a_duplicate_training_declaration_for_the_participant "the Participant", scenario.participant_type, declaration_type
                 end
               end
             end

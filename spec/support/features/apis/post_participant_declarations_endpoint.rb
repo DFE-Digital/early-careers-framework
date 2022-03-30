@@ -11,9 +11,9 @@ module APIs
       @token = token
     end
 
-    def post_training_declaration(participant_id, declaration_type, declaration_date)
+    def post_training_declaration(participant_id, course_identifier, declaration_type, declaration_date)
       @current_id = participant_id
-      post_declaration declaration_type, declaration_date
+      post_declaration course_identifier, declaration_type, declaration_date
     end
 
     def has_declaration_type?(expected_value)
@@ -34,7 +34,7 @@ module APIs
 
   private
 
-    def post_declaration(declaration_type, declaration_date)
+    def post_declaration(course_identifier, declaration_type, declaration_date)
       @response = nil
 
       url = "/api/v1/participant-declarations"
@@ -42,7 +42,7 @@ module APIs
         participant_id: @current_id,
         declaration_type: declaration_type,
         declaration_date: declaration_date.rfc3339,
-        course_identifier: "ecf-induction",
+        course_identifier: course_identifier,
       })
       headers = {
         "Authorization": "Bearer #{@token}",

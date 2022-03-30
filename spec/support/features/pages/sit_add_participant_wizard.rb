@@ -16,7 +16,10 @@ module Pages
         confirm_and_add
       when :mentor
         start_to_add_a_new_mentor
-        raise "Not implemented yet"
+        add_full_name participant_name
+        add_email_address participant_email
+        choose_start_date
+        confirm_and_add
       when :sit_mentor
         start_to_add_sit_as_mentor
         raise "Not implemented yet"

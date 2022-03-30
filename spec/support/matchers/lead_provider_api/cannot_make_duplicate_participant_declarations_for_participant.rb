@@ -4,7 +4,7 @@ module Support
   module CannotMakeDuplicateTrainingDeclarationsForParticipant
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_blocked_from_making_a_duplicate_training_declaration_for_the_participant do |participant_name, declaration_type|
+    RSpec::Matchers.define :be_blocked_from_making_a_duplicate_training_declaration_for_the_participant do |participant_name, participant_type, declaration_type|
       match do |lead_provider_name|
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
@@ -21,9 +21,11 @@ module Support
           puts "Unexpected declaration type \"#{declaration_type}\""
         end
 
+        course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+
         travel_to(timestamp) do
           declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
-          declarations_endpoint.post_training_declaration participant_profile.user.id, declaration_type, timestamp - 8.days
+          declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, timestamp - 8.days
 
           @text = declarations_endpoint.response
 

@@ -6,8 +6,36 @@ module Pages
     include WebMock::API
 
     def complete(participant_name, year, month, day, trn)
-      click_on "Continue"
+      setup_response_from_dqt participant_name, year, month, day, trn
 
+      agree_to_privacy_policy
+      confirm_have_trn
+      add_teacher_reference_number trn
+      add_date_of_birth year, month, day
+    end
+
+    def agree_to_privacy_policy
+      click_on "Continue"
+    end
+
+    def confirm_have_trn
+      choose "Yes"
+      click_on "Continue"
+    end
+
+    def add_teacher_reference_number(trn)
+      fill_in "Teacher reference number (TRN)", with: trn
+      click_on "Continue"
+    end
+
+    def add_date_of_birth(year, month, day)
+      fill_in "Day", with: day
+      fill_in "Month", with: month
+      fill_in "Year", with: year
+      click_on "Continue"
+    end
+
+    def setup_response_from_dqt(participant_name, year, month, day, trn)
       stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{year}-#{month}-#{day}")
         .with(
           headers: {
@@ -32,21 +60,6 @@ module Pages
             "start_date": "2021-09-02T00:00:00Z",
           },
         }), headers: {})
-
-      add_teacher_reference_number trn
-      add_date_of_birth year, month, day
-    end
-
-    def add_teacher_reference_number(trn)
-      fill_in "Teacher reference number (TRN)", with: trn
-      click_on "Continue"
-    end
-
-    def add_date_of_birth(year, month, day)
-      fill_in "Day", with: day
-      fill_in "Month", with: month
-      fill_in "Year", with: year
-      click_on "Continue"
     end
   end
 end

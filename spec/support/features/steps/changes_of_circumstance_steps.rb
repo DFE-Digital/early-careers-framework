@@ -88,8 +88,10 @@ module Steps
       sign_out
     end
 
-    def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_name, declaration_type)
+    def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_type, participant_name, declaration_type)
       participant_profile = find_participant_profile participant_name
+
+      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
       case declaration_type
       when :started
@@ -102,7 +104,7 @@ module Steps
 
       travel_to(timestamp) do
         declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
-        declarations_endpoint.post_training_declaration participant_profile.user.id, declaration_type, timestamp - 2.days
+        declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, timestamp - 2.days
 
         declarations_endpoint.has_declaration_type? declaration_type.to_s
         declarations_endpoint.has_eligible_for_payment? true
