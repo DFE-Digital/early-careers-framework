@@ -60,7 +60,7 @@ module Steps
       sign_out
     end
 
-    def and_participant_has_completed_registration(participant_name)
+    def and_participant_has_completed_registration(participant_name, participant_type)
       year = "1996"
       month = "07"
       day = "02"
@@ -70,7 +70,14 @@ module Steps
 
       sign_in_as user
       wizard = Pages::ParticipantRegistrationWizard.new
-      wizard.complete participant_name, year, month, day, trn
+      case participant_type
+      when "ECT"
+        wizard.complete_for_ect participant_name, year, month, day, trn
+      when "Mentor"
+        wizard.complete_for_mentor participant_name, year, month, day, trn
+      else
+        raise "Participant_type not recognised"
+      end
       sign_out
     end
 

@@ -5,7 +5,15 @@ module Pages
     include Capybara::DSL
     include WebMock::API
 
-    def complete(participant_name, year, month, day, trn)
+    def complete_for_ect(participant_name, year, month, day, trn)
+      setup_response_from_dqt participant_name, year, month, day, trn
+
+      agree_to_privacy_policy
+      add_teacher_reference_number trn
+      add_date_of_birth year, month, day
+    end
+
+    def complete_for_mentor(participant_name, year, month, day, trn)
       setup_response_from_dqt participant_name, year, month, day, trn
 
       agree_to_privacy_policy

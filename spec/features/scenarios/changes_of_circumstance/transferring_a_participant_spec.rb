@@ -64,7 +64,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         and_feature_flag_is_active :change_of_circumstances
 
         and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_email, scenario.participant_type
-        and_participant_has_completed_registration "the Participant"
+        and_participant_has_completed_registration "the Participant", scenario.participant_type
       end
 
       context when_context(scenario) do
