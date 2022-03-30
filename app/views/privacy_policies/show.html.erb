@@ -14,7 +14,7 @@
     <%= @policy.html.html_safe %>
 
     <% if @policy.acceptance_required?(current_user) %>
-      <%= form({action: :update}, method: :put) do %>
+      <%= form_tag({action: :update}, method: :put) do %>
         <%= hidden_field_tag :policy_id, @policy.id %>
         <%= submit_tag "Continue", class: "govuk-button govuk-!-margin-top-4" %>
       <% end %>
