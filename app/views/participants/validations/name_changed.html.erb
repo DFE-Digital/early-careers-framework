@@ -11,7 +11,7 @@
       </p>
     </div>
     <%= form_for validation_form, url: { action: :update }, method: :patch do |f| %>
-      <%= f.govuk_radio_buttons_fieldset :name_changed, inline: true, legend: { text: "" }, hint: { text: "Answer ‘no’ if your last name has changed, or you used a different version of your first name." } do %>
+      <%= f.govuk_radio_buttons_fieldset :name_changed, inline: true, legend: nil, hint: { text: "Answer ‘no’ if your last name has changed, or you used a different version of your first name." } do %>
         <%= f.govuk_radio_button :name_changed, false, label: { text: "Yes" } %>
         <%= f.govuk_radio_button :name_changed, true, label: { text: "No" } %>
       <% end %>
