@@ -248,6 +248,10 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v2/participants/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
+          let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+          let!(:induction_record) do
+            Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
+          end
 
           it "changes the training status of a participant to withdrawn" do
             put url, params: params
@@ -265,6 +269,10 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         let(:withdrawal_url)    { "/api/v2/participants/#{early_career_teacher_profile.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+        let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+        let!(:induction_record) do
+          Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
+        end
       end
 
       it_behaves_like "JSON Participant Resume endpoint", "participant" do
@@ -272,6 +280,11 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         let(:withdrawal_url)    { "/api/v2/participants/#{early_career_teacher_profile.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+        let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+        let!(:induction_record) do
+          Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
+        end
+
         before do
           put "/api/v2/participants/#{early_career_teacher_profile.user.id}/defer",
               params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }

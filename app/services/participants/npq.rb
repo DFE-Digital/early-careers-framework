@@ -29,6 +29,12 @@ module Participants
         .first
     end
 
+    # this is to appease the abused inheritance hierarchy
+    # as induction records are an ECF concept
+    def relevant_induction_record
+      nil
+    end
+
     module NPQClassMethods
       def valid_courses
         NPQCourse.identifiers
