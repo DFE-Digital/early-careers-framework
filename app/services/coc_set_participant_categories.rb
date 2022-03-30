@@ -3,6 +3,9 @@
 class CocSetParticipantCategories < BaseService
   ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :transferring_in, :transferring_out, :transferred)
 
+  # replace [] in call back to transferring_out_participants method once
+  # transferring out journey is done
+  # transferring out ppts are being shown in active_induction_records for now
   def call
     ParticipantCategories.new(
       eligible_participants,
@@ -11,7 +14,7 @@ class CocSetParticipantCategories < BaseService
       contacted_for_info_participants,
       details_being_checked_participants,
       transferring_in_participants,
-      transferring_out_participants,
+      [],
       transferred_participants,
     )
   end
@@ -87,11 +90,13 @@ private
     ).resolve
   end
 
+  # switch back to active_induction_records once transferring out journey is done
+  # Until this is done we want to show the active and transferring_out in this section
   def active_induction_records
     InductionRecordPolicy::Scope.new(
       user,
       school_cohort
-        .active_induction_records
+        .current_induction_records
         .where.not(training_status: :withdrawn)
         .joins(:participant_profile)
         .where(participant_profiles: { type: profile_type.to_s })
