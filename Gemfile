@@ -63,7 +63,6 @@ gem "tzinfo-data"
 
 gem "govuk-components", "~> 3.0", ">= 3.0.3"
 gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
-gem "govuk_markdown", "~> 1.0"
 gem "view_component", require: "view_component/engine"
 
 # Fetching from APIs
@@ -89,7 +88,6 @@ gem "jsonapi-serializer"
 gem "openapi3_parser", "~> 0.9.2"
 gem "open_api-rswag-api", "~> 0.1.0"
 gem "open_api-rswag-ui", "~> 0.1.0"
-gem "rouge"
 
 gem "ransack"
 
