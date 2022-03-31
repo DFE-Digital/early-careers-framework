@@ -32,7 +32,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
     let(:cohort) { create :cohort, :current }
-    let(:privacy_policy)  { create :privacy_policy }
+    let(:privacy_policy) { create :privacy_policy }
 
     let(:tokens) { {} }
 

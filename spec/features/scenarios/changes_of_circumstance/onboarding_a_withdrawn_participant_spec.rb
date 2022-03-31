@@ -32,7 +32,7 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
     let(:cohort) { create :cohort, :current }
-    let(:privacy_policy)  { create :privacy_policy }
+    let(:privacy_policy) { create :privacy_policy }
 
     let(:tokens) { {} }
 

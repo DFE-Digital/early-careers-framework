@@ -17,7 +17,7 @@ module Pages
     end
 
     def upload_school_urns(school_urns)
-      csv_filepath = "temp/school_urns.csv"
+      csv_filepath = "tmp/school_urns.csv"
 
       CSV.open(csv_filepath, "w") do |csv|
         school_urns.each { |urn| csv << [urn] }

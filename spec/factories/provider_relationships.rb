@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :provider_relationship do
-    cohort { create :cohort, :current }
+    cohort { Cohort.current || create(:cohort, :current) }
     lead_provider
     delivery_partner { create :delivery_partner }
   end
