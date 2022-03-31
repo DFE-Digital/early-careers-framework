@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+
 class Cohort < ApplicationRecord
   has_many :schedules, class_name: "Finance::Schedule"
   has_many :partnerships
