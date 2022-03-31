@@ -6,9 +6,9 @@ Sentry.init do |config|
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
   config.release = "#{ENV['RELEASE_VERSION']}-#{ENV['SHA']}"
 
-  config.async = lambda do |event, hint|
-    SentrySendEventJobNoRetry.perform_async(event, hint)
-  end
+  # config.async = lambda do |event, hint|
+  #   SentrySendEventJobNoRetry.perform_async(event, hint)
+  # end
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.before_send = lambda do |event, _hint|
