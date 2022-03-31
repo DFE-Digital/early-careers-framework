@@ -246,7 +246,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     it "updates the term of a participant" do
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-start-term", params: {
-          participant_profile: { start_term: "summer_2022" },
+          participant_start_term_form: { start_term: "summer_2022" },
         }
       }.to change { ect_profile.reload.start_term.humanize }.to("Summer 2022")
     end
