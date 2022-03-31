@@ -11,9 +11,9 @@ module APIs
       @token = token
     end
 
-    def post_withdraw_notice(participant_id, reason_code)
+    def post_withdraw_notice(participant_id, course_identifier, reason_code)
       @current_id = participant_id
-      post_request reason_code
+      post_request course_identifier, reason_code
     end
 
     def responded_with_full_name?(expected_value)
@@ -38,11 +38,11 @@ module APIs
 
   private
 
-    def post_request(reason_code)
+    def post_request(course_identifier, reason_code)
       @response = nil
 
       url = "/api/v1/participants/#{@current_id}/withdraw"
-      params = build_params reason: reason_code, course_identifier: "ecf-induction"
+      params = build_params reason: reason_code, course_identifier: course_identifier
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",

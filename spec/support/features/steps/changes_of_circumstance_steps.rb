@@ -120,13 +120,15 @@ module Steps
       end
     end
 
-    def and_lead_provider_withdraws_participant(lead_provider_name, participant_name)
+    def and_lead_provider_withdraws_participant(lead_provider_name, participant_name, participant_type)
       participant_profile = find_participant_profile participant_name
+
+      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
         withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.new tokens[lead_provider_name]
-        withdraw_endpoint.post_withdraw_notice participant_profile.user.id, "moved-school"
+        withdraw_endpoint.post_withdraw_notice participant_profile.user.id, course_identifier, "moved-school"
 
         withdraw_endpoint.responded_with_full_name? participant_name
         withdraw_endpoint.responded_with_obfuscated_email?

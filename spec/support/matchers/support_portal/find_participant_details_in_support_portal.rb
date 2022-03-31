@@ -29,12 +29,14 @@ module Support
         sign_out
 
         true
-      rescue Capybara::ElementNotFound
-        @text = page.find("main").text
+      rescue Capybara::ElementNotFound => e
+        @error = e
         false
       end
 
       failure_message do |_admin_user|
+        return @error unless @error.nil?
+
         "the details of '#{participant_name}' cannot be found at '#{@school_name}' within:\n===\n#{@text}\n==="
       end
 

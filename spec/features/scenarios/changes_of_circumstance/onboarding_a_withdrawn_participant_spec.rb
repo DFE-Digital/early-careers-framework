@@ -75,7 +75,7 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
 
           case scenario.withdrawn_by
           when :lead_provider
-            and_lead_provider_withdraws_participant "Original Lead Provider", "the Participant"
+            and_lead_provider_withdraws_participant "Original Lead Provider", "the Participant", scenario.participant_type
           when :school
             and_school_withdraws_participant "Original SIT", "the Participant"
           when :not_applicable

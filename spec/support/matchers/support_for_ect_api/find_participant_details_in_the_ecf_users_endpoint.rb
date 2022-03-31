@@ -21,11 +21,14 @@ module Support
         user_endpoint.has_induction_programme_choice? programme == "CIP" ? "core_induction_programme" : "full_induction_programme"
 
         true
-      rescue Capybara::ElementNotFound
+      rescue Capybara::ElementNotFound => e
+        @error = e
         false
       end
 
       failure_message do |service_name|
+        return @error unless @error.nil?
+
         "'#{service_name}' should have been able to retrieve the record for \"#{participant_name}\", an #{participant_type} on the #{programme} programme, within\n===\n#{@text}\n==="
       end
 
