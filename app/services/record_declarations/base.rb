@@ -50,8 +50,6 @@ module RecordDeclarations
       Api::V1::ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
-  private
-
     def initialize(params:)
       self.participant_id = params[:participant_id]
       self.course_identifier = params[:course_identifier]
@@ -59,6 +57,8 @@ module RecordDeclarations
       self.declaration_date = params[:declaration_date]
       self.declaration_type = params[:declaration_type]
     end
+
+  private
 
     def set_eligibility
       if participant_declaration.duplicate_declarations.any?
