@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  include Pagy::Frontend
+
   def profile_dashboard_path(user)
     if user.admin?
       admin_schools_path
