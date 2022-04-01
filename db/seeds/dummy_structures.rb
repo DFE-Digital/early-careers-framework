@@ -156,6 +156,21 @@ profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_pr
 end
 ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 
+# populate change of circumstances
+SchoolCohort.where(induction_programme_choice: InductionProgramme.training_programmes.keys).left_joins(:induction_programmes).where(induction_programmes: { id: nil }).find_each do |sc|
+  programme = InductionProgramme.find_or_create_by!(school_cohort: sc,
+                                                    training_programme: sc.induction_programme_choice,
+                                                    partnership: sc.school.partnerships.active.where(cohort: sc.cohort).first,
+                                                    core_induction_programme: sc.core_induction_programme)
+  sc.ecf_participant_profiles.each do |profile|
+    if profile.current_induction_programme != programme
+      induction = Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
+      induction.update!(induction_status: profile.status, training_status: profile.training_status, mentor_profile_id: profile.mentor_profile_id)
+    end
+  end
+  sc.update!(default_induction_programme: programme)
+end
+
 # We clear the database on a regular basis, but we want a stable token that E&L can use in its dev environments
 # Hashed token with the same unhashed version will be different between dev and deployed dev
 # The tokens below have different unhashed version to avoid worrying about clever cryptographic attacks
