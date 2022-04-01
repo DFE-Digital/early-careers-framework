@@ -8,6 +8,7 @@ RSpec.describe "Participants API", type: :request do
   let(:lead_provider) { create(:lead_provider) }
   let(:cohort) { create(:cohort, :current) }
   let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+  let(:induction_programme) { create(:induction_programme, partnership: partnership) }
   let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
@@ -318,7 +319,11 @@ RSpec.describe "Participants API", type: :request do
         end
       end
 
-      it_behaves_like "JSON Participant Change schedule endpoint"
+      it_behaves_like "JSON Participant Change schedule endpoint" do
+        let!(:induction_record) do
+          Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
+        end
+      end
 
       describe "JSON Participant Withdrawal" do
         it_behaves_like "a participant withdraw action endpoint" do
