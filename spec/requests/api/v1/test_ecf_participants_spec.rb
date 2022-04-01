@@ -75,6 +75,20 @@ RSpec.describe "Participants API", type: :request do
 
         context "when there is no mentor"
 
+        context "NQT+1" do
+          let(:cohort_2020) { create(:cohort, start_year: 2020) }
+
+          before do
+            profile.school_cohort.update!(cohort: cohort_2020)
+          end
+
+          it "does not include them" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"].size).to be_zero
+          end
+        end
+
         context "one profile with 2 induction records" do
           let(:profile) do
             create(
