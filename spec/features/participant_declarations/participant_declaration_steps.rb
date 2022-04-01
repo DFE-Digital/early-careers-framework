@@ -8,11 +8,15 @@ module ParticipantDeclarationSteps
     school_cohort = create(:school_cohort, cohort: cohort)
     @ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
     delivery_partner = create(:delivery_partner)
-    create(:partnership,
-           school: @ect_profile.school,
-           lead_provider: @cpd_lead_provider.lead_provider,
-           cohort: cohort,
-           delivery_partner: delivery_partner)
+    partnership = create(
+      :partnership,
+      school: @ect_profile.school,
+      lead_provider: @cpd_lead_provider.lead_provider,
+      cohort: cohort,
+      delivery_partner: delivery_partner,
+    )
+    induction_programme = create(:induction_programme, partnership: partnership)
+    Induction::Enrol.call(participant_profile: @ect_profile, induction_programme: induction_programme)
     @ect_id = @ect_profile.user.id
     @declaration_date = @ect_profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @ect_profile.schedule.milestones.first.start_date + 2.days
@@ -24,6 +28,9 @@ module ParticipantDeclarationSteps
     partnership = create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
     @mentor_profile = create(:mentor_participant_profile, school: partnership.school, cohort: partnership.cohort)
     @mentor_id = @mentor_profile.user.id
+    induction_programme = create(:induction_programme, partnership: partnership)
+    Induction::Enrol.call(participant_profile: @mentor_profile, induction_programme: induction_programme)
+
     @declaration_date = @mentor_profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @mentor_profile.schedule.milestones.first.start_date + 2.days
   end
@@ -114,13 +121,16 @@ module ParticipantDeclarationSteps
 
     delivery_partner = create(:delivery_partner)
 
-    create(:partnership,
-           school: @ect_profile.school,
-           lead_provider: @new_cpd_lead_provider.lead_provider,
-           cohort: partnership.cohort,
-           delivery_partner: delivery_partner)
+    new_partnership = create(
+      :partnership,
+      school: @ect_profile.school,
+      lead_provider: @new_cpd_lead_provider.lead_provider,
+      cohort: partnership.cohort,
+      delivery_partner: delivery_partner,
+    )
 
-    partnership.destroy!
+    new_induction_programme = create(:induction_programme, partnership: new_partnership)
+    Induction::Enrol.call(participant_profile: @ect_profile, induction_programme: new_induction_programme)
   end
 
   def then_second_declaration_is_created

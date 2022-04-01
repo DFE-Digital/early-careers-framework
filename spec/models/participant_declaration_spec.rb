@@ -270,9 +270,14 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:declaration_date)  { (Finance::Schedule::ECF.default.milestones.first.milestone_date - 1.day).rfc3339 }
       let(:declaration_type)  { "started" }
 
+      let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+
       before do
-        create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
+        Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+        Induction::Enrol.call(participant_profile: primary_participant_profile, induction_programme: induction_programme)
       end
+
+      let!(:partnership) { create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school) }
 
       context "when declarations have been made for a teacher profile with the same trn" do
         subject(:record_started_declaration) do
@@ -339,6 +344,8 @@ RSpec.describe ParticipantDeclaration, type: :model do
               end
 
               before do
+                Induction::Enrol.call(participant_profile: another_duplicate_participant_profile, induction_programme: induction_programme)
+
                 RecordDeclarations::Started::EarlyCareerTeacher.call(
                   params: {
                     participant_id: another_duplicate_participant_profile.user_id,
@@ -372,6 +379,8 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
           context "when declarations have been made for a different course" do
             before do
+              Induction::Enrol.call(participant_profile: mentor_participant_profile, induction_programme: induction_programme)
+
               RecordDeclarations::Started::Mentor.call(
                 params: {
                   participant_id: mentor_participant_profile.user_id,

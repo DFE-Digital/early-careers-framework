@@ -17,7 +17,7 @@ RSpec.shared_examples "a participant service for ect" do
       let!(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: user_profile.school) }
 
       before do
-        user_profile.update!(school_cohort: school_cohort_2020)
+        induction_programme.update!(school_cohort: school_cohort_2020)
       end
 
       it "raises a ParameterMissing error" do

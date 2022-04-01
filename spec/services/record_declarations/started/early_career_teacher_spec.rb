@@ -41,7 +41,7 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     let!(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: ect_profile.school) }
 
     before do
-      ect_profile.update!(school_cohort: school_cohort_2020)
+      induction_programme.update!(school_cohort: school_cohort_2020)
     end
 
     it "raises a ParameterMissing error" do

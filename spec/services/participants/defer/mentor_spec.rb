@@ -9,6 +9,12 @@ RSpec.describe Participants::Defer::Mentor do
   let(:user) { profile.user }
   let(:school) { profile.school_cohort.school }
   let(:cohort) { profile.school_cohort.cohort }
+  let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+
+  let!(:induction_record) do
+    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+  end
+
   let!(:partnership) do
     create(
       :partnership,
@@ -36,6 +42,10 @@ RSpec.describe Participants::Defer::Mentor do
 
     it "creates a ParticipantProfileState" do
       expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
+    end
+
+    it "updates induction_record training_status" do
+      expect { subject.call }.to change { induction_record.reload.training_status }.from("active").to("deferred")
     end
 
     context "when already deferred" do
