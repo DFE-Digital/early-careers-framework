@@ -24,10 +24,11 @@ end
 RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps
 
+  includes = ENV.fetch("SCENARIOS", "").split(",").map(&:to_i)
+
   fixture_data_path = File.join(File.dirname(__FILE__), "./onboarding_a_withdrawn_participant_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
-    # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 2
+    next if includes.any? && !includes.include?(index + 2)
 
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 

@@ -24,10 +24,11 @@ end
 RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps
 
+  includes = ENV.fetch("SCENARIOS", "").split(",").map(&:to_i)
+
   fixture_data_path = File.join(File.dirname(__FILE__), "./transferring_a_participant_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
-    # NOTE: uncomment to specify a specific test to run
-    # next unless index + 2 == 2
+    next if includes.any? && !includes.include?(index + 2)
 
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
@@ -198,7 +199,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             end
             expect(subject).to be_able_to_find_the_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_participant_status
             expect(subject).to be_able_to_find_the_training_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_training_status
-            expect(subject).to be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.see_new_declarations
+            expect(subject).to be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.all_declarations
 
             expect(subject).to be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors
             expect(subject).to be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_declarations

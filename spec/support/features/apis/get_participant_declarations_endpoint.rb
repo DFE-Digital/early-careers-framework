@@ -17,12 +17,12 @@ module APIs
     end
 
     def get_declaration(declaration_type)
-      @current_type = declaration_type
+      @current_type = declaration_type.to_s.gsub("_", "-")
       select_declaration
     end
 
     def has_declarations?(declaration_types)
-      list_declarations == declaration_types
+      list_declarations == declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
     end
 
   private

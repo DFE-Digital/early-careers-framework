@@ -17,7 +17,7 @@ module APIs
     end
 
     def has_declaration_type?(expected_value)
-      has_attribute_value? "declaration_type", expected_value
+      has_attribute_value? "declaration_type", expected_value.to_s.gsub("_", "-")
     end
 
     def has_eligible_for_payment?(expected_value)
@@ -34,16 +34,18 @@ module APIs
 
   private
 
-    def post_declaration(course_identifier, declaration_type, declaration_date)
+    def post_declaration(course_identifier, declaration_type, declaration_date, evidence_held: true)
       @response = nil
 
       url = "/api/v1/participant-declarations"
-      params = build_params({
+      @attributes = {
         participant_id: @current_id,
-        declaration_type: declaration_type,
+        declaration_type: declaration_type.to_s.gsub("_", "-"),
         declaration_date: declaration_date.rfc3339,
         course_identifier: course_identifier,
-      })
+        evidence_held: evidence_held ? "self-study-material-completed" : nil,
+      }
+      params = build_params(@attributes)
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",
@@ -53,8 +55,8 @@ module APIs
 
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
-        error = JSON.parse(session.response.body)
-        raise "POST request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        error = JSON.pretty_generate JSON.parse(session.response.body)["errors"]
+        raise "POST request to <#{url}> with request body \n#{JSON.pretty_generate @attributes}\n failed due to \n===\n#{error}\n===\n"
       end
     end
 

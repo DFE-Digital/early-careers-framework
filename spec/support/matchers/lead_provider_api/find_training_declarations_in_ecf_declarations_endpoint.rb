@@ -17,9 +17,9 @@ module Support
 
         @text = JSON.pretty_generate declarations_endpoint.response
 
-        declarations_endpoint.has_declarations? declaration_types.map(&:to_s)
+        declarations_endpoint.has_declarations? declaration_types
         declaration_types.each do |declaration_type|
-          declarations_endpoint.get_declaration declaration_type.to_s
+          declarations_endpoint.get_declaration declaration_type
         end
 
         true

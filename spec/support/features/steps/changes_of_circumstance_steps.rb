@@ -106,7 +106,7 @@ module Steps
       when :retained_1
         timestamp = participant_profile.schedule.milestones.second.start_date + 4.days
       else
-        puts "declaration type was actually #{declaration_type}"
+        raise "declaration type was #{declaration_type} but expected [started, retained_1]"
       end
 
       travel_to(timestamp) do
