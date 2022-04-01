@@ -6,7 +6,7 @@
     <p class="govuk-body">You can usually find it on your payslip, teachers’ pension documents, or teacher training records.</p>
 
     <%= form_for validation_form, url: { action: :update }, method: :patch do |f| %>
-      <%= f.govuk_radio_buttons_fieldset :check_trn_given, inline: true, legend: { text: "" } do %>
+      <%= f.govuk_radio_buttons_fieldset :check_trn_given, inline: true, legend: nil do %>
         <%= f.govuk_radio_button :check_trn_given, true, label: { text: "Yes" } %>
         <%= f.govuk_radio_button :check_trn_given, false, label: { text: "No" } %>
       <% end %>

@@ -13,12 +13,12 @@ RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
     and_percy_should_be_sent_a_snapshot_named("Admin choose programme page")
 
     when_i_select_cip
-    and_i_click_the_submit_button
+    and_i_click_the_continue_button
     then_i_should_be_on the_confirm_page
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Admin confirm programme page")
 
-    when_i_click_the_submit_button
+    when_i_click_the_continue_button
     then_i_should_be_on the_school_cohorts_page
     and_there_should_be_a_success_banner
   end
