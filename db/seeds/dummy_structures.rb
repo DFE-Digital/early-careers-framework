@@ -162,10 +162,10 @@ SchoolCohort.where(induction_programme_choice: InductionProgramme.training_progr
                                                     training_programme: sc.induction_programme_choice,
                                                     partnership: sc.school.partnerships.active.where(cohort: sc.cohort).first,
                                                     core_induction_programme: sc.core_induction_programme)
-  sc.ecf_participant_profiles.each do |profile|
-    if profile.current_induction_programme != programme
-      induction = Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
-      induction.update!(induction_status: profile.status, training_status: profile.training_status, mentor_profile_id: profile.mentor_profile_id)
+  sc.ecf_participant_profiles.each do |ecf_profile|
+    if ecf_profile.current_induction_programme != programme
+      induction = Induction::Enrol.call(participant_profile: ecf_profile, induction_programme: programme)
+      induction.update!(induction_status: ecf_profile.status, training_status: ecf_profile.training_status, mentor_profile_id: ecf_profile.mentor_profile_id)
     end
   end
   sc.update!(default_induction_programme: programme)
