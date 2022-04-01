@@ -4,7 +4,7 @@ module Pages
   class SITAddParticipantWizard
     include Capybara::DSL
 
-    def complete(participant_name, participant_email, participant_type)
+    def complete(participant_name, participant_email, participant_type, cohort_label)
       click_on "Continue"
 
       case participant_type.downcase.to_sym
@@ -12,13 +12,13 @@ module Pages
         start_to_add_a_new_ect
         add_full_name participant_name
         add_email_address participant_email
-        choose_start_date
+        choose_start_date cohort_label
         confirm_and_add
       when :mentor
         start_to_add_a_new_mentor
         add_full_name participant_name
         add_email_address participant_email
-        choose_start_date
+        choose_start_date cohort_label
         confirm_and_add
       when :sit_mentor
         start_to_add_sit_as_mentor
@@ -52,8 +52,8 @@ module Pages
       click_on "Continue"
     end
 
-    def choose_start_date
-      choose "Autumn 2021"
+    def choose_start_date(cohort_label)
+      choose cohort_label
       click_on "Continue"
     end
 

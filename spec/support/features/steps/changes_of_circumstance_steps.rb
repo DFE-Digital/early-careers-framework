@@ -5,62 +5,96 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      user = create :user, full_name: lead_provider_name
-      lead_provider = create :lead_provider, :with_delivery_partner, name: lead_provider_name
-      cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
-      create :lead_provider_profile, user: user, lead_provider: cpd_lead_provider.lead_provider
-      create :call_off_contract, lead_provider: cpd_lead_provider.lead_provider
+      timestamp = Time.zone.local(2021, 2, 1, 9, 0, 0)
 
-      create :ecf_statement,
-             name: "November 2021",
-             cpd_lead_provider: cpd_lead_provider
+      travel_to(timestamp) do
+        user = create :user, full_name: lead_provider_name
+        lead_provider = create :lead_provider, :with_delivery_partner, name: lead_provider_name
+        cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
+        create :lead_provider_profile, user: user, lead_provider: cpd_lead_provider.lead_provider
+        create :call_off_contract, lead_provider: cpd_lead_provider.lead_provider
 
-      token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
-                                                             lead_provider: lead_provider,
-                                                             private_api_access: true
+        create :ecf_statement,
+               name: "November 2021",
+               cpd_lead_provider: cpd_lead_provider
 
-      tokens[lead_provider_name] = token
+        token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
+                                                               lead_provider: lead_provider,
+                                                               private_api_access: true
+
+        tokens[lead_provider_name] = token
+      end
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      school = create :school, :pupil_premium_uplift, name: "#{sit_name}'s School"
-      user = create :user, full_name: sit_name
-      create :induction_coordinator_profile,
-             schools: [school],
-             user: user
-      privacy_policy.accept! user
+      timestamp = Time.zone.local(2021, 4, 1, 9, 0, 0)
 
-      sign_in_as user
-      choose_programme_wizard = Pages::SITReportProgrammeWizard.new
-      choose_programme_wizard.complete(programme)
-      sign_out
+      travel_to(timestamp) do
+        school = create :school, :pupil_premium_uplift, name: "#{sit_name}'s School"
+        user = create :user, full_name: sit_name
+        create :induction_coordinator_profile,
+               schools: [school],
+               user: user
+        privacy_policy.accept! user
 
-      # TODO: This needs to be automated as part of the Report Programme Task
-      create :induction_programme, programme.downcase.to_s,
-             school_cohort: school.school_cohorts.first
+        sign_in_as user
+        choose_programme_wizard = Pages::SITReportProgrammeWizard.new
+        choose_programme_wizard.complete(programme)
+        sign_out
+
+        # TODO: This needs to be automated as part of the Report Programme Task
+        create :induction_programme, programme.downcase.to_s,
+               school_cohort: school.school_cohorts.first
+      end
+    end
+
+    def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
+      timestamp = Time.zone.local(2021, 5, 1, 9, 0, 0)
+
+      user = find_user lead_provider_name
+      lead_provider = user.lead_provider
+      delivery_partner = lead_provider.delivery_partners.first
+
+      school = find_school_for_sit sit_name
+
+      travel_to(timestamp) do
+        sign_in_as user
+        dashboard = Pages::LeadProviderDashboard.new
+        wizard = dashboard.start_confirm_your_schools_wizard
+        wizard.complete delivery_partner.name, [school.urn]
+        sign_out
+      end
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
+      timestamp = Time.zone.local(2021, 6, 1, 9, 0, 0)
+
       user = find_user sit_name
       school = user.induction_coordinator_profile.schools.first
 
-      sign_in_as user
-      inductions_dashboard = Pages::SITInductionDashboard.new
-      wizard = inductions_dashboard.start_add_participant_wizard
-      wizard.complete(participant_name, participant_email, participant_type)
+      cohort_label = "Spring 2022"
 
-      # TODO: This needs to be automated as part of the Add Participant Task
-      create :induction_record,
-             induction_programme: school.school_cohorts.first.induction_programmes.first,
-             participant_profile: school.ecf_participant_profiles.first,
-             induction_status: "active"
+      travel_to(timestamp) do
+        sign_in_as user
+        inductions_dashboard = Pages::SITInductionDashboard.new
+        wizard = inductions_dashboard.start_add_participant_wizard
+        wizard.complete(participant_name, participant_email, participant_type, cohort_label)
 
-      participants_dashboard = wizard.view_participants_dashboard
-      participants_dashboard.view_participant participant_name
-      sign_out
+        # TODO: This needs to be automated as part of the Add Participant Task
+        create :induction_record,
+               induction_programme: school.school_cohorts.first.induction_programmes.first,
+               participant_profile: school.ecf_participant_profiles.first,
+               induction_status: "active"
+
+        participants_dashboard = wizard.view_participants_dashboard
+        participants_dashboard.view_participant participant_name
+        sign_out
+      end
     end
 
     def and_participant_has_completed_registration(participant_name, participant_type)
+      timestamp = Time.zone.local(2021, 8, 1, 9, 0, 0)
+
       year = "1996"
       month = "07"
       day = "02"
@@ -68,31 +102,19 @@ module Steps
 
       user = find_user participant_name
 
-      sign_in_as user
-      wizard = Pages::ParticipantRegistrationWizard.new
-      case participant_type
-      when "ECT"
-        wizard.complete_for_ect participant_name, year, month, day, trn
-      when "Mentor"
-        wizard.complete_for_mentor participant_name, year, month, day, trn
-      else
-        raise "Participant_type not recognised"
+      travel_to(timestamp) do
+        sign_in_as user
+        wizard = Pages::ParticipantRegistrationWizard.new
+        case participant_type
+        when "ECT"
+          wizard.complete_for_ect participant_name, year, month, day, trn
+        when "Mentor"
+          wizard.complete_for_mentor participant_name, year, month, day, trn
+        else
+          raise "Participant_type not recognised"
+        end
+        sign_out
       end
-      sign_out
-    end
-
-    def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      user = find_user lead_provider_name
-      lead_provider = user.lead_provider
-      delivery_partner = lead_provider.delivery_partners.first
-
-      school = find_school_for_sit sit_name
-
-      sign_in_as user
-      dashboard = Pages::LeadProviderDashboard.new
-      wizard = dashboard.start_confirm_your_schools_wizard
-      wizard.complete delivery_partner.name, [school.urn]
-      sign_out
     end
 
     def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_type, participant_name, declaration_type)
