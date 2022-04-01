@@ -1,11 +1,28 @@
 # frozen_string_literal: true
 
 module Support
-  module CannotMakeDuplicateTrainingDeclarationsForParticipant
+  module MakeDuplicateTrainingDeclarations
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_blocked_from_making_a_duplicate_training_declaration_for_the_participant do |participant_name, participant_type, declaration_type|
+    RSpec::Matchers.define :make_duplicate_training_declaration do |participant_name, participant_type, declaration_type|
       match do |lead_provider_name|
+        make_training_declaration lead_provider_name, participant_name, participant_type, declaration_type
+
+        true
+      rescue Capybara::ElementNotFound => e
+        @error = e
+        false
+      end
+
+      match_when_negated do |lead_provider_name|
+        make_training_declaration lead_provider_name
+
+        false
+      rescue StandardError
+        true
+      end
+
+      def make_training_declaration(lead_provider_name, participant_name, participant_type, declaration_type)
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
 
@@ -24,6 +41,8 @@ module Support
         course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
         travel_to(timestamp) do
+          puts timestamp
+
           declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
           declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, timestamp - 8.days
 
@@ -34,11 +53,6 @@ module Support
           declarations_endpoint.has_voided? false
           declarations_endpoint.has_state? "ineligible"
         end
-
-        true
-      rescue Capybara::ElementNotFound => e
-        @error = e
-        false
       end
 
       failure_message do |lead_provider_name|

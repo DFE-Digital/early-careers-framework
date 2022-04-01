@@ -164,7 +164,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             if scenario.duplicate_declarations.any?
               it "should not be able to make duplicate declarations", :aggregate_failures do
                 scenario.duplicate_declarations.each do |declaration_type|
-                  expect(subject).to be_blocked_from_making_a_duplicate_training_declaration_for_the_participant "the Participant", scenario.participant_type, declaration_type
+                  expect(subject).to_not make_duplicate_training_declaration "the Participant", scenario.participant_type, declaration_type
                 end
               end
             end
