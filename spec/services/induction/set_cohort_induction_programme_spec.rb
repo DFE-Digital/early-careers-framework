@@ -63,7 +63,7 @@ RSpec.describe Induction::SetCohortInductionProgramme do
         expect(school_cohort.default_induction_programme).to be_core_induction_programme
       end
     end
-    
+
     context "when a CIP is chosen and the programme specified" do
       let(:cip) { create(:core_induction_programme) }
 
