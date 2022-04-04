@@ -12,7 +12,9 @@ RSpec.describe Participants::Resume::Mentor do
   let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership) }
 
   let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+    ir = Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+    ir.update!(training_status: "deferred")
+    ir
   end
 
   let!(:partnership) do
@@ -37,6 +39,10 @@ RSpec.describe Participants::Resume::Mentor do
   describe "#call" do
     it "updates profile training_status to active" do
       expect { subject.call }.to change { profile.reload.training_status }.from("deferred").to("active")
+    end
+
+    it "updates induction_record training_status to active" do
+      expect { subject.call }.to change { induction_record.reload.training_status }.from("deferred").to("active")
     end
 
     it "creates a ParticipantProfileState" do
