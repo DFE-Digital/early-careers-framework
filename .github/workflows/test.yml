@@ -64,7 +64,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '16.x'
+          node-version: '16.14.x'
           cache: 'yarn'
 
       - name: Install node.js dependencies
@@ -123,7 +123,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '16.x'
+          node-version: '16.14.x'
           cache:  'yarn'
 
       - name: Install node.js dependencies
