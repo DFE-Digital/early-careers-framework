@@ -89,6 +89,40 @@ RSpec.describe "Participants API", type: :request do
           end
         end
 
+        context "when induction_status is withdrawn" do
+          let(:induction_record) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              induction_status: "withdrawn",
+            )
+          end
+
+          it "nullifies email" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
+          end
+        end
+
+        context "when induction_status is changed" do
+          let(:induction_record) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              induction_status: "changed",
+            )
+          end
+
+          it "nullifies email" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
+          end
+        end
+
         context "one profile with 2 induction records" do
           let(:profile) do
             create(
