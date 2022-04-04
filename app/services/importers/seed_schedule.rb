@@ -25,16 +25,18 @@ class Importers::SeedSchedule
         name: row["schedule-name"],
       )
 
-      milestone = Finance::Milestone.find_or_initialize_by(
-        schedule: schedule,
-        declaration_type: row["milestone-declaration-type"],
-      )
-
-      milestone.update!(
+      milestone = schedule.milestones.find_or_create_by!(
         name: row["milestone-name"],
         start_date: row["milestone-start-date"],
         milestone_date: row["milestone-date"],
         payment_date: row["milestone-payment-date"],
+        declaration_type: row["milestone-declaration-type"],
+      )
+
+      schedule.schedule_milestones.create!(
+        declaration_type: row["milestone-declaration-type"],
+        name: row["milestone-name"],
+        milestone: milestone,
       )
     end
   end

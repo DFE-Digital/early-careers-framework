@@ -7,3 +7,5 @@ class Finance::Schedule::ECF < Finance::Schedule
     find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-september")
   end
 end
+
+require "finance/schedule/mentor"
