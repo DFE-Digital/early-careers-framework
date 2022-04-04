@@ -158,16 +158,14 @@ module Steps
         withdraw_endpoint.responded_with_training_status? "withdrawn"
 
         # TODO: This needs to be automated through the withdraw API
-        current_induction_record = participant_profile.induction_records.select { |x| x.induction_status == "active" }.first
+        current_induction_record = participant_profile.induction_records.active.first
         current_induction_record.training_status_withdrawn! unless current_induction_record.nil?
       end
     end
 
     def and_school_withdraws_participant(_sit_name, participant_name)
       participant_profile = find_participant_profile participant_name
-      current_induction_record = participant_profile.induction_records
-                                                    .select { |x| x.induction_status == "active" }
-                                                    .first
+      current_induction_record = participant_profile.induction_records.active.first
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
@@ -187,9 +185,7 @@ module Steps
       induction_programme = school_cohort.induction_programmes.first
 
       participant_profile = find_participant_profile participant_name
-      current_induction_record = participant_profile.induction_records
-                                                    .select { |x| x.induction_status == "active" }
-                                                    .first
+      current_induction_record = participant_profile.induction_records.active.first
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do

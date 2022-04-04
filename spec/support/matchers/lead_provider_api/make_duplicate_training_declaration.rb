@@ -11,6 +11,7 @@ module Support
         true
       rescue Capybara::ElementNotFound => e
         @error = e
+
         false
       end
 
@@ -18,7 +19,9 @@ module Support
         make_training_declaration lead_provider_name
 
         false
-      rescue StandardError
+      rescue StandardError => e
+        @error = e
+
         true
       end
 
