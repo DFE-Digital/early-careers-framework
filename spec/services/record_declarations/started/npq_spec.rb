@@ -12,6 +12,10 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   let(:declaration_date) { profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days }
   let(:declaration_date_string) { declaration_date.rfc3339 }
 
+  before do
+    create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now)
+  end
+
   subject do
     described_class.new(
       params: {
