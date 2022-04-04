@@ -46,6 +46,10 @@ RSpec.describe Participants::Withdraw::Mentor do
       expect { subject.call }.to change { profile.reload.training_status }.from("active").to("withdrawn")
     end
 
+    it "updates induction record training_status to withdrawn" do
+      expect { subject.call }.to change { induction_record.reload.training_status }.from("active").to("withdrawn")
+    end
+
     it "creates a ParticipantProfileState" do
       expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
     end
