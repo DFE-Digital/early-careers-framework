@@ -5,7 +5,7 @@ module PaginationHelper
 
   def govuk_paginate(scope, pagy=nil)
     if pagy
-      pagy_nav(pagy, size: pagy_size(pagy))
+      render partial: 'shared/paginator', locals: {pagy: pagy}
     else
       paginate(scope, window: window(scope), outer_window: OUTER_WINDOW)
     end

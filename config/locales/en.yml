@@ -331,3 +331,9 @@ en:
       providers:
         show:
           title: "Banding tracker for %{provider_name}"
+
+  pagy:
+    nav:
+      prev: ← Previous
+      next: Next →
+      gap: ...
