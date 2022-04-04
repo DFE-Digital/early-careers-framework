@@ -3,13 +3,12 @@
 module PaginationHelper
   OUTER_WINDOW = 1
 
-  def govuk_paginate(scope, pagy=nil)
+  def govuk_paginate(scope, pagy = nil)
     if pagy
-      render partial: 'shared/paginator', locals: {pagy: pagy}
+      render partial: "shared/paginator", locals: { pagy: pagy }
     else
       paginate(scope, window: window(scope), outer_window: OUTER_WINDOW)
     end
-
   end
 
 private
