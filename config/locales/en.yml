@@ -198,6 +198,16 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
+        schools/add_participant_form:
+          attributes:
+            mentor_id:
+              blank: "Choose a mentor"
+            start_term:
+              blank: "Choose a start term"
+        participant_mentor_form:
+          attributes:
+            mentor_id:
+              blank: "Choose a mentor"
 
   page_titles:
     lead_providers:
