@@ -114,7 +114,7 @@ module Participants
       end
 
       def matches_lead_provider?
-        cpd_lead_provider == school_cohort&.lead_provider&.cpd_lead_provider
+        relevant_induction_record.present?
       end
     end
   end
