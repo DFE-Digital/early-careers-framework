@@ -9,7 +9,7 @@ module Admin
         lead_providers = policy_scope(LeadProvider).sort_by(&:name)
         delivery_partners = policy_scope(DeliveryPartner).sort_by(&:name)
         sorted_suppliers = (lead_providers + delivery_partners)
-        @pagy, @suppliers = pagy_array(sorted_suppliers, page: params[:page], items: 2)
+        @pagy, @suppliers = pagy_array(sorted_suppliers, page: params[:page], items: 20)
         @page = @pagy.page
         @total_pages = @pagy.pages
       end
