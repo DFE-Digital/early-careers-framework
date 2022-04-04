@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 module PaginationHelper
-  def govuk_paginate(scope)
-    paginate(scope, window: window(scope), outer_window: 1)
+  OUTER_WINDOW = 1
+
+  def govuk_paginate(scope, pagy = nil)
+    if pagy
+      render partial: "shared/paginator", locals: { pagy: pagy }
+    else
+      paginate(scope, window: window(scope), outer_window: OUTER_WINDOW)
+    end
   end
 
 private
@@ -20,5 +26,25 @@ private
     else
       2
     end
+  end
+
+  def pagy_window(pagy)
+    case pagy.page
+    when 1
+      4
+    when 2
+      3
+    when pagy.pages
+      4
+    when pagy.pages - 1
+      3
+    else
+      2
+    end
+  end
+
+  def pagy_size(pagy)
+    window = pagy_window(pagy)
+    [OUTER_WINDOW, window, window, OUTER_WINDOW]
   end
 end

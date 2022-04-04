@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
+  include Pagy::Backend
 
   impersonates :user
   prepend CurrentUser
