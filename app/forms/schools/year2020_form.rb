@@ -76,9 +76,9 @@ module Schools
     def save!
       ActiveRecord::Base.transaction do
         school_cohort = SchoolCohort.find_or_initialize_by(school: school, cohort: cohort)
-        school_cohort.induction_programme_choice = "core_induction_programme"
-        school_cohort.core_induction_programme = core_induction_programme
-        school_cohort.save!
+        Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+                                                    programme_choice: "core_induction_programme",
+                                                    core_induction_programme: core_induction_programme)
 
         participants = get_participants.each do |participant|
           EarlyCareerTeachers::Create.call(
