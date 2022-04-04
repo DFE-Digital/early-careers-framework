@@ -12,7 +12,6 @@ class Importers::SeedStatements
           cohort: Cohort.find_by(start_year: 2021),
           contract_version: statement_data.contract_version,
         )
-
         statement.update!(
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
