@@ -42,9 +42,11 @@ module Steps
         choose_programme_wizard.complete(programme)
         sign_out
 
-        # TODO: This needs to be automated as part of the Report Programme Task
-        create :induction_programme, programme.downcase.to_s,
-               school_cohort: school.school_cohorts.first
+        if programme == "CIP"
+          school_cohort = school.school_cohorts.first
+          Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
+                                                      programme_choice: school_cohort.induction_programme_choice
+        end
       end
     end
 
@@ -63,6 +65,10 @@ module Steps
         wizard = dashboard.start_confirm_your_schools_wizard
         wizard.complete delivery_partner.name, [school.urn]
         sign_out
+
+        school_cohort = school.school_cohorts.first
+        Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
+                                                    programme_choice: school_cohort.induction_programme_choice
       end
     end
 
@@ -70,7 +76,6 @@ module Steps
       timestamp = Time.zone.local(2021, 6, 1, 9, 0, 0)
 
       user = find_user sit_name
-      school = user.induction_coordinator_profile.schools.first
 
       cohort_label = "Spring 2022"
 
@@ -79,12 +84,6 @@ module Steps
         inductions_dashboard = Pages::SITInductionDashboard.new
         wizard = inductions_dashboard.start_add_participant_wizard
         wizard.complete(participant_name, participant_email, participant_type, cohort_label)
-
-        # TODO: This needs to be automated as part of the Add Participant Task
-        create :induction_record,
-               induction_programme: school.school_cohorts.first.induction_programmes.first,
-               participant_profile: school.ecf_participant_profiles.first,
-               induction_status: "active"
 
         participants_dashboard = wizard.view_participants_dashboard
         participants_dashboard.view_participant participant_name
@@ -164,28 +163,28 @@ module Steps
     end
 
     def and_school_withdraws_participant(_sit_name, participant_name)
+      # TODO: This needs to be automated through the inductions portal
+
       participant_profile = find_participant_profile participant_name
-      current_induction_record = participant_profile.induction_records.active.first
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
         # OLD way
         participant_profile.withdrawn_record!
 
-        # TODO: This needs to be automated through the inductions portal
+        # NEW way
+        current_induction_record = participant_profile.induction_records.active.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
       end
     end
 
     def when_school_takes_on_the_participant(sit_name, participant_name)
-      # TODO: This needs to be automated through the inductions portal when its made
+      # TODO: This needs to be automated through the inductions portal
 
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
-      induction_programme = school_cohort.induction_programmes.first
 
       participant_profile = find_participant_profile participant_name
-      current_induction_record = participant_profile.induction_records.active.first
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
@@ -196,12 +195,11 @@ module Steps
         participant_profile.update! school_cohort: school_cohort
 
         # NEW way
+        current_induction_record = participant_profile.induction_records.active.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
 
-        create :induction_record,
-               induction_programme: induction_programme,
-               participant_profile: participant_profile,
-               induction_status: "active"
+        Induction::Enrol.call participant_profile: participant_profile,
+                              induction_programme: school_cohort.default_induction_programme
       end
     end
 
@@ -210,7 +208,6 @@ module Steps
 
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
-      induction_programme = school_cohort.induction_programmes.first
 
       participant_profile = find_participant_profile participant_name
 
@@ -223,10 +220,8 @@ module Steps
         participant_profile.update! school_cohort: school_cohort
 
         # NEW way
-        create :induction_record,
-               induction_programme: induction_programme,
-               participant_profile: participant_profile,
-               induction_status: "active"
+        Induction::Enrol.call participant_profile: participant_profile,
+                              induction_programme: school_cohort.default_induction_programme
       end
     end
 
