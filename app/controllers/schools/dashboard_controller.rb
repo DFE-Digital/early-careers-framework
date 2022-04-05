@@ -10,8 +10,8 @@ class Schools::DashboardController < Schools::BaseController
                       .induction_coordinator_profile
                       .schools
                       .order(:name),
-                    page: params[:page],
-                    items: 10)
+                           page: params[:page],
+                           items: 10)
   end
 
   def show
