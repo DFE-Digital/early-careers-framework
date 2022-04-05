@@ -17,7 +17,7 @@ class Finance::Statement < ApplicationRecord
 
   class << self
     def next_output_fee_statement
-      output.order(deadline_date: :asc).where("deadline_date > ?", Date.current).first
+      output.order(deadline_date: :asc).where("deadline_date >= ?", Date.current).first
     end
 
     def attach(participant_declaration)
