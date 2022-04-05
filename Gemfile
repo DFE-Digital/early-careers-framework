@@ -25,7 +25,7 @@ gem "kaminari", "~> 1.2"
 gem "secure_headers"
 
 # Cleaner logs, one line per request
-gem "lograge", "~> 0.11.2"
+gem "lograge", "~> 0.12.0"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
