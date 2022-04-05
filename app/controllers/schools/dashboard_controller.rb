@@ -6,10 +6,12 @@ class Schools::DashboardController < Schools::BaseController
   skip_after_action :verify_policy_scoped
 
   def index
-    @schools = current_user.induction_coordinator_profile.schools
-                           .order(:name)
-                           .page(params[:page])
-                           .per(10)
+    @pagy, @schools = pagy(current_user
+                      .induction_coordinator_profile
+                      .schools
+                      .order(:name),
+                           page: params[:page],
+                           items: 10)
   end
 
   def show
