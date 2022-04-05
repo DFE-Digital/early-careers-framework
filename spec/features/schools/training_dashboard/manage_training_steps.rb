@@ -360,6 +360,10 @@ module ManageTrainingSteps
     click_on("Confirm")
   end
 
+  def when_i_submit_an_empty_form
+    when_i_click_on_continue
+  end
+
   def when_i_click_on_continue
     click_on("Continue")
   end
@@ -544,6 +548,10 @@ module ManageTrainingSteps
     expect(page).to have_text("What happens next")
   end
 
+  def then_i_am_taken_to_email_already_taken_page
+    expect(page).to have_text("This email has already been added")
+  end
+
   def then_i_am_taken_to_mentor_confirmation_page
     expect(page).to have_selector("h1", text: "#{@participant_data[:full_name]} has been added as a mentor")
     expect(page).to have_text("What happens next")
@@ -621,18 +629,6 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Materials")
     expect(page).to have_text(@cip.name)
-  end
-
-  def then_i_receive_a_missing_name_error_message
-    expect(page).to have_text("Enter a full name")
-  end
-
-  def then_i_receive_a_missing_email_error_message
-    expect(page).to have_text("Enter an email address")
-  end
-
-  def then_i_receive_an_email_already_taken_error_message
-    expect(page).to have_text("This email has already been added")
   end
 
   def then_i_am_taken_to_view_details_page
