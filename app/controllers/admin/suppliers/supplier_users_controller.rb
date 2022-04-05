@@ -11,9 +11,9 @@ module Admin
 
       def index
         sorted_users = User.for_lead_provider.sort_by(&:full_name)
-        @users = Kaminari.paginate_array(sorted_users).page(params[:page]).per(20)
-        @page = @users.current_page
-        @total_pages = @users.total_pages
+        @pagy, @users = pagy_array(sorted_users, page: params[:page], items: 20)
+        @page = @pagy.page
+        @total_pages = @pagy.pages
       end
 
       def new
