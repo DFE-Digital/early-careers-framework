@@ -9,7 +9,7 @@ module Api
       include ApiPagination
       include ApiCsv
       include ApiFilter
-      include Api::ParticipantActions
+      include ParticipantActions
 
       def index
         respond_to do |format|

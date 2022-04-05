@@ -30,7 +30,7 @@ RSpec.describe "Participants API", type: :request do
     induction_record
   end
 
-  describe "GET /api/v1/test_ecf_participants" do
+  describe "GET /api/v1/participants/ecf" do
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token
@@ -40,18 +40,18 @@ RSpec.describe "Participants API", type: :request do
         let(:parsed_response) { JSON.parse(response.body) }
 
         it "returns correct jsonapi content type header" do
-          get "/api/v1/test_ecf_participants"
+          get "/api/v1/participants/ecf"
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
         end
 
         it "returns all users" do
-          get "/api/v1/test_ecf_participants"
+          get "/api/v1/participants/ecf"
 
           expect(parsed_response["data"].size).to eql(1)
         end
 
         it "returns correct data" do
-          get "/api/v1/test_ecf_participants"
+          get "/api/v1/participants/ecf"
 
           expect(parsed_response["data"][0]["id"]).to eql(user.id)
           expect(parsed_response["data"][0]["type"]).to eql("participant")
@@ -83,7 +83,7 @@ RSpec.describe "Participants API", type: :request do
           end
 
           it "does not include them" do
-            get "/api/v1/test_ecf_participants"
+            get "/api/v1/participants/ecf"
 
             expect(parsed_response["data"].size).to be_zero
           end
@@ -100,7 +100,7 @@ RSpec.describe "Participants API", type: :request do
           end
 
           it "nullifies email" do
-            get "/api/v1/test_ecf_participants"
+            get "/api/v1/participants/ecf"
 
             expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
           end
@@ -117,7 +117,7 @@ RSpec.describe "Participants API", type: :request do
           end
 
           it "nullifies email" do
-            get "/api/v1/test_ecf_participants"
+            get "/api/v1/participants/ecf"
 
             expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
           end
@@ -152,7 +152,7 @@ RSpec.describe "Participants API", type: :request do
           end
 
           it "returns only the most recent induction record" do
-            get "/api/v1/test_ecf_participants"
+            get "/api/v1/participants/ecf"
 
             expect(parsed_response["data"].size).to eql(1)
             expect(parsed_response["data"][0]["attributes"]["training_status"]).to eql("active")
@@ -164,7 +164,7 @@ RSpec.describe "Participants API", type: :request do
           let(:profile2) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
 
           it "returns one" do
-            get "/api/v1/test_ecf_participants"
+            get "/api/v1/participants/ecf"
 
             expect(parsed_response["data"].size).to eql(1)
           end
@@ -197,7 +197,7 @@ RSpec.describe "Participants API", type: :request do
 
           context "as old provider" do
             it "returns participant with nullified fields" do
-              get "/api/v1/test_ecf_participants"
+              get "/api/v1/participants/ecf"
 
               expect(parsed_response["data"].size).to eql(1)
               expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
@@ -210,7 +210,7 @@ RSpec.describe "Participants API", type: :request do
             let(:bearer_token) { "Bearer #{token}" }
 
             it "returns participant without nullification" do
-              get "/api/v1/test_ecf_participants"
+              get "/api/v1/participants/ecf"
 
               expect(parsed_response["data"].size).to eql(1)
               expect(parsed_response["data"][0]["attributes"]["email"]).to eql(identity.email)
@@ -229,7 +229,7 @@ RSpec.describe "Participants API", type: :request do
             end
 
             it "does not return the partipant" do
-              get "/api/v1/test_ecf_participants"
+              get "/api/v1/participants/ecf"
 
               expect(parsed_response["data"].size).to be_zero
             end

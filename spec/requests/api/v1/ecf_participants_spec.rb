@@ -12,21 +12,41 @@ RSpec.describe "Participants API", type: :request do
   let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
-  let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+  let!(:mentor_profile) do
+    create(:mentor_participant_profile, school_cohort: school_cohort)
+      .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+  end
 
   before :each do
-    create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
+    profiles = create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
+    profiles.each { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+
     ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
-    create(:ect_participant_profile,
-           :withdrawn_record,
-           teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
-           school_cohort: school_cohort)
+    profile = create(
+      :ect_participant_profile,
+      :withdrawn_record,
+      teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
+      school_cohort: school_cohort,
+    )
+    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+      .tap { |induction_record| induction_record.update!(training_status: "withdrawn") }
     default_headers[:Authorization] = bearer_token
   end
 
-  let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort) }
+  let!(:withdrawn_ect_profile_record) do
+    create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort)
+      .tap do |profile|
+        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+          .tap { |induction_record| induction_record.update!(training_status: "withdrawn") }
+      end
+  end
+
   let(:user) { create(:user) }
-  let(:early_career_teacher_profile) { create(:ect_participant_profile, school_cohort: school_cohort, user: user) }
+
+  let(:early_career_teacher_profile) do
+    create(:ect_participant_profile, school_cohort: school_cohort, user: user)
+      .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+  end
 
   describe "GET /api/v1/participants/ecf" do
     context "when authorized" do
@@ -304,7 +324,7 @@ RSpec.describe "Participants API", type: :request do
           expect(withdrawn_record_row["eligible_for_funding"]).to be_empty
           expect(withdrawn_record_row["pupil_premium_uplift"]).to eql(withdrawn_ect_profile_record.pupil_premium_uplift.to_s)
           expect(withdrawn_record_row["sparsity_uplift"]).to eql(withdrawn_ect_profile_record.sparsity_uplift.to_s)
-          expect(withdrawn_record_row["training_status"]).to eql(withdrawn_ect_profile_record.training_status)
+          expect(withdrawn_record_row["training_status"]).to eql(withdrawn_ect_profile_record.induction_records.first.training_status)
         end
 
         it "ignores pagination parameters" do
@@ -319,20 +339,13 @@ RSpec.describe "Participants API", type: :request do
         end
       end
 
-      it_behaves_like "JSON Participant Change schedule endpoint" do
-        let!(:induction_record) do
-          Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
-        end
-      end
+      it_behaves_like "JSON Participant Change schedule endpoint"
 
       describe "JSON Participant Withdrawal" do
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
           let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-          let!(:induction_record) do
-            Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
-          end
 
           it "changes the training status of a participant to withdrawn" do
             put url, params: params
@@ -349,9 +362,6 @@ RSpec.describe "Participants API", type: :request do
         let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
         let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-        let!(:induction_record) do
-          Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
-        end
 
         before do
           put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/defer",
