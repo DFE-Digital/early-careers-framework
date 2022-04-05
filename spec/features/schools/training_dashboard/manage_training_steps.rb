@@ -483,6 +483,22 @@ module ManageTrainingSteps
     then_i_am_taken_to_your_ect_and_mentors_page
   end
 
+  def when_i_change_ect_name
+    fill_in "Change ECT’s name", with: @updated_participant_data[:full_name]
+  end
+
+  def when_i_change_ect_name_to_blank
+    fill_in "Change ECT’s name", with: ""
+  end
+
+  def when_i_change_ect_email
+    fill_in "Change ECT’s email", with: @updated_participant_data[:email]
+  end
+
+  def when_i_change_ect_email_to_blank
+    fill_in "Change ECT’s email", with: ""
+  end
+
   # Then_steps
 
   def then_i_am_taken_to_roles_page
@@ -534,6 +550,14 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
   end
 
+  def then_i_am_taken_to_change_ect_name_page
+    expect(page).to have_selector("h1", text: "Change ECT’s name")
+  end
+
+  def then_i_am_taken_to_change_ect_email_page
+    expect(page).to have_selector("h1", text: "Change ECT’s email")
+  end
+
   def then_i_am_taken_to_change_how_you_run_programme_page
     expect(page).to have_selector("h1", text: "Change how you run your programme")
     expect(page).to have_text("Check the other options available for your school if this changes")
@@ -580,6 +604,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_course_choice_page
     expect(page).to have_text("Which training materials do you want this cohort to use?")
+  end
+
+  def then_i_am_taken_to_participant_profile
+    expect(page).to have_selector("h2", text: "Participant details")
   end
 
   def then_i_can_view_the_design_our_own_induction_dashboard
@@ -629,6 +657,14 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Materials")
     expect(page).to have_text(@cip.name)
+  end
+
+  def then_i_can_view_the_updated_participant_name
+    expect(page).to have_content @updated_participant_data[:full_name]
+  end
+
+  def then_i_can_view_the_updated_participant_email
+    expect(page).to have_content @updated_participant_data[:email]
   end
 
   def then_i_am_taken_to_view_details_page
