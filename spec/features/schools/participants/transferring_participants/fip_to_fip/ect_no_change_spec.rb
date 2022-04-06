@@ -154,7 +154,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def when_i_update_the_name_with(name)
-        fill_in "Full name", with: name
+        fill_in "Full_name", with: name
       end
 
       def when_i_update_the_email_with(email)
@@ -233,7 +233,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def then_i_should_be_on_the_select_mentor_page
-        expect(page).to have_selector("h1", text: "Who will be #{@participant_data[:full_name]}’s mentor?")
+        expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
       end
 
       def then_i_should_be_taken_to_the_check_your_answers_page
