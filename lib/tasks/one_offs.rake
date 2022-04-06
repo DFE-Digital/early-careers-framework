@@ -29,4 +29,32 @@ namespace :one_offs do
       end
     end
   end
+
+  desc "Resolve issues in ECF hard schedule reference data - CPDLP-1164"
+  task resolve_issues_in_ecf_schedule_start_date: :environment do
+    changes = {
+      "ecf-standard-january" => {
+        "Output 6 - Participant Completion" => "2023-05-01", # from: 1 February 2023
+      },
+      "ecf-standard-april" => {
+        "Output 1 - Participant Start" => "2022-02-01", # from: 1 March 2022
+        "Output 2 - Retention Point 1" => "2022-05-01", # from: 1 June 2022
+        "Output 3 - Retention Point 2" => "2022-10-01", # from: 1 November 2022
+        "Output 4 - Retention Point 3" => "2023-02-01", # from: 1 March 2023
+        "Output 5 - Retention Point 4" => "2023-05-01", # from: 1 June 2023
+        "Output 6 - Participant Completion" => "2023-11-01", # from: 1 December 2023
+      },
+    }
+
+    changes.each do |schedule_identifier, milestone_changes|
+      Finance::Schedule.where(schedule_identifier: schedule_identifier).find_each do |schedule|
+        puts "Schedule: #{schedule_identifier}"
+        milestone_changes.each do |name, start_date|
+          milestone = schedule.milestones.where(name: name).first
+          puts "Milestone change: #{milestone.start_date.iso8601} to #{start_date}"
+          milestone.update!(start_date: start_date)
+        end
+      end
+    end
+  end
 end
