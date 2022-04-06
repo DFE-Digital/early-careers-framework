@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+
+exec "bundle exec rspec --tag end_to_end_scenario --format documentation --order read"

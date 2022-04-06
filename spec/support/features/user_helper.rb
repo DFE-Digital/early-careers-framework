@@ -21,4 +21,8 @@ module UserHelper
   end
 
   alias_method :and_i_am_signed_in_as_an_admin, :given_i_am_logged_in_as_an_admin
+
+  def sign_out
+    visit "/users/sign_out"
+  end
 end
