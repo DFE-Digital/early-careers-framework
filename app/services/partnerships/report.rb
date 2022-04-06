@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
 module Partnerships
-  class Report
+  class Report < BaseService
     CHALLENGE_WINDOW = 14.days.freeze
     REMINDER_EMAIL_DELAY = 7.days.freeze
-
-    def self.call(**args)
-      new(**args).call
-    end
 
     def initialize(cohort_id:, school_id:, lead_provider_id:, delivery_partner_id:)
       @cohort_id = cohort_id
@@ -30,6 +26,16 @@ module Partnerships
         partnership.challenge_deadline = CHALLENGE_WINDOW.from_now
         partnership.report_id = SecureRandom.uuid
         partnership.save!
+
+        # if a FIP has been chosen but the partnership was not present at the time
+        # add it to the programme when it's reported
+        induction_programme = school_cohort.default_induction_programme
+        if induction_programme.present? &&
+            induction_programme.full_induction_programme? &&
+            induction_programme.partnership.blank?
+
+          school_cohort.default_induction_programme.update!(partnership: partnership)
+        end
 
         partnership.event_logs.create!(
           event: :reported,
