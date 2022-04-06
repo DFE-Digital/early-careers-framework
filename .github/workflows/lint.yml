@@ -17,7 +17,7 @@ jobs:
       - name: Yarn install
         run: npm i -g yarn && yarn
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.100.0
+        uses: ruby/setup-ruby@v1.100.1
         with:
           ruby-version: 2.7.5
       - name: Install dependencies
