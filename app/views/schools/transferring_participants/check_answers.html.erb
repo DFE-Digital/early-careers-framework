@@ -1,6 +1,6 @@
 <% content_for :title, "Check your answers" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: transfer_journey_previous_step(@transferring_participant_form)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -42,7 +42,7 @@
                       href: url_for({ action: :email})) %>
       <% end %>
 
-      <% if @latest_induction_record.participant_profile.ect? %>
+      <% if @latest_induction_record.participant_profile.ect? && @school_cohort.active_mentors.any? %>
           <% summary_list.row do |row| %>
             <% row.key { "Mentor" } %>
             <% row.value { @transferring_participant_form.mentor_id.present? ? @transferring_participant_form.mentor.full_name.titleize : "Assign a mentor later" } %>
