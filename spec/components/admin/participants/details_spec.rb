@@ -3,36 +3,6 @@
 RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :view_component do
   component { described_class.new profile: profile }
 
-  context "for ECT profile" do
-    let(:mentor_profile) { create :mentor_participant_profile }
-    let(:profile) { create :ect_participant_profile, mentor_profile: mentor_profile }
-
-    it "renders all the required information" do
-      expect(rendered).to have_contents(
-        profile.user.full_name,
-        profile.user.email,
-        t(:ect, scope: "schools.participants.type"),
-        mentor_profile.user.full_name,
-        profile.school.name,
-        profile.cohort.display_name,
-      )
-    end
-  end
-
-  context "for mentor profile" do
-    let(:profile) { create :mentor_participant_profile }
-
-    it "renders all the required information" do
-      expect(rendered).to have_contents(
-        profile.user.full_name,
-        profile.user.email,
-        t(:mentor, scope: "schools.participants.type"),
-        profile.school.name,
-        profile.cohort.display_name,
-      )
-    end
-  end
-
   context "for unvalidated npq profile" do
     let(:npq_application) { create(:npq_application, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_application.profile }
