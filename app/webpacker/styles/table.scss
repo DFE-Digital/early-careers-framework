@@ -9,3 +9,11 @@
 .app-table-td-bottom_border {
   td { border-bottom: 1px solid black; }
 }
+
+.admin-tabs {
+  tr {
+    th {
+      width: 30%
+    }
+  }
+}

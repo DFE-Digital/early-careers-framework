@@ -12,9 +12,18 @@ RSpec.describe "Admin::Participants", type: :request do
   let!(:ect_profile) { create :ect_participant_profile, school_cohort: school_cohort, mentor_profile: mentor_profile }
   let!(:npq_profile) { create(:npq_participant_profile, school: school) }
   let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort) }
+  let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
 
   before do
     sign_in admin_user
+    [mentor_profile, ect_profile, withdrawn_ect_profile_record].each do |ppt|
+      Induction::Enrol.call(
+        participant_profile: ppt,
+        induction_programme: induction_programme,
+        start_date: 2.months.ago,
+        mentor_profile: ppt.ect? ? mentor_profile : nil,
+      )
+    end
   end
 
   describe "GET /admin/participants" do
