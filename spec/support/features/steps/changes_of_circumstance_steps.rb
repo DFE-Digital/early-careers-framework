@@ -219,7 +219,13 @@ module Steps
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
 
+        # TODO: this fails because of the state machine
+        # ParticipantProfileState.create! participant_profile: participant_profile, state: ParticipantProfileState.states[:active]
+
         # NEW way
+        current_induction_record = participant_profile.induction_records.active.first
+        current_induction_record.withdrawing! unless current_induction_record.nil?
+
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme
       end

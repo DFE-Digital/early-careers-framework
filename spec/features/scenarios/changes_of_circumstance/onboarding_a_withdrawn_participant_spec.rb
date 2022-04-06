@@ -32,6 +32,9 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
 
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
+    # scenarios that must be skipped as they will not be possible
+    next if scenario.withdrawn_by == :lead_provider && scenario.new_declarations.any?
+
     let(:cohort) { create :cohort, :current }
     let(:privacy_policy) { create :privacy_policy }
 
