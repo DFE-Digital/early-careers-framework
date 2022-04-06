@@ -235,13 +235,13 @@ module Steps
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
         # OLD way
+        # TODO: this fails because of the state machine
+        # ParticipantProfileState.create! participant_profile: participant_profile, state: ParticipantProfileState.states[:active]
+
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
-
-        # TODO: this fails because of the state machine
-        # ParticipantProfileState.create! participant_profile: participant_profile, state: ParticipantProfileState.states[:active]
 
         # NEW way
         current_induction_record = participant_profile.induction_records.active.first
@@ -260,16 +260,16 @@ module Steps
 
       participant_profile = find_participant_profile participant_name
 
-      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days + 1.minute
       travel_to(timestamp) do
         # OLD way
+        ParticipantProfileState.create! participant_profile: participant_profile,
+                                        state: ParticipantProfileState.states[:active]
+
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
-
-        ParticipantProfileState.create! participant_profile: participant_profile,
-                                        state: ParticipantProfileState.states[:active]
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme
