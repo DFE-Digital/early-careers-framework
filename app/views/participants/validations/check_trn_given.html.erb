@@ -3,7 +3,7 @@
     <%= form_for validation_form, url: { action: :update }, method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_radio_buttons_fieldset :check_trn_given, inline: true, legend: { text: "Have you been given a teacher reference number (TRN)?", tag: 'h1', size: 'l' } do %>
+      <%= f.govuk_radio_buttons_fieldset :check_trn_given, inline: true, legend: { text: "Have you been given a teacher reference number (TRN)?", tag: 'h1', size: 'xl' } do %>
         <p class="govuk-body">You’ll have a TRN if you hold, or are working towards qualified teacher status (QTS) in England.</p>
         <p class="govuk-body">You can usually find it on your payslip, teachers’ pension documents, or teacher training records.</p>
 

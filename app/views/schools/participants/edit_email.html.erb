@@ -4,7 +4,7 @@
     <%= form_for @profile.user, url: schools_participant_update_email_path, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_text_field :email, label: { text: "Change #{@profile.ect? ? "ECT’s" : "mentor’s"} email address", tag: 'h1', size: 'l' } %>
+      <%= f.govuk_text_field :email, label: { text: "Change #{@profile.ect? ? "ECT’s" : "mentor’s"} email address", tag: 'h1', size: 'xl' } %>
       <%= f.govuk_submit %>
     <% end %>
   </div>
