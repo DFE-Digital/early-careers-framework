@@ -50,9 +50,10 @@ module Schools
     end
 
     def email
-      if participant_profile.ect?
+      if participant_profile.ect? && @school_cohort.active_mentors.any?
         store_form_redirect_to_next_step(:choose_mentor)
       elsif matching_lead_provider_and_delivery_partner?
+        @transferring_participant_form.same_programme = true
         store_form_redirect_to_next_step(:check_answers)
       else
         store_form_redirect_to_next_step(:teachers_current_programme)

@@ -174,6 +174,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/email" do
     it "redirects to the choose mentor template" do
+      create(:mentor_participant_profile, school_cohort: school_cohort)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/email",
           params: { schools_transferring_participant_form: {
             full_name: ect.user.full_name,
