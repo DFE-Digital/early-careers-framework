@@ -217,6 +217,23 @@ RSpec.describe "Participants API", type: :request do
               expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
             end
           end
+
+          context "partnership has been challenged" do
+            let(:partnership) do
+              create(
+                :partnership,
+                lead_provider: lead_provider,
+                challenged_at: 10.days.ago,
+                challenge_reason: Partnership.challenge_reasons[:not_confirmed],
+              )
+            end
+
+            it "does not return the partipant" do
+              get "/api/v1/test_ecf_participants"
+
+              expect(parsed_response["data"].size).to be_zero
+            end
+          end
         end
       end
     end
