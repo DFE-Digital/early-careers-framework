@@ -2,7 +2,7 @@
 
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: teachers_programme_previous_step(@participant_profile, @school_cohort)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: teachers_programme_path_previous_step(@participant_profile, @school_cohort)) %>
 
 <span class="govuk-caption-xl"><%= @school.name %></span>
 
