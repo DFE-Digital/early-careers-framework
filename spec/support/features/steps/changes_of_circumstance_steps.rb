@@ -162,6 +162,27 @@ module Steps
       end
     end
 
+    def and_lead_provider_defers_participant(lead_provider_name, participant_name, participant_email, participant_type)
+      participant_profile = find_participant_profile participant_name
+
+      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
+      travel_to(timestamp) do
+        defer_endpoint = APIs::ParticipantDeferEndpoint.new tokens[lead_provider_name]
+        defer_endpoint.post_defer_notice participant_profile.user.id, course_identifier, "career-break"
+
+        defer_endpoint.responded_with_full_name? participant_name
+        defer_endpoint.responded_with_email? participant_email
+        defer_endpoint.responded_with_status? "active"
+        defer_endpoint.responded_with_training_status? "deferred"
+
+        # TODO: This needs to be automated through the withdraw API
+        current_induction_record = participant_profile.induction_records.active.first
+        current_induction_record.training_status_deferred! unless current_induction_record.nil?
+      end
+    end
+
     def and_school_withdraws_participant(_sit_name, participant_name)
       # TODO: This needs to be automated through the inductions portal
 
@@ -225,6 +246,30 @@ module Steps
         # NEW way
         current_induction_record = participant_profile.induction_records.active.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
+
+        Induction::Enrol.call participant_profile: participant_profile,
+                              induction_programme: school_cohort.default_induction_programme
+      end
+    end
+
+    def when_school_takes_on_the_deferred_participant(sit_name, participant_name)
+      # TODO: This needs to be automated through the inductions portal
+
+      school = find_school_for_sit sit_name
+      school_cohort = school.school_cohorts.first
+
+      participant_profile = find_participant_profile participant_name
+
+      timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
+      travel_to(timestamp) do
+        # OLD way
+        participant_profile.teacher_profile.update! school: school
+        participant_profile.active_record!
+        participant_profile.training_status_active!
+        participant_profile.update! school_cohort: school_cohort
+
+        ParticipantProfileState.create! participant_profile: participant_profile,
+                                        state: ParticipantProfileState.states[:active]
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme
