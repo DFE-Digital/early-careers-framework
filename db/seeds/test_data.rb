@@ -463,6 +463,17 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
+user = User.find_or_create_by!(email: "fip-ect3@example.com") do |u|
+  u.full_name = "FIP ECT"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule::ECF.default
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+end
+
 user = User.find_or_create_by!(email: "fip-mentor4@example.com") do |u|
   u.full_name = "FIP Mentor"
 end
