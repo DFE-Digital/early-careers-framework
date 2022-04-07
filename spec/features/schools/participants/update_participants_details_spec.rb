@@ -177,4 +177,43 @@ RSpec.describe "Update participants details", js: true do
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named "Participant details without change links"
   end
+
+  scenario "Induction tutor can change ECT / mentor name from participant profile page" do
+    click_on "Sally Teacher"
+    then_i_am_taken_to_participant_profile
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
+
+    when_i_click_on_change_name
+    then_i_am_taken_to_change_ect_name_page
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor changes existing ECT name"
+
+    when_i_change_ect_name_to_blank
+    when_i_click_on_continue
+    then_i_see_an_error_message("Enter a full name")
+
+    when_i_change_ect_name
+    when_i_click_on_continue
+    then_i_am_taken_to_participant_profile
+    then_i_can_view_the_updated_participant_name
+  end
+
+  scenario "Induction tutor can change ECT / mentor email from participant profile page" do
+    click_on "Sally Teacher"
+    then_i_am_taken_to_participant_profile
+
+    when_i_click_on_change_email
+    then_i_am_taken_to_change_ect_email_page
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor changes existing ECT email"
+
+    when_i_change_ect_email_to_blank
+    when_i_click_on_continue
+    then_i_see_an_error_message("Enter an email")
+
+    when_i_change_ect_email
+    when_i_click_on_continue
+    then_i_am_taken_to_participant_profile
+    then_i_can_view_the_updated_participant_email
+  end
 end

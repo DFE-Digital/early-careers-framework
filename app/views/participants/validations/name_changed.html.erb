@@ -3,18 +3,22 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Is this the name you used when you started your initial teacher training (ITT)?</h1>
-    <div class="govuk-inset-text">
-      <p>
-        <span class="govuk-!-font-weight-bold">Name:</span>
-        <%= validation_form.participant_profile.user.full_name %>
-      </p>
-    </div>
     <%= form_for validation_form, url: { action: :update }, method: :patch do |f| %>
-      <%= f.govuk_radio_buttons_fieldset :name_changed, inline: true, legend: { text: "" }, hint: { text: "Answer ‘no’ if your last name has changed, or you used a different version of your first name." } do %>
-        <%= f.govuk_radio_button :name_changed, false, label: { text: "Yes" } %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-xl">Is this the name you used when you started your initial teacher training (ITT)?</h1>
+      <div class="govuk-inset-text">
+        <p>
+          <span class="govuk-!-font-weight-bold">Name:</span>
+          <%= validation_form.participant_profile.user.full_name %>
+        </p>
+      </div>
+
+      <%= f.govuk_radio_buttons_fieldset :name_changed, inline: true, legend: nil, hint: { text: "Answer ‘no’ if your last name has changed, or you used a different version of your first name." } do %>
+        <%= f.govuk_radio_button :name_changed, false, label: { text: "Yes" }, link_errors: true %>
         <%= f.govuk_radio_button :name_changed, true, label: { text: "No" } %>
       <% end %>
+
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>

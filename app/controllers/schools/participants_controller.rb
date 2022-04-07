@@ -64,12 +64,18 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def email_used; end
 
-  def edit_start_term; end
+  def edit_start_term
+    @start_term_form = build_start_term_form
+    @start_term_form.start_term = @profile.start_term
+  end
 
   def update_start_term
-    @profile.assign_attributes(params.require(:participant_profile).permit(:start_term))
+    @start_term_form = build_start_term_form
+    unless @start_term_form.valid?
+      render "schools/participants/edit_start_term" and return
+    end
 
-    if @profile.save
+    if @profile.update(start_term: @start_term_form.start_term)
       if @profile.ect?
         set_success_message(heading: "The ECT's start term has been updated")
       else
@@ -144,5 +150,15 @@ private
 
   def email_used?
     User.where.not(id: @profile.user.id).where(email: @profile.user.email).any?
+  end
+
+  def start_term_form_params
+    params.require(:participant_start_term_form).permit(:start_term)
+  rescue ActionController::ParameterMissing
+    nil
+  end
+
+  def build_start_term_form
+    ParticipantStartTermForm.new(start_term_form_params)
   end
 end

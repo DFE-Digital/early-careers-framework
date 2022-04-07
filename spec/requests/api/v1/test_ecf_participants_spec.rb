@@ -75,6 +75,54 @@ RSpec.describe "Participants API", type: :request do
 
         context "when there is no mentor"
 
+        context "NQT+1" do
+          let(:cohort_2020) { create(:cohort, start_year: 2020) }
+
+          before do
+            profile.school_cohort.update!(cohort: cohort_2020)
+          end
+
+          it "does not include them" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"].size).to be_zero
+          end
+        end
+
+        context "when induction_status is withdrawn" do
+          let(:induction_record) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              induction_status: "withdrawn",
+            )
+          end
+
+          it "nullifies email" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
+          end
+        end
+
+        context "when induction_status is changed" do
+          let(:induction_record) do
+            create(
+              :induction_record,
+              induction_programme: induction_programme,
+              participant_profile: profile,
+              induction_status: "changed",
+            )
+          end
+
+          it "nullifies email" do
+            get "/api/v1/test_ecf_participants"
+
+            expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
+          end
+        end
+
         context "one profile with 2 induction records" do
           let(:profile) do
             create(
@@ -167,6 +215,23 @@ RSpec.describe "Participants API", type: :request do
               expect(parsed_response["data"].size).to eql(1)
               expect(parsed_response["data"][0]["attributes"]["email"]).to eql(identity.email)
               expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
+            end
+          end
+
+          context "partnership has been challenged" do
+            let(:partnership) do
+              create(
+                :partnership,
+                lead_provider: lead_provider,
+                challenged_at: 10.days.ago,
+                challenge_reason: Partnership.challenge_reasons[:not_confirmed],
+              )
+            end
+
+            it "does not return the partipant" do
+              get "/api/v1/test_ecf_participants"
+
+              expect(parsed_response["data"].size).to be_zero
             end
           end
         end

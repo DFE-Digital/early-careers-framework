@@ -12,6 +12,14 @@ RSpec.describe RecordDeclarations::Base do
   let(:user)                    { create(:user) }
   let(:teacher_profile)         { create(:teacher_profile, user: user) }
   let!(:ect_participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: teacher_profile) }
+  let!(:partnership) { create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school) }
+
+  let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+
+  let!(:induction_record) do
+    Induction::Enrol.call(participant_profile: ect_participant_profile, induction_programme: induction_programme)
+  end
+
   let(:params) do
     {
       participant_id: ect_participant_profile.user_id,
@@ -20,10 +28,6 @@ RSpec.describe RecordDeclarations::Base do
       declaration_date: declaration_date.rfc3339,
       declaration_type: declaration_type,
     }
-  end
-
-  before do
-    create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
   end
 
   describe "#call" do
@@ -68,6 +72,7 @@ RSpec.describe RecordDeclarations::Base do
       let(:original_ect_participant_profile) do
         create(:ect_participant_profile, school_cohort: school_cohort).tap do |participant_profile|
           participant_profile.teacher_profile.update!(trn: ect_participant_profile.teacher_profile.trn)
+          Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
         end
       end
 

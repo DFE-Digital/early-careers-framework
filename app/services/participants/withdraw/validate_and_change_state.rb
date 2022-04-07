@@ -16,6 +16,7 @@ module Participants
         ActiveRecord::Base.transaction do
           ParticipantProfileState.create!(participant_profile: user_profile, state: ParticipantProfileState.states[:withdrawn], reason: reason)
           user_profile.training_status_withdrawn!
+          relevant_induction_record.update!(training_status: "withdrawn") if relevant_induction_record
         end
 
         unless user_profile.npq?

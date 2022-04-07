@@ -21,10 +21,6 @@
       <%= school_cohort.lead_provider&.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <% if school_cohort.lead_provider.present? %>
-        <%= govuk_link_to "Change", new_admin_school_challenge_partnership_path(id: school_cohort.cohort.start_year) %>
-        <span class="govuk-visually-hidden"> partnership</span>
-      <% end %>
     </dd>
   </div>
   <div class="govuk-summary-list__row">

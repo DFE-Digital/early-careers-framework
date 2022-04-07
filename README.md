@@ -22,7 +22,7 @@
 4. Run `mkdir log && touch log/mail.log`
 5. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
 6. Run `bundle exec rails server` to launch the app on http://localhost:3000
-7. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
+7. Run `./bin/webpacker-dev-server` in a separate shell for faster compilation of assets
 8. For most work, you will need to seed the database with `rails db:seed`. For school data, see [Importing School data](#importing-school-data)
 
 ### With docker
@@ -95,7 +95,44 @@ Ideally change baseUrl to http://localhost:3000, since sandbox is used for testi
 
 The precommit hook will ensure linting passes. See [the hook](./.githooks/pre-commit) for details.
 
-## End to end tests
+## End to End Scenario testing
+
+We use Capybara for end-to-end tests. These can be found in the [scenarios folder within ./spec/features/](./spec/features/scenarios).
+
+The E2E scenarios currently covered are:
+
+  1. Transferring a participant to a new School
+  2. Onboarding a withdraw participant to a new School
+
+Scenarios tests use the `:end_to_end_scenario` tag so that they get excluded from the standard rspec command
+
+### Setup
+
+```
+RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load
+```
+
+To run the complete set of scenario tests use either:
+
+```
+bundle exec bin/scenarios_ci
+```
+
+or
+
+```
+bundle exec rspec --tag end_to_end_scenario --fail-fast
+```
+
+To run a specific scenario test include the environment variable `SCENARIOS`, for example to run scenarios 2, 12 and 20 use:
+
+```
+SCENARIOS=2,12,20 bundle exec bin/scenarios_ci
+```
+
+Please note: `--fail-fast` is recommended when running scenarios locally due to the length of time they can all take to run.
+
+## End to end browser testing
 
 We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests, and Percy for snapshot testing.
 

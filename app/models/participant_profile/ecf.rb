@@ -4,7 +4,7 @@ class ParticipantProfile < ApplicationRecord
   class ECF < ParticipantProfile
     self.ignored_columns = %i[school_id]
 
-    CURRENT_START_TERM_OPTIONS = %w[autumn_2021 spring_2022 summer_2022].freeze
+    CURRENT_START_TERM_OPTIONS = %w[spring_2022 summer_2022].freeze
 
     belongs_to :school_cohort
     belongs_to :core_induction_programme, optional: true
@@ -73,7 +73,6 @@ class ParticipantProfile < ApplicationRecord
     def sync_status_with_induction_record
       induction_record = induction_records.latest
       induction_record&.update!(induction_status: status) if saved_change_to_status?
-      induction_record&.update!(training_status: training_status) if saved_change_to_training_status?
       induction_record&.update!(mentor_profile: mentor_profile) if saved_change_to_mentor_profile_id?
     end
   end

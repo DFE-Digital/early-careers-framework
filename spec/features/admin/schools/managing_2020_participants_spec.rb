@@ -16,7 +16,7 @@ RSpec.feature "Admin managing 2020 participants", js: true, rutabaga: false do
     and_percy_should_be_sent_a_snapshot_named("Admin add new NQT+1 page")
 
     when_i_fill_the_form_in
-    and_i_click_the_submit_button
+    and_i_click_the_save_button
     then_i_should_be_on the_school_2020_cohort_page
     and_there_should_be_a_success_banner
     and_the_page_should_contain_the_new_user

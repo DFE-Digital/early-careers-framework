@@ -15,4 +15,18 @@ namespace :one_offs do
   rescue StandardError => e
     Sentry.capture_exception(e)
   end
+
+  desc "populate schedule_milestone"
+  task populate_schedule_milestones: :environment do
+    Finance::Schedule.includes(:milestones).find_each do |schedule|
+      schedule.milestones.each do |milestone|
+        actual_milestone = Finance::Milestone.where(milestone.slice(:start_date, :payment_date, :milestone_date)).order(created_at: :asc).first
+        schedule.schedule_milestones.create!(
+          name: milestone.name,
+          declaration_type: milestone.declaration_type,
+          milestone: actual_milestone,
+        )
+      end
+    end
+  end
 end

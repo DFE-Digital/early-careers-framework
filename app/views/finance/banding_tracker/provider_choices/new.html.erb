@@ -5,13 +5,12 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @choose_provider_form, url: finance_banding_tracker_provider_choice_path(programme_choice_id: @choose_provider_form.id) do |f| %>
       <%= f.govuk_error_summary %>
-      <h1 class="govuk-heading-xl">Choose provider</h1>
       <%= f.govuk_collection_radio_buttons(
         :id,
         @providers,
         :id,
         :name,
-        legend: { hidden: true },
+        legend: { text: 'Choose provider', size: "xl", tag: "h1" },
       ) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

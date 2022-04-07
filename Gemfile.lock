@@ -237,10 +237,10 @@ GEM
       activemodel (>= 6.1)
       railties (>= 6.1)
       view_component (~> 2.49.1)
-    govuk_design_system_formbuilder (2.3.0)
-      actionview (>= 5.2)
-      activemodel (>= 5.2)
-      activesupport (>= 5.2)
+    govuk_design_system_formbuilder (2.8.0)
+      actionview (>= 6.0)
+      activemodel (>= 6.0)
+      activesupport (>= 6.0)
       deep_merge (~> 1.2.1)
     gyoku (1.3.1)
       builder (>= 2.1.2)
@@ -284,7 +284,7 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    lograge (0.11.2)
+    lograge (0.12.0)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
@@ -346,7 +346,7 @@ GEM
       ast (~> 2.4.1)
     percy-capybara (5.0.0)
       capybara (>= 3)
-    pg (1.3.4)
+    pg (1.3.5)
     pretender (0.4.0)
       actionpack (>= 5.2)
     pry (0.13.1)
@@ -510,6 +510,11 @@ GEM
     sentry-sidekiq (5.2.1)
       sentry-ruby-core (~> 5.2.1)
       sidekiq (>= 3.0)
+    shakapacker (6.2.0)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
     sidekiq (6.4.1)
@@ -599,11 +604,6 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webpacker (5.4.3)
-      activesupport (>= 5.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     webrick (1.7.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
@@ -641,7 +641,7 @@ DEPENDENCIES
   friendly_id (~> 5.4, >= 5.4.2)
   google-cloud-bigquery
   govuk-components (~> 3.0, >= 3.0.3)
-  govuk_design_system_formbuilder (~> 2.3.0b1)
+  govuk_design_system_formbuilder (~> 2.8)
   httpclient (~> 2.8, >= 2.8.3)
   json-schema (>= 2.8.1)
   jsonapi-rspec
@@ -649,7 +649,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   launchy
   listen (~> 3.7)
-  lograge (~> 0.11.2)
+  lograge (~> 0.12.0)
   logstash-event
   mail-notify (~> 1.0, >= 1.0.4)
   memory_profiler
@@ -684,6 +684,7 @@ DEPENDENCIES
   sentry-rails (~> 5.2)
   sentry-ruby (~> 5.2)
   sentry-sidekiq
+  shakapacker (~> 6.2)
   shoulda-matchers (~> 5.1)
   sidekiq
   sidekiq-cron
@@ -701,7 +702,6 @@ DEPENDENCIES
   web-console (~> 4.2.0)
   webdrivers (~> 5.0)
   webmock (~> 3.14)
-  webpacker (>= 5.4.3)
   with_model
 
 RUBY VERSION

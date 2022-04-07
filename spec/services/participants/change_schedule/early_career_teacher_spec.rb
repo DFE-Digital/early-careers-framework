@@ -129,6 +129,16 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
              course_identifier: "ecf-induction")
     end
 
+    let(:induction_programme) do
+      create(
+        :induction_programme,
+        :fip,
+        school_cohort: school_cohort,
+        partnership: partnership,
+      )
+    end
+    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+
     subject do
       described_class.new(params: {
         schedule_identifier: schedule.schedule_identifier,

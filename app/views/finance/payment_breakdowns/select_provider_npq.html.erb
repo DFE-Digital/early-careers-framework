@@ -5,13 +5,12 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: @choose_programme_form, url: { action: :choose_provider_npq }, method: :post do |f| %>
       <%= f.govuk_error_summary %>
-      <h1 class="govuk-heading-xl">Choose provider</h1>
       <%= f.govuk_collection_radio_buttons(
             :provider,
             @choose_programme_form.npq_providers,
             :id,
             :name,
-            legend: { hidden: true },
+            legend: { text: 'Choose provider', size: "xl", tag: "h1" },
             ) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

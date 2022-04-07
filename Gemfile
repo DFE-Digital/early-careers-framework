@@ -25,7 +25,7 @@ gem "kaminari", "~> 1.2"
 gem "secure_headers"
 
 # Cleaner logs, one line per request
-gem "lograge", "~> 0.11.2"
+gem "lograge", "~> 0.12.0"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
@@ -38,7 +38,7 @@ gem "ar-uuid", "~> 0.2.2"
 gem "puma", "~> 5.6"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "webpacker", ">= 5.4.3"
+gem "shakapacker", "~> 6.2"
 
 # Soft delete
 gem "discard", "~> 1.2", ">= 1.2.0"
@@ -62,7 +62,7 @@ gem "mail-notify", "~> 1.0", ">= 1.0.4"
 gem "tzinfo-data"
 
 gem "govuk-components", "~> 3.0", ">= 3.0.3"
-gem "govuk_design_system_formbuilder", "~> 2.3.0b1"
+gem "govuk_design_system_formbuilder", "~> 2.8"
 gem "view_component", require: "view_component/engine"
 
 # Fetching from APIs

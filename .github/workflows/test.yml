@@ -64,7 +64,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '16.x'
+          node-version: '16.14.x'
           cache: 'yarn'
 
       - name: Install node.js dependencies
@@ -123,7 +123,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '16.x'
+          node-version: '16.14.x'
           cache:  'yarn'
 
       - name: Install node.js dependencies
@@ -133,7 +133,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Webpacker
-        run: bin/webpack
+        run: bin/webpacker
 
       # Percy stuff is from https://dev.to/digitaledawn/github-action-cypress-and-percy-parallelisation-setup-484a
       - name: Run Cypress

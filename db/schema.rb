@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_28_115143) do
+ActiveRecord::Schema.define(version: 2022_03_30_125412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -732,6 +732,19 @@ ActiveRecord::Schema.define(version: 2022_03_28_115143) do
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
   end
 
+  create_table "schedule_milestones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.uuid "schedule_id", null: false
+    t.uuid "milestone_id", null: false
+    t.string "declaration_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
+    t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
+    t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
+    t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
+  end
+
   create_table "schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -954,6 +967,8 @@ ActiveRecord::Schema.define(version: 2022_03_28_115143) do
   add_foreign_key "provider_relationships", "delivery_partners"
   add_foreign_key "provider_relationships", "lead_providers"
   add_foreign_key "pupil_premiums", "schools"
+  add_foreign_key "schedule_milestones", "milestones"
+  add_foreign_key "schedule_milestones", "schedules"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"

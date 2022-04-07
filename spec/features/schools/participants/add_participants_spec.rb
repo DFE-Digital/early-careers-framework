@@ -34,8 +34,8 @@ RSpec.describe "Add participants", js: true do
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT name"
 
-    when_i_click_on_continue
-    then_i_receive_a_missing_name_error_message
+    when_i_submit_an_empty_form
+    then_i_see_an_error_message("Enter a full name")
 
     when_i_add_ect_or_mentor_name
     when_i_click_on_continue
@@ -43,8 +43,8 @@ RSpec.describe "Add participants", js: true do
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT email"
 
-    when_i_click_on_continue
-    then_i_receive_a_missing_email_error_message
+    when_i_submit_an_empty_form
+    then_i_see_an_error_message("Enter an email address")
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
@@ -52,9 +52,11 @@ RSpec.describe "Add participants", js: true do
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT start term"
 
+    when_i_submit_an_empty_form
+    then_i_see_an_error_message("Choose a start term")
+
     when_i_choose_start_term
     when_i_click_on_continue
-
     then_i_am_taken_to_check_details_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor checks ECT details"
@@ -89,11 +91,15 @@ RSpec.describe "Add participants", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
+    then_i_am_taken_to_choose_term_page_as_mentor
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects mentor start term"
 
     when_i_choose_start_term
     when_i_click_on_continue
-
     then_i_am_taken_to_check_details_page
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor checks mentor details"
 
     when_i_click_confirm_and_add
     then_i_am_taken_to_mentor_confirmation_page
@@ -140,6 +146,8 @@ RSpec.describe "Add participants", js: true do
 
     when_i_add_ect_or_mentor_email_that_already_exists
     when_i_click_on_continue
-    then_i_receive_an_email_already_taken_error_message
+    then_i_am_taken_to_email_already_taken_page
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor receives the email taken page"
   end
 end

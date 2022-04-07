@@ -39,6 +39,8 @@ module Api
       def induction_records
         scope = InductionRecord
           .where(id: induction_record_ids_with_deduped_profiles)
+          .joins(participant_profile: { school_cohort: [:cohort] })
+          .where(participant_profile: { school_cohorts: { cohort: Cohort.current } })
           .includes(participant_profile: [
             :participant_identity,
             :user,
@@ -64,12 +66,14 @@ module Api
       # this query deals with the following scenario
       # given one profile with 2 induction records
       # we only want to return the latest induction record
+      # we also exclude any partnerships that have been challenged
       def induction_record_ids_with_deduped_induction_records
         query = InductionRecord
           .joins(induction_programme: { partnership: :lead_provider })
           .joins(participant_profile: %i[user participant_identity])
           .select("DISTINCT ON (participant_profiles.id) participant_profile_id, induction_records.id")
           .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
+          .where(induction_programme: { partnerships: { challenged_at: nil, challenge_reason: nil } })
           .order("participant_profiles.id", start_date: :desc)
           .to_sql
 

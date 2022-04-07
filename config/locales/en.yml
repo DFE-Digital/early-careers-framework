@@ -225,6 +225,16 @@ en:
               blank: "Select an option"
             teachers_current_programme_choice:
               blank: "Select an option"
+        schools/add_participant_form:
+          attributes:
+            mentor_id:
+              blank: "Choose a mentor"
+            start_term:
+              blank: "Choose a start term"
+        participant_mentor_form:
+          attributes:
+            mentor_id:
+              blank: "Choose a mentor"
 
   page_titles:
     lead_providers:
@@ -358,3 +368,9 @@ en:
       providers:
         show:
           title: "Banding tracker for %{provider_name}"
+
+  pagy:
+    nav:
+      prev: ← Previous
+      next: Next →
+      gap: ...

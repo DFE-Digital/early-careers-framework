@@ -56,6 +56,46 @@ RSpec.describe Partnerships::Report do
     expect(result.event_logs.map(&:event)).to eq %w[reported]
   end
 
+  context "when a FIP induction_programme exists" do
+    let(:school_cohort) { create(:school_cohort, :fip, school: school, cohort: cohort) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership: nil, school_cohort: school_cohort) }
+
+    before do
+      school_cohort.update!(default_induction_programme: induction_programme)
+    end
+
+    it "adds the partnership to the induction programme" do
+      expect(result).to eq induction_programme.reload.partnership
+    end
+
+    context "when the induction_programme already has a partnership" do
+      # this partnership will presumably be challenged
+      let(:old_partnership) { create(:partnership, :challenged) }
+      let(:induction_programme) { create(:induction_programme, :fip, partnership: old_partnership, school_cohort: school_cohort) }
+
+      before do
+        school_cohort.update!(default_induction_programme: induction_programme)
+      end
+
+      it "does not change the partnership on the induction programme" do
+        expect(induction_programme.reload.partnership).to eq old_partnership
+      end
+    end
+  end
+
+  context "when a non-FIP induction_programme exists" do
+    let(:school_cohort) { create(:school_cohort, :cip, school: school, cohort: cohort) }
+    let(:induction_programme) { create(:induction_programme, :cip, partnership: nil, school_cohort: school_cohort) }
+
+    before do
+      school_cohort.update!(default_induction_programme: induction_programme)
+    end
+
+    it "does not add the partnership to the induction programme" do
+      expect(induction_programme.reload.partnership).to be_blank
+    end
+  end
+
   context "with previous, challenged partnership between school and provider for the same cohort" do
     let!(:partnership) do
       create :partnership, :challenged, lead_provider: lead_provider, school: school, cohort: cohort
