@@ -73,7 +73,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         transferring_ppt_name: participant_profile.user.full_name,
-        joining_date: induction_record.start_date.to_s(:govuk),
+        joining_date: induction_record.start_date.to_date.to_s(:govuk),
         new_school_name: induction_record.school.name,
       },
     ).tag(:participant_transfer_in_notification).associate_with(participant_profile, as: :participant_profile)
@@ -91,7 +91,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        joining_date: induction_record.start_date.to_s(:govuk),
+        joining_date: induction_record.start_date.to_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
       },
     ).tag(:provider_transfer_out_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
@@ -109,7 +109,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        joining_date: induction_record.start_date.to_s(:govuk),
+        joining_date: induction_record.start_date.to_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
       },
     ).tag(:provider_transfer_in_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
@@ -128,7 +128,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        joining_date: induction_record.start_date.to_s(:govuk),
+        joining_date: induction_record.start_date.to_date.to_s(:govuk),
         external_participant_id: preferred_identity.external_identifier,
       },
     ).tag(:provider_new_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)

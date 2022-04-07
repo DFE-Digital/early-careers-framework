@@ -4,9 +4,9 @@ module TransferringParticipantHelper
   def transfer_journey_previous_step(form)
     if form.same_programme
       email_schools_transferring_participant_path
-    elsif form.schools_current_programme_choice.present?
+    elsif form.teachers_current_programme_choice == "yes"
       teachers_current_programme_schools_transferring_participant_path
-    elsif form.teachers_current_programme_choice.present?
+    elsif form.schools_current_programme_choice == "yes"
       schools_current_programme_schools_transferring_participant_path
     else
       dob_schools_transferring_participant_path

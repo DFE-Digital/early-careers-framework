@@ -193,7 +193,7 @@ RSpec.describe Schools::TransferringParticipantForm, type: :model do
       it "returns false" do
         form.schools_current_programme_choice = nil
         expect(form.valid?(:schools_current_programme)).to be false
-        expect(form.errors[:schools_current_programme_choice]).to include "Select an option"
+        expect(form.errors[:schools_current_programme_choice]).to include "Select if the participant will continue with your schools current training programme"
       end
     end
   end
@@ -219,7 +219,7 @@ RSpec.describe Schools::TransferringParticipantForm, type: :model do
       it "returns false" do
         form.teachers_current_programme_choice = nil
         expect(form.valid?(:teachers_current_programme)).to be false
-        expect(form.errors[:teachers_current_programme_choice]).to include "Select an option"
+        expect(form.errors[:teachers_current_programme_choice]).to include "Select if the participant will continue with their current training programme"
       end
     end
   end

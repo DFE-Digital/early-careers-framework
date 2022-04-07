@@ -222,9 +222,9 @@ en:
             mentor_id:
               blank: "Select an option"
             schools_current_programme_choice:
-              blank: "Select an option"
+              blank: "Select if the participant will continue with your schools current training programme"
             teachers_current_programme_choice:
-              blank: "Select an option"
+              blank: "Select if the participant will continue with their current training programme"
         schools/add_participant_form:
           attributes:
             mentor_id:
