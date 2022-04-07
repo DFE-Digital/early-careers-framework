@@ -108,7 +108,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor"
       expect(response).to render_template("schools/participants/edit_mentor")
-      expect(response.body).to include "Choose one"
+      expect(response.body).to include "Choose a mentor"
     end
 
     it "updates analytics" do

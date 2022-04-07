@@ -70,8 +70,8 @@ RSpec.feature "Participant validation journey", with_feature_flags: { eligibilit
     expect(page).to be_accessible
 
     page.percy_snapshot("Participant validation journey: name")
-    expect(page.find_field("Your name").value).to eq ect_participant_profile.user.full_name
-    fill_in "Your name", with: "Correct Name"
+    expect(page.find_field("participants-participant-validation-form-full-name-field").value).to eq ect_participant_profile.user.full_name
+    fill_in "participants-participant-validation-form-full-name-field", with: "Correct Name"
     click_on "Continue"
 
     expect(page).to have_current_path participants_validation_step_path(:"no-match")
