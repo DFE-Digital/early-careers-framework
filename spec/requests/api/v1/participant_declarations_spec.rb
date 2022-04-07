@@ -167,7 +167,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(response.status).to eq 200
         end
 
-        it "is it not possible for previous lead provider to view new lead providers declaration " do
+        it "is not possible for previous lead provider to view future declarations" do
           default_headers[:Authorization] = transfer_lp_bearer_token
 
           updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
