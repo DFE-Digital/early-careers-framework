@@ -4,7 +4,7 @@ class Induction::ChangePreferredIdentity < BaseService
   def call
     # NOTE: this in not the place to change a programme or transfer a participant
     # This creates a new induction record to preserve the email address used
-    # at a point in time during indcution.
+    # at a point in time during induction.
     # We could just update the induction_record but we'd then lose that
     # ability to track it
     ActiveRecord::Base.transaction do

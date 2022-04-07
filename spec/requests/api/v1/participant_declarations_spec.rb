@@ -148,6 +148,43 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
+      context "when the participant transfers to a new school with a different lead provider" do
+        let(:programme) { create(:induction_programme, :fip) }
+        let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: programme.partnership.lead_provider.cpd_lead_provider) }
+        let(:bearer_token) { "Bearer #{token}" }
+
+        before do
+          induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
+          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+
+          default_headers[:Authorization] = bearer_token
+        end
+
+        it "is possible for new lead provider to post a declaration" do
+          updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+          post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+          expect(response.status).to eq 200
+        end
+      end
+
+      context "when the participant transfers to a new school with the same lead provider" do
+        let(:partnership) { create(:partnership, school: school, lead_provider: ecf_lead_provider, delivery_partner: delivery_partner, cohort: ect_profile.cohort) }
+        let(:school) { create(:school, name: "Transferred-to School") }
+        let(:programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
+
+        before do
+          induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
+          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+        end
+
+        it "is possible for the same lead provider to post a declaration" do
+          updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+
+          post "/api/v1/participant-declarations", params: build_params(updated_params)
+        end
+      end
+
       it "returns 422 when trying to create for an invalid user id" do
         # Expects the user uuid. Pass the early_career_teacher_profile_id
         invalid_user_id = valid_params.merge({ participant_id: ect_profile.id })
