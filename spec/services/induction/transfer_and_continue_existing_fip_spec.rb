@@ -75,7 +75,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
         expect(new_induction_record.start_date).to be_within(1.second).of start_date
       end
 
-      xit "assigns the specified mentor to the induction" do
+      it "assigns the specified mentor to the induction" do
         expect(new_induction_record.mentor_profile).to eq mentor_profile_2
       end
 
