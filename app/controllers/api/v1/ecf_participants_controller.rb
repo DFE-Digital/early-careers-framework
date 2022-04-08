@@ -49,17 +49,20 @@ module Api
           .joins(participant_profile: { school_cohort: [:cohort] })
           .where(participant_profile: { school_cohorts: { cohort: Cohort.current } })
           .includes(
-            school_cohort: [:school],
-            participant_profile: [
+            :schedule,
+            mentor_profile: [
               :participant_identity,
-              :user,
-              :cohort,
+            ],
+            school_cohort: [
               :school,
-              :ecf_participant_eligibility,
-              :ecf_participant_validation_data,
-              :schedule,
-              :teacher_profile,
-              { mentor_profile: [:mentor] },
+            ],
+            participant_profile: %i[
+              participant_identity
+              user
+              cohort
+              ecf_participant_eligibility
+              ecf_participant_validation_data
+              teacher_profile
             ],
           )
 
