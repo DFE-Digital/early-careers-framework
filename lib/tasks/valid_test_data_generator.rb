@@ -77,7 +77,7 @@ module ValidTestDataGenerator
         lead_provider: lead_provider,
       )
 
-      InductionProgramme.find_or_create_by!(
+      induction_programme = InductionProgramme.find_or_create_by!(
         school_cohort: school_cohort,
         partnership: partnership,
         training_programme: "full_induction_programme",

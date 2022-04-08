@@ -578,6 +578,7 @@ GEM
       tzinfo (>= 1.0.0)
     uber (0.1.0)
     unicode-display_width (2.1.0)
+    uri_template (0.7.0)
     view_component (2.49.1)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
@@ -697,6 +698,7 @@ DEPENDENCIES
   terminal-table
   timecop
   tzinfo-data
+  uri_template
   view_component
   wdm (~> 0.1)
   web-console (~> 4.2.0)
