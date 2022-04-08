@@ -10,16 +10,20 @@ module Admin
     def show; end
 
     def index
-      school_cohort_ids = SchoolCohort.ransack(school_name_or_school_urn_cont: params[:query]).result.pluck(:id)
-      query = "%#{(params[:query] || '').downcase}%"
-      @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
-                                                              .active_record
-                                                              .includes(:validation_decisions)
-                                                              .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
-                                                              .order("DATE(users.created_at) asc, users.full_name")
+      if FeatureFlag.active?(:change_of_circumstances)
+        @participant_profiles = search
+      else
+        school_cohort_ids = SchoolCohort.ransack(school_name_or_school_urn_cont: params[:query]).result.pluck(:id)
+        query = "%#{(params[:query] || '').downcase}%"
+        @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
+                                                                .active_record
+                                                                .includes(:validation_decisions)
+                                                                .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
+                                                                .order("DATE(users.created_at) asc, users.full_name")
 
-      if params[:type].present?
-        @participant_profiles = @participant_profiles.where(type: params[:type])
+        if params[:type].present?
+          @participant_profiles = @participant_profiles.where(type: params[:type])
+        end
       end
     end
 
@@ -59,8 +63,15 @@ module Admin
     def remove; end
 
     def destroy
+      # FIXME: this will need looking at when we properly have mentors at multiple schools
+      @participant_profile.current_induction_record&.withdrawing!
+      # belt and braces while we transition
       @participant_profile.withdrawn_record!
-      @participant_profile.mentee_profiles.update_all(mentor_profile_id: nil) if @participant_profile.mentor?
+      if @participant_profile.mentor?
+        # FIXME: decide how to handle removing mentor_profile_id from induction_records
+        # this vvv will sync to the induction records but we should make it a new induction record
+        @participant_profile.mentee_profiles.update_all(mentor_profile_id: nil)
+      end
 
       render :destroy_success
     end
@@ -70,6 +81,22 @@ module Admin
     def load_participant
       @participant_profile = ParticipantProfile.find(params[:id])
       authorize @participant_profile, policy_class: @participant_profile.policy_class
+    end
+
+    def search
+      scope = policy_scope(ParticipantProfile).joins(participant_identity: :user)
+
+      if params[:type].present?
+        scope = scope.where(type: params[:type])
+      end
+
+      if params[:query].present?
+        query = "%#{params.fetch(:query).downcase}%"
+        profile_ids = InductionRecord.current.ransack(induction_programme_school_cohort_school_name_or_induction_programme_school_cohort_school_urn_i_cont: params[:query]).result.pluck(:participant_profile_id)
+        scope = scope.where("participant_profiles.id IN (?) OR users.full_name ILIKE ?", profile_ids, query)
+      end
+
+      scope.order("DATE(users.created_at) ASC, users.full_name")
     end
   end
 end
