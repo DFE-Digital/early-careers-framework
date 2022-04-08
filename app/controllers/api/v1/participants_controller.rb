@@ -11,9 +11,15 @@ module Api
     private
 
       def serialized_response(profile)
-        ParticipantSerializer
-          .new(profile)
+        relevant_induction_record = profile.relevant_induction_record(lead_provider: lead_provider)
+
+        ParticipantFromInductionRecordSerializer
+          .new(relevant_induction_record)
           .serializable_hash.to_json
+      end
+
+      def lead_provider
+        current_user.lead_provider
       end
 
       def access_scope
