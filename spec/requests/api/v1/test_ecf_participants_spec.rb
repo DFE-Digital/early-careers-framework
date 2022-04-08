@@ -18,13 +18,14 @@ RSpec.describe "Participants API", type: :request do
   let(:partnership) { create(:partnership, lead_provider: lead_provider) }
   let(:induction_programme) { create(:induction_programme, partnership: partnership) }
   let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, mentor_profile: mentor_profile) }
+
   let(:profile) { create(:ect_participant_profile) }
   let(:user) { profile.user }
   let(:teacher_profile) { profile.teacher_profile }
   let(:identity) { profile.participant_identity }
 
-  let(:mentor) { create(:user, :mentor) }
-  let(:mentor_profile) { mentor.mentor_profile }
+  let(:mentor) { mentor_participant_profile.user }
+  let(:mentor_profile) { create(:mentor_participant_profile) }
 
   before do
     induction_record
