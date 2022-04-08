@@ -48,17 +48,20 @@ module Api
           .where(id: induction_record_ids_with_deduped_profiles)
           .joins(participant_profile: { school_cohort: [:cohort] })
           .where(participant_profile: { school_cohorts: { cohort: Cohort.current } })
-          .includes(participant_profile: [
-            :participant_identity,
-            :user,
-            :cohort,
-            :school,
-            :ecf_participant_eligibility,
-            :ecf_participant_validation_data,
-            :schedule,
-            :teacher_profile,
-            { mentor_profile: [:mentor] },
-          ])
+          .includes(
+            school_cohort: [:school],
+            participant_profile: [
+              :participant_identity,
+              :user,
+              :cohort,
+              :school,
+              :ecf_participant_eligibility,
+              :ecf_participant_validation_data,
+              :schedule,
+              :teacher_profile,
+              { mentor_profile: [:mentor] },
+            ],
+          )
 
         if updated_since.present?
           scope = scope
