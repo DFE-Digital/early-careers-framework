@@ -77,7 +77,12 @@ module Api
       end
 
       attribute :status do |induction_record|
-        induction_record.participant_profile.status
+        case induction_record.induction_status
+        when "active", "completed", "leaving"
+          "active"
+        when "withdrawn", "changed"
+          "withdrawn"
+        end
       end
 
       attribute :teacher_reference_number do |induction_record|

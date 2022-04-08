@@ -37,7 +37,7 @@ RSpec.describe "Participants API", type: :request do
     create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort)
       .tap do |profile|
         Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
-          .tap { |induction_record| induction_record.update!(training_status: "withdrawn") }
+          .tap { |induction_record| induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn") }
       end
   end
 
