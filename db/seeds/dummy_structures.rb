@@ -157,11 +157,18 @@ end
 ParticipantProfileState.find_or_create_by!(participant_profile: profile)
 
 # populate change of circumstances
-SchoolCohort.where(induction_programme_choice: InductionProgramme.training_programmes.keys).left_joins(:induction_programmes).where(induction_programmes: { id: nil }).find_each do |sc|
-  programme = InductionProgramme.find_or_create_by!(school_cohort: sc,
-                                                    training_programme: sc.induction_programme_choice,
-                                                    partnership: sc.school.partnerships.active.where(cohort: sc.cohort).first,
-                                                    core_induction_programme: sc.core_induction_programme)
+SchoolCohort.where(induction_programme_choice: InductionProgramme.training_programmes.keys).where(default_induction_programme: nil).find_each do |sc|
+  choice = sc.induction_programme_choice
+  programme = InductionProgramme.find_or_initialize_by(school_cohort: sc,
+                                                       training_programme: sc.induction_programme_choice)
+  case choice
+  when "full_induction_programme"
+    programme.partnership = sc.school.active_partnerships.where(cohort: sc.cohort).first
+  when "core_induction_programme"
+    programme.core_induction_programme = sc.core_induction_programme
+  end
+  programme.save!
+
   sc.ecf_participant_profiles.each do |ecf_profile|
     if ecf_profile.current_induction_programme != programme
       induction = Induction::Enrol.call(participant_profile: ecf_profile, induction_programme: programme)

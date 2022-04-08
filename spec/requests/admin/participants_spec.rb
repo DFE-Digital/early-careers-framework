@@ -40,6 +40,41 @@ RSpec.describe "Admin::Participants", type: :request do
     end
   end
 
+  context "when change of circumstances enabled", with_feature_flags: { change_of_circumstances: "active" } do
+    before do
+      Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+                                                  programme_choice: school_cohort.induction_programme_choice)
+      school_cohort.reload.active_ecf_participant_profiles.each do |profile|
+        induction_record = Induction::Enrol.call(participant_profile: profile, induction_programme: school_cohort.default_induction_programme)
+        induction_record.update!(induction_status: profile.status, training_status: profile.training_status, mentor_profile_id: profile.mentor_profile_id)
+      end
+    end
+
+    describe "GET /admin/participants" do
+      it "renders the index participants template" do
+        get "/admin/participants"
+        expect(response).to render_template "admin/participants/index"
+      end
+
+      it "includes all participants" do
+        get "/admin/participants"
+        expect(assigns(:participant_profiles)).to include ect_profile
+        expect(assigns(:participant_profiles)).to include mentor_profile
+        expect(assigns(:participant_profiles)).to include npq_profile
+        # NOTE: withdrawn in this way is not really relevent now
+        expect(assigns(:participant_profiles)).to include withdrawn_ect_profile_record
+      end
+
+      it "can filter by type" do
+        get "/admin/participants?type=ParticipantProfile::NPQ"
+        expect(assigns(:participant_profiles)).not_to include ect_profile
+        expect(assigns(:participant_profiles)).not_to include mentor_profile
+        expect(assigns(:participant_profiles)).to include npq_profile
+        expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
+      end
+    end
+  end
+
   describe "GET /admin/participants/:id" do
     it "renders the show template" do
       get "/admin/participants/#{mentor_profile.id}"
