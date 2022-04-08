@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
+  include Pagy::Backend
+
   let(:partnerships) { Array.new(rand(21..30)) { |i| double "Partnership #{i}" } }
   let(:page) { rand(1..2) }
+  let(:paginated_partnerships) {
+    _, p = pagy_array(partnerships, page: page)
+    p
+  }
 
-  component { described_class.new partnerships: Kaminari.paginate_array(partnerships), page: page }
+  component { described_class.new partnerships: paginated_partnerships, page: page }
   request_path "/lead-providers/your-schools"
 
   stub_component LeadProviders::YourSchools::TableRow
