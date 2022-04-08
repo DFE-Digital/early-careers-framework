@@ -6,7 +6,7 @@ module Api
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilter
-      include Api::ParticipantActions
+      include ParticipantActions
 
       def index
         render json: NPQParticipantSerializer.new(paginate(npq_participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json

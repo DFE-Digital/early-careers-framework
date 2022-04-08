@@ -64,6 +64,15 @@ class ParticipantProfile < ApplicationRecord
       ParticipantProfile::ECFPolicy
     end
 
+    def relevant_induction_record(lead_provider:)
+      induction_records
+        .joins(induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
+        .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
+        .where(induction_programme: { school_cohorts: { cohort: Cohort.current } })
+        .order(start_date: :desc)
+        .first
+    end
+
   private
 
     def update_analytics
