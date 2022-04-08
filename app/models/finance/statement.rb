@@ -8,14 +8,18 @@ class Finance::Statement < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :cohort
   has_many :participant_declarations
-  scope :payable,      -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
-  scope :closed,       -> { where("payment_date < ?", Date.current) }
-  scope :current,      -> { where("deadline_date >= DATE(NOW())") }
-  scope :latest,       -> { order(deadline_date: :asc).last }
-  scope :upto_current, -> { payable.or(closed).or(current) }
-  scope :output,       -> { where(output_fee: true) }
+  scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
+  scope :closed,                    -> { where("payment_date < ?", Date.current) }
+  scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
+  scope :upto_current,              -> { payable.or(closed) }
+  scope :upto,                      -> (statement) { where("deadline_date < ?", statement.deadline_date) }
+  scope :output,                    -> { where(output_fee: true) }
 
   class << self
+    def current
+      with_future_deadline_date.order(deadline_date: :asc).first
+    end
+
     def next_output_fee_statement
       output.order(deadline_date: :asc).where("deadline_date >= ?", Date.current).first
     end
