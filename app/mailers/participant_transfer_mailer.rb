@@ -4,7 +4,7 @@
 class ParticipantTransferMailer < ApplicationMailer
   # participant_transfer_out_notification
   TRANSFER_OUT_FOR_ECT_TEMPLATE         = "7d46c3d2-bf80-4b48-a8cd-94902bbb31b8"
-  TRANSFER_OUT_FOR_MENTOR_TEAMPLTE      = "5341d978-1d81-45d7-9734-4f799f6742ab"
+  TRANSFER_OUT_FOR_MENTOR_TEMPLATE      = "5341d978-1d81-45d7-9734-4f799f6742ab"
 
   # participant_transfer_in_notification
   TRANSFER_IN_FOR_ECT_TEMPLATE          = "1f7baa1d-d684-4499-be8c-7cdeaa967f1b"
@@ -37,7 +37,7 @@ class ParticipantTransferMailer < ApplicationMailer
     template_id = if participant_profile.ect?
                     TRANSFER_OUT_FOR_ECT_TEMPLATE
                   else
-                    TRANSFER_OUT_FOR_MENTOR_TEAMPLTE
+                    TRANSFER_OUT_FOR_MENTOR_TEMPLATE
                   end
 
     template_mail(
@@ -179,11 +179,5 @@ class ParticipantTransferMailer < ApplicationMailer
         new_school_name: induction_record.school.urn,
       },
     ).tag(:induction_coordinator_participant_transfer_out_notification).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
-  end
-
-private
-
-  def participant_profile_type(participant_profile)
-    participant_profile.ect ? "ECT" : "Mentor"
   end
 end

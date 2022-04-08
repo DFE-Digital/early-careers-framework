@@ -247,7 +247,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def then_i_should_be_taken_to_the_schools_current_programme_page
-        expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} be training with your school's current providers?")
+        expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} be training with your school’s current providers?")
       end
 
       def then_i_should_be_taken_to_the_teachers_current_programme_page

@@ -16,9 +16,9 @@ private
 
   attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile
 
-  # preferred_email can be suppied if the participant_profile.participant_identity does not have
+  # preferred_email can be supplied if the participant_profile.participant_identity does not have
   # the required email for the induction i.e. a participant transferring schools might have a new email
-  # address at their new school - really only useed for display in the UI
+  # address at their new school - really only used for display in the UI
   def initialize(participant_profile:, induction_programme:, start_date: nil, preferred_email: nil, mentor_profile: nil)
     @participant_profile = participant_profile
     @induction_programme = induction_programme

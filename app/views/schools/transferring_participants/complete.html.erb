@@ -17,9 +17,9 @@
       <% if @transferring_participant_form.same_programme %>
         <p class="govuk-body">They’re already training with the same provider used by your school. We’ll let your provider know about the transfer.</p>
       <% elsif @transferring_participant_form.continue_teachers_programme? %>
-        <p class="govuk-body">We’ll contact their training lead provider, <%= @latest_induction_record.induction_programme.lead_provider&.name %>, and their delivery partner <%= @latest_induction_record.induction_programme.delivery_partner&.name %>, to let them know that you’ve reported their transfer too.</p>
+        <p class="govuk-body">We’ll contact their training lead provider, <%= @latest_induction_record.induction_programme.lead_provider&.name %>, to let them know that you’ve reported their transfer too.</p>
       <% elsif @transferring_participant_form.switch_to_schools_programme? %>
-        <p class="govuk-body">We’ll contact your training lead provider, <%= @school_cohort.default_induction_programme.lead_provider&.name %>, to let them know that you’ve reported this transfer too. We recommend you confirm this with them directly too.</p>
+        <p class="govuk-body">We’ll contact your training lead provider, <%= @school_cohort.default_induction_programme.lead_provider&.name %>, to let them know that you’ve reported this transfer. We recommend you confirm this with them directly too.</p>
       <% end %>
 
       <h2 class="govuk-heading-m">Continuing induction and ECF-based training</h2>
