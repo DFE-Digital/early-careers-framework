@@ -156,8 +156,8 @@ module Steps
         withdraw_endpoint.responded_with_status? "active"
         withdraw_endpoint.responded_with_training_status? "withdrawn"
 
-        # TODO: This needs to be automated through the withdraw API
-        current_induction_record = participant_profile.induction_records.active.first
+        # TODO: This needs to be added to the withdraw API
+        current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.training_status_withdrawn! unless current_induction_record.nil?
       end
     end
@@ -177,8 +177,8 @@ module Steps
         defer_endpoint.responded_with_status? "active"
         defer_endpoint.responded_with_training_status? "deferred"
 
-        # TODO: This needs to be automated through the withdraw API
-        current_induction_record = participant_profile.induction_records.active.first
+        # TODO: This needs to be added to the defer API
+        current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.training_status_deferred! unless current_induction_record.nil?
       end
     end
@@ -194,7 +194,7 @@ module Steps
         participant_profile.withdrawn_record!
 
         # NEW way
-        current_induction_record = participant_profile.induction_records.active.first
+        current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
       end
     end
@@ -216,7 +216,7 @@ module Steps
         participant_profile.update! school_cohort: school_cohort
 
         # NEW way
-        current_induction_record = participant_profile.induction_records.active.first
+        current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
@@ -235,16 +235,18 @@ module Steps
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
         # OLD way
-        # TODO: this fails because of the state machine
-        # ParticipantProfileState.create! participant_profile: participant_profile, state: ParticipantProfileState.states[:active]
 
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
 
+        profile_state = participant_profile.participant_profile_state
+        profile_state.delete
+        participant_profile.reload
+
         # NEW way
-        current_induction_record = participant_profile.induction_records.active.first
+        current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
@@ -270,6 +272,10 @@ module Steps
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
+
+        # NEW way
+        current_induction_record = participant_profile.current_induction_records.first
+        current_induction_record.withdrawing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme

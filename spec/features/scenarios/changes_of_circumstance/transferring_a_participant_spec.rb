@@ -116,21 +116,18 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
                                                                              scenario.participant_type,
                                                                              scenario.prior_participant_status,
                                                                              scenario.prior_training_status
-                # experimental: true
               }
             when :OBFUSCATED
               it.pending do
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              nil,
                                                                              scenario.participant_type
-                #  experimental: true
               end
             else
               it {
                 should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                                  scenario.participant_email,
                                                                                  scenario.participant_type
-                # experimental: true
               }
             end
 
@@ -156,7 +153,6 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
                                                                              scenario.participant_type,
                                                                              scenario.new_participant_status,
                                                                              scenario.new_training_status
-                # experimental: true
               }
             when :not_applicable
               # not applicable
