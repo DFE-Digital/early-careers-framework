@@ -19,9 +19,6 @@ gem "sentry-rails", "~> 5.2"
 gem "sentry-ruby", "~> 5.2"
 gem "sentry-sidekiq"
 
-# Pagination
-gem "kaminari", "~> 1.2"
-
 gem "secure_headers"
 
 # Cleaner logs, one line per request
@@ -76,7 +73,7 @@ gem "strong_migrations", "~> 1.0"
 # Acts as State Machine for participant and declaration states
 gem "aasm"
 
-# Pagination for API
+# Pagination
 gem "pagy", "~> 5.10", ">= 5.10.1"
 
 # Json Schema for api validation
