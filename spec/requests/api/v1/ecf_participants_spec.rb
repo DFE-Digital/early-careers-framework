@@ -19,7 +19,11 @@ RSpec.describe "Participants API", type: :request do
 
   before :each do
     profiles = create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-    profiles.each { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+    profiles.each do |profile|
+      Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme).tap do |ir|
+        ir.update!(mentor_profile: mentor_profile)
+      end
+    end
 
     ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
     profile = create(

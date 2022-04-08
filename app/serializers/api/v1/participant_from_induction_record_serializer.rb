@@ -60,7 +60,7 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          induction_record.participant_profile.mentor&.id
+          induction_record.mentor_profile&.user&.id
         end
       end
 

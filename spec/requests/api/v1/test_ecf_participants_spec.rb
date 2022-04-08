@@ -17,8 +17,8 @@ RSpec.describe "Participants API", type: :request do
 
   let(:partnership) { create(:partnership, lead_provider: lead_provider) }
   let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-  let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile) }
-  let(:profile) { create(:ect_participant_profile, mentor_profile: mentor_profile) }
+  let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, mentor_profile: mentor_profile) }
+  let(:profile) { create(:ect_participant_profile) }
   let(:user) { profile.user }
   let(:teacher_profile) { profile.teacher_profile }
   let(:identity) { profile.participant_identity }
@@ -58,7 +58,7 @@ RSpec.describe "Participants API", type: :request do
 
           expect(parsed_response["data"][0]["attributes"]["email"]).to eql(identity.email)
           expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
-          expect(parsed_response["data"][0]["attributes"]["mentor_id"]).to eql(profile.mentor.id)
+          expect(parsed_response["data"][0]["attributes"]["mentor_id"]).to eql(induction_record.mentor_profile.user.id)
           expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(induction_record.school_cohort.school.urn)
           expect(parsed_response["data"][0]["attributes"]["participant_type"]).to eql(profile.participant_type.to_s)
           expect(parsed_response["data"][0]["attributes"]["cohort"]).to eql(profile.cohort.start_year.to_s)
@@ -73,7 +73,15 @@ RSpec.describe "Participants API", type: :request do
           expect(parsed_response["data"][0]["attributes"]["updated_at"]).to eql(user.reload.updated_at.rfc3339)
         end
 
-        context "when there is no mentor"
+        context "when there is no mentor" do
+          let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile) }
+
+          it "returns correct data" do
+            get "/api/v1/participants/ecf"
+
+            expect(parsed_response["data"][0]["attributes"]["mentor_id"]).to be_nil
+          end
+        end
 
         context "NQT+1" do
           let(:cohort_2020) { create(:cohort, start_year: 2020) }
