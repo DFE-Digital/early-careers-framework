@@ -156,6 +156,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_two)
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
         @school_cohort_two.update!(default_induction_programme: @induction_programme_two)
+        Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
       end
 
       # when
@@ -275,7 +276,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       def then_i_should_be_on_the_complete_page_for_an_existing_induction
         expect(page).to have_selector("h2", text: "What happens next")
         expect(page).to have_text("We’ll let #{@participant_data[:full_name]} know you’ve registered them for ECF-based training at your school.")
-        expect(page).to have_text("We’ll contact their training lead provider, #{@lead_provider_two.name}, and their delivery partner #{@other_delivery_partner.name}, to let them know that you’ve reported their transfer too.")
+        expect(page).to have_text("We’ll contact their training lead provider, #{@lead_provider_two.name}, to let them know that you’ve reported their transfer too.")
       end
 
       def then_i_should_see_the_transferring_participant

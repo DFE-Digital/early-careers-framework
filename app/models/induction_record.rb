@@ -45,6 +45,8 @@ class InductionRecord < ApplicationRecord
   scope :transferring_in, -> { active_induction_status.where("start_date > ?", Time.zone.now) }
   scope :transferring_out, -> { leaving_induction_status.where("end_date > ?", Time.zone.now) }
   scope :transferred, -> { leaving_induction_status.where("end_date < ?", Time.zone.now) }
+  scope :mentors, -> { joins(:participant_profile).where(participant_profiles: { type: "ParticipantProfile::Mentor" }) }
+  scope :ects, -> { joins(:participant_profile).where(participant_profiles: { type: "ParticipantProfile::ECT" }) }
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 

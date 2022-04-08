@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true, rutabaga: false do
   context "Transferring an ECT to a school" do
-    context "ECT has matching lead provider and delivery" do
+    context "ECT has matching lead provider and delivery partner" do
       before do
         allow_participant_transfer_mailers
         set_participant_data
@@ -137,6 +137,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_1)
         @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_2)
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
+        Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
       end
 
       # when

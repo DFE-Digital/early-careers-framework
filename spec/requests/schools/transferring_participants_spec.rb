@@ -174,7 +174,8 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/email" do
     it "redirects to the choose mentor template" do
-      create(:mentor_participant_profile, school_cohort: school_cohort)
+      mentor = create(:mentor_participant_profile, school_cohort: school_cohort)
+      Induction::Enrol.call(participant_profile: mentor, induction_programme: induction_programme_one)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/email",
           params: { schools_transferring_participant_form: {
             full_name: ect.user.full_name,
@@ -189,6 +190,8 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/choose-mentor" do
     it "renders the choose-mentor template" do
+      mentor = create(:mentor_participant_profile, school_cohort: school_cohort)
+      Induction::Enrol.call(participant_profile: mentor, induction_programme: induction_programme_one)
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/choose-mentor",
           params: { schools_transferring_participant_form: {
             full_name: ect.user.full_name,
