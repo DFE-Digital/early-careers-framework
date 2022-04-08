@@ -65,7 +65,7 @@ module Api
       end
 
       attribute :school_urn do |induction_record|
-        induction_record.school_cohort.school.urn
+        induction_record.induction_programme&.school_cohort&.school&.urn
       end
 
       attribute :participant_type do |induction_record|
@@ -73,7 +73,7 @@ module Api
       end
 
       attribute :cohort do |induction_record|
-        induction_record.participant_profile.cohort.start_year.to_s
+        induction_record.induction_programme&.school_cohort&.cohort&.start_year&.to_s
       end
 
       attribute :status do |induction_record|

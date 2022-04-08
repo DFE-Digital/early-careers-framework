@@ -50,16 +50,18 @@ module Api
           .where(participant_profile: { school_cohorts: { cohort: Cohort.current } })
           .includes(
             :schedule,
+            induction_programme: {
+              school_cohort: %i[
+                cohort
+                school
+              ],
+            },
             mentor_profile: [
               :participant_identity,
-            ],
-            school_cohort: [
-              :school,
             ],
             participant_profile: %i[
               participant_identity
               user
-              cohort
               ecf_participant_eligibility
               ecf_participant_validation_data
               teacher_profile
