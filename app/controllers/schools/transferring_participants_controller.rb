@@ -135,7 +135,7 @@ module Schools
     #
     def send_notification_emails!(induction_record)
       current_lead_provider_users = current_lead_provider&.users || []
-      target_lead_provider_users = participant_lead_provider&.users | []
+      target_lead_provider_users = participant_lead_provider&.users || []
 
       if matching_lead_provider_and_delivery_partner?
         current_lead_provider_users.each do |user|
