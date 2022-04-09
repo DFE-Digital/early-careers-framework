@@ -34,5 +34,11 @@ module Pages
 
       Pages::SITAddParticipantWizard.new
     end
+
+    def start_transfer_participant_wizard
+      click_on "Add your early career teacher and mentor details"
+
+      Pages::SITTransferParticipantWizard.new
+    end
   end
 end

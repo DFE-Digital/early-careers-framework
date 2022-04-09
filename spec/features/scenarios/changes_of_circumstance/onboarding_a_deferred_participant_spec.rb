@@ -76,7 +76,7 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
 
           and_lead_provider_defers_participant "Original Lead Provider", "the Participant", scenario.participant_email, scenario.participant_type
 
-          when_school_takes_on_the_deferred_participant "New SIT", "the Participant"
+          when_school_takes_on_the_deferred_participant "New SIT", "the Participant", scenario.participant_email, scenario.participant_type, scenario.new_programme
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
