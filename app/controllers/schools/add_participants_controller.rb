@@ -13,11 +13,26 @@ module Schools
     def start
       reset_form
 
-      if type_param
-        add_participant_form.assign_attributes(type: type_param)
+      if type_param || who_to_add_param
+        add_participant_form.assign_attributes(type: type_param || who_to_add_param)
         store_form_in_session
 
-        if add_participant_form.type == :self
+        if FeatureFlag.active?(:change_of_circumstances)
+          case add_participant_form.type
+          when :self
+            redirect_to action: :show, step: :yourself
+          when :teacher
+            redirect_to action: :show, step: :who
+          when :joining
+            redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year)
+          when :ect
+            redirect_to action: :show, step: :name
+          when :mentor
+            redirect_to action: :show, step: :name
+          else
+            redirect_to action: :show, step: :started
+          end
+        elsif add_participant_form.type == :self
           redirect_to action: :show, step: :yourself
         else
           redirect_to action: :show, step: :started
@@ -40,6 +55,10 @@ module Schools
 
     def type_param
       params[:type]&.to_sym
+    end
+
+    def who_to_add_param
+      params[:schools_add_participant_form][:type]&.to_sym
     end
 
     def email_used_in_the_same_school?

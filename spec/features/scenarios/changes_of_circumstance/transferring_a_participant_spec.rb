@@ -67,8 +67,14 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
           and_sit_at_pupil_premium_school_reported_programme "New SIT", "CIP"
         end
 
-        and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_email, scenario.participant_type
-        and_participant_has_completed_registration "the Participant", scenario.participant_type
+        and_sit_reported_participant "Original SIT",
+                                     "the Participant",
+                                     scenario.participant_email,
+                                     scenario.participant_type
+        and_participant_has_completed_registration "the Participant",
+                                                   scenario.participant_trn,
+                                                   scenario.participant_dob,
+                                                   scenario.participant_type
       end
 
       context when_context(scenario) do
@@ -77,7 +83,12 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             and_lead_provider_has_made_training_declaration "Original Lead Provider", scenario.participant_type, "the Participant", declaration_type
           end
 
-          when_school_takes_on_the_participant "New SIT", "the Participant"
+          when_school_takes_on_the_participant "New SIT",
+                                               "the Participant",
+                                               scenario.participant_email,
+                                               scenario.participant_trn,
+                                               scenario.participant_dob,
+                                               "#{scenario.original_programme}>#{scenario.new_programme}"
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
@@ -116,21 +127,18 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
                                                                              scenario.participant_type,
                                                                              scenario.prior_participant_status,
                                                                              scenario.prior_training_status
-                # experimental: true
               }
             when :OBFUSCATED
               it.pending do
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              nil,
                                                                              scenario.participant_type
-                #  experimental: true
               end
             else
               it {
                 should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                                  scenario.participant_email,
                                                                                  scenario.participant_type
-                # experimental: true
               }
             end
 
@@ -156,7 +164,6 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
                                                                              scenario.participant_type,
                                                                              scenario.new_participant_status,
                                                                              scenario.new_training_status
-                # experimental: true
               }
             when :not_applicable
               # not applicable

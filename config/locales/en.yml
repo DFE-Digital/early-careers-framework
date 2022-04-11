@@ -80,6 +80,13 @@ en:
       blank: "Enter an email address"
     start_term:
       blank: "Enter a start term"
+    date_of_birth:
+      blank: "Enter date of birth"
+      invalid: "Invalid date of birth"
+      in_future: "Date is in the future"
+    start_date:
+      blank: "Enter start date"
+      invalid: "Invalid start date"
     name:
       blank: "Enter a name"
     full_name: &full_name_error_messages
@@ -198,6 +205,26 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
+        schools/transferring_participant_form:
+          attributes:
+            full_name:
+              <<: *full_name_error_messages
+            email:
+              <<: *email_error_messages
+            trn:
+              blank: "Enter the teachers TRN (teacher reference number)"
+              too_short: "Teacher reference number is at least 5 digits long"
+              too_long: "Teacher reference number is at most 7 digits long"
+              invalid: "Teacher reference number must only contain numbers"
+            dob:
+              blank: "Enter date of birth"
+              invalid: "Enter valid date of birth"
+            mentor_id:
+              blank: "Select an option"
+            schools_current_programme_choice:
+              blank: "Select if the participant will continue with your schools current training programme"
+            teachers_current_programme_choice:
+              blank: "Select if the participant will continue with their current training programme"
         schools/add_participant_form:
           attributes:
             mentor_id:

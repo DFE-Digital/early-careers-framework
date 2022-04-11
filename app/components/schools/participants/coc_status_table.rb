@@ -29,10 +29,12 @@ module Schools
         induction_records.first.school_cohort.core_induction_programme?
       end
 
+      # add the below back in once we do the transferring out journey
+      # transferring out currently list in the ECT or Mentor tabs
+      # if transferring_out_participants?
+      #   "Leaving"
       def date_column_heading
-        if transferring_out_participants?
-          "Leaving"
-        elsif transferring_in_participants?
+        if transferring_in_participants?
           "Joining"
         elsif transferred_participants?
           "Transferred"

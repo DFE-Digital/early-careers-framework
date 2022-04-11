@@ -74,6 +74,7 @@ School.find_or_create_by!(urn: "000004") do |school|
 end
 
 lead_provider = LeadProvider.find_by(name: "Ambition Institute")
+lead_provider.users.create!(full_name: "Ambition User", email: "lead-provider-user@example.com")
 
 School.find_or_create_by!(urn: "000005") do |school|
   school.update!(
@@ -518,6 +519,16 @@ participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
+user = User.find_or_create_by!(email: "fip-ect3@example.com") do |u|
+  u.full_name = "FIP ECT"
+end
+teacher_profile = TeacherProfile.find_or_create_by!(user: user)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+  ect_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
+  ect_profile.schedule = Finance::Schedule::ECF.default
+  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+end
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 

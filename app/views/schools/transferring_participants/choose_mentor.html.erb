@@ -1,0 +1,24 @@
+<% title = "Who will #{@transferring_participant_form.full_name_to_display} mentor be?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: {action: :email}) %>
+
+<span class="govuk-caption-xl"><%= @school.name %></span>
+
+<%= form_for @transferring_participant_form, url: { action: :choose_mentor }, method: :put do |f| %>
+  <%= f.govuk_radio_buttons_fieldset :mentor_id,
+    legend: { text: title, tag: 'h1', size: 'xl' },
+    hint: { text: "You can tell us later if you’re not sure." } do %>
+
+    <% @school_cohort.current_induction_records.mentors.each do |mentor| %>
+      <%= f.govuk_radio_button :mentor_id, mentor.user.id, label: { text: mentor.user.full_name } %>
+    <% end %>
+
+    <%= f.govuk_radio_divider %>
+
+    <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign a mentor later' } %>
+  <% end %>
+
+  <%= f.govuk_submit "Continue" %>
+<% end %>

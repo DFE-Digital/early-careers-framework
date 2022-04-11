@@ -26,7 +26,8 @@ module EarlyCareerTeachers
         ParticipantProfileState.create!(participant_profile: profile)
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
-                                induction_programme: school_cohort.default_induction_programme)
+                                induction_programme: school_cohort.default_induction_programme,
+                                mentor_profile: mentor_profile)
         end
       end
 
@@ -60,6 +61,10 @@ module EarlyCareerTeachers
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),
       }
+    end
+
+    def mentor_profile
+      ParticipantProfile::Mentor.find(mentor_profile_id) if mentor_profile_id.present?
     end
   end
 end

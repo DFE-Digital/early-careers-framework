@@ -677,7 +677,7 @@ ActiveRecord::Schema.define(version: 2022_03_30_125412) do
     t.index ["delivery_partner_id"], name: "index_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnerships_on_lead_provider_id"
     t.index ["pending"], name: "index_partnerships_on_pending"
-    t.index ["school_id", "lead_provider_id", "cohort_id"], name: "unique_partnerships", unique: true
+    t.index ["school_id", "lead_provider_id", "delivery_partner_id", "cohort_id"], name: "unique_partnerships", unique: true
     t.index ["school_id"], name: "index_partnerships_on_school_id"
   end
 

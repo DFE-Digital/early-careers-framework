@@ -32,7 +32,11 @@
           Email address
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @profile.user.email %>
+          <% if FeatureFlag.active?(:change_of_circumstances) %>
+            <%= @induction_record.preferred_identity.email %>
+          <% else %>
+            <%= @profile.user.email %>
+          <% end %>
         </dd>
         <% unless @profile.training_status_withdrawn? %>
           <dd class="govuk-summary-list__actions">

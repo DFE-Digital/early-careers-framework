@@ -1,0 +1,27 @@
+<% title = "What’s #{@transferring_participant_form.full_name_to_display} teacher reference number (TRN)?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: {action: :full_name }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <p class="govuk-body">This unique ID:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>is usually 7 digits long, for example ‘4567814’</li>
+      <li>may include the letters ‘RP’ or a slash ‘/’ symbol, for example ‘RP99/12345’</li>
+      <li>may also be called a QTS, GTC, DfE, DfES or DCSF number</li>
+    </ul>
+
+    <%= form_for @transferring_participant_form, url: { action: :trn }, method: :put do |f| %>
+
+      <%= f.govuk_text_field :trn,
+        width: "three-quarters",
+        label: { text: "Teacher reference number (TRN)", class: "govuk-visually-hidden" }
+      %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

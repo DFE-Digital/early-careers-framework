@@ -7,15 +7,17 @@ module Pages
     def complete(participant_name, participant_email, participant_type, cohort_label)
       click_on "Continue"
 
+      start_to_add_a_participant
+
       case participant_type.downcase.to_sym
       when :ect
-        start_to_add_a_new_ect
+        choose_to_add_a_new_ect
         add_full_name participant_name
         add_email_address participant_email
         choose_start_date cohort_label
         confirm_and_add
       when :mentor
-        start_to_add_a_new_mentor
+        choose_to_add_a_new_mentor
         add_full_name participant_name
         add_email_address participant_email
         choose_start_date cohort_label
@@ -26,13 +28,17 @@ module Pages
       end
     end
 
-    def start_to_add_a_new_ect
-      click_on "Add a new ECT"
+    def start_to_add_a_participant
+      click_on "Add an ECT or mentor"
+    end
+
+    def choose_to_add_a_new_ect
+      choose "A new ECT"
       click_on "Continue"
     end
 
-    def start_to_add_a_new_mentor
-      click_on "Add a new mentor"
+    def choose_to_add_a_new_mentor
+      choose "A new mentor"
       click_on "Continue"
     end
 

@@ -9,6 +9,8 @@ module Schools
     attribute :participant_type
     attribute :type
 
+    step :who
+
     step :yourself do
       next_step :confirm
     end
