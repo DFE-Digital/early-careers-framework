@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe "Lead Provider school reporting", type: :request do
   let(:user) { create(:user, :lead_provider) }
   let!(:cohort) { create(:cohort, :current) }
+  let!(:cohort_2022) { create(:cohort, :next) }
 
   before do
     sign_in user
