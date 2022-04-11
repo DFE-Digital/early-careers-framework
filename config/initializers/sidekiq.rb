@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sidekiq/web"
+require "sidekiq/cron/web"
 
 if ENV.key?("VCAP_SERVICES")
   service_config = JSON.parse(ENV["VCAP_SERVICES"])

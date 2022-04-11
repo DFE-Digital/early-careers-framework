@@ -63,11 +63,10 @@ class ParticipantDeclaration < ApplicationRecord
   scope :eligible_npqs_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).npq }
   scope :eligible_uplift_for_lead_provider, ->(lead_provider) { eligible_for_lead_provider(lead_provider).uplift }
 
-  scope :unique_for_lead_provider, ->(lead_provider) { for_lead_provider(lead_provider).unique_id }
-  scope :unique_ects_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).ect }
-  scope :unique_mentors_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).mentor }
+  scope :unique_ects,    -> { unique_id.ect }
+  scope :unique_mentors, -> { unique_id.mentor }
+  scope :unique_uplift,  -> { unique_id.uplift }
   scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
-  scope :unique_uplift_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).uplift }
 
   scope :for_course_identifier, ->(course_identifier) { where(course_identifier: course_identifier) }
   scope :unique_for_lead_provider_and_course_identifier, ->(lead_provider, course_identifier) { for_lead_provider(lead_provider).for_course_identifier(course_identifier).unique_id }
