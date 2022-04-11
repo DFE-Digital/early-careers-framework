@@ -2,11 +2,14 @@
 
 module TransferringParticipantHelper
   def transfer_journey_previous_step(form)
-    if form.same_programme
-      email_schools_transferring_participant_path
-    elsif form.teachers_current_programme_choice == "yes"
+    schools_choice = form.schools_current_programme_choice
+    teachers_choice = form.teachers_current_programme_choice
+
+    if schools_choice == "yes"
+      schools_current_programme_schools_transferring_participant_path
+    elsif teachers_choice == "yes"
       teachers_current_programme_schools_transferring_participant_path
-    elsif form.schools_current_programme_choice == "yes"
+    elsif schools_choice == "no" && teachers_choice == "no"
       schools_current_programme_schools_transferring_participant_path
     else
       dob_schools_transferring_participant_path
