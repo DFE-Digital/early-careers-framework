@@ -7,17 +7,17 @@ module Finance
         {
           started: {
             # not_yet_included: :not_eligible_for_lead_provider,
-            all: :unique_for_lead_provider,
-            uplift: :unique_uplift_for_lead_provider,
-            ects: :unique_ects_for_lead_provider,
-            mentors: :unique_mentors_for_lead_provider,
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
           },
           retained_1: {
             # not_yet_included: :not_eligible_for_lead_provider,
-            all: :unique_for_lead_provider,
-            uplift: :unique_uplift_for_lead_provider,
-            ects: :unique_ects_for_lead_provider,
-            mentors: :unique_mentors_for_lead_provider,
+            all: :unique_id,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
+            uplift: :unique_uplift,
           },
         }
       end

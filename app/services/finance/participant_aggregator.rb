@@ -7,6 +7,14 @@ module Finance
     include AbstractInterface
     implement_class_method :aggregation_types
 
+    EVENT_TYPE_TO_DECLARATION_TYPE_MAP = {
+      started: "started",
+      retained_1: "retained-1",
+      retained_2: "retained-2",
+      retained_3: "retained-3",
+      retained_4: "retained-4",
+    }.freeze
+
     def call(event_type: :started)
       aggregations(event_type: event_type).tap do |h|
         h[:previous_participants] =
@@ -41,10 +49,11 @@ module Finance
     end
 
     def aggregate(aggregation_type:, event_type:)
-      scope = recorder.public_send(self.class.aggregation_types[event_type][aggregation_type], cpd_lead_provider)
-      scope = scope.where(statement_id: statement.id)
-      scope = scope.public_send(event_type)
-      scope.count
+      statement
+        .declarations
+        .public_send(self.class.aggregation_types[event_type][aggregation_type])
+        .where(declaration_type: EVENT_TYPE_TO_DECLARATION_TYPE_MAP[event_type])
+        .count
     end
 
     def aggregations(event_type:)
