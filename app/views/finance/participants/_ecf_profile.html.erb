@@ -52,6 +52,10 @@
 
 <h4>Declarations</h4>
 
+<% if pp.participant_declarations.blank? %>
+  No declarations have been made
+<% end %>
+
 <% pp.participant_declarations.each do |declaration| %>
   <%= render partial: "finance/participants/declaration", locals: { declaration: declaration } %>
 <% end %>
