@@ -31,7 +31,7 @@ private
     @breakdown = Finance::ECF::CalculationOrchestrator.new(
       statement: @statement,
       contract: @cpd_lead_provider.lead_provider.call_off_contract,
-      aggregator: Finance::ECF::ParticipantEligibleAggregator.new(statement: @statement),
+      aggregator: Finance::ECF::ParticipantAggregator.new(statement: @statement),
       calculator: PaymentCalculator::ECF::PaymentCalculation,
     ).call(event_type: :started)
   end
