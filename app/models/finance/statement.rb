@@ -29,7 +29,7 @@ class Finance::Statement < ApplicationRecord
       statement.participant_declarations << participant_declaration
     end
 
-  private
+    private
 
     def statement_class_for(participant_declaration)
       case participant_declaration
@@ -39,6 +39,28 @@ class Finance::Statement < ApplicationRecord
         NPQ
       end
     end
+  end
+
+  def declarations
+    if paid?
+      participant_declarations.paid
+    elsif payable?
+      participant_declarations.payable
+    else
+      participant_declarations.where.not(state: %i[voided ineligible])
+    end
+  end
+
+  def payable?
+    deadline_date > Time.current && payment_date < Time.current
+  end
+
+  def paid?
+    payment_date <= Time.current
+  end
+
+  def open?
+    deadline_date <= Time.current
   end
 
   def past_deadline_date?
