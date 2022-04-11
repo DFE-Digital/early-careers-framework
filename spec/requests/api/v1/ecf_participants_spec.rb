@@ -19,7 +19,11 @@ RSpec.describe "Participants API", type: :request do
 
   before :each do
     profiles = create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-    profiles.each { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+    profiles.each do |profile|
+      Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme).tap do |ir|
+        ir.update!(mentor_profile: mentor_profile)
+      end
+    end
 
     ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
     profile = create(
@@ -285,7 +289,7 @@ RSpec.describe "Participants API", type: :request do
           expect(mentor_row["email"]).to eql mentor.email
           expect(mentor_row["full_name"]).to eql mentor.full_name
           expect(mentor_row["mentor_id"]).to eql ""
-          expect(mentor_row["school_urn"]).to eql partnership.school.urn
+          expect(mentor_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(mentor_row["teacher_reference_number"]).to eql mentor.teacher_profile.trn
@@ -301,7 +305,7 @@ RSpec.describe "Participants API", type: :request do
           expect(ect_row["email"]).to eql ect.email
           expect(ect_row["full_name"]).to eql ect.full_name
           expect(ect_row["mentor_id"]).to eql mentor.id
-          expect(ect_row["school_urn"]).to eql partnership.school.urn
+          expect(ect_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
@@ -316,7 +320,7 @@ RSpec.describe "Participants API", type: :request do
           expect(withdrawn_record_row["email"]).to be_empty
           expect(withdrawn_record_row["full_name"]).to eql(withdrawn_ect_profile_record.user.full_name)
           expect(withdrawn_record_row["mentor_id"]).to be_empty
-          expect(withdrawn_record_row["school_urn"]).to eql(withdrawn_ect_profile_record.school.urn)
+          expect(withdrawn_record_row["school_urn"]).to eql withdrawn_ect_profile_record.induction_records[0].school_cohort.school.urn
           expect(withdrawn_record_row["participant_type"]).to eql(withdrawn_ect_profile_record.participant_type.to_s)
           expect(withdrawn_record_row["cohort"]).to eql(withdrawn_ect_profile_record.cohort.start_year.to_s)
           expect(withdrawn_record_row["teacher_reference_number"]).to eql(withdrawn_ect_profile_record.teacher_profile.trn)

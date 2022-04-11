@@ -60,12 +60,12 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          induction_record.participant_profile.mentor&.id
+          induction_record.mentor_profile&.participant_identity&.external_identifier
         end
       end
 
       attribute :school_urn do |induction_record|
-        induction_record.participant_profile.school.urn
+        induction_record.induction_programme&.school_cohort&.school&.urn
       end
 
       attribute :participant_type do |induction_record|
@@ -73,7 +73,7 @@ module Api
       end
 
       attribute :cohort do |induction_record|
-        induction_record.participant_profile.cohort.start_year.to_s
+        induction_record.induction_programme&.school_cohort&.cohort&.start_year&.to_s
       end
 
       attribute :status do |induction_record|
