@@ -27,6 +27,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
       ects: 5,
       mentors: 5,
       name: "Lead Provider",
+      declaration: :started,
       participants: 10,
       recruitment_target: 2000,
       revised_target: nil,
