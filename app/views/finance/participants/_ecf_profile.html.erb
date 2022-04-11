@@ -50,6 +50,54 @@
   <% end %>
 <% end %>
 
+<h4>Induction records</h4>
+
+<% pp.induction_records.order(:start_date).each do |ir| %>
+  <h5>Induction record: <%= ir.id %></h5>
+
+  <%= govuk_summary_list do |summary_list| %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Training programme" } %>
+      <% row.value { ir.induction_programme.training_programme.humanize } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "School URN" } %>
+      <% row.value { ir.induction_programme.school_cohort.school.urn } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "Lead provider" } %>
+      <% row.value { ir.induction_programme.partnership&.lead_provider&.name } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "Induction status" } %>
+      <% row.value { ir.induction_status } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "Training status" } %>
+      <% row.value { ir.training_status } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "Start date" } %>
+      <% row.value { ir.start_date&.to_s(:govuk) } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "End date" } %>
+      <% row.value { ir.end_date&.to_s(:govuk) } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "Schedule" } %>
+      <% row.value { ir.schedule.schedule_identifier } %>
+    <% end %>
+  <% end %>
+<% end %>
+
 <h4>Declarations</h4>
 
 <% if pp.participant_declarations.blank? %>
