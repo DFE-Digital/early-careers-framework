@@ -72,7 +72,7 @@ class ECFApiClient
           t.headings = %w[participant_type id email eligible_for_funding training_status course_identifier cohort schedule_identifier]
           t.rows = rows.map(&:to_table)
         end
-        puts table
+        $stdout.puts table
       end
     end
   end
