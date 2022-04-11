@@ -21,7 +21,6 @@ RSpec.describe LeadProvider, type: :model do
     it { is_expected.to have_many(:partnership_csv_uploads) }
     it { is_expected.to have_one(:call_off_contract) }
     it { is_expected.to have_many(:statements).through(:cpd_lead_provider).class_name("Finance::Statement::ECF").source(:ecf_statements) }
-    it { is_expected.to have_one(:current_statement).through(:cpd_lead_provider).class_name("Finance::Statement::ECF").source(:ecf_statements).conditions("deadline_date >= DATE(NOW())") }
 
     describe "active_partnerships" do
       it "should not include pending partnerships" do
