@@ -12,7 +12,7 @@ class Finance::Statement < ApplicationRecord
   scope :closed,                    -> { where("payment_date < ?", Date.current) }
   scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
   scope :upto_current,              -> { payable.or(closed) }
-  scope :upto,                      -> (statement) { where("deadline_date < ?", statement.deadline_date) }
+  scope :upto,                      ->(statement) { where("deadline_date < ?", statement.deadline_date) }
   scope :output,                    -> { where(output_fee: true) }
 
   class << self
@@ -29,7 +29,7 @@ class Finance::Statement < ApplicationRecord
       statement.participant_declarations << participant_declaration
     end
 
-    private
+  private
 
     def statement_class_for(participant_declaration)
       case participant_declaration
