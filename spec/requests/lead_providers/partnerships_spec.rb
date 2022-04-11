@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Lead provider partnerships spec", type: :request do
   let(:user) { create :user, :lead_provider }
-  let(:cohort) { create :cohort }
+  let(:cohort) { create :cohort, :current }
 
   before do
     sign_in user
@@ -47,6 +47,10 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
 
     it "returns the correct CSV content type header" do
       expect(response.headers["Content-Type"]).to include("text/csv")
+    end
+
+    it "returns a CSV file with the cohort start year in the filename" do
+      expect(response.headers["Content-Disposition"]).to include "schools-2021.csv"
     end
 
     it "returns only active partnerships" do
