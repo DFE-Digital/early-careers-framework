@@ -5,21 +5,21 @@ module Pages
     include Capybara::DSL
     include WebMock::API
 
-    def complete_for_ect(participant_name, year, month, day, trn)
-      setup_response_from_dqt participant_name, year, month, day, trn
+    def complete_for_ect(participant_name, participant_dob, trn)
+      setup_response_from_dqt participant_name, participant_dob, trn
 
       agree_to_privacy_policy
       add_teacher_reference_number trn
-      add_date_of_birth year, month, day
+      add_date_of_birth participant_dob
     end
 
-    def complete_for_mentor(participant_name, year, month, day, trn)
-      setup_response_from_dqt participant_name, year, month, day, trn
+    def complete_for_mentor(participant_name, participant_dob, trn)
+      setup_response_from_dqt participant_name, participant_dob, trn
 
       agree_to_privacy_policy
       confirm_have_trn
       add_teacher_reference_number trn
-      add_date_of_birth year, month, day
+      add_date_of_birth participant_dob
     end
 
     def agree_to_privacy_policy
@@ -36,15 +36,15 @@ module Pages
       click_on "Continue"
     end
 
-    def add_date_of_birth(year, month, day)
-      fill_in "Day", with: day
-      fill_in "Month", with: month
-      fill_in "Year", with: year
+    def add_date_of_birth(dob)
+      fill_in "Day", with: dob[:day]
+      fill_in "Month", with: dob[:month]
+      fill_in "Year", with: dob[:year]
       click_on "Continue"
     end
 
-    def setup_response_from_dqt(participant_name, year, month, day, trn)
-      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{year}-#{month}-#{day}")
+    def setup_response_from_dqt(participant_name, dob, trn)
+      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{dob[:year]}-#{dob[:month]}-#{dob[:day]}")
         .with(
           headers: {
             "Accept" => "*/*",
@@ -56,7 +56,7 @@ module Pages
         )
         .to_return(status: 200, body: JSON.generate({
           "name": participant_name,
-          "dob": "#{year}-#{month}-#{day}T00:00:00",
+          "dob": "#{dob[:year]}-#{dob[:month]}-#{dob[:day]}T00:00:00",
           "trn": trn,
           "ni_number": "AB123456D",
           "active_alert": false,

@@ -7,9 +7,8 @@ module APIs
 
     attr_reader :response
 
-    def initialize(token, experimental)
+    def initialize(token)
       @token = token
-      @experimental = experimental
       call_participants_endpoint
     end
 
@@ -53,7 +52,7 @@ module APIs
       @current_id = nil
       @response = nil
 
-      url = @experimental ? "/api/v1/test_ecf_participants" : "/api/v1/participants/ecf"
+      url = "/api/v1/participants/ecf"
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",

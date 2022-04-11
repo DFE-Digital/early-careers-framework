@@ -88,7 +88,7 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
             raise "scenario.withdrawn_by is not a valid value"
           end
 
-          when_school_takes_on_the_withdrawn_participant "New SIT", "the Participant"
+          when_school_takes_on_the_withdrawn_participant "New SIT", "the Participant", scenario.participant_email, scenario.participant_type, scenario.new_programme
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
@@ -127,21 +127,18 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
                                                                              scenario.participant_type,
                                                                              scenario.prior_participant_status,
                                                                              scenario.prior_training_status
-                # experimental: true
               }
             when :OBFUSCATED
               it.pending do
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              nil,
                                                                              scenario.participant_type
-                #  experimental: true
               end
             else
               it {
                 should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                                  scenario.participant_email,
                                                                                  scenario.participant_type
-                # experimental: true
               }
             end
 
@@ -167,7 +164,6 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
                                                                              scenario.participant_type,
                                                                              scenario.new_participant_status,
                                                                              scenario.new_training_status
-                # experimental: true
               }
             when :not_applicable
               # not applicable
