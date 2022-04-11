@@ -5,8 +5,6 @@ SimpleCov.start
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require "spec_helper"
-require "super_diff/rspec"
-require "super_diff/active_support"
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../app/helpers/application_helper"
 require File.expand_path("../config/environment", __dir__)
