@@ -24,14 +24,13 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
   let(:call_off_contract) { create(:call_off_contract) }
   let(:breakdown_summary) do
     {
-      declaration: :started,
       ects: 5,
       mentors: 5,
       name: "Lead Provider",
       participants: 10,
       recruitment_target: 2000,
       revised_target: nil,
-      not_yet_included_participants: 0,
+      not_yet_included_participants: nil,
     }
   end
   let(:service_fees) do
@@ -248,7 +247,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
 private
 
-  def run_calculation(aggregator: Finance::ECF::ParticipantEligibleAggregator.new(statement: statement))
+  def run_calculation(aggregator: Finance::ECF::ParticipantAggregator.new(statement: statement))
     set_precision(
       described_class.new(
         calculator: PaymentCalculator::ECF::PaymentCalculation,
