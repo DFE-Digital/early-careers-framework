@@ -74,7 +74,6 @@ LeadProvider.find_each do |lead_provider|
   )
 end
 
-
 User.find_or_create_by!(email: "school-leader@example.com") do |user|
   user.update!(full_name: "InductionTutor User")
   InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|

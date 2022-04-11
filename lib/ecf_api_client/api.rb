@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require "ecf_api_client/client"
 require "uri_template"
 class ECFApiClient
   class API
     include Singleton
 
-    GET_PARTICIPANTS_ENDPOINT   = "/api/v1/participants/ecf".freeze
-    POST_DECLARATION_ENDPOINT   = "/api/v1/participant-declarations".freeze
-    CHANGE_SCHEDULE_ENDPOINT    = "/api/v1/participants/ecf/{id}/change-schedule".freeze
-    RECORD_DECLARATION_ENDPOINT = "/api/v1/participant-declarations".freeze
+    GET_PARTICIPANTS_ENDPOINT   = "/api/v1/participants/ecf"
+    POST_DECLARATION_ENDPOINT   = "/api/v1/participant-declarations"
+    CHANGE_SCHEDULE_ENDPOINT    = "/api/v1/participants/ecf/{id}/change-schedule"
+    RECORD_DECLARATION_ENDPOINT = "/api/v1/participant-declarations"
 
     def initialize
       self.client = Client.new
@@ -54,7 +56,8 @@ class ECFApiClient
       end
     end
 
-    private
+  private
+
     attr_accessor :client
 
     def url_for(uri, params)

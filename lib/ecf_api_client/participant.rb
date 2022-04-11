@@ -1,4 +1,6 @@
-require 'ecf_api_client/api'
+# frozen_string_literal: true
+
+require "ecf_api_client/api"
 
 class ECFApiClient
   class Participant
