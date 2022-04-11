@@ -231,13 +231,13 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
     context "when ineligible records available" do
       let(:ineligible_outcome) do
         normal_outcome.merge(
-          breakdown_summary: breakdown_summary.merge({ ects: 10, mentors: 0, not_yet_included_participants: 10, participants: 10 }),
+          breakdown_summary: breakdown_summary.merge({ ects: 10, mentors: 0, not_yet_included_participants: nil, participants: 10 }),
         )
       end
 
       before do
         create_list(:ect_participant_declaration, 10, :sparsity_uplift, :eligible, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
-        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :submitted, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider, statement: statement)
+        create_list(:ect_participant_declaration, 10, :sparsity_uplift, :submitted, cpd_lead_provider: call_off_contract.lead_provider.cpd_lead_provider)
       end
 
       it "returns the total calculation, and ineligible declarations are put in not_yet_included_participants field" do
