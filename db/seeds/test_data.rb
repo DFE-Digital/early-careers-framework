@@ -943,18 +943,19 @@ create_npq_declarations = lambda {
       end
 
       ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-      ParticipantDeclaration::NPQ.create!(
-        course_identifier: course,
-        participant_profile: npq_profile,
-        user: user,
-        declaration_date: Time.zone.now - 1.week,
-        state: state,
-        declaration_type: "started",
-        cpd_lead_provider_id: CpdLeadProvider.find_by_name(provider_name).id,
+
+      RecordDeclarations::Started::NPQ.call(
+        params: {
+          participant_id: npq_application.user.id,
+          course_identifier: npq_application.npq_course.identifier,
+          declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+          cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+          declaration_type: "started",
+        },
       )
     end
   end
-}[]
+}.call
 
 %w[submitted eligible].each do |state|
   create_npq_declarations[

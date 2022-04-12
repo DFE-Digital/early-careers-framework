@@ -12,55 +12,41 @@ class Finance::Statement < ApplicationRecord
   scope :closed,                    -> { where("payment_date < ?", Date.current) }
   scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
   scope :upto_current,              -> { payable.or(closed) }
+  scope :latest,                    -> { order(deadline_date: :asc).last }
   scope :upto,                      ->(statement) { where("deadline_date < ?", statement.deadline_date) }
   scope :output,                    -> { where(output_fee: true) }
+  scope :next_output_fee_statements, lambda {
+    output
+      .left_outer_joins(:participant_declarations)
+      .where(type: name)
+      .order(deadline_date: :asc)
+      .where("deadline_date >= ?", Date.current)
+  }
 
   class << self
     def current
       with_future_deadline_date.order(deadline_date: :asc).first
     end
 
-    def next_output_fee_statement
-      output.order(deadline_date: :asc).where("deadline_date >= ?", Date.current).first
-    end
-
     def attach(participant_declaration)
-      statement = statement_class_for(participant_declaration).next_output_fee_statement
+      statement = statement_for(participant_declaration)
       statement.participant_declarations << participant_declaration
     end
 
   private
 
-    def statement_class_for(participant_declaration)
+    def statement_for(participant_declaration)
       case participant_declaration
       when ParticipantDeclaration::ECF
-        ECF
+        participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement
       when ParticipantDeclaration::NPQ
-        NPQ
+        participant_declaration.cpd_lead_provider.npq_lead_provider.next_output_fee_statement
       end
     end
   end
 
-  def declarations
-    if paid?
-      participant_declarations.paid
-    elsif payable?
-      participant_declarations.payable
-    else
-      participant_declarations.where.not(state: %i[voided ineligible])
-    end
-  end
-
-  def payable?
-    deadline_date > Time.current && payment_date < Time.current
-  end
-
-  def paid?
-    payment_date <= Time.current
-  end
-
   def open?
-    deadline_date <= Time.current
+    true
   end
 
   def past_deadline_date?

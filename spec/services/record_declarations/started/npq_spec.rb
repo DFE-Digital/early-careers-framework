@@ -13,7 +13,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   let(:declaration_date_string) { declaration_date.rfc3339 }
 
   before do
-    create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now)
+    create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
   end
 
   subject do

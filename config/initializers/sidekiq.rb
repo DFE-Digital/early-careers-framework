@@ -26,7 +26,6 @@ end
 # Sidekiq Cron
 if Sidekiq.server?
   Rails.application.config.after_initialize do
-    yaml = ERB.new(Rails.root.join("config/sidekiq_cron_schedule.yml").read).result
-    Sidekiq::Cron::Job.load_from_hash(YAML.safe_load(yaml))
+    Sidekiq::Cron::Job.load_from_hash(YAML.load_file(Rails.root.join("config/sidekiq_cron_schedule.yml")))
   end
 end

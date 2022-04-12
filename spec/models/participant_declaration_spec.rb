@@ -274,7 +274,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       before do
         Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
         Induction::Enrol.call(participant_profile: primary_participant_profile, induction_programme: induction_programme)
-        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now)
+        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
       end
 
       let!(:partnership) { create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school) }
@@ -345,7 +345,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
               before do
                 Induction::Enrol.call(participant_profile: another_duplicate_participant_profile, induction_programme: induction_programme)
-                create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now)
+                create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
                 RecordDeclarations::Started::EarlyCareerTeacher.call(
                   params: {
                     participant_id: another_duplicate_participant_profile.user_id,

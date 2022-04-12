@@ -17,6 +17,7 @@ class Importers::SeedStatements
           payment_date: statement_data.payment_date,
           cohort: Cohort.find_by(start_year: 2021),
           output_fee: statement_data.output_fee,
+          type: class_for(statement_data, namespace: Finance::Statement::ECF),
         )
       end
     end
@@ -37,12 +38,20 @@ class Importers::SeedStatements
           payment_date: statement_data.payment_date,
           cohort: cohort,
           output_fee: statement_data.output_fee,
+          type: class_for(statement_data, namespace: Finance::Statement::NPQ),
         )
       end
     end
   end
 
 private
+
+  def class_for(statment_data, namespace:)
+    return namespace::Paid    if statment_data[:payment_date] < Date.current
+    return namespace::Payable if Date.current.between?(statment_data[:deadline_date], statment_data[:payment_date])
+
+    namespace
+  end
 
   def cohort
     @cohort ||= Cohort.find_by!(start_year: 2021)
@@ -67,7 +76,7 @@ private
       { name: "February 2023",  deadline_date: Date.new(2023, 1, 31),  payment_date: Date.new(2023, 2, 25),  contract_version: "0.0.1", output_fee: true  },
       { name: "March 2023",     deadline_date: Date.new(2023, 2, 28),  payment_date: Date.new(2023, 3, 25),  contract_version: "0.0.1", output_fee: false },
       { name: "April 2023",     deadline_date: Date.new(2023, 3, 31),  payment_date: Date.new(2023, 4, 25),  contract_version: "0.0.1", output_fee: false },
-      { name: "May 2023",       deadline_date: Date.new(2023, 4, 30),  payment_date: Date.new(2023, 5, 25),  contract_version: "0.0.1", output_fee: false },
+      { name: "May 2023",       deadline_date: Date.new(2023, 4, 30),  payment_date: Date.new(2023, 5, 25),  contract_version: "0.0.1", output_fee: true  },
       { name: "June 2023",      deadline_date: Date.new(2023, 5, 31),  payment_date: Date.new(2023, 6, 25),  contract_version: "0.0.1", output_fee: false },
       { name: "July 2023",      deadline_date: Date.new(2023, 6, 30),  payment_date: Date.new(2023, 7, 25),  contract_version: "0.0.1", output_fee: false },
       { name: "August 2023",    deadline_date: Date.new(2023, 7, 31),  payment_date: Date.new(2023, 8, 25),  contract_version: "0.0.1", output_fee: false },

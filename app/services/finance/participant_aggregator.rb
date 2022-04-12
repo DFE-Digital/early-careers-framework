@@ -50,7 +50,7 @@ module Finance
 
     def aggregate(aggregation_type:, event_type:)
       statement
-        .declarations
+        .participant_declarations
         .public_send(self.class.aggregation_types[event_type][aggregation_type])
         .where(declaration_type: EVENT_TYPE_TO_DECLARATION_TYPE_MAP[event_type])
         .count

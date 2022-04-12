@@ -9,9 +9,8 @@ module Finance
         @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
         @cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
 
-        current_statement = @ecf_lead_provider.statements.current
-        @statements = @ecf_lead_provider.statements.upto(current_statement).order(deadline_date: :desc)
         @statement = @ecf_lead_provider.statements.find_by(name: identifier_to_name)
+        @statements = @ecf_lead_provider.statements.upto(@statement).order(deadline_date: :desc)
 
         aggregator = ParticipantAggregator.new(
           statement: @statement,
