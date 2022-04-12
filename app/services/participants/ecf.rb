@@ -14,6 +14,10 @@ module Participants
       relevant_induction_record.present?
     end
 
+    def transferred_induction_record?
+      relevant_induction_record.any?(&:transferred?)
+    end
+
     def relevant_induction_record
       @relevant_induction_record ||= InductionRecord
         .joins(:participant_profile, induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })

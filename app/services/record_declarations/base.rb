@@ -129,7 +129,14 @@ module RecordDeclarations
 
     def validate_participant_state!
       last_state = user_profile.state_at(declaration_date)
-      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
+      unless last_state&.state.nil? || last_state.active? || participant_has_transferred?
+        raise ActionController::ParameterMissing,
+              I18n.t(:declaration_on_incorrect_state)
+      end
+    end
+
+    def participant_has_transferred?
+      user_profile&.induction_records&.any?(&:transferred?)
     end
 
     def validate_schedule_present
