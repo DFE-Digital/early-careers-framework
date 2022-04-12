@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::Statements::StatementSelector, type: :component do
+RSpec.describe Finance::Statements::NPQStatementSelector, type: :component do
   let!(:npq_lead_provider) { create(:npq_lead_provider) }
   let!(:npq_statement) { create(:npq_statement) }
   let!(:other_npq_statement) { create(:npq_statement) }
