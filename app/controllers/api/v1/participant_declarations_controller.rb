@@ -47,10 +47,11 @@ module Api
     private
 
       def query_scope
-        scope = ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
-        scope = scope.where("user_id = ?", participant_id_filter) if participant_id_filter.present?
-        scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
-        scope
+        ParticipantDeclarations::Index.new(
+          cpd_lead_provider: cpd_lead_provider,
+          updated_since: updated_since,
+          participant_id: participant_id_filter,
+        ).scope
       end
 
       def filter
