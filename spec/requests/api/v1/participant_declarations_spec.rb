@@ -207,7 +207,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             expect(response.status).to eq 200
           end
 
-          it "is possible for previous lead provider to submit backdated declarations following a withdrawal" do
+          it "is possible for previous lead provider to submit backdated declarations" do
             updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
