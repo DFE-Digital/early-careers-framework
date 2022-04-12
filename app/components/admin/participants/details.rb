@@ -19,10 +19,6 @@ module Admin
       class NPQPending < Details; end
 
       class NPQ < Details; end
-
-      class ECTPending < Details; end
-
-      class MentorPending < Details; end
     end
   end
 end

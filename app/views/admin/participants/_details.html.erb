@@ -1,0 +1,63 @@
+<table class="govuk-table">
+  <tbody class="govuk-table__body admin-tabs">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header ">Full name</th>
+      <td class="govuk-table__cell"><%= latest_induction_record.user.full_name %></td>
+      <td class="govuk-table__cell">
+        <%= govuk_link_to edit_name_admin_participant_path(latest_induction_record.participant_profile) do %>
+          Change <span class="govuk-visually-hidden">name</span>
+        <% end %>
+      </td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Email address</th>
+      <td class="govuk-table__cell"><%= latest_induction_record.user.email %></td>
+      <td class="govuk-table__cell">
+        <%= govuk_link_to edit_email_admin_participant_path(latest_induction_record.participant_profile) do %>
+          Change <span class="govuk-visually-hidden">email</span>
+        <% end %>
+      </td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">ID</th>
+      <td class="govuk-table__cell"><%= latest_induction_record.user.id %></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">External ID</th>
+      <td class="govuk-table__cell"><%= latest_induction_record.preferred_identity.external_identifier %></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Associated email addresses</th>
+      <td class="govuk-table__cell">
+      <ul>
+        <% all_emails_associated_with_a_user(latest_induction_record).each do |email| %>
+         <li><%= email %></li>
+        <% end %>
+      </ul>
+      </td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Validation status</th>
+      <td class="govuk-table__cell"><%= render ParticipantStatusTagComponent.new(profile: latest_induction_record.participant_profile) %></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Start term</th>
+      <td class="govuk-table__cell"><%= latest_induction_record.participant_profile.start_term.humanize %></td>
+      <td class="govuk-table__cell"></td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Notes</th>
+       <td class="govuk-table__cell"><%= latest_induction_record.participant_profile.notes? ? simple_format(latest_induction_record.participant_profile.notes, class: "govuk-body") : "No notes" %></td>
+
+       <td class="govuk-table__cell">
+         <%= govuk_link_to edit_admin_note_path(latest_induction_record.participant_profile) do %>
+           <span><%= latest_induction_record.participant_profile.notes.present? ? "Change notes" : "Add notes" %></span>
+         <% end %>
+       </td>
+    </tr>
+  </tbody>
+</table>

@@ -9,6 +9,7 @@ module ParticipantDetailsSteps
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
   end
 
   # When
@@ -104,10 +105,12 @@ module ParticipantDetailsSteps
 
   def and_i_have_added_an_ect
     @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com"), school_cohort: @school_cohort)
+    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_mentor
     @participant_profile_mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com"), school_cohort: @school_cohort)
+    Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_click_on_continue
