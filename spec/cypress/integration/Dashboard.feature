@@ -1,6 +1,8 @@
 Feature: Dashboard page
   Background:
     Given cohort was created with start_year "2021"
+    And cohort was created with start_year "2022"
+
   Scenario: Visiting the dashboard
     Given I am logged in as a "lead_provider"
     Then I should be on "dashboard" page
