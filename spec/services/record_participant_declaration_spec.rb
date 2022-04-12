@@ -23,7 +23,7 @@ RSpec.describe RecordParticipantDeclaration do
     end
 
     before do
-      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now)
+      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
     end
 
     it "creates a participant declaration" do

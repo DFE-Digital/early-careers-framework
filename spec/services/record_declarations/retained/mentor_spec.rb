@@ -14,7 +14,7 @@ RSpec.describe RecordDeclarations::Retained::Mentor do
 
   before do
     travel_to cutoff_start_datetime + 2.days
-    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now)
+    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
   end
 
   it_behaves_like "a participant declaration with evidence held service" do

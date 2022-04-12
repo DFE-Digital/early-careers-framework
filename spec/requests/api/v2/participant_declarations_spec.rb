@@ -35,7 +35,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     context "when authorized" do
       let(:fake_logger) { double("logger", info: nil) }
-      let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now) }
+      let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider) }
 
       before do
         default_headers[:Authorization] = bearer_token
