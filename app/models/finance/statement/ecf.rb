@@ -35,3 +35,6 @@ private
     )
   end
 end
+
+require "finance/statement/ecf/payable"
+require "finance/statement/ecf/paid"

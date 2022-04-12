@@ -16,7 +16,12 @@ module Steps
 
         create :ecf_statement,
                name: "November 2021",
-               cpd_lead_provider: cpd_lead_provider
+               cpd_lead_provider: cpd_lead_provider,
+               deadline_date: Date.new(2021, 11, 25)
+
+        create :ecf_statement,
+               cpd_lead_provider: cpd_lead_provider,
+               deadline_date: 10.days.from_now
 
         token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
                                                                lead_provider: lead_provider,

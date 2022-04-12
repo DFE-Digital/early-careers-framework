@@ -30,11 +30,10 @@ RSpec.describe RecordDeclarations::Base do
     }
   end
 
-  let(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 2.weeks.from_now) }
+  let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider) }
 
   before do
     create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
-    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now)
   end
 
   describe "#call" do
