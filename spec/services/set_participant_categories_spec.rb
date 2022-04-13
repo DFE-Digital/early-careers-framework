@@ -172,7 +172,9 @@ RSpec.describe SetParticipantCategories do
       context "change_of_circumstances feature flag active" do
         before do
           FeatureFlag.activate(:change_of_circumstances)
-          ParticipantProfile::ECF.all.each { |participant_profile| create(:induction_record, induction_programme: induction_programme, participant_profile: participant_profile, status: "active") }
+          ParticipantProfile::ECF.all.each do |participant_profile|
+            Induction::Enrol.call(induction_programme: induction_programme, participant_profile: participant_profile)
+          end
 
           transferring_in_participant.induction_records.first.update!(start_date: 2.weeks.from_now)
           transferring_out_participant.induction_records.first.leaving!(6.weeks.from_now)
