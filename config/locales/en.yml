@@ -341,6 +341,9 @@ en:
       payment_breakdown: ECF Payment Breakdown
       breakdown_summary:
         total: Total
+      statements:
+        show:
+          title: Early career framework (ECF)
 
     npq:
       payment_breakdown: NPQ Payment Breakdown
