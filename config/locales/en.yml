@@ -374,3 +374,9 @@ en:
       prev: ← Previous
       next: Next →
       gap: ...
+
+  components:
+    finance:
+      statements:
+        ecf_statement_selector:
+          submit: "View"
