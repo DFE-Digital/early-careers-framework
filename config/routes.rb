@@ -323,6 +323,7 @@ Rails.application.routes.draw do
 
       collection do
         post :choose_npq_statement, path: "choose-npq-statement"
+        post :choose_ecf_statement, path: "choose-ecf-statement"
       end
     end
 

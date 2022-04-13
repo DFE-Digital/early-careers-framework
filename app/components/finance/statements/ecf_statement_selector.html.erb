@@ -1,0 +1,21 @@
+<%= form_with url: choose_ecf_statement_finance_payment_breakdowns_path, class: "statement-selector" do |f| %>
+  <%= f.govuk_collection_select :lead_provider,
+    lead_providers,
+    :id,
+    :name,
+    label: { text: "View a different provider" },
+    options: { selected: current_statement.lead_provider.id },
+    form_group: { class: "govuk-form-group govuk-!-width-one-third" }
+  %>
+
+  <%= f.govuk_collection_select :statement,
+    statements,
+    :id,
+    :name,
+    label: { text: "View a different statement" },
+    options: { selected: current_statement.name.parameterize },
+    form_group: { class: "govuk-form-group govuk-!-width-one-third" }
+  %>
+
+  <%= f.govuk_submit t(:submit), secondary: true %>
+<% end %>

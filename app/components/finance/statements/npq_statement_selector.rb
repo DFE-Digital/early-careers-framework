@@ -2,7 +2,7 @@
 
 module Finance
   module Statements
-    class StatementSelector < BaseComponent
+    class NPQStatementSelector < BaseComponent
       attr_reader :current_statement
 
       def initialize(current_statement:)
