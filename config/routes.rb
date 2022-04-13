@@ -339,8 +339,6 @@ Rails.application.routes.draw do
           end
         end
       end
-
-      resources :contracts, only: %i[show]
     end
 
     namespace :npq do

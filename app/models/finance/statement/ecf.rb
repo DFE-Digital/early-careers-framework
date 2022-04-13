@@ -3,6 +3,13 @@
 class Finance::Statement::ECF < Finance::Statement
   has_one :lead_provider, through: :cpd_lead_provider
 
+  def contract
+    CallOffContract.find_by!(
+      cohort: cohort,
+      lead_provider: lead_provider,
+    )
+  end
+
   def cache_original_value!
     breakdown_started = orchestrator.call(event_type: :started)
     breakdown_retained_1 = orchestrator.call(event_type: :retained_1)
