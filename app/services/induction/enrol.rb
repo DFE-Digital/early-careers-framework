@@ -5,7 +5,7 @@ class Induction::Enrol < BaseService
     participant_profile.induction_records.create!(
       induction_programme: induction_programme,
       start_date: start_date,
-      status: :active,
+      induction_status: :active,
       schedule: participant_profile.schedule,
       preferred_identity: preferred_identity,
       mentor_profile: mentor_profile,

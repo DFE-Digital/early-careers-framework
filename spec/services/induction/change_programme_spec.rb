@@ -6,7 +6,7 @@ RSpec.describe Induction::ChangeProgramme do
     let(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
     let(:new_induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
     let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-    let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: participant_profile, status: :active, start_date: 6.months.ago) }
+    let!(:induction_record) { Induction::Enrol.call(induction_programme: induction_programme, participant_profile: participant_profile, start_date: 6.months.ago) }
     let(:action_date) { Time.zone.now }
     let(:mentor_profile) { create(:mentor_participant_profile) }
 
