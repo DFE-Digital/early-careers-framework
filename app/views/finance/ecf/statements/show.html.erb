@@ -2,20 +2,18 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_ecf_finance_payment_breakdowns_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <ul class="govuk-list">
-      <% @statements.each do |statement| %>
-        <li>
-          <%= text_otherwise_link_to(statement_display_text(statement), finance_ecf_payment_breakdown_statement_path(@ecf_lead_provider, statement), statement == @statement) %>
-        </li>
-      <% end %>
-    </ul>
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Early career framework (ECF)</h1>
+
+    <span class="govuk-caption-l"><%= @ecf_lead_provider.name %></span>
+    <h2 class="govuk-heading-l"><%= @statement.name %></h2>
+
+    <%= render Finance::Statements::ECFStatementSelector.new(current_statement: @statement) %>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl"><%= @ecf_lead_provider.name %></h1>
     <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
     <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds(total_payment_combined(@breakdown_started, @breakdown_retained_1)) %></h2>
     <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @statement.payment_date.to_s(:govuk) %></p>

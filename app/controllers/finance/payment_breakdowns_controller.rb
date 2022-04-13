@@ -53,6 +53,14 @@ module Finance
       redirect_to finance_npq_lead_provider_statement_path(npq_lead_provider.id, statement)
     end
 
+    def choose_ecf_statement
+      lead_provider = LeadProvider.find(params[:lead_provider])
+      statement_name = params[:statement].humanize.gsub("-", " ")
+      statement = lead_provider.statements.find_by(name: statement_name)
+
+      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider.id, statement)
+    end
+
   private
 
     def set_programme_form

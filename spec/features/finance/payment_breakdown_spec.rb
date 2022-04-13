@@ -66,7 +66,8 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     click_link("Back")
     then_the_page_should_be_accessible
 
-    click_link("November 2021")
+    select("November 2021", from: "statement-field")
+    click_button("View")
     click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
@@ -323,8 +324,9 @@ private
   end
 
   def then_i_should_see_correct_breakdown_summary
-    expect(page).to have_css("h1.govuk-heading-xl", text: lead_provider.name)
-    click_on "January 2022"
+    expect(page).to have_css(".govuk-caption-l", text: lead_provider.name)
+    select("January 2022", from: "statement-field")
+    click_button("View")
 
     within ".breakdown-summary" do
       expect(page).to have_content("Submission deadline")
