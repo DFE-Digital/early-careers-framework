@@ -62,7 +62,6 @@ module NPQ
         school_ukprn: npq_application.school_ukprn,
         participant_identity: npq_application.participant_identity,
       ) do |participant_profile|
-        ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
       end
     end
 

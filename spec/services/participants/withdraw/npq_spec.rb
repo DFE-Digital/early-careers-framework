@@ -26,10 +26,6 @@ RSpec.describe Participants::Withdraw::NPQ do
       expect { subject.call }.to change { profile.reload.training_status }.from("active").to("withdrawn")
     end
 
-    it "creates a ParticipantProfileState" do
-      expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
-    end
-
     context "when already withdrawn" do
       before do
         described_class.new(
@@ -49,7 +45,6 @@ RSpec.describe Participants::Withdraw::NPQ do
 
     context "when status is withdrawn" do
       before do
-        ParticipantProfileState.create!(participant_profile: profile, state: "withdrawn")
         profile.update!(status: "withdrawn")
       end
 

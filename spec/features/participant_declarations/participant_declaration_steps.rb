@@ -191,12 +191,12 @@ module ParticipantDeclarationSteps
     end
   end
 
-  def then_the_declaration_made_against_the_withdrawn_participant_is_rejected
+  def then_the_declaration_made_against_the_withdrawn_participant_is_still_accepted
     params = common_params(participant_id: @participant_id, declaration_date: @declaration_date + 3.days)
     travel_to @submission_date + 2.days do
       submit_request(params)
     end
-    expect(@response.dig("errors", 0, "detail")).to eq("The declaration on withdrawn or deferred participant can not be accepted")
+    expect(@response.dig("errors", 0, "detail")).to eq(nil)
   end
 
   def submit_request(params)

@@ -46,10 +46,6 @@ RSpec.describe Participants::Resume::EarlyCareerTeacher do
       expect { subject.call }.to change { induction_record.reload.training_status }.from("deferred").to("active")
     end
 
-    it "creates a ParticipantProfileState" do
-      expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
-    end
-
     context "when already active" do
       before do
         described_class.new(
@@ -69,7 +65,6 @@ RSpec.describe Participants::Resume::EarlyCareerTeacher do
 
     context "when status is withdrawn" do
       before do
-        ParticipantProfileState.create!(participant_profile: profile, state: "withdrawn")
         profile.update!(status: "withdrawn")
       end
 

@@ -268,8 +268,6 @@ module Steps
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days + 1.minute
       travel_to(timestamp) do
         # OLD way
-        ParticipantProfileState.create! participant_profile: participant_profile,
-                                        state: ParticipantProfileState.states[:active]
 
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!

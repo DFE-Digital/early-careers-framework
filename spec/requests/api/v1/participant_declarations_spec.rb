@@ -41,17 +41,17 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         default_headers[:CONTENT_TYPE] = "application/json"
       end
 
-      it "create declaration record and declaration attempt and return id when successful" do
+      it "creates a declaration record and declaration attempt and returns id when successful" do
         params = build_params(valid_params)
         expect { post "/api/v1/participant-declarations", params: params }
-            .to change(ParticipantDeclaration, :count).by(1)
-            .and change(ParticipantDeclarationAttempt, :count).by(1)
+          .to change(ParticipantDeclaration, :count).by(1)
+                                                    .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
-      it "create eligible declaration record when user is eligible" do
+      it "creates eligible declaration record when user is eligible" do
         eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
         eligibility.eligible_status!
         params = build_params(valid_params)
@@ -60,21 +60,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
       end
 
-      it "does create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
+      it "creates duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
         expect { post "/api/v1/participant-declarations", params: params }
-            .to change(ParticipantDeclaration, :count).by(1)
+          .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params }
-            .to change(ParticipantDeclarationAttempt, :count).by(1)
+          .to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response.status).to eq 200
         expect(parsed_response["id"]).to eq(original_id)
       end
 
-      it "does create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do
+      it "creates duplicate declarations with different declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
 
         new_valid_params = valid_params
@@ -86,9 +86,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         original_id = parsed_response["id"]
 
         expect { post "/api/v1/participant-declarations", params: params }
-            .to change(ParticipantDeclaration, :count).by(1)
+          .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
-            .to change(ParticipantDeclarationAttempt, :count).by(1)
+          .to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response.status).to eq 400
         expect(parsed_response["id"]).to eq(original_id)
@@ -110,61 +110,103 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           partnership.update!(lead_provider: create(:lead_provider))
         end
 
-        it "create declaration attempt" do
+        it "creates a declaration attempt" do
           expect { post "/api/v1/participant-declarations", params: build_params(valid_params) }
-              .to change(ParticipantDeclarationAttempt, :count).by(1)
+            .to change(ParticipantDeclarationAttempt, :count).by(1)
         end
 
-        it "does not create declaration" do
+        it "does not create a declaration" do
           expect { post "/api/v1/participant-declarations", params: build_params(valid_params) }
-              .not_to change(ParticipantDeclaration, :count)
+            .not_to change(ParticipantDeclaration, :count)
           expect(response.status).to eq 422
-        end
-      end
-
-      context "when participant is withdrawn" do
-        before do
-          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: Time.zone.now - 1.hour })
-        end
-
-        it "returns 422" do
-          params = build_params(valid_params)
-          post "/api/v1/participant-declarations", params: params
-          expect(response.status).to eq 422
-          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
         end
       end
 
       context "when participant is deferred" do
-        before do
-          ect_profile.participant_profile_states.create({ state: "deferred", created_at: Time.zone.now - 1.hour })
-        end
-
-        it "returns 422" do
+        it "returns 200" do
           params = build_params(valid_params)
           post "/api/v1/participant-declarations", params: params
-          expect(response.status).to eq 422
-          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+          expect(response.status).to eq 200
         end
       end
 
       context "when the participant transfers to a new school with a different lead provider" do
-        let(:programme) { create(:induction_programme, :fip) }
-        let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: programme.partnership.lead_provider.cpd_lead_provider) }
-        let(:bearer_token) { "Bearer #{token}" }
+        let(:new_programme) { create(:induction_programme, :fip) }
+        let(:transfer_lp_token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: new_programme.partnership.lead_provider.cpd_lead_provider) }
+        let(:transfer_lp_bearer_token) { "Bearer #{transfer_lp_token}" }
+
+        let(:url) { "/api/v1/participants/ecf/#{ect_profile.user.id}/withdraw" }
+        let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
 
         before do
           induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
-          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
-
-          default_headers[:Authorization] = bearer_token
+          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
         end
 
-        it "is possible for new lead provider to post a declaration" do
-          updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
-          post "/api/v1/participant-declarations", params: build_params(updated_params)
+        context "if the participant has been withdrawn" do
+          before do
+            put url, params: build_params(params)
+          end
 
-          expect(response.status).to eq 200
+          it "is possible for new lead provider to post a declaration" do
+            default_headers[:Authorization] = transfer_lp_bearer_token
+
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+          end
+
+          it "is possible for previous lead provider to submit backdated declarations following a withdrawal" do
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+          end
+
+          it "is not possible for previous lead provider to view future declarations" do
+            default_headers[:Authorization] = transfer_lp_bearer_token
+
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+
+            default_headers[:Authorization] = bearer_token
+            expect { get "/api/v1/participant-declarations/#{ect_profile.participant_declarations.first.id}" }
+              .to raise_error(ActiveRecord::RecordNotFound)
+          end
+        end
+
+        context "if the participant has not been withdrawn" do
+          it "is possible for new lead provider to post a declaration" do
+            default_headers[:Authorization] = transfer_lp_bearer_token
+
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+          end
+
+          it "is possible for previous lead provider to submit backdated declarations" do
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+          end
+
+          it "is not possible for the previous lead provider to view future declarations" do
+            default_headers[:Authorization] = transfer_lp_bearer_token
+
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+
+            default_headers[:Authorization] = bearer_token
+            expect { get "/api/v1/participant-declarations/#{ect_profile.participant_declarations.first.id}" }
+              .to raise_error(ActiveRecord::RecordNotFound)
+          end
         end
       end
 
@@ -173,15 +215,34 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         let(:school) { create(:school, name: "Transferred-to School") }
         let(:programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
 
-        before do
-          induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
-          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+        let(:url) { "/api/v1/participants/ecf/#{ect_profile.user.id}/withdraw" }
+        let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
+
+        context "when the participant has been withdrawn" do
+          before do
+            induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+            put url, params: build_params(params)
+          end
+
+          it "is possible for the same lead provider to post a declaration" do
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+          end
         end
 
-        it "is possible for the same lead provider to post a declaration" do
-          updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+        context "when the participant has not been withdrawn" do
+          before do
+            induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+          end
 
-          post "/api/v1/participant-declarations", params: build_params(updated_params)
+          it "is possible for the same lead provider to post a declaration" do
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+          end
         end
       end
 
@@ -337,7 +398,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
-      context "when a updated since filter used" do
+      context "when an updated since filter is used" do
         it "returns declarations changed or created since a particular time" do
           participant_declaration.update!(updated_at: 2.days.ago)
           get "/api/v1/participant-declarations", params: { filter: { updated_since: 1.day.ago.iso8601 } }
@@ -347,7 +408,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         end
       end
 
-      context "when a participant id filter used" do
+      context "when a participant id filter is used" do
         let!(:second_ect_profile) { create(:ect_participant_profile, schedule: default_schedule) }
         let!(:second_participant_declaration) do
           create(:participant_declaration,
@@ -473,7 +534,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
     end
 
-    context "when declaration is payable" do
+    context "when a declaration is payable" do
       let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider: cpd_lead_provider) }
 
       it "can be voided" do
@@ -494,16 +555,16 @@ private
   def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          [
-            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
-          ],
+        [
+          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
+        ],
     }
   end
 
   def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
+        single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
     }
   end
 

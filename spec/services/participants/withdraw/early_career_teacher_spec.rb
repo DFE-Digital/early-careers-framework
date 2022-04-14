@@ -50,10 +50,6 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
       expect { subject.call }.to change { induction_record.reload.training_status }.from("active").to("withdrawn")
     end
 
-    it "creates a ParticipantProfileState" do
-      expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
-    end
-
     it "sends an email to confirm a participant has been withdrawn" do
       mailer = instance_double(ActionMailer::MessageDelivery, deliver_later: true)
       allow(SchoolMailer).to receive(:fip_provider_has_withdrawn_a_participant).and_return(mailer)
@@ -85,7 +81,6 @@ RSpec.describe Participants::Withdraw::EarlyCareerTeacher do
 
     context "when status is withdrawn" do
       before do
-        ParticipantProfileState.create!(participant_profile: profile, state: "withdrawn")
         profile.update!(status: "withdrawn")
       end
 

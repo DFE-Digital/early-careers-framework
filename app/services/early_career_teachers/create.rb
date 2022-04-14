@@ -23,7 +23,6 @@ module EarlyCareerTeachers
           participant_identity: Identity::Create.call(user: user),
         }.merge(ect_attributes))
 
-        ParticipantProfileState.create!(participant_profile: profile)
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
                                 induction_programme: school_cohort.default_induction_programme,

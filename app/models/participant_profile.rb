@@ -17,10 +17,10 @@ class ParticipantProfile < ApplicationRecord
   has_many :induction_records
   has_many :current_induction_records, -> { current }, class_name: "InductionRecord"
 
-  has_many :participant_profile_states
-  has_one :participant_profile_state, lambda {
-    merge(ParticipantProfileState.most_recent)
-  }, class_name: "ParticipantProfileState"
+  # has_many :participant_profile_states
+  # has_one :participant_profile_state, lambda {
+  #   merge(ParticipantProfileState.most_recent)
+  # }, class_name: "ParticipantProfileState"
 
   has_many :participant_profile_schedules
 
@@ -91,10 +91,6 @@ class ParticipantProfile < ApplicationRecord
 
     decision = validation_decisions.find { |record| record.validation_step.to_s == name.to_s }
     decision || validation_decisions.build(validation_step: name)
-  end
-
-  def state_at(declaration_date)
-    participant_profile_states.where("created_at < ?", declaration_date).order(:created_at).last
   end
 
   def fundable?

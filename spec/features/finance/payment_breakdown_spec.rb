@@ -18,7 +18,6 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   let(:jan_statement)     { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider: cpd_lead_provider) }
   let(:voided_declarations) do
     participant_profiles = create_list(:ect_participant_profile, 2, school_cohort: school_cohort, cohort: contract.cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     participant_profiles.map { |participant| create_voided_declarations_nov(participant) }
   end
@@ -88,32 +87,27 @@ private
 
   def multiple_start_declarations_are_submitted_nov_statement
     participant_profiles = create_list(:ect_participant_profile, 4, school_cohort: school_cohort, cohort: contract.cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     participant_profiles.map { |participant| create_start_declarations_nov(participant) }
   end
 
   def multiple_retained_declarations_are_submitted_nov_statement
     participant_profiles = create_list(:ect_participant_profile, 4, school_cohort: school_cohort, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     participant_profiles.map { |participant| create_retained_declarations_nov(participant) }
   end
 
   def multiple_ineligible_declarations_are_submitted_jan_statement
     participant_profiles = create_list(:ect_participant_profile, 3, school_cohort: school_cohort, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     participant_profiles.map { |participant| create_ineligible_declarations_jan(participant) }
   end
 
   def multiple_retained_declarations_are_submitted_jan_statement
     mentor_participant_profiles = create_list(:mentor_participant_profile, 5, school_cohort: school_cohort, cohort: contract.cohort, sparsity_uplift: true)
-    mentor_participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     mentor_participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     mentor_participant_profiles.map { |participant| create_retained_declarations_jan_mentor(participant) }
     participant_profiles = create_list(:ect_participant_profile, 6, school_cohort: school_cohort, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
     participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
     participant_profiles.map { |participant| create_retained_declarations_jan_ect(participant) }
   end

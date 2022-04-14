@@ -122,24 +122,4 @@ RSpec.shared_examples "a participant declaration service" do
     given_profile.withdrawn_record!
     expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
   end
-
-  it "fails when user profile is in a withdrawn state" do
-    ParticipantProfileState.create!(participant_profile: given_profile, state: "withdrawn", created_at: cutoff_start_datetime)
-    expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
-  end
-
-  it "fails when user profile is in a deferred state" do
-    ParticipantProfileState.create!(participant_profile: given_profile, state: "deferred", created_at: cutoff_start_datetime)
-    expect { described_class.call(params: given_params) }.to raise_error(ActionController::ParameterMissing)
-  end
-
-  it "succeeds when user profile is in a withdrawn state, but was active on declaration date" do
-    ParticipantProfileState.create!(participant_profile: given_profile, state: "withdrawn")
-    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
-  end
-
-  it "fails when user profile is in a deferred state, but was active on declaration date" do
-    ParticipantProfileState.create!(participant_profile: given_profile, state: "deferred")
-    expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
-  end
 end
