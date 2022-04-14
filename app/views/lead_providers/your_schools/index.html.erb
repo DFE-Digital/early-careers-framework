@@ -22,8 +22,7 @@
 <% if @cohorts.length > 1 %>
   <%= render SubnavComponent.new do |component| %>
     <% @cohorts.reverse.each do |cohort| %>
-      <%# Use a query param to access cohorts other than the current one %>
-      <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort == Cohort.current ? nil : cohort)) do %>
+      <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort)) do %>
         <%= cohort.start_year %> cohort
       <% end %>
     <% end %>
