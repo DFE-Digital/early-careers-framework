@@ -13,7 +13,10 @@ module LeadProviders
         return
       end
 
-      @selected_cohort = params[:cohort] ? @cohorts.find_by(start_year: params[:cohort]) : Cohort.current
+      # The search component only submits the query string, so the search will always
+      # run against the current cohort schools if the selected cohort is not persisted.
+      session[:selected_cohort] = params[:cohort] if params[:cohort]
+      @selected_cohort = session[:selected_cohort] ? @cohorts.find_by(start_year: session[:selected_cohort]) : Cohort.current
 
       @partnerships = Partnership
         .includes(:delivery_partner, :cohort, :school)
