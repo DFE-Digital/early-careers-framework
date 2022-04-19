@@ -141,7 +141,6 @@ group :development, :deployed_development, :test, :sandbox do
   gem "factory_bot_rails", "~> 6.2.0"
   gem "faker"
   gem "timecop"
-  gem "uri_template"
 end
 
 group :development do
