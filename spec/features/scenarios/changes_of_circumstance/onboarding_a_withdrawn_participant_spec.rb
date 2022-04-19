@@ -68,7 +68,10 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
         end
 
         and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_email, scenario.participant_type
-        and_participant_has_completed_registration "the Participant", scenario.participant_type
+        and_participant_has_completed_registration "the Participant",
+                                                   scenario.participant_trn,
+                                                   scenario.participant_dob,
+                                                   scenario.participant_type
       end
 
       context when_context(scenario) do
@@ -88,7 +91,12 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
             raise "scenario.withdrawn_by is not a valid value"
           end
 
-          when_school_takes_on_the_withdrawn_participant "New SIT", "the Participant", scenario.participant_email, scenario.participant_type, scenario.new_programme
+          when_school_takes_on_the_withdrawn_participant "New SIT",
+                                                         "the Participant",
+                                                         scenario.participant_email,
+                                                         scenario.participant_trn,
+                                                         scenario.participant_dob,
+                                                         "#{scenario.original_programme}>#{scenario.new_programme}"
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type

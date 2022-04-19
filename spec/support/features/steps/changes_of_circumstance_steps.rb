@@ -228,8 +228,8 @@ module Steps
       end
     end
 
-    def when_school_takes_on_the_withdrawn_participant(sit_name, participant_name)
-      # TODO: This needs to be automated through the inductions portal
+    def when_school_takes_on_the_withdrawn_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance)
+      user = find_user sit_name
 
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
@@ -238,27 +238,39 @@ module Steps
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
-        # OLD way
-        participant_profile.teacher_profile.update! school: school
-        participant_profile.active_record!
-        participant_profile.training_status_active!
-        participant_profile.update! school_cohort: school_cohort
+        if circumstance == "FIP>FIP"
+          sign_in_as user
+          inductions_dashboard = Pages::SITInductionDashboard.new
+          wizard = inductions_dashboard.start_transfer_participant_wizard
+          wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
 
-        profile_state = participant_profile.participant_profile_state
-        profile_state.delete
-        participant_profile.reload
+          # This checks that the participant has been added
+          # participants_dashboard = wizard.view_participants_dashboard
+          # participants_dashboard.view_participant participant_name
+          sign_out
+        else
+          # OLD way
+          participant_profile.teacher_profile.update! school: school
+          participant_profile.active_record!
+          participant_profile.training_status_active!
+          participant_profile.update! school_cohort: school_cohort
 
-        # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+          profile_state = participant_profile.participant_profile_state
+          profile_state.delete
+          participant_profile.reload
 
-        Induction::Enrol.call participant_profile: participant_profile,
-                              induction_programme: school_cohort.default_induction_programme
+          # NEW way
+          current_induction_record = participant_profile.current_induction_records.first
+          current_induction_record.withdrawing! unless current_induction_record.nil?
+
+          Induction::Enrol.call participant_profile: participant_profile,
+                                induction_programme: school_cohort.default_induction_programme
+        end
       end
     end
 
-    def when_school_takes_on_the_deferred_participant(sit_name, participant_name)
-      # TODO: This needs to be automated through the inductions portal
+    def when_school_takes_on_the_deferred_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance)
+      user = find_user sit_name
 
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
@@ -267,21 +279,33 @@ module Steps
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days + 1.minute
       travel_to(timestamp) do
-        # OLD way
-        ParticipantProfileState.create! participant_profile: participant_profile,
-                                        state: ParticipantProfileState.states[:active]
+        if circumstance == "FIP>FIP"
+          sign_in_as user
+          inductions_dashboard = Pages::SITInductionDashboard.new
+          wizard = inductions_dashboard.start_transfer_participant_wizard
+          wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
 
-        participant_profile.teacher_profile.update! school: school
-        participant_profile.active_record!
-        participant_profile.training_status_active!
-        participant_profile.update! school_cohort: school_cohort
+          # This checks that the participant has been added
+          # participants_dashboard = wizard.view_participants_dashboard
+          # participants_dashboard.view_participant participant_name
+          sign_out
+        else
+          # OLD way
+          ParticipantProfileState.create! participant_profile: participant_profile,
+                                          state: ParticipantProfileState.states[:active]
 
-        # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+          participant_profile.teacher_profile.update! school: school
+          participant_profile.active_record!
+          participant_profile.training_status_active!
+          participant_profile.update! school_cohort: school_cohort
 
-        Induction::Enrol.call participant_profile: participant_profile,
-                              induction_programme: school_cohort.default_induction_programme
+          # NEW way
+          current_induction_record = participant_profile.current_induction_records.first
+          current_induction_record.withdrawing! unless current_induction_record.nil?
+
+          Induction::Enrol.call participant_profile: participant_profile,
+                                induction_programme: school_cohort.default_induction_programme
+        end
       end
     end
 
