@@ -104,13 +104,13 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         context "Then the Original SIT" do
           subject(:original_sit) { "Original SIT" }
 
-          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status, is_being_trained: false }
+          it { should_not find_participant_details_in_school_induction_portal "the Participant" }
         end
 
         context "Then the New SIT" do
           subject(:new_sit) { "New SIT" }
 
-          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status, is_being_trained: true }
+          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status }
 
           # what are the onward actions available to the new school - can they do them ??
         end
@@ -124,20 +124,26 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
               it {
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              scenario.participant_email,
+                                                                             scenario.participant_trn,
+                                                                             "Original SIT's School",
                                                                              scenario.participant_type,
                                                                              scenario.prior_participant_status,
                                                                              scenario.prior_training_status
               }
             when :OBFUSCATED
-              it.pending do
+              it do
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              nil,
+                                                                             scenario.participant_trn,
+                                                                             "Original SIT's School",
                                                                              scenario.participant_type
               end
             else
               it {
                 should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                                  scenario.participant_email,
+                                                                                 scenario.participant_trn,
+                                                                                 "Original SIT's School",
                                                                                  scenario.participant_type
               }
             end
@@ -161,6 +167,8 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
               it {
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              scenario.participant_email,
+                                                                             scenario.participant_trn,
+                                                                             "New SIT's School",
                                                                              scenario.participant_type,
                                                                              scenario.new_participant_status,
                                                                              scenario.new_training_status
@@ -189,7 +197,13 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         context "Then other Lead Providers" do
           subject(:another_lead_provider) { "Another Lead Provider" }
 
-          it { should_not find_participant_details_in_ecf_participants_endpoint "the Participant", scenario.participant_email, scenario.participant_type }
+          it do
+            should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                             scenario.participant_email,
+                                                                             scenario.participant_trn,
+                                                                             "Original SIT's School",
+                                                                             scenario.participant_type
+          end
           it { should find_training_declarations_in_ecf_declarations_endpoint "the Participant", [] }
         end
 
@@ -209,7 +223,7 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             end
             expect(subject).to be_able_to_find_the_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_participant_status
             expect(subject).to be_able_to_find_the_training_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_training_status
-            expect(subject).to be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.all_declarations
+            expect(subject).to be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.see_new_declarations
 
             expect(subject).to be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors
             expect(subject).to be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_declarations

@@ -14,8 +14,6 @@ module Support
         induction_dashboard = Pages::SITInductionDashboard.new
         participants_dashboard = induction_dashboard.view_participant_dashboard
 
-        # puts page.html if sit_name == "New SIT"
-
         participant_details = if is_being_trained
                                 participants_dashboard.view_ects participant_name
                               else

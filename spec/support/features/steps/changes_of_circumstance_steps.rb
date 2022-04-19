@@ -302,9 +302,6 @@ module Steps
           sign_out
         else
           # OLD way
-          ParticipantProfileState.create! participant_profile: participant_profile,
-                                          state: ParticipantProfileState.states[:active]
-
           participant_profile.teacher_profile.update! school: school
           participant_profile.active_record!
           participant_profile.training_status_active!

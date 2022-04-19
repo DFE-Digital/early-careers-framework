@@ -132,20 +132,26 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
               it {
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              scenario.participant_email,
+                                                                             scenario.participant_trn,
+                                                                             "Original SIT's School",
                                                                              scenario.participant_type,
                                                                              scenario.prior_participant_status,
                                                                              scenario.prior_training_status
               }
             when :OBFUSCATED
-              it.pending do
+              it do
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              nil,
+                                                                             scenario.participant_trn,
+                                                                             "Original SIT's School",
                                                                              scenario.participant_type
               end
             else
               it {
                 should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                                  scenario.participant_email,
+                                                                                 scenario.participant_trn,
+                                                                                 "Original SIT's School",
                                                                                  scenario.participant_type
               }
             end
@@ -169,6 +175,8 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
               it {
                 should find_participant_details_in_ecf_participants_endpoint "the Participant",
                                                                              scenario.participant_email,
+                                                                             scenario.participant_trn,
+                                                                             "New SIT's School",
                                                                              scenario.participant_type,
                                                                              scenario.new_participant_status,
                                                                              scenario.new_training_status
@@ -197,7 +205,13 @@ RSpec.feature "Onboard a withdrawn participant", type: :feature, end_to_end_scen
         context "Then other Lead Providers" do
           subject(:another_lead_provider) { "Another Lead Provider" }
 
-          it { should_not find_participant_details_in_ecf_participants_endpoint "the Participant", scenario.participant_email, scenario.participant_type }
+          it do
+            should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                             scenario.participant_email,
+                                                                             scenario.participant_trn,
+                                                                             "Original SIT's School",
+                                                                             scenario.participant_type
+          end
           it { should find_training_declarations_in_ecf_declarations_endpoint "the Participant", [] }
         end
 
