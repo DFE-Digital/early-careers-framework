@@ -6,4 +6,4 @@ ci_node_index = ENV["CI_NODE_INDEX"] || "0"
 scenario_numbers = (1..99).to_a
                      .select { | num | num % ci_node_total.to_i == ci_node_index.to_i }
 
-exec "SCENARIOS=#{scenario_numbers.join(",")} bundle exec rspec --tag end_to_end_scenario --format documentation --order read"
+exec "SCENARIOS=#{scenario_numbers.join(",")} bundle exec rspec --tag end_to_end_scenario --format documentation --order read #{ARGV.any? ? ARGV.join(' ') : ''}"
