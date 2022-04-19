@@ -11,8 +11,26 @@ module Pages
         has_text?("Add yourself as a mentor")
     end
 
-    def view_participant(participant_name)
-      click_on participant_name
+    def view_ects(participant_name)
+      within "#ects" do
+        click_on participant_name
+      end
+
+      Pages::SITParticipantDetails.new
+    end
+
+    def view_mentors(participant_name)
+      within "#mentors" do
+        click_on participant_name
+      end
+
+      Pages::SITParticipantDetails.new
+    end
+
+    def view_not_training(participant_name)
+      within "#not-training" do
+        click_on participant_name
+      end
 
       Pages::SITParticipantDetails.new
     end

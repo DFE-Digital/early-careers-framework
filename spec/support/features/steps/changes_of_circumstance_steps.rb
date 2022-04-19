@@ -5,7 +5,7 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      timestamp = Time.zone.local(2021, 2, 1, 9, 0, 0)
+      timestamp = next_ideal_time(2021, 2, 1, 9, 0, 0)
 
       travel_to(timestamp) do
         user = create :user, full_name: lead_provider_name
@@ -23,11 +23,13 @@ module Steps
                                                                private_api_access: true
 
         tokens[lead_provider_name] = token
+
+        travel_to 1.minute.from_now
       end
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      timestamp = Time.zone.local(2021, 4, 1, 9, 0, 0)
+      timestamp = next_ideal_time(2021, 4, 1, 9, 0, 0)
 
       travel_to(timestamp) do
         school = create :school, :pupil_premium_uplift, name: "#{sit_name}'s School"
@@ -47,11 +49,13 @@ module Steps
           Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
                                                       programme_choice: school_cohort.induction_programme_choice
         end
+
+        travel_to 1.minute.from_now
       end
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      timestamp = Time.zone.local(2021, 5, 1, 9, 0, 0)
+      timestamp = next_ideal_time(2021, 5, 1, 9, 0, 0)
 
       user = find_user lead_provider_name
       lead_provider = user.lead_provider
@@ -66,14 +70,17 @@ module Steps
         wizard.complete delivery_partner.name, [school.urn]
         sign_out
 
+        # TODO: This needs to be added to the partnership UI process
         school_cohort = school.school_cohorts.first
         Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
                                                     programme_choice: school_cohort.induction_programme_choice
+
+        travel_to 1.minute.from_now
       end
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
-      timestamp = Time.zone.local(2021, 6, 1, 9, 0, 0)
+      timestamp = next_ideal_time(2021, 6, 1, 9, 0, 0)
 
       user = find_user sit_name
 
@@ -85,11 +92,13 @@ module Steps
         wizard = inductions_dashboard.start_add_participant_wizard
         wizard.complete(participant_name, participant_email, participant_type, cohort_label)
         sign_out
+
+        travel_to 1.minute.from_now
       end
     end
 
     def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      timestamp = Time.zone.local(2021, 8, 1, 9, 0, 0)
+      timestamp = next_ideal_time(2021, 8, 1, 9, 0, 0)
 
       user = find_user participant_name
 
@@ -105,6 +114,8 @@ module Steps
           raise "Participant_type not recognised"
         end
         sign_out
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -130,6 +141,8 @@ module Steps
         declarations_endpoint.has_eligible_for_payment? true
         declarations_endpoint.has_voided? false
         declarations_endpoint.has_state? "eligible"
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -151,6 +164,8 @@ module Steps
         # TODO: This needs to be added to the withdraw API
         current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.training_status_withdrawn! unless current_induction_record.nil?
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -172,6 +187,8 @@ module Steps
         # TODO: This needs to be added to the defer API
         current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.training_status_deferred! unless current_induction_record.nil?
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -188,10 +205,12 @@ module Steps
         # NEW way
         current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
+
+        travel_to 1.minute.from_now
       end
     end
 
-    def when_school_takes_on_the_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance)
+    def when_school_takes_on_the_active_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance)
       user = find_user sit_name
 
       school = find_school_for_sit sit_name
@@ -206,10 +225,6 @@ module Steps
           inductions_dashboard = Pages::SITInductionDashboard.new
           wizard = inductions_dashboard.start_transfer_participant_wizard
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
-
-          # This checks that the participant has been added
-          participants_dashboard = wizard.view_participants_dashboard
-          participants_dashboard.view_participant participant_name
           sign_out
         else
           # OLD way
@@ -225,6 +240,8 @@ module Steps
           Induction::Enrol.call participant_profile: participant_profile,
                                 induction_programme: school_cohort.default_induction_programme
         end
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -238,15 +255,11 @@ module Steps
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(timestamp) do
-        if circumstance == "FIP>FIP"
+        if circumstance == "xxFIP>FIP"
           sign_in_as user
           inductions_dashboard = Pages::SITInductionDashboard.new
           wizard = inductions_dashboard.start_transfer_participant_wizard
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
-
-          # This checks that the participant has been added
-          participants_dashboard = wizard.view_participants_dashboard
-          participants_dashboard.view_participant participant_name
           sign_out
         else
           # OLD way
@@ -266,6 +279,8 @@ module Steps
           Induction::Enrol.call participant_profile: participant_profile,
                                 induction_programme: school_cohort.default_induction_programme
         end
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -279,15 +294,11 @@ module Steps
 
       timestamp = participant_profile.schedule.milestones.first.start_date + 2.days + 1.minute
       travel_to(timestamp) do
-        if circumstance == "FIP>FIP"
+        if circumstance == "xxFIP>FIP"
           sign_in_as user
           inductions_dashboard = Pages::SITInductionDashboard.new
           wizard = inductions_dashboard.start_transfer_participant_wizard
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
-
-          # This checks that the participant has been added
-          participants_dashboard = wizard.view_participants_dashboard
-          participants_dashboard.view_participant participant_name
           sign_out
         else
           # OLD way
@@ -306,6 +317,8 @@ module Steps
           Induction::Enrol.call participant_profile: participant_profile,
                                 induction_programme: school_cohort.default_induction_programme
         end
+
+        travel_to 1.minute.from_now
       end
     end
 
@@ -330,6 +343,16 @@ module Steps
     end
 
   private
+
+    def next_ideal_time(year, month, day, hours, minutes, seconds)
+      ideal = Time.zone.local(year, month, day, hours, minutes, seconds)
+
+      if ideal <= Time.zone.now
+        ideal = 1.minute.from_now
+      end
+
+      ideal
+    end
 
     def find_user(full_name)
       user = User.find_by(full_name: full_name)

@@ -4,7 +4,7 @@ module Support
   module FindingParticipantDetailsInSchoolsInductionPortal
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :find_participant_details_in_school_induction_portal do |participant_name, participant_status|
+    RSpec::Matchers.define :find_participant_details_in_school_induction_portal do |participant_name, participant_status, is_being_trained: true|
       match do |sit_name|
         user = User.find_by(full_name: sit_name)
         raise "Could not find User for #{sit_name}" if user.nil?
@@ -13,7 +13,14 @@ module Support
 
         induction_dashboard = Pages::SITInductionDashboard.new
         participants_dashboard = induction_dashboard.view_participant_dashboard
-        participant_details = participants_dashboard.view_participant participant_name
+
+        # puts page.html if sit_name == "New SIT"
+
+        participant_details = if is_being_trained
+                                participants_dashboard.view_ects participant_name
+                              else
+                                participants_dashboard.view_not_training participant_name
+                              end
 
         @text = page.find("main").text
 

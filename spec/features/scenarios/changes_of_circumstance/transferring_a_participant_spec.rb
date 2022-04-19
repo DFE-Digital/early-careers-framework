@@ -83,12 +83,12 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
             and_lead_provider_has_made_training_declaration "Original Lead Provider", scenario.participant_type, "the Participant", declaration_type
           end
 
-          when_school_takes_on_the_participant "New SIT",
-                                               "the Participant",
-                                               scenario.participant_email,
-                                               scenario.participant_trn,
-                                               scenario.participant_dob,
-                                               "#{scenario.original_programme}>#{scenario.new_programme}"
+          when_school_takes_on_the_active_participant "New SIT",
+                                                      "the Participant",
+                                                      scenario.participant_email,
+                                                      scenario.participant_trn,
+                                                      scenario.participant_dob,
+                                                      "#{scenario.original_programme}>#{scenario.new_programme}"
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
@@ -104,13 +104,13 @@ RSpec.feature "Transfer a participant", type: :feature, end_to_end_scenario: tru
         context "Then the Original SIT" do
           subject(:original_sit) { "Original SIT" }
 
-          it { should_not find_participant_details_in_school_induction_portal "the Participant" }
+          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status, is_being_trained: false }
         end
 
         context "Then the New SIT" do
           subject(:new_sit) { "New SIT" }
 
-          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status }
+          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status, is_being_trained: true }
 
           # what are the onward actions available to the new school - can they do them ??
         end
