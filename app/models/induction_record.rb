@@ -3,6 +3,8 @@
 class InductionRecord < ApplicationRecord
   has_paper_trail
 
+  self.ignored_columns = %w[status]
+
   belongs_to :induction_programme
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF"
   belongs_to :schedule, class_name: "Finance::Schedule"
