@@ -4,9 +4,12 @@ module Admin
   module Participants
     class Table < BaseComponent
       include PaginationHelper
+      include Pagy::Backend
 
       def initialize(profiles:, page:)
-        @profiles = profiles.includes(:user).page(page).per(10)
+        @pagy, @profiles = pagy(profiles.includes(:user),
+                                page: page,
+                                items: 10)
       end
 
     private

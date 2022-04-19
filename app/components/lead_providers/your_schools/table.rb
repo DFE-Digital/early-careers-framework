@@ -4,12 +4,21 @@ module LeadProviders
   module YourSchools
     class Table < BaseComponent
       include PaginationHelper
+      include Pagy::Backend
 
       def initialize(partnerships:, page:)
-        @partnerships = partnerships.page(page).per(10)
+        @pagy, @partnerships = paginate(partnerships, page || 1)
       end
 
     private
+
+      def paginate(data, page)
+        if data.is_a? Array
+          pagy_array(data, page: page, items: 10)
+        else
+          pagy(data, page: page, items: 10)
+        end
+      end
 
       attr_reader :partnerships
     end
