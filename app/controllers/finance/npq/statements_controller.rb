@@ -13,13 +13,6 @@ module Finance
         @npq_contracts     = @npq_lead_provider.npq_contracts.where(version: @statement.contract_version).order(course_identifier: :asc)
       end
 
-      def voided
-        @npq_lead_provider   = lead_provider_scope.find(params[:lead_provider_id])
-        @cpd_lead_provider   = @npq_lead_provider.cpd_lead_provider
-        @statement           = @cpd_lead_provider.npq_lead_provider.statements.find_by(name: identifier_to_name)
-        @voided_declarations = ParticipantDeclaration::NPQ.where(statement: @statement).voided
-      end
-
     private
 
       def identifier_to_name
