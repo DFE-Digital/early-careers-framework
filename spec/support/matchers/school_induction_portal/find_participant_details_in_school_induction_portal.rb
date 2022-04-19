@@ -18,7 +18,7 @@ module Support
           case participant_type
           when "ECT"
             participant_details = participants_dashboard.view_ects participant_name
-          when "mentor"
+          when "Mentor"
             participant_details = participants_dashboard.view_mentors participant_name
           else
             raise "unknown participant_type of #{participant_type}"

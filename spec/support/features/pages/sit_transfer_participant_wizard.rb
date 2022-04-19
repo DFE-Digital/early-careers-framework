@@ -91,8 +91,6 @@ module Pages
     end
 
     def choose_schools_current_training_provider
-      puts page.html
-
       choose "No"
       click_on "Continue"
 
