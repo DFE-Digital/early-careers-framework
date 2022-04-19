@@ -208,8 +208,8 @@ module Steps
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
 
           # This checks that the participant has been added
-          # participants_dashboard = wizard.view_participants_dashboard
-          # participants_dashboard.view_participant participant_name
+          participants_dashboard = wizard.view_participants_dashboard
+          participants_dashboard.view_participant participant_name
           sign_out
         else
           # OLD way
@@ -245,8 +245,8 @@ module Steps
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
 
           # This checks that the participant has been added
-          # participants_dashboard = wizard.view_participants_dashboard
-          # participants_dashboard.view_participant participant_name
+          participants_dashboard = wizard.view_participants_dashboard
+          participants_dashboard.view_participant participant_name
           sign_out
         else
           # OLD way
@@ -286,8 +286,8 @@ module Steps
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob)
 
           # This checks that the participant has been added
-          # participants_dashboard = wizard.view_participants_dashboard
-          # participants_dashboard.view_participant participant_name
+          participants_dashboard = wizard.view_participants_dashboard
+          participants_dashboard.view_participant participant_name
           sign_out
         else
           # OLD way
