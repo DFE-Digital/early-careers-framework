@@ -5,7 +5,7 @@ module LeadProviders
     before_action :set_lead_provider
 
     def index
-      @cohorts ||= @lead_provider.cohorts
+      @cohorts ||= @lead_provider.cohorts.order(start_year: :desc)
 
       # Don't break old URLs
       if params[:selected_cohort_id]

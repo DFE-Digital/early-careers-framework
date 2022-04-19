@@ -26,7 +26,7 @@
 <% if FeatureFlag.active?(:multiple_cohorts) %>
   <% if @cohorts.length > 1 %>
     <%= render SubnavComponent.new do |component| %>
-      <% @cohorts.reverse.each do |cohort| %>
+      <% @cohorts.each do |cohort| %>
         <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort)) do %>
           <%= cohort.start_year %> cohort
         <% end %>
