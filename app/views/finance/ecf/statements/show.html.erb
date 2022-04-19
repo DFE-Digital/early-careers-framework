@@ -33,7 +33,7 @@
     <% end %>
 
     <ul class="govuk-list">
-      <li><%= govuk_link_to t("finance.show_voided_declarations"), voided_finance_ecf_payment_breakdown_statement_declarations_path(@ecf_lead_provider.id, @statement) %></li>
+      <li><%= govuk_link_to t("finance.show_voided_declarations"), finance_ecf_payment_breakdown_statement_voided_path(@ecf_lead_provider.id, @statement) %></li>
       <li><%= govuk_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %></li>
     </ul>
   </div>

@@ -332,11 +332,7 @@ Rails.application.routes.draw do
     namespace :ecf do
       resources :payment_breakdowns, only: [] do
         resources :statements, only: %i[show] do
-          resources :declarations, only: [] do
-            collection do
-              get :voided
-            end
-          end
+          resources :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
         end
       end
 
@@ -347,10 +343,7 @@ Rails.application.routes.draw do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
         resources :statements, only: %i[show] do
           resources :courses, only: %i[show], controller: "course_payment_breakdowns"
-
-          member do
-            get :voided
-          end
+          resources :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
         end
       end
 
