@@ -3,6 +3,7 @@ Feature: Report Schools flow
     Given cohort was created with start_year "2021"
     And cohort was created with start_year "2022"
     And I am logged in as a "lead_provider"
+    And feature multiple_cohorts is active
     And scenario "lead_provider_with_delivery_partners" has been run
 
   Scenario: Visiting the start page

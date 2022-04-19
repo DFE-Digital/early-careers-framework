@@ -14,16 +14,22 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Your schools</h1>
-    <%= govuk_button_link_to "Confirm more schools", lead_providers_report_schools_start_path if @selected_cohort == Cohort.next %>
+    <% if FeatureFlag.active?(:multiple_cohorts) %>
+      <%= govuk_button_link_to "Confirm more schools", lead_providers_report_schools_start_path if @selected_cohort == Cohort.next %>
+    <% else %>
+      <%= govuk_button_link_to "Confirm more schools", lead_providers_report_schools_start_path %>
+    <% end %>
     <%= govuk_button_link_to "Download schools for #{@selected_cohort&.display_name}", active_lead_providers_partnerships_path(cohort: @selected_cohort, format: :csv) if @total_provider_schools.positive? %>
   </div>
 </div>
 
-<% if @cohorts.length > 1 %>
-  <%= render SubnavComponent.new do |component| %>
-    <% @cohorts.reverse.each do |cohort| %>
-      <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort)) do %>
-        <%= cohort.start_year %> cohort
+<% if FeatureFlag.active?(:multiple_cohorts) %>
+  <% if @cohorts.length > 1 %>
+    <%= render SubnavComponent.new do |component| %>
+      <% @cohorts.reverse.each do |cohort| %>
+        <%= component.nav_item(path: lead_providers_your_schools_path(cohort: cohort)) do %>
+          <%= cohort.start_year %> cohort
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

@@ -3,8 +3,14 @@
     <%= component.nav_item(path: dashboard_path) do %>
       Overview
     <% end %>
-    <%= component.nav_item(path: lead_providers_your_schools_path(cohort: Cohort.next)) do %>
-      Schools
+    <% if FeatureFlag.active?(:multiple_cohorts) %>
+      <%= component.nav_item(path: lead_providers_your_schools_path(cohort: Cohort.next)) do %>
+        Schools
+      <% end %>
+    <% else %>
+      <%= component.nav_item(path: lead_providers_your_schools_path) do %>
+        Schools
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

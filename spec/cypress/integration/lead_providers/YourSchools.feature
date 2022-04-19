@@ -3,6 +3,7 @@ Feature: Your schools flow
     Given cohort was created with start_year "2021"
     And cohort was created with start_year "2022"
     And I am logged in as a "lead_provider"
+    And feature multiple_cohorts is active
     And scenario "lead_provider_with_schools" has been run
     And I am on "lead providers your schools" page
 
@@ -23,7 +24,7 @@ Feature: Your schools flow
     And I click on "link" containing "Check your schools"
     Then "page body" should contain "Your schools"
     And "page body" should contain "Confirm more schools"
-    And "page body" should contain "Download schools for 2022"
+    And "page body" should not contain "Download schools for 2022"
     And "schools table" should not exist
 
   Scenario: Searching my list of schools
