@@ -87,7 +87,7 @@
               <%= @calculator.voided_count %>
             </div>
 
-            <%= govuk_link_to 'View<span class="govuk-visually-hidden"> voided declarations</span>'.html_safe, voided_finance_ecf_payment_breakdown_statement_declarations_path(@ecf_lead_provider.id, @statement), class: "govuk-body-s" %>
+            <%= govuk_link_to 'View<span class="govuk-visually-hidden"> voided declarations</span>'.html_safe, finance_ecf_payment_breakdown_statement_voided_path(@ecf_lead_provider.id, @statement), class: "govuk-body-s" %>
           </div>
         </div>
       </div>
