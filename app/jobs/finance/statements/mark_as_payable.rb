@@ -10,6 +10,7 @@ module Finance
             .where
             .not(state: ParticipantDeclaration.states.values_at(:voided, :ineligible))
             .find_each(&:make_payable!)
+          statement.payable!
         end
       end
     end

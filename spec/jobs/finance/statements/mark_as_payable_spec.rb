@@ -16,11 +16,12 @@ RSpec.describe Finance::Statements::MarkAsPayable do
     end
   end
 
-  it "transitions eligible declarations to payable" do
+  it "transitions eligible declarations to payable", :aggregate_failures do
     expect {
       travel_to Date.new(2022, 1, 1) do
         described_class.perform_now
       end
     }.to change(statement.reload.participant_declarations.payable, :count).from(0).to(1)
+    expect(statement.reload.type).to eq("Finance::Statement::ECF::Payable")
   end
 end

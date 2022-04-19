@@ -11,6 +11,10 @@ class Finance::Statement::ECF < Finance::Statement
     update!(original_value: value)
   end
 
+  def payable!
+    update!(type: "Finance::Statement::ECF::Payable")
+  end
+
 private
 
   def orchestrator
