@@ -11,7 +11,7 @@ RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
     p
   end
 
-  component { described_class.new partnerships: paginated_partnerships, page: page }
+  component { described_class.new partnerships: partnerships, page: page }
   request_path "/lead-providers/your-schools"
 
   stub_component LeadProviders::YourSchools::TableRow
