@@ -44,21 +44,29 @@ module Seeds
         band_a: {
           max: 10,
           per_participant: 995,
+          output_payment_percantage: 60,
+          service_fee_percentage: 40,
         },
         band_b: {
           min: 11,
           max: 20,
           per_participant: 979,
+          output_payment_percantage: 60,
+          service_fee_percentage: 40,
         },
         band_c: {
           min: 21,
           max: 30,
           per_participant: 966,
+          output_payment_percantage: 60,
+          service_fee_percentage: 40,
         },
         band_d: {
           min: 31,
-          max: 40,
+          max: 1000,
           per_participant: 966,
+          output_payment_percantage: 100,
+          service_fee_percentage: 0,
         },
       }
     end
