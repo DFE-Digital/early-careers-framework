@@ -15,10 +15,10 @@ module Pages
       add_start_date year: Time.zone.now.year, month: Time.zone.now.month, day: Time.zone.now.day
       add_email_address participant_email
 
-      unless same_provider
+      if same_provider
+        # UI does not ask about provider
+      else
         choose_schools_current_training_provider
-
-        # TODO: when schools have different training provider
         # choose_participants_current_training_provider
         # choose_a_new_training_provider
       end
