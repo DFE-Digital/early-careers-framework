@@ -4,8 +4,10 @@ require "rails_helper"
 
 RSpec.describe "finance/participants/show.html.erb" do
   context "with ECF profile" do
-    let(:profile) { create(:ecf_participant_profile) }
+    let(:profile) { create(:ect_participant_profile) }
     let(:user) { profile.user }
+    let(:induction_programme) { create(:induction_programme, :fip) }
+    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
 
     it "renders schedule identifier and cohort" do
       assign :user, user
@@ -14,6 +16,15 @@ RSpec.describe "finance/participants/show.html.erb" do
 
       expect(rendered).to have_content("Schedule identifier#{profile.schedule.schedule_identifier}")
       expect(rendered).to have_content("Schedule cohort#{profile.schedule.cohort.start_year}")
+    end
+
+    it "renders induction records" do
+      assign :user, user
+
+      render
+
+      expect(rendered).to have_content("Induction record: #{induction_record.id}")
+      expect(rendered).to have_content("Training programmeFull induction programme")
     end
   end
 
