@@ -29,6 +29,10 @@ module APIs
       has_attribute_value? "email", nil
     end
 
+    def has_trn?(expected_value)
+      has_attribute_value? "teacher_reference_number", expected_value
+    end
+
     def has_school_urn?(expected_value)
       has_attribute_value? "school_urn", expected_value
     end
