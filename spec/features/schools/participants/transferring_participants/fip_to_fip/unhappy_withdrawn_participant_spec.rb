@@ -129,11 +129,6 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         expect(page).to have_selector("h1", text: "Who do you want to add?")
       end
 
-      def then_i_should_be_taken_to_the_cannot_find_their_details
-        expect(page).to have_selector("h1", text: "We cannot find #{@participant_data[:full_name]}’s record")
-        expect(page).to have_text("Check the information you’ve entered is correct.")
-      end
-
       def then_i_should_be_taken_to_the_cannot_add_page
         expect(page).to have_selector("h1", text: "Contact us to transfer #{@participant_data[:full_name]}")
         expect(page).to have_text("Contact us for help to register this person at your school")
@@ -153,10 +148,6 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two)
         @participant_profile_ect.training_status_withdrawn!
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
-      end
-
-      def and_it_should_list_the_schools_mentors
-        expect(page).to have_text(@mentor.user.full_name)
       end
 
       def set_dqt_validation_result
