@@ -28,6 +28,7 @@ class SchoolCohort < ApplicationRecord
   has_many :active_mentors, through: :active_mentor_profiles, source: :user
 
   has_many :induction_programmes
+  has_many :induction_records, through: :induction_programmes
   has_many :current_induction_records, through: :induction_programmes, class_name: "InductionRecord"
   has_many :active_induction_records, through: :induction_programmes, class_name: "InductionRecord"
   has_many :transferring_in_induction_records, through: :induction_programmes, class_name: "InductionRecord"

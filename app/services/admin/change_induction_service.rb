@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# FIXME: this needs attention as it will not do the right thing in the new data model
 module Admin
   class ChangeInductionService
     def initialize(school:, cohort:)
