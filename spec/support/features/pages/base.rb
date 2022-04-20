@@ -14,7 +14,14 @@ module Pages
 
     def is_current_page?
       expect(current_path).to eq @url
-      expect(page).to have_content @title
+
+      within(:css, "h1") do
+        has_content? @title
+      end
+    end
+
+    def go_back
+      click_on "Back"
     end
 
     def show_html
