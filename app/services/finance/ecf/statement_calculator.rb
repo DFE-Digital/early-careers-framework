@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "payment_calculator/ecf/service_fees"
+
 module Finance
   module ECF
     class StatementCalculator
@@ -116,10 +118,6 @@ module Finance
 
     private
 
-      def open?
-        statement.participant_declarations.none?
-      end
-
       def event_types
         self.class.event_types
       end
@@ -129,32 +127,15 @@ module Finance
       end
 
       def aggregator
-        @aggregator ||= aggregator_class.new(
+        @aggregator ||= ParticipantAggregator.new(
           statement: statement,
           recorder: aggregator_scope,
         )
       end
 
       def aggregator_scope
-        if open?
-          ParticipantDeclaration::ECF
-            .where(cpd_lead_provider: cpd_lead_provider)
-            .unique_id
-            .where(state: %w[eligible])
-            .where(statement: nil)
-            .where.not(state: %w[voided ineligible])
-        else
-          ParticipantDeclaration::ECF
-            .where(state: %w[eligible payable paid])
-        end
-      end
-
-      def aggregator_class
-        if open?
-          ParticipantEligibleAggregator
-        else
-          ParticipantAggregator
-        end
+        ParticipantDeclaration::ECF
+          .where(state: %w[eligible payable paid])
       end
 
       def orchestrator
