@@ -6,10 +6,6 @@ RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
   let(:items) { 10 }
   let(:partnerships) { Array.new(rand(21..30)) { |i| double "Partnership #{i}" } }
   let(:page) { rand(1..2) }
-  # let(:paginated_partnerships) do
-  #   _, p = pagy_array(partnerships, page: page, items: items)
-  #   p
-  # end
 
   component { described_class.new partnerships: partnerships, page: page }
   request_path "/lead-providers/your-schools"
