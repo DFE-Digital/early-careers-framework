@@ -161,10 +161,6 @@ module Steps
         withdraw_endpoint.responded_with_status? "active"
         withdraw_endpoint.responded_with_training_status? "withdrawn"
 
-        # TODO: This needs to be added to the withdraw API
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.training_status_withdrawn! unless current_induction_record.nil?
-
         travel_to 1.minute.from_now
       end
     end
@@ -183,10 +179,6 @@ module Steps
         defer_endpoint.responded_with_email? participant_email
         defer_endpoint.responded_with_status? "active"
         defer_endpoint.responded_with_training_status? "deferred"
-
-        # TODO: This needs to be added to the defer API
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.training_status_deferred! unless current_induction_record.nil?
 
         travel_to 1.minute.from_now
       end
@@ -246,9 +238,7 @@ module Steps
       end
     end
 
-    def when_school_takes_on_the_withdrawn_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance, same_provider)
-      user = find_user sit_name
-
+    def when_school_takes_on_the_withdrawn_participant(sit_name, participant_name, _participant_email, _participant_trn, _participant_dob, _circumstance, _same_provider)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
 
@@ -256,39 +246,29 @@ module Steps
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
-        if circumstance == "xxFIP>FIP"
-          sign_in_as user
-          inductions_dashboard = Pages::SITInductionDashboard.new
-          wizard = inductions_dashboard.start_transfer_participant_wizard
-          wizard.complete(participant_name, participant_email, participant_trn, participant_dob, same_provider == :same_provider)
-          sign_out
-        else
-          # OLD way
-          participant_profile.teacher_profile.update! school: school
-          participant_profile.active_record!
-          participant_profile.training_status_active!
-          participant_profile.update! school_cohort: school_cohort
+        # OLD way
+        participant_profile.teacher_profile.update! school: school
+        participant_profile.active_record!
+        participant_profile.training_status_active!
+        participant_profile.update! school_cohort: school_cohort
 
-          profile_state = participant_profile.participant_profile_state
-          profile_state.delete
-          participant_profile.reload
+        profile_state = participant_profile.participant_profile_state
+        profile_state.delete
+        participant_profile.reload
 
-          # NEW way
-          current_induction_record = participant_profile.current_induction_records.first
-          current_induction_record.withdrawing! unless current_induction_record.nil?
+        # NEW way
+        current_induction_record = participant_profile.current_induction_records.first
+        current_induction_record.withdrawing! unless current_induction_record.nil?
 
-          Induction::Enrol.call participant_profile: participant_profile,
-                                induction_programme: school_cohort.default_induction_programme,
-                                start_date: @timestamp
-        end
+        Induction::Enrol.call participant_profile: participant_profile,
+                              induction_programme: school_cohort.default_induction_programme,
+                              start_date: @timestamp
 
         travel_to 1.minute.from_now
       end
     end
 
-    def when_school_takes_on_the_deferred_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance, same_provider)
-      user = find_user sit_name
-
+    def when_school_takes_on_the_deferred_participant(sit_name, participant_name, _participant_email, _participant_trn, _participant_dob, _circumstance, _same_provider)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
 
@@ -296,27 +276,23 @@ module Steps
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
-        if circumstance == "xxFIP>FIP"
-          sign_in_as user
-          inductions_dashboard = Pages::SITInductionDashboard.new
-          wizard = inductions_dashboard.start_transfer_participant_wizard
-          wizard.complete(participant_name, participant_email, participant_trn, participant_dob, same_provider == :same_provider)
-          sign_out
-        else
-          # OLD way
-          participant_profile.teacher_profile.update! school: school
-          participant_profile.active_record!
-          participant_profile.training_status_active!
-          participant_profile.update! school_cohort: school_cohort
+        # OLD way
+        participant_profile.teacher_profile.update! school: school
+        participant_profile.active_record!
+        participant_profile.training_status_active!
+        participant_profile.update! school_cohort: school_cohort
 
-          # NEW way
-          current_induction_record = participant_profile.current_induction_records.first
-          current_induction_record.withdrawing! unless current_induction_record.nil?
+        profile_state = participant_profile.participant_profile_state
+        profile_state.delete
+        participant_profile.reload
 
-          Induction::Enrol.call participant_profile: participant_profile,
-                                induction_programme: school_cohort.default_induction_programme,
-                                start_date: @timestamp
-        end
+        # NEW way
+        current_induction_record = participant_profile.current_induction_records.first
+        current_induction_record.withdrawing! unless current_induction_record.nil?
+
+        Induction::Enrol.call participant_profile: participant_profile,
+                              induction_programme: school_cohort.default_induction_programme,
+                              start_date: @timestamp
 
         travel_to 1.minute.from_now
       end

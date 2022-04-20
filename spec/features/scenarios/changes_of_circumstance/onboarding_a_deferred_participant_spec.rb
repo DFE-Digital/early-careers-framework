@@ -64,7 +64,10 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
           and_sit_at_pupil_premium_school_reported_programme "New SIT", "CIP"
         end
 
-        and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_email, scenario.participant_type
+        and_sit_reported_participant "Original SIT",
+                                     "the Participant",
+                                     scenario.participant_email,
+                                     scenario.participant_type
         and_participant_has_completed_registration "the Participant",
                                                    scenario.participant_trn,
                                                    scenario.participant_dob,
@@ -87,7 +90,8 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
                                                         scenario.participant_email,
                                                         scenario.participant_trn,
                                                         scenario.participant_dob,
-                                                        "#{scenario.original_programme}>#{scenario.new_programme}"
+                                                        "#{scenario.original_programme}>#{scenario.new_programme}",
+                                                        scenario.transfer
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
@@ -104,19 +108,11 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
           subject(:original_sit) { "Original SIT" }
 
           it do
-            if scenario.original_programme == "FIP" && scenario.new_programme == "FIP"
-              should find_participant_details_in_school_induction_portal "the Participant",
-                                                                         scenario.participant_email,
-                                                                         scenario.participant_type,
-                                                                         scenario.new_school_status,
-                                                                         is_being_trained: false
-            else
-              should_not find_participant_details_in_school_induction_portal "the Participant",
-                                                                             scenario.participant_email,
-                                                                             scenario.participant_type,
-                                                                             scenario.new_school_status,
-                                                                             is_being_trained: false
-            end
+            should_not find_participant_details_in_school_induction_portal "the Participant",
+                                                                           scenario.participant_email,
+                                                                           scenario.participant_type,
+                                                                           scenario.new_school_status,
+                                                                           is_being_trained: false
           end
         end
 
