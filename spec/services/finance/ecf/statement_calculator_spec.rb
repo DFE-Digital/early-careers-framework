@@ -143,21 +143,6 @@ RSpec.describe Finance::ECF::StatementCalculator do
         expect(subject.started_band_b_count).to eql(1)
       end
     end
-
-    context "when statement is open" do
-      let!(:declaration) do
-        create_list(
-          :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
-          state: "eligible",
-          statement: nil
-        )
-      end
-
-      it "considers non attached declarations" do
-        expect(subject.started_band_a_count).to eql(1)
-      end
-    end
   end
 
   describe "#uplift_count" do
