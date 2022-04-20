@@ -20,7 +20,7 @@ private
   def given_i_am_on_the_sandbox_landing_page
     sandbox_landing_page = Pages::SandboxLandingPage.new
     sandbox_landing_page.load
-    sandbox_landing_page.is_on_page?
+    sandbox_landing_page.is_current_page?
   end
 
   def when_i_continue_as_an_ecf_training_provider
@@ -30,6 +30,6 @@ private
 
   def then_i_am_on_the_lead_provider_landing_page
     lead_provider_landing_page = Pages::LeadProviderLandingPage.new
-    lead_provider_landing_page.is_on_page?
+    lead_provider_landing_page.is_current_page?
   end
 end

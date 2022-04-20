@@ -16,7 +16,7 @@ private
   def given_i_am_on_the_start_page
     start_page = Pages::StartPage.new
     start_page.load
-    start_page.is_on_page?
+    start_page.is_current_page?
   end
 
   def when_i_click_accessibility
@@ -26,6 +26,6 @@ private
 
   def then_i_should_be_on_the_accessibility_statement_page
     accessibility_statement_page = Pages::AccessibilityStatementPage.new
-    accessibility_statement_page.is_on_page?
+    accessibility_statement_page.is_current_page?
   end
 end
