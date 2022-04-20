@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class LeadProviderConfirmYourSchoolsWizard
+  class LeadProviderConfirmYourSchoolsWizard < ::Pages::Base
     include Capybara::DSL
 
     def complete(delivery_partner_name, school_urns)

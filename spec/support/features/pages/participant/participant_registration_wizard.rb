@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class ParticipantRegistrationWizard
+  class ParticipantRegistrationWizard < ::Pages::Base
     include Capybara::DSL
     include WebMock::API
 

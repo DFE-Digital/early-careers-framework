@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class FinancePortal
+  class FinancePortal < ::Pages::Base
     include Capybara::DSL
 
     def view_participant_drilldown

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class SITParticipantDetails
+  class SITParticipantDetails < ::Pages::Base
     include Capybara::DSL
 
     def can_see_email?(email)

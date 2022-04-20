@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class SITAddParticipantWizard
+  class SITAddParticipantWizard < ::Pages::Base
     include Capybara::DSL
 
     def complete(participant_name, participant_email, participant_type, cohort_label)

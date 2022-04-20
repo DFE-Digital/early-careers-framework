@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class SITReportProgrammeWizard
+  class SITReportProgrammeWizard < ::Pages::Base
     include Capybara::DSL
 
     def complete(programme_type)

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class SITParticipantsDashboard
+  class SITParticipantsDashboard < ::Pages::Base
     include Capybara::DSL
 
     def has_expected_content?

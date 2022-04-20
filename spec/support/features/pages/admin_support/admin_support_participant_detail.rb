@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class AdminSupportParticipantDetail
+  class AdminSupportParticipantDetail < ::Pages::Base
     include Capybara::DSL
 
     def can_see_eligible_to_start?(participant_name)

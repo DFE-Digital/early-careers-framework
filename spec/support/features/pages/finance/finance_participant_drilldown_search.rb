@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class FinanceParticipantDrilldownSearch
+  class FinanceParticipantDrilldownSearch < ::Pages::Base
     include Capybara::DSL
 
     def find(participant_name)

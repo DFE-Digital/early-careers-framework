@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class FinancePaymentBreakdownReport
+  class FinancePaymentBreakdownReport < ::Pages::Base
     include Capybara::DSL
 
     def can_see_recruitment_summary?(num_ects, num_mentors)

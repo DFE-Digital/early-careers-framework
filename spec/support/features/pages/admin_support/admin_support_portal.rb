@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class AdminSupportPortal
+  class AdminSupportPortal < ::Pages::Base
     include Capybara::DSL
 
     def view_participant_list

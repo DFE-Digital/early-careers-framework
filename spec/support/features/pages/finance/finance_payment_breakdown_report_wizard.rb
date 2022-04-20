@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class FinancePaymentBreakdownReportWizard
+  class FinancePaymentBreakdownReportWizard < ::Pages::Base
     include Capybara::DSL
 
     def complete(lead_provider_name)

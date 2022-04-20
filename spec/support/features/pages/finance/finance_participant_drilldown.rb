@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../base"
+
 module Pages
-  class FinanceParticipantDrilldown
+  class FinanceParticipantDrilldown < ::Pages::Base
     include Capybara::DSL
 
     def can_see_participant?(user_id)
