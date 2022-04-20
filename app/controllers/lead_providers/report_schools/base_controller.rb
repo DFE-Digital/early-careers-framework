@@ -13,11 +13,7 @@ module LeadProviders
       def start
         clean_form!
 
-        report_schools_form.cohort_id = if FeatureFlag.active?(:multiple_cohorts)
-                                          Cohort.next.id
-                                        else
-                                          Cohort.current.id
-                                        end
+        report_schools_form.cohort_id = Cohort.next.id
         report_schools_form.lead_provider_id = current_user.lead_provider_profile.lead_provider.id
       end
 
