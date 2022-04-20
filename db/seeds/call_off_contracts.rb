@@ -40,7 +40,7 @@ module Seeds
         uplift_amount: 100,
         recruitment_target: 4500,
         revised_target: (4500 * 1.02).to_i,
-        set_up_fee: 149_861,
+        set_up_fee: 0,
         band_a: {
           max: 10,
           per_participant: 995,
