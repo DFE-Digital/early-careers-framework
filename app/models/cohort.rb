@@ -12,6 +12,12 @@ class Cohort < ApplicationRecord
     find_by(start_year: 2021)
   end
 
+  def self.next
+    year = FeatureFlag.active?(:multiple_cohorts) ? 2022 : 2021
+
+    find_by(start_year: year)
+  end
+
   def display_name
     start_year.to_s
   end

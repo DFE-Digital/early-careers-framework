@@ -5,15 +5,21 @@ module LeadProviders
     before_action :set_lead_provider
 
     def index
-      @cohorts ||= @lead_provider.cohorts
+      @cohorts ||= @lead_provider.cohorts.order(start_year: :desc)
 
       # Don't break old URLs
       if params[:selected_cohort_id]
         redirect_to cohort: params[:selected_cohort_id]
         return
       end
-
-      @selected_cohort = params[:cohort] ? @cohorts.find_by(start_year: params[:cohort]) : Cohort.current
+      if FeatureFlag.active?(:multiple_cohorts)
+        # The search component only submits the query string, so the search will always
+        # run against the current cohort schools if the selected cohort is not persisted.
+        session[:selected_cohort] = params[:cohort] if params[:cohort]
+        @selected_cohort = session[:selected_cohort] ? @cohorts.find_by(start_year: session[:selected_cohort]) : Cohort.current
+      else
+        @selected_cohort = Cohort.current
+      end
 
       @partnerships = Partnership
         .includes(:delivery_partner, :cohort, :school)

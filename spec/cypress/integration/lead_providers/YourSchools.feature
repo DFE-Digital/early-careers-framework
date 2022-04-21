@@ -1,20 +1,31 @@
 Feature: Your schools flow
   Background:
     Given cohort was created with start_year "2021"
+    And cohort was created with start_year "2022"
     And I am logged in as a "lead_provider"
+    And feature multiple_cohorts is active
     And scenario "lead_provider_with_schools" has been run
     And I am on "lead providers your schools" page
 
   Scenario: Viewing my schools
     Then "page body" should contain "Your schools"
-    Then "page body" should contain "Confirm more schools"
-    Then "page body" should contain "Download schools for 2021"
+    And "page body" should not contain "Confirm more schools"
+    And "page body" should contain "2022 cohort"
+    And "page body" should contain "2021 cohort"
+    And "page body" should contain "Download schools for 2021"
     And the table should have 3 rows
     And "page body" should contain "Big School"
     And "page body" should contain "Middle School"
     And "page body" should contain "Small School"
     And the page should be accessible
     And percy should be sent snapshot
+
+    When I am on "dashboard" page
+    And I click on "link" containing "Check your schools"
+    Then "page body" should contain "Your schools"
+    And "page body" should contain "Confirm more schools"
+    And "page body" should not contain "Download schools for 2022"
+    And "schools table" should not exist
 
   Scenario: Searching my list of schools
     When I type "900002" into "search box"
