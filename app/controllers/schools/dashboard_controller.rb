@@ -46,4 +46,10 @@ private
     # redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year)
   end
 
+  def set_up_new_cohort?
+    # FIXME: after 1/9 this won't work becaue it will return 2023 not 2022
+    next_cohort = @school.school_cohorts.find_by(cohort: Cohort.next)
+    !@school_cohorts.include?(next_cohort) && next_cohort.cohort.registration_start_date > Time.zone.now
+  end
+
 end
