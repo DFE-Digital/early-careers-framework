@@ -9,8 +9,17 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Manage your training</h1>
 
-    <% @school_cohorts.each do |school_cohort| %>
+    <% if FeatureFlag.active?(:multiple_cohorts) %>
+      <%= govuk_tabs(title: "Cohorts") do |component| %>
+        <% @school_cohorts.each do |school_cohort| %>
+          <% component.tab(label: school_cohort.description) do %>
+            <%= render partial: "school_cohort_details", locals: { school_cohort: school_cohort } %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% else %>
 
+    <% @school_cohorts.each do |school_cohort| %>
       <% if school_cohort.core_induction_programme? || school_cohort.full_induction_programme? %>
         <% if school_cohort.active_ecf_participant_profiles.any? || school_cohort.active_induction_records.any? %>
           <p class="govuk-body govuk-!-margin-bottom-5">
@@ -109,5 +118,6 @@
       <% end %>
 
     <% end %>
+  <% end %>
   </div>
 </div>

@@ -44,6 +44,14 @@ class SchoolCohort < ApplicationRecord
     end
   end
 
+  def self.dashboard_cohorts
+    joins(:cohort).where(cohort: { start_year: [2022, 2021] })
+  end
+
+  def description
+    "#{cohort.start_year} to #{cohort.start_year + 1}"
+  end
+
   def lead_provider
     school.lead_provider(cohort.start_year)
   end
