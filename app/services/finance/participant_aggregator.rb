@@ -13,6 +13,7 @@ module Finance
       retained_2: "retained-2",
       retained_3: "retained-3",
       retained_4: "retained-4",
+      completed: "completed",
     }.freeze
 
     def call(event_type: :started)

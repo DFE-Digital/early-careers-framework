@@ -5,12 +5,10 @@ module Finance
     class MarkAsPayable < ApplicationJob
       def perform
         Finance::Statement.where(deadline_date: 1.day.ago.to_date).find_each do |statement|
-          statement
-            .participant_declarations
-            .where
-            .not(state: ParticipantDeclaration.states.values_at(:voided, :ineligible))
-            .find_each(&:make_payable!)
-          statement.payable!
+          Finance::Statement.transaction do
+            statement.participant_declarations.find_each(&:make_payable!)
+            statement.payable!
+          end
         end
       end
     end

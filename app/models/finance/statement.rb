@@ -17,13 +17,16 @@ class Finance::Statement < ApplicationRecord
   scope :output,                    -> { where(output_fee: true) }
   scope :next_output_fee_statements, lambda {
     output
-      .left_outer_joins(:participant_declarations)
       .where(type: name)
       .order(deadline_date: :asc)
       .where("deadline_date >= ?", Date.current)
   }
 
   class << self
+    def find_by_humanised_name(humanised_name)
+      find_by(name: humanised_name.humanize.gsub("-", " "))
+    end
+
     def current
       with_future_deadline_date.order(deadline_date: :asc).first
     end

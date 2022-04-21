@@ -2,7 +2,8 @@
 
 class Finance::Statement::ECF < Finance::Statement
   has_one :lead_provider, through: :cpd_lead_provider
-
+  has_many :participant_declarations,        -> { not_voided.not_ineligible }, foreign_key: :statement_id
+  has_many :voided_participant_declarations, -> { voided }, foreign_key: :statement_id, class_name: "ParticipantDeclaration::ECF"
   def cache_original_value!
     breakdown_started = orchestrator.call(event_type: :started)
     breakdown_retained_1 = orchestrator.call(event_type: :retained_1)
