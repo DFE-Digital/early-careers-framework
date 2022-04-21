@@ -6,10 +6,9 @@ module Finance
       class PaymentOverviewTable < BaseComponent
         include NPQPaymentsHelper
 
-        def initialize(contract, statement, npq_lead_provider)
+        def initialize(contract, statement)
           @contract = contract
           @statement = statement
-          @npq_lead_provider = npq_lead_provider
         end
 
       private
@@ -23,7 +22,7 @@ module Finance
         def output_payment
           @output_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
             contract: contract,
-            total_participants: total_declarations(npq_lead_provider, contract),
+            total_participants: total_declarations(contract),
           )
         end
       end

@@ -2,6 +2,6 @@
   <% milestones.order(name: :asc).each do |milestone| %>
     <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewMilestoneSummary.new(milestone, total_participants_for(milestone)) %>
   <% end %>
-  <span class="govuk-body-s"><%= t("finance.total_declarations") %><br><%= total_declarations(npq_lead_provider, contract) %></span>
+  <span class="govuk-body-s"><%= t("finance.total_declarations") %><br><%= total_declarations(contract) %></span>
   <span class="govuk-body-s"><%= t("finance.total_not_eligible_for_funding") %><br><%= not_eligible_declarations %></span>
 </header>
