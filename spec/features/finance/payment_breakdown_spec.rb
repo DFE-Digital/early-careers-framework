@@ -64,12 +64,17 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
 
     select("November 2021", from: "statement-field")
     click_button("View")
+    then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
   end
 
 private
+
+  def then_i_should_see_the_total_voided
+    expect(page.find("strong", text: "Total voided")).to have_sibling("div", text: voided_declarations.size)
+  end
 
   def then_i_see_voided_declarations
     within first("table tbody") do
