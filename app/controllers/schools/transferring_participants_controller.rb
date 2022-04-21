@@ -14,35 +14,15 @@ module Schools
     end
 
     def full_name
-      if check_against_dqt?
-        if valid_participant_details?
-          store_form_redirect_to_next_step(:teacher_start_date)
-        else
-          store_form_redirect_to_next_step(:cannot_find_their_details)
-        end
-      else
-        store_form_redirect_to_next_step(:trn)
-      end
+      validate_or_next_step(valid_step: :teacher_start_date, next_step: :trn)
     end
 
     def trn
-      if check_against_dqt?
-        if valid_participant_details?
-          store_form_redirect_to_next_step(:teacher_start_date)
-        else
-          store_form_redirect_to_next_step(:cannot_find_their_details)
-        end
-      else
-        store_form_redirect_to_next_step(:dob)
-      end
+      validate_or_next_step(valid_step: :teacher_start_date, next_step: :dob)
     end
 
     def dob
-      if check_against_dqt? && valid_participant_details?
-        store_form_redirect_to_next_step(:teacher_start_date)
-      else
-        store_form_redirect_to_next_step(:cannot_find_their_details)
-      end
+      validate_or_next_step(valid_step: :teacher_start_date, next_step: :cannot_find_their_details)
     end
 
     def teacher_start_date
@@ -230,6 +210,10 @@ module Schools
       participant_profile.present? && dqt_record.present?
     end
 
+    def withdrawn_participant?
+      participant_profile.training_status_withdrawn? || latest_induction_record.training_status_withdrawn?
+    end
+
     def matching_lead_provider_and_delivery_partner?
       with_the_same_provider? && with_the_same_delivery_partner?
     end
@@ -262,6 +246,22 @@ module Schools
 
     def with_the_same_delivery_partner?
       current_delivery_partner == participant_delivery_partner
+    end
+
+    def validate_or_next_step(valid_step:, next_step:)
+      if check_against_dqt?
+        if valid_participant_details?
+          if withdrawn_participant?
+            store_form_redirect_to_next_step(:cannot_add)
+          else
+            store_form_redirect_to_next_step(valid_step)
+          end
+        else
+          store_form_redirect_to_next_step(:cannot_find_their_details)
+        end
+      else
+        store_form_redirect_to_next_step(next_step)
+      end
     end
 
     def check_against_dqt?
