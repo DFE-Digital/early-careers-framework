@@ -26,6 +26,6 @@ enrol_school_cohorts:
   cron: "0 3 * * *"
   class: "EnrolSchoolCohortsJob"
 transition_statements_to_payable:
-  cron: "<%= Rails.env.production? ? '@daily' : '@hourly' %>"
+  cron: "@daily"
   class: "Finance::Statements::MarkAsPayable"
   queue: default

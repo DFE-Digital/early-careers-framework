@@ -7,14 +7,8 @@ module Finance
         def show
           @ecf_lead_provider = LeadProvider.find(params[:payment_breakdown_id])
           @cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
-          @statement = @cpd_lead_provider.statements.find_by(name: statement_id_to_name)
-          @voided_declarations = ParticipantDeclaration.where(statement: @statement).voided
-        end
-
-      private
-
-        def statement_id_to_name
-          params[:statement_id].humanize.gsub("-", " ")
+          @statement = @cpd_lead_provider.statements.find_by_humanised_name(params[:statement_id])
+          @voided_declarations = @statement.voided_participant_declarations
         end
       end
     end
