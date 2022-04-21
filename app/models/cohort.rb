@@ -25,6 +25,10 @@ class Cohort < ApplicationRecord
     where("registration_start_date <= ?", Time.zone.now).order(start_year: :desc).first
   end
 
+  def description
+    "cohort-#{start_year} to #{start_year + 1}"
+  end
+
   def display_name
     start_year.to_s
   end

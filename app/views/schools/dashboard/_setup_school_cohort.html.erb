@@ -1,0 +1,13 @@
+<% cohort = Cohort.active_registration_cohort %>
+<h2 class-"govuk-heading-s">How to set up training for <%= cohort.description %></h2>
+<div class="govuk-inset-text">
+  You can do this later if you do not have the information you need yet.
+</div>
+<p class="govuk-body">We need to know:</p>
+<ul class="govuk-list--bullet">
+  <li>if your school expects and ECTs in the next academic year</li>
+  <li>which training programme you want to use for any new ECTs</li>
+</ul>
+<p class="govuk-body">You can change your answers later if you need to.</p>
+<p class="govuk-body">It should only take a few minutes to get set up.</p>
+<%= govuk_start_button(text: "Start now", href: "#") %>

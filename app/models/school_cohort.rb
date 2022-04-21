@@ -37,6 +37,8 @@ class SchoolCohort < ApplicationRecord
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
+  delegate :description, to: :cohort
+
   after_save do |school_cohort|
     unless school_cohort.saved_changes.empty?
       ecf_participant_profiles.touch_all
@@ -46,10 +48,6 @@ class SchoolCohort < ApplicationRecord
 
   def self.dashboard_cohorts
     joins(:cohort).where(cohort: { start_year: [2022, 2021] })
-  end
-
-  def description
-    "#{cohort.start_year} to #{cohort.start_year + 1}"
   end
 
   def lead_provider
