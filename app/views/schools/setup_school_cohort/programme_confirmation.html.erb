@@ -7,17 +7,15 @@
 
     <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'fip' %>
       <p class="govuk-body">You've chosen to use a training provider, funded by DfE.</p>
-    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'cip' %>
-      <p class="govuk-body">You've chosen to deliver your own programme using DfE accredited materials.</p>
-    <% end %>
 
-    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'fip' %>
       <p class="govuk-body">You'll need to:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>choose a training provider</li>
         <li>add your ECTs and mentors</li>
       </ul>
     <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'cip' %>
+      <p class="govuk-body">You've chosen to deliver your own programme using DfE accredited materials.</p>
+
       <p class="govuk-body">You'll need to:</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>choose your training materials</li>
@@ -32,14 +30,15 @@
       </p>
       <p class="govuk-body">
         You'll need to design a 2-year programme of support and training that covers every 'learn that' and
-        'learn how to' statement in the <a href="#">early career framework (ECF)</a>.
+        'learn how to' statement in the
+        <%= govuk_link_to("early career framework (ECF)", "https://www.gov.uk/government/publications/early-career-framework") %>
       </p>
       <p class="govuk-body">
-        <a href="#">See you statutory guidance</a> for information about funding, time off timetable, and
-        roles.
+        <%= govuk_link_to("See you statutory guidance", "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction") %>
+        for information about funding, time off timetable, and roles.
       </p>
     <% end %>
 
-    <%= govuk_button_to "Confirm", "#", class: "govuk-!-margin-top-8" %>
+    <%= govuk_link_to "Confirm", training_confirmation_schools_setup_school_cohort_path, class: "govuk-button govuk-!-margin-top-8" %>
   </div>
 </div>
