@@ -33,8 +33,10 @@ module Schools
       store_form_redirect_to_next_step :programme_confirmation
     end
 
-    def programme_confirmation
+    def programme_confirmation; end
 
+    def training_confirmation
+      reset_form_data
     end
 
     def change_provider; end
