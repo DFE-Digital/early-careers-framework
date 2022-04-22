@@ -6,7 +6,7 @@ module Schools
     include ActiveRecord::AttributeAssignment
     include ActiveModel::Serialization
 
-    attr_accessor :expect_any_ects_choice, :trn, :date_of_birth, :start_date, :email, :mentor_id, :schools_current_programme_choice, :teachers_current_programme_choice, :same_programme
+    attr_accessor :expect_any_ects_choice, :how_will_you_run_training_choice, :trn, :date_of_birth, :start_date, :email, :mentor_id, :schools_current_programme_choice, :teachers_current_programme_choice, :same_programme
 
     validates :full_name, presence: true, on: :full_name
     validates :trn,
@@ -21,10 +21,12 @@ module Schools
     validate :check_mentor, on: :choose_mentor
     validate :dob, on: :dob
     validate :teacher_start_date, on: :teacher_start_date
+    validate :how_will_you_run_training_choice, on: :how_will_you_run_training
 
     def attributes
       {
         expect_any_ects_choice: expect_any_ects_choice,
+        how_will_you_run_training_choice: how_will_you_run_training_choice,
       }
     end
 
@@ -49,6 +51,15 @@ module Schools
         OpenStruct.new(id: "no", name: "No"),
       ]
     end
+
+    def how_will_you_run_training_choices
+      [
+        OpenStruct.new(id: "fip", name: "Use a training provider, funded by the DfE"),
+        OpenStruct.new(id: "cip", name: "Deliver your own programme using DfE-accredited materials"),
+        OpenStruct.new(id: "diy", name: "Design and deliver you own programme based on the early career framework (ECF)")
+      ]
+    end
+
 
     def using_schools_programme?
       same_programme || switch_to_schools_programme?
