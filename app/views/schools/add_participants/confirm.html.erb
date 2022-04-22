@@ -17,12 +17,50 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <% unless add_participant_form.type == :self %>
-            <%= govuk_link_to({ action: :show, step: "name" }) do %>
-              Change <span class="govuk-visually-hidden">name</span>
+            <% unless add_participant_form.dqt_record.present? %>
+              <%= govuk_link_to({ action: :show, step: "name" }) do %>
+                Change <span class="govuk-visually-hidden">name</span>
+              <% end %>
             <% end %>
           <% end %>
         </dd>
       </div>
+
+      <% if add_participant_form.trn %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            TRN
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div><%= add_participant_form.trn %></div>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <% unless add_participant_form.dqt_record.present? %>
+              <%= govuk_link_to({ action: :show, step: "name" }) do %>
+                Change <span class="govuk-visually-hidden">TRN</span>
+              <% end %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
+      <% if add_participant_form.dob %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Date of birth
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div><%= add_participant_form.dob.to_date.to_s(:govuk) %></div>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <% unless add_participant_form.dqt_record.present? %>
+              <%= govuk_link_to({ action: :show, step: "name" }) do %>
+                Change <span class="govuk-visually-hidden">dob</span>
+              <% end %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -56,6 +94,22 @@
         </dd>
       </div>
 
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Induction start
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <div>
+            <%= add_participant_form.start_date.to_date.to_s(:govuk) %>
+          </div>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <%= govuk_link_to({ action: :show, step: "start-date" }) do %>
+            Change <span class="govuk-visually-hidden">start date</span>
+          <% end %>
+        </dd>
+      </div>
+
 
       <% if add_participant_form.type == :ect %>
         <div class="govuk-summary-list__row">
@@ -80,10 +134,28 @@
           </dd>
         </div>
       <% end %>
+
+      <% if @school_cohort.default_induction_programme %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Training with
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <div>
+              <%= @school_cohort.default_induction_programme.lead_provider.name %>
+            </div>
+            <div>
+              <%= @school_cohort.default_induction_programme.delivery_partner.name %>
+            </div>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+          </dd>
+        </div>
+      <% end %>
     </dl>
-
-    <p class="govuk-body">We’ll contact this person for information needed to check they’re eligible for this training programme.</p>
-
+    <% unless add_participant_form.dqt_record %>
+      <p class="govuk-body">We’ll contact this person for information needed to check they’re eligible for this training programme.</p>
+    <% end %>
     <%= form_for add_participant_form, url: { action: :complete }, method: :post do |f| %>
       <%= f.govuk_submit "Confirm and add" %>
     <% end %>
