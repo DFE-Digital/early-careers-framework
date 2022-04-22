@@ -409,6 +409,8 @@ Rails.application.routes.draw do
             put "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects"
 
             get "no-expected-ects", to: "setup_school_cohort#no_expected_ects"
+            get "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
+            put "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
           end
 
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
