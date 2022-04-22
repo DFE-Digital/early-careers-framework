@@ -227,6 +227,10 @@ module ManageTrainingSteps
     expect(page).to have_text("Add your early career teacher and mentor details")
   end
 
+  def then_i_should_be_on_the_who_to_add_page
+    expect(page).to have_selector("h1", text: "Who do you want to add?")
+  end
+
   def then_i_should_see_the_view_your_ect_and_mentor_link
     expect(page).to have_text("View your early career teacher and mentor details")
   end
@@ -398,8 +402,16 @@ module ManageTrainingSteps
     click_on("Add a new mentor")
   end
 
+  def when_i_click_to_add_a_new_ect_or_mentor
+    click_on "Add an ECT or mentor"
+  end
+
   def when_i_click_on_add_myself_as_mentor
     click_on("Add yourself as a mentor")
+  end
+
+  def when_i_select_to_add_a(participant_type)
+    choose(participant_type, allow_label_click: true)
   end
 
   def when_i_click_on_add_your_early_career_teacher_and_mentor_details
@@ -428,6 +440,10 @@ module ManageTrainingSteps
 
   def when_i_click_on_change_term
     click_on("Change term", visible: false)
+  end
+
+  def when_i_click_on_change_trn
+    click_on("Change TRN", visible: false)
   end
 
   def when_i_choose_a_mentor
@@ -466,6 +482,24 @@ module ManageTrainingSteps
     choose(@updated_participant_data[:start_term].humanize, allow_label_click: true)
   end
 
+  def when_i_add_the_trn
+    fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?", with: @participant_data[:trn]
+  end
+
+  def when_i_add_a_date_of_birth
+    date = @participant_data[:date_of_birth]
+    fill_in "Day", with: date.day
+    fill_in "Month", with: date.month
+    fill_in "Year", with: date.year
+  end
+
+  def when_i_add_a_start_date
+    date = @participant_data[:start_date]
+    fill_in "Day", with: date.day
+    fill_in "Month", with: date.month
+    fill_in "Year", with: date.year
+  end
+
   def when_i_choose_materials
     choose("CIP Programme 1", allow_label_click: true)
   end
@@ -499,6 +533,14 @@ module ManageTrainingSteps
 
   def when_i_change_ect_email_to_blank
     fill_in "Change ECT’s email", with: ""
+  end
+
+  def when_i_add_the_wrong_trn
+    fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?", with: "1111111"
+  end
+
+  def when_i_select(option)
+    choose(option)
   end
 
   # Then_steps
@@ -614,6 +656,36 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_participant_profile
     expect(page).to have_selector("h2", text: "Participant details")
+  end
+
+  def then_i_am_taken_to_do_you_know_your_teachers_trn_page
+    expect(page).to have_selector("h1", text: "Do you know #{@participant_data[:full_name]}’s teacher reference number (TRN)?")
+  end
+
+  def then_i_am_taken_to_updated_do_you_know_your_teachers_trn_page
+    expect(page).to have_selector("h1", text: "Do you know #{@updated_participant_data[:full_name]}’s teacher reference number (TRN)?")
+  end
+
+  def then_i_am_taken_to_add_teachers_trn_page
+    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?")
+    expect(page).to have_text("This unique ID:")
+  end
+
+  def then_i_am_taken_to_add_date_of_birth_page
+    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s date of birth?")
+  end
+
+  def then_i_am_taken_to_choose_start_date_page
+    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s induction start date?")
+  end
+
+  def then_i_am_taken_to_updated_choose_start_date_page
+    expect(page).to have_selector("h1", text: "What’s #{@updated_participant_data[:full_name]}’s induction start date?")
+  end
+
+  def then_i_am_taken_to_the_cannot_find_their_details
+    expect(page).to have_selector("h1", text: "We cannot find #{@participant_data[:full_name]}’s record")
+    expect(page).to have_text("Check the information you’ve entered is correct.")
   end
 
   def then_i_can_view_the_design_our_own_induction_dashboard
@@ -809,6 +881,7 @@ module ManageTrainingSteps
       email: "sally@school.com",
       nino: "",
       start_term: "summer_2022",
+      start_date: Date.new(2022, 9, 1),
     }
   end
 
@@ -818,5 +891,20 @@ module ManageTrainingSteps
       email: "jane@school.com",
       start_term: "spring_2022",
     }
+  end
+
+  def set_dqt_blank_validation_result
+    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(nil)
+  end
+
+  def set_dqt_validation_result
+    response = {
+      trn: @participant_data[:trn],
+      full_name: @participant_data[:full_name],
+      nino: nil,
+      dob: @participant_data[:date_of_birth],
+      config: {},
+    }
+    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
   end
 end
