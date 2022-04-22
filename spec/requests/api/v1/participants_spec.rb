@@ -301,6 +301,64 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
             expect(response).to be_successful
             expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
           end
+
+          context "when a participant is transfered to another school" do
+            let(:new_school)              { create(:school) }
+            let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+            let(:other_partnership)       { create(:partnership, lead_provider: other_cpd_lead_provider.lead_provider, cohort: cohort) }
+            let(:other_school_cohort)     { create(:school_cohort, cohort: cohort, school: new_school) }
+            let(:new_induction_programme) { create(:induction_programme, school_cohort: other_school_cohort, partnership: other_partnership) }
+
+            before do
+              Induction::ChangeProgramme.new(
+                participant_profile: early_career_teacher_profile,
+                end_date: 1.month.from_now,
+                new_induction_programme: new_induction_programme,
+              ).call
+            end
+
+            context "when the new lead provider withdrawn the participant" do
+              let!(:new_provider_token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: other_cpd_lead_provider) }
+
+              before do
+                default_headers["Authorization"] = "Bearer #{new_provider_token}"
+                put url, params: params
+              end
+
+              it "allows the new lead provider to withdrawn the partcipant" do
+                expect(response).to be_successful
+                expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")
+              end
+
+              context "when the old provider submit a declaration" do
+                before { default_headers["Authorization"] = "Bearer #{token}" }
+
+                context "when the declaration is not back dated" do
+                  let(:milestone) { early_career_teacher_profile.schedule.milestones.where("? BETWEEN DATE(start_date) AND DATE(milestone_date)", Time.current).first }
+                  let(:declaration_params) do
+                    {
+                      data: {
+                        type: "participant-declaration",
+                        attributes: {
+                          participant_id: early_career_teacher_profile.user_id,
+                          declaration_type: milestone.declaration_type,
+                          delcaration_date: milestone.start_date + 1.day,
+                          course_identifier: "ecf-induction",
+                          evidence_held: "other",
+                        }
+                      }
+                    }
+                  end
+
+                  it "is not allowed" do
+                    post "/api/v1/participant-declarations", params: declaration_params
+
+                    # byebug
+                  end
+                end
+              end
+            end
+          end
         end
       end
 
