@@ -40,6 +40,10 @@ private
       school: @school,
     )
 
-    redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year) unless @school_cohort
+    if FeatureFlag.active?(:multiple_cohorts)
+      redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year) unless @school_cohort
+    else
+      redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year) unless @school_cohort
+    end
   end
 end

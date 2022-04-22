@@ -40,10 +40,10 @@ private
 
   def set_multi_cohorts
     @school = active_school
-
     @school_cohorts = @school.school_cohorts.dashboard_cohorts
-    # FIXME: need to call this when no school_cohorts for the right registration window
-    # redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year)
+    if @school_cohorts.empty?
+      redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year)
+    end
   end
 
   def set_up_new_cohort?
