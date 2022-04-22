@@ -6,6 +6,17 @@ This should not be used in other environments.
 The following assumed you have the cloudfoundry CLI set up on your machine, and have logged in. 
 When you log in, you should select the dev space. Instructions can be found [here](https://docs.cloud.service.gov.uk/get_started.html#set-up-the-cloud-foundry-command-line)
 
+### Changing Space
+If you need to change space, for example to move between the dev space and the staging space you can use the following commands.
+
+To view available spaces:
+
+```cf spaces```
+
+To change to a different space:
+
+```cf target -s <space_name>```
+
 ### View logs
 To view logs, you will first need to know the service name. `cf a` will list services, but the service name will probably be `ecf-dev`.
 
