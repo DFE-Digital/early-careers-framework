@@ -10,5 +10,5 @@ paas_app_stopped = false
 paas_web_app_deployment_strategy = "blue-green-v2"
 paas_web_app_instances = 1
 paas_web_app_memory = 1024
-paas_web_app_start_command = "bundle exec rake cf:on_first_instance db:migrate redis:flushall one_offs:attach_eligible_declaration_to_next_output_statement && (bundle exec sidekiq -C config/sidekiq.yml &) && rails s"
+paas_web_app_start_command = "bundle exec rake cf:on_first_instance one_offs:backfill_contract_cohort one_offs:backfill_statement_cohort db:migrate db:safe_reset redis:flushall && (bundle exec sidekiq -C config/sidekiq.yml &) && rails s"
 paas_redis_service_plan = "micro-6_x"
