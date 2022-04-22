@@ -39,7 +39,8 @@ module PaymentCalculator
       end
 
       alias_method :started, :start_and_completion_event_percentage
-      alias_method :completion, :start_and_completion_event_percentage
+      alias_method :completion, :start_and_completion_event_percentage # DEPRECATE
+      alias_method :completed, :start_and_completion_event_percentage
 
       def interim_retained_period_event_percentage
         0.15

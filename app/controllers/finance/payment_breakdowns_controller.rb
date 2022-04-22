@@ -27,7 +27,7 @@ module Finance
 
       lead_provider = LeadProvider.find(@choose_programme_form.provider)
 
-      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider, (lead_provider.current_statement || lead_provider.statements.latest))
+      redirect_to finance_ecf_payment_breakdown_statement_path(lead_provider, (lead_provider.statements.current || lead_provider.statements.latest))
     end
 
     def select_provider_npq; end
@@ -37,7 +37,7 @@ module Finance
 
       npq_lead_provider = NPQLeadProvider.find(@choose_programme_form.provider)
 
-      statement = npq_lead_provider.current_statement
+      statement = npq_lead_provider.statements.current
 
       # TODO: remove when we have created the next statement
       statement ||= npq_lead_provider.statements.order(payment_date: :desc).first

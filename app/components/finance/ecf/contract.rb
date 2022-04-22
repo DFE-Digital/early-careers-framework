@@ -8,6 +8,10 @@ module Finance
 
       delegate :uplift_target, :uplift_amount, :recruitment_target, :revised_target, :set_up_fee, to: :contract
 
+      def initialize(contract:)
+        @contract = contract
+      end
+
       def name
         contract.lead_provider.name
       end
@@ -19,12 +23,6 @@ module Finance
             band: band,
           }
         end
-      end
-
-    private
-
-      def initialize(contract:)
-        @contract = contract
       end
     end
   end

@@ -7,7 +7,7 @@ module Finance
     class CalculationOrchestrator < ::Finance::CalculationOrchestrator
       class << self
         def default_aggregator
-          ::Finance::ECF::ParticipantEligibleAggregator
+          ::ParticipantAggregator
         end
 
         def default_calculator

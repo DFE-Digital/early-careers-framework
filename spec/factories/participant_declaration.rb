@@ -8,9 +8,8 @@ FactoryBot.define do
     declaration_type { "started" }
     state { "submitted" }
 
-    factory :ect_participant_declaration do
+    factory :ect_participant_declaration, class: "ParticipantDeclaration::ECF" do
       user { create(:user, :early_career_teacher) }
-      type { "ParticipantDeclaration::ECF" }
       course_identifier { "ecf-induction" }
       participant_profile { create(:ect_participant_profile, *uplift) }
     end
@@ -45,6 +44,10 @@ FactoryBot.define do
 
     trait :eligible do
       state { "eligible" }
+    end
+
+    trait :ineligible do
+      state { "ineligible" }
     end
 
     trait :payable do

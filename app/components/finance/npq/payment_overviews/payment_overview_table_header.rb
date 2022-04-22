@@ -7,12 +7,11 @@ module Finance
         include NPQPaymentsHelper
         delegate :recruitment_target, to: :contract
 
-        attr_accessor :contract, :statement, :npq_lead_provider
+        attr_accessor :contract, :statement
 
-        def initialize(contract, statement, npq_lead_provider)
+        def initialize(contract, statement)
           self.contract = contract
           self.statement = statement
-          self.npq_lead_provider = npq_lead_provider
         end
 
         def milestones
@@ -20,21 +19,11 @@ module Finance
         end
 
         def not_eligible_declarations
-          if statement.current?
-            ParticipantDeclaration::NPQ
-              .for_lead_provider(npq_lead_provider)
-              .where(statement_id: nil)
-              .where(state: %w[ineligible voided])
-              .unique_id
-              .count
-          else
-            statement
-              .participant_declarations
-              .for_course_identifier(contract.course_identifier)
-              .where(state: %w[ineligible voided])
-              .unique_id
-              .count
-          end
+          statement
+            .not_eligible_participant_declarations
+            .for_course_identifier(contract.course_identifier)
+            .unique_id
+            .count
         end
 
         def total_participants_for(milestone)
@@ -50,7 +39,6 @@ module Finance
         def participants_per_declaration_type
           @participants_per_declaration_type ||= statement.participant_declarations
             .for_course_identifier(contract.course_identifier)
-            .paid_payable_or_eligible
             .group(:declaration_type)
             .count
         end

@@ -39,6 +39,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
+        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
       end
 
       it "create declaration record and declaration attempt and return id when successful" do

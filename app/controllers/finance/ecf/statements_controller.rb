@@ -7,25 +7,8 @@ module Finance
     class StatementsController < BaseController
       def show
         @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
-        @cpd_lead_provider = @ecf_lead_provider.cpd_lead_provider
-
-        @statements = @ecf_lead_provider.statements.upto_current.order(payment_date: :desc)
-
         @statement = @ecf_lead_provider.statements.find_by(name: identifier_to_name)
-
-        aggregator = ParticipantAggregator.new(
-          statement: @statement,
-          recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
-        )
-
-        orchestrator = Finance::ECF::CalculationOrchestrator.new(
-          aggregator: aggregator,
-          contract: @ecf_lead_provider.call_off_contract,
-          statement: @statement,
-        )
-
-        @breakdown_started = orchestrator.call(event_type: :started)
-        @breakdown_retained_1 = orchestrator.call(event_type: :retained_1)
+        @calculator = StatementCalculator.new(statement: @statement)
       end
 
     private
