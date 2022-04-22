@@ -3,8 +3,9 @@
 module Schools
   class SetupSchoolCohortController < ::Schools::BaseController
     before_action :load_form
+    before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
     before_action :school
-    before_action :validate_request_or_render, except: %i[]
+    before_action :validate_request_or_render, except: %i[what_we_need]
 
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
@@ -13,10 +14,17 @@ module Schools
       previous_cohort = @school.school_cohorts.find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
 
       if previous_cohort.full_induction_programme?
+        # FIP
         store_form_redirect_to_next_step(:change_provider)
       elsif previous_cohort.core_induction_programme?
-        # CIP and DIY journeys
+        # DIY CIP
+        if setup_school_cohort_form_params[:expect_any_ects_choice] == "no"
+          redirect_to no_expected_ects_schools_setup_school_cohort_path
+        end
       end
+    end
+
+    def no_expected_ects
     end
 
     # cip
