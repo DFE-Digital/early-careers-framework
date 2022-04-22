@@ -35,7 +35,8 @@ module EarlyCareerTeachers
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
                                 induction_programme: school_cohort.default_induction_programme,
-                                mentor_profile: mentor_profile)
+                                mentor_profile: mentor_profile,
+                                start_date: start_date)
         end
       end
 
@@ -50,14 +51,15 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :start_term, :school_cohort, :mentor_profile_id, :year_2020
+    attr_reader :full_name, :email, :start_term, :school_cohort, :mentor_profile_id, :year_2020, :start_date
 
-    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_term: nil, year_2020: false)
+    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_term: nil, start_date: nil, year_2020: false)
       @full_name = full_name
       @email = email
       @start_term = start_term || school_cohort.cohort.start_term_options.first
       @school_cohort = school_cohort
       @mentor_profile_id = mentor_profile_id
+      @start_date = start_date
       @year_2020 = year_2020
     end
 
