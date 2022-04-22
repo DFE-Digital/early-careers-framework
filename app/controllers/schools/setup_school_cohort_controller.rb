@@ -19,9 +19,9 @@ module Schools
       elsif previous_cohort.core_induction_programme?
         # DIY CIP
         if setup_school_cohort_form_params[:expect_any_ects_choice] == "no"
-          redirect_to no_expected_ects_schools_setup_school_cohort_path
+          store_form_redirect_to_next_step :no_expected_ects
         elsif setup_school_cohort_form_params[:expect_any_ects_choice] == "yes"
-          redirect_to how_will_you_run_training_schools_setup_school_cohort_path
+          store_form_redirect_to_next_step :how_will_you_run_training
         end
       end
     end
@@ -30,9 +30,7 @@ module Schools
 
     # cip
     def how_will_you_run_training
-      if setup_school_cohort_form_params[:how_will_you_run_training_choice] == 'fip'
-        redirect_to programme_confirmation_schools_setup_school_cohort_path
-      end
+      store_form_redirect_to_next_step :programme_confirmation
     end
 
     def programme_confirmation
