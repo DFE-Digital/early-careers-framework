@@ -21,7 +21,8 @@ module Schools
     validate :check_mentor, on: :choose_mentor
     validate :dob, on: :dob
     validate :teacher_start_date, on: :teacher_start_date
-    validate :how_will_you_run_training_choice, on: :how_will_you_run_training
+    validates :expect_any_ects_choice, presence: true, on: :expect_any_ects
+    validates :how_will_you_run_training_choice, presence: true, on: :how_will_you_run_training
 
     def attributes
       {
