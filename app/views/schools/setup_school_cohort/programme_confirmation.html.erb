@@ -5,14 +5,41 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-l">Are you sure this is how you want to run training?</h1>
 
-    <p class="govuk-body">You've chosen to use a training provider, funded by DfE</p>
+    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'fip' %>
+      <p class="govuk-body">You've chosen to use a training provider, funded by DfE.</p>
+    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'cip' %>
+      <p class="govuk-body">You've chosen to deliver your own programme using DfE accredited materials.</p>
+    <% end %>
 
-    <p class="govuk-body">You'll need to:</p>
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
-      <li>choose a training provider</li>
-      <li>add your ECTs and mentors</li>
-    </ul>
+    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'fip' %>
+      <p class="govuk-body">You'll need to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>choose a training provider</li>
+        <li>add your ECTs and mentors</li>
+      </ul>
+    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'cip' %>
+      <p class="govuk-body">You'll need to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>choose your training materials</li>
+        <li>add your ECTs and mentors</li>
+      </ul>
+    <% end %>
 
-    <%= govuk_button_to "Confirm", "#" %>
+    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'diy' %>
+      <p class="govuk-body">
+        You're choosing to design and deliver your own programme based on the early career
+        framework (ECF).
+      </p>
+      <p class="govuk-body">
+        You'll need to design a 2-year programme of support and training that covers every 'learn that' and
+        'learn how to' statement in the <a href="#">early career framework (ECF)</a>.
+      </p>
+      <p class="govuk-body">
+        <a href="#">See you statutory guidance</a> for information about funding, time off timetable, and
+        roles.
+      </p>
+    <% end %>
+
+    <%= govuk_button_to "Confirm", "#", class: "govuk-!-margin-top-8" %>
   </div>
 </div>
