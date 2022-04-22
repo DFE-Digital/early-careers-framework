@@ -23,10 +23,12 @@
     <% list.row do |row| %>
       <% row.key(text: "Training provider") %>
       <% row.value(text: school_cohort.default_induction_programme&.lead_provider&.name) %>
+      <% row.action(text: :none) %>
     <% end %>
     <% list.row do |row| %>
       <% row.key(text: "Delivery partner") %>
       <% row.value(text: school_cohort.default_induction_programme&.delivery_partner&.name) %>
+      <% row.action(text: :none) %>
     <% end %>
   <% elsif school_cohort.core_induction_programme? %>
     <% list.row do |row| %>
