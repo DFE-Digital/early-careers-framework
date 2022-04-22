@@ -29,7 +29,15 @@ module Schools
     def no_expected_ects; end
 
     # cip
-    def how_will_you_run_training; end
+    def how_will_you_run_training
+      if setup_school_cohort_form_params[:how_will_you_run_training_choice] == 'fip'
+        redirect_to programme_confirmation_schools_setup_school_cohort_path
+      end
+    end
+
+    def programme_confirmation
+
+    end
 
     def change_provider; end
 
@@ -51,6 +59,7 @@ module Schools
 
       params.require(:schools_setup_school_cohort_form)
             .permit(:expect_any_ects_choice,
+                    :how_will_you_run_training_choice,
                     :trn,
                     :date_of_birth,
                     :start_date,
