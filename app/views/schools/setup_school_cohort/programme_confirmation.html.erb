@@ -1,0 +1,18 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: how_will_you_run_training_schools_setup_school_cohort_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-l">Are you sure this is how you want to run training?</h1>
+
+    <p class="govuk-body">You've chosen to use a training provider, funded by DfE</p>
+
+    <p class="govuk-body">You'll need to:</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-8">
+      <li>choose a training provider</li>
+      <li>add your ECTs and mentors</li>
+    </ul>
+
+    <%= govuk_button_to "Confirm", "#" %>
+  </div>
+</div>
