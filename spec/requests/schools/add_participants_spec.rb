@@ -39,10 +39,12 @@ RSpec.describe "Schools::AddParticipant", type: :request do
           type: :teacher,
           full_name: Faker::Name.name,
           email: Faker::Internet.email,
+          dob: Date.new(1990, 1, 1),
           mentor_id: "later",
           school_cohort_id: school_cohort.id,
           current_user_id: user.id,
           start_term: "Autumn 2050",
+          start_date: Date.new(2022, 5, 5),
         })
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who", params: { type: :joining }
       end
@@ -71,10 +73,12 @@ RSpec.describe "Schools::AddParticipant", type: :request do
             type: :ect,
             full_name: Faker::Name.name,
             email: Faker::Internet.email,
+            dob: Date.new(1990, 1, 1),
             mentor_id: "later",
             school_cohort_id: school_cohort.id,
             current_user_id: user.id,
             start_term: "Autumn 2050",
+            start_date: Date.new(2022, 5, 5),
           })
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
@@ -102,6 +106,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
                     type: :ect,
                     full_name: Faker::Name.name,
                     email: email,
+                    dob: Date.new(1990, 1, 1),
                     mentor_id: "later",
                     school_cohort_id: school_cohort.id,
                     current_user_id: user.id)
