@@ -20,12 +20,13 @@ module Schools
         # DIY CIP
         if setup_school_cohort_form_params[:expect_any_ects_choice] == "no"
           redirect_to no_expected_ects_schools_setup_school_cohort_path
+        elsif setup_school_cohort_form_params[:expect_any_ects_choice] == "yes"
+          redirect_to how_will_you_run_training_schools_setup_school_cohort_path
         end
       end
     end
 
-    def no_expected_ects
-    end
+    def no_expected_ects; end
 
     # cip
     def how_will_you_run_training; end
