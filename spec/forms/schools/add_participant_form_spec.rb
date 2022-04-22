@@ -5,11 +5,40 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   let(:school_cohort) { create(:school_cohort, cohort: cohort_2021) }
   let(:school) { school_cohort.school }
   let(:user) { create :user }
+  let!(:dqt_response) do
+    {
+      trn: "1234567",
+      full_name: "Danny DeVito",
+      nino: nil,
+      dob: Date.new(1990, 1, 1),
+      config: {},
+    }
+  end
 
   subject(:form) { described_class.new(current_user_id: user.id, school_cohort_id: school_cohort.id) }
 
   it { is_expected.to validate_presence_of(:full_name).on(:name).with_message("Enter a full name") }
   it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email address") }
+  it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
+  it { is_expected.to validate_presence_of(:start_date).on(:start_date) }
+
+  describe "when a SIT knows the teachers trn" do
+    it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter the teacher reference number (TRN) for the teacher you are adding") }
+    it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
+    it { is_expected.to validate_presence_of(:dob).on(:dob) }
+
+    before do
+      form.trn = "1234567"
+      form.dob = Date.new(1990, 1, 1)
+      form.full_name = "Danny DeVito"
+      allow(ParticipantValidationService).to receive(:validate).and_return(dqt_response)
+    end
+
+    it "returns a response from the dqt when a record matches" do
+      form.complete_step(:dob, dob: form.dob)
+      expect(form.dqt_record).to eq(dqt_response)
+    end
+  end
 
   describe "mentor_options" do
     it "does not include mentors with withdrawn records" do
@@ -162,19 +191,53 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
   end
 
+  describe "#trn_known?" do
+    before do
+      form.do_you_know_teachers_trn = "true"
+    end
+
+    it "returns true" do
+      expect(form.trn_known?).to be true
+    end
+  end
+
   describe "#save!" do
     before do
+      response = {
+        trn: form.trn,
+        full_name: form.full_name,
+        nino: nil,
+        dob: form.dob,
+        config: {},
+      }
+
       form.type = form.type_options.sample
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
+      form.trn = "1234567"
+      form.dob = Date.new(1990, 1, 1)
       form.start_term = "autumn_2021"
+      form.start_date = Date.new(2022, 9, 1)
+      form.dqt_record = dqt_response
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
+      allow(ParticipantValidationService).to receive(:validate).and_return(response)
 
       create :ecf_schedule
     end
 
     it "creates new participant record" do
       expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
+    end
+
+    it "creates new validation data" do
+      expect { form.save! }.to change(ECFParticipantValidationData, :count).by 1
+    end
+
+    context "no dqt record is present" do
+      it "does not create ecf validation data" do
+        form.dqt_record = nil
+        expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
+      end
     end
   end
 end
