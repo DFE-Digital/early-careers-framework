@@ -266,5 +266,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         end
       end
     end
+
+    it "creates new validation data" do
+      expect { form.save! }.to change(ECFParticipantValidationData, :count).by 1
+    end
+
+    context "no dqt record is present" do
+      it "does not create ecf validation data" do
+        form.dqt_record = nil
+        expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
+      end
+    end
   end
 end
