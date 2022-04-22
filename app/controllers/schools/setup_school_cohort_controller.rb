@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 module Schools
@@ -17,22 +16,17 @@ module Schools
       if previous_cohort.full_induction_programme?
         store_form_redirect_to_next_step(:change_provider)
       elsif previous_cohort.core_induction_programme?
-      else
       end
     end
 
     # cip
-    def how_will_you_run_training
-    end
+    def how_will_you_run_training; end
 
-    def change_provider
-    end
+    def change_provider; end
 
-    def change_fip_programme_choice
-    end
+    def change_fip_programme_choice; end
 
-    def are_you_sure
-    end
+    def are_you_sure; end
 
     def complete; end
 

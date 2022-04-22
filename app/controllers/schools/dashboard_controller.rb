@@ -50,5 +50,9 @@ private
     @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort).blank?
   end
 
-  helper_method :set_up_new_cohort?
+  def previous_school_cohort
+    @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort.previous)
+  end
+
+  helper_method :set_up_new_cohort?, :previous_school_cohort
 end

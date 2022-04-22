@@ -26,7 +26,15 @@ class Cohort < ApplicationRecord
   end
 
   def description
-    "cohort-#{start_year} to #{start_year + 1}"
+    "#{start_year} to #{start_year + 1}"
+  end
+
+  def next
+    Cohort.find_by(start_year: start_year + 1)
+  end
+
+  def previous
+    Cohort.find_by(start_year: start_year - 1)
   end
 
   def display_name
