@@ -3,11 +3,11 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", :with_default_schdules, type: :request do
+RSpec.describe "Participants API", :with_default_schedules, type: :request do
   describe "GET /api/v1/participants" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
-    let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current) }
+    let(:lead_provider) { create(:lead_provider, name: "previous") }
+    let!(:cohort) { Cohort.find_by(start_year: 2021) }
     let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
     let(:induction_programme) { create(:induction_programme, partnership: partnership) }
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
@@ -291,9 +291,9 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
 
-          let!(:induction_record) do
-            Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
-          end
+          # let!(:induction_record) do
+          #   Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
+          # end
 
           it "changes the training status of a participant to withdrawn" do
             put url, params: params
@@ -304,23 +304,30 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
 
           context "when a participant is transfered to another school" do
             let(:new_school)              { create(:school) }
-            let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+            let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "new") }
             let(:other_partnership)       { create(:partnership, lead_provider: other_cpd_lead_provider.lead_provider, cohort: cohort) }
             let(:other_school_cohort)     { create(:school_cohort, cohort: cohort, school: new_school) }
             let(:new_induction_programme) { create(:induction_programme, school_cohort: other_school_cohort, partnership: other_partnership) }
+            let(:milestone) { early_career_teacher_profile.schedule.milestones.where("? BETWEEN DATE(start_date) AND DATE(milestone_date)", Time.current).first }
+            let(:induction_record_end_date) { 1.day.from_now }
 
             before do
+              travel_to Date.new(2022, 4, 26)
+
               Induction::ChangeProgramme.new(
                 participant_profile: early_career_teacher_profile,
-                end_date: 1.month.from_now,
+                end_date: induction_record_end_date,
                 new_induction_programme: new_induction_programme,
               ).call
             end
+
+            after { travel_back }
 
             context "when the new lead provider withdrawn the participant" do
               let!(:new_provider_token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: other_cpd_lead_provider) }
 
               before do
+                travel_to 2.days.from_now
                 default_headers["Authorization"] = "Bearer #{new_provider_token}"
                 put url, params: params
               end
@@ -333,27 +340,40 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
               context "when the old provider submit a declaration" do
                 before { default_headers["Authorization"] = "Bearer #{token}" }
 
+                let(:declaration_params) do
+                  {
+                    data: {
+                      type: "participant-declaration",
+                      attributes: {
+                        participant_id: early_career_teacher_profile.user_id,
+                        declaration_type: milestone.declaration_type,
+                        declaration_date: declaration_date,
+                        course_identifier: "ecf-induction",
+                        evidence_held: "other",
+                      },
+                    },
+                  }
+                end
                 context "when the declaration is not back dated" do
-                  let(:milestone) { early_career_teacher_profile.schedule.milestones.where("? BETWEEN DATE(start_date) AND DATE(milestone_date)", Time.current).first }
-                  let(:declaration_params) do
-                    {
-                      data: {
-                        type: "participant-declaration",
-                        attributes: {
-                          participant_id: early_career_teacher_profile.user_id,
-                          declaration_type: milestone.declaration_type,
-                          declaration_date: (milestone.start_date + 1.day).rfc3339,
-                          course_identifier: "ecf-induction",
-                          evidence_held: "other",
-                        }
-                      }
-                    }
-                  end
+                  let(:declaration_date) { Date.current.rfc3339 }
 
-                  it "is not allowed" do
+                  it "is is not allowed", :aggregate_failures do
                     post "/api/v1/participant-declarations", params: declaration_params
 
-                    # byebug
+                    expect(response).not_to be_successful
+                    expected_error_message = { "title" => "Bad or missing parameters", "detail" => "translation missing: en.i_need_content_for_this" }
+                    expect(JSON.parse(response.body)["error"]).not_to eq([expected_error_message.to_json])
+                  end
+                end
+
+                context "when the declaration is back dated before the induction_record's end date" do
+                  let(:declaration_date) { (induction_record_end_date - 1.day).rfc3339 }
+
+                  it "is is allowed", :aggregate_failures do
+                    post "/api/v1/participant-declarations", params: declaration_params
+
+                    expect(response).to be_successful
+                    expect(JSON.parse(response.body).dig("data", "attributes", "declaration_date")).to eq(declaration_date)
                   end
                 end
               end

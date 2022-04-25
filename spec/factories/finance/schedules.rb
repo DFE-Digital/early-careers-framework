@@ -2,6 +2,9 @@
 
 FactoryBot.define do
   factory :schedule, class: "Finance::Schedule" do
+    cohort { Cohort.current || create(:cohort, :current) }
+    sequence(:schedule_identifier) { |n| "schedule-identifier-#{n}" }
+
     trait(:with_ecf_milestones) do
       after(:create) do |schedule|
         [
@@ -40,9 +43,6 @@ FactoryBot.define do
         end
       end
     end
-
-    cohort { Cohort.current || create(:cohort, :current) }
-    sequence(:schedule_identifier) { |n| "schedule-identifier-#{n}" }
 
     factory :ecf_schedule, class: "Finance::Schedule::ECF", parent: :schedule do
       name { "ECF September standard 2021" }

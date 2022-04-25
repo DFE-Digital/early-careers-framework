@@ -128,11 +128,6 @@ module RecordDeclarations
       end
     end
 
-    # def validate_participant_state!
-    #   last_state = user_profile.state_at(declaration_date)
-    #   raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
-    # end
-
     def validate_schedule_present
       unless schedule
         errors.add(:schedule, I18n.t(:schedule_missing))
