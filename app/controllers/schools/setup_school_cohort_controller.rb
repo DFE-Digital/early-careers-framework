@@ -18,9 +18,9 @@ module Schools
         store_form_redirect_to_next_step(:change_provider)
       elsif previous_cohort.core_induction_programme?
         # DIY CIP
-        if setup_school_cohort_form_params[:expect_any_ects_choice] == "no"
+        if no_ects_expected
           store_form_redirect_to_next_step :no_expected_ects
-        elsif setup_school_cohort_form_params[:expect_any_ects_choice] == "yes"
+        elsif ects_expected
           store_form_redirect_to_next_step :how_will_you_run_training
         end
       end
@@ -48,6 +48,14 @@ module Schools
     def complete; end
 
   private
+
+    def ects_expected
+      setup_school_cohort_form_params[:expect_any_ects_choice] == "yes"
+    end
+
+    def no_ects_expected
+      setup_school_cohort_form_params[:expect_any_ects_choice] == "no"
+    end
 
     def load_form
       @setup_school_cohort_form = SetupSchoolCohortForm.new(session[:setup_school_cohort_form])
