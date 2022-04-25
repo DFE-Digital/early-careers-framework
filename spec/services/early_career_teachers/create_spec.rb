@@ -133,6 +133,32 @@ RSpec.describe EarlyCareerTeachers::Create do
     end
   end
 
+  context "when a SIT is adding and validating an ECT" do
+    it "does not schedule participant_added email" do
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: Faker::Name.name,
+          school_cohort: school_cohort,
+          sit_validation: true,
+        )
+      }.to_not have_enqueued_mail(ParticipantMailer, :participant_added)
+    end
+  end
+
+  context "when a SIT is adding and cannot validate an ECT" do
+    it "does schedule participant_added email" do
+      expect {
+        described_class.call(
+          email: user.email,
+          full_name: Faker::Name.name,
+          school_cohort: school_cohort,
+          sit_validation: false,
+        )
+      }.to have_enqueued_mail(ParticipantMailer, :participant_added)
+    end
+  end
+
   context "when the user has an active participant profile" do
     before do
       create(:ect_participant_profile, teacher_profile: create(:teacher_profile, user: user))

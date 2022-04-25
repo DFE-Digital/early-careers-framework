@@ -198,18 +198,45 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       create :ecf_schedule
     end
 
-    it "creates new participant record" do
-      expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
-    end
+    context "Participant has been added" do
+      before do
+        allow(ParticipantMailer).to receive(:participant_added).and_call_original
+        allow(ParticipantMailer).to receive(:sit_has_added_and_validated_participant).and_call_original
+      end
 
-    it "creates new validation data" do
-      expect { form.save! }.to change(ECFParticipantValidationData, :count).by 1
-    end
+      context "No DQT record has been returned" do
+        it "creates new participant record" do
+          expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
+        end
 
-    context "no dqt record is present" do
-      it "does not create ecf validation data" do
-        form.dqt_record = nil
-        expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
+        it "does not create ecf validation data" do
+          form.dqt_record = nil
+          expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
+        end
+
+        it "sends a participant the added email when there is no validation data" do
+          form.dqt_record = nil
+          form.save!
+          expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
+          expect(ParticipantMailer).to have_received(:participant_added)
+        end
+      end
+
+      context "Validated against the DQT" do
+        it "creates new participant record" do
+          expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
+        end
+
+        it "creates new validation data" do
+          expect { form.save! }.to change(ECFParticipantValidationData, :count).by 1
+        end
+
+        it "sends a participant the added and validated" do
+          form.save!
+          profile = ECFParticipantValidationData.find_by(trn: form.trn).participant_profile
+          expect(ParticipantMailer).not_to have_received(:participant_added)
+          expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant).with(participant_profile: profile, school_name: school_cohort.school.name)
+        end
       end
     end
   end
