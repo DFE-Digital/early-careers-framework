@@ -10,6 +10,12 @@ class ParticipantMailer < ApplicationMailer
     mentor_fip: "ba3d4caf-5ef8-4a14-9e79-b7719780da09",
     sit_mentor_cip: "7aa80a9c-e486-42e8-92c8-7f970459d37d",
     sit_mentor_fip: "0b7f850f-f26a-4e62-9fc5-17fbd8286e49",
+    fip_preterm_reminder: "12969797-c110-436d-b10b-7f7d08d4d9df",
+    cip_preterm_reminder: "623cb545-1bc4-4407-94a1-474e2a080e39",
+    ect_fip_added_and_validated: "93fba542-f118-4855-9509-83583f251eab",
+    mentor_fip_added_and_validated: "f71fa01a-ecc2-49e5-999b-48ff0070e13a",
+    ect_cip_added_and_validated: "b0d58248-c49e-4ec6-bca2-2c4cf151c421",
+    mentor_cip_added_and_validated: "1396072b-4dc7-473d-aef7-22e674e42874",
     preterm_reminder: "3bece922-871e-49a9-88a1-83eeb8821ab1",
   }.freeze
 
@@ -75,12 +81,30 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
+  def sit_has_added_and_validated_participant(participant_profile:, school_name:)
+    template_mail(
+      PARTICIPANT_TEMPLATES[sit_validation_template participant_profile],
+      to: participant_profile.user.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        ppt_name: participant_profile.user.full_name,
+        school: school_name,
+      },
+    ).tag(:sit_has_added_and_validated_participant).associate_with(participant_profile, as: :participant_profile)
+  end
+
 private
 
   def template_type_for(profile)
     type = profile.participant_type
     type = :sit_mentor if type == :mentor && profile.user.induction_coordinator?
     "#{type}_#{profile.school_cohort.cip? ? 'cip' : 'fip'}".to_sym
+  end
+
+  def sit_validation_template(profile)
+    type_and_programme = template_type_for profile
+    "#{type_and_programme}_added_and_validated".to_sym
   end
 
   def what_each_person_does_url

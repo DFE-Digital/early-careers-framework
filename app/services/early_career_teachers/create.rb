@@ -40,7 +40,7 @@ module EarlyCareerTeachers
         end
       end
 
-      unless year_2020
+      unless year_2020 || sit_validation
         ParticipantMailer.participant_added(participant_profile: profile).deliver_later
         profile.update_column(:request_for_details_sent_at, Time.zone.now)
         ParticipantDetailsReminderJob.schedule(profile)
@@ -51,7 +51,7 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :start_term, :school_cohort, :mentor_profile_id, :year_2020, :start_date
+    attr_reader :full_name, :email, :start_term, :school_cohort, :mentor_profile_id, :year_2020, :start_date, :sit_validation
 
     def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_term: nil, start_date: nil, year_2020: false)
       @full_name = full_name
@@ -61,6 +61,7 @@ module EarlyCareerTeachers
       @mentor_profile_id = mentor_profile_id
       @start_date = start_date
       @year_2020 = year_2020
+      @sit_validation = sit_validation
     end
 
     def ect_attributes

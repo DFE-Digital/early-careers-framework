@@ -262,6 +262,7 @@ module Schools
     end
 
     def save!
+      profile = nil
       ActiveRecord::Base.transaction do
         profile = creators[participant_type].call(
           full_name: full_name,
@@ -270,10 +271,15 @@ module Schools
           school_cohort: school_cohort,
           mentor_profile_id: mentor&.mentor_profile&.id,
           start_date: start_date,
+          sit_validation: dqt_record.present? ? true : false,
         )
         store_validation_result!(profile) if dqt_record.present?
-        profile
       end
+
+      participant_validation_record = validation_record(profile)
+
+      send_added_and_validated_email(profile) if profile && participant_validation_record
+      profile
     end
 
     def store_validation_result!(profile)
@@ -286,6 +292,14 @@ module Schools
           full_name: full_name,
         },
       )
+    end
+
+    def send_added_and_validated_email(profile)
+      ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
+    end
+
+    def validation_record(profile)
+      ECFParticipantValidationData.find_by(participant_profile: profile)
     end
   end
 end
