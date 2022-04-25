@@ -4,7 +4,7 @@ module Schools
   class SetupSchoolCohortController < ::Schools::BaseController
     before_action :load_form
     before_action :school
-    before_action :validate_request_or_render, except: %i[]
+    before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
 
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
@@ -25,7 +25,9 @@ module Schools
       end
     end
 
-    def no_expected_ects; end
+    def no_expected_ects
+      reset_form_data
+    end
 
     # cip
     def how_will_you_run_training
