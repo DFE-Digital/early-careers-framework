@@ -96,6 +96,20 @@ RSpec.describe "Admin::Participants", type: :request do
       expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
       expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
     end
+
+    context "when the participant has a withdrawn induction record" do
+      before do
+        ect_profile.current_induction_record.withdrawing!
+      end
+
+      it "shows the correct participant" do
+        get "/admin/participants/#{ect_profile.id}"
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+        expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+        expect(assigns(:latest_induction_record)).not_to be_nil
+      end
+    end
   end
 
   describe "GET /admin/participants/:participant_id/remove" do
