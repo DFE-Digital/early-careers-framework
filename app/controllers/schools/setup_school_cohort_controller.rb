@@ -53,6 +53,12 @@ module Schools
 
     def complete; end
 
+    def save_programme
+      save_school_choice!
+
+      redirect_to training_confirmation_schools_setup_school_cohort_path
+    end
+
   private
 
     def ects_expected
@@ -84,7 +90,7 @@ module Schools
     end
 
     def validate_request_or_render
-      render unless request.put? && step_valid?
+      render unless (request.post? || request.put?) && step_valid?
     end
 
     def store_form_redirect_to_next_step(step)
@@ -102,6 +108,11 @@ module Schools
 
     def school
       @school ||= active_school
+    end
+
+    def save_school_choice!
+      Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+                                                  programme_choice: @setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
     end
 
     def school_cohort
