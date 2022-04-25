@@ -26,6 +26,11 @@ module Schools
     end
 
     def no_expected_ects
+      unless school_cohort.persisted?
+        school_cohort.induction_programme_choice = :not_yet_known
+        school_cohort.save!
+      end
+
       reset_form_data
     end
 
@@ -97,6 +102,14 @@ module Schools
 
     def school
       @school ||= active_school
+    end
+
+    def school_cohort
+      @school_cohort ||= school.school_cohorts.find_or_initialize_by(cohort: cohort)
+    end
+
+    def cohort
+      @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
     end
   end
 end
