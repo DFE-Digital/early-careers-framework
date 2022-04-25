@@ -55,12 +55,11 @@ module Schools
 
     def how_will_you_run_training_choices
       [
-        OpenStruct.new(id: "fip", name: "Use a training provider, funded by the DfE"),
-        OpenStruct.new(id: "cip", name: "Deliver your own programme using DfE-accredited materials"),
-        OpenStruct.new(id: "diy", name: "Design and deliver you own programme based on the early career framework (ECF)")
+        OpenStruct.new(id: "full_induction_programme", name: "Use a training provider, funded by the DfE"),
+        OpenStruct.new(id: "core_induction_programme", name: "Deliver your own programme using DfE-accredited materials"),
+        OpenStruct.new(id: "design_our_own", name: "Design and deliver you own programme based on the early career framework (ECF)"),
       ]
     end
-
 
     def using_schools_programme?
       same_programme || switch_to_schools_programme?

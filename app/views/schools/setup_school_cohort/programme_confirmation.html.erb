@@ -5,7 +5,7 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-l">Are you sure this is how you want to run training?</h1>
 
-    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'fip' %>
+    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'full_induction_programme' %>
       <p class="govuk-body">You've chosen to use a training provider, funded by DfE.</p>
 
       <p class="govuk-body">You'll need to:</p>
@@ -13,7 +13,7 @@
         <li>choose a training provider</li>
         <li>add your ECTs and mentors</li>
       </ul>
-    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'cip' %>
+    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'core_induction_programme' %>
       <p class="govuk-body">You've chosen to deliver your own programme using DfE accredited materials.</p>
 
       <p class="govuk-body">You'll need to:</p>
@@ -23,7 +23,7 @@
       </ul>
     <% end %>
 
-    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'diy' %>
+    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'design_our_own' %>
       <p class="govuk-body">
         You're choosing to design and deliver your own programme based on the early career
         framework (ECF).
@@ -39,6 +39,8 @@
       </p>
     <% end %>
 
-    <%= govuk_link_to "Confirm", training_confirmation_schools_setup_school_cohort_path, class: "govuk-button govuk-!-margin-top-8" %>
+    <%= form_for @setup_school_cohort_form, url: { action: :save_programme }, method: :post do |f| %>
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
   </div>
 </div>
