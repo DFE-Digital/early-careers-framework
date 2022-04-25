@@ -27,7 +27,7 @@ module Schools
 
     def no_expected_ects
       unless school_cohort.persisted?
-        school_cohort.induction_programme_choice = :not_yet_known
+        school_cohort.induction_programme_choice = :no_early_career_teachers
         school_cohort.save!
       end
 
