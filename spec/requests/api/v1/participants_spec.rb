@@ -342,7 +342,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
                         attributes: {
                           participant_id: early_career_teacher_profile.user_id,
                           declaration_type: milestone.declaration_type,
-                          delcaration_date: milestone.start_date + 1.day,
+                          declaration_date: (milestone.start_date + 1.day).rfc3339,
                           course_identifier: "ecf-induction",
                           evidence_held: "other",
                         }
