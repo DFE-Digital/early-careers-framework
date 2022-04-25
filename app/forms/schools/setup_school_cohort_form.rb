@@ -33,7 +33,6 @@ module Schools
       ]
     end
 
-
     def using_schools_programme?
       same_programme || switch_to_schools_programme?
     end
