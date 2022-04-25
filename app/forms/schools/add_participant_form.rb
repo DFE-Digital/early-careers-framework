@@ -94,7 +94,7 @@ module Schools
                 presence: { message: I18n.t("errors.email_address.blank") },
                 notify_email: { allow_blank: true }
 
-      before_complete { remove_trn_and_dob unless trn_known? }
+      before_complete { reset_dqt_details unless trn_known? }
       next_step do
         if email_already_taken?
           :email_taken
@@ -199,9 +199,10 @@ module Schools
       full_name.present? && trn.present? && dob.present?
     end
 
-    def remove_trn_and_dob
+    def reset_dqt_details
       self.dob = nil
       self.trn = nil
+      self.dqt_record = nil
     end
 
     def email_already_taken?
