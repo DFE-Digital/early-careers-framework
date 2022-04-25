@@ -42,7 +42,7 @@ module ApplicationHelper
       return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.current.start_year) unless school.chose_programme?(Cohort.current)
     end
 
-    schools_dashboard_path(school_id: school.slug)
+    school_dashboard_with_tab_path(school)
   end
 
   def participant_start_path(user)
@@ -82,5 +82,17 @@ private
     return participants_validation_path unless profile&.completed_validation_wizard?
 
     induction_coordinator_dashboard_path(user)
+  end
+
+  def school_dashboard_with_tab_path(school)
+    current_cohort = Cohort.current
+    registration_cohort = Cohort.active_registration_cohort
+    default_cohort = if current_cohort != registration_cohort && school.school_cohorts.where(cohort: registration_cohort).exists?
+                       current_cohort
+                     else
+                       registration_cohort
+                     end
+
+    schools_dashboard_path(school_id: school.slug, anchor: TabLabelDecorator.new(default_cohort.description).parameterize)
   end
 end
