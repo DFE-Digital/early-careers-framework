@@ -64,8 +64,14 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
           and_sit_at_pupil_premium_school_reported_programme "New SIT", "CIP"
         end
 
-        and_sit_reported_participant "Original SIT", "the Participant", scenario.participant_email, scenario.participant_type
-        and_participant_has_completed_registration "the Participant", scenario.participant_type
+        and_sit_reported_participant "Original SIT",
+                                     "the Participant",
+                                     scenario.participant_email,
+                                     scenario.participant_type
+        and_participant_has_completed_registration "the Participant",
+                                                   scenario.participant_trn,
+                                                   scenario.participant_dob,
+                                                   scenario.participant_type
       end
 
       context when_context(scenario) do
@@ -74,9 +80,18 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
             and_lead_provider_has_made_training_declaration "Original Lead Provider", scenario.participant_type, "the Participant", declaration_type
           end
 
-          and_lead_provider_defers_participant "Original Lead Provider", "the Participant", scenario.participant_email, scenario.participant_type
+          and_lead_provider_defers_participant "Original Lead Provider",
+                                               "the Participant",
+                                               scenario.participant_email,
+                                               scenario.participant_type
 
-          when_school_takes_on_the_deferred_participant "New SIT", "the Participant", scenario.participant_email, scenario.participant_type, scenario.new_programme
+          when_school_takes_on_the_deferred_participant "New SIT",
+                                                        "the Participant",
+                                                        scenario.participant_email,
+                                                        scenario.participant_trn,
+                                                        scenario.participant_dob,
+                                                        "#{scenario.original_programme}>#{scenario.new_programme}",
+                                                        scenario.transfer
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
@@ -92,13 +107,25 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
         context "Then the Original SIT" do
           subject(:original_sit) { "Original SIT" }
 
-          it { should_not find_participant_details_in_school_induction_portal "the Participant" }
+          it do
+            is_expected.to_not find_participant_details_in_school_induction_portal "the Participant",
+                                                                                   scenario.participant_email,
+                                                                                   scenario.participant_type,
+                                                                                   scenario.new_school_status,
+                                                                                   is_being_trained: false
+          end
         end
 
         context "Then the New SIT" do
           subject(:new_sit) { "New SIT" }
 
-          it { should find_participant_details_in_school_induction_portal "the Participant", scenario.new_school_status }
+          it do
+            is_expected.to find_participant_details_in_school_induction_portal "the Participant",
+                                                                               scenario.participant_email,
+                                                                               scenario.participant_type,
+                                                                               scenario.new_school_status,
+                                                                               is_being_trained: true
+          end
 
           # what are the onward actions available to the new school - can they do them ??
         end
@@ -110,30 +137,36 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
             case scenario.see_original_details
             when :ALL
               it {
-                should find_participant_details_in_ecf_participants_endpoint "the Participant",
-                                                                             scenario.participant_email,
-                                                                             scenario.participant_type,
-                                                                             scenario.prior_participant_status,
-                                                                             scenario.prior_training_status
+                is_expected.to find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                                     scenario.participant_email,
+                                                                                     scenario.participant_trn,
+                                                                                     "New SIT's School",
+                                                                                     scenario.participant_type,
+                                                                                     scenario.prior_participant_status,
+                                                                                     scenario.prior_training_status
               }
             when :OBFUSCATED
-              it.pending do
-                should find_participant_details_in_ecf_participants_endpoint "the Participant",
-                                                                             nil,
-                                                                             scenario.participant_type
+              it "is expected to be able to retrieve the obfuscated participant details for \"the Participant\" from the ecf participants endpoint", skip: "Not yet implemented" do
+                is_expected.to find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                                     nil,
+                                                                                     scenario.participant_trn,
+                                                                                     "New SIT's School",
+                                                                                     scenario.participant_type
               end
             else
               it {
-                should_not find_participant_details_in_ecf_participants_endpoint "the Participant",
-                                                                                 scenario.participant_email,
-                                                                                 scenario.participant_type
+                is_expected.to_not find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                                         scenario.participant_email,
+                                                                                         scenario.participant_trn,
+                                                                                         "New SIT's School",
+                                                                                         scenario.participant_type
               }
             end
 
             if scenario.see_original_declarations.any?
-              it { should find_training_declarations_in_ecf_declarations_endpoint "the Participant", scenario.see_original_declarations }
+              it { is_expected.to find_training_declarations_in_ecf_declarations_endpoint "the Participant", scenario.see_original_declarations }
             elsif scenario.all_declarations.any?
-              it { should_not find_training_declarations_in_ecf_declarations_endpoint "the Participant", scenario.all_declarations }
+              it { is_expected.to_not find_training_declarations_in_ecf_declarations_endpoint "the Participant", scenario.all_declarations }
             end
 
             # previous lead provider can void ??
@@ -147,11 +180,13 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
             case scenario.see_new_details
             when :ALL
               it {
-                should find_participant_details_in_ecf_participants_endpoint "the Participant",
-                                                                             scenario.participant_email,
-                                                                             scenario.participant_type,
-                                                                             scenario.new_participant_status,
-                                                                             scenario.new_training_status
+                is_expected.to find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                                     scenario.participant_email,
+                                                                                     scenario.participant_trn,
+                                                                                     "New SIT's School",
+                                                                                     scenario.participant_type,
+                                                                                     scenario.new_participant_status,
+                                                                                     scenario.new_training_status
               }
             when :not_applicable
               # not applicable
@@ -168,8 +203,9 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
             end
 
             if scenario.see_new_declarations.any?
-              # TODO: make prior declarations available to the different lead provider
-              it.pending { should find_training_declarations_in_ecf_declarations_endpoint "the Participant", scenario.see_new_declarations }
+              it "should make prior declarations available to the new lead provider when they are different", skip: "Not yet implemented" do
+                expect(subject).to find_training_declarations_in_ecf_declarations_endpoint "the Participant", scenario.see_new_declarations
+              end
             end
           end
         end
@@ -177,14 +213,20 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
         context "Then other Lead Providers" do
           subject(:another_lead_provider) { "Another Lead Provider" }
 
-          it { should_not find_participant_details_in_ecf_participants_endpoint "the Participant", scenario.participant_email, scenario.participant_type }
-          it { should find_training_declarations_in_ecf_declarations_endpoint "the Participant", [] }
+          it do
+            is_expected.to_not find_participant_details_in_ecf_participants_endpoint "the Participant",
+                                                                                     scenario.participant_email,
+                                                                                     scenario.participant_trn,
+                                                                                     "Original SIT's School",
+                                                                                     scenario.participant_type
+          end
+          it { is_expected.to find_training_declarations_in_ecf_declarations_endpoint "the Participant", [] }
         end
 
         context "Then the Support for Early Career Teachers Service" do
           subject(:support_ects) { "Support for Early Career Teachers Service" }
 
-          it { should find_participant_details_in_the_ecf_users_endpoint "the Participant", scenario.participant_email, scenario.new_programme, scenario.participant_type }
+          it { is_expected.to find_participant_details_in_the_ecf_users_endpoint "the Participant", scenario.participant_email, scenario.new_programme, scenario.participant_type }
         end
 
         context "Then a Teacher CPD Finance User" do
@@ -214,13 +256,15 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
         context "Then a Teacher CPD Admin User" do
           subject(:admin_user) { create :user, :admin }
 
-          it { should find_participant_details_in_support_portal "the Participant", "New SIT" }
+          it { is_expected.to find_participant_details_in_support_portal "the Participant", "New SIT" }
         end
 
         context "Then the Analytics Dashboards" do
           subject(:analytics_user) { "Analysts" }
 
-          it.pending { should report_correct_participant_details "the Participant" }
+          it "is expected to report the correct participant details for \"the Participant\"", skip: "Not yet implemented" do
+            expect(subject).to report_correct_participant_details "the Participant"
+          end
         end
       end
     end

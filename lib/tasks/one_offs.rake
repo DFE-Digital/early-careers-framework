@@ -29,4 +29,24 @@ namespace :one_offs do
       end
     end
   end
+
+  desc "attach elibible declaration to next output statement"
+  task attach_eligible_declaration_to_next_output_statement: :environment do
+    CpdLeadProvider.find_each do |cpd_lead_provider|
+      if (lead_provider = cpd_lead_provider.lead_provider)
+        pp "ECF: #{cpd_lead_provider.lead_provider.name} -> #{lead_provider.next_output_fee_statement.name}"
+        pp cpd_lead_provider.lead_provider.participant_declarations.eligible.where(statement_id: nil).count
+        cpd_lead_provider.lead_provider.participant_declarations.eligible.where(statement_id: nil).update_all(statement_id: lead_provider.next_output_fee_statement.id)
+      end
+      if (npq_lead_provider = cpd_lead_provider.npq_lead_provider)
+        pp "NPQ: #{cpd_lead_provider.npq_lead_provider.name} -> #{npq_lead_provider.next_output_fee_statement.name}"
+        pp cpd_lead_provider.npq_lead_provider.participant_declarations.eligible.where(statement_id: nil).count
+        npq_lead_provider
+          .participant_declarations
+          .eligible
+          .where(statement_id: nil)
+          .update_all(statement_id: npq_lead_provider.next_output_fee_statement.id)
+      end
+    end
+  end
 end

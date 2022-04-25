@@ -39,6 +39,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
+        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
       end
 
       it "creates a declaration record and declaration attempt and returns id when successful" do
@@ -135,18 +136,16 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         let(:transfer_lp_token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: new_programme.partnership.lead_provider.cpd_lead_provider) }
         let(:transfer_lp_bearer_token) { "Bearer #{transfer_lp_token}" }
 
-        let(:url) { "/api/v1/participants/ecf/#{ect_profile.user.id}/withdraw" }
-        let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
-
         before do
           induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
           Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
         end
 
-        context "if the participant has been withdrawn" do
-          before do
-            put url, params: build_params(params)
-          end
+        it "is possible for new lead provider to post a declaration" do
+          default_headers[:Authorization] = transfer_lp_bearer_token
+
+          updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+          post "/api/v1/participant-declarations", params: build_params(updated_params)
 
           it "is possible for new lead provider to post a declaration" do
             default_headers[:Authorization] = transfer_lp_bearer_token
@@ -207,6 +206,19 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             expect { get "/api/v1/participant-declarations/#{ect_profile.participant_declarations.first.id}" }
               .to raise_error(ActiveRecord::RecordNotFound)
           end
+        end
+
+        it "is not possible for previous lead provider to view future declarations" do
+          default_headers[:Authorization] = transfer_lp_bearer_token
+
+          updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+          post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+          expect(response.status).to eq 200
+
+          default_headers[:Authorization] = bearer_token
+          expect { get "/api/v1/participant-declarations/#{ect_profile.participant_declarations.first.id}" }
+            .to raise_error(ActiveRecord::RecordNotFound)
         end
       end
 

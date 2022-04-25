@@ -35,14 +35,33 @@ FactoryBot.define do
       contract.lead_provider = evaluator.lead_provider
     end
 
-    after(:create) do |contract|
-      create(:participant_band, :band_a, { call_off_contract: contract })
-      create(:participant_band, :band_b, { call_off_contract: contract })
-      if contract.revised_target.present?
-        create(:participant_band, :band_c_with_additional, { max: contract.recruitment_target, call_off_contract: contract })
-        create(:participant_band, :additional, { min: contract.recruitment_target + 1, max: contract.revised_target, call_off_contract: contract })
-      else
-        create(:participant_band, :band_c, { call_off_contract: contract })
+    transient do
+      with_minimal_bands { false }
+    end
+
+    trait :with_minimal_bands do
+      transient do
+        with_minimal_bands { true }
+      end
+
+      after(:create) do |contract, _evaluator|
+        create(:participant_band, call_off_contract: contract, max: 2, per_participant: 400)
+        create(:participant_band, call_off_contract: contract, min: 3, max: 4, per_participant: 300)
+        create(:participant_band, call_off_contract: contract, min: 5, max: 6, per_participant: 200)
+        create(:participant_band, call_off_contract: contract, min: 7, max: 8, per_participant: 100)
+      end
+    end
+
+    after(:create) do |contract, evaluator|
+      unless evaluator.with_minimal_bands
+        create(:participant_band, :band_a, { call_off_contract: contract })
+        create(:participant_band, :band_b, { call_off_contract: contract })
+        if contract.revised_target.present?
+          create(:participant_band, :band_c_with_additional, { max: contract.recruitment_target, call_off_contract: contract })
+          create(:participant_band, :additional, { min: contract.recruitment_target + 1, max: contract.revised_target, call_off_contract: contract })
+        else
+          create(:participant_band, :band_c, { call_off_contract: contract })
+        end
       end
     end
   end

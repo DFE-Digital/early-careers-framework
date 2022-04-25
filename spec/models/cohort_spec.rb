@@ -3,6 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
+  let!(:cohort_2021) { Cohort.create!(start_year: 2021) }
+  let!(:cohort_2022) { Cohort.create!(start_year: 2022) }
+
   describe "#schedules" do
     subject { described_class.create!(start_year: 3000) }
 
@@ -13,17 +16,27 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
-  it "can be created" do
-    expect {
-      Cohort.create(start_year: 2021)
-    }.to change { Cohort.count }.by(1)
-  end
-
   describe ".current" do
     it "returns the 2021 cohort" do
-      cohort_2021 = Cohort.create!(start_year: 2021)
-
       expect(Cohort.current).to eq cohort_2021
+    end
+  end
+
+  describe ".next" do
+    context "when the feature flag is deactivated" do
+      it "returns the 2021 cohort" do
+        FeatureFlag.deactivate(:multiple_cohorts)
+
+        expect(Cohort.next).to eq cohort_2021
+      end
+    end
+
+    context "when the feature flag is activated" do
+      it "returns the 2022 cohort" do
+        FeatureFlag.activate(:multiple_cohorts)
+
+        expect(Cohort.next).to eq cohort_2022
+      end
     end
   end
 

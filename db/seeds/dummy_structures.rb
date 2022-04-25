@@ -53,6 +53,27 @@ end
 
 school_three_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school_three, induction_programme_choice: "full_induction_programme")
 
+LeadProvider.find_each do |lead_provider|
+  Partnership.find_or_create_by!(
+    cohort: school_cohort.cohort,
+    delivery_partner: lead_provider.delivery_partners.first,
+    school: school_cohort.school,
+    lead_provider: lead_provider,
+  )
+  Partnership.find_or_create_by!(
+    cohort: school_two_cohort.cohort,
+    delivery_partner: lead_provider.delivery_partners.first,
+    school: school_two_cohort.school,
+    lead_provider: lead_provider,
+  )
+  Partnership.find_or_create_by!(
+    cohort: school_three_cohort.cohort,
+    delivery_partner: lead_provider.delivery_partners.first,
+    school: school_three_cohort.school,
+    lead_provider: lead_provider,
+  )
+end
+
 User.find_or_create_by!(email: "school-leader@example.com") do |user|
   user.update!(full_name: "InductionTutor User")
   InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
@@ -77,11 +98,24 @@ end
 
 teacher_profile = user.teacher_profile || user.create_teacher_profile
 
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+partnership = Partnership.find_or_create_by!(
+  cohort: school_cohort.cohort,
+  delivery_partner: school_cohort.school.delivery_partner_for(school_cohort.cohort.start_year),
+  school: school_cohort.school,
+  lead_provider: school_cohort.lead_provider,
+)
+induction_programme = InductionProgramme.find_or_create_by!(
+  school_cohort: school_cohort,
+  partnership: partnership,
+  training_programme: "full_induction_programme",
+)
+
+profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = school_cohort
   mentor_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Ambition Institute")
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 end
 
 user = User.find_or_create_by!(email: "rp-mentor-edt@example.com") do |mentor_user|
@@ -95,6 +129,7 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "Education Development Trust")
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 end
 
 user = User.find_or_create_by!(email: "rp-mentor-ucl@example.com") do |mentor_user|
@@ -107,6 +142,7 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.core_induction_programme = CoreInductionProgramme.find_by(name: "UCL Institute of Education")
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 end
 
 user = User.find_or_create_by!(email: "rp-ect-ambition@example.com") do |ect_user|
@@ -120,6 +156,7 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   ect_profile.mentor_profile = user.mentor_profile
   ect_profile.schedule = Finance::Schedule::ECF.default
   ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 end
 
 user = User.find_or_create_by!(email: "rp-ect-edt@example.com") do |ect_user|
@@ -133,6 +170,7 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   ect_profile.mentor_profile = user.mentor_profile
   ect_profile.schedule = Finance::Schedule::ECF.default
   ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 end
 
 user = User.find_or_create_by!(email: "rp-ect-ucl@example.com") do |ect_user|
@@ -146,6 +184,7 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   ect_profile.mentor_profile = user.mentor_profile
   ect_profile.schedule = Finance::Schedule::ECF.default
   ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
 end
 
 # populate change of circumstances

@@ -309,11 +309,6 @@ module ValidTestDataGenerator
       user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
       identity = Identity::Create.call(user: user, origin: :npq)
 
-      december_statement = Finance::Statement::NPQ.find_by(
-        cpd_lead_provider: lead_provider.cpd_lead_provider,
-        name: "December 2021",
-      )
-
       npq_application = NPQApplication.create!(
         active_alert: "",
         date_of_birth: Date.new(1990, 1, 1),
@@ -347,7 +342,6 @@ module ValidTestDataGenerator
       return if [true, false].sample
 
       participant_declaration.make_payable!
-      participant_declaration.update!(statement: december_statement)
     end
 
     def accept_application(npq_application)

@@ -17,11 +17,14 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   let(:npq_course_leading_teaching_development) { create(:npq_course, identifier: npq_leading_teaching_development_contract.course_identifier, name: "Leading Teaching Development") }
 
   let!(:statement) do
-    create(:npq_statement,
-           name: "January 2022",
-           deadline_date: Date.new(2022, 1, 31),
-           payment_date: Date.new(2022, 2, 16),
-           cpd_lead_provider: cpd_lead_provider)
+    create(
+      :npq_statement,
+      name: "January 2022",
+      deadline_date: Date.new(2022, 1, 31),
+      payment_date: Date.new(2022, 2, 16),
+      cpd_lead_provider: cpd_lead_provider,
+      contract_version: npq_leading_teaching_contract.version,
+    )
   end
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
@@ -159,7 +162,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def then_i_should_see_correct_output_payment_breakdown
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_leading_behaviour_culture_contract))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(output_payment_per_participant))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(output_payment_subtotal))
     end
@@ -184,7 +187,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       expect(page).to have_content("Started")
       expect(page).to have_content(total_participants_for(npq_specialist_schedule.milestones.first))
       expect(page).to have_content("Total declarations")
-      expect(page).to have_content(total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+      expect(page).to have_content(total_declarations(npq_leading_behaviour_culture_contract))
     end
   end
 
@@ -240,7 +243,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def output_payment
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: total_declarations(npq_leading_behaviour_culture_contract))
   end
 
   def service_fees

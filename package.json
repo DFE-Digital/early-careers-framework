@@ -11,7 +11,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/runtime": "^7.17.2",
     "@sentry/browser": "^6.19.3",
-    "@sentry/tracing": "^6.19.3",
+    "@sentry/tracing": "^6.19.6",
     "accessible-autocomplete": "^2.0.3",
     "babel-loader": "^8.2.3",
     "babel-plugin-macros": "^3.1.0",
@@ -34,7 +34,7 @@
     "whatwg-fetch": "^3.6.1"
   },
   "devDependencies": {
-    "@percy/cli": "^1.0.1",
+    "@percy/cli": "^1.0.8",
     "@percy/cypress": "^3.1.1",
     "axe-core": "^4.3.5",
     "cypress": "9.5.3",
@@ -46,7 +46,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "prettier": "^2.6.2",
     "webpack-dev-server": "^4.7.4"

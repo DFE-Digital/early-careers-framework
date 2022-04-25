@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "tasks/valid_test_data_generator"
+require_relative "call_off_contracts"
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
 cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
@@ -213,58 +214,7 @@ ProviderRelationship.find_or_create_by!(
   cohort: Cohort.current,
 )
 
-# ECF contracts
-
-example_contract_data = {
-  "uplift_target": 0.33,
-  "uplift_amount": 100,
-  "recruitment_target": 4500,
-  "revised_target": (4500 * 1.02).to_i,
-  "set_up_fee": 149_861,
-  "band_a": {
-    "max": 2000,
-    "per_participant": 995,
-  },
-  "band_b": {
-    "min": 2001,
-    "max": 4000,
-    "per_participant": 979,
-  },
-  "band_c": {
-    "min": 4001,
-    "max": 4500,
-    "per_participant": 966,
-  },
-  "band_d": {
-    "min": 4501,
-    "max": 4590,
-    "per_participant": 966,
-  },
-}
-
-LeadProvider.all.each do |lp|
-  sample_call_off_contract = CallOffContract.find_or_create_by!(
-    lead_provider: lp,
-    version: example_contract_data[:version] || "0.0.1",
-    uplift_target: example_contract_data[:uplift_target],
-    uplift_amount: example_contract_data[:uplift_amount],
-    recruitment_target: example_contract_data[:recruitment_target],
-    revised_target: example_contract_data[:revised_target],
-    set_up_fee: example_contract_data[:set_up_fee],
-    raw: example_contract_data.to_json,
-    cohort: cohort_2021,
-  )
-
-  %i[band_a band_b band_c band_d].each do |band|
-    src = example_contract_data[band]
-    ParticipantBand.find_or_create_by!(
-      call_off_contract: sample_call_off_contract,
-      min: src[:min],
-      max: src[:max],
-      per_participant: src[:per_participant],
-    )
-  end
-end
+Seeds::CallOffContracts.new.call
 
 npq_specifics = [
   {
@@ -330,6 +280,78 @@ npq_specifics = [
   {
     version: "0.0.1",
     recruitment_target: 400,
+    course_identifier: "npq-executive-leadership",
+    number_of_payment_periods: 4,
+    per_participant: 4099.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 24,
+  },
+
+  # Version 0.0.2
+  {
+    version: "0.0.2",
+    recruitment_target: 100,
+    course_identifier: "npq-additional-support-offer",
+    number_of_payment_periods: 4,
+    per_participant: 800.00,
+    service_fee_percentage: 0,
+    output_payment_percentage: 100,
+    service_fee_installments: 18,
+  },
+  {
+    version: "0.0.2",
+    recruitment_target: 1500,
+    course_identifier: "npq-leading-teaching",
+    number_of_payment_periods: 3,
+    per_participant: 902.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 18,
+  },
+  {
+    version: "0.0.2",
+    recruitment_target: 750,
+    course_identifier: "npq-leading-behaviour-culture",
+    number_of_payment_periods: 3,
+    per_participant: 902.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 18,
+  },
+  {
+    version: "0.0.2",
+    recruitment_target: 1500,
+    course_identifier: "npq-leading-teaching-development",
+    number_of_payment_periods: 3,
+    per_participant: 902.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 18,
+  },
+  {
+    version: "0.0.2",
+    recruitment_target: 1250,
+    course_identifier: "npq-senior-leadership",
+    number_of_payment_periods: 4,
+    per_participant: 1149.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 24,
+  },
+  {
+    version: "0.0.2",
+    recruitment_target: 750,
+    course_identifier: "npq-headship",
+    number_of_payment_periods: 4,
+    per_participant: 1985.00,
+    service_fee_percentage: 40,
+    output_payment_percentage: 60,
+    service_fee_installments: 30,
+  },
+  {
+    version: "0.0.2",
+    recruitment_target: 100,
     course_identifier: "npq-executive-leadership",
     number_of_payment_periods: 4,
     per_participant: 4099.00,
@@ -587,50 +609,54 @@ user = User.find_or_create_by!(email: "cip-ect@example.com") do |u|
 end
 
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
   ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
 end
+Induction::Enrol.call(participant_profile: profile, induction_programme: profile.school_cohort.induction_programmes.first)
 
 # CIP mentor
 user = User.find_or_create_by!(email: "cip-mentor@example.com") do |u|
   u.full_name = "CIP Mentor"
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000201").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
 end
+Induction::Enrol.call(participant_profile: profile, induction_programme: profile.school_cohort.induction_programmes.first)
 
 # CIP mentor already doing an NPQ with the same email
 user = User.find_or_create_by!(email: "cip-mentor-npq@example.com") do |u|
   u.full_name = "CIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
-  profile.trn = "1162128"
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+  p.trn = "1162128"
 end
 ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000202").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+  Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-  profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+  p.schedule = Finance::Schedule::NPQSpecialist.default
+  p.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 
 # CIP mentor already doing an NPQ with a different email
 user = User.find_or_create_by!(email: "cip-mentor-npq-other-email@example.com") do |u|
   u.full_name = "CIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
-  profile.trn = "2631405"
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+  p.trn = "2631405"
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-  profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+  p.schedule = Finance::Schedule::NPQSpecialist.default
+  p.participant_identity = Identity::Create.call(user: user, origin: :npq)
 end
 
 user = User.find_or_create_by!(email: "cip-mentor2@example.com") do |u|
@@ -641,14 +667,16 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.school_cohort = School.find_by(urn: "000203").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+  Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
 
 # FIP mentor already mentoring at another school with another email
 user = User.find_or_create_by!(email: "cip-mentor-another-school@example.com") do |u|
   u.full_name = "CIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
-  profile.trn = "1835206"
+teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+  p.trn = "1835206"
 end
 participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000204").school_cohorts.find_by(cohort: Cohort.current)
@@ -669,6 +697,8 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.school_cohort = School.find_by(urn: "000205").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+  Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
 
 # SIT also a mentor
@@ -678,6 +708,8 @@ ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) 
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
   mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
+  Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
 
 # Extra participant records
@@ -689,6 +721,8 @@ ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do 
   ect_profile.school_cohort = School.find_by(urn: "000206").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
   ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
+  Induction::Enrol.call(participant_profile: ect_profile, induction_programme: ect_profile.school_cohort.induction_programmes.first)
 end
 
 def create_fip_ect_with_eligibility(type, *args)
@@ -732,6 +766,7 @@ def create_participant_with_eligibility(urn, name, participant_class, options = 
     }
 
     ECFParticipantEligibility.find_or_create_by!(default_options.merge(options))
+    Induction::Enrol.call(participant_profile: profile, induction_programme: profile.school_cohort.induction_programmes.first)
   end
 end
 
@@ -739,24 +774,26 @@ user = User.find_or_create_by!(email: "cip-ect-email-sent@example.com") do |u|
   u.full_name = "CIP ECT Email Sent"
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-  profile.request_for_details_sent_at = Time.zone.now
-  profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
-  profile.schedule = Finance::Schedule::ECF.default
-  profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
-  Email.create!(tags: [:request_for_details], status: "delivered").create_association_with(profile)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+  p.request_for_details_sent_at = Time.zone.now
+  p.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
+  p.schedule = Finance::Schedule::ECF.default
+  p.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Email.create!(tags: [:request_for_details], status: "delivered").create_association_with(p)
+  Induction::Enrol.call(participant_profile: p, induction_programme: p.school_cohort.induction_programmes.first)
 end
 
 user = User.find_or_create_by!(email: "cip-ect-email-bounced@example.com") do |u|
   u.full_name = "CIP ECT Email bounced"
 end
 teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-  profile.request_for_details_sent_at = Time.zone.now
-  profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
-  profile.schedule = Finance::Schedule::ECF.default
-  profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
-  Email.create!(tags: [:request_for_details], status: "permanent-failure").create_association_with(profile)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+  p.request_for_details_sent_at = Time.zone.now
+  p.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
+  p.schedule = Finance::Schedule::ECF.default
+  p.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  Email.create!(tags: [:request_for_details], status: "permanent-failure").create_association_with(p)
+  Induction::Enrol.call(participant_profile: p, induction_programme: p.school_cohort.induction_programmes.first)
 end
 
 create_fip_ect_with_eligibility("Eligible")
@@ -805,8 +842,8 @@ create_npq_declarations = lambda {
         u.full_name = "NPQ #{i}"
       end
 
-      teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
-        profile.trn = trn
+      teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+        p.trn = trn
       end
 
       npq_application = NPQ::BuildApplication.call(
@@ -827,24 +864,24 @@ create_npq_declarations = lambda {
         user_id: user.id,
       ).tap(&:save!)
 
-      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-        profile.id = npq_application.id
-        profile.schedule = Finance::Schedule::NPQSpecialist.default
-        profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+        p.id = npq_application.id
+        p.schedule = Finance::Schedule::NPQSpecialist.default
+        p.participant_identity = Identity::Create.call(user: user, origin: :npq)
       end
 
-      ParticipantDeclaration::NPQ.create!(
-        course_identifier: course,
-        participant_profile: npq_profile,
-        user: user,
-        declaration_date: Time.zone.now - 1.week,
-        state: state,
-        declaration_type: "started",
-        cpd_lead_provider_id: CpdLeadProvider.find_by_name(provider_name).id,
+      RecordDeclarations::Started::NPQ.call(
+        params: {
+          participant_id: npq_application.user.id,
+          course_identifier: npq_application.npq_course.identifier,
+          declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+          cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+          declaration_type: "started",
+        },
       )
     end
   end
-}[]
+}.call
 
 %w[submitted eligible].each do |state|
   create_npq_declarations[

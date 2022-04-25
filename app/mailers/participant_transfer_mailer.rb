@@ -83,8 +83,6 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 3
   def provider_transfer_out_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = induction_record.preferred_identity
-
     template_mail(
       TRANSFER_OUT_FOR_PROVIDER_TEMPLATE,
       to: lead_provider_profile.user.email,
@@ -92,7 +90,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_date.to_s(:govuk),
-        external_participant_id: preferred_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
       },
     ).tag(:provider_transfer_out_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -101,8 +99,6 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 4
   def provider_transfer_in_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = induction_record.preferred_identity
-
     template_mail(
       TRANSFER_IN_FOR_PROVIDER_TEMPLATE,
       to: lead_provider_profile.user.email,
@@ -110,7 +106,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_date.to_s(:govuk),
-        external_participant_id: preferred_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
       },
     ).tag(:provider_transfer_in_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -120,8 +116,6 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 9
   def provider_new_school_transfer_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = induction_record.preferred_identity
-
     template_mail(
       NEW_SCHOOL_TRANSFER_FOR_PROVIDER,
       to: lead_provider_profile.user.email,
@@ -129,7 +123,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_date.to_s(:govuk),
-        external_participant_id: preferred_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
       },
     ).tag(:provider_new_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -138,8 +132,6 @@ class ParticipantTransferMailer < ApplicationMailer
   #
   # Reference: 10
   def provider_existing_school_transfer_notification(induction_record:, lead_provider_profile:)
-    preferred_identity = induction_record.preferred_identity
-
     template_mail(
       EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER,
       to: lead_provider_profile.user.email,
@@ -147,7 +139,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_s(:govuk),
-        external_participant_id: preferred_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
       },
     ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end

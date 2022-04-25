@@ -7,5 +7,9 @@ FactoryBot.define do
     trait :current do
       start_year { 2021 }
     end
+
+    trait :next do
+      start_year { 2022 }
+    end
   end
 end

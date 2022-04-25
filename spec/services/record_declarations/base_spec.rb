@@ -30,6 +30,12 @@ RSpec.describe RecordDeclarations::Base do
     }
   end
 
+  let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider) }
+
+  before do
+    create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school)
+  end
+
   describe "#call" do
     subject(:record_declaration) { RecordDeclarations::Started::EarlyCareerTeacher.call(params: params) }
 
@@ -42,6 +48,12 @@ RSpec.describe RecordDeclarations::Base do
             .to change(ect_participant_profile.reload.participant_declarations.for_lead_provider(cpd_lead_provider).eligible, :count)
             .from(0).to(1)
         end
+
+        it "attaches the declarations to the relevant statement" do
+          expect { record_declaration }
+            .to change(next_output_statement.participant_declarations, :count)
+            .from(0).to(1)
+        end
       end
 
       context "when the participant is not fundable" do
@@ -51,6 +63,11 @@ RSpec.describe RecordDeclarations::Base do
           expect { record_declaration }
             .to change(ect_participant_profile.reload.participant_declarations.for_lead_provider(cpd_lead_provider).submitted, :count)
                   .from(0).to(1)
+        end
+
+        it "attaches the declarations to the relevant statement" do
+          expect { record_declaration }
+            .not_to change(next_output_statement.participant_declarations, :count)
         end
       end
 

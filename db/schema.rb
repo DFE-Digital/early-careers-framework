@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_30_125412) do
+ActiveRecord::Schema.define(version: 2022_04_13_092522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -360,7 +360,6 @@ ActiveRecord::Schema.define(version: 2022_03_30_125412) do
     t.uuid "induction_programme_id", null: false
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
-    t.string "status", default: "active", null: false
     t.datetime "start_date", null: false
     t.datetime "end_date"
     t.datetime "created_at", precision: 6, null: false
@@ -374,7 +373,6 @@ ActiveRecord::Schema.define(version: 2022_03_30_125412) do
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
     t.index ["preferred_identity_id"], name: "index_induction_records_on_preferred_identity_id"
     t.index ["schedule_id"], name: "index_induction_records_on_schedule_id"
-    t.index ["status"], name: "index_induction_records_on_status"
   end
 
   create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -857,6 +855,8 @@ ActiveRecord::Schema.define(version: 2022_03_30_125412) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
+    t.string "contract_version", default: "0.0.1"
+    t.boolean "output_fee", default: true
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end

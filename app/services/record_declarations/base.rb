@@ -44,6 +44,7 @@ module RecordDeclarations
       ParticipantDeclaration.transaction do
         set_eligibility
 
+        Finance::Statement.attach(participant_declaration) unless participant_declaration.submitted?
         declaration_attempt.update!(participant_declaration: participant_declaration)
       end
 

@@ -6,6 +6,7 @@ FactoryBot.define do
     deadline_date { (Time.zone.today - 1.month).end_of_month }
     payment_date  { Time.zone.today.end_of_month }
     cohort        { Cohort.current || create(:cohort, :current) }
+    contract_version { "1.0" }
 
     factory :npq_statement, class: "Finance::Statement::NPQ" do
       association :cpd_lead_provider, :with_npq_lead_provider
@@ -13,6 +14,10 @@ FactoryBot.define do
 
     factory :ecf_statement, class: "Finance::Statement::ECF" do
       association :cpd_lead_provider, :with_lead_provider
+    end
+
+    trait :output_fee do
+      output_fee { true }
     end
   end
 end

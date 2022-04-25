@@ -8,11 +8,49 @@ class Finance::Statement < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :cohort
   has_many :participant_declarations
-  scope :payable, -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
-  scope :closed,  -> { where("payment_date < ?", Date.current) }
-  scope :current, -> { where("deadline_date >= DATE(NOW())") }
-  scope :latest, -> { order(deadline_date: :asc).last }
-  scope :upto_current, -> { payable.or(closed).or(current) }
+  scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
+  scope :closed,                    -> { where("payment_date < ?", Date.current) }
+  scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
+  scope :upto_current,              -> { payable.or(closed) }
+  scope :latest,                    -> { order(deadline_date: :asc).last }
+  scope :upto,                      ->(statement) { where("deadline_date < ?", statement.deadline_date) }
+  scope :output,                    -> { where(output_fee: true) }
+  scope :next_output_fee_statements, lambda {
+    output
+      .where(type: name)
+      .order(deadline_date: :asc)
+      .where("deadline_date >= ?", Date.current)
+  }
+
+  class << self
+    def find_by_humanised_name(humanised_name)
+      find_by(name: humanised_name.humanize.gsub("-", " "))
+    end
+
+    def current
+      with_future_deadline_date.order(deadline_date: :asc).first
+    end
+
+    def attach(participant_declaration)
+      statement = statement_for(participant_declaration)
+      statement.participant_declarations << participant_declaration
+    end
+
+  private
+
+    def statement_for(participant_declaration)
+      case participant_declaration
+      when ParticipantDeclaration::ECF
+        participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement
+      when ParticipantDeclaration::NPQ
+        participant_declaration.cpd_lead_provider.npq_lead_provider.next_output_fee_statement
+      end
+    end
+  end
+
+  def open?
+    true
+  end
 
   def past_deadline_date?
     participant_declarations.any?

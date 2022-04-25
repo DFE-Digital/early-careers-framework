@@ -22,66 +22,28 @@ module Finance
       output_payment[:per_participant]
     end
 
-    def total_declarations(npq_lead_provider, contract)
-      if statement.current?
-        ParticipantDeclaration::NPQ
-          .eligible_for_lead_provider(npq_lead_provider)
-          .for_course_identifier(contract.course_identifier)
-          .where(statement_id: nil)
-          .count
-      else
-        statement
-          .participant_declarations
-          .for_course_identifier(contract.course_identifier)
-          .paid_payable_or_eligible
-          .unique_id
-          .count
-      end
+    def total_declarations(contract)
+      statement
+        .participant_declarations
+        .for_course_identifier(contract.course_identifier)
+        .unique_id
+        .count
     end
 
     def statement_declarations
-      if statement.current?
-        ParticipantDeclaration::NPQ
-          .for_lead_provider(npq_lead_provider)
-          .eligible
-          .where(statement_id: nil)
-      else
-        statement
-          .participant_declarations
-          .paid_payable_or_eligible
-      end
+      statement.participant_declarations
     end
 
     def statement_declarations_per_contract(contract)
-      if statement.current?
-        ParticipantDeclaration::NPQ
-          .eligible_for_lead_provider(npq_lead_provider)
-          .for_course_identifier(contract.course_identifier)
-          .where(statement_id: nil)
-          .count
-      else
-        statement
-          .participant_declarations
-          .for_course_identifier(contract.course_identifier)
-          .paid_payable_or_eligible
-          .unique_id
-          .count
-      end
+      statement
+        .participant_declarations
+        .for_course_identifier(contract.course_identifier)
+        .unique_id
+        .count
     end
 
     def voided_declarations
-      if statement.current?
-        ParticipantDeclaration::NPQ
-          .for_lead_provider(npq_lead_provider)
-          .where(statement_id: nil)
-          .where(state: "voided")
-          .unique_id
-      else
-        statement
-          .participant_declarations
-          .where(state: "voided")
-          .unique_id
-      end
+      statement.voided_participant_declarations.unique_id
     end
 
     def service_fees

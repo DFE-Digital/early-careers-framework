@@ -19,9 +19,6 @@ gem "sentry-rails", "~> 5.2"
 gem "sentry-ruby", "~> 5.2"
 gem "sentry-sidekiq"
 
-# Pagination
-gem "kaminari", "~> 1.2"
-
 gem "secure_headers"
 
 # Cleaner logs, one line per request
@@ -76,7 +73,7 @@ gem "strong_migrations", "~> 1.0"
 # Acts as State Machine for participant and declaration states
 gem "aasm"
 
-# Pagination for API
+# Pagination
 gem "pagy", "~> 5.10", ">= 5.10.1"
 
 # Json Schema for api validation
@@ -146,7 +143,6 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", "~> 4.2.0"
-
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0"

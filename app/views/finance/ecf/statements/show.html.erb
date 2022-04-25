@@ -13,28 +13,171 @@
 </div>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-caption-m govuk-!-margin-0">Payment of</p>
-    <h2 class="govuk-heading-xl govuk-!-margin-0"><%= number_to_pounds(total_payment_combined(@breakdown_started, @breakdown_retained_1)) %></h2>
-    <p class="govuk-caption-m govuk-!-margin-top-0">On <%= @statement.payment_date.to_s(:govuk) %></p>
+  <div class="govuk-grid-column-full">
+    <div class="finance-panel finance-panel__summary">
+      <div class="finance-panel__summary__total-payment-breakdown">
+        <h4 class="govuk-heading-l govuk-!-margin-bottom-2">Total <%= number_to_pounds(@calculator.total(with_vat: true)) %></h4>
 
-    <%= render Finance::ECF::BreakdownSummary.new(breakdown_started: @breakdown_started, breakdown_retained_1: @breakdown_retained_1, lead_provider: @ecf_lead_provider, deadline_date: @statement.deadline_date) %>
+        <div>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Output payment <span><%= number_to_pounds(@calculator.output_fee) %></span>
+          </p>
 
-    <%= render Finance::ECF::ServiceFees.new(service_fees: @breakdown_started[:service_fees], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Service fee <span><%= number_to_pounds(@calculator.service_fee) %></span>
+          </p>
 
-    <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_started[:output_payments], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Adjustments <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
+          </p>
 
-    <%= render Finance::ECF::OutputPayments.new(output_payments: @breakdown_retained_1[:output_payments], breakdown_summary: @breakdown_retained_1[:breakdown_summary]) %>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            VAT <span><%= number_to_pounds(@calculator.vat) %></span>
+          </p>
+        </div>
+      </div>
 
-    <%= render Finance::ECF::ParticipantSummary.new(breakdown_started_summary: @breakdown_started[:breakdown_summary], breakdown_retained_1_summary: @breakdown_retained_1[:breakdown_summary]) %>
+      <div class="finance-panel__summary__meta">
+        <div class="finance-panel__summary__meta__dates">
+          <div>
+            <div>
+              <strong class="govuk-body-s govuk-!-margin-bottom-0">Milestone cut off date</strong>
+            </div>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @statement.deadline_date.to_s(:govuk) %>
+            </div>
+          </div>
 
-    <% @breakdown_started[:other_fees].each do |other_fee| %>
-      <%= render Finance::ECF::OtherFeeRow.new(other_fee: @breakdown_started[:other_fees], breakdown_summary: @breakdown_started[:breakdown_summary]) %>
-    <% end %>
+          <div>
+            <div>
+              <strong class="govuk-body-s govuk-!-margin-bottom-0">Payment date</strong>
+            </div>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @statement.payment_date.to_s(:govuk) %>
+            </div>
+          </div>
+        </div>
 
-    <ul class="govuk-list">
-      <li><%= govuk_link_to t("finance.show_voided_declarations"), voided_finance_ecf_payment_breakdown_statement_declarations_path(@ecf_lead_provider.id, @statement) %></li>
-      <li><%= govuk_link_to t("finance.show_contract"), finance_ecf_contract_path(id: @ecf_lead_provider.id) %></li>
-    </ul>
+        <div class="finance-panel__summary__meta__counts">
+          <div class="second govuk-list govuk-!-margin-bottom-0">
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total starts</strong>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @calculator.started_count %>
+            </div>
+          </div>
+
+          <div>
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total retained</strong>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @calculator.retained_count %>
+            </div>
+          </div>
+
+          <div>
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total completed</strong>
+            <div class="govuk-heading-m govuk-!-padding-top-0">
+              <%= @calculator.completed_count %>
+            </div>
+          </div>
+
+          <div>
+            <strong class="govuk-body-s govuk-!-margin-bottom-0">Total voided</strong>
+
+            <div class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0">
+              <%= @calculator.voided_count %>
+            </div>
+
+            <%= govuk_link_to 'View<span class="govuk-visually-hidden"> voided declarations</span>'.html_safe, finance_ecf_payment_breakdown_statement_voided_path(@ecf_lead_provider.id, @statement), class: "govuk-body-s" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-top-5">
+  <div class="govuk-grid-column-full">
+    <div class="finance-panel">
+      <%= govuk_table classes: ["output-payments"] do |table| %>
+        <% table.caption(size: 'm', text: "Output payments") %>
+
+        <% table.head do |head| %>
+          <% head.row do |row| %>
+            <% row.cell(header: true, text: "Outputs") %>
+            <% row.cell(header: true, text: "Band A", numeric: true) %>
+            <% row.cell(header: true, text: "Band B", numeric: true) %>
+            <% row.cell(header: true, text: "Band C", numeric: true) %>
+            <% row.cell(header: true, text: "Band D", numeric: true) %>
+            <% row.cell(header: true, text: "Payments", numeric: true) %>
+          <% end %>
+
+          <% table.body do |body| %>
+            <% @calculator.class.event_types.each do |event_type| %>
+              <% body.row do |row| %>
+                <% row.cell(text: t(".#{event_type}"), header: true) %>
+
+                <% @calculator.class.band_mapping.each do |letter, number| %>
+                  <% row.cell(text: @calculator.public_send("#{event_type}_band_#{letter}_count"), numeric: true) %>
+                <% end %>
+
+                <% row.cell(text: "") %>
+              <% end %>
+
+              <% body.row do |row| %>
+                <% row.cell(text: "Fee per trainee") %>
+
+                <% @calculator.class.band_mapping.each do |letter, number| %>
+                  <% row.cell(text: number_to_pounds(@calculator.public_send("#{event_type}_band_#{letter}_fee_per_declaration")), numeric: true) %>
+                <% end %>
+
+                <% row.cell(text: number_to_pounds(@calculator.public_send("total_for_#{event_type}")), numeric: true) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <div class="govuk-!-text-align-right govuk-heading-s govuk-!-margin-bottom-0">
+        Output payment total
+      </div>
+
+      <div class="govuk-!-text-align-right govuk-heading-s">
+        <%= number_to_pounds(@calculator.output_fee) %>
+      </div>
+    </div>
+
+    <div class="finance-panel govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+      <%= govuk_table do |table| %>
+        <% table.caption(size: "m", text: "Adjustments") %>
+
+        <% table.head do |head| %>
+          <% head.row do |row| %>
+            <% row.cell(header: true, text: "Adjustment type") %>
+            <% row.cell(header: true, text: "Number of trainees") %>
+            <% row.cell(header: true, text: "Fee per trainee") %>
+            <% row.cell(header: true, text: "Payments", numeric: true) %>
+          <% end %>
+
+          <% table.body do |body| %>
+            <% body.row do |row| %>
+              <% row.cell(text: "Uplift fee") %>
+              <% row.cell(text: @calculator.uplift_count) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration)) %>
+              <% row.cell(text: number_to_pounds(@calculator.total_for_uplift), numeric: true) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <div class="govuk-!-text-align-right govuk-heading-s govuk-!-margin-bottom-0">
+        Adjustments total
+      </div>
+
+      <div class="govuk-!-text-align-right govuk-heading-s">
+        <%= number_to_pounds(@calculator.adjustments_total) %>
+      </div>
+    </div>
+
+    <%= render Finance::ECF::Contract.new(contract: @calculator.contract) %>
   </div>
 </div>
