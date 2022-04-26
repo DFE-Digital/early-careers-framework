@@ -9,49 +9,36 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">We cannot find <%= add_participant_form.full_name.titleize %>’s record</h1>
     <p>Check the information you’ve entered is correct.</p>
-    <p>We need to find <%= add_participant_form.full_name.titleize %> in the Teaching Regulation Agency records so we can transfer their record to your school.</p>
+    <p>We need to find <%= add_participant_form.full_name.titleize %> in the Teaching Regulation Agency records to make sure they’re eligible for this funded programme.</p>
 
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Full name
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= add_participant_form.full_name.titleize %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to step_schools_add_participants_path(step: :name)  do %>
-            Change <span class="govuk-visually-hidden">name</span>
-          <% end %>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          TRN
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= add_participant_form.trn %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to step_schools_add_participants_path(step: :trn) do %>
-            Change <span class="govuk-visually-hidden">TRN</span>
-          <% end %>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Date of birth
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= add_participant_form.dob.to_date.to_s(:govuk) %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to step_schools_add_participants_path(step: :dob)  do %>
-            Change <span class="govuk-visually-hidden">date of birth</span>
-          <% end %>
-        </dd>
-      </div>
-    </dl>
+    <%= govuk_summary_list do |summary_list| %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Name" } %>
+        <% row.value { add_participant_form.full_name.titleize } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "name",
+                      href: url_for( { step: :name } )) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "TRN" } %>
+        <% row.value { add_participant_form.trn } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "TRN",
+                      href: url_for({ step: :trn })) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Date of birth" } %>
+        <% row.value { add_participant_form.dob.to_date.to_s(:govuk) } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "dob",
+                      href: url_for({ step: :dob })) %>
+      <% end %>
+    <% end %>
+
+    <h3 class="govuk-heading-s">If this information is correct.</h3>
+    <p>You can still continue to register <%= add_participant_form.full_name.titleize %>. We'll contact them to check their information.</p>
 
     <%= govuk_button_link_to "Continue and confirm", step_schools_add_participants_path(step: :email)  %>
 
