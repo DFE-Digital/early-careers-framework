@@ -56,7 +56,7 @@
         <% row.key { "Training with" } %>
         <% if @transferring_participant_form.using_schools_programme? %>
           <% row.value do %>
-            <div><%= @school_cohort.default_induction_programme.lead_provider.name %></div>
+            <div><%= @school_cohort.default_induction_programme.lead_provider&.name %></div>
             <div><%= @school_cohort.default_induction_programme.delivery_partner&.name %></div>
           <% end %>
           <% if @transferring_participant_form.switch_to_schools_programme? %>
