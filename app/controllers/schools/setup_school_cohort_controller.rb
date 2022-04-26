@@ -36,9 +36,7 @@ module Schools
 
     # cip
     def how_will_you_run_training
-      if setup_school_cohort_form_params[:how_will_you_run_training_choice] == 'fip'
-        redirect_to programme_confirmation_schools_setup_school_cohort_path
-      end
+      store_form_redirect_to_next_step :programme_confirmation
     end
 
     def programme_confirmation; end
