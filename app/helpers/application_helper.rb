@@ -39,7 +39,7 @@ module ApplicationHelper
     if FeatureFlag.active?(:multiple_cohorts)
       return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.active_registration_cohort.start_year) if school.school_cohorts.empty?
     else
-      return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.current.start_year) unless school.chose_programme?(Cohort.current)
+      return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.current.start_year) unless school.chosen_programme?(Cohort.current)
     end
 
     school_dashboard_with_tab_path(school)
