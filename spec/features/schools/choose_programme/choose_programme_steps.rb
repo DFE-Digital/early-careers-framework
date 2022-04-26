@@ -27,12 +27,24 @@ module ChooseProgrammeSteps
     expect(page).to have_content("Does your school expect any ECTs in the next academic year?")
   end
 
-  def then_I_am_taken_to_the_confirmation_page
+  def then_I_am_taken_to_the_submitted_page
     expect(page).to have_content("Your information has been saved")
   end
 
   def then_I_am_taken_to_the_manage_your_training_page
     expect(page).to have_content("Manage your training")
+  end
+
+  def then_I_am_take_the_how_will_you_run_training_page
+    expect(page).to have_content("How will you run training for new starters")
+  end
+
+  def then_I_am_taken_to_the_training_confirmation_page
+    expect(page).to have_content("Are you sure this is how you want to run training?")
+  end
+
+  def then_I_am_take_to_the_training_submitted_page
+    expect(page).to have_content("You've submitted your training information")
   end
 
   # And steps
@@ -60,6 +72,18 @@ module ChooseProgrammeSteps
 
   def when_I_click_on_the_return_to_your_training_link
     click_on("Return to manage your training")
+  end
+
+  def when_I_choose_ects_expected
+    choose("Yes")
+  end
+
+  def when_I_choose_dfe_funded_training
+    choose("Use a training provider, funded by the DfE")
+  end
+
+  def when_I_click_the_confirm_button
+    click_on("Confirm")
   end
 
 end
