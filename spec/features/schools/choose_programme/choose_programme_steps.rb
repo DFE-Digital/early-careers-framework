@@ -86,4 +86,11 @@ module ChooseProgrammeSteps
     click_on("Confirm")
   end
 
+  def when_I_choose_deliver_your_own_programme
+    choose("Deliver your own programme using DfE-accredited materials")
+  end
+
+  def when_I_choose_design_and_deliver_your_own_material
+    choose("Design and deliver you own programme based on the early career framework (ECF)")
+  end
 end
