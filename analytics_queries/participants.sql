@@ -1,4 +1,5 @@
 SELECT u.id                                                    as participant_id,
+       pi.external_identifier                                  as external_id,
        pp.created_at                                           as added_at,
        sch.urn                                                 as school_urn,
        u.full_name                                             as name,
@@ -31,6 +32,7 @@ FROM participant_profiles pp
          JOIN schedules s on pp.schedule_id = s.id
          JOIN teacher_profiles tp on pp.teacher_profile_id = tp.id
          JOIN users u on tp.user_id = u.id
+         JOIN participant_identities pi on pp.participant_identity_id = pi.id
          LEFT OUTER JOIN ecf_participant_validation_data epvd on pp.id = epvd.participant_profile_id
          LEFT OUTER JOIN ecf_participant_eligibilities epe on pp.id = epe.participant_profile_id
          LEFT OUTER JOIN participant_profile_states pps on pp.id = pps.participant_profile_id AND pps.id = (

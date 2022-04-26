@@ -36,6 +36,6 @@ private
   end
 
   def check_different_school!
-    raise ArgumentError "Participant is already enrolled at this school" if latest_induction_record.school == induction_programme.school
+    raise ArgumentError, "Participant is already enrolled at this school" if latest_induction_record.school == induction_programme.school
   end
 end
