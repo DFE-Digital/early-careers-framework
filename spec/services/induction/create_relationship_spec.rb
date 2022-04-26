@@ -24,7 +24,7 @@ RSpec.describe Induction::CreateRelationship do
       expect(school_cohort.school.partnerships.last).to be_relationship
     end
 
-    it "the PArtnership doesn't have a challenge window" do
+    it "the Partnership doesn't have a challenge window" do
       service.call(school_cohort: school_cohort,
                    lead_provider: lead_provider,
                    delivery_partner: delivery_partner)
