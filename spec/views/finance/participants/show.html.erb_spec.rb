@@ -3,6 +3,17 @@
 require "rails_helper"
 
 RSpec.describe "finance/participants/show.html.erb" do
+  let(:profile) { create(:ect_participant_profile) }
+  let(:user) { profile.user }
+
+  it "shows name for the identity" do
+    assign :user, user
+
+    render
+
+    expect(rendered).to have_content(user.full_name)
+  end
+
   context "with ECF profile" do
     let(:profile) { create(:ect_participant_profile) }
     let(:user) { profile.user }

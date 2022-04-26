@@ -7,25 +7,22 @@
 <% @user.participant_identities.each_with_index do |identity, i| %>
   <h3><%= "Identity #{i + 1}" %></h3>
 
-  <dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">
-        User ID / Participant ID
-      </dt>
-      <dd class="govuk-summary-list__value">
-        <%= govuk_link_to identity.user_id, finance_participant_path(identity.user_id) %>
-      </dd>
-    </div>
+  <%= govuk_summary_list do |summary_list| %>
+    <% summary_list.row do |row| %>
+      <% row.key { "User ID / Participant ID" } %>
+      <% row.value { govuk_link_to identity.user_id, finance_participant_path(identity.user_id) } %>
+    <% end %>
 
-    <div class="govuk-summary-list__row">
-      <dt class="govuk-summary-list__key">
-        External ID
-      </dt>
-      <dd class="govuk-summary-list__value">
-        <%= govuk_link_to identity.external_identifier, finance_participant_path(identity.external_identifier) %>
-      </dd>
-    </div>
-  </dl>
+    <% summary_list.row do |row| %>
+      <% row.key { "External ID" } %>
+      <% row.value { govuk_link_to identity.external_identifier, finance_participant_path(identity.external_identifier) } %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key { "Full name" } %>
+      <% row.value { identity.user&.full_name } %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <h2>Profiles</h2>
