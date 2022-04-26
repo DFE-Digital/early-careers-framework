@@ -37,6 +37,18 @@ RSpec.describe "finance/participants/show.html.erb" do
       expect(rendered).to have_content("Induction record: #{induction_record.id}")
       expect(rendered).to have_content("Training programmeFull induction programme")
     end
+
+    context "when there are declarations" do
+      let!(:declaration) { create(:ect_participant_declaration, user: user, participant_profile: profile) }
+
+      it "renders declarations" do
+        assign :user, user
+
+        render
+
+        expect(rendered).to have_content(declaration.id)
+      end
+    end
   end
 
   context "with NPQ profile" do
