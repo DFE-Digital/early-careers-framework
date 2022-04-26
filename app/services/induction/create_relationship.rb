@@ -13,6 +13,7 @@ class Induction::CreateRelationship < BaseService
                                    lead_provider: lead_provider,
                                    delivery_partner: delivery_partner) do |partnership|
       partnership.relationship = true
+      partnership.challenge_deadline = Time.zone.now
     end
   end
 
