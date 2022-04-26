@@ -2,8 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Set up your school’s ECF-based training programme: step by step</h1>
 
-    <p class="govuk-body">This guidance explains how and why to use the <%= govuk_link_to "Manage training for early career teachers", root_path, class: "app-step-nav__link js-link" %>
-    </p>
+    <p class="govuk-body">This guidance explains how and why to use the <%= govuk_link_to "Manage training for early career teachers", root_path, class: "app-step-nav__link js-link" %> service.</p>
     <p class="govuk-body">You can
       <a href="https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects",
          class="govuk-link">find information on training, mentoring and induction for early career teachers (ECTs)</a> in our updated guidance collection.
@@ -18,13 +17,14 @@
     
     <p class="govuk-body">We need this information to:</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>check if ECTs and mentors are eligible for funded training and time off timetable (see guidance on <a href="https://www.gov.uk/guidance/funding-and-eligibility-for-ecf-based-training", class="govuk-link">funding and eligibility for ECF-based training</a> for more information)</li>
+          <li>check if ECTs and mentors are <a href="https://www.gov.uk/guidance/funding-and-eligibility-for-ecf-based-training", class="govuk-link">eligible for funded training and time off timetable</a></li>
           <li>pay your training provider, if you choose to use one</li>
           <li>give access to DfE-accredited training materials, if you choose to use them</li>
+        </ul>  
           
    <p class="govuk-body">You must provide this in addition to any information you give a training provider or appropriate body.</p>       
 
- <div class="govuk-inset-text">If your school has not used the service before, <a href="https://manage-training-for-early-career-teachers.education.gov.uk/nominations/resend-email", class="govuk-link">request a link to sign in</a>. If this does not work, <%= render MailToSupportComponent.new("contact us") %>.</div>
+ <div class="govuk-inset-text"><p class="govuk-body">If your school has not used the service before, <a href="https://manage-training-for-early-career-teachers.education.gov.uk/nominations/resend-email", class="govuk-link">request a link to sign in</a></p>. <p class="govuk-body">If this does not work, <%= render MailToSupportComponent.new("contact us") %>.</p></div>
           
           <p class="govuk-body">Follow the steps below to provide the DfE with the information we need.</p>        
           
