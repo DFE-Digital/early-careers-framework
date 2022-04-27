@@ -162,15 +162,4 @@ RSpec.describe SchoolCohort, type: :model do
       end
     end
   end
-
-  describe "dashboard_cohorts" do
-    it "return 3 cohorts starting from 2021" do
-      school = create(:school)
-      (2020..2023).each do |start_year|
-        cohort = create(:cohort, start_year: start_year)
-        create(:school_cohort, school: school, cohort: cohort)
-      end
-      expect(SchoolCohort.dashboard_cohorts.pluck(:start_year)).to eq([2023, 2022, 2021])
-    end
-  end
 end
