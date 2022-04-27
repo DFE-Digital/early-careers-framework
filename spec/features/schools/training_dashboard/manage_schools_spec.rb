@@ -46,7 +46,7 @@ RSpec.feature "School Tutors should be abled to manage schools", type: :feature,
       end
 
       scenario "Start setting up the new cohort" do
-        when_i_click("Start Now")
+        when_i_click("Start now")
         then_i_am_on_the_expect_any_ects_page
       end
     end
