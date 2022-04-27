@@ -94,7 +94,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       subject { described_class.new(cpd_lead_provider: new_cpd_lead_provider) }
 
       before do
-        profile.induction_records.first.leaving!
+        profile.induction_records.find_by(induction_programme_id: old_induction_programme.id).leaving!
       end
 
       it "returns old providers declarations" do
