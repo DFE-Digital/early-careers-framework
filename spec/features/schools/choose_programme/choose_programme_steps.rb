@@ -14,8 +14,8 @@ module ChooseProgrammeSteps
   # Given steps
 
   def given_a_school_with_no_chosen_programme_for_next_academic_year
-    @previous_cohort = create(:cohort, start_year: 2020)
-    @cohort = create(:cohort, start_year: 2021)
+    @previous_cohort = create(:cohort, start_year: 2021)
+    @cohort = create(:cohort, start_year: 2022)
     @school = create(:school, name: "NoECTsSchool")
     create(:school_cohort, :cip, school: @school, cohort: @previous_cohort)
   end
@@ -60,10 +60,22 @@ module ChooseProgrammeSteps
     click_on("Continue")
   end
 
+  def and_cohort_2022_is_created
+    create(:cohort, start_year: 2022)
+  end
+
+  def and_the_next_cohort_is_open_for_registrations
+    Timecop.freeze(Time.zone.local(2022, 5, 10, 16, 15, 0))
+  end
+
+  def and_the_dashboard_page_shows_the_no_ects_message
+    expect(page).to have_content("Your school has told us you do not expect any ECTs")
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort
-    visit does_your_school_expect_any_ects_schools_setup_school_cohort_path(@school, @cohort)
+    click_on("Start now")
   end
 
   def when_i_choose_no_ects
