@@ -28,6 +28,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
     end
 
+    ect_profile.current_induction_record.update!(mentor_profile: mentor_profile)
     sign_in user
   end
 
