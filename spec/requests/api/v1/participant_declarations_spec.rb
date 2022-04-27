@@ -351,7 +351,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
         post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
         expect(response.status).to eq 422
-        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }.stringify_keys)
+        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t(:invalid_identifier) }.stringify_keys)
       end
 
       it "returns 422 when there are multiple errors" do

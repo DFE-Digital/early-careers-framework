@@ -25,7 +25,7 @@ module Participants
     def participant_has_user_profile
       return if errors.any?
 
-      errors.add(:participant_id, I18n.t(:invalid_participant)) if user_profile.blank?
+      errors.add(:participant_id, I18n.t(:invalid_identifier)) if user_profile.blank?
     end
 
   private
