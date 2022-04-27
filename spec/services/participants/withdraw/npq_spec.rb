@@ -26,23 +26,6 @@ RSpec.describe Participants::Withdraw::NPQ do
       expect { subject.call }.to change { profile.reload.training_status }.from("active").to("withdrawn")
     end
 
-    context "when already withdrawn" do
-      before do
-        described_class.new(
-          params: {
-            participant_id: user.id,
-            course_identifier: npq_course.identifier,
-            cpd_lead_provider: cpd_lead_provider,
-            reason: "insufficient-capacity-to-undertake-programme",
-          },
-        ).call # must be different instance from subject
-      end
-
-      it "returns an error and does not update training_status" do
-        expect { subject.call }.to raise_error(ActiveRecord::RecordInvalid).and not_change { profile.reload.training_status }
-      end
-    end
-
     context "when status is withdrawn" do
       before do
         profile.update!(status: "withdrawn")
