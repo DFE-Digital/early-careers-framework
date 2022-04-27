@@ -3,9 +3,8 @@
 module Schools
   class SetupSchoolCohortController < ::Schools::BaseController
     before_action :load_form
-    before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
     before_action :school
-    before_action :validate_request_or_render, except: %i[what_we_need]
+    before_action :validate_request_or_render, except: %i[]
 
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
@@ -16,6 +15,7 @@ module Schools
       if previous_cohort.full_induction_programme?
         store_form_redirect_to_next_step(:change_provider)
       elsif previous_cohort.core_induction_programme?
+        # CIP and DIY journeys
       end
     end
 
