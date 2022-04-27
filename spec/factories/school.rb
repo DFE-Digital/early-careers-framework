@@ -36,5 +36,15 @@ FactoryBot.define do
       open
       school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample }
     end
+
+    factory :school_with_consecutive_cohorts do
+      transient do
+        school_cohorts_count { 5 }
+      end
+
+      after :build do |school, evaluator|
+        create_list(:school_cohort, evaluator.school_cohorts_count, :consecutive_cohorts, school: school)
+      end
+    end
   end
 end

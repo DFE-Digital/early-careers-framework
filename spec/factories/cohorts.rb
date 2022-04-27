@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  sequence :base_year do |n|
+    2020 + n
+  end
+
   factory :cohort do
     start_year { Faker::Number.unique.between(from: 2022, to: 2100) }
     registration_start_date { Date.new(start_year.to_i, 5, 10) }
@@ -12,6 +16,10 @@ FactoryBot.define do
 
     trait :next do
       start_year { 2022 }
+    end
+
+    trait :consecutive_years do
+      start_year { generate(:base_year) }
     end
   end
 end

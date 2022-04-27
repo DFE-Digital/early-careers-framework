@@ -47,7 +47,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def self.dashboard_cohorts
-    joins(:cohort).where("cohorts.start_year > 2020").order(start_year: :desc).limit(3)
+    joins(:cohort).where("cohorts.start_year BETWEEN 2021 AND ?", Time.zone.now.year).order(start_year: :desc).limit(3)
   end
 
   def lead_provider
