@@ -22,28 +22,28 @@ module ChooseProgrammeSteps
 
   # Then steps
 
-  def then_I_am_taken_to_ects_expected_in_next_academic_year_page
+  def then_i_am_taken_to_ects_expected_in_next_academic_year_page
     expect(page).to have_content(@school.name)
     expect(page).to have_content("Does your school expect any ECTs in the next academic year?")
   end
 
-  def then_I_am_taken_to_the_submitted_page
+  def then_i_am_taken_to_the_submitted_page
     expect(page).to have_content("Your information has been saved")
   end
 
-  def then_I_am_taken_to_the_manage_your_training_page
+  def then_i_am_taken_to_the_manage_your_training_page
     expect(page).to have_content("Manage your training")
   end
 
-  def then_I_am_take_the_how_will_you_run_training_page
+  def then_i_am_taken_to_the_how_will_you_run_training_page
     expect(page).to have_content("How will you run training for new starters")
   end
 
-  def then_I_am_taken_to_the_training_confirmation_page
+  def then_i_am_taken_to_the_training_confirmation_page
     expect(page).to have_content("Are you sure this is how you want to run training?")
   end
 
-  def then_I_am_take_to_the_training_submitted_page
+  def then_i_am_taken_to_the_training_submitted_page
     expect(page).to have_content("You've submitted your training information")
   end
 
@@ -56,41 +56,41 @@ module ChooseProgrammeSteps
     sign_in_as @induction_coordinator_profile.user
   end
 
-  def and_I_click_continue
+  def and_i_click_continue
     click_on("Continue")
   end
 
   # When steps
 
-  def when_I_start_programme_selection_for_next_cohort
+  def when_i_start_programme_selection_for_next_cohort
     visit does_your_school_expect_any_ects_schools_setup_school_cohort_path(@school, @cohort)
   end
 
-  def when_I_choose_no_ects
+  def when_i_choose_no_ects
     choose("No")
   end
 
-  def when_I_click_on_the_return_to_your_training_link
+  def when_i_click_on_the_return_to_your_training_link
     click_on("Return to manage your training")
   end
 
-  def when_I_choose_ects_expected
+  def when_i_choose_ects_expected
     choose("Yes")
   end
 
-  def when_I_choose_dfe_funded_training
+  def when_i_choose_dfe_funded_training
     choose("Use a training provider, funded by the DfE")
   end
 
-  def when_I_click_the_confirm_button
+  def when_i_click_the_confirm_button
     click_on("Confirm")
   end
 
-  def when_I_choose_deliver_your_own_programme
+  def when_i_choose_deliver_your_own_programme
     choose("Deliver your own programme using DfE-accredited materials")
   end
 
-  def when_I_choose_design_and_deliver_your_own_material
+  def when_i_choose_design_and_deliver_your_own_material
     choose("Design and deliver you own programme based on the early career framework (ECF)")
   end
 end
