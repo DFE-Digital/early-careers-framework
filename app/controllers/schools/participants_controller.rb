@@ -25,7 +25,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def show
     @induction_record = @profile.induction_records.for_school(@school).latest
-    @mentor = @profile.mentor if @profile.ect?
+    @mentor = @induction_record.mentor
   end
 
   def edit_name; end

@@ -13,6 +13,10 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
   let(:privacy_policy) { create :privacy_policy }
 
   before do
+    Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort, programme_choice: "full_induction_programme")
+    Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: school_cohort.default_induction_programme)
+    Induction::Enrol.call(participant_profile: ect_profile, induction_programme: school_cohort.default_induction_programme, mentor_profile: mentor_profile)
+    Induction::Enrol.call(participant_profile: ineligible_ect_profile, induction_programme: school_cohort.default_induction_programme)
     privacy_policy.accept!(sit_profile.user)
     privacy_policy.accept!(mentor_profile.user)
     ineligible_ect_profile.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")

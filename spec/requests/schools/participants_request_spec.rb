@@ -9,7 +9,8 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let!(:another_cohort) { create(:school_cohort) }
   let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
   let!(:mentor_user) { mentor_profile.user }
-  let!(:mentor_user_2) { create(:mentor_participant_profile, school_cohort: school_cohort).user }
+  let!(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+  let!(:mentor_user_2) { mentor_profile_2.user }
   let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
   let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user }
@@ -20,6 +21,14 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort) }
 
   before do
+    Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+                                                programme_choice: "full_induction_programme")
+    programme = school_cohort.default_induction_programme
+    [mentor_profile, ect_profile, mentor_profile_2].each do |profile|
+      Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
+    end
+
+    ect_profile.current_induction_record.update!(mentor_profile: mentor_profile)
     sign_in user
   end
 
@@ -76,6 +85,17 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
       expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
       expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
+    end
+
+    context "when the participant is an ECT" do
+      before do
+        ect_profile.current_induction_record.update!(mentor_profile: mentor_profile_2)
+      end
+
+      it "uses the mentor from the induction record" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+        expect(assigns(:mentor)).to eq mentor_user_2
+      end
     end
   end
 
