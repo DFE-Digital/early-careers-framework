@@ -91,10 +91,10 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
       end
     end
     let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule: schedule) }
-    let(:user) { profile.user }
     let(:profile) { create(:npq_participant_profile) }
+    let(:user) { profile.user }
     let!(:declaration) do
-      create(:participant_declaration,
+      create(:npq_participant_declaration,
              user: user,
              participant_profile: profile,
              course_identifier: profile.npq_course.identifier)

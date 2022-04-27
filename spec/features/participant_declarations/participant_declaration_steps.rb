@@ -130,6 +130,7 @@ module ParticipantDeclarationSteps
     )
 
     new_induction_programme = create(:induction_programme, partnership: new_partnership)
+    @ect_profile.induction_records.first.leaving!
     Induction::Enrol.call(participant_profile: @ect_profile, induction_programme: new_induction_programme)
   end
 

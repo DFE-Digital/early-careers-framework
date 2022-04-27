@@ -8,16 +8,38 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       let(:old_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
       let(:new_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
 
-      let(:partnership) { create(:partnership, lead_provider: new_cpd_lead_provider.lead_provider) }
-      let(:induction_programme) do
+      let(:old_lead_provider) { old_cpd_lead_provider.lead_provider }
+      let(:new_lead_provider) { new_cpd_lead_provider.lead_provider }
+
+      let(:old_partnership) { create(:partnership, lead_provider: old_lead_provider) }
+      let(:new_partnership) { create(:partnership, lead_provider: new_lead_provider) }
+      let(:old_induction_programme) do
         create(
           :induction_programme,
           :fip,
-          partnership: partnership,
+          partnership: old_partnership,
         )
       end
 
-      let(:profile) { create(:ect_participant_profile) }
+      let(:new_induction_programme) do
+        create(
+          :induction_programme,
+          :fip,
+          partnership: new_partnership,
+        )
+      end
+
+      let!(:old_induction_record) do
+        Induction::Enrol
+          .call(participant_profile: profile, induction_programme: old_induction_programme)
+      end
+
+      let!(:new_induction_record) do
+        Induction::Enrol
+          .call(participant_profile: profile, induction_programme: new_induction_programme)
+      end
+
+      let!(:profile) { create(:ect_participant_profile) }
       let(:user) { profile.user }
 
       let(:old_provider_declaration) do
@@ -72,7 +94,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       subject { described_class.new(cpd_lead_provider: new_cpd_lead_provider) }
 
       before do
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+        profile.induction_records.first.leaving!
       end
 
       it "returns old providers declarations" do

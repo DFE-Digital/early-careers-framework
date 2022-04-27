@@ -8,9 +8,9 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
   def validate_backdated_declaration_before_induction_record_end_date
     return if participant_profile.nil?
 
-    previous_induction_record = participant_profile.relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)
+    previous_induction_record = participant_profile.relevant_induction_record(lead_provider: cpd_lead_provider.lead_provider)
 
-    return if participant_profile.current_induction_record == previous_induction_record
+    return if participant_profile.current_induction_record == previous_induction_record || previous_induction_record.nil?
 
     if previous_induction_record.end_date < declaration_date
       errors.add(:declaration_date, I18n.t(:i_need_content_for_this))
