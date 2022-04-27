@@ -8,8 +8,8 @@ coordinator.induction_coordinator_profile.schools.first.destroy!
 coordinator.induction_coordinator_profile.schools = [school]
 
 school_with_cohorts = FactoryBot.create(:school, name: "Cohort School", urn: 900_123)
-cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
-cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
+cohort_2021 = Cohort.find_or_create_by!(start_year: 2021, registration_start_date: Date.new(2021, 5, 10), academic_year_start_date: Date.new(2021, 9, 1))
+cohort_2022 = Cohort.find_or_create_by!(start_year: 2022, registration_start_date: Date.new(2022, 5, 10), academic_year_start_date: Date.new(2022, 9, 1))
 
 cip_1 = FactoryBot.create(:core_induction_programme, name: "CIP Programme 1")
 cip_2 = FactoryBot.create(:core_induction_programme, name: "CIP Programme 2")
