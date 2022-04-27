@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SetParticipantCategories < BaseService
-  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked)
+  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :no_qts_participants)
 
   def call
     set_participant_categories
@@ -28,15 +28,15 @@ private
   end
 
   def fip_participant_categories_feature_flag_active
-    ParticipantCategories.new(eligible_participants, fip_flag_active_ineligible_participants, fip_flag_active_withdrawn_participants, contacted_for_info_participants, details_being_checked_participants)
+    ParticipantCategories.new(eligible_participants, fip_flag_active_ineligible_participants, fip_flag_active_withdrawn_participants, contacted_for_info_participants, details_being_checked, no_qts_participants)
   end
 
   def fip_participant_categories_feature_flag_inactive
-    ParticipantCategories.new([], [], withdrawn_participants, contacted_for_info_participants, fip_flag_inactive_details_being_checked_participants)
+    ParticipantCategories.new([], [], withdrawn_participants, contacted_for_info_participants, fip_flag_inactive_details_being_checked_participants, [])
   end
 
   def cip_participant_categories
-    ParticipantCategories.new(cip_eligible_participants, [], withdrawn_participants, contacted_for_info_participants, [])
+    ParticipantCategories.new(cip_eligible_participants, [], withdrawn_participants, contacted_for_info_participants, [], [])
   end
 
   def active_participant_profiles
@@ -63,6 +63,14 @@ private
     active_participant_profiles.details_being_checked.includes(:user).order("users.full_name").where.not(training_status: :withdrawn)
   end
 
+  def details_being_checked
+    details_being_checked_participants - no_qts_participants
+  end
+
+  def no_qts_participants
+    details_being_checked_participants.select { |profile| profile.ecf_participant_eligibility&.no_qts_reason? }
+  end
+
   def fip_flag_active_ineligible_participants
     ineligible_participants - eligible_participants
   end
@@ -72,10 +80,10 @@ private
   end
 
   def cip_eligible_participants
-    [*eligible_participants, *ineligible_participants, *details_being_checked_participants].uniq
+    [*eligible_participants, *ineligible_participants, *details_being_checked, *no_qts_participants].uniq
   end
 
   def fip_flag_inactive_details_being_checked_participants
-    [*details_being_checked_participants, *ineligible_participants, *eligible_participants].uniq
+    [*details_being_checked, *no_qts_participants, *ineligible_participants, *eligible_participants].uniq
   end
 end

@@ -28,6 +28,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
     let(:fip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let(:fip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let(:fip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let(:fip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let(:fip_mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     # CIP
     let(:cip_eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let(:cip_eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
@@ -46,6 +48,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
     let(:cip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let(:cip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
     let(:cip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let(:cip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let(:cip_mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
 
     let(:fip_participants) do
       [
@@ -66,6 +70,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         fip_transferring_out_participant,
         fip_transferred_participant,
         fip_transferred_withdrawn_participant,
+        fip_ect_no_qts,
+        fip_mentor_no_qts,
       ]
     end
 
@@ -88,6 +94,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         cip_transferring_out_participant,
         cip_transferred_participant,
         cip_transferred_withdrawn_participant,
+        cip_ect_no_qts,
+        cip_mentor_no_qts,
       ]
     end
 
@@ -128,6 +136,10 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
 
         # transferred
         expect(@ect_categories.transferred).to match_array([fip_transferred_participant, fip_transferred_withdrawn_participant].map { |profile| profile.induction_records.latest })
+
+        # no_qts
+        expect(@ect_categories.no_qts_participants).to match_array(fip_ect_no_qts.current_induction_record)
+        expect(@mentor_categories.no_qts_participants).to match_array(fip_mentor_no_qts.current_induction_record)
       end
     end
 
@@ -142,8 +154,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "returns participants in correct category" do
         # Transferring out needs to be removed from eligible when we build the transfer out journey
         # eligible
-        expect(@ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_transferring_out_participant].map(&:current_induction_record))
-        expect(@mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
+        expect(@mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
 
         # ineligible
         expect(@ect_categories.ineligible).to be_empty
@@ -167,7 +179,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         # expect(@ect_categories.transferring_out).to match_array(cip_transferring_out_participant.current_induction_record)
 
         # transferred
-        expect(@ect_categories.transferred).to match_array([cip_transferred_participant, cip_transferred_withdrawn_participant].map { |profile| profile.induction_records.latest })
+        expect(@ect_categories.no_qts_participants).to be_empty
+        expect(@mentor_categories.no_qts_participants).to be_empty
       end
     end
 
@@ -183,8 +196,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "returns participants in correct category" do
         # Transferring out needs to be removed from eligible when we build the transfer out journey
         # eligible
-        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, fip_transferring_out_participant, cip_transferring_out_participant].map(&:current_induction_record))
-        expect(@mentor_categories.eligible).to match_array([fip_eligible_mentor, fip_ero_mentor, fip_primary_mentor, fip_secondary_mentor, cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, fip_transferring_out_participant, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
+        expect(@mentor_categories.eligible).to match_array([fip_eligible_mentor, fip_ero_mentor, fip_primary_mentor, fip_secondary_mentor, cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
 
         # ineligible
         expect(@ect_categories.ineligible).to match_array(fip_ineligible_ect.current_induction_record)
@@ -209,6 +222,10 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
 
         # transferred
         expect(@ect_categories.transferred).to match_array([fip_transferred_participant, fip_transferred_withdrawn_participant, cip_transferred_participant, cip_transferred_withdrawn_participant].map { |profile| profile.induction_records.latest })
+
+        # no_qts
+        expect(@ect_categories.no_qts_participants).to match_array([fip_ect_no_qts.current_induction_record])
+        expect(@mentor_categories.no_qts_participants).to match_array([fip_mentor_no_qts.current_induction_record])
       end
     end
 
@@ -240,13 +257,13 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "only returns ECTs for the selected school cohort" do
         ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
         # Transferring out needs to be removed when we build the transfer out journey
-        expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, cip_transferring_out_participant].map(&:current_induction_record))
+        expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
       end
 
       it "only returns mentors for the selected school cohort" do
         mentor_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::Mentor)
 
-        expect(mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor].map(&:current_induction_record))
+        expect(mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
       end
     end
   end
@@ -267,8 +284,10 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
     fip_ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
     fip_ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
     fip_ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    fip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    fip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    fip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+    fip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+    fip_ect_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    fip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
     [fip_primary_mentor, fip_secondary_mentor].each do |profile|
       profile.ecf_participant_eligibility.determine_status
@@ -295,8 +314,10 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
     cip_ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
     cip_ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
     cip_ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    cip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    cip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    cip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+    cip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+    cip_ect_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    cip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
     [cip_primary_mentor, cip_secondary_mentor].each do |profile|
       profile.ecf_participant_eligibility.determine_status

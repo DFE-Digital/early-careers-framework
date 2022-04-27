@@ -25,6 +25,22 @@
   </table>
 <% end %>
 
+<% if ect_profiles.no_qts_participants.any? %>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Checking QTS</h2>
+  <p class="govuk-!-margin-bottom-3">
+    These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training.
+    We’ll keep checking their status and notify you if something changes.
+  </p>
+
+<table class="govuk-table govuk-!-margin-bottom-9" data-test="no_qts">
+  <% if FeatureFlag.active?(:change_of_circumstances) %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.no_qts_participants) %>
+  <% else %>
+    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.no_qts_participants, school_cohort: @school_cohort) %>
+  <% end %>
+</table>
+<% end %>
+
 <% if ect_profiles.eligible.any? %>
   <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
 
