@@ -36,7 +36,7 @@ Feature: Reporting an error with a partnership
     Then I should be on "challenge partnership success" page
 
     When I navigate to "2021 school partnerships" page with id "111111-test-school"
-    Then "page body" should contain "Signing up with a training provider"
+    Then "page body" should contain "Sign up with a training provider"
 
   Scenario: A logged in induction tutor for CIP school challenges partnership
     Given I am logged in as existing user with email "test-subject2@example.com"
@@ -52,5 +52,5 @@ Feature: Reporting an error with a partnership
     Then I should be on "challenge partnership success" page
 
     When I navigate to "2021 school partnerships" page with id "111113-test-school-3"
-    Then "page body" should contain "Signing up with a training provider"
+    Then "page body" should contain "Sign up with a training provider"
     And "page body" should not contain "report it now"

@@ -604,7 +604,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_sign_up_to_training_provider_page
-    expect(page).to have_selector("h1", text: "Signing up with a training provider")
+    expect(page).to have_selector("h1", text: "Sign up with a training provider")
     expect(page).to have_text("How you can sign up with a training provider")
   end
 
