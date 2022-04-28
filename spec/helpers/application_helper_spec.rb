@@ -34,9 +34,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
 
       it "returns the school dashboard path (show)" do
-        school_url = "/schools/#{school.slug}#_#{cohort.description.parameterize}"
-
-        expect(helper.profile_dashboard_path(induction_coordinator)).to eq(school_url)
+        expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
       end
     end
 
