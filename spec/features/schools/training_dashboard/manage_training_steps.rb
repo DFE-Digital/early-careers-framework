@@ -387,7 +387,7 @@ module ManageTrainingSteps
   end
 
   def when_i_click_on_view_details
-    click_on("View details")
+    click_on("Change")
   end
 
   def when_i_click_on_add_ect
