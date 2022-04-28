@@ -12,5 +12,11 @@ module Pages
 
       Pages::ReportIncorrectPartnershipPage.loaded
     end
+
+    def enter_partnership_details_url
+      visit "#{current_url}/partnerships"
+
+      Pages::SchoolPartnershipsPage.loaded
+    end
   end
 end

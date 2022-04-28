@@ -2,29 +2,50 @@
 
 require "rails_helper"
 
-RSpec.feature "Reporting an error with a partnership", type: :feature, js: true, rutabaga: false do
-  let(:cohort) { Cohort.find_or_create_by! start_year: 2021 }
+class ChallengePartnershipScenario
+  attr_reader :number,
+              :sit_email_address,
+              :school_name,
+              :school_slug,
+              :partnership_challenge_token
 
+  def initialize(num)
+    @number = num
+
+    @sit_email_address = "test-sit-#{num}@example.com"
+
+    @school_name = "Test school #{num}"
+    @school_slug = "111111-test-school-#{num}"
+
+    @partnership_challenge_token = "abc123_#{num}"
+  end
+end
+
+RSpec.feature "Reporting an error with a partnership", type: :feature, js: true, rutabaga: false do
   before(:each) do
+    Cohort.find_or_create_by! start_year: 2021
     PrivacyPolicy.find_or_create_by! major_version: 1, minor_version: 0, html: "PrivacyPolicy"
-    @scenario = Time.zone.now.to_i
   end
 
   describe "when using an email link" do
     scenario "Can see challenge options from an email link" do
-      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario, cohort
+      @scenario = ChallengePartnershipScenario.new(1)
 
-      when_i_use_the_report_incorrect_partnership_email_link "abc123_#{@scenario}"
+      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
 
-      then_i_am_on_the_report_incorrect_partnership_page_with_token "abc123_#{@scenario}"
+      when_i_use_the_report_incorrect_partnership_token @scenario.partnership_challenge_token
+
+      then_i_am_on_the_report_incorrect_partnership_page_with_token @scenario.partnership_challenge_token
       and_the_page_is_accessible
       and_percy_is_sent_a_snapshot_named "challenge options"
     end
 
     scenario "Can challenge a partnership from an email link" do
-      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario, cohort
-      and_i_use_the_report_incorrect_partnership_email_link "abc123_#{@scenario}"
-      and_i_am_on_the_report_incorrect_partnership_page_with_token "abc123_#{@scenario}"
+      @scenario = ChallengePartnershipScenario.new(2)
+
+      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_use_the_report_incorrect_partnership_token @scenario.partnership_challenge_token
+      and_i_am_on_the_report_incorrect_partnership_page_with_token @scenario.partnership_challenge_token
 
       when_i_report_a_mistake
 
@@ -34,9 +55,11 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     end
 
     scenario "Cannot challenge a partnership twice from an email link" do
-      given_a_fip_school_with_a_partnership_that_has_previously_been_challenged @scenario, cohort
+      @scenario = ChallengePartnershipScenario.new(3)
 
-      when_i_use_the_report_incorrect_partnership_email_link "abc123_#{@scenario}"
+      given_a_fip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+
+      when_i_use_the_report_incorrect_partnership_token @scenario.partnership_challenge_token
 
       then_i_am_on_the_report_incorrect_partnership_already_challenged_page
       and_the_page_is_accessible
@@ -44,9 +67,11 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     end
 
     scenario "Cannot challenge an expired challenge from an email link" do
-      given_a_fip_school_with_a_partnership_that_has_an_expired_challenge @scenario, cohort
+      @scenario = ChallengePartnershipScenario.new(4)
 
-      when_i_use_the_report_incorrect_partnership_email_link "abc123_#{@scenario}"
+      given_a_fip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+
+      when_i_use_the_report_incorrect_partnership_token @scenario.partnership_challenge_token
 
       then_i_am_on_the_report_incorrect_partnership_link_expired_page
       and_the_page_is_accessible
@@ -56,8 +81,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
   describe "when the school has chosen a FIP programme" do
     scenario "Can challenge a partnership from the school page" do
-      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(5)
+
+      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       when_i_report_that_the_school_has_been_confirmed_incorrectly
       and_i_report_an_unrecognised_provider
@@ -66,8 +93,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     end
 
     scenario "Can challenge a partnership by entering the partnerships URL" do
-      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(6)
+
+      given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       when_i_view_the_programme_details
       and_i_view_the_training_partnership_details
@@ -77,15 +106,19 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     end
 
     scenario "Cannot challenge a partnership twice" do
-      given_a_fip_school_with_a_partnership_that_has_previously_been_challenged @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(7)
+
+      given_a_fip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
     end
 
     scenario "Cannot challenge an expired challenge" do
-      given_a_fip_school_with_a_partnership_that_has_an_expired_challenge @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(8)
+
+      given_a_fip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
     end
@@ -93,8 +126,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
   describe "when the school has chosen a CIP programme" do
     scenario "Can challenge a partnership from the school page" do
-      given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(9)
+
+      given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       when_i_report_that_the_school_has_been_confirmed_incorrectly
       and_i_report_an_unrecognised_provider
@@ -103,8 +138,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     end
 
     scenario "Can challenge a partnership by entering the partnerships URL" do
-      given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(10)
+
+      given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       when_i_view_the_programme_details
       and_i_view_the_training_partnership_details
@@ -114,15 +151,19 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
     end
 
     scenario "Cannot challenge a partnership twice" do
-      given_a_cip_school_with_a_partnership_that_has_previously_been_challenged @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(11)
+
+      given_a_cip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
     end
 
     scenario "Cannot challenge an expired challenge" do
-      given_a_cip_school_with_a_partnership_that_has_an_expired_challenge @scenario, cohort
-      and_i_authenticate_as_a_sit_with_the_email "test-sit-#{@scenario}@example.com"
+      @scenario = ChallengePartnershipScenario.new(12)
+
+      given_a_cip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
+      and_i_authenticate_as_a_sit_with_the_email @scenario.sit_email_address
 
       then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
     end
@@ -130,11 +171,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
 private
 
-  def given_a_school(scenario_id, _cohort, induction_programme)
-    email_address = "test-sit-#{scenario_id}@example.com"
-    school_name = "Test school #{scenario_id}"
-    school_slug = "11111#{scenario_id}-test-school-#{scenario_id}"
-
+  def given_a_school(email_address, school_name, school_slug, induction_programme)
     school = create :school,
                     name: school_name,
                     slug: school_slug
@@ -160,25 +197,26 @@ private
     school
   end
 
-  def given_a_partnership(scenario_id, cohort, school, expired: false)
+  def given_a_partnership(challenge_token, school, expired: false)
     created_date = 20.days.ago
-    challenge_token = "abc123_#{scenario_id}"
 
     delivery_partner = create :delivery_partner,
-                              name: "Test delivery partner #{scenario_id}"
+                              name: "Test delivery partner"
+
+    school_cohort = school.school_cohorts.first
 
     partnership = if expired
                     create :partnership,
                            challenge_deadline: created_date + 14.days,
                            school: school,
-                           cohort: cohort,
+                           cohort: school_cohort.cohort,
                            delivery_partner: delivery_partner,
                            created_at: created_date
                   else
                     create :partnership,
                            :in_challenge_window,
                            school: school,
-                           cohort: cohort,
+                           cohort: school_cohort.cohort,
                            delivery_partner: delivery_partner,
                            created_at: created_date
                   end
@@ -189,69 +227,74 @@ private
                                          email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
                                          created_at: created_date
 
-    delivery_partner
+    partnership
   end
 
-  def given_a_fip_school(scenario_id, cohort)
-    given_a_school scenario_id, cohort, "FIP"
+  def given_a_fip_school(email_address, school_name, school_slug)
+    given_a_school email_address, school_name, school_slug, "FIP"
   end
 
-  def given_a_cip_school(scenario_id, cohort)
-    given_a_school scenario_id, cohort, "CIP"
+  def given_a_cip_school(email_address, school_name, school_slug)
+    given_a_school email_address, school_name, school_slug, "CIP"
   end
 
-  def given_a_partnership_that_can_be_challenged(scenario_id, cohort, school)
-    given_a_partnership scenario_id, cohort, school
+  def given_a_partnership_that_can_be_challenged(challenge_token, school)
+    given_a_partnership challenge_token, school
+  end
+  alias_method :and_a_partnership_that_can_be_challenged, :given_a_partnership_that_can_be_challenged
+
+  def given_a_partnership_that_has_an_expired_challenge(challenge_token, school)
+    given_a_partnership challenge_token, school, expired: true
+  end
+  alias_method :and_a_partnership_that_has_an_expired_challenge, :given_a_partnership_that_has_an_expired_challenge
+
+  def given_a_fip_school_with_a_partnership_that_can_be_challenged(email_address, school_name, school_slug, challenge_token)
+    school = given_a_fip_school email_address, school_name, school_slug
+    and_a_partnership_that_can_be_challenged challenge_token, school
+
+    school
   end
 
-  def given_a_partnership_that_has_an_expired_challenge(scenario_id, cohort, school)
-    given_a_partnership scenario_id, cohort, school, expired: true
+  def given_a_fip_school_with_a_partnership_that_has_an_expired_challenge(email_address, school_name, school_slug, challenge_token)
+    school = given_a_fip_school email_address, school_name, school_slug
+    and_a_partnership_that_has_an_expired_challenge challenge_token, school
+
+    school
   end
 
-  def given_a_fip_school_with_a_partnership_that_can_be_challenged(scenario_id, cohort)
-    school = given_a_fip_school scenario_id, cohort
-    given_a_partnership_that_can_be_challenged scenario_id, cohort, school
+  def given_a_cip_school_with_a_partnership_that_can_be_challenged(email_address, school_name, school_slug, challenge_token)
+    school = given_a_cip_school email_address, school_name, school_slug
+    and_a_partnership_that_can_be_challenged challenge_token, school
+
+    school
   end
 
-  def given_a_fip_school_with_a_partnership_that_has_an_expired_challenge(scenario_id, cohort)
-    school = given_a_fip_school scenario_id, cohort
-    given_a_partnership_that_has_an_expired_challenge scenario_id, cohort, school
+  def given_a_cip_school_with_a_partnership_that_has_an_expired_challenge(email_address, school_name, school_slug, challenge_token)
+    school = given_a_cip_school email_address, school_name, school_slug
+    and_a_partnership_that_has_an_expired_challenge challenge_token, school
+
+    school
   end
 
-  def given_a_fip_school_with_a_partnership_that_has_previously_been_challenged(scenario_id, cohort)
-    delivery_partner = given_a_fip_school_with_a_partnership_that_can_be_challenged scenario_id, cohort
-    given_i_use_the_report_incorrect_partnership_email_link "abc123_#{scenario_id}"
-    when_i_report_a_mistake
+  def given_a_fip_school_with_a_partnership_that_has_previously_been_challenged(email_address, school_name, school_slug, challenge_token)
+    school = given_a_fip_school_with_a_partnership_that_can_be_challenged email_address, school_name, school_slug, challenge_token
+    and_i_use_the_report_incorrect_partnership_token challenge_token
+    and_i_report_a_mistake
 
-    delivery_partner
+    school
   end
 
-  def given_a_cip_school_with_a_partnership_that_can_be_challenged(scenario_id, cohort)
-    school = given_a_cip_school scenario_id, cohort
-    given_a_partnership_that_can_be_challenged scenario_id, cohort, school
-  end
+  def given_a_cip_school_with_a_partnership_that_has_previously_been_challenged(email_address, school_name, school_slug, challenge_token)
+    school = given_a_cip_school_with_a_partnership_that_can_be_challenged email_address, school_name, school_slug, challenge_token
+    and_i_use_the_report_incorrect_partnership_token challenge_token
+    and_i_report_a_mistake
 
-  def given_a_cip_school_with_a_partnership_that_has_an_expired_challenge(scenario_id, cohort)
-    school = given_a_cip_school scenario_id, cohort
-    given_a_partnership_that_has_an_expired_challenge scenario_id, cohort, school
+    school
   end
-
-  def given_a_cip_school_with_a_partnership_that_has_previously_been_challenged(scenario_id, cohort)
-    delivery_partner = given_a_cip_school_with_a_partnership_that_can_be_challenged scenario_id, cohort
-    given_i_use_the_report_incorrect_partnership_email_link "abc123_#{scenario_id}"
-    when_i_report_a_mistake
-
-    delivery_partner
-  end
-
-  def when_i_view_the_school_cohorts_page
-    raise "method <when_i_view_the_school_cohorts_page> not implemented yet"
-  end
-  alias_method :and_i_view_the_school_cohorts_page, :when_i_view_the_school_cohorts_page
 
   def when_i_view_the_training_partnership_details
-    visit "#{page.current_url}/partnerships"
-    page_object = Pages::SchoolPartnershipsPage.loaded
+    page_object = Pages::SchoolCohortsPage.loaded
+    page_object = page_object.enter_partnership_details_url
     page_object.report_school_has_been_confirmed_incorrectly
   end
   alias_method :and_i_view_the_training_partnership_details, :when_i_view_the_training_partnership_details

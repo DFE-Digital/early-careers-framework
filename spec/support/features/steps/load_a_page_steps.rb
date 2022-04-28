@@ -23,12 +23,12 @@ module Steps
       expect(page.find("h1")).to have_content "All research sessions are currently booked"
     end
 
-    def given_i_use_the_report_incorrect_partnership_email_link(challenge_token)
+    def given_i_use_the_report_incorrect_partnership_token(challenge_token)
       page_object = Pages::ReportIncorrectPartnershipPage.new
       page_object.load(token: challenge_token)
     end
-    alias_method :when_i_use_the_report_incorrect_partnership_email_link, :given_i_use_the_report_incorrect_partnership_email_link
-    alias_method :and_i_use_the_report_incorrect_partnership_email_link, :given_i_use_the_report_incorrect_partnership_email_link
+    alias_method :when_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
+    alias_method :and_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
 
     # Handles `given_i_am_on_the_{page_object}`
     # where `page_object`` is constantized
