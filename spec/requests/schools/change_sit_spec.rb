@@ -72,15 +72,14 @@ RSpec.describe "Schools::ChangeSit", type: :request do
     it "Creates a new user with the correct details" do
       post "/schools/#{school.slug}/change-sit/confirm"
 
-      created_user = User.order(:created_at).last
+      created_user = User.find_by(email: new_email)
       expect(created_user.full_name).to eq new_name
-      expect(created_user.email).to eq new_email
     end
 
     it "assigns the school to the new user" do
       post "/schools/#{school.slug}/change-sit/confirm"
 
-      created_user = User.order(:created_at).last
+      created_user = User.find_by(email: new_email)
       expect(created_user.schools).to include school
     end
 
@@ -105,7 +104,7 @@ RSpec.describe "Schools::ChangeSit", type: :request do
       it "adds the school to the new user" do
         post "/schools/#{school.slug}/change-sit/confirm"
 
-        created_user = User.order(:created_at).last
+        created_user = User.find_by(email: new_email)
         expect(created_user.schools).to include school
       end
 
