@@ -13,32 +13,36 @@ module Schools
     def start
       reset_form
 
-      if type_param || who_to_add_param
-        add_participant_form.assign_attributes(type: type_param || who_to_add_param)
+      if type_param
+        add_participant_form.assign_attributes(type: type_param)
         store_form_in_session
 
-        if FeatureFlag.active?(:change_of_circumstances)
-          case add_participant_form.type
-          when :self
-            redirect_to action: :show, step: :yourself
-          when :teacher
-            redirect_to action: :show, step: :who
-          when :joining
-            redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year)
-          when :ect
-            redirect_to action: :show, step: :name
-          when :mentor
-            redirect_to action: :show, step: :name
-          else
-            redirect_to action: :show, step: :started
-          end
-        elsif add_participant_form.type == :self
+        if add_participant_form.type == :self
           redirect_to action: :show, step: :yourself
         else
           redirect_to action: :show, step: :started
         end
+      end
+    end
+
+    def who
+      reset_form
+      @who_to_add_form = build_participant_type_form
+    end
+
+    def chosen_who_to_add
+      @who_to_add_form = build_participant_type_form
+
+      unless @who_to_add_form.valid?
+        render "schools/add_participants/who" and return
+      end
+
+      if @who_to_add_form.type == "transfer"
+        redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year)
       else
-        redirect_to action: :show, step: form.next_step
+        add_participant_form.assign_attributes(type: @who_to_add_form.type)
+        store_form_in_session
+        redirect_to action: :show, step: :name
       end
     end
 
@@ -57,13 +61,20 @@ module Schools
       params[:type]&.to_sym
     end
 
-    def who_to_add_param
-      params[:schools_add_participant_form][:type]&.to_sym
+    def build_participant_type_form
+      Schools::NewParticipantOrTransferForm.new(who_to_add_params)
+    end
+
+    def who_to_add_params
+      return {} unless params.key?(:schools_participant_type_form)
+
+      params.require(:schools_participant_type_form).permit(:type)
     end
 
     def email_used_in_the_same_school?
       Identity.find_user_by(email: add_participant_form.email).school == add_participant_form.school_cohort.school
     end
+
     helper_method :email_used_in_the_same_school?
 
     def school_cohort
