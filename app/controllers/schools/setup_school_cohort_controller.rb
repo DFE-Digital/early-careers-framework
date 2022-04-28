@@ -10,7 +10,7 @@ module Schools
     skip_after_action :verify_policy_scoped
 
     def expect_any_ects
-      previous_cohort = @school.school_cohorts.find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
+      previous_cohort = @school.school_cohorts.previous
 
       if previous_cohort.full_induction_programme?
         # FIP

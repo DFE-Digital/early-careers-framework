@@ -417,6 +417,8 @@ Rails.application.routes.draw do
             get "training-confirmation", to: "setup_school_cohort#training_confirmation"
 
             post "save-programme", to: "setup_school_cohort#save_programme"
+
+            get "change_provider", to: "setup_school_cohort#change_provider"
           end
 
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
