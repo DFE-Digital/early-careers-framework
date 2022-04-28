@@ -6,7 +6,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature do
   let(:schedule) { create(:ecf_schedule) }
 
   scenario "viewing a schedule" do
-    given_i_am_logged_in_as_a_finance_user
+    given_i_authenticate_as_a_finance_user
     and_there_is_a_schedule
     when_i_click("Schedules")
     then_i_see("Schedules")

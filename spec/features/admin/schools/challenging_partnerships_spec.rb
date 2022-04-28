@@ -6,7 +6,7 @@ RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
   # feature removed while the new journeys are developed
   xscenario "Admin challenges school partnership" do
     given_there_is_a_partnered_school
-    and_i_am_signed_in_as_an_admin
+    and_i_authenticate_as_an_admin
     when_i_visit the_school_cohorts_page
     and_i_click_the_link_containing "Change"
 

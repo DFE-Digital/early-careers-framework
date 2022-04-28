@@ -4,8 +4,6 @@ require_relative "../base"
 
 module Pages
   class SITReportProgrammeWizard < ::Pages::Base
-    include Capybara::DSL
-
     def complete(programme_type)
       choose_programme_type programme_type
       click_button "Confirm"

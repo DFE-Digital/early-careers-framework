@@ -93,7 +93,7 @@ module Steps
 
       travel_to(@timestamp) do
         sign_in_as user
-        inductions_dashboard = Pages::SITInductionDashboard.new
+        inductions_dashboard = Pages::SchoolPage.new
         wizard = inductions_dashboard.start_add_participant_wizard
         wizard.complete(participant_name, participant_email, participant_type, cohort_label)
         sign_out
@@ -219,7 +219,7 @@ module Steps
       travel_to(@timestamp) do
         if circumstance == "FIP>FIP"
           sign_in_as user
-          inductions_dashboard = Pages::SITInductionDashboard.new
+          inductions_dashboard = Pages::SchoolPage.new
           wizard = inductions_dashboard.start_transfer_participant_wizard
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob, same_provider == :same_provider)
           sign_out

@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.feature "Admin managing 2020 participants", js: true, rutabaga: false do
   scenario "Admin views participants and adds a new one" do
     given_there_is_a_school_with_2020_cohort
-    and_i_am_signed_in_as_an_admin
+    and_i_authenticate_as_an_admin
     when_i_visit the_school_2020_cohort_page
     then_the_page_is_accessible
     and_percy_is_sent_a_snapshot_named("Admin NQT+1 listing page")

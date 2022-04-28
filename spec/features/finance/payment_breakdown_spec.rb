@@ -38,7 +38,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   before { Importers::SeedStatements.new.call }
 
   scenario "Can get to ECF payment breakdown page for a provider" do
-    given_i_am_logged_in_as_a_finance_user
+    given_i_authenticate_as_a_finance_user
     and_multiple_declarations_are_submitted
     and_voided_payable_declarations_are_submitted
     and_breakdowns_are_calculated

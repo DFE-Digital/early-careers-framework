@@ -8,7 +8,7 @@ RSpec.feature "Admin should be able to update participants details", js: true, r
 
   before do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    and_i_am_signed_in_as_an_admin
+    and_i_authenticate_as_an_admin
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
     when_i_visit_admin_participants_dashboard

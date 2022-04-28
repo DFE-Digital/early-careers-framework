@@ -28,7 +28,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
-    given_i_am_logged_in_as_a_finance_user
+    given_i_authenticate_as_a_finance_user
     and_those_courses_have_submitted_declarations
     when_i_visit_the_payment_breakdown_page
     and_choose_to_see_npq_payment_breakdown

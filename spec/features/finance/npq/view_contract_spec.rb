@@ -6,7 +6,7 @@ RSpec.feature "NPQ view contract" do
   include Finance::NPQPaymentsHelper
 
   scenario "see the contract information for all courses of an NPQ lead provider" do
-    given_i_am_logged_in_as_a_finance_user
+    given_i_authenticate_as_a_finance_user
     and_there_is_an_npq_lead_provider_with_contracts
     when_i_visit_the_payment_breakdown_page
     and_choose_to_see_npq_payment_breakdown
