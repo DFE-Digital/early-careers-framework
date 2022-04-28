@@ -10,7 +10,7 @@ module Schools
     skip_after_action :verify_policy_scoped
 
     def expect_any_ects
-      previous_cohort = @school.school_cohorts.find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
+      previous_cohort = @school.school_cohorts.previous
 
       if previous_cohort.full_induction_programme?
         # FIP
@@ -45,7 +45,14 @@ module Schools
       reset_form_data
     end
 
-    def change_provider; end
+    def change_provider
+      case setup_school_cohort_form_params[:change_provider_choice]
+      when "yes"
+        store_form_redirect_to_next_step :what_change
+      when "no"
+        store_form_redirect_to_next_step :fip_confirmation
+      end
+    end
 
     def change_fip_programme_choice; end
 
@@ -86,7 +93,8 @@ module Schools
                     :email,
                     :mentor_id,
                     :schools_current_programme_choice,
-                    :teachers_current_programme_choice)
+                    :teachers_current_programme_choice,
+                    :change_provider_choice)
     end
 
     def validate_request_or_render
