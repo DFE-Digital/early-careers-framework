@@ -66,9 +66,9 @@ module Schools
     end
 
     def who_to_add_params
-      return {} unless params.key?(:schools_participant_type_form)
+      return {} unless params.key?(:schools_new_participant_or_transfer_form)
 
-      params.require(:schools_participant_type_form).permit(:type)
+      params.require(:schools_new_participant_or_transfer_form).permit(:type)
     end
 
     def email_used_in_the_same_school?
