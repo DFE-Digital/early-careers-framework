@@ -361,7 +361,7 @@ module ManageTrainingSteps
   end
 
   def and_the_cohort_2022_tab_is_selected
-    expect(page).to have_text("How to set up training for 2022 to 2023")
+    expect(page).to have_text("How to set up training for ECTs in 2022 to 2023")
   end
 
   # When_steps

@@ -30,25 +30,22 @@ RSpec.feature "School Tutors should be abled to manage schools", type: :feature,
     and_percy_should_be_sent_a_snapshot_named "School Cohorts with Breadcrumbs"
   end
 
-  feature "Multiple cohorts" do
-    context "when the feature flag is enabled and the new cohort is open for registrations" do
-      before do
-        given_there_is_a_school_that_has_chosen_cip_for_2021
-        and_feature_flag_is_active(:multiple_cohorts)
-        and_cohort_2022_is_created
-        and_the_cohort_2022_is_open_for_registrations
-        and_i_am_signed_in_as_an_induction_coordinator
-      end
+  context "Multiple cohorts when the new cohort is open for registrations", with_feature_flags: { multiple_cohorts: "active" } do
+    before do
+      given_there_is_a_school_that_has_chosen_cip_for_2021
+      and_cohort_2022_is_created
+      and_the_cohort_2022_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
-      scenario "Show cohort tabs" do
-        then_i_see_the_cohort_tabs
-        and_the_cohort_2022_tab_is_selected
-      end
+    scenario "Show cohort tabs" do
+      then_i_see_the_cohort_tabs
+      and_the_cohort_2022_tab_is_selected
+    end
 
-      scenario "Start setting up the new cohort" do
-        when_i_click("Start now")
-        then_i_am_on_the_expect_any_ects_page
-      end
+    scenario "Start setting up the new cohort" do
+      when_i_click("Start now")
+      then_i_am_on_the_expect_any_ects_page
     end
   end
 end
