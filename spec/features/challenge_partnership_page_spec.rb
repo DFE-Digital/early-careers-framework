@@ -22,9 +22,9 @@ class ChallengePartnershipScenario
 end
 
 RSpec.feature "Reporting an error with a partnership", type: :feature, js: true, rutabaga: false do
-  before(:each) do
-    Cohort.find_or_create_by! start_year: 2021
-    PrivacyPolicy.find_or_create_by! major_version: 1, minor_version: 0, html: "PrivacyPolicy"
+  before do
+    given_a_cohort_with_start_year 2021
+    given_a_privacy_policy_has_been_published
   end
 
   describe "when using an email link" do
@@ -170,6 +170,15 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
   end
 
 private
+
+  def given_a_cohort_with_start_year(year)
+    Cohort.find_or_create_by! start_year: year
+  end
+
+  def given_a_privacy_policy_has_been_published
+    create :privacy_policy
+    PrivacyPolicy::Publish.call
+  end
 
   def given_a_school(email_address, school_name, school_slug, induction_programme)
     school = create :school,

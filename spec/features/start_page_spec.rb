@@ -23,7 +23,7 @@ RSpec.feature "Start user journey", type: :feature, js: true, rutabaga: false do
 private
 
   def when_i_click_start_now
-    start_page = Pages::StartPage.new
+    start_page = Pages::StartPage.loaded
     start_page.start_now
   end
 end

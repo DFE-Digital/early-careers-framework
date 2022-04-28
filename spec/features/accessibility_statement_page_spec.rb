@@ -18,7 +18,7 @@ RSpec.feature "Accessibility statement page", type: :feature, js: true, rutabaga
 private
 
   def when_i_click_accessibility
-    start_page = Pages::StartPage.new
+    start_page = Pages::StartPage.loaded
     start_page.view_accessibility_statement
   end
 end

@@ -19,12 +19,12 @@ RSpec.feature "Check you have an account page", type: :feature, js: true, rutaba
 private
 
   def and_i_click_start_now
-    start_page = Pages::StartPage.new
+    start_page = Pages::StartPage.loaded
     start_page.start_now
   end
 
   def and_i_click_find_out_how_to_get_access
-    sign_in_page = Pages::SignInPage.new
+    sign_in_page = Pages::SignInPage.loaded
     sign_in_page.find_out_how_to_get_access
   end
 end
