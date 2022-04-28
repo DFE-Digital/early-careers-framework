@@ -1,11 +1,13 @@
-<h2 class="govuk-heading-m govuk-!-margin-bottom-1"><%= title %></h2>
-<dl class="govuk-summary-list">
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-7">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Name
-    </dt>
+      School</dt>
     <dd class="govuk-summary-list__value">
       <%= school.name %>
+    </dd>
+    <dd class="govuk-summary-list__actions">
+        <%= govuk_link_to "Change", choose_location_request_nomination_invite_path, class: "govuk-link--no-visited-state", "data-test": "change-school" %>
     </dd>
   </div>
 
@@ -16,6 +18,7 @@
     <dd class="govuk-summary-list__value">
       <%= school.urn %>
     </dd>
+    <dd class="govuk-summary-list__actions"></dd>
   </div>
 
   <div class="govuk-summary-list__row">
@@ -25,5 +28,6 @@
     <dd class="govuk-summary-list__value">
       <%= simple_format school.full_address, class: "govuk-body" %>
     </dd>
+    <dd class="govuk-summary-list__actions"></dd>
   </div>
 </dl>
