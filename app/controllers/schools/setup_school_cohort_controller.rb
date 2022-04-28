@@ -45,7 +45,14 @@ module Schools
       reset_form_data
     end
 
-    def change_provider; end
+    def change_provider
+      case setup_school_cohort_form_params[:change_provider_choice]
+      when "yes"
+        store_form_redirect_to_next_step :what_change
+      when "no"
+        store_form_redirect_to_next_step :fip_confirmation
+      end
+    end
 
     def change_fip_programme_choice; end
 
@@ -86,7 +93,8 @@ module Schools
                     :email,
                     :mentor_id,
                     :schools_current_programme_choice,
-                    :teachers_current_programme_choice)
+                    :teachers_current_programme_choice,
+                    :change_provider_choice)
     end
 
     def validate_request_or_render

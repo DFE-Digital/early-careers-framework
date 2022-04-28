@@ -10,13 +10,13 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <%= form_for @setup_school_cohort_form, url: { action: :expect_any_ects }, method: :put do |f| %>
+    <%= form_for @setup_school_cohort_form, url: { action: :change_provider }, method: :put do |f| %>
 
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_collection_radio_buttons(
-            :expect_any_ects_choice,
-            @setup_school_cohort_form.expect_any_ects_choices,
+            :change_provider_choice,
+            @setup_school_cohort_form.change_provider_choices,
             :id, :name,
             inline: true,
             legend: { text: title, tag: 'h1', size: 'xl' }) do %>
