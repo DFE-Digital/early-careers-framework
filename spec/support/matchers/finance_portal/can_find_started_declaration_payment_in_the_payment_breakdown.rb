@@ -8,13 +8,11 @@ module Support
       match do |finance_user|
         sign_in_as finance_user
 
-        portal = Pages::FinancePortal.new
-        wizard = portal.view_payment_breakdown
-        report = wizard.complete lead_provider_name
+        report = Pages.finance_portal
+                  .view_payment_breakdown
+                  .complete(lead_provider_name)
 
-        @text = page.all(".output-payments-table")[0].text
-
-        report.can_see_started_declaration_payment_table?(num_ects, num_mentors, num_declarations)
+        report.can_see_started_declaration_payment_amount_table?(num_ects, num_mentors, num_declarations)
 
         sign_out
 

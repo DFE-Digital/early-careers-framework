@@ -25,12 +25,11 @@ module Finance
         }
       end
 
-      attr_reader :statement
 
       delegate :contract, to: :statement
 
       def initialize(statement:)
-        @statement = statement
+        self.statement = statement
       end
 
       def vat
@@ -60,38 +59,38 @@ module Finance
       end
 
       def started_count
-        orchestrator.call(event_type: :started)[:output_payments].sum { |hash| hash[:participants] }
+        @started_count ||= statement.participant_declarations.started.count
       end
 
       def retained_count
-        %i[
-          retained_1
-          retained_2
-          retained_3
-          retained_4
-        ].sum do |event_type|
-          orchestrator.call(event_type: event_type)[:output_payments].sum { |hash| hash[:participants] }
-        end
+        @retained_count ||= statement
+          .participant_declarations
+          .retained_1
+          .retained_2
+          .retained_3
+          .retained_4
+          .unique_id
+          .count
       end
 
       def completed_count
-        orchestrator.call(event_type: :completed)[:output_payments].sum { |hash| hash[:participants] }
+        @completed_count ||= statement.participant_declarations.completed.unique_id.count
       end
 
       def voided_count
-        voided_declarations.count
+        @voided_count ||= statement.voided_participant_declarations.count
       end
 
       def uplift_count
-        orchestrator.call(event_type: :started).dig(:other_fees, :uplift, :participants)
+        @uplift_count ||= statement.participant_declarations.uplift.count
       end
 
       def uplift_fee_per_declaration
-        orchestrator.call(event_type: :started).dig(:other_fees, :uplift, :per_participant)
+        statement.contract.uplift_amount
       end
 
       def total_for_uplift
-        orchestrator.call(event_type: :started).dig(:other_fees, :uplift, :subtotal)
+        @total_for_uplift ||= [uplift_count * uplift_fee_per_declaration, statement.contract.uplift_cap].min
       end
 
       def adjustments_total
@@ -115,6 +114,8 @@ module Finance
       end
 
     private
+
+      attr_accessor :statement
 
       def event_types
         self.class.event_types

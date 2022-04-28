@@ -23,6 +23,9 @@ require "sidekiq/testing"
 # require features_helper after support files have been loaded
 require "features_helper"
 
+$LOAD_PATH.unshift Rails.root.join("pages")
+require "pages"
+
 Capybara.server = :puma, { Silent: true }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -50,7 +53,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 RSpec.configure do |config|
   config.include RSpec::DefaultHttpHeader, type: :request
-
+  config.include Pages, :end_to_end_scenario
   config.include JSONAPI::RSpec
 
   config.before do

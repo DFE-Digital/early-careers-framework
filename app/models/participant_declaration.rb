@@ -12,6 +12,15 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :statement, optional: true, class_name: "Finance::Statement"
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
+  enum declaration_type: {
+    started: "started",
+    retained_1: "retained-1",
+    retained_2: "retained-2",
+    retained_3: "retained-3",
+    retained_4: "retained-4",
+    completed: "completed",
+  }
+
   enum state: {
     submitted: "submitted",
     eligible: "eligible",
@@ -30,14 +39,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
-  scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
-  scope :retained_1, -> { for_declaration("retained-1").order(declaration_date: "desc").unique_id }
-  scope :retained_2, -> { for_declaration("retained-2").order(declaration_date: "desc").unique_id }
-  scope :retained_3, -> { for_declaration("retained-3").order(declaration_date: "desc").unique_id }
-  scope :retained_4, -> { for_declaration("retained-4").order(declaration_date: "desc").unique_id }
-  scope :completed, -> { for_declaration("completed").order(declaration_date: "desc").unique_id }
 
-  scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
+  scope :uplift, -> { joins(:participant_profile).merge(ParticipantProfile.uplift).started }
 
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }

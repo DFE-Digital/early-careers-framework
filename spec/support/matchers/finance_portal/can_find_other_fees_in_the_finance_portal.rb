@@ -12,9 +12,7 @@ module Support
         wizard = portal.view_payment_breakdown
         report = wizard.complete lead_provider_name
 
-        @text = page.find("main").text
-
-        report.can_see_other_fees_table?(num_ects, num_mentors)
+        report.can_see_adjustments_table?(num_ects, num_mentors)
 
         sign_out
 

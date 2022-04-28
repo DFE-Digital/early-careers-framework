@@ -310,19 +310,6 @@ module Steps
       end
     end
 
-    def and_lead_provider_statements_have_been_created(lead_provider_name)
-      lead_provider = find_lead_provider lead_provider_name
-
-      nov_statement = lead_provider.cpd_lead_provider.statements.first
-
-      Finance::ECF::CalculationOrchestrator.new(
-        statement: nov_statement,
-        contract: lead_provider.call_off_contract,
-        aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
-        calculator: PaymentCalculator::ECF::PaymentCalculation,
-      ).call(event_type: :started)
-    end
-
   private
 
     def next_ideal_time(ideal)

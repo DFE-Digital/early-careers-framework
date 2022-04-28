@@ -4,7 +4,7 @@ module Support
   module FindingRecruitmentSummaryInPaymentBreakdown
     extend RSpec::Matchers::DSL
 
-    RSpec::Matchers.define :be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown do |lead_provider_name, num_ects, num_mentors|
+    RSpec::Matchers.define :be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown do |lead_provider_name, see_new_declarations|
       match do |finance_user|
         sign_in_as finance_user
 
