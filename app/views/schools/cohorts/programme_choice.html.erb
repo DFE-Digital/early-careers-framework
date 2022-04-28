@@ -3,53 +3,37 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl govuk-!-margin-top-2">Choose an induction programme</h1>
-    <p class="govuk-body-l">
-      <strong>You’ve chosen to:</strong>
-      <%= I18n.t "schools.induction_choice_form.confirmation_options.#{@school_cohort.induction_programme_choice}", cohort: @school_cohort.cohort.start_year %>
-    </p>
+    <div class="govuk-grid-column-two-thirds">
 
-    <h2 class="govuk-heading-m">Changing your programme</h2>
-    <% if @school_cohort.school_chose_fip? %>
-      <p class="govuk-body">If your school has decided to:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>deliver your own programme using DfE-accredited materials</li>
-      </ul>
-      <p class="govuk-body">Or</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>design your own programme based on the Early Career Framework (ECF)</li>
-      </ul>
 
-      <p class="govuk-body">You need to:</p>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <h1 class="govuk-heading-xl govuk-!-margin-top-2">Change how you run your programme</h1>
 
-      <ol class="govuk-list govuk-list--number">
-        <li>Speak to your training provider (if you have signed up with one).</li>
-        <li>Contact: <%= render MailToSupportComponent.new %>.</li>
-      </ol>
-    <% else %>
-      <p class="govuk-body">If your school wants to use a training provider, funded by the DfE, you should:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>contact your local Teaching School Hub</li>
-      </ul>
-      <p class="govuk-body">
-      They will talk you through how to access this support for your early career teachers and mentors.
-      Not sure? <%= govuk_link_to(
+        <p>Your school has chosent to <%= I18n.t "schools.induction_choice_form.confirmation_options.#{@school_cohort.induction_programme_choice}", cohort: @school_cohort.cohort.start_year %>.</p>
+
+        <% if @school_cohort.school_chose_fip? %>
+            <p class="govuk-body">Follow these steps to change how you run your programme:</p>
+            <ol class="govuk-list govuk-list--number">
+                <li>Contact your training provider about the change.</li>
+                <li>Once your provider knows, email the DfE to let us know too: <%= render MailToSupportComponent.new %>.</li>
+            </ol>
+        <% else %>
+            <p class="govuk-body">If your school wants to use a training provider, funded by the DfE, you should:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>contact your local Teaching School Hub</li>
+            </ul>
+            <p class="govuk-body">They will talk you through how to access this support for your early career teachers and mentors. Not sure? <%= govuk_link_to(
                     "Find your local Teaching School Hub (opens in a new tab)",
                     "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub",
                     target: :_blank,
                     rel: "noopener noreferrer") %>.
-      </p>
+            </p>
 
-      <p class="govuk-body">
-      If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF),
-      you need to:
-      </p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>contact: <%= render MailToSupportComponent.new %></li>
-      </ul>
-      <%= govuk_warning_text text: "If you change your programme, your early career teachers and mentors will lose their progress on the service" %>
-    <% end %>
-  </div>
+            <p class="govuk-body">If your school has decided to design and deliver your own programme based on the Early Career Framework (ECF), you need to:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>contact: <%= render MailToSupportComponent.new %></li>
+            </ul>
+            <%= govuk_warning_text text: "If you change your programme, your early career teachers and mentors will lose their progress on the service" %>
+            <% end %>
+    </div>
 </div>
