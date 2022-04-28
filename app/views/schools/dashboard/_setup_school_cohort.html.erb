@@ -1,8 +1,5 @@
 <% cohort = Cohort.active_registration_cohort %>
-<h2 class-"govuk-heading-s">How to set up training for <%= cohort.description %></h2>
-<div class="govuk-inset-text">
-  You can do this later if you do not have the information you need yet.
-</div>
+<h3 class-"govuk-heading-m">How to set up training for ECTs in <%= cohort.description %></h3>
 <% if previous_school_cohort&.full_induction_programme? %>
   <p class="govuk-body">We need to know if:</p>
   <ul class="govuk-list--bullet">
@@ -19,4 +16,7 @@
 
 <p class="govuk-body">You can change your answers later if you need to.</p>
 <p class="govuk-body">It should only take a few minutes to get set up.</p>
+<div class="govuk-inset-text">
+  You can do this later if you do not have the information you need yet.
+</div>
 <%= govuk_button_link_to("Start now", expect_any_ects_schools_setup_school_cohort_path(cohort_id: cohort.start_year)) %>
