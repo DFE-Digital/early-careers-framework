@@ -7,12 +7,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m">Participant details</h2>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Full name
+          Name
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @profile.user.full_name %>
@@ -21,7 +20,7 @@
           <dd class="govuk-summary-list__actions">
             <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
               <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
-                Change <span class="govuk-visually-hidden">name</span>
+                Edit <span class="govuk-visually-hidden">name</span>
               <% end %>
             <% end %>
           </dd>
@@ -42,7 +41,7 @@
           <dd class="govuk-summary-list__actions">
             <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
               <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
-                Change <span class="govuk-visually-hidden">email</span>
+                Edit <span class="govuk-visually-hidden">email</span>
               <% end %>
             <% end %>
           </dd>
@@ -50,7 +49,7 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Start induction
+          Start term
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @profile.start_term.humanize %>
@@ -58,7 +57,7 @@
         <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_start_term? %>
             <%= govuk_link_to schools_participant_edit_start_term_path(participant_id: @profile) do %>
-              Change <span class="govuk-visually-hidden">start induction</span>
+              Edit <span class="govuk-visually-hidden">start induction</span>
             <% end %>
           <% end %>
         </dd>
@@ -89,7 +88,7 @@
             <dd class="govuk-summary-list__actions">
               <% if @mentors_added %>
                 <%= govuk_link_to schools_participant_edit_mentor_path(participant_id: @profile.id) do %>
-                  Change <span class="govuk-visually-hidden">mentor</span>
+                  Edit <span class="govuk-visually-hidden">mentor</span>
                 <% end %>
               <% end %>
             </dd>
