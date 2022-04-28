@@ -420,6 +420,9 @@ Rails.application.routes.draw do
 
             get "change-provider", to: "setup_school_cohort#change_provider"
             put "change-provider", to: "setup_school_cohort#change_provider"
+
+            get "what-changes", to: "setup_school_cohort#what_changes"
+            put "what-changes", to: "setup_school_cohort#what_changes"
           end
 
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do

@@ -4,6 +4,8 @@ module Schools
   class SetupSchoolCohortController < ::Schools::BaseController
     before_action :load_form
     before_action :school
+    before_action :cohort
+    before_action :previous_cohort
     before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
 
     skip_after_action :verify_authorized
@@ -48,10 +50,14 @@ module Schools
     def change_provider
       case setup_school_cohort_form_params[:change_provider_choice]
       when "yes"
-        store_form_redirect_to_next_step :what_change
+        store_form_redirect_to_next_step :what_changes
       when "no"
         store_form_redirect_to_next_step :fip_confirmation
       end
+    end
+
+    def what_changes
+
     end
 
     def change_fip_programme_choice; end
@@ -130,5 +136,10 @@ module Schools
     def cohort
       @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
     end
+
+    def previous_cohort
+      @previous_cohort ||= @school.school_cohorts.previous&.cohort
+    end
+
   end
 end
