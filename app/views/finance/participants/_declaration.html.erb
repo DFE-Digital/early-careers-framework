@@ -1,5 +1,10 @@
 <%= govuk_summary_list do |summary_list| %>
   <% summary_list.row do |row| %>
+    <% row.key { "Declaration ID" } %>
+    <% row.value { declaration.id } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
     <% row.key { "Declaration type" } %>
     <% row.value { declaration.declaration_type } %>
   <% end %>

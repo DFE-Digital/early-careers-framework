@@ -3,6 +3,17 @@
 require "rails_helper"
 
 RSpec.describe "finance/participants/show.html.erb" do
+  let(:profile) { create(:ect_participant_profile) }
+  let(:user) { profile.user }
+
+  it "shows name for the identity" do
+    assign :user, user
+
+    render
+
+    expect(rendered).to have_content(user.full_name)
+  end
+
   context "with ECF profile" do
     let(:profile) { create(:ect_participant_profile) }
     let(:user) { profile.user }
@@ -25,6 +36,18 @@ RSpec.describe "finance/participants/show.html.erb" do
 
       expect(rendered).to have_content("Induction record: #{induction_record.id}")
       expect(rendered).to have_content("Training programmeFull induction programme")
+    end
+
+    context "when there are declarations" do
+      let!(:declaration) { create(:ect_participant_declaration, user: user, participant_profile: profile) }
+
+      it "renders declarations" do
+        assign :user, user
+
+        render
+
+        expect(rendered).to have_content(declaration.id)
+      end
     end
   end
 
