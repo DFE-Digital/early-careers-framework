@@ -37,7 +37,6 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       validate_milestone!
-      # validate_participant_state!
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
