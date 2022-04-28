@@ -78,6 +78,8 @@ en:
       taken: "There is already a user with this email address"
     email_address:
       blank: "Enter an email address"
+    type:
+      blank: "Select whether to add or transfer a teacher"
     start_term:
       blank: "Enter a start term"
     date_of_birth:
