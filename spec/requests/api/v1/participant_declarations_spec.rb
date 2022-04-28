@@ -141,7 +141,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         context "when the participant has been withdrawn" do
           before do
             induction_record.leaving!(ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1)
-            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1)
             put url, params: build_params(params)
           end
 
@@ -184,6 +184,20 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             default_headers[:Authorization] = bearer_token
             expect { get "/api/v1/participant-declarations/#{ect_profile.participant_declarations.first.id}" }
               .to raise_error(ActiveRecord::RecordNotFound)
+          end
+
+          it "is not possible for new lead provider to post same declaration_type as previous lead_provider" do
+            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1).rfc3339 })
+
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+            expect(response.status).to eq 200
+
+            default_headers[:Authorization] = transfer_lp_bearer_token
+            new_updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(new_updated_params)
+
+            expect(response.status).to eq 400
+            expect(response.body).to include("Declaration with given participant ID already exists")
           end
         end
 
