@@ -1,4 +1,3 @@
-<% previous_cohort = @school.school_cohorts.previous %>
 <% title = "What change do you plan to make?" %>
 
 <% content_for :title, title %>
@@ -16,15 +15,13 @@
 
       <%= f.govuk_collection_radio_buttons(
         :what_changes_choice,
-        @setup_school_cohort_form.what_changes_choices(@school, @previous_cohort),
+        @setup_school_cohort_form.what_changes_choices(@lead_provider_name, @delivery_partner_name),
         :id, :name,
         inline: true,
         legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
         <p class="govuk-body">The change will only apply for ECTs and mentors starting in the 2022 to 2023 academic year.</p>
       <% end %>
-
-
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

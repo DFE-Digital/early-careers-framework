@@ -34,12 +34,10 @@ module Schools
       ]
     end
 
-    def what_changes_choices(school, previous_cohort)
-      lead_provider_name = school.lead_provider(previous_cohort.start_year)&.name
-      delivery_partner_name = school.delivery_partner_for(previous_cohort.start_year)&.name
+    def what_changes_choices(lead_provider_name, delivery_partner_name)
       [
         OpenStruct.new(id: "change_lead_provider", name: "Leave #{lead_provider_name} and use a different lead provider"),
-        OpenStruct.new(id: "full_induction_programme", name: "Stay with #{lead_provider_name} but change your delivery partner, #{delivery_partner_name}"),
+        OpenStruct.new(id: "change_delivery_partner", name: "Stay with #{lead_provider_name} but change your delivery partner, #{delivery_partner_name}"),
         OpenStruct.new(id: "core_induction_programme", name: "Deliver your own programme using DfE-accredited materials"),
         OpenStruct.new(id: "design_our_own", name: "Design and deliver you own programme based on the Early Career Framework (ECF)"),
       ]

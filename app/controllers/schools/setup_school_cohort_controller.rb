@@ -5,7 +5,9 @@ module Schools
     before_action :load_form
     before_action :school
     before_action :cohort
-    before_action :previous_cohort
+    before_action :previous_cohort, only: %i[what_changes what_changes_confirmation]
+    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation]
+    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation]
     before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
 
     skip_after_action :verify_authorized
@@ -57,8 +59,10 @@ module Schools
     end
 
     def what_changes
-
+      store_form_redirect_to_next_step :what_changes_confirmation
     end
+
+    def what_changes_confirmation; end
 
     def change_fip_programme_choice; end
 
@@ -100,7 +104,8 @@ module Schools
                     :mentor_id,
                     :schools_current_programme_choice,
                     :teachers_current_programme_choice,
-                    :change_provider_choice)
+                    :change_provider_choice,
+                    :what_changes_choice)
     end
 
     def validate_request_or_render
@@ -141,5 +146,12 @@ module Schools
       @previous_cohort ||= @school.school_cohorts.previous&.cohort
     end
 
+    def lead_provider_name
+      @lead_provider_name ||= school.lead_provider(previous_cohort.start_year)&.name
+    end
+
+    def delivery_partner_name
+      @delivery_partner_name ||= school.delivery_partner_for(previous_cohort.start_year)&.name
+    end
   end
 end

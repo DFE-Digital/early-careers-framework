@@ -1,0 +1,11 @@
+<span class="govuk-caption-xl"><%= @school.name %></span>
+<h1 class="govuk-heading-xl">Are you sure you want to make this change?</h1>
+
+<p class="govuk-body">
+  <%= @lead_provider_name %> and <%= @delivery_partner_name %> will not be able to deliver training for ECTs and mentors
+  starting in the <%= @cohort.description %> academic year.
+</p>
+<p class="govuk-body govuk-!-margin-bottom-7">
+  They can continue delivering training to ECTs and mentors who started in the <%= @previous_cohort.description %>
+  academic year however.
+</p>
