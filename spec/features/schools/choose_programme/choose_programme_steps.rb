@@ -47,6 +47,14 @@ module ChooseProgrammeSteps
     expect(page).to have_content("You've submitted your training information")
   end
 
+  def then_i_am_taken_to_the_change_provider_page
+    expect(page).to have_content("Are you planning to change your current training provider?")
+  end
+
+  def then_i_am_taken_to_the_complete_page
+    expect(page).to have_content("You can now add ECTs and mentors when you’re ready")
+  end
+
   # And steps
 
   def and_i_am_signed_in_as_an_induction_coordinator
@@ -60,10 +68,6 @@ module ChooseProgrammeSteps
     click_on("Continue")
   end
 
-  def and_cohort_2022_is_created
-    create(:cohort, start_year: 2022)
-  end
-
   def and_the_next_cohort_is_open_for_registrations
     Timecop.freeze(Time.zone.local(2022, 5, 10, 16, 15, 0))
   end
@@ -72,14 +76,30 @@ module ChooseProgrammeSteps
     expect(page).to have_content("Your school has told us you do not expect any ECTs")
   end
 
+  def and_i_see_the_current_lead_provider
+    expect(page).to have_content(@lead_provider.name)
+  end
+
+  def and_i_see_the_delivery_partner
+    expect(page).to have_content(@delivery_partner.name)
+  end
+
+  def and_cohort_for_next_academic_year_is_created
+    create(:cohort, start_year: 2022)
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort
     click_on("Start now")
   end
 
-  def when_i_choose_no_ects
+  def when_i_choose_no
     choose("No")
+  end
+
+  def when_i_choose_no_ects
+    when_i_choose_no
   end
 
   def when_i_click_on_the_return_to_your_training_link

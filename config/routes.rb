@@ -427,6 +427,8 @@ Rails.application.routes.draw do
             get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
+
+            get "complete", to: "setup_school_cohort#complete"
           end
 
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
