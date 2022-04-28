@@ -38,8 +38,8 @@ module Schools
       [
         OpenStruct.new(id: "change_lead_provider", name: "Leave #{lead_provider_name} and use a different lead provider"),
         OpenStruct.new(id: "change_delivery_partner", name: "Stay with #{lead_provider_name} but change your delivery partner, #{delivery_partner_name}"),
-        OpenStruct.new(id: "core_induction_programme", name: "Deliver your own programme using DfE-accredited materials"),
-        OpenStruct.new(id: "design_our_own", name: "Design and deliver you own programme based on the Early Career Framework (ECF)"),
+        OpenStruct.new(id: "change_to_core_induction_programme", name: "Deliver your own programme using DfE-accredited materials"),
+        OpenStruct.new(id: "change_to_design_our_own", name: "Design and deliver you own programme based on the Early Career Framework (ECF)"),
       ]
     end
 
