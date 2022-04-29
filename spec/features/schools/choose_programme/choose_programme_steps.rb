@@ -88,6 +88,10 @@ module ChooseProgrammeSteps
     ).to have_text("To be confirmed")
   end
 
+  def and_i_see_add_ects_link
+    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort

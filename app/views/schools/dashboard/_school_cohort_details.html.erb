@@ -1,5 +1,6 @@
 <% lead_provider = school_cohort.default_induction_programme&.lead_provider %>
 <% delivery_partner =  school_cohort.default_induction_programme&.delivery_partner %>
+<% ects_count = school_cohort.current_induction_records.count %>
 
 <%= govuk_summary_list do |list| %>
   <% list.row do |row| %>
@@ -9,8 +10,8 @@
   <% end %>
   <% list.row do |row| %>
     <% row.key(text: "ECTs and mentors") %>
-    <% row.value(text: school_cohort.current_induction_records.count) %>
-    <% row.action(text: "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% row.value(text: ects_count) %>
+    <% row.action(text: ects_count.zero? ? "Add" : "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year)) %>
   <% end %>
   <% list.row do |row| %>
     <% row.key(text: "Induction tutor") %>
