@@ -533,7 +533,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_add_ect_name_page
-    expect(page).to have_selector("h1", text: "What’s the full name of this ECT?")
+    expect(page).to have_selector("h1", text: "What’s this person’s full name?")
   end
 
   def then_i_am_taken_to_add_mentor_name_page
