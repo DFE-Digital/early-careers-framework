@@ -5,10 +5,11 @@ ci_node_index = ENV["CI_NODE_INDEX"] || "0"
 github_sha = ENV['GITHUB_SHA'] || "fake-sha-123"
 
 tests = Dir["spec/**/*_spec.rb"].
+  select { |path| !path.start_with?("spec/features/") }.
   sort.
   # Add randomization seed based on SHA of each commit
   shuffle(random: Random.new(github_sha.to_i(16))).
   select.
   with_index { |el, i| i % ci_node_total.to_i == ci_node_index.to_i }
 
-exec "bundle exec rspec #{tests.join(" ")} --exclude-pattern \"spec/features/**/*_spec.rb\" --format documentation --profile #{ARGV.any? ? ARGV.join(' ') : ''}"
+exec "bundle exec rspec #{tests.join(" ")} --format documentation --profile #{ARGV.any? ? ARGV.join(' ') : ''}"
