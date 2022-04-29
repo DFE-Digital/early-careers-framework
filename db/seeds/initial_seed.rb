@@ -2,7 +2,8 @@
 
 Cohort.find_or_create_by!(start_year: 2020, registration_start_date: Date.new(2020, 5, 10), academic_year_start_date: Date.new(2020, 9, 1))
 cohort_2021 = Cohort.find_or_create_by!(start_year: 2021, registration_start_date: Date.new(2021, 5, 10), academic_year_start_date: Date.new(2021, 9, 1))
-cohort_2022 = Cohort.find_or_create_by!(start_year: 2022, registration_start_date: Date.new(2022, 5, 10), academic_year_start_date: Date.new(2022, 9, 1))
+# moving the date back so the changes can be checked in the review app
+cohort_2022 = Cohort.find_or_create_by!(start_year: 2022, registration_start_date: Date.new(2022, 4, 10), academic_year_start_date: Date.new(2022, 9, 1))
 
 ambition_cip = CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
 edt_cip = CoreInductionProgramme.find_or_create_by!(name: "Education Development Trust")
