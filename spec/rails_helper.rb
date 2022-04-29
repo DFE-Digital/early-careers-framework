@@ -130,4 +130,10 @@ RSpec.configure do |config|
       example.run
     end
   end
+
+  config.around(:each, :travel_to) do |example|
+    travel_to(example.metadata.fetch(:travel_to)) do
+      example.run
+    end
+  end
 end

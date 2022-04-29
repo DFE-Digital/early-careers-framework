@@ -30,11 +30,10 @@ RSpec.feature "School Tutors should be abled to manage schools", type: :feature,
     and_percy_should_be_sent_a_snapshot_named "School Cohorts with Breadcrumbs"
   end
 
-  context "Multiple cohorts when the new cohort is open for registrations", with_feature_flags: { multiple_cohorts: "active" } do
+  context "Multiple cohorts when the new cohort is open for registrations", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do
     before do
       given_there_is_a_school_that_has_chosen_cip_for_2021
       and_cohort_2022_is_created
-      and_the_cohort_2022_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
     end
 

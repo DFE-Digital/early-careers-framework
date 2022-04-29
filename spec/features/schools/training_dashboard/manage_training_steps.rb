@@ -3,14 +3,6 @@
 module ManageTrainingSteps
   include Capybara::DSL
 
-  def freeze_dynamic_dates_or_times_for_percy
-    Timecop.freeze(Time.zone.local(2021, 9, 17, 16, 15, 0))
-  end
-
-  def return_from_timecop
-    Timecop.return
-  end
-
   # Given_steps
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
@@ -354,10 +346,6 @@ module ManageTrainingSteps
 
   def and_cohort_2022_is_created
     create(:cohort, start_year: 2022)
-  end
-
-  def and_the_cohort_2022_is_open_for_registrations
-    Timecop.freeze(Time.zone.local(2022, 5, 10, 16, 15, 0))
   end
 
   def and_the_cohort_2022_tab_is_selected

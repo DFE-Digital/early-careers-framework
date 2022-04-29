@@ -3,12 +3,8 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage FIP training", js: true do
+RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021, 9, 17, 16, 15, 0) do
   include ManageTrainingSteps
-
-  before { freeze_dynamic_dates_or_times_for_percy }
-
-  after { return_from_timecop }
 
   scenario "FIP Induction Coordinator with training provider" do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
