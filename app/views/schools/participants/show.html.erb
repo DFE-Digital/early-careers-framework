@@ -57,7 +57,7 @@
         <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_start_term? %>
             <%= govuk_link_to schools_participant_edit_start_term_path(participant_id: @profile) do %>
-              Edit <span class="govuk-visually-hidden">start induction</span>
+              Edit <span class="govuk-visually-hidden">start term</span>
             <% end %>
           <% end %>
         </dd>
