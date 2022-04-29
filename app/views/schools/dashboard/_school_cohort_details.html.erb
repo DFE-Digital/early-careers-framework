@@ -39,7 +39,7 @@
       <% row.key(text: "Materials") %>
       <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
       <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
-        <% row.action(text: "Add", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+        <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
       <% else %>
         <% row.action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
       <% end %>
