@@ -47,7 +47,10 @@ module Pages
 
     def self.loaded
       page_object = new
-      if page_object.displayed? && page_object.loaded?
+      is_displayed = page_object.displayed?
+      is_loaded = page_object.loaded?
+
+      if is_displayed && is_loaded
         page_object
       else
         raise "Expected #{page_object.url_matcher} to match #{page_object.current_path}"

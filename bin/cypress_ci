@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+ci_node_total = ENV["CI_NODE_TOTAL"] || "1"
+ci_node_index = ENV["CI_NODE_INDEX"] || "0"
+github_sha = ENV['GITHUB_SHA'] || "fake-sha-123"
+
 tests = Dir["spec/cypress/**/*.feature"].
   sort.
   # Add randomization seed based on SHA of each commit

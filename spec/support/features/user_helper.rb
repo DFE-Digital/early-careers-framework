@@ -1,22 +1,25 @@
 # frozen_string_literal: true
 
 module UserHelper
-  def given_i_authenticate_as_a_sit_with_the_email(email_address)
+  def given_i_authenticate_as_the_user_with_the_email(email_address)
     sit_user = User.find_by(email: email_address)
     sign_in_as sit_user
   end
-  alias_method :and_i_authenticate_as_a_sit_with_the_email, :given_i_authenticate_as_a_sit_with_the_email
+  alias_method :and_i_authenticate_as_the_user_with_the_email, :given_i_authenticate_as_the_user_with_the_email
+  alias_method :when_i_authenticate_as_the_user_with_the_email, :given_i_authenticate_as_the_user_with_the_email
 
   def given_i_authenticate_as_an_admin
-    create(:user, :admin, login_token: "test-admin-token-#{Time.zone.now.to_f}")
-    visit "/users/confirm_sign_in?login_token=test-token"
+    token = "test-finance-token-#{Time.zone.now.to_f}"
+    create(:user, :admin, login_token: token)
+    visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"
   end
   alias_method :and_i_authenticate_as_an_admin, :given_i_authenticate_as_an_admin
 
   def given_i_authenticate_as_a_finance_user
-    create(:user, :finance, login_token: "test-finance-token-#{Time.zone.now.to_f}")
-    visit "/users/confirm_sign_in?login_token=test-token"
+    token = "test-finance-token-#{Time.zone.now.to_f}"
+    create(:user, :finance, login_token: token)
+    visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"
   end
   alias_method :and_i_authenticate_as_a_finance_user, :given_i_authenticate_as_a_finance_user

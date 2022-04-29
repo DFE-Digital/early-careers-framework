@@ -3,9 +3,9 @@
 require_relative "../base"
 
 module Pages
-  class LeadProviderSchoolsDashboard < ::Pages::Base
+  class CheckSchoolsPage < ::Pages::Base
     set_url "/lead-providers/your-schools"
-    set_primary_heading "XXX"
+    set_primary_heading "Your schools"
 
     def confirm_more_schools
       click_on "Confirm more schools"

@@ -20,14 +20,14 @@ module Pages
       choose "This looks like a mistake"
       click_on "Submit"
 
-      Pages::ReportIncorrectPartnershipSuccessPage.new
+      Pages::ReportIncorrectPartnershipSuccessPage.loaded
     end
 
     def report_an_unrecognised_provider
       choose "I do not recognise this training provider"
       click_on "Submit"
 
-      Pages::ReportIncorrectPartnershipSuccessPage.new
+      Pages::ReportIncorrectPartnershipSuccessPage.loaded
     end
 
     # Additional answers

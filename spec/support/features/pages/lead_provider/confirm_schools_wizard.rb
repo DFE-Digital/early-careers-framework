@@ -3,9 +3,9 @@
 require_relative "../base"
 
 module Pages
-  class LeadProviderConfirmYourSchoolsWizard < ::Pages::Base
+  class ConfirmSchoolsWizard < ::Pages::Base
     set_url "/lead-providers/report-schools/start"
-    set_primary_heading "XXX"
+    set_primary_heading "You can only confirm schools for the cohort that starts in the next academic year (2021)"
 
     def complete(delivery_partner_name, school_urns)
       click_on "Continue"

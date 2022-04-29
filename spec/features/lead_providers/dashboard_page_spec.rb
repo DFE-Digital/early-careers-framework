@@ -2,68 +2,102 @@
 
 require "rails_helper"
 
-RSpec.feature "Lead Providers Dashboard page", type: :feature, js: true, rutabaga: false do
+class LeadProviderDashboardScenario
+  attr_reader :number,
+              :email_address,
+              :full_name
+
+  def initialize(num)
+    @number = num
+
+    @email_address = "test-lead-provider-#{num}@example.com"
+    @full_name = "Test Lead Provider #{num}"
+  end
+end
+
+RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: false do
   before do
-    given_a_cohort_with_start_year_2021
+    given_a_cohort_with_start_year 2021
   end
 
-  scenario "Visiting the dashboard" do
-    given_i_am_logged_in_as_a_lead_provider
-    then_i_should_be_on_the_dashboard_page
+  scenario "Lead provider dashboard is accessible" do
+    @scenario = LeadProviderDashboardScenario.new(1)
+
+    given_a_lead_provider @scenario.email_address, @scenario.full_name
+    and_i_authenticate_as_the_user_with_the_email @scenario.email_address
+
+    when_i_am_on_the_lead_provider_dashboard
 
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Dashboard page"
+    and_percy_is_sent_a_snapshot_named "Lead Provider Dashboard"
   end
 
-  scenario "Confirming your schools" do
-    given_i_am_logged_in_as_a_lead_provider
-    when_i_choose_to_confirm_my_schools
-    then_i_am_on_the_report_schools_wizard_start_page
+  scenario "Visiting the Lead provider dashboard" do
+    @scenario = LeadProviderDashboardScenario.new(2)
+
+    given_a_lead_provider @scenario.email_address, @scenario.full_name
+
+    when_i_authenticate_as_the_user_with_the_email @scenario.email_address
+
+    then_i_am_on_the_lead_provider_dashboard
   end
 
-  scenario "Checking your schools for 2021" do
-    given_i_am_logged_in_as_a_lead_provider
-    when_i_choose_to_check_my_schools_for_2021
-    then_i_am_on_the_check_schools_for_2021_wizard_start_page
+  scenario "Confirming schools" do
+    @scenario = LeadProviderDashboardScenario.new(3)
+
+    given_a_lead_provider @scenario.email_address, @scenario.full_name
+    and_i_authenticate_as_the_user_with_the_email @scenario.email_address
+
+    when_i_confirm_my_schools_with_lead_provider_name @scenario.full_name
+
+    then_i_am_on_the_confirm_schools_wizard
+  end
+
+  scenario "Checking schools" do
+    @scenario = LeadProviderDashboardScenario.new(4)
+
+    given_a_lead_provider @scenario.email_address, @scenario.full_name
+    and_i_authenticate_as_the_user_with_the_email @scenario.email_address
+
+    when_i_check_my_schools_with_lead_provider_name @scenario.full_name
+
+    then_i_am_on_the_check_schools_page
   end
 
 private
 
-  def given_a_cohort_with_start_year_2021
-    create :cohort, start_year: 2021
+  def given_a_cohort_with_start_year(year)
+    Cohort.find_or_create_by! start_year: year
   end
 
-  def given_i_am_logged_in_as_a_lead_provider
+  def given_a_lead_provider(email_address, lead_provider_name)
     user = create :user,
-                  :lead_provider,
-                  full_name: "lead_provider"
+                  full_name: lead_provider_name,
+                  email: email_address
 
-    visit "/users/confirm_sign_in?login_token=#{user.login_token}"
-    click_on "Continue"
+    ecf_lead_provider = create :lead_provider,
+                               name: lead_provider_name
+
+    create :cpd_lead_provider,
+           lead_provider: ecf_lead_provider,
+           name: lead_provider_name
+
+    create :lead_provider_profile,
+           user: user,
+           lead_provider: ecf_lead_provider
   end
 
-  def then_i_should_be_on_the_dashboard_page
-    lead_provider_dashboard_page = Pages::LeadProviderDashboard.new
-    lead_provider_dashboard_page.displayed?
+  def when_i_confirm_my_schools_with_lead_provider_name(full_name)
+    page_object = Pages::LeadProviderDashboard.loaded
+    expect(page_object).to have_primary_heading(text: full_name)
+
+    page_object.confirm_schools
   end
 
-  def when_i_choose_to_confirm_my_schools
-    lead_provider_dashboard_page = Pages::LeadProviderDashboard.new
-    lead_provider_dashboard_page.start_confirm_your_schools_wizard
-  end
+  def when_i_check_my_schools_with_lead_provider_name(full_name)
+    page_object = Pages::LeadProviderDashboard.loaded
+    expect(page_object).to have_primary_heading(text: full_name)
 
-  def when_i_choose_to_check_my_schools_for_2021
-    lead_provider_dashboard_page = Pages::LeadProviderDashboard.new
-    lead_provider_dashboard_page.check_schools_for_2021
-  end
-
-  def then_i_am_on_the_report_schools_wizard_start_page
-    confirm_your_school_wizard = Pages::LeadProviderConfirmYourSchoolsWizard.new
-    confirm_your_school_wizard.displayed?
-  end
-
-  def then_i_am_on_the_check_schools_for_2021_wizard_start_page
-    check_schools_for_2021_wizard = Pages::LeadProviderSchoolsDashboard.new
-    check_schools_for_2021_wizard.displayed?
+    page_object.check_schools
   end
 end

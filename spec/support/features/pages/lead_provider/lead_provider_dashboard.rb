@@ -5,18 +5,19 @@ require_relative "../base"
 module Pages
   class LeadProviderDashboard < ::Pages::Base
     set_url "/dashboard"
-    set_primary_heading "Lead Provider Dashboard"
+    # this is a hack as the lead providers name is the page title
+    set_primary_heading(/^.*$/)
 
-    def start_confirm_your_schools_wizard
+    def confirm_schools
       click_on "Confirm your schools"
 
-      Pages::LeadProviderConfirmYourSchoolsWizard.new
+      Pages::ConfirmSchoolsWizard.loaded
     end
 
-    def check_schools_for_2021
-      click_on "Check your schools for 2021"
+    def check_schools
+      click_on "Check your schools"
 
-      Pages::LeadProviderSchoolsDashboard.new
+      Pages::CheckSchoolsPage.loaded
     end
   end
 end

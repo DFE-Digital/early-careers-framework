@@ -11,8 +11,8 @@ module Steps
         user = create :user, full_name: lead_provider_name
         lead_provider = create :lead_provider, :with_delivery_partner, name: lead_provider_name
         cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
-        create :lead_provider_profile, user: user, lead_provider: cpd_lead_provider.lead_provider
-        create :call_off_contract, lead_provider: cpd_lead_provider.lead_provider
+        create :lead_provider_profile, user: user, lead_provider: lead_provider
+        create :call_off_contract, lead_provider: lead_provider
 
         create :ecf_statement,
                name: "November 2021",
@@ -71,7 +71,7 @@ module Steps
       travel_to(@timestamp) do
         sign_in_as user
         dashboard = Pages::LeadProviderDashboard.new
-        wizard = dashboard.start_confirm_your_schools_wizard
+        wizard = dashboard.confirm_schools
         wizard.complete delivery_partner.name, [school.urn]
         sign_out
 

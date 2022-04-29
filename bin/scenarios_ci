@@ -7,4 +7,4 @@ scenarios = ENV["SCENARIOS"] || (1..99).to_a
                                        .select { | num | num % ci_node_total.to_i == ci_node_index.to_i }
                                        .join(",")
 
-exec "SCENARIOS=#{scenarios} bundle exec rspec --tag end_to_end_scenario --format documentation --order read #{ARGV.any? ? ARGV.join(' ') : ''}"
+exec "SCENARIOS=#{scenarios} bundle exec rspec --tag end_to_end_scenario --format documentation --profile --order read #{ARGV.any? ? ARGV.join(' ') : ''}"
