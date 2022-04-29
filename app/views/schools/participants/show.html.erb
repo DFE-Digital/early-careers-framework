@@ -41,7 +41,7 @@
           <dd class="govuk-summary-list__actions">
             <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
               <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
-                Edit <span class="govuk-visually-hidden">email</span>
+                Edit <span class="govuk-visually-hidden">email address</span>
               <% end %>
             <% end %>
           </dd>
