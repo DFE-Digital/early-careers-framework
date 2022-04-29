@@ -83,5 +83,12 @@ FactoryBot.define do
 
       with_npq_milestones
     end
+
+    factory :npq_ehco_schedule, class: "Finance::Schedule::NPQEhco", parent: :schedule do
+      name { "NPQ EHCO December 2021" }
+      schedule_identifier { "npq-ehco-december" }
+
+      with_npq_milestones
+    end
   end
 end

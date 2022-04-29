@@ -16,6 +16,11 @@ Importers::SeedSchedule.new(
 ).call
 
 Importers::SeedSchedule.new(
+  path_to_csv: Rails.root.join("db/seeds/schedules/npq_ehco.csv"),
+  klass: Finance::Schedule::NPQEhco,
+).call
+
+Importers::SeedSchedule.new(
   path_to_csv: Rails.root.join("db/seeds/schedules/ecf_standard.csv"),
   klass: Finance::Schedule::ECF,
 ).call
