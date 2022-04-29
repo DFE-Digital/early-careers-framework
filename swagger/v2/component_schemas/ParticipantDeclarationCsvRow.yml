@@ -43,12 +43,15 @@ properties:
       - ecf-induction
       - ecf-mentor
       - npq-leading-teaching
-      - npq-leading-teaching-development
       - npq-leading-behaviour-culture
-      - npq-headship
+      - npq-leading-teaching-development
+      - npq-leading-literacy
       - npq-senior-leadership
+      - npq-headship
       - npq-executive-leadership
+      - npq-early-years-leadership
       - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
     example: ecf-induction
   eligible_for_payment:
     description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE"
