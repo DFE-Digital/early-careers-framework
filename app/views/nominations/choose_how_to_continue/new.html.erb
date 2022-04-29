@@ -1,6 +1,11 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-  <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
+    <div class="govuk-grid-column-two-thirds">
+
+        <span class="govuk-caption-l"><%= @how_to_continue_form.school.name %></span>
+        <h1 class="govuk-heading-xl">Do you expect any early career teachers to join your school this academic year?</h1>
+
+        <p>These are teachers who have finished their initial teacher training. It does not include teachers who started or completed their statutory induction before 1 September 2021</p>
+
     <%= form_for @how_to_continue_form, url: choose_how_to_continue_path(token: @how_to_continue_form.token) do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
@@ -8,9 +13,7 @@
         @how_to_continue_form.choices,
         :id,
         :name,
-        legend: { text: "Do you expect any early career teachers to join your school this academic year?", size: "xl", tag: "h1" },
-        hint: { text: "These are teachers who have finished their initial teacher training. It does not include teachers
-        who started or completed their statutory induction before 1 September 2021" },
+        legend: { text: "Do you expect any early career teachers to join your school this academic year?", class: "govuk-visually-hidden" },
       ) %>
       <%= f.hidden_field :token %>
       <%= f.govuk_submit "Continue" %>

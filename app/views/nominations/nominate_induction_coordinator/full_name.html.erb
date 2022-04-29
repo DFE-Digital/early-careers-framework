@@ -6,11 +6,15 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
     <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
+    <h1 class="govuk-heading-xl">What’s the full name of your induction tutor?</h1>
+
+
     <%= form_for @nominate_induction_tutor_form, url: { action: :check_name }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <div class="govuk-form-group" >
-        <%= f.govuk_text_field(:full_name, label: { text: "What’s the full name of your induction tutor?", tag: "h1", size: "xl" }, width: "two-thirds" )%>
+        <%= f.govuk_text_field(:full_name, label: { text: "What’s the full name of your induction tutor?", class: "govuk-visually-hidden" }, width: "two-thirds" )%>
       </div>
       <%= f.hidden_field :token, value: @nominate_induction_tutor_form.token %>
       <%= f.govuk_submit "Continue" %>
