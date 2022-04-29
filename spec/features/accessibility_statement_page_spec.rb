@@ -9,15 +9,15 @@ RSpec.feature "Accessibility statement page", type: :feature, js: true, rutabaga
     and_percy_is_sent_a_snapshot_named "Accessibility statement page"
   end
 
-  scenario "Visiting the accessibility statement" do
+  scenario "Reading the accessibility statement" do
     given_i_am_on_the_start_page
-    when_i_click_accessibility
+    when_i_view_the_accessibility_statement
     then_i_am_on_the_accessibility_statement_page
   end
 
 private
 
-  def when_i_click_accessibility
+  def when_i_view_the_accessibility_statement
     start_page = Pages::StartPage.loaded
     start_page.view_accessibility_statement
   end

@@ -19,11 +19,6 @@
 require "with_model"
 
 RSpec.configure do |config|
-  # Configure rutabaga/turnip to find features outside of /features/ folders in
-  # order to prevent clashes with cypress features and confusion with capybara
-  # conventions.
-  config.pattern += ",**/turnip_features/**/*.feature"
-
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

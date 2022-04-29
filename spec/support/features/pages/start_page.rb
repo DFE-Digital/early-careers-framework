@@ -12,19 +12,25 @@ module Pages
     def start_now
       click_on "Start now"
 
-      Pages::SignInPage.new
+      Pages::SignInPage.loaded
     end
 
     def view_accessibility_statement
       click_on "Accessibility"
 
-      Pages::AccessibilityStatementPage.new
+      Pages::AccessibilityStatementPage.loaded
     end
 
     def view_privacy_policy
       click_on "Privacy"
 
-      Pages::PrivacyPolicyPage.new
+      Pages::PrivacyPolicyPage.loaded
+    end
+
+    def view_cookie_policy
+      click_on "Cookies"
+
+      Pages::CookiePolicyPage.loaded
     end
   end
 end

@@ -7,6 +7,11 @@ module Pages
     set_url "/report-incorrect-partnership{?token}"
     set_primary_heading "Report that your school has been signed up incorrectly"
 
+    def self.load_from_email(challenge_token)
+      page_object = new
+      page_object.load token: challenge_token, with_validations: false
+    end
+
     def view_details
       click_on "View details"
     end

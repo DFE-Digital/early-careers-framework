@@ -24,13 +24,12 @@ module Steps
     end
 
     def given_i_use_the_report_incorrect_partnership_token(challenge_token)
-      page_object = Pages::ReportIncorrectPartnershipPage.new
-      page_object.load(token: challenge_token)
+      Pages::ReportIncorrectPartnershipPage.load_from_email challenge_token
     end
     alias_method :when_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
     alias_method :and_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
 
-    # Handles `given_i_am_on_the_{page_object}`
+    # Handles `given_i_am_on_the_{page_object}` to load a specific page via the URL
     # where `page_object`` is constantized
     # if it also end in `_with_{query_param}` then it is parsed and passed to #load
 
