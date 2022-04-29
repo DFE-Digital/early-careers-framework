@@ -1,3 +1,6 @@
+<% lead_provider = school_cohort.default_induction_programme&.lead_provider %>
+<% delivery_partner =  school_cohort.default_induction_programme&.delivery_partner %>
+
 <%= govuk_summary_list do |list| %>
   <% list.row do |row| %>
     <% row.key(text: "Length of induction") %>
@@ -22,12 +25,12 @@
   <% if school_cohort.full_induction_programme? %>
     <% list.row do |row| %>
       <% row.key(text: "Training provider") %>
-      <% row.value(text: school_cohort.default_induction_programme&.lead_provider&.name) %>
+      <% row.value(text: lead_provider&.name ? lead_provider.name : "To be confirmed") %>
       <% row.action(text: :none) %>
     <% end %>
     <% list.row do |row| %>
       <% row.key(text: "Delivery partner") %>
-      <% row.value(text: school_cohort.default_induction_programme&.delivery_partner&.name) %>
+      <% row.value(text: delivery_partner&.name ? delivery_partner.name : "To be confirmed") %>
       <% row.action(text: :none) %>
     <% end %>
   <% elsif school_cohort.core_induction_programme? %>

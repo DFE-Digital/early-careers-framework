@@ -72,6 +72,22 @@ module ChooseProgrammeSteps
     expect(page).to have_content("Your school has told us you do not expect any ECTs")
   end
 
+  def and_i_see_training_provider_to_be_confirmed
+    expect(
+      page
+        .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Training provider")
+        .sibling("dd.govuk-summary-list__value"),
+    ).to have_text("To be confirmed")
+  end
+
+  def and_i_see_delivery_partner_to_be_confirmed
+    expect(
+      page
+        .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Delivery partner")
+        .sibling("dd.govuk-summary-list__value"),
+    ).to have_text("To be confirmed")
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort
