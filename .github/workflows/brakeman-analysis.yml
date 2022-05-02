@@ -23,7 +23,7 @@ jobs:
 
     # Customize the ruby version depending on your needs
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1.101.0
+      uses: ruby/setup-ruby@v1.104.0
       with:
         ruby-version: '2.7.5'
 
