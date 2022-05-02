@@ -68,6 +68,11 @@ class SchoolCohort < ApplicationRecord
   end
   alias_method :fip?, :school_chose_fip?
 
+  def school_chose_diy?
+    induction_programme_choice == "design_our_own"
+  end
+  alias_method :diy?, :school_chose_diy?
+
   def school_chose_school_funded_fip?
     induction_programme_choice == "school_funded_fip"
   end

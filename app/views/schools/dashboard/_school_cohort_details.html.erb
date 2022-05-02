@@ -8,10 +8,12 @@
     <% row.value(text: "2") %>
     <% row.action(text: :none) %>
   <% end %>
-  <% list.row do |row| %>
-    <% row.key(text: "ECTs and mentors") %>
-    <% row.value(text: ects_count) %>
-    <% row.action(text: ects_count.zero? ? "Add" : "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year)) %>
+  <% unless school_cohort.school_chose_diy? %>
+    <% list.row do |row| %>
+      <% row.key(text: "ECTs and mentors") %>
+      <% row.value(text: ects_count) %>
+      <% row.action(text: ects_count.zero? ? "Add" : "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% end %>
   <% end %>
   <% list.row do |row| %>
     <% row.key(text: "Induction tutor") %>
