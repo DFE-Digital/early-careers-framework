@@ -125,7 +125,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when participant is withdrawn" do
         before do
-          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: declaration_date - 1.hour })
+          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: declaration_date - 1.second })
         end
 
         it "returns 422" do
@@ -138,7 +138,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when participant is deferred" do
         before do
-          ect_profile.participant_profile_states.create({ state: "deferred", created_at: declaration_date - 1.hour })
+          ect_profile.participant_profile_states.create({ state: "deferred", created_at: declaration_date - 1.second })
         end
 
         it "returns 422" do

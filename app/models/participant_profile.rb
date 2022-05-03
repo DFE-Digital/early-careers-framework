@@ -94,7 +94,7 @@ class ParticipantProfile < ApplicationRecord
   end
 
   def state_at(declaration_date)
-    participant_profile_states.where("created_at <= ?", declaration_date).order(:created_at).last
+    participant_profile_states.where("created_at < ?", declaration_date).order(:created_at).last
   end
 
   def fundable?
