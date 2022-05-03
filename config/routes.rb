@@ -425,6 +425,7 @@ Rails.application.routes.draw do
             put "what-changes", to: "setup_school_cohort#what_changes"
 
             get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
+            put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
 
