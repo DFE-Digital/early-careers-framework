@@ -5,6 +5,9 @@
   <div class="govuk-grid-column-two-thirds">
     <%= render partial: what_changes_confirmation_partial %>
 
-    <%= govuk_button_link_to("Confirm", what_changes_submitted_schools_setup_school_cohort_path) %>
+    <%= form_for @setup_school_cohort_form, url: { action: :what_changes_confirmation }, method: :put do |f| %>
+      <%#= f.hidden_field :what_changes_choice %>
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
   </div>
 </div>

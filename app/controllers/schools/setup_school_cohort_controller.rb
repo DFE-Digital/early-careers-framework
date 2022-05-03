@@ -62,7 +62,21 @@ module Schools
       store_form_redirect_to_next_step :what_changes_confirmation
     end
 
-    def what_changes_confirmation; end
+    def what_changes_confirmation
+      programme_choice = case @setup_school_cohort_form.what_changes_choice
+                         when "change_lead_provider"
+                           "full_induction_programme"
+                         when "change_delivery_partner"
+                           "full_induction_programme"
+                         when "change_to_core_induction_programme"
+                           "core_induction_programme"
+                         when "change_to_design_our_own"
+                           "design_our_own"
+                         end
+      set_cohort_induction_programme!(programme_choice)
+
+      store_form_redirect_to_next_step :what_changes_submitted
+    end
 
     def change_fip_programme_choice; end
 
@@ -114,13 +128,6 @@ module Schools
       params.require(:schools_setup_school_cohort_form)
             .permit(:expect_any_ects_choice,
                     :how_will_you_run_training_choice,
-                    :trn,
-                    :date_of_birth,
-                    :start_date,
-                    :email,
-                    :mentor_id,
-                    :schools_current_programme_choice,
-                    :teachers_current_programme_choice,
                     :change_provider_choice,
                     :what_changes_choice)
     end
@@ -172,8 +179,7 @@ module Schools
     end
 
     def save_school_choice!
-      Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
-                                                  programme_choice: @setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
+      set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
     end
   end
 end
