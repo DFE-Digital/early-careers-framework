@@ -38,6 +38,14 @@ RSpec.describe "finance/participants/show.html.erb" do
       expect(rendered).to have_content("Training programmeFull induction programme")
     end
 
+    it "renders eligible for funding" do
+      assign :user, user
+
+      render
+
+      expect(rendered).to have_content("Eligible for funding#{profile.fundable?.to_s.upcase}")
+    end
+
     context "when there are declarations" do
       let!(:declaration) { create(:ect_participant_declaration, user: user, participant_profile: profile) }
 
@@ -65,6 +73,14 @@ RSpec.describe "finance/participants/show.html.erb" do
 
       expect(rendered).to have_content("Lead provider#{profile.npq_application.npq_lead_provider.name}")
       expect(rendered).to have_content("School URN#{profile.npq_application.school_urn}")
+    end
+
+    it "renders eligible for funding" do
+      assign :user, user
+
+      render
+
+      expect(rendered).to have_content("Eligible for funding#{profile.fundable?.to_s.upcase}")
     end
   end
 end
