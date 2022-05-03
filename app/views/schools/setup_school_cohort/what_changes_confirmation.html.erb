@@ -1,0 +1,10 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: what_changes_schools_setup_school_cohort_path) %>
+<% what_changes_confirmation_partial = @setup_school_cohort_form.attributes[:what_changes_choice] + "_confirmation" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render partial: what_changes_confirmation_partial %>
+
+    <%= govuk_button_link_to("Confirm", what_changes_submitted_schools_setup_school_cohort_path) %>
+  </div>
+</div>

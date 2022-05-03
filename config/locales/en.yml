@@ -241,6 +241,8 @@ en:
               blank: "Choose whether your school expect any ECTs"
             how_will_you_run_training_choice:
               blank: "Choose how you will run training for new starters"
+            what_changes_choice:
+              blank: "Choose what change you plan to make"
 
   page_titles:
     lead_providers:

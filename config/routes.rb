@@ -417,6 +417,18 @@ Rails.application.routes.draw do
             get "training-confirmation", to: "setup_school_cohort#training_confirmation"
 
             post "save-programme", to: "setup_school_cohort#save_programme"
+
+            get "change-provider", to: "setup_school_cohort#change_provider"
+            put "change-provider", to: "setup_school_cohort#change_provider"
+
+            get "what-changes", to: "setup_school_cohort#what_changes"
+            put "what-changes", to: "setup_school_cohort#what_changes"
+
+            get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
+
+            get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
+
+            get "complete", to: "setup_school_cohort#complete"
           end
 
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do

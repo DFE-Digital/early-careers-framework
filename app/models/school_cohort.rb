@@ -50,6 +50,10 @@ class SchoolCohort < ApplicationRecord
     joins(:cohort).where("cohorts.start_year BETWEEN 2021 AND ?", Time.zone.now.year).order(start_year: :desc).limit(3)
   end
 
+  def self.previous
+    find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
+  end
+
   def lead_provider
     school.lead_provider(cohort.start_year)
   end

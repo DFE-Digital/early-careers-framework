@@ -2,6 +2,8 @@
 
 require "rails_helper"
 require_relative "./choose_programme_steps"
+require_relative "../training_dashboard/manage_training_steps"
+
 
 RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false do
   include ChooseProgrammeSteps
@@ -14,7 +16,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     reset_time
   end
 
-  scenario "A school choose no ECTs expected in next academic year" do
+  scenario "A school chooses no ECTs expected in next academic year" do
     given_a_school_with_no_chosen_programme_for_next_academic_year
     and_the_next_cohort_is_open_for_registrations
     and_i_am_signed_in_as_an_induction_coordinator
@@ -32,7 +34,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     and_the_dashboard_page_shows_the_no_ects_message
   end
 
-  scenario "A school choose ECTs expected in next academic year and training DfE funded" do
+  scenario "A school chooses ECTs expected in next academic year and training DfE funded" do
     given_a_school_with_no_chosen_programme_for_next_academic_year
     and_the_next_cohort_is_open_for_registrations
     and_i_am_signed_in_as_an_induction_coordinator
@@ -59,7 +61,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     and_i_see_add_ects_link
   end
 
-  scenario "A school choose ECTs expected in next academic year and deliver own programme" do
+  scenario "A school chooses ECTs expected in next academic year and deliver own programme" do
     given_a_school_with_no_chosen_programme_for_next_academic_year
     and_the_next_cohort_is_open_for_registrations
     and_i_am_signed_in_as_an_induction_coordinator
@@ -83,7 +85,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_manage_your_training_page
   end
 
-  scenario "A school choose ECTs expected in next academic year and design and deliver own programme" do
+  scenario "A school chooses ECTs expected in next academic year and design and deliver own programme" do
     given_a_school_with_no_chosen_programme_for_next_academic_year
     and_the_next_cohort_is_open_for_registrations
     and_i_am_signed_in_as_an_induction_coordinator
@@ -107,6 +109,161 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_manage_your_training_page
   end
 
+  context "FIP" do
+    scenario "A school chooses to keep the same FIP programme in the new cohort" do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_cohort_for_next_academic_year_is_created
+      and_the_next_cohort_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+      when_i_start_programme_selection_for_next_cohort
+      then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+      when_i_choose_ects_expected
+      and_i_click_continue
+      then_i_am_taken_to_the_change_provider_page
+      and_i_see_the_current_lead_provider
+      and_i_see_the_delivery_partner
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+
+      click_on "Return to manage your training"
+      then_i_am_taken_to_the_manage_your_training_page
+      and_i_see_the_current_lead_provider
+      and_i_see_the_delivery_partner
+    end
+
+    context "Changing training" do
+      scenario "A school chooses to use a different lead provider" do
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+        and_cohort_for_next_academic_year_is_created
+        and_the_next_cohort_is_open_for_registrations
+        and_i_am_signed_in_as_an_induction_coordinator
+        when_i_start_programme_selection_for_next_cohort
+        then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+        when_i_choose_ects_expected
+        and_i_click_continue
+        then_i_am_taken_to_the_change_provider_page
+        and_i_see_the_current_lead_provider
+        and_i_see_the_delivery_partner
+
+        when_i_choose_yes
+        and_i_click_continue
+        then_i_am_taken_to_what_changes_page
+
+        when_i_choose_to_leave_lead_provider
+        and_i_click_continue
+
+        then_I_am_taken_to_the_change_lead_provider_confirmation_page
+
+        when_i_click_the_confirm_button
+        then_i_am_taken_to_the_training_change_submitted_page
+
+        click_on "Return to manage your training"
+        then_i_am_taken_to_the_manage_your_training_page
+        # FIXME
+        # and_i_see_the_current_lead_provider
+        # and_i_see_the_delivery_partner
+      end
+
+      scenario "A school chooses to change delivery partner" do
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+        and_cohort_for_next_academic_year_is_created
+        and_the_next_cohort_is_open_for_registrations
+        and_i_am_signed_in_as_an_induction_coordinator
+        when_i_start_programme_selection_for_next_cohort
+        then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+        when_i_choose_ects_expected
+        and_i_click_continue
+        then_i_am_taken_to_the_change_provider_page
+        and_i_see_the_current_lead_provider
+        and_i_see_the_delivery_partner
+
+        when_i_choose_yes
+        and_i_click_continue
+        then_i_am_taken_to_what_changes_page
+
+        when_i_choose_to_change_delivery_partner
+        and_i_click_continue
+        then_I_am_taken_to_the_change_delivery_partner_confirmation_page
+
+        when_i_click_the_confirm_button
+        then_i_am_taken_to_the_training_change_submitted_page
+
+        click_on "Return to manage your training"
+        then_i_am_taken_to_the_manage_your_training_page
+        # FIXME
+        # and_i_see_the_current_lead_provider
+        # and_i_see_the_delivery_partner
+      end
+
+      scenario "A school chooses to deliver own programme" do
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+        and_cohort_for_next_academic_year_is_created
+        and_the_next_cohort_is_open_for_registrations
+        and_i_am_signed_in_as_an_induction_coordinator
+        when_i_start_programme_selection_for_next_cohort
+        then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+        when_i_choose_ects_expected
+        and_i_click_continue
+        then_i_am_taken_to_the_change_provider_page
+        and_i_see_the_current_lead_provider
+        and_i_see_the_delivery_partner
+
+        when_i_choose_yes
+        and_i_click_continue
+        then_i_am_taken_to_what_changes_page
+
+        when_i_choose_to_deliver_own_programme
+        and_i_click_continue
+        then_I_am_taken_to_the_change_to_design_own_programme_confirmation_page
+
+        when_i_click_the_confirm_button
+        then_i_am_taken_to_the_training_change_submitted_page
+
+        click_on "Return to manage your training"
+        then_i_am_taken_to_the_manage_your_training_page
+        # FIXME
+        # and_i_see_the_current_lead_provider
+        # and_i_see_the_delivery_partner
+      end
+
+      scenario "A school chooses to design and deliver own programme" do
+        given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+        and_cohort_for_next_academic_year_is_created
+        and_the_next_cohort_is_open_for_registrations
+        and_i_am_signed_in_as_an_induction_coordinator
+        when_i_start_programme_selection_for_next_cohort
+        then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+        when_i_choose_ects_expected
+        and_i_click_continue
+        then_i_am_taken_to_the_change_provider_page
+        and_i_see_the_current_lead_provider
+        and_i_see_the_delivery_partner
+
+        when_i_choose_yes
+        and_i_click_continue
+        then_i_am_taken_to_what_changes_page
+
+        when_i_choose_to_design_and_deliver_own_programme
+        and_i_click_continue
+        then_I_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
+
+        when_i_click_the_confirm_button
+        then_i_am_taken_to_the_training_change_submitted_page
+
+        click_on "Return to manage your training"
+        then_i_am_taken_to_the_manage_your_training_page
+        # FIXME
+        # and_i_see_the_current_lead_provider
+        # and_i_see_the_delivery_partner
+      end
+    end
   scenario "A school choose ECTs expected in next academic year and deliver own programme" do
     given_a_school_with_no_chosen_programme_for_next_academic_year
     and_i_am_signed_in_as_an_induction_coordinator

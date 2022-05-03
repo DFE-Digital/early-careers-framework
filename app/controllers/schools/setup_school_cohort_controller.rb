@@ -4,28 +4,29 @@ module Schools
   class SetupSchoolCohortController < ::Schools::BaseController
     before_action :load_form
     before_action :school
+    before_action :cohort
+    before_action :previous_cohort, only: %i[what_changes what_changes_confirmation]
+    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation]
+    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation]
     before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
 
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
 
     def expect_any_ects
-      previous_cohort = @school.school_cohorts.find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
-
-      if previous_cohort.full_induction_programme?
-        # FIP
-        store_form_redirect_to_next_step(:change_provider)
-      elsif previous_cohort.core_induction_programme?
-        # DIY CIP
-        if no_ects_expected
-          store_form_redirect_to_next_step :no_expected_ects
-        elsif ects_expected
+      if no_ects_expected
+        store_form_redirect_to_next_step :no_expected_ects
+      elsif ects_expected
+        if previous_school_cohort.full_induction_programme?
+          store_form_redirect_to_next_step(:change_provider)
+        elsif previous_school_cohort.core_induction_programme?
           store_form_redirect_to_next_step :how_will_you_run_training
         end
       end
     end
 
     def no_expected_ects
+      # prevent overriding the induction programme
       unless school_cohort.persisted?
         school_cohort.induction_programme_choice = :no_early_career_teachers
         school_cohort.save!
@@ -45,7 +46,27 @@ module Schools
       reset_form_data
     end
 
-    def change_provider; end
+    def training_confirmation
+      reset_form_data
+    end
+
+    def change_provider
+      case setup_school_cohort_form_params[:change_provider_choice]
+      when "yes"
+        store_form_redirect_to_next_step :what_changes
+      when "no"
+        # skip if there is already a programme selected for the school cohort
+        use_the_same_training_programme!
+
+        store_form_redirect_to_next_step :complete
+      end
+    end
+
+    def what_changes
+      store_form_redirect_to_next_step :what_changes_confirmation
+    end
+
+    def what_changes_confirmation; end
 
     def change_fip_programme_choice; end
 
@@ -69,6 +90,19 @@ module Schools
       setup_school_cohort_form_params[:expect_any_ects_choice] == "no"
     end
 
+    def previous_school_cohort
+      @previous_school_cohort ||= @school.school_cohorts.previous
+    end
+
+    def use_the_same_training_programme!
+      # copy the previous partnership for the new cohort
+      previous_partnership_copy = @school.partnerships.find_by(cohort: previous_cohort).dup
+      previous_partnership_copy.cohort = cohort
+      previous_partnership_copy.save!
+
+      set_cohort_induction_programme!("full_induction_programme")
+    end
+
     def load_form
       @setup_school_cohort_form = SetupSchoolCohortForm.new(session[:setup_school_cohort_form])
       @setup_school_cohort_form.assign_attributes(setup_school_cohort_form_params)
@@ -86,7 +120,9 @@ module Schools
                     :email,
                     :mentor_id,
                     :schools_current_programme_choice,
-                    :teachers_current_programme_choice)
+                    :teachers_current_programme_choice,
+                    :change_provider_choice,
+                    :what_changes_choice)
     end
 
     def validate_request_or_render
@@ -110,9 +146,9 @@ module Schools
       @school ||= active_school
     end
 
-    def save_school_choice!
+    def set_cohort_induction_programme!(programme_choice)
       Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
-                                                  programme_choice: @setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
+                                                  programme_choice: programme_choice)
     end
 
     def school_cohort
@@ -121,6 +157,23 @@ module Schools
 
     def cohort
       @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
+    end
+
+    def previous_cohort
+      @previous_cohort ||= previous_school_cohort&.cohort
+    end
+
+    def lead_provider_name
+      @lead_provider_name ||= school.lead_provider(previous_cohort.start_year)&.name
+    end
+
+    def delivery_partner_name
+      @delivery_partner_name ||= school.delivery_partner_for(previous_cohort.start_year)&.name
+    end
+
+    def save_school_choice!
+      Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+                                                  programme_choice: @setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
     end
   end
 end
