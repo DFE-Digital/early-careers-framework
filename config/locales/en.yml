@@ -235,6 +235,12 @@ en:
           attributes:
             mentor_id:
               blank: "Choose a mentor"
+        schools/setup_school_cohort_form:
+          attributes:
+            expect_any_ects_choice:
+              blank: "Choose whether your school expect any ECTs"
+            how_will_you_run_training_choice:
+              blank: "Choose how you will run training for new starters"
 
   page_titles:
     lead_providers:
