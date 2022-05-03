@@ -23,7 +23,7 @@ RSpec.describe Schools::Participants::StatusTable, type: :view_component do
         expect(rendered).to have_css("th", text: "Name")
         expect(rendered).to have_css("th", text: "Lead provider")
         expect(rendered).to have_css("th", text: "Delivery partner")
-        expect(rendered).to have_css("th", text: "Induction start")
+        expect(rendered).to have_css("th", text: "Start term")
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe Schools::Participants::StatusTable, type: :view_component do
         expect(rendered).to have_rendered(Schools::Participants::StatusTableRow).with(profile: participant_profile)
         expect(rendered).to have_css("th", text: "Name")
         expect(rendered).to have_css("th", text: "Materials supplier")
-        expect(rendered).to have_css("th", text: "Induction start")
+        expect(rendered).to have_css("th", text: "Start term")
       end
     end
   end

@@ -6,12 +6,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Confirm your details</h1>
-  
-    <div class="govuk-!-margin-bottom-9">
-      <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
-      <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path, class: "govuk-link--no-visited-state", "data-test": "change-school" %>
-    </div>
+    <h1 class="govuk-heading-xl">Confirm this is your school</h1>
+
+
+      <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "" } %>
+
 
     <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
       <%= f.hidden_field :answers_checked, value: true %>

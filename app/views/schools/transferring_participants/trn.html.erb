@@ -18,7 +18,7 @@
     <%= form_for @transferring_participant_form, url: { action: :trn }, method: :put do |f| %>
 
       <%= f.govuk_text_field :trn,
-        width: "three-quarters",
+        width: "two-thirds",
         label: { text: "Teacher reference number (TRN)", class: "govuk-visually-hidden" }
       %>
       <%= f.govuk_submit "Continue" %>

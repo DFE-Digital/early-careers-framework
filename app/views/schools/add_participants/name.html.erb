@@ -7,14 +7,14 @@
     <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
+      <span class="govuk-caption-xl"><%= @school.name %></span>
       <% if add_participant_form.type == :ect %>
-        <h1 class="govuk-heading-xl">What’s the full name of this ECT?</h1>
+        <h1 class="govuk-heading-xl">What’s this person’s full name?</h1>
       <% else %>
-        <h1 class="govuk-heading-xl">What’s the full name of this mentor?</h1>
+        <h1 class="govuk-heading-xl">What’s this person’s full name?</h1>
       <% end %>
 
-      <%= f.govuk_text_field :full_name, width: "three-quarters", label: { hidden: true } %>
+      <%= f.govuk_text_field :full_name, width: "two-thirds", label: { hidden: true } %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

@@ -12,9 +12,9 @@
 
     <% else %>
       <% if participant_profile.ect? %>
-        <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as an ECT", text: nil, classes: "govuk-!-margin-bottom-8" %>
+        <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as an ECT", text: nil, classes: "govuk-!-margin-bottom-7" %>
       <% else %>
-        <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-8" %>
+        <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-7" %>
       <% end %>
 
       <h2 class="govuk-heading-m">What happens next</h2>

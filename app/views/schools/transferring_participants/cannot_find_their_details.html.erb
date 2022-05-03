@@ -7,14 +7,14 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">We cannot find <%= @transferring_participant_form.full_name_to_display %> record</h1>
-    <p>Check the information you’ve entered is correct.</p>
+    <p>Check the information you entered is correct.</p>
 
     <p>We need to find <%= @transferring_participant_form.full_name.titleize %> in the Teaching Regulation Agency records so we can transfer their record to your school.</p>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Full name
+          Name
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @transferring_participant_form.full_name.titleize %>

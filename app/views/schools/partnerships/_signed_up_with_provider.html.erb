@@ -17,9 +17,6 @@
 <% if @report_mistake_link.present? %>
   <p class="govuk-body">
     If this doesn’t look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
-  </p>
-
-  <p class="govuk-body">
     This link will expire on <%= @mistake_link_expiry %>.
   </p>
 <% else %>

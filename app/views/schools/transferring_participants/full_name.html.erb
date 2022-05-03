@@ -6,8 +6,10 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">What’s this person’s full name?</h1>
+
+
     <%= form_for @transferring_participant_form, url: { action: :full_name }, method: :put do |f| %>
-      <%= f.govuk_text_field :full_name, width: "three-quarters", label: { hidden: true } %>
+      <%= f.govuk_text_field :full_name, width: "two-thirds", label: { hidden: true } %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

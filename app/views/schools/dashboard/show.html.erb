@@ -46,7 +46,7 @@
                 Change <span class="govuk-visually-hidden">induction programme choice</span>
               <% end %>
             <% else %>
-              <%= govuk_link_to "View details", schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %>
+              <%= govuk_link_to "Change", schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %>
             <% end %>
           </dd>
         </div>
@@ -88,8 +88,6 @@
         <% if @report_mistake_link.present? %>
           <p class="govuk-body">
           If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
-          </p>
-          <p class="govuk-body">
           This link will expire on <%= @mistake_link_expiry %>.
           </p>
         <% else %>

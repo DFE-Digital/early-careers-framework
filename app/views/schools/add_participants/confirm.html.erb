@@ -3,11 +3,12 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
-    <h1 class="govuk-heading-xl">Check your answers</h1>
+    <div class="govuk-grid-column-two-thirds">
 
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <h1 class="govuk-heading-xl">Check your answers</h1>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-7">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Name
@@ -26,7 +27,7 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Email
+          Email address
         </dt>
         <dd class="govuk-summary-list__value">
           <div><%= add_participant_form.email %></div>
@@ -34,7 +35,7 @@
         <dd class="govuk-summary-list__actions">
           <% unless add_participant_form.type == :self %>
             <%= govuk_link_to({ action: :show, step: "email" }) do %>
-              Change <span class="govuk-visually-hidden">email</span>
+              Change <span class="govuk-visually-hidden">email address</span>
             <% end %>
           <% end %>
         </dd>
@@ -42,7 +43,7 @@
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Start induction
+          Start term
         </dt>
         <dd class="govuk-summary-list__value">
           <div>
@@ -51,7 +52,7 @@
         </dd>
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to({ action: :show, step: "start-term" }) do %>
-            Change <span class="govuk-visually-hidden">term</span>
+            Change <span class="govuk-visually-hidden">start term</span>
           <% end %>
         </dd>
       </div>
@@ -82,7 +83,6 @@
       <% end %>
     </dl>
 
-    <p class="govuk-body">We’ll contact this person for information needed to check they’re eligible for this training programme.</p>
 
     <%= form_for add_participant_form, url: { action: :complete }, method: :post do |f| %>
       <%= f.govuk_submit "Confirm and add" %>
