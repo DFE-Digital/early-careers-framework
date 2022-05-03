@@ -8,11 +8,12 @@ module Pages
       include Capybara::DSL
 
       def initialize(caption)
-        self.element = page.find("caption", text: caption)
+        self.element = find("caption", text: caption)
       end
 
       def row_labelled(label)
-        tbody.find("tr", text: label).all("td,th")
+        tbody.has_css?("tr", text: label) &&
+          tbody.find("tr", text: label).all("td,th")
       end
 
       def column(column_header)
@@ -31,7 +32,7 @@ module Pages
         row_labelled(row)
       end
 
-      private
+    private
 
       attr_accessor :element
 
@@ -78,7 +79,7 @@ module Pages
     end
 
     def output_payments_table_body
-      page.find("caption", text: "Output payments").sibling("tbody")
+      find("caption", text: "Output payments").sibling("tbody")
     end
 
     def find_row_labled(table, declaration_type, row_type: "th")
@@ -108,7 +109,7 @@ module Pages
     end
 
     def total_starts_summary
-      page.find("strong", text: "Total starts").sibling("div")
+      find("strong", text: "Total starts").sibling("div")
     end
 
     def can_see_started_declaration_payment_amount_table?(num_ects, num_mentors, num_declarations)
@@ -129,7 +130,8 @@ module Pages
 
     def declaration_in_band?(declarations, band)
       declarations.group_by(&:itself).transform_values(&:size).all? do |declaration_type, num_declarations|
-        output_payments_table.cell(table_row_label_for(declaration_type), band).has_text?(num_declarations)
+        row_label = table_row_label_for(declaration_type)
+        output_payments_table.cell(row_label, band).has_text?(num_declarations)
       end
     end
 

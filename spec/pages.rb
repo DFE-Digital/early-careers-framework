@@ -3,6 +3,7 @@
 require "pages/finance_payment_breakdown_report"
 require "pages/sit_report_programme_wizard"
 require "pages/lead_provider_dashboard"
+require "pages/admin_support_participant_detail"
 require "pages/admin_support_participant_list"
 require "pages/admin_support_portal"
 require "pages/finance_participant_drilldown"
@@ -22,71 +23,71 @@ require "pages/sit_transfer_participant_wizard"
 module Pages
 
   def admin_support_participant_detail
-    @admin_support_participant_detail || Pages::AdminSupportParticipantDetail.new
+    Pages::AdminSupportParticipantDetail.new
   end
 
   def admin_support_participant_list
-    @admin_support_participant_list ||= Pages::AdminSupportParticipantList.new
+    Pages::AdminSupportParticipantList.new
   end
 
   def admin_support_portal
-    @admin_support_portal ||= Pages::AdminSupportPortal.new
+    Pages::AdminSupportPortal.new
   end
 
   def finance_participant_drilldown
-    @finance_participant_drilldown ||= Pages::FinanceParticipantDrilldown.new
+    Pages::FinanceParticipantDrilldown.new
   end
 
   def finance_participant_drilldown_search
-    @finance_participant_drilldown_search ||= Pages::FinanceParticipantDrilldownSearch
+    Pages::FinanceParticipantDrilldownSearch
   end
 
   def finance_payment_breakdown_report
-    @finance_payment_breakdown_report ||= Pages::FinancePaymentBreakdownReport
+    Pages::FinancePaymentBreakdownReport
   end
 
   def finance_payment_breakdown_report_wizard
-    @finance_payment_breakdown_report_wizard ||= Pages::FinancePaymentBreakdownReportWizard.new
+    Pages::FinancePaymentBreakdownReportWizard.new
   end
 
   def finance_portal
-    @finance_portal ||= Pages::FinancePortal.new
+    Pages::FinancePortal.new
   end
 
   def lead_provider_confirm_your_schools_wizard
-    @lead_provider_confirm_your_schools_wizard ||= Pages::LeadProviderConfirmYourSchoolsWizard.new
+    Pages::LeadProviderConfirmYourSchoolsWizard.new
   end
 
   def lead_provider_dashboard
-    @lead_provider_dashboard ||= Pages::LeadProviderDashboard.new
+    Pages::LeadProviderDashboard.new
   end
 
   def participant_registration_wizard
-    @participant_registration_wizard ||= Pages::ParticipantRegistrationWizard.new
+    Pages::ParticipantRegistrationWizard.new
   end
 
   def sit_add_participant_wizard
-    @sit_add_participant_wizard ||= Pages::SITAddParticipantWizard.new
+    Pages::SITAddParticipantWizard.new
   end
 
   def sit_report_programme_wizard
-    @sit_report_programme_wizard ||= Pages::SITReportProgrammeWizard.new
+    Pages::SITReportProgrammeWizard.new
   end
 
   def sit_induction_dashboard
-    @sit_induction_dashboard ||= Pages::SITInductionDashboard
+    Pages::SITInductionDashboard
   end
 
   def sit_participant_details
-    @sit_participant_details ||= Pages::SITParticipantDetails
+    Pages::SITParticipantDetails
   end
 
   def sit_participants_dashboard
-    @sit_participants_dashboard ||= Pages::SITParticipantsDashboard
+    Pages::SITParticipantsDashboard
   end
 
   def sit_transfer_participant_wizard
-    @sit_transfer_participant_wizard ||= Pages::SITTransferParticipantWizard
+    Pages::SITTransferParticipantWizard
   end
 
   module_function :finance_portal

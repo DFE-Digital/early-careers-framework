@@ -98,10 +98,6 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
           end
 
           and_eligible_training_declarations_are_made_payable
-
-          and_lead_provider_statements_have_been_created "Original Lead Provider"
-          and_lead_provider_statements_have_been_created "New Lead Provider"
-          and_lead_provider_statements_have_been_created "Another Lead Provider"
         end
 
         context "Then the Original SIT" do
