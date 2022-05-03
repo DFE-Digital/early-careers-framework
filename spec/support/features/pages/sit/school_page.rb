@@ -52,7 +52,7 @@ module Pages
       Pages::ReportIncorrectPartnershipPage.loaded
     end
 
-    def able_to_report_that_the_school_has_been_confirmed_incorrectly?
+    def able_to_report_school_has_been_confirmed_incorrectly?
       has_no_partnership?
       has_selector?("a", text: "report that your school has been confirmed incorrectly")
     end

@@ -86,7 +86,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_report_that_the_school_has_been_confirmed_incorrectly
+      when_i_report_school_has_been_confirmed_incorrectly
       and_i_report_an_unrecognised_provider
 
       then_i_am_on_the_report_incorrect_partnership_success_page
@@ -98,9 +98,9 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_the_programme_details
-      and_i_view_the_training_partnership_details
-      and_i_report_that_the_training_partnership_has_been_confirmed_incorrectly
+      when_i_view_programme_details
+      and_i_enter_partnership_details_url
+      and_i_report_school_partnership_has_been_confirmed_incorrectly
       and_i_report_an_unrecognised_provider
 
       then_i_am_on_the_report_incorrect_partnership_success_page
@@ -112,7 +112,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
+      then_i_cannot_report_school_has_been_confirmed_incorrectly
     end
 
     scenario "Cannot challenge an expired challenge" do
@@ -121,7 +121,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
+      then_i_cannot_report_school_has_been_confirmed_incorrectly
     end
   end
 
@@ -132,7 +132,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_report_that_the_school_has_been_confirmed_incorrectly
+      when_i_report_school_has_been_confirmed_incorrectly
       and_i_report_an_unrecognised_provider
 
       then_i_am_on_the_report_incorrect_partnership_success_page
@@ -144,9 +144,9 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_the_programme_details
-      and_i_view_the_training_partnership_details
-      and_i_report_that_the_training_partnership_has_been_confirmed_incorrectly
+      when_i_view_programme_details
+      and_i_enter_partnership_details_url
+      and_i_report_school_partnership_has_been_confirmed_incorrectly
       and_i_report_an_unrecognised_provider
 
       then_i_am_on_the_report_incorrect_partnership_success_page
@@ -158,10 +158,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_the_programme_details
-      and_i_view_the_training_partnership_details
+      when_i_view_programme_details
+      and_i_enter_partnership_details_url
 
-      then_i_cannot_report_that_the_training_partnership_has_been_confirmed_incorrectly
+      then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
     end
 
     scenario "Cannot challenge an expired challenge" do
@@ -170,10 +170,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_the_programme_details
-      and_i_view_the_training_partnership_details
+      when_i_view_programme_details
+      and_i_enter_partnership_details_url
 
-      then_i_cannot_report_that_the_training_partnership_has_been_confirmed_incorrectly
+      then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
     end
   end
 
@@ -309,17 +309,17 @@ private
     school
   end
 
-  def when_i_view_the_training_partnership_details
+  def when_i_enter_partnership_details_url
     page_object = Pages::SchoolCohortsPage.loaded
     page_object.enter_partnership_details_url
   end
-  alias_method :and_i_view_the_training_partnership_details, :when_i_view_the_training_partnership_details
+  alias_method :and_i_enter_partnership_details_url, :when_i_enter_partnership_details_url
 
-  def when_i_view_the_programme_details
+  def when_i_view_programme_details
     page_object = Pages::SchoolPage.loaded
     page_object.view_programme_details
   end
-  alias_method :and_i_view_the_programme_details, :when_i_view_the_programme_details
+  alias_method :and_i_view_programme_details, :when_i_view_programme_details
 
   def when_i_report_a_mistake
     page_object = Pages::ReportIncorrectPartnershipPage.loaded
@@ -333,25 +333,25 @@ private
   end
   alias_method :and_i_report_an_unrecognised_provider, :when_i_report_an_unrecognised_provider
 
-  def when_i_report_that_the_school_has_been_confirmed_incorrectly
+  def when_i_report_school_has_been_confirmed_incorrectly
     page_object = Pages::SchoolPage.loaded
     page_object.report_school_has_been_confirmed_incorrectly
   end
-  alias_method :and_i_report_that_the_school_has_been_confirmed_incorrectly, :when_i_report_that_the_school_has_been_confirmed_incorrectly
+  alias_method :and_i_report_school_has_been_confirmed_incorrectly, :when_i_report_school_has_been_confirmed_incorrectly
 
-  def when_i_report_that_the_training_partnership_has_been_confirmed_incorrectly
+  def when_i_report_school_partnership_has_been_confirmed_incorrectly
     page_object = Pages::SchoolPartnershipsPage.loaded
-    page_object.report_school_has_been_confirmed_incorrectly
+    page_object.report_school_partnership_has_been_confirmed_incorrectly
   end
-  alias_method :and_i_report_that_the_training_partnership_has_been_confirmed_incorrectly, :when_i_report_that_the_training_partnership_has_been_confirmed_incorrectly
+  alias_method :and_i_report_school_partnership_has_been_confirmed_incorrectly, :when_i_report_school_partnership_has_been_confirmed_incorrectly
 
-  def then_i_cannot_report_that_the_school_has_been_confirmed_incorrectly
+  def then_i_cannot_report_school_has_been_confirmed_incorrectly
     page_object = Pages::SchoolPage.loaded
-    expect(page_object).to_not be_able_to_report_that_the_school_has_been_confirmed_incorrectly
+    expect(page_object).to_not be_able_to_report_school_has_been_confirmed_incorrectly
   end
 
-  def then_i_cannot_report_that_the_training_partnership_has_been_confirmed_incorrectly
+  def then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
     page_object = Pages::SchoolPartnershipsPage.loaded
-    expect(page_object).to_not be_able_to_report_that_the_school_has_been_confirmed_incorrectly
+    expect(page_object).to_not be_able_to_report_school_partnership_has_been_confirmed_incorrectly
   end
 end
