@@ -145,6 +145,8 @@ module RecordDeclarations
 
     def milestone_schedule
       @milestone_schedule ||= begin
+        return nil unless schedule
+
         scope = schedule.schedule_milestones.joins(:milestone)
         scope
           .where("milestones.start_date <= ? AND milestones.milestone_date >= ?", parsed_date, parsed_date)
