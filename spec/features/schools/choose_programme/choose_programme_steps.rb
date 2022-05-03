@@ -74,22 +74,22 @@ module ChooseProgrammeSteps
     expect(page).to have_content("What change do you plan to make?")
   end
 
-  def then_I_am_taken_to_the_change_lead_provider_confirmation_page
+  def then_i_am_taken_to_the_change_lead_provider_confirmation_page
     expect(page).to have_content("Are you sure you want to make this change?")
     expect(page).to have_content("#{@lead_provider.name} and #{@delivery_partner.name} will not be able to deliver training for ECTs and mentors starting in the 2022 to 2023 academic year.")
   end
 
-  def then_I_am_taken_to_the_change_delivery_partner_confirmation_page
+  def then_i_am_taken_to_the_change_delivery_partner_confirmation_page
     expect(page).to have_content("Are you sure you want to make this change?")
     expect(page).to have_content("#{@delivery_partner.name} will not be able to deliver training for ECTs and mentors starting in the 2022 to 2023 academic year.")
   end
 
-  def then_I_am_taken_to_the_change_to_design_own_programme_confirmation_page
+  def then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
     expect(page).to have_content("Are you sure you want to change how you'll run your training?")
     expect(page).to have_content("You've chosen to deliver your own programme using DfE accredited materials.")
   end
 
-  def then_I_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
+  def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
     expect(page).to have_content("Are you sure you want to change how you'll run your training?")
     expect(page).to have_content("You're choosing to design and deliver your own programme based on the early career framework (ECF).")
   end
@@ -159,10 +159,6 @@ module ChooseProgrammeSteps
 
   def when_i_start_programme_selection_for_next_cohort
     click_on("Start now")
-  end
-
-  def when_i_choose_no_ects
-    choose("No")
   end
 
   def when_i_choose_no

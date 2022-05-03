@@ -46,10 +46,6 @@ module Schools
       reset_form_data
     end
 
-    def training_confirmation
-      reset_form_data
-    end
-
     def change_provider
       case setup_school_cohort_form_params[:change_provider_choice]
       when "yes"
