@@ -9,13 +9,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
-
+  let(:declaration_date) { ect_profile.schedule.milestones.first.start_date }
   describe "POST /api/v1/participant-declarations" do
     let(:valid_params) do
       {
         participant_id: ect_profile.user.id,
         declaration_type: "started",
-        declaration_date: (ect_profile.schedule.milestones.first.start_date + 2.days).rfc3339,
+        declaration_date: declaration_date.rfc3339,
         course_identifier: "ecf-induction",
       }
     end
@@ -125,7 +125,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when participant is withdrawn" do
         before do
-          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: Time.zone.now - 1.hour })
+          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: declaration_date - 1.second })
         end
 
         it "returns 422" do
@@ -138,7 +138,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when participant is deferred" do
         before do
-          ect_profile.participant_profile_states.create({ state: "deferred", created_at: Time.zone.now - 1.hour })
+          ect_profile.participant_profile_states.create({ state: "deferred", created_at: declaration_date - 1.second })
         end
 
         it "returns 422" do
