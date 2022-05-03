@@ -3,7 +3,7 @@
 RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_flags: { eligibility_notifications: "active" } do
   let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
   let(:school) { school_cohort.school }
-  let(:cohort) { create(:cohort) }
+  let(:cohort) { create(:cohort, :current) }
 
   let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
   let!(:another_cohort) { create(:school_cohort) }
@@ -203,34 +203,34 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     it "updates the email of an ECT" do
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-email", params: {
-          user: { email: "new@email.com" },
+          participant_identity: { email: "new@email.com" },
         }
-      }.to change { ect_user.reload.email }.to("new@email.com")
+      }.to change { ect_profile.current_induction_record.preferred_identity.email }.to("new@email.com")
     end
 
     it "updates the email of a mentor" do
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          user: { email: "new@email.com" },
+          participant_identity: { email: "new@email.com" },
         }
-      }.to change { mentor_user.reload.email }.to("new@email.com")
+      }.to change { mentor_profile.current_induction_record.preferred_identity.email }.to("new@email.com")
     end
 
     it "rejects a blank email" do
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          user: { email: "" },
+          participant_identity: { email: "" },
         }
-      }.not_to change { mentor_user.reload.email }
+      }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
       expect(response).to render_template("schools/participants/edit_email")
     end
 
     it "rejects a malformed email" do
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          user: { email: "nonsense" },
+          participant_identity: { email: "nonsense" },
         }
-      }.not_to change { mentor_user.reload.email }
+      }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
       expect(response).to render_template("schools/participants/edit_email")
     end
 
@@ -238,9 +238,9 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       other_user = create(:user)
       expect {
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          user: { email: other_user.email },
+          participant_identity: { email: other_user.email },
         }
-      }.not_to change { mentor_user.reload.email }
+      }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
       expect(response).to redirect_to("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/email-used")
     end
   end

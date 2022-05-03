@@ -46,20 +46,21 @@ class Schools::ParticipantsController < Schools::BaseController
   def edit_email; end
 
   def update_email
-    user = @profile.user
-    user.assign_attributes(params.require(:user).permit(:email))
-    redirect_to action: :email_used and return if email_used?
+    identity = @induction_record.preferred_identity
+    identity.assign_attributes(params.require(:participant_identity).permit(:email))
+    redirect_to action: :email_used and return if email_used?(identity.email)
 
-    if user.save
-      if @profile.ect?
-        set_success_message(heading: "The ECT’s email address has been updated")
-      else
-        set_success_message(heading: "The mentor’s email address has been updated")
-      end
-      redirect_to schools_participant_path(id: @profile)
+    render "schools/participants/edit_email" and return if identity.invalid?
+
+    Induction::ChangePreferredEmail.call(induction_record: @induction_record,
+                                         preferred_email: identity.email)
+
+    if @profile.ect?
+      set_success_message(heading: "The ECT’s email address has been updated")
     else
-      render "schools/participants/edit_email"
+      set_success_message(heading: "The mentor’s email address has been updated")
     end
+    redirect_to schools_participant_path(id: @profile)
   end
 
   def email_used; end
@@ -99,10 +100,8 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
 
     if @mentor_form.valid?
-      mentor_profile = @mentor_form.mentor&.mentor_profile
-      @profile.update!(mentor_profile: mentor_profile)
       Induction::ChangeMentor.call(induction_record: @profile.induction_records.for_school(@school).latest,
-                                   mentor_profile: mentor_profile)
+                                   mentor_profile: @mentor_form.mentor&.mentor_profile)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
       redirect_to schools_participant_path(id: @profile)
@@ -145,14 +144,15 @@ private
   def set_participant
     @profile = ParticipantProfile.find(params[:participant_id] || params[:id])
     authorize @profile, policy_class: @profile.policy_class
+    @induction_record = @profile.induction_records.for_school(@school).latest
   end
 
   def participant_mentor_form_params
     params.require(:participant_mentor_form).permit(:mentor_id)
   end
 
-  def email_used?
-    User.where.not(id: @profile.user.id).where(email: @profile.user.email).any?
+  def email_used?(email)
+    User.where(email: email).where.not(id: @profile.user.id).any? || ParticipantIdentity.where(email: email).where.not(user_id: @profile.user.id).any?
   end
 
   def start_term_form_params
