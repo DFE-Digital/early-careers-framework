@@ -6,7 +6,7 @@
 
         <h1 class="govuk-heading-xl">What’s your school’s local authority?</h1>
         <p>This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure?
-        <%= govuk_link_to "Find your school on our register (opens in a new tab)", "https://get-information-schools.service.gov.uk/", target: :_blank, rel: "noopener noreferrer", class: "govuk-link--no-visited-state" %></p>
+        <%= govuk_link_to "Find your school on our register (opens in new tab)", "https://get-information-schools.service.gov.uk/", target: :_blank, rel: "noopener noreferrer", class: "govuk-link--no-visited-state" %></p>
 
 
         <%= form_with model: @nomination_request_form, url: choose_location_request_nomination_invite_path, method: :post do |f| %>
