@@ -95,9 +95,13 @@ module Schools
     end
 
     def use_the_same_training_programme!
-      # copy the previous partnership for the new cohort
-      previous_partnership_copy = @school.partnerships.find_by(cohort: previous_cohort).dup
+      # Copy the previous active partnership for the new cohort
+      # with challenge date set to 1st Oct 2022
+      #
+      # TODO: we need a better way to set the challenge date
+      previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
       previous_partnership_copy.cohort = cohort
+      previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 1)
       previous_partnership_copy.save!
 
       set_cohort_induction_programme!("full_induction_programme")
