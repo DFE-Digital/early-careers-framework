@@ -47,7 +47,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       and_i_use_the_report_incorrect_partnership_token @scenario.partnership_challenge_token
       and_i_am_on_the_report_incorrect_partnership_page_with_token @scenario.partnership_challenge_token
 
-      when_i_report_a_mistake
+      when_i_report_a_mistake_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
       and_the_page_is_accessible
@@ -86,8 +86,8 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_report_school_has_been_confirmed_incorrectly
-      and_i_report_an_unrecognised_provider
+      when_i_report_school_has_been_confirmed_incorrectly_from_school_page
+      and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
     end
@@ -98,10 +98,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details
-      and_i_enter_partnership_details_url
-      and_i_report_school_partnership_has_been_confirmed_incorrectly
-      and_i_report_an_unrecognised_provider
+      when_i_view_programme_details_from_school_page
+      and_i_enter_partnership_details_url_from_school_cohorts_page
+      and_i_report_school_partnership_has_been_confirmed_incorrectly_from_school_partnerships_page
+      and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
     end
@@ -132,8 +132,8 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_report_school_has_been_confirmed_incorrectly
-      and_i_report_an_unrecognised_provider
+      when_i_report_school_has_been_confirmed_incorrectly_from_school_page
+      and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
     end
@@ -144,10 +144,10 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details
-      and_i_enter_partnership_details_url
-      and_i_report_school_partnership_has_been_confirmed_incorrectly
-      and_i_report_an_unrecognised_provider
+      when_i_view_programme_details_from_school_page
+      and_i_enter_partnership_details_url_from_school_cohorts_page
+      and_i_report_school_partnership_has_been_confirmed_incorrectly_from_school_partnerships_page
+      and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
     end
@@ -158,8 +158,8 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details
-      and_i_enter_partnership_details_url
+      when_i_view_programme_details_from_school_page
+      and_i_enter_partnership_details_url_from_school_cohorts_page
 
       then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
     end
@@ -170,8 +170,8 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details
-      and_i_enter_partnership_details_url
+      when_i_view_programme_details_from_school_page
+      and_i_enter_partnership_details_url_from_school_cohorts_page
 
       then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
     end
@@ -179,171 +179,11 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
 private
 
-  def given_a_cohort_with_start_year(year)
-    Cohort.find_or_create_by! start_year: year
+  def given_i_use_the_report_incorrect_partnership_token(challenge_token)
+    Pages::ReportIncorrectPartnershipPage.load_from_email challenge_token
   end
-
-  def given_a_privacy_policy_has_been_published
-    create :privacy_policy
-    PrivacyPolicy::Publish.call
-  end
-
-  def given_a_school(email_address, school_name, school_slug, induction_programme)
-    school = create :school,
-                    name: school_name,
-                    slug: school_slug
-
-    user = create :user,
-                  :induction_coordinator,
-                  schools: [school],
-                  email: email_address
-
-    PrivacyPolicy.current.accept! user
-
-    sign_in_as user
-    choose_programme_wizard = Pages::SITReportProgrammeWizard.new
-    choose_programme_wizard.complete induction_programme
-    sign_out
-
-    if induction_programme == "CIP"
-      school_cohort = school.school_cohorts.first
-      Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
-                                                  programme_choice: school_cohort.induction_programme_choice
-    end
-
-    school
-  end
-
-  def given_a_partnership(challenge_token, school, expired: false)
-    created_date = 20.days.ago
-
-    delivery_partner = create :delivery_partner,
-                              name: "Test delivery partner"
-
-    school_cohort = school.school_cohorts.first
-
-    partnership = if expired
-                    create :partnership,
-                           challenge_deadline: created_date + 14.days,
-                           school: school,
-                           cohort: school_cohort.cohort,
-                           delivery_partner: delivery_partner,
-                           created_at: created_date
-                  else
-                    create :partnership,
-                           :in_challenge_window,
-                           school: school,
-                           cohort: school_cohort.cohort,
-                           delivery_partner: delivery_partner,
-                           created_at: created_date
-                  end
-
-    PartnershipNotificationEmail.create! token: challenge_token,
-                                         sent_to: school.induction_coordinators.first.email,
-                                         partnership: partnership,
-                                         email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
-                                         created_at: created_date
-
-    partnership
-  end
-
-  def given_a_fip_school(email_address, school_name, school_slug)
-    given_a_school email_address, school_name, school_slug, "FIP"
-  end
-
-  def given_a_cip_school(email_address, school_name, school_slug)
-    given_a_school email_address, school_name, school_slug, "CIP"
-  end
-
-  def given_a_partnership_that_can_be_challenged(challenge_token, school)
-    given_a_partnership challenge_token, school
-  end
-  alias_method :and_a_partnership_that_can_be_challenged, :given_a_partnership_that_can_be_challenged
-
-  def given_a_partnership_that_has_an_expired_challenge(challenge_token, school)
-    given_a_partnership challenge_token, school, expired: true
-  end
-  alias_method :and_a_partnership_that_has_an_expired_challenge, :given_a_partnership_that_has_an_expired_challenge
-
-  def given_a_fip_school_with_a_partnership_that_can_be_challenged(email_address, school_name, school_slug, challenge_token)
-    school = given_a_fip_school email_address, school_name, school_slug
-    and_a_partnership_that_can_be_challenged challenge_token, school
-
-    school
-  end
-
-  def given_a_fip_school_with_a_partnership_that_has_an_expired_challenge(email_address, school_name, school_slug, challenge_token)
-    school = given_a_fip_school email_address, school_name, school_slug
-    and_a_partnership_that_has_an_expired_challenge challenge_token, school
-
-    school
-  end
-
-  def given_a_cip_school_with_a_partnership_that_can_be_challenged(email_address, school_name, school_slug, challenge_token)
-    school = given_a_cip_school email_address, school_name, school_slug
-    and_a_partnership_that_can_be_challenged challenge_token, school
-
-    school
-  end
-
-  def given_a_cip_school_with_a_partnership_that_has_an_expired_challenge(email_address, school_name, school_slug, challenge_token)
-    school = given_a_cip_school email_address, school_name, school_slug
-    and_a_partnership_that_has_an_expired_challenge challenge_token, school
-
-    school
-  end
-
-  def given_a_fip_school_with_a_partnership_that_has_previously_been_challenged(email_address, school_name, school_slug, challenge_token)
-    school = given_a_fip_school_with_a_partnership_that_can_be_challenged email_address, school_name, school_slug, challenge_token
-    and_i_use_the_report_incorrect_partnership_token challenge_token
-    and_i_report_a_mistake
-
-    school
-  end
-
-  def given_a_cip_school_with_a_partnership_that_has_previously_been_challenged(email_address, school_name, school_slug, challenge_token)
-    school = given_a_cip_school_with_a_partnership_that_can_be_challenged email_address, school_name, school_slug, challenge_token
-    and_i_use_the_report_incorrect_partnership_token challenge_token
-    and_i_report_a_mistake
-
-    school
-  end
-
-  def when_i_enter_partnership_details_url
-    page_object = Pages::SchoolCohortsPage.loaded
-    page_object.enter_partnership_details_url
-  end
-  alias_method :and_i_enter_partnership_details_url, :when_i_enter_partnership_details_url
-
-  def when_i_view_programme_details
-    page_object = Pages::SchoolPage.loaded
-    page_object.view_programme_details
-  end
-  alias_method :and_i_view_programme_details, :when_i_view_programme_details
-
-  def when_i_report_a_mistake
-    page_object = Pages::ReportIncorrectPartnershipPage.loaded
-    page_object.report_a_mistake
-  end
-  alias_method :and_i_report_a_mistake, :when_i_report_a_mistake
-
-  def when_i_report_an_unrecognised_provider
-    page_object = Pages::ReportIncorrectPartnershipPage.loaded
-    page_object.report_an_unrecognised_provider
-  end
-  alias_method :and_i_report_an_unrecognised_provider, :when_i_report_an_unrecognised_provider
-
-  def when_i_report_school_has_been_confirmed_incorrectly
-    page_object = Pages::SchoolPage.loaded
-    page_object.report_school_has_been_confirmed_incorrectly
-  end
-  alias_method :and_i_report_school_has_been_confirmed_incorrectly, :when_i_report_school_has_been_confirmed_incorrectly
-
-  def when_i_report_school_partnership_has_been_confirmed_incorrectly
-    page_object = Pages::SchoolPartnershipsPage.loaded
-    page_object.report_school_partnership_has_been_confirmed_incorrectly
-  end
-  alias_method :and_i_report_school_partnership_has_been_confirmed_incorrectly, :when_i_report_school_partnership_has_been_confirmed_incorrectly
+  alias_method :when_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
+  alias_method :and_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
 
   def then_i_cannot_report_school_has_been_confirmed_incorrectly
     page_object = Pages::SchoolPage.loaded

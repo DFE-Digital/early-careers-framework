@@ -15,19 +15,7 @@ RSpec.feature "Privacy policy page", type: :feature, js: true, rutabaga: false d
 
   scenario "Visiting the Privacy policy" do
     given_i_am_on_the_start_page
-    when_i_view_the_privacy_policy
+    when_i_view_privacy_policy_from_start_page
     then_i_am_on_the_privacy_policy_page
-  end
-
-private
-
-  def given_a_privacy_policy_has_been_published
-    create :privacy_policy
-    PrivacyPolicy::Publish.call
-  end
-
-  def when_i_view_the_privacy_policy
-    start_page = Pages::StartPage.loaded
-    start_page.view_privacy_policy
   end
 end

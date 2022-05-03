@@ -31,6 +31,8 @@ RSpec.configure do |config|
 
   config.include Steps::LoadAPageSteps, type: :feature
   config.include Steps::VerifyAPageSteps, type: :feature
+  config.include Steps::InteractWithAPageSteps, type: :feature
+  config.include Steps::SetupAScenarioSteps, type: :feature
 
   # need this for percy and axe
   config.before(:each, type: :feature) do

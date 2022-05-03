@@ -4,38 +4,33 @@ module Steps
   module LoadAPageSteps
     include RSpec::Matchers
 
-    def given_i_am_at_the_root_of_the_service
-      visit "/"
-    end
+    # Handles `when_i_{method_name}_from_{page_object}` to call a specific action of a specific page object
+    # where `method_name` and `page_object`` are constantized
+    # if it also end in `_with_{query_param}` then it is parsed and passed to #method_name
 
-    def given_i_use_the_report_incorrect_partnership_token(challenge_token)
-      Pages::ReportIncorrectPartnershipPage.load_from_email challenge_token
-    end
-    alias_method :when_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
-    alias_method :and_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
+    def method_missing(method_symbol, *query_values)
+      match_data = method_symbol.to_s.match given_i_am_on_matcher
+      return super if match_data.nil?
 
-    # Handles `given_i_am_on_the_{page_object}` to load a specific page via the URL
-    # where `page_object`` is constantized
-    # if it also end in `_with_{query_param}` then it is parsed and passed to #load
+      page_object_name, query_params = match_data[1].split("_with_")
+      return super if page_object_name.nil?
 
-    def method_missing(method_name, *query_values)
-      name = method_name.to_s
-      return super unless name.starts_with?("given_i_am_on_the_") || name.to_s.starts_with?("when_i_am_on_the_")
-
-      parts = name.gsub("given_i_am_on_the_", "").gsub("when_i_am_on_the_", "").split("_with_")
-      page_object_name = parts.first
-      query_params = parts.second&.split("_") || []
       page_object = Pages.const_get(page_object_name.camelize).new
+      query_params = query_params&.split("_") || []
+      query_values = query_values.map(&:to_s)
 
-      given_i_am_on page_object, query_params, query_values.map(&:to_s)
+      given_i_am_on page_object, query_params, query_values
     end
 
-    def respond_to_missing?(method_name, include_private = false)
-      name = method_name.to_s
-      name.starts_with?("given_i_am_on_the_") || name.to_s.starts_with?("when_i_am_on_the_") || super
+    def respond_to_missing?(method_symbol, include_private = false)
+      method_symbol.to_s.match?(given_i_am_on_matcher) || super
     end
 
   private
+
+    def given_i_am_on_matcher
+      /^(?:given|when)_i_am_on_the_(.*)$/
+    end
 
     def given_i_am_on(page_object, query_params = [], query_values = [])
       args = {}

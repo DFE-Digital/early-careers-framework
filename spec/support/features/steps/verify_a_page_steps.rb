@@ -8,24 +8,29 @@ module Steps
     # where `page_object`` is constantized
     # if it also end in `_with_{query_param}` then it is parsed and passed to #displayed?
 
-    def method_missing(method_name, *query_values)
-      name = method_name.to_s
-      return super unless name.starts_with?("then_i_am_on_the_") || name.to_s.starts_with?("and_i_am_on_the_")
+    def method_missing(method_symbol, *query_values)
+      match_data = method_symbol.to_s.match then_i_am_on_matcher
+      return super if match_data.nil?
 
-      parts = name.gsub("then_i_am_on_the_", "").gsub("and_i_am_on_the_", "").split("_with_")
-      page_object_name = parts.first
-      query_params = parts.second&.split("_") || []
+      page_object_name, query_params = match_data[1].split("_with_")
+      return super if page_object_name.nil?
+
       page_object = Pages.const_get(page_object_name.camelize).new
+      query_params = query_params&.split("_") || []
+      query_values = query_values.map(&:to_s)
 
-      then_i_am_on page_object, query_params, query_values.map(&:to_s)
+      then_i_am_on page_object, query_params, query_values
     end
 
-    def respond_to_missing?(method_name, include_private = false)
-      name = method_name.to_s
-      name.starts_with?("then_i_am_on_the_") || name.to_s.starts_with?("and_i_am_on_the_") || super
+    def respond_to_missing?(method_symbol, include_private = false)
+      method_symbol.to_s.match?(then_i_am_on_matcher) || super
     end
 
   private
+
+    def then_i_am_on_matcher
+      /^(?:then|and)_i_am_on_the_(.*)$/
+    end
 
     def then_i_am_on(page_object, query_params = [], query_values = [])
       args = {}
