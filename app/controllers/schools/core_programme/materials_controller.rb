@@ -23,6 +23,12 @@ class Schools::CoreProgramme::MaterialsController < Schools::BaseController
       core_induction_programme_id: @form.core_induction_programme_id,
     )
 
+    unless @school_cohort.default_induction_programme&.core_induction_programme
+      @school_cohort.default_induction_programme.update!(
+        core_induction_programme_id: @form.core_induction_programme_id,
+      )
+    end
+
     redirect_to action: :success
   end
 

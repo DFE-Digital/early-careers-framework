@@ -1,13 +1,19 @@
+<% lead_provider = school_cohort.default_induction_programme&.lead_provider %>
+<% delivery_partner =  school_cohort.default_induction_programme&.delivery_partner %>
+<% ects_count = school_cohort.current_induction_records.count %>
+
 <%= govuk_summary_list do |list| %>
   <% list.row do |row| %>
     <% row.key(text: "Length of induction") %>
     <% row.value(text: "2") %>
     <% row.action(text: :none) %>
   <% end %>
-  <% list.row do |row| %>
-    <% row.key(text: "ECTs and mentors") %>
-    <% row.value(text: school_cohort.current_induction_records.count) %>
-    <% row.action(text: "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year)) %>
+  <% unless school_cohort.school_chose_diy? %>
+    <% list.row do |row| %>
+      <% row.key(text: "ECTs and mentors") %>
+      <% row.value(text: ects_count) %>
+      <% row.action(text: ects_count.zero? ? "Add" : "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% end %>
   <% end %>
   <% list.row do |row| %>
     <% row.key(text: "Induction tutor") %>
@@ -22,12 +28,12 @@
   <% if school_cohort.full_induction_programme? %>
     <% list.row do |row| %>
       <% row.key(text: "Training provider") %>
-      <% row.value(text: school_cohort.default_induction_programme&.lead_provider&.name) %>
+      <% row.value(text: lead_provider&.name ? lead_provider.name : "To be confirmed") %>
       <% row.action(text: :none) %>
     <% end %>
     <% list.row do |row| %>
       <% row.key(text: "Delivery partner") %>
-      <% row.value(text: school_cohort.default_induction_programme&.delivery_partner&.name) %>
+      <% row.value(text: delivery_partner&.name ? delivery_partner.name : "To be confirmed") %>
       <% row.action(text: :none) %>
     <% end %>
   <% elsif school_cohort.core_induction_programme? %>
@@ -35,7 +41,7 @@
       <% row.key(text: "Materials") %>
       <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
       <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
-        <% row.action(text: "Add", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+        <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
       <% else %>
         <% row.action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
       <% end %>

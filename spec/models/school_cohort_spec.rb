@@ -162,4 +162,22 @@ RSpec.describe SchoolCohort, type: :model do
       end
     end
   end
+
+  describe "#school_chose_diy?" do
+    context "when school has chosen diy programme" do
+      let(:school_cohort) { build(:school_cohort, induction_programme_choice: "design_our_own") }
+
+      it "returns true" do
+        expect(school_cohort.school_chose_diy?).to be true
+      end
+    end
+
+    context "when school has not chosen diy programme" do
+      let(:school_cohort) { build(:school_cohort, induction_programme_choice: "core_induction_programme") }
+
+      it "returns false" do
+        expect(school_cohort.school_chose_diy?).to be false
+      end
+    end
+  end
 end
