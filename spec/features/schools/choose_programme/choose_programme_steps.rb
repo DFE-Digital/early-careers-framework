@@ -20,6 +20,21 @@ module ChooseProgrammeSteps
     create(:school_cohort, :cip, school: @school, cohort: @previous_cohort)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_2021
+    @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+    @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
+    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+  end
+
+  def given_there_is_a_school_that_has_chosen_fip_for_2021
+    @cohort = create(:cohort, start_year: 2021)
+    @school = create(:school, name: "Fip School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
+  end
+
   # Then steps
 
   def then_i_am_taken_to_ects_expected_in_next_academic_year_page
@@ -53,6 +68,34 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_the_complete_page
     expect(page).to have_content("You can now add ECTs and mentors when you’re ready")
+  end
+
+  def then_i_am_taken_to_what_changes_page
+    expect(page).to have_content("What change do you plan to make?")
+  end
+
+  def then_I_am_taken_to_the_change_lead_provider_confirmation_page
+    expect(page).to have_content("Are you sure you want to make this change?")
+    expect(page).to have_content("#{@lead_provider.name} and #{@delivery_partner.name} will not be able to deliver training for ECTs and mentors starting in the 2022 to 2023 academic year.")
+  end
+
+  def then_I_am_taken_to_the_change_delivery_partner_confirmation_page
+    expect(page).to have_content("Are you sure you want to make this change?")
+    expect(page).to have_content("#{@delivery_partner.name} will not be able to deliver training for ECTs and mentors starting in the 2022 to 2023 academic year.")
+  end
+
+  def then_I_am_taken_to_the_change_to_design_own_programme_confirmation_page
+    expect(page).to have_content("Are you sure you want to change how you'll run your training?")
+    expect(page).to have_content("You've chosen to deliver your own programme using DfE accredited materials.")
+  end
+
+  def then_I_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
+    expect(page).to have_content("Are you sure you want to change how you'll run your training?")
+    expect(page).to have_content("You're choosing to design and deliver your own programme based on the early career framework (ECF).")
+  end
+
+  def then_i_am_taken_to_the_training_change_submitted_page
+    expect(page).to have_content("You've submitted your training information")
   end
 
   # And steps
@@ -98,6 +141,10 @@ module ChooseProgrammeSteps
     choose("No")
   end
 
+  def when_i_choose_yes
+    choose("Yes")
+  end
+
   def when_i_choose_no_ects
     when_i_choose_no
   end
@@ -124,5 +171,21 @@ module ChooseProgrammeSteps
 
   def when_i_choose_design_and_deliver_your_own_material
     choose("Design and deliver you own programme based on the early career framework (ECF)")
+  end
+
+  def when_i_choose_to_leave_lead_provider
+    choose("Leave #{@lead_provider.name} and use a different lead provider")
+  end
+
+  def when_i_choose_to_change_delivery_partner
+    choose("Stay with #{@lead_provider.name} but change your delivery partner, #{@delivery_partner.name}")
+  end
+
+  def when_i_choose_to_deliver_own_programme
+    choose("Deliver your own programme using DfE-accredited materials")
+  end
+
+  def when_i_choose_to_design_and_deliver_own_programme
+    choose("Design and deliver you own programme based on the Early Career Framework (ECF)")
   end
 end
