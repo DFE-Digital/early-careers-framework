@@ -7,6 +7,7 @@ module Finance
         npq-senior-leadership
         npq-headship
         npq-executive-leadership
+        npq-early-years-leadership
       ].freeze
 
       PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS

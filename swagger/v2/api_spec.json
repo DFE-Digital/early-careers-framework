@@ -3085,10 +3085,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ]
           },
           "status": {
@@ -3222,10 +3225,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ]
           },
           "status": {
@@ -3284,10 +3290,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ]
           },
           "schedule_identifier": {
@@ -3367,10 +3376,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ]
           },
           "schedule_identifier": {
@@ -3542,13 +3554,16 @@
             "description": "The type of course the participant is enrolled in",
             "type": "string",
             "enum": [
-              "npq-leading-teaching-development",
-              "npq-leading-behaviour-culture",
               "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "npq-executive-leadership"
           },
@@ -3654,9 +3669,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
-              "npq-executive-leadership"
+              "npq-executive-leadership",
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "npq-senior-leadership"
           }
@@ -3746,9 +3765,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
-              "npq-executive-leadership"
+              "npq-executive-leadership",
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "npq-senior-leadership"
           }
@@ -3846,12 +3869,15 @@
             "type": "string",
             "enum": [
               "npq-leading-teaching",
-              "npq-leading-teaching-development",
               "npq-leading-behaviour-culture",
-              "npq-headship",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
+              "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "npq-headship"
           }
@@ -3920,12 +3946,15 @@
             "type": "string",
             "enum": [
               "npq-leading-teaching",
-              "npq-leading-teaching-development",
               "npq-leading-behaviour-culture",
-              "npq-headship",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
+              "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "npq-headship"
           }
@@ -3996,9 +4025,13 @@
               "npq-leading-teaching",
               "npq-leading-behaviour-culture",
               "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
               "npq-headship",
-              "npq-executive-leadership"
+              "npq-executive-leadership",
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "npq-leading-teaching-development"
           }
@@ -4167,12 +4200,15 @@
               "ecf-induction",
               "ecf-mentor",
               "npq-leading-teaching",
-              "npq-leading-teaching-development",
               "npq-leading-behaviour-culture",
-              "npq-headship",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
+              "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "ecf-induction"
           },
@@ -4261,12 +4297,15 @@
               "ecf-induction",
               "ecf-mentor",
               "npq-leading-teaching",
-              "npq-leading-teaching-development",
               "npq-leading-behaviour-culture",
-              "npq-headship",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
               "npq-senior-leadership",
+              "npq-headship",
               "npq-executive-leadership",
-              "npq-additional-support-offer"
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
             ],
             "example": "ecf-induction"
           },

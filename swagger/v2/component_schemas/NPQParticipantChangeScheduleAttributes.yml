@@ -18,13 +18,16 @@ properties:
     description: "The type of course the participant is enrolled in"
     type: string
     enum:
-      - npq-leading-teaching-development
-      - npq-leading-behaviour-culture
       - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
       - npq-senior-leadership
       - npq-headship
       - npq-executive-leadership
+      - npq-early-years-leadership
       - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
     example: npq-executive-leadership
   cohort:
     description: "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified"
