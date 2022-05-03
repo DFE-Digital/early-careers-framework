@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_13_092522) do
+ActiveRecord::Schema.define(version: 2022_05_03_132944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -737,9 +737,9 @@ ActiveRecord::Schema.define(version: 2022_04_13_092522) do
     t.string "declaration_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
+    t.index ["milestone_id", "schedule_id"], name: "index_schedule_milestones_on_milestone_id_and_schedule_id"
     t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
-    t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
+    t.index ["schedule_id", "milestone_id"], name: "index_schedule_milestones_on_schedule_id_and_milestone_id"
     t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
   end
 
