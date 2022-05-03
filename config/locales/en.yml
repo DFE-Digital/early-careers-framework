@@ -259,7 +259,7 @@ en:
   manage_your_training:
     induction_programmes:
       full_induction_programme: "Use a training provider funded by the DfE"
-      core_induction_programme: "Use DfE-accredited materials"
+      core_induction_programme: "DfE accredited materials"
       design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)"
       school_funded_fip: "Use a training provider funded by your school"
       no_early_career_teachers: "No early career teachers for this cohort"

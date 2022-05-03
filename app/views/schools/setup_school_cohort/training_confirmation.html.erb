@@ -1,7 +1,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% academic_year = TabLabelDecorator.new(Cohort.active_registration_cohort.description) %>
-    <%= govuk_panel title_text: "You've submitted your training information", text: "Academic year #{academic_year}", classes: "govuk-!-margin-bottom-8" %>
+    <% academic_year = Cohort.active_registration_cohort.description %>
+    <%= govuk_panel title_text: "You’ve submitted your training information", classes: "govuk-!-margin-bottom-8" do %>
+      Academic year
+      <br/>
+      <strong><%= academic_year %></strong>
+    <% end %>
 
     <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'full_induction_programme' %>
       <%= render 'fip_confirmation' %>
