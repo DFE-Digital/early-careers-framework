@@ -5,14 +5,14 @@ require "csv"
 
 RSpec.describe "Participants API", :with_default_schdules, type: :request do
   describe "GET /api/v2/participants" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
-    let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current) }
-    let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+    let(:cpd_lead_provider)   { create(:cpd_lead_provider, lead_provider: lead_provider) }
+    let(:lead_provider)       { create(:lead_provider) }
+    let(:cohort)              { create(:cohort, :current) }
+    let(:partnership)         { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
     let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
-    let(:bearer_token) { "Bearer #{token}" }
+    let(:school_cohort)       { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
+    let(:token)               { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:bearer_token)        { "Bearer #{token}" }
 
     before :each do
       mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
@@ -34,47 +34,36 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
 
       describe "JSON Index API" do
         let(:parsed_response) { JSON.parse(response.body) }
-
-        it "returns correct jsonapi content type header" do
-          get "/api/v2/participants"
-          expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+        let(:expected_reponse_attribute_keys) do
+          %i[
+            email
+            full_name
+            mentor_id
+            school_urn
+            participant_type
+            cohort
+            status
+            teacher_reference_number
+            teacher_reference_number_validated
+            eligible_for_funding
+            pupil_premium_uplift
+            sparsity_uplift
+            training_status
+            schedule_identifier
+            updated_at
+          ]
         end
 
-        it "returns all users" do
+        it "returns correct jsonapi response", :aggregate_failures do
           get "/api/v2/participants"
-          expect(parsed_response["data"].size).to eql(4)
-        end
 
-        it "returns correct type" do
-          get "/api/v2/participants"
-          expect(parsed_response["data"][0]).to have_type("participant")
-        end
+          pp JSON.parse response.body
 
-        it "returns IDs" do
-          get "/api/v2/participants"
-          expect(parsed_response["data"][0]["id"]).to be_in(User.pluck(:id))
-        end
-
-        it "has correct attributes" do
-          get "/api/v2/participants"
-          expect(parsed_response["data"][0])
-            .to(have_jsonapi_attributes(
-              :email,
-              :full_name,
-              :mentor_id,
-              :school_urn,
-              :participant_type,
-              :cohort,
-              :status,
-              :teacher_reference_number,
-              :teacher_reference_number_validated,
-              :eligible_for_funding,
-              :pupil_premium_uplift,
-              :sparsity_uplift,
-              :training_status,
-              :schedule_identifier,
-              :updated_at,
-            ).exactly)
+          expect(response.headers["Content-Type"]).to eq("application/vnd.api+json")
+          expect(parsed_response["data"].size).to eq(4)
+          expect(parsed_response.dig("data", 0, "id")).to be_in(User.pluck(:id))
+          expect(parsed_response.dig("data", 0)).to have_type("participant")
+          expect(parsed_response.dig("data", 0)).to have_jsonapi_attributes(*expected_reponse_attribute_keys).exactly
         end
 
         it "returns correct user types" do
