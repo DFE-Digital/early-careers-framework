@@ -19,7 +19,7 @@ module Schools
       elsif ects_expected
         if previous_school_cohort.full_induction_programme?
           store_form_redirect_to_next_step(:change_provider)
-        elsif previous_school_cohort.core_induction_programme?
+        else
           store_form_redirect_to_next_step :how_will_you_run_training
         end
       end
@@ -27,10 +27,11 @@ module Schools
 
     def no_expected_ects
       # prevent overriding the induction programme
-      unless school_cohort.persisted?
-        school_cohort.induction_programme_choice = :no_early_career_teachers
-        school_cohort.save!
-      end
+      # unless school_cohort.persisted?
+      #   school_cohort.induction_programme_choice = :no_early_career_teachers
+      #   school_cohort.save!
+      # end
+      set_cohort_induction_programme!("no_early_career_teachers", true)
 
       reset_form_data
     end
@@ -153,9 +154,10 @@ module Schools
       @school ||= active_school
     end
 
-    def set_cohort_induction_programme!(programme_choice)
+    def set_cohort_induction_programme!(programme_choice, opt_out_of_updates = false)
       Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
-                                                  programme_choice: programme_choice)
+                                                  programme_choice: programme_choice,
+                                                  opt_out_of_updates: opt_out_of_updates)
     end
 
     def school_cohort
