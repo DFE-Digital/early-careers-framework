@@ -37,10 +37,10 @@
          <% end %>
        <% end %>
 
-       <% if add_participant_form.dob %>
+       <% if add_participant_form.date_of_birth %>
          <% summary_list.row do |row| %>
            <% row.key { "Date of birth" } %>
-           <% row.value { add_participant_form.dob.to_date.to_s(:govuk) } %>
+           <% row.value { add_participant_form.date_of_birth.to_date.to_s(:govuk) } %>
            <% unless add_participant_form.dqt_record.present? %>
              <% row.action(text: "Change",
                            visually_hidden_text: "dob",

@@ -239,7 +239,7 @@ module Schools
       self.dqt_record = ParticipantValidationService.validate(
         full_name: full_name,
         trn: trn,
-        date_of_birth: dob,
+        date_of_birth: date_of_birth,
         config: {
           check_first_name_only: true,
         },
@@ -247,7 +247,7 @@ module Schools
     end
 
     def check_for_dqt_record?
-      full_name.present? && trn.present? && dob.present?
+      full_name.present? && trn.present? && date_of_birth.present?
     end
 
     def reset_dqt_details
@@ -339,7 +339,7 @@ module Schools
         data: {
           trn: trn,
           nino: nil,
-          date_of_birth: dob,
+          date_of_birth: date_of_birth,
           full_name: full_name,
         },
       )

@@ -242,7 +242,7 @@ en:
               blank: "Select whether you know the teacher reference number (TRN) for the teacher you are adding"
             trn:
               blank: "Enter the teacher reference number (TRN) for the teacher you are adding"
-            dob:
+            date_of_birth:
               blank: "Enter a date of birth"
               invalid: "Enter a valid date of birth"
             start_date:
