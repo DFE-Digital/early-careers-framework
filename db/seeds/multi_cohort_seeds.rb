@@ -26,7 +26,6 @@ Partnership.find_or_create_by!(school: fip_school,
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
-
 Induction::SetCohortInductionProgramme.call(school_cohort: fip_school_cohort,
                                             programme_choice: "full_induction_programme")
 
@@ -53,7 +52,7 @@ fip2_school = School.find_or_create_by!(urn: "090002") do |school|
   school.school_type_code = 1
 end
 fip2_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                            start_year: seed_cohort.start_year)
+                                             start_year: seed_cohort.start_year)
 
 fip2_school_cohort = SchoolCohort.find_or_initialize_by(school: fip2_school, cohort: seed_cohort)
 
@@ -66,17 +65,16 @@ Partnership.find_or_create_by!(school: fip2_school,
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
-
 Induction::SetCohortInductionProgramme.call(school_cohort: fip2_school_cohort,
                                             programme_choice: "full_induction_programme")
 
 fip2_sit = CreateInductionTutor.call(school: fip2_school,
-                                    email: "cpd-test+tutor-92@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090002 FIP")
+                                     email: "cpd-test+tutor-92@digital.education.gov.uk",
+                                     full_name: "Induction Tutor for 090002 FIP")
 
 fip2_mentor = Mentors::Create.call(full_name: "FIP Mentor 090002",
-                                  email: "fipmentor-090002@example.com",
-                                  school_cohort: fip2_school_cohort)
+                                   email: "fipmentor-090002@example.com",
+                                   school_cohort: fip2_school_cohort)
 
 EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090002",
                                  email: "fipect-090002@example.com",
@@ -93,7 +91,7 @@ fip3_school = School.find_or_create_by!(urn: "090003") do |school|
   school.school_type_code = 1
 end
 fip3_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                            start_year: seed_cohort.start_year)
+                                             start_year: seed_cohort.start_year)
 
 fip3_school_cohort = SchoolCohort.find_or_initialize_by(school: fip3_school, cohort: seed_cohort)
 
@@ -106,17 +104,16 @@ Partnership.find_or_create_by!(school: fip3_school,
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
-
 Induction::SetCohortInductionProgramme.call(school_cohort: fip3_school_cohort,
                                             programme_choice: "full_induction_programme")
 
 fip3_sit = CreateInductionTutor.call(school: fip3_school,
-                                    email: "cpd-test+tutor-93@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090003 FIP")
+                                     email: "cpd-test+tutor-93@digital.education.gov.uk",
+                                     full_name: "Induction Tutor for 090003 FIP")
 
 fip3_mentor = Mentors::Create.call(full_name: "FIP Mentor 090003",
-                                  email: "fipmentor-090003@example.com",
-                                  school_cohort: fip3_school_cohort)
+                                   email: "fipmentor-090003@example.com",
+                                   school_cohort: fip3_school_cohort)
 
 EarlyCareerTeachers::Create.call(full_name: "FIP ECT 090003",
                                  email: "fipect-090003@example.com",
@@ -169,24 +166,24 @@ cip2_school = School.find_or_create_by!(urn: "090011") do |school|
   school.school_type_code = 1
 end
 cip2_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                            start_year: seed_cohort.start_year)
+                                             start_year: seed_cohort.start_year)
 cip = CoreInductionProgramme.first
 
 cip2_school_cohort = SchoolCohort.find_or_initialize_by(school: cip2_school,
-                                                       cohort: seed_cohort,
-                                                       core_induction_programme: cip)
+                                                        cohort: seed_cohort,
+                                                        core_induction_programme: cip)
 
 Induction::SetCohortInductionProgramme.call(school_cohort: cip2_school_cohort,
                                             programme_choice: "core_induction_programme",
                                             core_induction_programme: cip)
 
 cip2_sit = CreateInductionTutor.call(school: cip2_school,
-                                    email: "cpd-test+tutor-911@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090011 CIP2")
+                                     email: "cpd-test+tutor-911@digital.education.gov.uk",
+                                     full_name: "Induction Tutor for 090011 CIP2")
 
 cip2_mentor = Mentors::Create.call(full_name: "CIP Mentor 090011",
-                                  email: "cipmentor-090011@example.com",
-                                  school_cohort: cip2_school_cohort)
+                                   email: "cipmentor-090011@example.com",
+                                   school_cohort: cip2_school_cohort)
 
 EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090011",
                                  email: "cipect-090011@example.com",
@@ -204,24 +201,24 @@ cip3_school = School.find_or_create_by!(urn: "090012") do |school|
   school.school_type_code = 1
 end
 cip3_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                            start_year: seed_cohort.start_year)
+                                             start_year: seed_cohort.start_year)
 cip = CoreInductionProgramme.first
 
 cip3_school_cohort = SchoolCohort.find_or_initialize_by(school: cip3_school,
-                                                       cohort: seed_cohort,
-                                                       core_induction_programme: cip)
+                                                        cohort: seed_cohort,
+                                                        core_induction_programme: cip)
 
 Induction::SetCohortInductionProgramme.call(school_cohort: cip3_school_cohort,
                                             programme_choice: "core_induction_programme",
                                             core_induction_programme: cip)
 
 cip3_sit = CreateInductionTutor.call(school: cip3_school,
-                                    email: "cpd-test+tutor-912@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090012 CIP3")
+                                     email: "cpd-test+tutor-912@digital.education.gov.uk",
+                                     full_name: "Induction Tutor for 090012 CIP3")
 
 cip3_mentor = Mentors::Create.call(full_name: "CIP Mentor 090012",
-                                  email: "cipmentor-090012@example.com",
-                                  school_cohort: cip3_school_cohort)
+                                   email: "cipmentor-090012@example.com",
+                                   school_cohort: cip3_school_cohort)
 
 EarlyCareerTeachers::Create.call(full_name: "CIP ECT 090012",
                                  email: "cipect-090012@example.com",
@@ -262,17 +259,17 @@ diy2_school = School.find_or_create_by!(urn: "090021") do |school|
   school.school_type_code = 1
 end
 diy2_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                            start_year: seed_cohort.start_year)
+                                             start_year: seed_cohort.start_year)
 
 diy2_school_cohort = SchoolCohort.find_or_initialize_by(school: diy2_school,
-                                                       cohort: seed_cohort)
+                                                        cohort: seed_cohort)
 
 Induction::SetCohortInductionProgramme.call(school_cohort: diy2_school_cohort,
                                             programme_choice: "design_our_own")
 
 diy2_sit = CreateInductionTutor.call(school: diy2_school,
-                                    email: "cpd-test+tutor-921@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090021 DIY2")
+                                     email: "cpd-test+tutor-921@digital.education.gov.uk",
+                                     full_name: "Induction Tutor for 090021 DIY2")
 
 # ===== DIY3 school and SIT ==================
 
@@ -285,17 +282,17 @@ diy3_school = School.find_or_create_by!(urn: "090022") do |school|
   school.school_type_code = 1
 end
 diy3_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                            start_year: seed_cohort.start_year)
+                                             start_year: seed_cohort.start_year)
 
 diy3_school_cohort = SchoolCohort.find_or_initialize_by(school: diy3_school,
-                                                       cohort: seed_cohort)
+                                                        cohort: seed_cohort)
 
 Induction::SetCohortInductionProgramme.call(school_cohort: diy3_school_cohort,
                                             programme_choice: "design_our_own")
 
 diy3_sit = CreateInductionTutor.call(school: diy3_school,
-                                    email: "cpd-test+tutor-922@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090022 DIY3")
+                                     email: "cpd-test+tutor-922@digital.education.gov.uk",
+                                     full_name: "Induction Tutor for 090022 DIY3")
 
 # ===== No ECTs school and SIT ==================
 
@@ -318,8 +315,8 @@ Induction::SetCohortInductionProgramme.call(school_cohort: no_ects_school_cohort
                                             opt_out_of_updates: true)
 
 no_ects_sit = CreateInductionTutor.call(school: no_ects_school,
-                                    email: "cpd-test+tutor-930@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090030 NO ECTs")
+                                        email: "cpd-test+tutor-930@digital.education.gov.uk",
+                                        full_name: "Induction Tutor for 090030 NO ECTs")
 
 # ===== No ECTs school 2 and SIT ==================
 
@@ -332,18 +329,18 @@ no_ects2_school = School.find_or_create_by!(urn: "090031") do |school|
   school.school_type_code = 1
 end
 no_ects2_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                                start_year: seed_cohort.start_year)
+                                                 start_year: seed_cohort.start_year)
 
 no_ects2_school_cohort = SchoolCohort.find_or_initialize_by(school: no_ects2_school,
-                                                           cohort: seed_cohort)
+                                                            cohort: seed_cohort)
 
 Induction::SetCohortInductionProgramme.call(school_cohort: no_ects2_school_cohort,
                                             programme_choice: "no_early_career_teachers",
                                             opt_out_of_updates: true)
 
 no_ects2_sit = CreateInductionTutor.call(school: no_ects2_school,
-                                    email: "cpd-test+tutor-931@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090031 NO ECTs 2")
+                                         email: "cpd-test+tutor-931@digital.education.gov.uk",
+                                         full_name: "Induction Tutor for 090031 NO ECTs 2")
 
 # ===== No ECTs school 3 and SIT ==================
 
@@ -356,18 +353,18 @@ no_ects3_school = School.find_or_create_by!(urn: "090032") do |school|
   school.school_type_code = 1
 end
 no_ects3_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
-                                                start_year: seed_cohort.start_year)
+                                                 start_year: seed_cohort.start_year)
 
 no_ects3_school_cohort = SchoolCohort.find_or_initialize_by(school: no_ects3_school,
-                                                           cohort: seed_cohort)
+                                                            cohort: seed_cohort)
 
 Induction::SetCohortInductionProgramme.call(school_cohort: no_ects3_school_cohort,
                                             programme_choice: "no_early_career_teachers",
                                             opt_out_of_updates: true)
 
 no_ects3_sit = CreateInductionTutor.call(school: no_ects3_school,
-                                    email: "cpd-test+tutor-932@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090032 NO ECTs 2")
+                                         email: "cpd-test+tutor-932@digital.education.gov.uk",
+                                         full_name: "Induction Tutor for 090032 NO ECTs 2")
 
 # ===== No choice school and SIT ==================
 
@@ -383,6 +380,5 @@ no_choice_school.school_local_authorities.create!(local_authority: LocalAuthorit
                                                   start_year: seed_cohort.start_year)
 
 no_choice_sit = CreateInductionTutor.call(school: no_choice_school,
-                                    email: "cpd-test+tutor-940@digital.education.gov.uk",
-                                    full_name: "Induction Tutor for 090040 No choice")
-
+                                          email: "cpd-test+tutor-940@digital.education.gov.uk",
+                                          full_name: "Induction Tutor for 090040 No choice")

@@ -19,7 +19,7 @@ module EarlyCareerTeachers
 
         profile = ParticipantProfile::ECT.create!({
           teacher_profile: teacher_profile,
-          schedule: Finance::Schedule::ECF.default,
+          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
           participant_identity: Identity::Create.call(user: user),
         }.merge(ect_attributes))
 
