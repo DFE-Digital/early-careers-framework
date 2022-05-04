@@ -37,7 +37,6 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       validate_milestone!
-      validate_participant_state!
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
@@ -126,11 +125,6 @@ module RecordDeclarations
       if milestone.milestone_date.present? && (milestone.milestone_date.end_of_day <= parsed_date)
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
-    end
-
-    def validate_participant_state!
-      last_state = user_profile.state_at(declaration_date)
-      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
     end
 
     def validate_schedule_present
