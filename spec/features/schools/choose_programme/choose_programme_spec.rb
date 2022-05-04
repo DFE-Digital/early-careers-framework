@@ -191,11 +191,10 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_click_the_confirm_button
         then_i_am_taken_to_the_training_change_submitted_page
 
-        click_on "Return to manage your training"
+        when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
-        # FIXME
-        # and_i_see_the_current_lead_provider
-        # and_i_see_the_delivery_partner
+        and_i_see_training_provider_to_be_confirmed
+        and_i_see_delivery_partner_to_be_confirmed
       end
 
       scenario "A school chooses to deliver own programme" do
@@ -223,11 +222,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_click_the_confirm_button
         then_i_am_taken_to_the_training_change_submitted_page
 
-        click_on "Return to manage your training"
+        when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
-        # FIXME
-        # and_i_see_the_current_lead_provider
-        # and_i_see_the_delivery_partner
+        and_i_see_programme_to_dfe_accredited_materials
       end
 
       scenario "A school chooses to design and deliver own programme" do
@@ -255,11 +252,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_click_the_confirm_button
         then_i_am_taken_to_the_training_change_submitted_page
 
-        click_on "Return to manage your training"
+        when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
-        # FIXME
-        # and_i_see_the_current_lead_provider
-        # and_i_see_the_delivery_partner
+        and_i_see_programme_to_design_and_deliver_own_programme
       end
     end
   end
