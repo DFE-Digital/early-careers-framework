@@ -192,6 +192,18 @@ module ManageTrainingSteps
                                               start_date: 2.months.from_now)
   end
 
+  def and_a_participant_is_already_on_ecf
+    @school_two = create(:school, name: "Fip School 2")
+    @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two)
+
+    user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
+    teacher_profile = create(:teacher_profile, user: user)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two)
+    create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
+  end
+
   def and_i_have_a_transferring_out_participant
     and_i_have_added_an_eligible_ect
     @induction_record.leaving!(2.months.from_now)
@@ -869,6 +881,34 @@ module ManageTrainingSteps
     expect(page).to have_text("Sally Teacher")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
+  end
+
+  def then_i_am_taken_to_are_they_a_transfer_page
+    expect(page).to have_selector("h1", text: "Is #{@participant_profile_ect.user.full_name} transferring from another school?")
+    expect(page).to have_text("Yes")
+    expect(page).to have_text("No")
+  end
+
+  def then_i_am_taken_to_teacher_start_date_page
+    expect(page).to have_selector("h1", text: "What’s Sally Teacher’s start date at your school?")
+  end
+
+  def then_i_am_taken_to_the_cannot_add_page
+    expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
+    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
+  end
+
+  def then_i_am_taken_choose_mentor_in_transfer_page
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
+  end
+
+  def then_i_should_be_taken_to_the_teachers_current_programme_page
+    expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
+  end
+
+  def then_i_should_be_on_the_complete_page
+    expect(page).to have_selector("h2", text: "What happens next")
+    expect(page).to have_text("We’ll let #{@participant_profile_ect.user.full_name}")
   end
 
   def then_i_see_the_tab_for_the_cohort(cohort)
