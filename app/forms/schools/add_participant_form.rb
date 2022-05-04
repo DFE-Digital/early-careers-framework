@@ -9,6 +9,7 @@ module Schools
     attribute :participant_type
     attribute :type
     attribute :dqt_record
+    attribute :existing_participant_profile
 
     step :yourself do
       next_step :confirm
@@ -22,10 +23,12 @@ module Schools
       attribute :full_name
 
       validates :full_name, presence: { message: I18n.t("errors.full_name.blank") }
-      before_complete { validate_dqt_record if check_for_dqt_record? }
+      before_complete { check_records if check_for_dqt_record? }
 
       next_step do
-        if dqt_record.present?
+        if existing_participant_profile.present?
+          :transfer
+        elsif dqt_record.present?
           :email
         elsif check_for_dqt_record?
           :cannot_find_their_details
@@ -56,9 +59,11 @@ module Schools
                 presence: true,
                 format: { with: /\A\d+\z/ },
                 length: { within: 5..7 }
-      before_complete { validate_dqt_record if check_for_dqt_record? }
+      before_complete { check_records if check_for_dqt_record? }
       next_step do
-        if dqt_record.present?
+        if existing_participant_profile.present?
+          :transfer
+        elsif dqt_record.present?
           :email
         elsif check_for_dqt_record?
           :cannot_find_their_details
@@ -69,17 +74,20 @@ module Schools
     end
 
     step :dob, update: true do
-      attribute :dob, :date
-      validates :dob,
+      attribute :date_of_birth, :date
+      validates :date_of_birth,
                 presence: true,
                 inclusion: {
                   in: ->(_) { (Date.new(1900, 1, 1))..(Date.current - 18.years) },
                   message: :invalid,
                 }
 
-      before_complete { validate_dqt_record if check_for_dqt_record? }
+      before_complete { check_records if check_for_dqt_record? }
+
       next_step do
-        if dqt_record.present?
+        if existing_participant_profile.present?
+          :transfer
+        elsif dqt_record.present?
           :email
         else
           :cannot_find_their_details
@@ -166,6 +174,18 @@ module Schools
       next_step :confirm
     end
 
+    step :transfer do
+      attribute :transfer
+
+      validates :transfer,
+                presence: true,
+                inclusion: { in: %w[true false] }
+
+      next_step :cannot_add
+    end
+
+    step :cannot_add
+
     step :email_taken
 
     step :cannot_find_their_details
@@ -200,6 +220,19 @@ module Schools
 
     def trn_known?
       do_you_know_teachers_trn == "true"
+    end
+
+    def check_records
+      check_for_existing_profile
+      validate_dqt_record
+    end
+
+    def check_for_existing_profile
+      self.existing_participant_profile = ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
+                                                        .where("LOWER(full_name) = ? AND trn = ? AND date_of_birth = ?",
+                                                               full_name.downcase,
+                                                               trn,
+                                                               date_of_birth).first
     end
 
     def validate_dqt_record
