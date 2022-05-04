@@ -6,16 +6,14 @@ module Support
 
     define :have_summary_row do |key, value|
       match do |actual|
-        begin
-          key_node = find_key_node(actual, key)
-          value_node = find_value_node(key_node)
-          expect(value_node).to have_content(value)
-        rescue Capybara::ElementNotFound
-          false
-        end
+        key_node = find_key_node(actual, key)
+        value_node = find_value_node(key_node)
+        expect(value_node).to have_content(value)
+      rescue Capybara::ElementNotFound
+        false
       end
 
-      failure_message do |actual|
+      failure_message do
         @failure_message || "Can't find a summary row where the key is \"#{key}\" and the value is \"#{value}\""
       end
 
@@ -24,12 +22,10 @@ module Support
       end
 
       def find_key_node(actual, key)
-        begin
-          actual.find("dt.govuk-summary-list__key", text: key)
-        rescue Capybara::ElementNotFound
-          @failure_message = "Can't find a summary row where the key is \"#{key}\""
-          raise
-        end
+        actual.find("dt.govuk-summary-list__key", text: key)
+      rescue Capybara::ElementNotFound
+        @failure_message = "Can't find a summary row where the key is \"#{key}\""
+        raise
       end
 
       def find_value_node(key_node)
