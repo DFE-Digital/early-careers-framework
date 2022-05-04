@@ -63,10 +63,13 @@ $govuk-image-url-function: frontend-image-url;
 }
 
 // Overrides the difference in styling between a normal H1 and when using as a legend so its consistent
-h1.govuk-fieldset__heading {
+h1.govuk-fieldset__heading,
+.govuk-label--xl {
     @media (min-width: 40.0625em) {
     margin-bottom: 50px;
     }
 
     margin-bottom: 30px;
 }
+
+
