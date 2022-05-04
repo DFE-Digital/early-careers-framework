@@ -11,15 +11,37 @@ module Steps
       PrivacyPolicy::Publish.call
     end
 
+    def given_an_ecf_lead_provider(email_address, lead_provider_name)
+      ecf_lead_provider = create :lead_provider,
+                                 name: lead_provider_name
+
+      create :cpd_lead_provider,
+             lead_provider: ecf_lead_provider,
+             name: lead_provider_name
+
+      user = create :user,
+                    full_name: "#{lead_provider_name}'s Manager",
+                    email: email_address
+
+      create :lead_provider_profile,
+             user: user,
+             lead_provider: ecf_lead_provider
+
+      ecf_lead_provider
+    end
+
     def given_a_school(email_address, school_name, school_slug, induction_programme)
       school = create :school,
                       name: school_name,
                       slug: school_slug
 
       user = create :user,
-                    :induction_coordinator,
-                    schools: [school],
+                    full_name: "#{school_name}'s SIT",
                     email: email_address
+
+      create :induction_coordinator_profile,
+             user: user,
+             schools: [school]
 
       PrivacyPolicy.current.accept! user
 

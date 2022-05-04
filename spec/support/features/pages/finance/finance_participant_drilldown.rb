@@ -4,7 +4,8 @@ require_relative "../base"
 
 module Pages
   class FinanceParticipantDrilldown < ::Pages::Base
-    include Capybara::DSL
+    set_url "/finance/participants/{lead_provider_id}"
+    set_primary_heading "Participant"
 
     def can_see_participant?(user_id)
       has_text?("User ID / Participant ID #{user_id}")

@@ -4,6 +4,8 @@ require_relative "./base"
 
 module Sections
   class CookieConsentForm < SitePrism::Section
+    set_default_search_arguments "#new_cookies_form"
+
     element :legend, "fieldset > legend"
     element :on_field, "#cookies-form-analytics-consent-on-field", visible: false
     element :off_field, "#cookies-form-analytics-consent-off-field", visible: false
@@ -45,6 +47,6 @@ module Pages
     set_url "/cookies"
     set_primary_heading "Cookies"
 
-    section :cookie_consent_form, ::Sections::CookieConsentForm, "#new_cookies_form"
+    section :cookie_consent_form, ::Sections::CookieConsentForm
   end
 end

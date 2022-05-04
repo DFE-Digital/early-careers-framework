@@ -5,8 +5,8 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl"><%= t(".title") %></h1>
 
-    <span class="govuk-caption-l"><%= @ecf_lead_provider.name %></span>
-    <h2 class="govuk-heading-l"><%= @statement.name %></h2>
+    <span class="govuk-caption-l lead-provider-name"><%= @ecf_lead_provider.name %></span>
+    <h2 class="govuk-heading-l statement-name"><%= @statement.name %></h2>
 
     <%= render Finance::Statements::ECFStatementSelector.new(current_statement: @statement) %>
   </div>
@@ -97,7 +97,7 @@
 
 <div class="govuk-grid-row govuk-!-margin-top-5">
   <div class="govuk-grid-column-full">
-    <div class="finance-panel">
+    <div class="finance-panel finance-panel__output-payments">
       <%= govuk_table classes: ["output-payments"] do |table| %>
         <% table.caption(size: 'm', text: "Output payments") %>
 
@@ -146,7 +146,7 @@
       </div>
     </div>
 
-    <div class="finance-panel govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+    <div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5">
       <%= govuk_table do |table| %>
         <% table.caption(size: "m", text: "Adjustments") %>
 

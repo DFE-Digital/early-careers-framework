@@ -11,16 +11,13 @@ module Support
         user = User.find_by(full_name: participant_name)
         raise "Could not find User for #{participant_name}" if user.nil?
 
-        participant = user.participant_profiles.first
-        raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
-
         sit = User.find_by(full_name: sit_name)
         raise "Could not find User for #{sit_name}" if sit.nil?
 
         school = sit.induction_coordinator_profile.schools.first
         raise "Could not find School for #{sit_name}" if school.nil?
 
-        portal = Pages::FinancePortal.new
+        portal = Pages::FinancePortal.loaded
         search = portal.view_participant_drilldown
         drilldown = search.find participant_name
 
@@ -34,6 +31,9 @@ module Support
         true
       rescue Capybara::ElementNotFound => e
         @error = e
+
+        sign_out
+
         false
       end
 

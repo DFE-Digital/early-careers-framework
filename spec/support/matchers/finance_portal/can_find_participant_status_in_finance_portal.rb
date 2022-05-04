@@ -14,7 +14,7 @@ module Support
         participant = user.participant_profiles.first
         raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
-        portal = Pages::FinancePortal.new
+        portal = Pages::FinancePortal.loaded
         search = portal.view_participant_drilldown
         drilldown = search.find participant_name
 
@@ -28,6 +28,9 @@ module Support
         true
       rescue Capybara::ElementNotFound => e
         @error = e
+
+        sign_out
+
         false
       end
 

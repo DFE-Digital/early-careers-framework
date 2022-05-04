@@ -2,6 +2,8 @@
 
 module Sections
   class CookieConsentBanner < SitePrism::Section
+    set_default_search_arguments ".govuk-cookie-banner", visible: false
+
     element :heading, "h2"
     element :success_message, :css, ".js-cookie-banner__success", visible: false
 
@@ -39,7 +41,7 @@ module Pages
   class Base < SitePrism::Page
     element :header, "h1"
 
-    section :cookie_banner, ::Sections::CookieConsentBanner, ".govuk-cookie-banner", visible: false
+    section :cookie_banner, ::Sections::CookieConsentBanner
 
     load_validation do
       [has_primary_heading?, "Primary heading \"#{primary_heading}\" not found on page"]

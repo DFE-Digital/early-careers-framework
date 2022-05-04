@@ -4,7 +4,8 @@ require_relative "../base"
 
 module Pages
   class FinanceParticipantDrilldownSearch < ::Pages::Base
-    include Capybara::DSL
+    set_url "/finance/participants"
+    set_primary_heading "Participants"
 
     def find(participant_name)
       user = User.find_by(full_name: participant_name)
@@ -12,7 +13,7 @@ module Pages
       fill_in "Search participants", with: user.id
       click_on "Search"
 
-      Pages::FinanceParticipantDrilldown.new
+      Pages::FinanceParticipantDrilldown.loaded
     end
   end
 end

@@ -8,11 +8,11 @@ module Support
       match do |finance_user|
         sign_in_as finance_user
 
-        portal = Pages::FinancePortal.new
+        portal = Pages::FinancePortal.loaded
         wizard = portal.view_payment_breakdown
         report = wizard.complete lead_provider_name
 
-        @text = page.find("main .breakdown-summary-payment").text
+        @text = page.find("main").text
 
         report.can_see_payment_summary?(num_declarations)
 
@@ -21,6 +21,9 @@ module Support
         true
       rescue Capybara::ElementNotFound => e
         @error = e
+
+        sign_out
+
         false
       end
 

@@ -31,6 +31,9 @@ module Support
         true
       rescue Capybara::ElementNotFound => e
         @error = e
+
+        sign_out
+
         false
       end
 

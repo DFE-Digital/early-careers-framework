@@ -8,7 +8,7 @@ module Support
       match do |finance_user|
         sign_in_as finance_user
 
-        portal = Pages::FinancePortal.new
+        portal = Pages::FinancePortal.loaded
         wizard = portal.view_payment_breakdown
         report = wizard.complete lead_provider_name
 
@@ -21,6 +21,9 @@ module Support
         true
       rescue Capybara::ElementNotFound => e
         @error = e
+
+        sign_out
+
         false
       end
 
