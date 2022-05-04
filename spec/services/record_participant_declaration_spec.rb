@@ -10,7 +10,6 @@ RSpec.describe RecordParticipantDeclaration do
     let(:profile) { create(:npq_participant_profile, npq_application: npq_application) }
     let(:user) { profile.user }
     let(:npq_course) { profile.npq_course }
-
     let(:declaration_date) { profile.schedule.milestones.where(declaration_type: "started").first.start_date + 3.days }
 
     let(:params) do
@@ -21,6 +20,10 @@ RSpec.describe RecordParticipantDeclaration do
         course_identifier: npq_course.identifier,
         cpd_lead_provider: cpd_lead_provider,
       }
+    end
+
+    before do
+      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
     end
 
     it "creates a participant declaration" do

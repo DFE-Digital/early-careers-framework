@@ -5,8 +5,6 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
   include Finance::NPQPaymentsHelper
 
-  let(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
-  let(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Lead Provider") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider, name: "NPQ Lead Provider") }
   let(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider: npq_lead_provider) }
@@ -162,7 +160,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def then_i_should_see_correct_output_payment_breakdown
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_leading_behaviour_culture_contract))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(output_payment_per_participant))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(output_payment_subtotal))
     end
@@ -185,9 +183,9 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def then_i_should_see_correct_course_summary
     within first(".app-application-card__header") do
       expect(page).to have_content("Started")
-      expect(page).to have_content(total_participants_for(npq_specialist_schedule.milestones.first))
+      expect(page).to have_content(total_participants_for(Finance::Schedule::NPQLeadership.default.schedule_milestones.find_by(declaration_type: "started")))
       expect(page).to have_content("Total declarations")
-      expect(page).to have_content(total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+      expect(page).to have_content(total_declarations(npq_leading_behaviour_culture_contract))
     end
   end
 
@@ -238,12 +236,12 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.group(:declaration_type).count
   end
 
-  def total_participants_for(milestone)
-    participants_per_declaration_type.fetch(milestone.declaration_type, 0)
+  def total_participants_for(milestone_schedule)
+    participants_per_declaration_type.fetch(milestone_schedule.declaration_type, 0)
   end
 
   def output_payment
-    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: total_declarations(npq_lead_provider, npq_leading_behaviour_culture_contract))
+    PaymentCalculator::NPQ::OutputPayment.call(contract: npq_leading_behaviour_culture_contract, total_participants: total_declarations(npq_leading_behaviour_culture_contract))
   end
 
   def service_fees

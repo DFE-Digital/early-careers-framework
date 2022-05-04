@@ -55,25 +55,26 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     and_i_click_the_continue_button
     then_i_should_see_correct_breakdown_summary
     then_i_should_see_the_correct_payment_summary
-    then_i_should_see_the_correct_service_fees
     then_i_should_see_the_correct_output_fees
     then_i_should_see_the_correct_uplift_fee
     and_the_page_should_be_accessible
 
     when_i_click_on_view_contract_link
-    then_the_page_should_be_accessible
-
-    click_link("Back")
-    then_the_page_should_be_accessible
+    then_i_see_contract_information
 
     select("November 2021", from: "statement-field")
     click_button("View")
+    then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
     and_the_page_should_be_accessible
   end
 
 private
+
+  def then_i_should_see_the_total_voided
+    expect(page.find("strong", text: "Total voided")).to have_sibling("div", text: voided_declarations.size)
+  end
 
   def then_i_see_voided_declarations
     within first("table tbody") do
@@ -328,50 +329,30 @@ private
     select("January 2022", from: "statement-field")
     click_button("View")
 
-    within ".breakdown-summary" do
-      expect(page).to have_content("Submission deadline")
+    within ".finance-panel__summary" do
+      expect(page).to have_content("Milestone cut off date")
       expect(page).to have_content(jan_statement.deadline_date.to_s(:govuk))
-    end
-
-    within ".breakdown-summary-recruitment" do
-      expect(page).to have_content("Current ECTs")
-      expect(page).to have_content(@jan_starts[:breakdown_summary][:ects] + @jan_retained_1[:breakdown_summary][:ects])
-      expect(page).to have_content("Current Mentors")
-      expect(page).to have_content(@jan_starts[:breakdown_summary][:mentors] + @jan_retained_1[:breakdown_summary][:mentors])
-      expect(page).to have_content("Total")
-      expect(page).to have_content(@jan_starts[:breakdown_summary][:participants] + @jan_retained_1[:breakdown_summary][:participants])
-      expect(page).to have_content("Recruitment target")
-      expect(page).to have_content(contract.recruitment_target)
     end
   end
 
   def then_i_should_see_the_correct_payment_summary
-    within ".breakdown-summary-payment" do
-      expect(page).to have_content("Service fee")
-      expect(page).to have_content(contract.recruitment_target)
-      expect(page).to have_content(number_to_pounds(service_fee_total))
-      expect(page).to have_content("Output fee")
-      expect(page).to have_content(number_of_declarations)
+    within ".finance-panel__summary" do
+      expect(page).to have_content(number_to_pounds(total_payment_with_vat_breakdown))
+
+      expect(page).to have_content("Output payment")
       expect(page).to have_content(output_payment_total)
+
+      expect(page).to have_content("Service fee")
+      expect(page).to have_content(number_to_pounds(service_fee_total))
+
       expect(page).to have_content("VAT")
       expect(page).to have_content(number_to_pounds(total_vat_breakdown))
-      expect(page).to have_content("Total payment")
-      expect(page).to have_content(number_to_pounds(total_payment_with_vat_breakdown))
-    end
-  end
-
-  def then_i_should_see_the_correct_service_fees
-    within ".service-fees-table" do
-      expect(page).to have_content("Service fee")
-      expect(page).to have_content(number_to_pounds(@jan_starts[:service_fees][0][:per_participant]))
-      expect(page).to have_content(contract.recruitment_target)
-      expect(page).to have_content(number_to_pounds(@jan_starts[:service_fees][0][:monthly]))
     end
   end
 
   def then_i_should_see_the_correct_output_fees
-    first(".output-payments-table") do
-      expect(page).to have_content("Output fee")
+    all(".finance-panel")[0] do
+      expect(page).to have_content("Output payments")
       expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:per_participant]))
       expect(page).to have_content(@jan_starts[:output_payments][0][:participants])
       expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:subtotal]))
@@ -379,7 +360,7 @@ private
   end
 
   def then_i_should_see_the_correct_uplift_fee
-    within(".other-fees-table") do
+    all(".finance-panel")[1] do
       expect(page).to have_content("Uplift fee")
       expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:per_participant]))
       expect(page).to have_content(@jan_starts[:other_fees][:uplift][:participants])
@@ -423,11 +404,11 @@ private
     choose option: "cffd2237-c368-4044-8451-68e4a4f73369", allow_label_click: true
   end
 
-  def and_i_click_open_all_button
-    find("button", text: "Open all").click
+  def when_i_click_on_view_contract_link
+    find("summary", text: I18n.t("finance.contract_information")).click
   end
 
-  def when_i_click_on_view_contract_link
-    find("a", text: I18n.t("finance.show_contract")).click
+  def then_i_see_contract_information
+    expect(page).to have_content("Recruitment target #{contract.recruitment_target}")
   end
 end

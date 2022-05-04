@@ -19,7 +19,7 @@ module RecordDeclarations
     validates :parsed_date, future_date: true, allow_blank: true
     validate :date_has_the_right_format
     validate :validate_schedule_present
-    validate :validate_milestone_exists
+    validate :validate_milestone_schedule_exists
 
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
@@ -44,6 +44,7 @@ module RecordDeclarations
       ParticipantDeclaration.transaction do
         set_eligibility
 
+        Finance::Statement.attach(participant_declaration) unless participant_declaration.submitted?
         declaration_attempt.update!(participant_declaration: participant_declaration)
       end
 
@@ -118,11 +119,11 @@ module RecordDeclarations
     end
 
     def validate_milestone!
-      if parsed_date <= milestone.start_date.beginning_of_day
+      if parsed_date < milestone.start_date.beginning_of_day
         raise ActionController::ParameterMissing, I18n.t(:declaration_before_milestone_start)
       end
 
-      if milestone.milestone_date.present? && (milestone.milestone_date.end_of_day < parsed_date)
+      if milestone.milestone_date.present? && (milestone.milestone_date.end_of_day <= parsed_date)
         raise ActionController::ParameterMissing, I18n.t(:declaration_after_milestone_cutoff)
       end
     end
@@ -139,11 +140,23 @@ module RecordDeclarations
     end
 
     def milestone
-      schedule&.milestones&.find_by(declaration_type: declaration_type)
+      milestone_schedule && milestone_schedule.milestone
     end
 
-    def validate_milestone_exists
-      if milestone.blank?
+    def milestone_schedule
+      @milestone_schedule ||= begin
+        return nil unless schedule
+
+        scope = schedule.schedule_milestones.joins(:milestone)
+        scope
+          .where("milestones.start_date <= ? AND milestones.milestone_date >= ?", parsed_date, parsed_date)
+          .or(scope.where("milestones.start_date <= ? AND milestones.milestone_date IS NULL", parsed_date))
+          .find_by(declaration_type: declaration_type)
+      end
+    end
+
+    def validate_milestone_schedule_exists
+      if milestone_schedule.blank?
         errors.add(:declaration_type, I18n.t(:mismatch_declaration_type_for_schedule))
       end
     end

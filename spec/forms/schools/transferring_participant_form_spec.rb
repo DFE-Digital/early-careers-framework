@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rails_helper"
+
 RSpec.describe Schools::TransferringParticipantForm, type: :model do
   let(:school_cohort) { create(:school_cohort) }
   let(:user) { create(:user) }
@@ -220,6 +222,42 @@ RSpec.describe Schools::TransferringParticipantForm, type: :model do
         form.teachers_current_programme_choice = nil
         expect(form.valid?(:teachers_current_programme)).to be false
         expect(form.errors[:teachers_current_programme_choice]).to include "Select if the participant will continue with their current training programme"
+      end
+    end
+  end
+
+  describe "steps" do
+    it "add the current step to the steps when set to nil" do
+      form.steps = nil
+      form.current_step = "full_name"
+      form.update_steps
+      expect(form.steps).to eq(%w[what_we_need full_name])
+    end
+
+    it "add the current step to the steps when set to nil" do
+      form.steps = %w[what_we_need full_name trn dob email]
+      form.current_step = "choose_mentor"
+      form.update_steps
+      expect(form.steps).to eq(%w[what_we_need full_name trn dob email choose_mentor])
+    end
+
+    it "correctly shows the previous page action" do
+      form.steps = %w[what_we_need full_name trn]
+      form.current_step = "dob"
+      form.update_steps
+      expect(form.previous_step).to eq(:trn)
+      expect(form.steps).to eq(%w[what_we_need full_name trn])
+    end
+
+    context "sit has changed transferees details" do
+      it "correctly shows the previous page action for multiple steps in " do
+        form.steps = %w[what_we_need full_name trn cannot_find_their_details]
+        form.current_step = "trn"
+        form.update_steps
+        form.current_step = "email"
+        form.update_steps
+        expect(form.previous_step).to eq(:trn)
+        expect(form.steps).to eq(%w[what_we_need full_name trn cannot_find_their_details trn])
       end
     end
   end

@@ -283,7 +283,6 @@ en:
       npq-executive-leadership: Executive Leadership
       npq-additional-support-offer: Additional Support Offer
   finance:
-    submission_deadline: Submission deadline
     choose_programme: Choose programme scheme
     cohort: Cohort
     course_total: Course total
@@ -297,32 +296,18 @@ en:
     total: Total
     total_declarations: Total declarations
     total_not_eligible_for_funding: Total not eligible for funding
-    show_contract: View contract information
-    show_voided_declarations: View voided declarations
     voided_declarations: Voided declarations
     provider: Provider
-    ects: Current ECTs
-    mentors: Current Mentors
     participants: Current participants
     per_participant: Payment amount per participant
     amount: Amount
-    payment_breakdown: Payment Breakdown
     payment_type: Payment type
     payment_reference: PO reference
-    number_of_participants: Number of participants
-    payment_amount_for_period: Payment amount for period
-    payment: Payment
     vat: VAT
-    type: Type
-    total_payment: Total payment
-    fee_per_participant: Fee per participant
     back_payment_participants: Back payment participants
     payment_per_trainee: Payment per trainee
     current_milestone: Current milestone
-    total_paid: Total paid
-    total_not_paid: Total not paid
     trainees: Trainees
-    number_of_declarations: Number of declarations
     view: View
     contract:
       version: Contract reference
@@ -347,30 +332,25 @@ en:
         "2": Band C
         "3": New target
       payment_breakdown: ECF Payment Breakdown
-      breakdown_summary:
-        total: Total
       statements:
         show:
           title: Early career framework (ECF)
+          started: Starts
+          retained_1: Retained 1
+          retained_2: Retained 2
+          retained_3: Retained 3
+          retained_4: Retained 4
+          completed: Completed
 
     npq:
       payment_breakdown: NPQ Payment Breakdown
-    participant_breakdown:
-      caption: Particiant Breakdown
-    milestone:
-      caption: Milestone
     service_fee:
       caption: Service fee
-    service_fees:
-      caption: Service fees
     output_payment:
       label: Output payment
-      caption: Output fee
       band_d_info: Participants over the original band C target up to the new target.
     cut_off_date:
       caption: Output payment cut off date
-    uplift_fee:
-      caption: Uplift fee
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant

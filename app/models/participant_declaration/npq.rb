@@ -5,6 +5,7 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
 
   belongs_to :participant_profile, class_name: "ParticipantProfile::NPQ"
   has_one :npq_application, through: :participant_profile
+  belongs_to :statement, optional: true, class_name: "Finance::Statement::NPQ"
 
   scope :for_course, ->(course_identifier) { where(course_identifier: course_identifier) }
   scope :eligible_for_lead_provider_and_course, ->(cpd_lead_provider, course_identifier) { for_lead_provider(cpd_lead_provider).for_course(course_identifier).eligible }

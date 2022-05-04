@@ -15,6 +15,8 @@ class NPQCourse < ApplicationRecord
       Finance::Schedule::NPQSpecialist.default
     when *Finance::Schedule::NPQSupport::IDENTIFIERS
       Finance::Schedule::NPQSupport.default
+    when *Finance::Schedule::NPQEhco::IDENTIFIERS
+      Finance::Schedule::NPQEhco.default
     else
       raise ArgumentError, "Invalid course identifier"
     end

@@ -6,18 +6,40 @@ module Finance
       def self.aggregation_types
         {
           started: {
-            # not_yet_included: :not_eligible_for_lead_provider,
-            all: :unique_for_lead_provider,
-            uplift: :unique_uplift_for_lead_provider,
-            ects: :unique_ects_for_lead_provider,
-            mentors: :unique_mentors_for_lead_provider,
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
           },
           retained_1: {
-            # not_yet_included: :not_eligible_for_lead_provider,
-            all: :unique_for_lead_provider,
-            uplift: :unique_uplift_for_lead_provider,
-            ects: :unique_ects_for_lead_provider,
-            mentors: :unique_mentors_for_lead_provider,
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
+          },
+          retained_2: {
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
+          },
+          retained_3: {
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
+          },
+          retained_4: {
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
+          },
+          completed: {
+            all: :unique_id,
+            uplift: :unique_uplift,
+            ects: :unique_ects,
+            mentors: :unique_mentors,
           },
         }
       end

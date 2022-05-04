@@ -10,7 +10,6 @@ RSpec.describe ParticipantDeclaration, type: :model do
     it { is_expected.to belong_to(:cpd_lead_provider) }
     it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
-    it { is_expected.to belong_to(:statement).class_name("Finance::Statement").optional }
   end
 
   describe "state transitions" do
@@ -275,6 +274,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       before do
         Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
         Induction::Enrol.call(participant_profile: primary_participant_profile, induction_programme: induction_programme)
+        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
       end
 
       let!(:partnership) { create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school) }
@@ -345,7 +345,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
               before do
                 Induction::Enrol.call(participant_profile: another_duplicate_participant_profile, induction_programme: induction_programme)
-
+                create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
                 RecordDeclarations::Started::EarlyCareerTeacher.call(
                   params: {
                     participant_id: another_duplicate_participant_profile.user_id,
@@ -380,6 +380,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
           context "when declarations have been made for a different course" do
             before do
               Induction::Enrol.call(participant_profile: mentor_participant_profile, induction_programme: induction_programme)
+              create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now)
 
               RecordDeclarations::Started::Mentor.call(
                 params: {

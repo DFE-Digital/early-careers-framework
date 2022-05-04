@@ -79,7 +79,7 @@
             <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
               <span><%= total_voided %></span>
               <br>
-              <p class="govuk-body-s"><%= govuk_link_to( t("finance.view") , voided_finance_npq_lead_provider_statement_path(@npq_lead_provider.id, @statement)) %></p>
+              <p class="govuk-body-s"><%= govuk_link_to( t("finance.view") , finance_npq_lead_provider_statement_voided_path(@npq_lead_provider.id, @statement)) %></p>
             </div>
           </div>
         </div>

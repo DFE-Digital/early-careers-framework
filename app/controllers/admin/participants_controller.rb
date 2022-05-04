@@ -106,7 +106,7 @@ module Admin
     end
 
     def latest_induction_record
-      @latest_induction_record ||= @participant_profile.current_induction_record
+      @latest_induction_record ||= @participant_profile.current_induction_record || @participant_profile.induction_records&.latest
     end
   end
 end

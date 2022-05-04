@@ -23,10 +23,13 @@ properties:
       - npq-leading-teaching
       - npq-leading-behaviour-culture
       - npq-leading-teaching-development
+      - npq-leading-literacy
       - npq-senior-leadership
       - npq-headship
       - npq-executive-leadership
+      - npq-early-years-leadership
       - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
   schedule_identifier:
     description: "The schedule currently applied to this enrollment"
     type: string

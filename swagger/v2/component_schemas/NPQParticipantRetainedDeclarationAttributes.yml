@@ -24,12 +24,15 @@ properties:
     type: string
     enum:
       - npq-leading-teaching
-      - npq-leading-teaching-development
       - npq-leading-behaviour-culture
-      - npq-headship
+      - npq-leading-teaching-development
+      - npq-leading-literacy
       - npq-senior-leadership
+      - npq-headship
       - npq-executive-leadership
+      - npq-early-years-leadership
       - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
     example: npq-headship
 required:
   - participant_id

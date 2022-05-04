@@ -6,7 +6,7 @@ module Schools
     include ActiveRecord::AttributeAssignment
     include ActiveModel::Serialization
 
-    attr_accessor :full_name, :trn, :date_of_birth, :start_date, :email, :mentor_id, :schools_current_programme_choice, :teachers_current_programme_choice, :same_programme
+    attr_accessor :full_name, :trn, :date_of_birth, :start_date, :email, :mentor_id, :schools_current_programme_choice, :teachers_current_programme_choice, :same_programme, :current_step, :steps
 
     validates :full_name, presence: true, on: :full_name
     validates :trn,
@@ -33,6 +33,8 @@ module Schools
         schools_current_programme_choice: schools_current_programme_choice,
         teachers_current_programme_choice: teachers_current_programme_choice,
         same_programme: same_programme,
+        steps: steps,
+        current_step: current_step,
       }
     end
 
@@ -76,6 +78,27 @@ module Schools
 
     def mentor_profile
       mentor&.mentor_profile
+    end
+
+    def previous_step
+      remove_current_step
+      steps.last.to_sym
+    end
+
+    def remove_current_step
+      return if steps.nil?
+
+      if steps.include?(current_step)
+        steps.delete(current_step)
+      end
+    end
+
+    def update_steps
+      if steps.nil?
+        @steps = %w[what_we_need]
+      end
+
+      steps.push(current_step)
     end
 
   private

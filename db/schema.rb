@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_21_094257) do
+ActiveRecord::Schema.define(version: 2022_05_03_132944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -739,9 +739,9 @@ ActiveRecord::Schema.define(version: 2022_04_21_094257) do
     t.string "declaration_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
+    t.index ["milestone_id", "schedule_id"], name: "index_schedule_milestones_on_milestone_id_and_schedule_id"
     t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
-    t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
+    t.index ["schedule_id", "milestone_id"], name: "index_schedule_milestones_on_schedule_id_and_milestone_id"
     t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
   end
 
@@ -858,6 +858,7 @@ ActiveRecord::Schema.define(version: 2022_04_21_094257) do
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
     t.string "contract_version", default: "0.0.1"
+    t.boolean "output_fee", default: true
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
