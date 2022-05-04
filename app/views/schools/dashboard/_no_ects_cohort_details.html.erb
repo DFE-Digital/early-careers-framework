@@ -1,5 +1,5 @@
 <p>
-  Your school has told us you do not expect any ECTs to join you in the <%= TabLabelDecorator.new(Cohort.active_registration_cohort.description) %> academic year.
+  Your school has told us you do not expect any ECTs to join you in the <%= school_cohort.description %> academic year.
 </p>
 
-<%= govuk_link_to 'Tell us if this has changed', expect_any_ects_schools_setup_school_cohort_path(cohort_id: Cohort.active_registration_cohort) %>
+<%= govuk_link_to 'Tell us if this has changed', expect_any_ects_schools_setup_school_cohort_path(cohort_id: school_cohort.cohort) %>

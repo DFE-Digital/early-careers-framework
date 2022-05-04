@@ -1,5 +1,5 @@
-<% registration_cohort = TabLabelDecorator.new(Cohort.active_registration_cohort.description) %>
-<% title = "How will you run training for new starters in the #{registration_cohort} acadamic year?" %>
+<% registration_cohort = Cohort.active_registration_cohort.description %>
+<% title = "How will you run training for new starters in the #{registration_cohort} academic year?" %>
 
 <% content_for :title, title %>
 
