@@ -1,16 +1,17 @@
 <% content_for :title, "Error: email limit" %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-header-xl">You can only send <%= @limit[:max] %> <%= "email".pluralize(@limit[:max]) %> per <%= @limit[:within].inspect %></h1>
-    <p>You can try again later.</p>
+    <div class="govuk-grid-column-two-thirds">
 
-    <h2 class="govuk-heading-m">If your school has not received this email</h2>
-    <p>
-      <%= govuk_link_to "Sign in to DfE (opens in a new tab)",
+        <h1 class="govuk-header-xl">You can only send <%= @limit[:max] %> <%= "email".pluralize(@limit[:max]) %> per <%= @limit[:within].inspect %></h1>
+        <p class="govuk-body">You can try again later.</p>
+
+        <h2 class="govuk-heading-m">If your school has not received this email</h2>
+        <p class="govuk-body"><%= govuk_link_to "Sign in to DfE (opens in a new tab)",
           "https://www.get-information-schools.service.gov.uk/",
           target: :_blank,
           rel: "noopener noreferrer" %> and make sure that your GIAS email address is up to date.
-    </p>
-  </div>
+        </p>
+
+    </div>
 </div>

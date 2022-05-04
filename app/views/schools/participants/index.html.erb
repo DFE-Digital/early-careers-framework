@@ -1,62 +1,62 @@
 <% content_for :title, "Early career teachers and mentors" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back to manage your training", href: schools_dashboard_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl">Your ECTs and mentors</h1>
+    <div class="govuk-grid-column-two-thirds">
 
-    <p class="govuk-body">Before your early career teachers (ECTs) and mentors can start, we need to check their details
-      in the Teaching Regulation Agency records. This is to make sure they’re eligible for this programme.</p>
-    <p class="govuk-body">You need to tell us their names and email addresses. We’ll then contact them
-      to <%= govuk_link_to "explain their role", roles_schools_cohort_path(info: true), class: "govuk-link--no-visited-state" %> and
-      what they need to do next.</p>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <h1 class="govuk-heading-xl">Your ECTs and mentors</h1>
 
-    <h2 class="govuk-heading-m">ECTs and mentors starting in the next academic year</h2>
-    <p>You’ll be able to add Autumn 2022 starters from May. We’ll email schools as soon as the new term is added.</p>
+        <p class="govuk-body">Before your early career teachers (ECTs) and mentors can start, we need to check their details in the Teaching Regulation Agency records. This is to make sure they’re eligible for this programme.</p>
+        <p class="govuk-body">You need to tell us their names and email addresses. We’ll then contact them to <%= govuk_link_to "explain their role", roles_schools_cohort_path(info: true), class: "govuk-link--no-visited-state" %> and what they need to do next.</p>
 
-    <div class="govuk-inset-text">
-      <ul class="govuk-list">
-        <% if FeatureFlag.active?(:change_of_circumstances) %>
-          <li><%= govuk_link_to "Add an ECT or mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :teacher), class: "govuk-link--no-visited-state" %></li>
-        <% else %>
-          <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
-          <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
-        <% end %>
-        <% unless current_user.mentor? %>
-          <li><%= govuk_link_to "Add yourself as a mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :self), class: "govuk-link--no-visited-state" %></li>
-        <% end %>
-      </ul>
+        <h2 class="govuk-heading-m">ECTs and mentors starting in the next academic year</h2>
+        <p>You’ll be able to add Autumn 2022 starters from May. We’ll email schools as soon as the new term is added.</p>
+
+        <div class="govuk-inset-text">
+            <ul class="govuk-list">
+                <% if FeatureFlag.active?(:change_of_circumstances) %>
+                <li><%= govuk_link_to "Add an ECT or mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :teacher), class: "govuk-link--no-visited-state" %></li>
+                <% else %>
+                <li><%= govuk_link_to "Add a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link--no-visited-state" %></li>
+                <li><%= govuk_link_to "Add a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link--no-visited-state" %></li>
+                <% end %>
+                <% unless current_user.mentor? %>
+                <li><%= govuk_link_to "Add yourself as a mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :self), class: "govuk-link--no-visited-state" %></li>
+                <% end %>
+            </ul>
+        </div>
     </div>
-  </div>
-  <div class="govuk-grid-column-full">
-    <%= govuk_tabs(title: 'Contents') do |component| %>
-      <% if participants_active?(@ect_categories) %>
-        <% component.tab(label: 'ECTs') do %>
-          <%= render partial: 'ects', locals: { ect_profiles: @ect_categories } %>
-        <% end %>
-      <% end %>
 
-      <% if participants_active?(@mentor_categories) %>
-        <% component.tab(label: 'Mentors') do %>
-          <%= render partial: 'mentors', locals: { mentor_profiles: @mentor_categories } %>
+    <div class="govuk-grid-column-full">
+        <%= govuk_tabs(title: 'Contents') do |component| %>
+        <% if participants_active?(@ect_categories) %>
+            <% component.tab(label: 'ECTs') do %>
+                <%= render partial: 'ects', locals: { ect_profiles: @ect_categories } %>
+            <% end %>
         <% end %>
-      <% end %>
 
-      <% if @withdrawn.any? || @ineligible.any? || @transferred.any? %>
-        <% component.tab(label: 'Not training') do %>
-          <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible, transferred: @transferred } %>
+        <% if participants_active?(@mentor_categories) %>
+            <% component.tab(label: 'Mentors') do %>
+                <%= render partial: 'mentors', locals: { mentor_profiles: @mentor_categories } %>
+            <% end %>
         <% end %>
-      <% end %>
 
-      <% if FeatureFlag.active?(:change_of_circumstances) %>
-        <% if @transferring_in.any? || @transferring_out.any? %>
-          <% component.tab(label: 'Moving school') do %>
-            <%= render partial: 'moving_school', locals: { transferring_in: @transferring_in, transferring_out: @transferring_out } %>
-          <% end %>
+        <% if @withdrawn.any? || @ineligible.any? || @transferred.any? %>
+            <% component.tab(label: 'Not training') do %>
+                <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible, transferred: @transferred } %>
+            <% end %>
         <% end %>
-      <% end %>
-    <% end %>
-  </div>
+
+        <% if FeatureFlag.active?(:change_of_circumstances) %>
+            <% if @transferring_in.any? || @transferring_out.any? %>
+                <% component.tab(label: 'Moving school') do %>
+                    <%= render partial: 'moving_school', locals: { transferring_in: @transferring_in, transferring_out: @transferring_out } %>
+                <% end %>
+            <% end %>
+        <% end %>
+        <% end %>
+
+    </div>
 </div>

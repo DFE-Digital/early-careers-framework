@@ -6,16 +6,17 @@
 
         <%= form_with model: @nomination_request_form, url: choose_location_request_nomination_invite_path, method: :post do |f| %>
         <%= f.govuk_error_summary %>
-
+            <div class="govuk-form-group">
             <%= f.govuk_collection_select(
                 :local_authority_id,
                 @local_authorities,
                 :id,
                 :name,
                 label: { text: "What’s your school’s local authority?", tag: 'h1', size: 'xl' },
-                options: { include_blank: true },
                 width: "two-thirds",
+                options: { include_blank: true },
                 class: ["js-location-select"]) do %>
+            </div>
 
             <p class="govuk-body">This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure?
             <%= govuk_link_to "Find your school on our register (opens in new tab)", "https://get-information-schools.service.gov.uk/", target: :_blank, rel: "noopener noreferrer", class: "govuk-link--no-visited-state" %></p>
