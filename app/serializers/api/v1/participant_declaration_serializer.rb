@@ -13,7 +13,7 @@ module Api
 
       set_id :id
       set_type :'participant-declaration'
-      attributes :participant_id, :declaration_type, :course_identifier
+      attributes :participant_id, :course_identifier
 
       attribute :eligible_for_payment do |declaration|
         declaration.payable? || declaration.eligible?
@@ -32,6 +32,10 @@ module Api
       attribute(:participant_id, &:user_id)
 
       attribute :state, &:current_state
+
+      attribute :declaration_type do |declaration|
+        declaration.declaration_type.dasherize
+      end
     end
   end
 end
