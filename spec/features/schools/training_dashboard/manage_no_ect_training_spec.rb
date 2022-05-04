@@ -28,7 +28,7 @@ RSpec.describe "Manage No ECT training", js: true do
                                                choice: "We don’t expect to have any early career teachers starting in 2021",
                                                snapshot: "Design Your Own - change programme options")
 
-    expect(page).to have_text "Training programme confirmed"
+    expect(page).to have_text "You’ve submitted your training information"
     expect(page).to have_text "Your school will not receive any more messages about statutory inductions for ECTs until the next academic year."
   end
 end
