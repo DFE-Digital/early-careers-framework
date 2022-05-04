@@ -6,7 +6,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-l"><%= @school.name %></span>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
 
         <%= form_for @induction_choice_form, url: schools_choose_programme_path, method: :post do |f| %>
             <%= f.govuk_error_summary %>
