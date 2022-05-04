@@ -15,7 +15,7 @@ mentor_2 = FactoryBot.create :mentor_participant_profile,
                              created_at: Date.parse("06/05/2020")
 
 ect_1 = FactoryBot.create :ect_participant_profile,
-                          user: FactoryBot.create(:user, full_name: "ECT User 1", email: "young_prosacco@crist.net"),
+                          user: FactoryBot.create(:user, id: "05a85345-3d33-4bac-8152-07874b7ff328", full_name: "ECT User 1", email: "young_prosacco@crist.net"),
                           mentor_profile: mentor_1,
                           school_cohort: school_cohort,
                           created_at: Date.parse("01/07/2020")

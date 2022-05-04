@@ -4,6 +4,7 @@ module Schools
   class TransferringParticipantsController < ::Schools::BaseController
     before_action :load_joining_participant_form, except: %i[what_we_need]
     before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
+    before_action :set_current_steps, except: %i[what_we_need]
     before_action :set_school_cohort
     before_action :validate_request_or_render, except: %i[what_we_need]
 
@@ -292,6 +293,11 @@ module Schools
 
     def reset_form_data
       session.delete(:schools_transferring_participant_form)
+    end
+
+    def set_current_steps
+      @transferring_participant_form.current_step = action_name
+      @transferring_participant_form.update_steps
     end
   end
 end
