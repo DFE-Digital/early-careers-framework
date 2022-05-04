@@ -613,7 +613,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_participant_profile
-    expect(page).to have_selector("h2", text: "Participant details")
+    expect(page).to have_text("Name")
   end
 
   def then_i_can_view_the_design_our_own_induction_dashboard
