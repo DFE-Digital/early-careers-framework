@@ -4,20 +4,19 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl">What’s the name of your school?</h1>
-
         <%= form_with model: @nomination_request_form, url: choose_school_request_nomination_invite_path, method: :post do |f| %>
-        <div class="govuk-!-width-two-thirds">
+
             <%= f.govuk_error_summary %>
                 <%= f.govuk_collection_select(
                 :school_id,
                 @nomination_request_form.available_schools,
                 :id,
                 :name_with_address,
-                label: { text: "What’s the name of your school?", class: "govuk-visually-hidden"  },
+                label: { text: "What’s the name of your school?", tag: 'h1', size: 'xl'  },
                 options: { include_blank: true },
+                width: 'two-thirds',
                 class: ["js-school-select"]) %>
-        </div>
+
         <%= f.govuk_submit "Continue" %>
         <% end %>
     </div>

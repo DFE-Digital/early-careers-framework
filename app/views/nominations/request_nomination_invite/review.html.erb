@@ -5,16 +5,16 @@
 %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Confirm this is your school</h1>
+    <div class="govuk-grid-column-two-thirds">
 
+        <h1 class="govuk-heading-xl">Confirm this is your school</h1>
 
-      <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "" } %>
+        <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "" } %>
 
+        <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
+            <%= f.hidden_field :answers_checked, value: true %>
+            <%= f.govuk_submit "Confirm and send" %>
+        <% end %>
 
-    <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
-      <%= f.hidden_field :answers_checked, value: true %>
-      <%= f.govuk_submit "Confirm and send" %>
-    <% end %>
-  </div>
+    </div>
 </div>
