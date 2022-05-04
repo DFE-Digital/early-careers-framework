@@ -7,21 +7,22 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
-        <h1 class="govuk-heading-xl">What’s <%= @nominate_induction_tutor_form.full_name_to_display %> email address? </h1>
-        <p>We’ll use this address to contact them with more information.</p>
+        <span class="govuk-caption-xl"><%= @nominate_induction_tutor_form.school.name %></span>
 
+        <%= form_for @nominate_induction_tutor_form, url: { action: :check_email }, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+            <div class="govuk-form-group">
+                <%= f.govuk_text_field(:email, label: { text: "What’s #{@nominate_induction_tutor_form.full_name_to_display} email address?",
+                tag: 'h1',
+                size: 'xl' },
+                width: "two-thirds") do %>
+            </div>
 
+            <p class="govuk-body">We’ll use this address to contact them with more information.</p>
+            <% end %>
 
-    <%= form_for @nominate_induction_tutor_form, url: { action: :check_email }, method: :put do |f| %>
-      <%= f.govuk_error_summary %>
-        <div class="govuk-form-group">
-          <%= f.govuk_text_field(:email, label: { text: "What’s #{@nominate_induction_tutor_form.full_name_to_display} email address?",
-           class: "govuk-visually-hidden" },
-           width: "two-thirds") %>
-        </div>
-      <%= f.hidden_field :token, value: @nominate_induction_tutor_form.token %>
-      <%= f.govuk_submit "Continue" %>
-    <% end %>
-  </div>
+            <%= f.hidden_field :token, value: @nominate_induction_tutor_form.token %>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+    </div>
 </div>

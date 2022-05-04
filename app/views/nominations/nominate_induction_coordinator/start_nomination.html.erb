@@ -4,36 +4,33 @@
   href: choose_how_to_continue_path(token: @nominate_induction_tutor_form.token))
 %>
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
-    <h1 class="govuk-heading-xl">Nominate an induction tutor for your school</h1>
+    <div class="govuk-grid-column-two-thirds">
 
-    <p>Your induction tutor will use our online service to:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>choose how your school wants to run your early career teacher (ECT) training programme</li>
-      <li>complete some steps to set up a programme</li>
-      <li>tell us if things change at your school, for example if ECTs join or not</li>
-      <li>be our point of contact for your ECT training</li>
-    </ul>
-    <h2 class="govuk-heading-m">Who you can nominate</h2>
-    <p>
-      You should choose the best person to complete these tasks for your schools:
-    </p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>choose the right training provider or study materials</li>
-      <li>provide contact information for your ECTs and their mentors</li>
-      <li>coordinate training, support and assessment for ECTs</li>
-    </ul>
+        <span class="govuk-caption-xl"><%= @nominate_induction_tutor_form.school.name %></span>
+        <h1 class="govuk-heading-xl">Nominate an induction tutor for your school</h1>
 
-    <p>
-     <%= govuk_link_to "Read more about the induction role in our guidance",
-       page_path(page: 'what-each-person-does'),
-       class: "govuk-link--no-visited-state" %>.
-    </p>
-    <p class="govuk-!-margin-bottom-7">
-      If you’re supported by a MAT (multi-academy trust) or federation, you can choose someone who manages traning for a number of schools.
-    </p>
+        <p class="govuk-body">Your induction tutor will use our online service to:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>choose how your school wants to run your early career teacher (ECT) training programme</li>
+            <li>complete some steps to set up a programme</li>
+            <li>tell us if things change at your school, for example if ECTs join or not</li>
+            <li>be our point of contact for your ECT training</li>
+        </ul>
 
-    <%= govuk_button_link_to "Continue", { action: :full_name  } %>
-  </div>
+        <h2 class="govuk-heading-m">Who you can nominate</h2>
+        <p class="govuk-body">You should choose the best person to complete these tasks for your schools:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>choose the right training provider or study materials</li>
+            <li>provide contact information for your ECTs and their mentors</li>
+            <li>coordinate training, support and assessment for ECTs</li>
+        </ul>
+
+        <p class="govuk-body"><%= govuk_link_to "Read more about the induction role in our guidance",
+        page_path(page: 'what-each-person-does'),
+        class: "govuk-link--no-visited-state" %>.</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">If you’re supported by a MAT (multi-academy trust) or federation, you can choose someone who manages traning for a number of schools.</p>
+
+        <%= govuk_button_link_to "Continue", { action: :full_name  } %>
+
+    </div>
 </div>
