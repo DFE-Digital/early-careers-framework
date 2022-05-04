@@ -6,10 +6,9 @@
     <div class="govuk-grid-column-two-thirds">
 
         <span class="govuk-caption-xl"><%= @school.name %></span>
-        <h1 class="govuk-heading-xl">Who do you want to add?</h1>
 
         <%= form_for add_participant_form, url: { action: :start }, method: :get do |f| %>
-            <%= f.govuk_radio_buttons_fieldset :type , legend: { text: "Who do you want to add?", class: "govuk-visually-hidden" } do %>
+            <%= f.govuk_radio_buttons_fieldset :type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
                 <% if @school_cohort.school_chose_fip? %>
                     <%= f.govuk_radio_button :type, :joining, label: { text: "A teacher transferring from another school where they’ve started ECF-based training or mentoring" } %>
                 <% end %>

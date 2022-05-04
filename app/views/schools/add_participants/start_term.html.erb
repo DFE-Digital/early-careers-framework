@@ -3,16 +3,17 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
+    <div class="govuk-grid-column-two-thirds">
 
-      <%= f.govuk_radio_buttons_fieldset :start_term,
-        legend: { text: add_participant_form.start_term_legend, tag: 'h1', size: 'xl' },
-        caption: { text: "#{@school.name}", size: 'xl' } do
-      %>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+
+        <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+            <%= f.govuk_error_summary %>
+            <%= f.govuk_radio_buttons_fieldset :start_term,
+            legend: { text: add_participant_form.start_term_legend, tag: 'h1', size: 'xl' } do %>
+
         <div class="govuk-inset-text">
-          You’ll be able to add Autumn 2022 starters from May. We’ll email schools as soon as the new term is added.
+            You’ll be able to add Autumn 2022 starters from May. We’ll email schools as soon as the new term is added.
         </div>
 
         <% ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS.each_with_index do |term, index| %>
