@@ -134,24 +134,6 @@ RSpec.describe RecordDeclarations::Started::NPQ do
     end
   end
 
-  context "when profile status is withdrawn" do
-    let(:profile) { create(:npq_participant_profile, npq_application: npq_application, status: "withdrawn") }
-
-    it "fails when user profile is a withdrawn record" do
-      expect { subject.call }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
-  context "when profile history had training_status deferred" do
-    before do
-      ParticipantProfileState.create!(participant_profile: profile, state: "deferred", created_at: declaration_date - 2.days)
-    end
-
-    it "fails" do
-      expect { subject.call }.to raise_error(ActionController::ParameterMissing)
-    end
-  end
-
   context "user profile is in a withdrawn state, but was active on declaration date" do
     let(:profile) { create(:npq_participant_profile, npq_application: npq_application, training_status: "withdrawn") }
 
