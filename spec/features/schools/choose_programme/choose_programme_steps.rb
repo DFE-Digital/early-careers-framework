@@ -135,24 +135,16 @@ module ChooseProgrammeSteps
     create(:cohort, start_year: 2022)
   end
 
+  def and_i_see_add_ects_link
+    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+  end
+
   def and_i_see_training_provider_to_be_confirmed
-    expect(
-      page
-        .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Training provider")
-        .sibling("dd.govuk-summary-list__value"),
-    ).to have_text("To be confirmed")
+    expect(page).to have_summary_row("Training provider", "To be confirmed")
   end
 
   def and_i_see_delivery_partner_to_be_confirmed
-    expect(
-      page
-        .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Delivery partner")
-        .sibling("dd.govuk-summary-list__value"),
-    ).to have_text("To be confirmed")
-  end
-
-  def and_i_see_add_ects_link
-    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+    expect(page).to have_summary_row("Delivery partner", "To be confirmed")
   end
 
   # When steps
