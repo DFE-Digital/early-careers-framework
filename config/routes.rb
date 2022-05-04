@@ -465,6 +465,7 @@ Rails.application.routes.draw do
               multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
                 get :who, path: "who", controller: :add_participants
                 put :chosen_who_to_add, path: "chosen-who-to-add", controller: :add_participants
+                put "transfer", as: nil
               end
             end
           end
