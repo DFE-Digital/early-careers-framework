@@ -110,7 +110,13 @@ module Schools
       validates :start_term,
                 presence: { message: I18n.t("errors.start_term.blank") }
 
-      next_step :start_date
+      next_step do
+        if type == :ect
+          :start_date
+        else
+          :confirm
+        end
+      end
     end
 
     step :start_date, update: true do
