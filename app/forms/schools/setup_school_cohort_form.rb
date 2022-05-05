@@ -17,8 +17,8 @@ module Schools
       "change_lead_provider" => "full_induction_programme",
       "change_delivery_partner" => "full_induction_programme",
       "change_to_core_induction_programme" => "core_induction_programme",
-      "change_to_design_our_own" => "design_our_own"
-    }
+      "change_to_design_our_own" => "design_our_own",
+    }.freeze
 
     def attributes
       {
