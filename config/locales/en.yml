@@ -246,7 +246,7 @@ en:
               blank: "Enter a date of birth"
               invalid: "Enter a valid date of birth"
             transfer:
-              blank: "Slect whether the teacher is transferring from another school"
+              blank: "Select whether the teacher is transferring from another school"
             start_date:
               blank: "Enter the teacher's induction start date"
               invalid: "Enter a valid start date"
