@@ -33,12 +33,14 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
       let(:profile) { create(:npq_participant_profile) }
       let(:schedule) do
         case profile.npq_course.identifier
-        when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
+        when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
           create(:npq_specialist_schedule)
-        when "npq-headship", "npq-senior-leadership", "npq-executive-leadership"
+        when *Finance::Schedule::NPQLeadership::IDENTIFIERS
           create(:npq_leadership_schedule)
-        when "npq-additional-support-offer"
+        when *Finance::Schedule::NPQSupport::IDENTIFIERS
           create(:npq_aso_schedule)
+        when *Finance::Schedule::NPQEhco::IDENTIFIERS
+          create(:npq_ehco_schedule)
         end
       end
 
@@ -82,12 +84,14 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
     let(:cohort) { create(:cohort) }
     let(:schedule) do
       case profile.npq_course.identifier
-      when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development"
+      when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
         create(:npq_specialist_schedule, schedule_identifier: "soft-schedule")
-      when "npq-headship", "npq-senior-leadership", "npq-executive-leadership"
+      when *Finance::Schedule::NPQLeadership::IDENTIFIERS
         create(:npq_leadership_schedule, schedule_identifier: "soft-schedule")
-      when "npq-additional-support-offer"
+      when *Finance::Schedule::NPQSupport::IDENTIFIERS
         create(:npq_aso_schedule, schedule_identifier: "soft-schedule")
+      when *Finance::Schedule::NPQEhco::IDENTIFIERS
+        create(:npq_ehco_schedule, schedule_identifier: "soft-schedule")
       end
     end
     let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule: schedule) }

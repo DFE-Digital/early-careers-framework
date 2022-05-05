@@ -332,6 +332,13 @@ module ValidTestDataGenerator
 
       return if [true, false].sample
 
+      # skip declarations for future courses
+      return if %w[
+        npq-early-headship-coaching-offer
+        npq-early-years-leadership
+        npq-leading-literacy
+      ].include?(npq_application.npq_course.identifier)
+
       json_participant_declaration = create_started_declarations(npq_application)
 
       return if [true, false].sample

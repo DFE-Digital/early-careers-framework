@@ -48,6 +48,10 @@ end
   { name: "NPQ for Headship (NPQH)", id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768", identifier: "npq-headship" },
   { name: "NPQ for Executive Leadership (NPQEL)", id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a", identifier: "npq-executive-leadership" },
   { name: "Additional Support Offer for new headteachers", id: "7fbefdd4-dd2d-4a4f-8995-d59e525124b7", identifier: "npq-additional-support-offer" },
+
+  { name: "The Early Headship Coaching Offer", id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a", identifier: "npq-early-headship-coaching-offer" },
+  { name: "NPQ Early Years Leadership (NPQEYL)", id: "66dff4af-a518-498f-9042-36a41f9e8aa7", identifier: "npq-early-years-leadership" },
+  { name: "NPQ Leading Literacy (NPQLL)", id: "829fcd45-e39d-49a9-b309-26d26debfa90", identifier: "npq-leading-literacy" },
 ].each do |hash|
   NPQCourse.find_or_create_by!(name: hash[:name], id: hash[:id], identifier: hash[:identifier])
 end

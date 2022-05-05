@@ -10,6 +10,11 @@
   <% end %>
 
   <% summary_list.row do |row| %>
+    <% row.key { "Eligible for funding" } %>
+    <% row.value { pp.fundable?.to_s.upcase } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
     <% row.key { "NPQ course" } %>
     <% row.value { pp.npq_course&.name } %>
   <% end %>

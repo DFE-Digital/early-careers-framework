@@ -7,6 +7,7 @@ module Finance
         npq-leading-teaching
         npq-leading-behaviour-culture
         npq-leading-teaching-development
+        npq-leading-literacy
       ].freeze
 
       PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS

@@ -2,7 +2,7 @@
 
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: { action: :trn }) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: @transferring_participant_form.previous_step }) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
