@@ -47,7 +47,7 @@ module Api
         scope = InductionRecord
           .where(id: induction_record_ids_with_deduped_profiles)
           .joins(participant_profile: { school_cohort: [:cohort] })
-          .where(participant_profile: { school_cohorts: { cohort: Cohort.current } })
+          .where(participant_profile: { school_cohorts: { cohort: with_cohorts } })
           .includes(
             :schedule,
             induction_programme: {
@@ -84,12 +84,20 @@ module Api
       # we also exclude any partnerships that have been challenged
       def induction_record_ids_with_deduped_induction_records
         query = InductionRecord
-          .joins(induction_programme: { partnership: :lead_provider })
+          .joins(induction_programme: { partnership: %i[lead_provider cohort] })
           .joins(participant_profile: %i[user participant_identity])
           .select("DISTINCT ON (participant_profiles.id) participant_profile_id, induction_records.id")
-          .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
-          .where(induction_programme: { partnerships: { challenged_at: nil, challenge_reason: nil } })
-          .order("participant_profiles.id", start_year: :desc)
+          .where(
+            induction_programme: {
+              partnerships: {
+                challenged_at: nil,
+                challenge_reason: nil,
+                lead_provider: lead_provider,
+                cohort: with_cohorts,
+              },
+            },
+          )
+          .order("participant_profiles.id", start_date: :desc)
           .to_sql
 
         ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")
