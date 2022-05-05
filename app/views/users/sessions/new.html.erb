@@ -1,21 +1,23 @@
 <% content_for :title, "Sign in" %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+<% content_for :before_content %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <%= f.govuk_error_summary %>
+    <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-xl">Sign in</h1>
-      <div class="govuk-form-group">
-        <%= f.govuk_email_field :email, label: { text: "Email address" } %>
-      </div>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <%= f.govuk_error_summary %>
 
-      <%= f.govuk_submit "Sign in" %>
-    <% end %>
-    <h2 class="govuk-heading-m">How to access this service</h2>
-      		<p>Enter your registered email address (the one we send emails to).</p>
-      		<p>Do not use your DfE Sign-in details.</p>
-        	<p>If you’re not registered or need to nominate an induction tutor for your school, <%= govuk_link_to "find out how to get access", check_account_path %>.</p>
-  </div>
+            <h1 class="govuk-heading-xl">Sign in</h1>
+            <div class="govuk-form-group">
+                <%= f.govuk_email_field :email, label: { text: "Email address" } %>
+            </div>
+            <%= f.govuk_submit "Sign in" %>
+        <% end %>
+
+        <h2 class="govuk-heading-m">How to access this service</h2>
+      	<p class="govuk-body">Enter your registered email address (the one we send emails to).</p>
+      	<p class="govuk-body">Do not use your DfE Sign-in details.</p>
+        <p class="govuk-body">If you’re not registered or need to nominate an induction tutor for your school, <%= govuk_link_to "find out how to get access", check_account_path %>.</p>
+
+    </div>
 </div>
