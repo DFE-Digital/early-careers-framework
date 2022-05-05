@@ -8,9 +8,8 @@ RSpec.describe RecordDeclarations::Retained::NPQ do
   include_context "lead provider profiles and courses"
   include_context "service record declaration params"
 
-  let(:milestone) { npq_profile.schedule.schedule_milestones.find_by(declaration_type: "started").milestone }
-  let(:cutoff_start_datetime) { milestone.start_date.beginning_of_day }
-  let(:cutoff_end_datetime) { milestone.milestone_date.end_of_day }
+  let(:cutoff_start_datetime) { npq_profile.schedule.milestones.where(declaration_type: "started").first.start_date.beginning_of_day }
+  let(:cutoff_end_datetime) { npq_profile.schedule.milestones[1].milestone_date.end_of_day }
 
   before do
     travel_to cutoff_start_datetime + 2.days
