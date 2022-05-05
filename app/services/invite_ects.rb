@@ -1,35 +1,27 @@
 # frozen_string_literal: true
 
 class InviteEcts
-  def fip_preterm_reminder(season:)
-    Rails.logger.info "Sending reminder to fip SITs"
+  # This is sent to SITs who were set up in a previous cohort. We request
+  # that they choose a programme for the next cohort and add their ECTs, if neccessary.
+  def preterm_reminder(conditions: {})
+    School.eligible.joins(:induction_coordinators).includes(:school_cohorts).where(conditions).each do |school|
+      # Filter out children's centres from these communications
+      next if GiasTypes::NO_INVITATIONS_TYPE_CODES.include?(school.school_type_code)
 
-    SchoolCohort.includes(school: :induction_coordinators)
-      .where(induction_programme_choice: :full_induction_programme, opt_out_of_updates: false).each do |cohort|
-        cohort.school.induction_coordinator_profiles.each do |sit|
-          next if Email.associated_with(sit).tagged_with(:fip_preterm_reminder).any?
+      school.induction_coordinator_profiles.each do |sit|
+        # Already received this email
+        next if Email.associated_with(sit).tagged_with(:preterm_reminder).any?
 
-          ParticipantMailer.fip_preterm_reminder(induction_coordinator_profile: sit, season: season, school_name: cohort.school.name).deliver_later
-        end
+        # Already chosen a programme this cohort
+        next if school.chosen_programme?(Cohort.next)
+
+        ParticipantMailer.preterm_reminder(induction_coordinator_profile: sit).deliver_later
       end
+    end
   end
 
-  def cip_preterm_reminder(season:)
-    Rails.logger.info "Sending reminder to cip SITs"
-
-    SchoolCohort.includes(school: :induction_coordinators)
-      .where(induction_programme_choice: :core_induction_programme, opt_out_of_updates: false).each do |cohort|
-        cohort.school.induction_coordinator_profiles.each do |sit|
-          next if Email.associated_with(sit).tagged_with(:cip_preterm_reminder).any?
-
-          ParticipantMailer.cip_preterm_reminder(induction_coordinator_profile: sit, season: season, school_name: cohort.school.name).deliver_later
-        end
-      end
-  end
-
+  # A pre-term reminder to request that a school nominate an induction coordinator.
   def school_preterm_reminder(season:)
-    Rails.logger.info "Sending reminder to schools"
-
     cohort = Cohort.current
     School.includes(:induction_coordinators).eligible.reject { |s| s.chosen_programme?(cohort) }.each do |school|
       next if school.induction_coordinators.any? || Email.associated_with(school).tagged_with(:school_preterm_reminder).any?
