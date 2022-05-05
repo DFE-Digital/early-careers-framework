@@ -19,7 +19,7 @@ module Api
       scope = scope.where("user_id = ?", participant_id) if participant_id.present?
       scope = scope.where("updated_at > ?", updated_since) if updated_since.present?
 
-      scope
+      scope.order(:created_at)
     end
 
   private
