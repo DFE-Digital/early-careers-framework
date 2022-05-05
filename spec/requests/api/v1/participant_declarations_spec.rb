@@ -9,19 +9,19 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
   let(:bearer_token) { "Bearer #{token}" }
-  let(:declaration_date) { ect_profile.schedule.milestones.first.start_date }
+  let(:milestone_start_date) { ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
   describe "POST /api/v1/participant-declarations" do
     let(:valid_params) do
       {
         participant_id: ect_profile.user.id,
         declaration_type: "started",
-        declaration_date: declaration_date.rfc3339,
+        declaration_date: milestone_start_date.rfc3339,
         course_identifier: "ecf-induction",
       }
     end
 
     before do
-      travel_to ect_profile.schedule.milestones.first.start_date + 2.days
+      travel_to milestone_start_date + 2.days
     end
 
     def build_params(attributes)
@@ -109,7 +109,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         params = build_params(valid_params)
 
         new_valid_params = valid_params
-        new_valid_params[:declaration_date] = (ect_profile.schedule.milestones.first.start_date + 1.second).rfc3339
+        new_valid_params[:declaration_date] = (milestone_start_date + 1.second).rfc3339
 
         params_with_different_declaration_date = build_params(new_valid_params)
 
@@ -155,7 +155,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when participant is withdrawn" do
         before do
-          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: declaration_date - 1.second })
+          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: milestone_start_date - 1.second })
         end
 
         it "returns 200" do
@@ -167,7 +167,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       context "when participant is deferred" do
         before do
-          ect_profile.participant_profile_states.create({ state: "deferred", created_at: declaration_date - 1.second })
+          ect_profile.participant_profile_states.create({ state: "deferred", created_at: milestone_start_date - 1.second })
         end
 
         it "returns 200" do
@@ -186,14 +186,14 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
         context "when the participant has been withdrawn" do
           before do
-            induction_record.leaving!(ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1)
-            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1)
+            induction_record.leaving!(milestone_start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: milestone_start_date + 1)
             put url, params: build_params(params)
           end
 
           it "is possible for new lead provider to post a declaration" do
             default_headers[:Authorization] = transfer_lp_bearer_token
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 2).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
             expect(response.status).to eq 200
@@ -202,7 +202,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           it "is not possible for previous lead provider to view future declarations" do
             default_headers[:Authorization] = transfer_lp_bearer_token
 
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 2).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
             expect(response.status).to eq 200
@@ -213,13 +213,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           end
 
           it "is not possible for new lead provider to post same declaration_type as previous lead_provider" do
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 1).rfc3339 })
 
             post "/api/v1/participant-declarations", params: build_params(updated_params)
             expect(response.status).to eq 200
 
             default_headers[:Authorization] = transfer_lp_bearer_token
-            new_updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 2).rfc3339 })
+            new_updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(new_updated_params)
 
             expect(response.status).to eq 400
@@ -230,21 +230,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         context "when the participant has not been withdrawn" do
           before do
             induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
-            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: milestone_start_date)
             put url, params: build_params(params)
           end
 
           it "is possible for new lead provider to post a declaration" do
             default_headers[:Authorization] = transfer_lp_bearer_token
 
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 2).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
             expect(response.status).to eq 200
           end
 
           it "is possible for previous lead provider to submit backdated declarations" do
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 1).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 1).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
             expect(response.status).to eq 200
@@ -253,7 +253,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           it "is not possible for the previous lead provider to view future declarations" do
             default_headers[:Authorization] = transfer_lp_bearer_token
 
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date + 2).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
             expect(response.status).to eq 200
@@ -274,13 +274,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
         context "when the participant has been withdrawn" do
           before do
-            induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
-            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+            induction_record.leaving!(milestone_start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: milestone_start_date)
             put url, params: build_params(params)
           end
 
           it "is possible for the same lead provider to post a declaration" do
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
 
             post "/api/v1/participant-declarations", params: build_params(updated_params)
           end
@@ -289,11 +289,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         context "when the participant has not been withdrawn" do
           before do
             induction_record.leaving!(ect_profile.schedule.milestones.first.start_date + 1)
-            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: ect_profile.schedule.milestones.first.start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: milestone_start_date)
           end
 
           it "is possible for the same lead provider to post a declaration" do
-            updated_params = valid_params.merge({ declaration_date: (ect_profile.schedule.milestones.first.start_date + 2).rfc3339 })
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
 
             post "/api/v1/participant-declarations", params: build_params(updated_params)
           end
