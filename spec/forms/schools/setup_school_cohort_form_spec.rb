@@ -12,7 +12,10 @@ RSpec.describe Schools::SetupSchoolCohortForm, type: :model do
     end
 
     it "returns the user form choices" do
-      choices = { expect_any_ects_choice: "yes", how_will_you_run_training_choice: "core_induction_programme" }
+      choices = { expect_any_ects_choice: "yes",
+                  how_will_you_run_training_choice: "core_induction_programme",
+                  change_provider_choice: "yes",
+                  what_changes_choice: "change_lead_provider" }
       expect(described_class.new(choices).attributes).to eq(choices)
     end
   end
