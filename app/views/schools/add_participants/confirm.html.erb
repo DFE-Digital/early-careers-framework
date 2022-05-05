@@ -71,12 +71,14 @@
                        href: url_for({ step: "start\-term" })) %>
        <% end %>
 
-       <% summary_list.row do |row| %>
-         <% row.key { "Induction start date" } %>
-         <% row.value { add_participant_form.start_date.to_date.to_s(:govuk) } %>
-         <% row.action(text: "Change",
-                       visually_hidden_text: "start date",
-                       href: url_for({ step: "start\-date" })) %>
+       <% if add_participant_form.start_date %>
+         <% summary_list.row do |row| %>
+           <% row.key { "Induction start date" } %>
+           <% row.value { add_participant_form.start_date.to_date.to_s(:govuk) } %>
+           <% row.action(text: "Change",
+                         visually_hidden_text: "start date",
+                         href: url_for({ step: "start\-date" })) %>
+         <% end %>
        <% end %>
 
        <% if add_participant_form.type == :ect %>

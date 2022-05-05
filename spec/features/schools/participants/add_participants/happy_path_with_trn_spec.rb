@@ -144,15 +144,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
     when_i_choose_start_term
     when_i_click_on_continue
-    then_i_am_taken_to_choose_start_date_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT induction start date"
-
-    when_i_submit_an_empty_form
-    then_i_see_an_error_message("Enter the teacher's induction start date")
-
-    when_i_add_a_start_date
-    when_i_click_on_continue
     then_i_am_taken_to_check_details_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor checks mentor details"
