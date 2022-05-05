@@ -11,12 +11,16 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
     let(:partnership)         { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
     let(:induction_programme) { create(:induction_programme, partnership: partnership) }
     let(:school_cohort)       { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
+    let(:next_school_cohort)  { create(:school_cohort, school: partnership.school, cohort: create(:cohort, :next), induction_programme_choice: "full_induction_programme") }
     let(:token)               { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
     let(:bearer_token)        { "Bearer #{token}" }
 
+    let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+
     before :each do
-      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
-      create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
+      create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: school_cohort
+      create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: next_school_cohort
+
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:ect_participant_profile,
              :withdrawn_record,
@@ -24,8 +28,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
              school_cohort: school_cohort)
     end
     let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort) }
-    let(:user) { create(:user) }
-    let(:early_career_teacher_profile) { create(:ect_participant_profile, school_cohort: school_cohort, user: user) }
+    let(:early_career_teacher_profile) { create(:ect_participant_profile, school_cohort: school_cohort, user: create(:user)) }
 
     context "when authorized" do
       before do
@@ -56,8 +59,6 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
 
         it "returns correct jsonapi response", :aggregate_failures do
           get "/api/v2/participants"
-
-          pp JSON.parse response.body
 
           expect(response.headers["Content-Type"]).to eq("application/vnd.api+json")
           expect(parsed_response["data"].size).to eq(4)

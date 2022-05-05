@@ -85,7 +85,7 @@ module Api
           .ecf_participant_profiles
           .select("DISTINCT ON (participant_profiles.participant_identity_id) participant_identity_id, participant_profiles.status, participant_profiles.id AS id")
           .joins(:school_cohort)
-          .where(school_cohort: { cohort_id: Cohort.current.id })
+          .where(school_cohort: { cohort_id: Cohort.where("start_date > 2020") })
           .order(:participant_identity_id, status: :asc)
           .to_sql
         ActiveRecord::Base.connection.query_values("SELECT id FROM (#{inner_query}) AS inner_query")
