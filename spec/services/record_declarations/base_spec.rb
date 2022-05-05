@@ -156,13 +156,7 @@ RSpec.describe RecordDeclarations::Base do
 
     context "when milestone has null milestone_date" do
       before do
-        ect_participant_profile
-          .schedule
-          .schedule_milestones
-          .where(declaration_type: "started")
-          .first
-          .milestone
-          .update!(milestone_date: nil)
+        Finance::Milestone.find_by(declaration_type: "started").update!(milestone_date: nil)
       end
 
       it "does not have errors on milestone_date" do
@@ -172,7 +166,7 @@ RSpec.describe RecordDeclarations::Base do
 
     context "when declaration_type does not exist for the schedule" do
       before do
-        ect_participant_profile.schedule.schedule_milestones.find_by(declaration_type: "retained-4").destroy
+        ect_participant_profile.schedule.milestones.find_by(declaration_type: "retained-4").destroy
       end
 
       subject do
