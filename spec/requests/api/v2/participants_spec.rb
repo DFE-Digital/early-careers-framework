@@ -5,22 +5,30 @@ require "csv"
 
 RSpec.describe "Participants API", :with_default_schdules, type: :request do
   describe "GET /api/v2/participants" do
-    let(:cpd_lead_provider)   { create(:cpd_lead_provider, lead_provider: lead_provider) }
-    let(:lead_provider)       { create(:lead_provider) }
-    let(:cohort)              { create(:cohort, :current) }
-    let(:partnership)         { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
-    let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-    let(:school_cohort)       { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
-    let(:next_school_cohort)  { create(:school_cohort, school: partnership.school, cohort: create(:cohort, :next), induction_programme_choice: "full_induction_programme") }
-    let(:token)               { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
-    let(:bearer_token)        { "Bearer #{token}" }
+    let(:cpd_lead_provider)        { create(:cpd_lead_provider, lead_provider: lead_provider) }
+    let(:lead_provider)            { create(:lead_provider) }
 
-    let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+    let(:cohort)                   { create(:cohort, :current) }
+    let(:cohort_2022)              { create(:cohort, :next) }
+
+    let(:partnership)              { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
+    let(:partnership_2022)         { create(:partnership, lead_provider: lead_provider, cohort: cohort_2022) }
+
+    let(:induction_programme)      { create(:induction_programme, partnership: partnership) }
+    let(:induction_programme_2022) { create(:induction_programme, partnership: partnership_2022) }
+
+    let(:school_cohort)            { create(:school_cohort, school: partnership.school, cohort: cohort,      induction_programme_choice: "full_induction_programme") }
+    let(:next_school_cohort)       { create(:school_cohort, school: partnership.school, cohort: cohort_2022, induction_programme_choice: "full_induction_programme") }
+
+    let(:token)                    { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:bearer_token)             { "Bearer #{token}" }
+
+    let!(:mentor_profile)          { create(:mentor_participant_profile, school_cohort: school_cohort) }
+    let!(:mentor_profile_2022)     { create(:mentor_participant_profile, school_cohort: next_school_cohort) }
+    let!(:ect_profile_2022)         { create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: next_school_cohort  }
 
     before :each do
       create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: school_cohort
-      create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: next_school_cohort
-
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
       create(:ect_participant_profile,
              :withdrawn_record,
@@ -61,7 +69,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           get "/api/v2/participants"
 
           expect(response.headers["Content-Type"]).to eq("application/vnd.api+json")
-          expect(parsed_response["data"].size).to eq(4)
+          expect(parsed_response["data"].size).to eq(5)
           expect(parsed_response.dig("data", 0, "id")).to be_in(User.pluck(:id))
           expect(parsed_response.dig("data", 0)).to have_type("participant")
           expect(parsed_response.dig("data", 0)).to have_jsonapi_attributes(*expected_reponse_attribute_keys).exactly
@@ -74,13 +82,14 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           withdrawn = parsed_response["data"].count { |h| h["attributes"]["status"] == "withdrawn" }
           ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
-          expect(mentors).to eql(1)
+          expect(mentors).to eql(2)
           expect(ects).to eql(3)
           expect(withdrawn).to eql(1)
         end
 
         it "returns the right number of users per page" do
           get "/api/v2/participants", params: { page: { per_page: 2, page: 1 } }
+
           expect(parsed_response["data"].size).to eql(2)
         end
 
@@ -106,6 +115,13 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           expect(parsed_response["data"][1]["id"]).to eq User.first.id
         end
 
+        context "When cohort parameter is supplied" do
+          it "returns users changed since the updated_since parameter" do
+            get "/api/v2/participants", params: { filter: { cohort: 2022 } }
+            expect(parsed_response["data"].size).to eq(2)
+          end
+        end
+
         context "when updated_since parameter is supplied" do
           before do
             User.first.update!(updated_at: 2.days.ago)
@@ -113,20 +129,20 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
 
           it "returns users changed since the updated_since parameter" do
             get "/api/v2/participants", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eql(4)
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
             User.first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v2/participants", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eql(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do
             it "unescapes the value and returns users changed since the updated_since date" do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
               get "/api/v2/participants", params: { filter: { updated_since: since } }
-              expect(parsed_response["data"].size).to eql(3)
+              expect(parsed_response["data"].size).to eql(4)
             end
           end
 
@@ -150,7 +166,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eq(5)
         end
 
         it "returns the correct headers" do
@@ -175,7 +191,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
         end
 
         it "returns the correct values" do
-          mentor = ParticipantProfile::Mentor.first.user
+          mentor = mentor_profile.user
           mentor_row = parsed_response.find { |row| row["id"] == mentor.id }
           expect(mentor_row).not_to be_nil
           expect(mentor_row["email"]).to eql mentor.email
@@ -191,7 +207,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = ParticipantProfile::ECT.active_record.first.user
+          ect = ect_profile_2022.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
@@ -199,7 +215,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           expect(ect_row["mentor_id"]).to eql mentor.id
           expect(ect_row["school_urn"]).to eql partnership.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
-          expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
+          expect(ect_row["cohort"]).to eql partnership_2022.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
           expect(ect_row["teacher_reference_number_validated"]).to eql "false"
           expect(ect_row["eligible_for_funding"]).to be_empty
@@ -225,13 +241,13 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
 
         it "ignores pagination parameters" do
           get "/api/v2/participants.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eq(5)
         end
 
         it "respects the updated_since parameter" do
           User.first.update!(updated_at: 2.days.ago)
           get "/api/v2/participants.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(parsed_response.length).to eql(3)
+          expect(parsed_response.length).to eq(4)
         end
       end
 

@@ -89,7 +89,7 @@ module Api
           .select("DISTINCT ON (participant_profiles.id) participant_profile_id, induction_records.id")
           .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
           .where(induction_programme: { partnerships: { challenged_at: nil, challenge_reason: nil } })
-          .order("participant_profiles.id", start_date: :desc)
+          .order("participant_profiles.id", start_year: :desc)
           .to_sql
 
         ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")
