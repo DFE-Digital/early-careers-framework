@@ -25,7 +25,7 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
 
     let!(:mentor_profile)          { create(:mentor_participant_profile, school_cohort: school_cohort) }
     let!(:mentor_profile_2022)     { create(:mentor_participant_profile, school_cohort: next_school_cohort) }
-    let!(:ect_profile_2022)         { create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: next_school_cohort  }
+    let!(:ect_profile_2022) { create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: next_school_cohort }
 
     before :each do
       create :ect_participant_profile, mentor_profile: mentor_profile, school_cohort: school_cohort
