@@ -1,4 +1,4 @@
-<% content_for :title, "Confirm these details" %>
+<% content_for :title, "Check your answers" %>
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
@@ -6,41 +6,39 @@
 %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-l"><%= @nominate_induction_tutor_form.school.name %></span>
-    <h1 class="govuk-heading-xl">Check your answers</h1>
+    <div class="govuk-grid-column-two-thirds">
 
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Name
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div><%= @nominate_induction_tutor_form.full_name %></div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :full_name }) do %>
-            Change <span class="govuk-visually-hidden">name</span>
-          <% end %>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Email
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div><%= @nominate_induction_tutor_form.email %></div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :email }) do %>
-            Change <span class="govuk-visually-hidden">email</span>
-          <% end %>
-        </dd>
-      </div>
-    </dl>
+        <span class="govuk-caption-xl"><%= @nominate_induction_tutor_form.school.name %></span>
+        <h1 class="govuk-heading-xl">Check your answers</h1>
 
-    <%= form_for @nominate_induction_tutor_form, url: { action: :create }, method: :post do |f| %>
-      <%= f.govuk_submit "Confirm and nominate" %>
-    <% end %>
-  </div>
+        <dl class="govuk-summary-list govuk-!-margin-bottom-7">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Name</dt>
+                <dd class="govuk-summary-list__value">
+                    <%= @nominate_induction_tutor_form.full_name %>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <%= govuk_link_to({ action: :full_name }) do %>
+                    Change <span class="govuk-visually-hidden">name</span>
+                    <% end %>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Email address</dt>
+                <dd class="govuk-summary-list__value">
+                    <%= @nominate_induction_tutor_form.email %>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <%= govuk_link_to({ action: :email }) do %>
+                    Change <span class="govuk-visually-hidden">email address</span>
+                    <% end %>
+                </dd>
+            </div>
+        </dl>
+
+        <%= form_for @nominate_induction_tutor_form, url: { action: :create }, method: :post do |f| %>
+            <%= f.govuk_submit "Confirm and nominate" %>
+        <% end %>
+
+    </div>
 </div>
