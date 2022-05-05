@@ -13,7 +13,11 @@ class ParticipantMentorForm
   end
 
   def available_mentors
-    SchoolCohort.find_by(school_id: school_id, cohort_id: cohort_id).active_mentors.order(:full_name)
+    if FeatureFlag.active?(:multiple_cohorts)
+      User.where(id: school.school_mentors.joins(preferred_identity: :user).select("users.id")).order(:full_name)
+    else
+      SchoolCohort.find_by(school_id: school_id, cohort_id: cohort_id).active_mentors.order(:full_name)
+    end
   end
 
 private
