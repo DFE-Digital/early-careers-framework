@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with default schedules", shared_context: :metadata do
-  let!(:ecf_schedule)            { create(:ecf_schedule) }
-  let!(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
-  let!(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
-  let!(:npq_aso_schedule)        { create(:npq_aso_schedule) }
+  before do
+    create(:ecf_schedule)
+    create(:npq_specialist_schedule)
+    create(:npq_leadership_schedule)
+    create(:npq_aso_schedule)
+  end
 end
 
 RSpec.configure do |config|
