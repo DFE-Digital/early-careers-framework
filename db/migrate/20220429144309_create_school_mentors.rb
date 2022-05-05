@@ -9,6 +9,6 @@ class CreateSchoolMentors < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :school_mentors, [:participant_profile_id, :school_id], unique: true
+    add_index :school_mentors, %i[participant_profile_id school_id], unique: true
   end
 end
