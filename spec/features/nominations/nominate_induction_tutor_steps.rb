@@ -93,7 +93,7 @@ module NominateInductionTutorSteps
   def then_i_should_be_on_the_nominate_sit_success_page
     expect(page).to have_selector("h1", text: "Induction tutor nominated")
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We'll email this person and let them know you nominated them.")
+    expect(page).to have_text("We’ll email this person and let them know you nominated them.")
   end
 
   def then_i_should_be_redirected_to_name_different_page
