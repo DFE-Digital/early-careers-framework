@@ -2664,7 +2664,7 @@
         }
       },
       "ListFilter": {
-        "description": "Filter a list of participants records to return more specific results",
+        "description": "Filter a list of records to return more specific results",
         "type": "object",
         "properties": {
           "updated_since": {
