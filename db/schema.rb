@@ -867,8 +867,8 @@ ActiveRecord::Schema.define(version: 2022_04_29_144309) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
-    t.string "contract_version", default: "0.0.1"
     t.boolean "output_fee", default: true
+    t.string "contract_version", default: "0.0.1"
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
