@@ -92,7 +92,7 @@ module Schools
         LeadProviderMailer.programme_changed_email(
           partnership: previous_partnership,
           user: lead_provider_user,
-          cohort_year: school_cohort.description,
+          cohort_year: school_cohort.academic_year,
           what_changes_choice: what_changes_choice,
         ).deliver_later
       end

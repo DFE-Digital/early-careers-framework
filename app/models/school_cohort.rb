@@ -37,7 +37,7 @@ class SchoolCohort < ApplicationRecord
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
-  delegate :description, to: :cohort
+  delegate :description, :academic_year, to: :cohort
 
   after_save do |school_cohort|
     unless school_cohort.saved_changes.empty?
