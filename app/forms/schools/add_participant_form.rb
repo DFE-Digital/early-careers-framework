@@ -87,7 +87,11 @@ module Schools
     end
 
     def mentor_options
-      @mentor_options ||= school_cohort.active_mentors.order(:full_name)
+      @mentor_options ||= if FeatureFlag.active?(:multiple_cohorts)
+                            school_cohort.school.mentors
+                          else
+                            school_cohort.active_mentors.order(:full_name)
+                          end
     end
 
     def mentor
