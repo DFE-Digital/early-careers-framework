@@ -155,6 +155,10 @@ module ChooseProgrammeSteps
     expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
   end
 
+  def and_i_see_the_school_name
+    expect(page).to have_content(@school.name)
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort

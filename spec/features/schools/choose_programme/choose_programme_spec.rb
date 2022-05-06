@@ -27,6 +27,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     when_i_choose_no_ects
     and_i_click_continue
     then_i_am_taken_to_the_submitted_page
+    and_i_see_the_school_name
 
     when_i_click_on_the_return_to_your_training_link
     then_i_am_taken_to_the_manage_your_training_page
