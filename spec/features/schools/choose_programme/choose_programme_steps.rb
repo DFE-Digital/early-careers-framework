@@ -55,11 +55,11 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_training_confirmation_page
-    expect(page).to have_content("Are you sure this is how you want to run training?")
+    expect(page).to have_content("Are you sure this is how you want to run your training?")
   end
 
   def then_i_am_taken_to_the_training_submitted_page
-    expect(page).to have_content("You've submitted your training information")
+    expect(page).to have_content("You‘ve submitted your training information")
   end
 
   def then_i_am_taken_to_the_change_provider_page
@@ -86,7 +86,7 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
     expect(page).to have_content("Are you sure you want to change how you'll run your training?")
-    expect(page).to have_content("You've chosen to deliver your own programme using DfE accredited materials.")
+    expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE accredited materials.")
   end
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
@@ -95,7 +95,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_training_change_submitted_page
-    expect(page).to have_content("You've submitted your training information")
+    expect(page).to have_content("You‘ve submitted your training information")
   end
 
   # And steps
@@ -135,24 +135,24 @@ module ChooseProgrammeSteps
     create(:cohort, start_year: 2022)
   end
 
+  def and_i_see_add_ects_link
+    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+  end
+
   def and_i_see_training_provider_to_be_confirmed
-    expect(
-      page
-        .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Training provider")
-        .sibling("dd.govuk-summary-list__value"),
-    ).to have_text("To be confirmed")
+    expect(page).to have_summary_row("Training provider", "To be confirmed")
   end
 
   def and_i_see_delivery_partner_to_be_confirmed
-    expect(
-      page
-        .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Delivery partner")
-        .sibling("dd.govuk-summary-list__value"),
-    ).to have_text("To be confirmed")
+    expect(page).to have_summary_row("Delivery partner", "To be confirmed")
   end
 
-  def and_i_see_add_ects_link
-    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+  def and_i_see_programme_to_dfe_accredited_materials
+    expect(page).to have_summary_row("Programme", "DfE accredited materials")
+  end
+
+  def and_i_see_programme_to_design_and_deliver_own_programme
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
   end
 
   # When steps

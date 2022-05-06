@@ -17,11 +17,19 @@ module EarlyCareerTeachers
           teacher.school = school_cohort.school
         end
 
-        profile = ParticipantProfile::ECT.create!({
-          teacher_profile: teacher_profile,
-          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-          participant_identity: Identity::Create.call(user: user),
-        }.merge(ect_attributes))
+        profile = if year_2020
+                    ParticipantProfile::ECT.create!({
+                      teacher_profile: teacher_profile,
+                      schedule: Finance::Schedule::ECF.default_for(cohort: Cohort.find_by_start_year("2021")),
+                      participant_identity: Identity::Create.call(user: user),
+                    }.merge(ect_attributes))
+                  else
+                    ParticipantProfile::ECT.create!({
+                      teacher_profile: teacher_profile,
+                      schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+                      participant_identity: Identity::Create.call(user: user),
+                    }.merge(ect_attributes))
+                  end
 
         ParticipantProfileState.create!(participant_profile: profile)
         if school_cohort.default_induction_programme.present?

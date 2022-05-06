@@ -13,6 +13,13 @@ module Schools
     validates :change_provider_choice, presence: true, on: :change_provider
     validates :what_changes_choice, presence: true, on: :what_changes
 
+    PROGRAMME_CHOICES_MAP = {
+      "change_lead_provider" => "full_induction_programme",
+      "change_delivery_partner" => "full_induction_programme",
+      "change_to_core_induction_programme" => "core_induction_programme",
+      "change_to_design_our_own" => "design_our_own",
+    }.freeze
+
     def attributes
       {
         expect_any_ects_choice: expect_any_ects_choice,
@@ -45,6 +52,10 @@ module Schools
 
     def change_provider_choices
       yes_no_choices
+    end
+
+    def programme_choice
+      PROGRAMME_CHOICES_MAP[what_changes_choice]
     end
 
   private

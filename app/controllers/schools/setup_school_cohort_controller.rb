@@ -5,9 +5,9 @@ module Schools
     before_action :load_form
     before_action :school
     before_action :cohort
-    before_action :previous_cohort, only: %i[what_changes what_changes_confirmation what_changes_submitted]
-    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
-    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
+    before_action :previous_cohort, only: %i[what_changes what_changes_confirmation]
+    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation]
+    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation]
     before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
 
     skip_after_action :verify_authorized
@@ -26,12 +26,7 @@ module Schools
     end
 
     def no_expected_ects
-      # prevent overriding the induction programme
-      # unless school_cohort.persisted?
-      #   school_cohort.induction_programme_choice = :no_early_career_teachers
-      #   school_cohort.save!
-      # end
-      set_cohort_induction_programme!("no_early_career_teachers", true)
+      set_cohort_induction_programme!("no_early_career_teachers", opt_out_of_updates: true)
 
       reset_form_data
     end
@@ -64,16 +59,7 @@ module Schools
     end
 
     def what_changes_confirmation
-      programme_choice = case @setup_school_cohort_form.what_changes_choice
-                         when "change_lead_provider"
-                           "full_induction_programme"
-                         when "change_delivery_partner"
-                           "full_induction_programme"
-                         when "change_to_core_induction_programme"
-                           "core_induction_programme"
-                         when "change_to_design_our_own"
-                           "design_our_own"
-                         end
+      programme_choice = @setup_school_cohort_form.programme_choice
       set_cohort_induction_programme!(programme_choice)
 
       store_form_redirect_to_next_step :what_changes_submitted
@@ -154,7 +140,7 @@ module Schools
       @school ||= active_school
     end
 
-    def set_cohort_induction_programme!(programme_choice, opt_out_of_updates = false)
+    def set_cohort_induction_programme!(programme_choice, opt_out_of_updates: false)
       Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
                                                   programme_choice: programme_choice,
                                                   opt_out_of_updates: opt_out_of_updates)
