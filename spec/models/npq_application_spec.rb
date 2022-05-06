@@ -120,4 +120,45 @@ RSpec.describe NPQApplication, type: :model do
       end
     end
   end
+
+  describe "#ineligible_for_funding_reason" do
+    context "it is eligible for funding" do
+      subject { create(:npq_application, eligible_for_funding: true) }
+
+      it "returns nil" do
+        expect(subject.ineligible_for_funding_reason).to be_nil
+      end
+    end
+
+    context "when school/course combo is not applicable" do
+      subject { create(:npq_application, eligible_for_funding: false) }
+
+      it "returns establishment-ineligible" do
+        expect(subject.ineligible_for_funding_reason).to eql("establishment-ineligible")
+      end
+    end
+
+    context "when there is a previously accepted application" do
+      let(:npq_course) { create(:npq_leadship_course) }
+
+      subject { create(:npq_application, eligible_for_funding: true, npq_course: npq_course) }
+
+      before do
+        create(:npq_leadership_schedule, :with_npq_milestones)
+
+        create(
+          :npq_application,
+          :accepted,
+          participant_identity: subject.participant_identity,
+          eligible_for_funding: true,
+          npq_course: subject.npq_course,
+          npq_lead_provider: subject.npq_lead_provider,
+        )
+      end
+
+      it "returns previously-funded" do
+        expect(subject.ineligible_for_funding_reason).to eql("previously-funded")
+      end
+    end
+  end
 end

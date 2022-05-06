@@ -46,6 +46,7 @@ module Api
           created_at
           updated_at
           cohort
+          ineligible_for_funding_reason
         ]
       end
 
@@ -72,6 +73,7 @@ module Api
           record.created_at.rfc3339,
           record.updated_at.rfc3339,
           record.cohort.start_year.to_s,
+          record.ineligible_for_funding_reason,
         ]
       end
     end
