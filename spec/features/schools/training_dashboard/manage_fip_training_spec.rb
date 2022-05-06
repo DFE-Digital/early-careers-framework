@@ -49,7 +49,7 @@ RSpec.describe "Manage FIP training", js: true do
                                                choice: "Use a training provider, funded by the DfE",
                                                snapshot: "FIP - change programme options")
 
-    expect(page).to have_text "Training programme confirmed"
+    expect(page).to have_text "You’ve submitted your training information"
     expect(page).to have_text "choose one of the 6 DfE-funded training providers as soon as possible"
   end
 end
