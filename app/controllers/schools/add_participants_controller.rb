@@ -48,7 +48,7 @@ module Schools
 
     def transfer
       if form.complete_step(:transfer, form_params)
-        if form.transfer == "true"
+        if form.transfer?
           session[:schools_transferring_participant_form] = form.serializable_hash(only: %i[full_name trn date_of_birth])
           remove_form
           redirect_to teacher_start_date_schools_transferring_participant_path

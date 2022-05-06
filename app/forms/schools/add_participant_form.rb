@@ -222,6 +222,10 @@ module Schools
       do_you_know_teachers_trn == "true"
     end
 
+    def transfer?
+      transfer == "true"
+    end
+
     def check_records
       check_for_existing_profile
       validate_dqt_record
