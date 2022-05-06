@@ -25,10 +25,15 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
 
   describe "/api/v1/participants/ID/change-schedule with cohort" do
     let(:parsed_response) { JSON.parse(response.body) }
-    let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, :next) }
+    let(:cohort_2022) { Cohort.next || create(:cohort, :next) }
 
     let!(:schedule_2021) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2021") }
-    let!(:schedule_2022) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2022", cohort: cohort_2022) }
+    let(:schedule_2022) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2022", cohort: cohort_2022) }
+
+    before do
+      allow(FeatureFlag).to receive(:active?).with(:multiple_cohorts).and_return(true)
+      schedule_2022
+    end
 
     it "changes participant schedule" do
       expect {

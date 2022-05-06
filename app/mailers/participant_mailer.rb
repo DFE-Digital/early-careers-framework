@@ -10,8 +10,7 @@ class ParticipantMailer < ApplicationMailer
     mentor_fip: "ba3d4caf-5ef8-4a14-9e79-b7719780da09",
     sit_mentor_cip: "7aa80a9c-e486-42e8-92c8-7f970459d37d",
     sit_mentor_fip: "0b7f850f-f26a-4e62-9fc5-17fbd8286e49",
-    fip_preterm_reminder: "12969797-c110-436d-b10b-7f7d08d4d9df",
-    cip_preterm_reminder: "623cb545-1bc4-4407-94a1-474e2a080e39",
+    preterm_reminder: "3bece922-871e-49a9-88a1-83eeb8821ab1",
   }.freeze
 
   def participant_added(participant_profile:)
@@ -63,34 +62,17 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def fip_preterm_reminder(induction_coordinator_profile:, season:, school_name:)
+  def preterm_reminder(induction_coordinator_profile:)
     template_mail(
-      PARTICIPANT_TEMPLATES[:fip_preterm_reminder],
+      PARTICIPANT_TEMPLATES[:preterm_reminder],
       to: induction_coordinator_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        season: season,
         name: induction_coordinator_profile.user.full_name,
-        school_name: school_name,
-        sign_in: new_user_session_url,
+        sign_in: new_user_session_url(**UTMService.email(:preterm_reminder)),
       },
-    ).tag(:fip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
-  end
-
-  def cip_preterm_reminder(induction_coordinator_profile:, season:, school_name:)
-    template_mail(
-      PARTICIPANT_TEMPLATES[:cip_preterm_reminder],
-      to: induction_coordinator_profile.user.email,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        season: season,
-        name: induction_coordinator_profile.user.full_name,
-        school_name: school_name,
-        sign_in: new_user_session_url,
-      },
-    ).tag(:cip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
+    ).tag(:preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
 private

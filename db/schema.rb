@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_13_092522) do
+ActiveRecord::Schema.define(version: 2022_04_29_144309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -803,6 +803,18 @@ ActiveRecord::Schema.define(version: 2022_04_13_092522) do
     t.index ["school_id"], name: "index_school_local_authority_districts_on_school_id"
   end
 
+  create_table "school_mentors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.uuid "school_id", null: false
+    t.uuid "preferred_identity_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_profile_id", "school_id"], name: "index_school_mentors_on_participant_profile_id_and_school_id", unique: true
+    t.index ["participant_profile_id"], name: "index_school_mentors_on_participant_profile_id"
+    t.index ["preferred_identity_id"], name: "index_school_mentors_on_preferred_identity_id"
+    t.index ["school_id"], name: "index_school_mentors_on_school_id"
+  end
+
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -855,8 +867,8 @@ ActiveRecord::Schema.define(version: 2022_04_13_092522) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
-    t.string "contract_version", default: "0.0.1"
     t.boolean "output_fee", default: true
+    t.string "contract_version", default: "0.0.1"
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
@@ -978,6 +990,9 @@ ActiveRecord::Schema.define(version: 2022_04_13_092522) do
   add_foreign_key "school_local_authorities", "schools"
   add_foreign_key "school_local_authority_districts", "local_authority_districts"
   add_foreign_key "school_local_authority_districts", "schools"
+  add_foreign_key "school_mentors", "participant_identities", column: "preferred_identity_id"
+  add_foreign_key "school_mentors", "participant_profiles"
+  add_foreign_key "school_mentors", "schools"
   add_foreign_key "schools", "networks"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"

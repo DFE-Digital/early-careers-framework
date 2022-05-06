@@ -10,6 +10,9 @@ class ParticipantProfile < ApplicationRecord
              dependent: :nullify
     has_many :mentees, through: :mentee_profiles, source: :user
 
+    has_many :school_mentors, dependent: :destroy, foreign_key: :participant_profile_id
+    has_many :schools, through: :school_mentors
+
     def mentor?
       true
     end

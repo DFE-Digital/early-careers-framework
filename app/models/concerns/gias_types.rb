@@ -8,6 +8,9 @@ module GiasTypes
   CIP_ONLY_TYPE_CODES = [10, 11, 30, 37].freeze
   CIP_ONLY_EXCEPT_WELSH_CODES = [10, 11, 37].freeze
 
+  # Types that *are* eligible but we would prefer not to send communications to.
+  NO_INVITATIONS_TYPE_CODES = [47, 48].freeze
+
   OPEN_STATUS_CODES = ELIGIBLE_STATUS_CODES
   CLOSED_STATUS_CODES = [2, 4].freeze
 

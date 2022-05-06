@@ -1,21 +1,17 @@
-<% content_for :title, "Confirm school" %>
-<% content_for :before_content, govuk_back_link(
-  text: "Back",
-  href: choose_school_request_nomination_invite_path)
-%>
+<% content_for :title, "Confirm this is your school" %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: choose_school_request_nomination_invite_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-l">Confirm your details</h1>
-  
-    <div class="govuk-!-margin-bottom-9">
-      <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" } %>
-      <%= govuk_link_to "Change school", choose_location_request_nomination_invite_path, class: "govuk-link--no-visited-state", "data-test": "change-school" %>
-    </div>
+    <div class="govuk-grid-column-two-thirds">
 
-    <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
-      <%= f.hidden_field :answers_checked, value: true %>
-      <%= f.govuk_submit "Confirm and send" %>
-    <% end %>
-  </div>
+        <h1 class="govuk-heading-xl">Confirm this is your school</h1>
+
+        <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" }  %>
+
+        <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>
+            <%= f.hidden_field :answers_checked, value: true %>
+            <%= f.govuk_submit "Confirm and send" %>
+        <% end %>
+
+    </div>
 </div>
