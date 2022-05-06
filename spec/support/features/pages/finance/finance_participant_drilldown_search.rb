@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class FinanceParticipantDrilldownSearch < ::Pages::Base
+  class FinanceParticipantDrilldownSearch < ::Pages::BasePage
     set_url "/finance/participants"
     set_primary_heading "Participants"
 

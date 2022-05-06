@@ -11,7 +11,7 @@ module Support
 
         sign_in_as user
 
-        induction_dashboard = Pages::SchoolPage.loaded
+        induction_dashboard = Pages::SchoolDashboardPage.loaded
         participants_dashboard = induction_dashboard.view_participant_dashboard
 
         if is_being_trained
@@ -29,9 +29,9 @@ module Support
 
         @text = page.find("main").text
 
-        participant_details.can_see_full_name? participant_name
-        participant_details.can_see_email? participant_email
-        participant_details.can_see_status? participant_status.to_s unless participant_status.nil?
+        expect(participant_details).to have_full_name(participant_name)
+        expect(participant_details).to have_email(participant_email)
+        expect(participant_details).to have_status(participant_status.to_s) unless participant_status.nil?
 
         sign_out
 

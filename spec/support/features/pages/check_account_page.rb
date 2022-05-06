@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "./base"
+require_relative "./base_page"
 
 module Pages
-  class CheckAccountPage < ::Pages::Base
+  class CheckAccountPage < ::Pages::BasePage
     set_url "/check-account"
     set_primary_heading "How to access this service"
 

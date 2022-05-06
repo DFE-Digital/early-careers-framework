@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class ConfirmSchoolsWizard < ::Pages::Base
+  class ConfirmSchoolsWizard < ::Pages::BasePage
     set_url "/lead-providers/report-schools/start"
     set_primary_heading "You can only confirm schools for the cohort that starts in the next academic year (2021)"
 

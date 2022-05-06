@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class FinancePortal < ::Pages::Base
+  class FinancePortal < ::Pages::BasePage
     set_url "/finance/manage-cpd-contracts"
     set_primary_heading "Manage CPD contracts"
 

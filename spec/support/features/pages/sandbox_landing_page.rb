@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "./base"
+require_relative "./base_page"
 
 module Pages
-  class SandboxLandingPage < ::Pages::Base
+  class SandboxLandingPage < ::Pages::BasePage
     set_url "/sandbox"
     set_primary_heading "Use our sandbox to test Manage teacher CPD"
 
@@ -16,7 +16,7 @@ module Pages
     def continue_as_an_ecf_training_provider
       click_on "Continue as an ECF training provider"
 
-      Pages::LeadProviderLandingPage.new
+      Pages::LeadProviderLandingPage.loaded
     end
 
     def review_api_guidance

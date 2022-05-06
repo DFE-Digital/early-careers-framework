@@ -1,28 +1,21 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class GetParticipantDeclarationsEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
-    end
-
+  class GetParticipantDeclarationsEndpoint < APIs::BaseEndpoint
     def get_training_declarations(participant_id)
       @current_id = participant_id
       get_declarations
     end
 
+    def has_declarations?(declaration_types)
+      list_declarations == declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
+    end
+
     def get_declaration(declaration_type)
       @current_type = declaration_type.to_s.gsub("_", "-")
       select_declaration
-    end
-
-    def has_declarations?(declaration_types)
-      list_declarations == declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
     end
 
   private

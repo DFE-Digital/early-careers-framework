@@ -46,15 +46,15 @@ module Support
         travel_to(timestamp) do
           puts timestamp
 
-          declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+          declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.load tokens[lead_provider_name]
           declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, timestamp - 8.days
 
           @text = declarations_endpoint.response
 
-          declarations_endpoint.has_declaration_type? declaration_type.to_s
-          declarations_endpoint.has_eligible_for_payment? false
-          declarations_endpoint.has_voided? false
-          declarations_endpoint.has_state? "ineligible"
+          expect(declarations_endpoint).to have_declaration_type(declaration_type.to_s)
+          expect(declarations_endpoint).to have_eligible_for_payment(false)
+          expect(declarations_endpoint).to have_voided(false)
+          expect(declarations_endpoint).to have_state("ineligible")
         end
       end
 

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class SITReportProgrammeWizard < ::Pages::Base
+  class SchoolReportProgrammeWizard < ::Pages::BasePage
+    set_url "SITReportProgrammeWizard"
+    set_primary_heading "SITReportProgrammeWizard"
+
     def complete(programme_type)
       choose_programme_type programme_type
       click_button "Confirm"

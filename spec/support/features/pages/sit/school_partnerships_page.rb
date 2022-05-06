@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class SchoolPartnershipsPage < ::Pages::Base
+  class SchoolPartnershipsPage < ::Pages::BasePage
     set_url "/schools/{slug}/cohorts/{cohort}/partnerships"
     set_primary_heading(/^Sign(?:ed|ing) up with a training provider$/)
 

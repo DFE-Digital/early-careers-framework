@@ -15,19 +15,19 @@ module Support
         school = School.find_by(name: school_name)
         raise "Could not find School for #{participant_name}" if school.nil?
 
-        declarations_endpoint = APIs::ECFParticipantsEndpoint.new tokens[lead_provider_name]
+        declarations_endpoint = APIs::ECFParticipantsEndpoint.load tokens[lead_provider_name]
         declarations_endpoint.get_participant user.id
 
         @text = declarations_endpoint.response
 
-        declarations_endpoint.has_full_name? participant_name
-        declarations_endpoint.has_email? participant_email
-        declarations_endpoint.has_trn? participant_trn
-        declarations_endpoint.has_school_urn? school.urn
-        declarations_endpoint.has_participant_type? participant_type.to_s.downcase
+        expect(declarations_endpoint).to have_full_name(participant_name)
+        expect(declarations_endpoint).to have_email(participant_email)
+        expect(declarations_endpoint).to have_trn(participant_trn)
+        expect(declarations_endpoint).to have_school_urn(school.urn)
+        expect(declarations_endpoint).to have_participant_type(participant_type.to_s.downcase)
 
-        declarations_endpoint.has_status? participant_status.to_s unless participant_status.nil?
-        declarations_endpoint.has_training_status? training_status.to_s unless training_status.nil?
+        expect(declarations_endpoint).to have_status(participant_status.to_s) unless participant_status.nil?
+        expect(declarations_endpoint).to have_training_status(training_status.to_s) unless training_status.nil?
 
         true
       rescue Capybara::ElementNotFound => e

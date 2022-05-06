@@ -1,44 +1,44 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class FinanceParticipantDrilldown < ::Pages::Base
+  class FinanceParticipantDrilldown < ::Pages::BasePage
     set_url "/finance/participants/{lead_provider_id}"
     set_primary_heading "Participant"
 
-    def can_see_participant?(user_id)
-      has_text?("User ID / Participant ID #{user_id}")
+    def has_participant?(user_id)
+      has_content? "User ID / Participant ID#{user_id}"
     end
 
-    def can_see_school_urn?(school_urn)
-      has_text?("School URN#{school_urn}")
+    def has_school_urn?(school_urn)
+      has_content?("School URN#{school_urn}")
     end
 
-    def can_see_lead_provider_urn?(lead_provider_name)
-      has_text?("Lead provider#{lead_provider_name}")
+    def has_lead_provider?(lead_provider_name)
+      has_content?("Lead provider#{lead_provider_name}")
     end
 
-    def can_see_status?(status)
-      has_text?("Status#{status}")
+    def has_status?(status)
+      has_content?("Status#{status}")
     end
 
-    def can_see_training_status?(training_status)
-      has_text?("Training status#{training_status}")
+    def has_training_status?(training_status)
+      has_content?("Training status#{training_status}")
     end
 
-    def can_see_schedule_identifier?(schedule)
-      has_text?("Schedule identifier#{schedule}")
+    def has_schedule_identifier?(schedule)
+      has_content?("Schedule identifier#{schedule}")
     end
 
-    def can_see_schedule_cohort?(cohort)
-      has_text?("Schedule cohort#{cohort}")
+    def has_schedule_cohort?(cohort)
+      has_content?("Schedule cohort#{cohort}")
     end
 
-    def can_see_declaration?(declaration_type, course_identifier, state)
-      has_text?("Declaration type#{declaration_type}")
-      has_text?("Course identifier#{course_identifier}")
-      has_text?("State#{state}")
+    def has_declaration?(declaration_type, course_identifier, state)
+      has_content?("Declaration type#{declaration_type}") &&
+        has_content?("Course identifier#{course_identifier}") &&
+        has_content?("State#{state}")
     end
   end
 end

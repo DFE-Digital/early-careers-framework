@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Sections
   class StatementSelector < SitePrism::Section
@@ -38,24 +38,37 @@ module Sections
     element :dates, ".finance-panel__summary__meta__dates"
     element :counts, ".finance-panel__summary__meta__counts"
 
+    def payment_total
+      payment_total.text
+    end
+
     def has_payment_total?(total)
-      payment_total.has_content? "Total £#{total}"
+      expected = "Total £#{total}"
+      payment_total.has_content? expected
+    end
+
+    def output_payment
+      payment_breakdown.text
     end
 
     def has_output_payment?(output_payment)
-      payment_breakdown.has_content? "Output payment £#{output_payment}"
+      expected = "Output payment £#{output_payment}".strip
+      payment_breakdown.has_content? expected
     end
 
     def has_service_fee?(service_fee)
-      payment_breakdown.has_content? "Service fee £#{service_fee}"
+      expected = "Output payment £#{service_fee}".strip
+      payment_breakdown.has_content? expected
     end
 
     def has_adjustments?(adjustments)
-      payment_breakdown.has_content? "Adjustments £#{adjustments}"
+      expected = "Output payment £#{adjustments}".strip
+      payment_breakdown.has_content? expected
     end
 
     def has_vat?(vat_total)
-      payment_breakdown.has_content? "VAT £#{vat_total}"
+      expected = "Output payment £#{vat_total}".strip
+      payment_breakdown.has_content? expected
     end
 
     def has_milestone_cutoff_date?(cutoff_date)
@@ -67,19 +80,19 @@ module Sections
     end
 
     def has_total_starts?(total_starts)
-      counts.has_content? "Total starts #{total_starts}"
+      counts.has_content? "Total starts\n#{total_starts}"
     end
 
     def has_total_retained?(total_retained)
-      counts.has_content? "Total retained #{total_retained}"
+      counts.has_content? "Total retained\n#{total_retained}"
     end
 
     def has_total_completed?(total_completed)
-      counts.has_content? "Total completed #{total_completed}"
+      counts.has_content? "Total completed\n#{total_completed}"
     end
 
     def has_total_voided?(total_voided)
-      counts.has_content? "Total voided #{total_voided}"
+      counts.has_content? "Total voided\n#{total_voided}"
     end
 
     def view_voided_declarations
@@ -95,15 +108,18 @@ module Sections
     elements :output_payments, ".output-payments tbody > tr"
 
     def has_output_payment?(output_payment)
-      has_content? "Output payment total £#{output_payment}"
+      expected = "Output payment total\n£#{output_payment}".strip
+      has_content? expected
     end
 
-    def has_started_declarations?(band_a_total = 0, band_b_total = 0, band_c_total = 0, band_d_total = 0, payment_total = "")
-      output_payments[0].has_content? "Starts #{band_a_total} #{band_b_total} #{band_c_total} #{band_d_total} #{payment_total}"
+    def has_started_declarations?(band_a_total = 0, band_b_total = 0, band_c_total = 0, band_d_total = 0)
+      expected = "Starts #{band_a_total} #{band_b_total} #{band_c_total} #{band_d_total}".strip
+      output_payments[0].has_content? expected
     end
 
-    def has_retained_1_declarations?(band_a_total = 0, band_b_total = 0, band_c_total = 0, band_d_total = 0, payment_total = "")
-      output_payments[2].has_content? "Retained 1 #{band_a_total} #{band_b_total} #{band_c_total} #{band_d_total} #{payment_total}"
+    def has_retained_1_declarations?(band_a_total = 0, band_b_total = 0, band_c_total = 0, band_d_total = 0)
+      expected = "Retained 1 #{band_a_total} #{band_b_total} #{band_c_total} #{band_d_total}".strip
+      output_payments[2].has_content? expected
     end
   end
 
@@ -113,8 +129,9 @@ module Sections
     # cols: Adjustment type, Number of trainees, Fee per trainee, Payments
     elements :adjustments, "table tbody > tr"
 
-    def has_uplift_payment?(num_participants = 0, total_uplift = "0.00")
-      adjustments[0].has_content? "Uplift fee #{num_participants} £100.00 £#{total_uplift}"
+    def has_uplift_payments?(num_participants = 0)
+      expected = "Uplift fee #{num_participants}".strip
+      adjustments[0].has_content? expected
     end
 
     def has_total?(total_adjustments = "0.00")
@@ -128,7 +145,7 @@ module Sections
 end
 
 module Pages
-  class FinancePaymentBreakdownReport < ::Pages::Base
+  class FinancePaymentBreakdownReport < ::Pages::BasePage
     set_url "/finance/ecf/payment_breakdowns/{lead_provider_id}/statements/{statement_name}"
     set_primary_heading "Early career framework (ECF)"
 
@@ -138,33 +155,35 @@ module Pages
     section :adjustments_panel, Sections::AdjustmentsFinancePanel
     section :contract_information_panel, Sections::ContractInformationFinancePanel
 
-    def can_see_payment_summary?(num_declarations)
-      payment_total = num_declarations == 0 ? "0.00" : "100.00"
+    def has_payment_summary?(num_declarations)
+      payment_total = num_declarations == 0 ? "0.00" : "119.40"
 
       summary_panel.has_output_payment? payment_total
     end
 
-    def can_see_started_declaration_payment_table?(num_ects, num_mentors, num_declarations)
-      total_in_band = (num_ects + num_mentors) * num_declarations
-      total_payment = total_in_band == 0 ? "0.00" : "119.40"
-
-      output_payments_panel.has_started_declarations? total_in_band, 0, 0, 0, total_payment
+    def has_declaration_counts?(starts_count, retained_count, completed_count, voided_count)
+      summary_panel.has_total_starts? starts_count
+      summary_panel.has_total_retained? retained_count
+      summary_panel.has_total_completed? completed_count
+      summary_panel.has_total_voided? voided_count
     end
 
-    def can_see_retained_1_declaration_payment_table?(num_ects, num_mentors, num_declarations)
+    def has_started_declaration_payment_table?(num_ects, num_mentors, num_declarations)
       total_in_band = (num_ects + num_mentors) * num_declarations
-      total_payment = total_in_band == 0 ? "0.00" : "119.40"
 
-      output_payments_panel.has_retained_1_declarations? total_in_band, 0, 0, 0, total_payment
+      output_payments_panel.has_started_declarations? total_in_band, 0, 0, 0
     end
 
-    def can_see_other_fees_table?(num_ects, num_mentors)
+    def has_retained_1_declaration_payment_table?(num_ects, num_mentors, num_declarations)
+      total_in_band = (num_ects + num_mentors) * num_declarations
+
+      output_payments_panel.has_retained_1_declarations? total_in_band, 0, 0, 0
+    end
+
+    def has_other_fees_table?(num_ects, num_mentors)
       num_participants = num_ects + num_mentors
-      total_payment = num_participants == 0 ? "0.00" : "100.00"
-      total_uplift = "100.00"
 
-      output_payments_panel.has_output_payment? total_payment
-      adjustments_panel.has_uplift_payment? num_participants, total_uplift
+      adjustments_panel.has_uplift_payments?(num_participants)
     end
   end
 end

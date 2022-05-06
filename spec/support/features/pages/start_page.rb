@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "./base"
+require_relative "./base_page"
 
 module Pages
-  class StartPage < ::Pages::Base
+  class StartPage < ::Pages::BasePage
     set_url "/"
     set_primary_heading "Manage training for early career teachers"
 

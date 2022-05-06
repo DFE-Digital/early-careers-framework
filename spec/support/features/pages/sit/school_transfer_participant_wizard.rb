@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class SITTransferParticipantWizard < ::Pages::Base
-    include Capybara::DSL
+  class SchoolTransferParticipantWizard < ::Pages::BasePage
+    set_url "/schools/{slug}/cohorts/{cohort}/roles"
+    set_primary_heading "Check what each person needs to do in the early career teacher training programme"
 
     def complete(participant_name, participant_email, participant_trn, participant_dob, same_provider)
       click_on "Continue"
@@ -107,7 +108,7 @@ module Pages
     def view_participants_dashboard
       click_on "View your ECTs and mentors"
 
-      Pages::SITParticipantsDashboard.new
+      Pages::SchoolParticipantsDashboardPage.loaded
     end
   end
 end

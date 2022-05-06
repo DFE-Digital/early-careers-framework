@@ -14,11 +14,23 @@ end
 
 def when_context(scenario)
   str = "When they are onboarded by the new SIT"
-  str += " after being deferred by the Original Lead Provider"
+  str += " after being withdrawn by #{scenario.withdrawn_by}"
   str += " before any declarations are made" if (scenario.new_declarations + scenario.prior_declarations).empty?
   str += " after the declarations #{scenario.prior_declarations} have been made" if scenario.prior_declarations.any?
   str += " and the new declarations #{scenario.new_declarations} are then made" if scenario.new_declarations.any?
   str
+end
+
+def then_an_admin_user(_scenario)
+  "should be able to see the correct information"
+end
+
+def then_a_finance_user(_scenario)
+  "should be able to see the correct information"
+end
+
+def then_the_support_service(_scenario)
+  "should be able to see the correct information"
 end
 
 RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scenario: true do
@@ -226,37 +238,27 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
         context "Then the Support for Early Career Teachers Service" do
           subject(:support_ects) { "Support for Early Career Teachers Service" }
 
-          it { is_expected.to find_participant_details_in_the_ecf_users_endpoint "the Participant", scenario.participant_email, scenario.new_programme, scenario.participant_type }
+          it then_the_support_service(scenario) do
+            then_ecf_users_endpoint_shows_the_current_record "the Participant", scenario.participant_email, scenario.participant_type, scenario.new_programme
+          end
         end
 
         context "Then a Teacher CPD Finance User" do
-          subject(:finance_user) { create :user, :finance }
+          subject(:finance_user) { "Teacher CPD Finance User" }
 
-          it "should be able to see who the participant is managed by, where there training is up to and what payments are due to each Lead Provider", :aggregate_failures do
-            expect(subject).to be_able_to_find_the_school_of_the_participant_in_the_finance_portal "the Participant", "New SIT"
-            if scenario.new_programme == "FIP"
-              expect(subject).to be_able_to_find_the_lead_provider_of_the_participant_in_the_finance_portal "the Participant", scenario.new_lead_provider_name
-            end
-            expect(subject).to be_able_to_find_the_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_participant_status
-            expect(subject).to be_able_to_find_the_training_status_of_the_participant_in_the_finance_portal "the Participant", scenario.new_training_status
-            expect(subject).to be_able_to_find_the_training_declarations_for_the_participant_in_the_finance_portal "the Participant", scenario.see_new_declarations
-
-            expect(subject).to be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors
-            expect(subject).to be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_declarations
-            expect(subject).to be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors, scenario.original_payment_declarations
-            expect(subject).to be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors
-
-            expect(subject).to be_able_to_see_recruitment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors
-            expect(subject).to be_able_to_see_payment_summary_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_declarations
-            expect(subject).to be_able_to_see_started_declaration_payment_for_lead_provider_in_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors, scenario.new_payment_declarations
-            expect(subject).to be_able_to_see_other_fees_for_the_lead_provider_in_the_finance_portal "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors
+          it Steps::ChangesOfCircumstanceSteps.then_finance_user_context(scenario), :aggregate_failures do
+            then_the_finance_portal_shows_the_current_participant_record "the Participant", scenario.participant_type, "New SIT", scenario.new_lead_provider_name, scenario.new_participant_status, scenario.new_training_status, scenario.see_new_declarations
+            then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider", scenario.original_payment_ects, scenario.original_payment_mentors, scenario.original_started_declarations, scenario.original_retained_declarations, 0, 0
+            then_the_finance_portal_shows_the_lead_provider_payment_breakdown "New Lead Provider", scenario.new_payment_ects, scenario.new_payment_mentors, scenario.new_started_declarations, scenario.new_retained_declarations, 0, 0
           end
         end
 
         context "Then a Teacher CPD Admin User" do
-          subject(:admin_user) { create :user, :admin }
+          subject(:admin_user) { "Teacher CPD Admin User" }
 
-          it { is_expected.to find_participant_details_in_support_portal "the Participant", "New SIT" }
+          it Steps::ChangesOfCircumstanceSteps.then_admin_user_context(scenario), :aggregate_failures do
+            then_the_admin_portal_shows_the_current_participant_record "the Participant", "New SIT", scenario.new_lead_provider_name, "Eligible to start"
+          end
         end
 
         context "Then the Analytics Dashboards" do

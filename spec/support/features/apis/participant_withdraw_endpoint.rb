@@ -1,16 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class ParticipantWithdrawEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
-    end
-
+  class ParticipantWithdrawEndpoint < APIs::BaseEndpoint
     def post_withdraw_notice(participant_id, course_identifier, reason_code)
       @current_id = participant_id
       post_request course_identifier, reason_code

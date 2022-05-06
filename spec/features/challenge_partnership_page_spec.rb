@@ -186,7 +186,7 @@ private
   alias_method :and_i_use_the_report_incorrect_partnership_token, :given_i_use_the_report_incorrect_partnership_token
 
   def then_i_cannot_report_school_has_been_confirmed_incorrectly
-    page_object = Pages::SchoolPage.loaded
+    page_object = Pages::SchoolDashboardPage.loaded
     expect(page_object).to_not be_able_to_report_school_has_been_confirmed_incorrectly
   end
 

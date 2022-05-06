@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./base"
+require_relative "./base_page"
 
 module Sections
   class CookieConsentForm < SitePrism::Section
@@ -43,7 +43,7 @@ module Sections
 end
 
 module Pages
-  class CookiePolicyPage < ::Pages::Base
+  class CookiePolicyPage < ::Pages::BasePage
     set_url "/cookies"
     set_primary_heading "Cookies"
 

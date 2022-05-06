@@ -12,15 +12,17 @@ module Support
         participant = user.participant_profiles.first
         raise "Could not find ParticipantProfile for #{participant_name}" if participant.nil?
 
-        declarations_endpoint = APIs::GetParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+        declarations_endpoint = APIs::GetParticipantDeclarationsEndpoint.load tokens[lead_provider_name]
         declarations_endpoint.get_training_declarations user.id
 
         @text = JSON.pretty_generate declarations_endpoint.response
 
-        declarations_endpoint.has_declarations? declaration_types
-        declaration_types.each do |declaration_type|
-          declarations_endpoint.get_declaration declaration_type
-        end
+        expect(declarations_endpoint).to have_declarations(declaration_types)
+        # TODO: check the properties of the declaration type
+        # declaration_types.each do |declaration_type|
+        #   declarations_endpoint.get_declaration declaration_type
+        #   expect(declarations_endpoint).to have_declaration_type(declaration_type)
+        # end
 
         true
       rescue Capybara::ElementNotFound => e

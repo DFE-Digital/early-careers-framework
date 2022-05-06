@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class LeadProviderLandingPage < ::Pages::Base
+  class LeadProviderLandingPage < ::Pages::BasePage
     set_url "/lead-providers"
     set_primary_heading "Manage your records quickly and easily"
 

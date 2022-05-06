@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class FinancePaymentBreakdownReportWizard < ::Pages::Base
+  class FinancePaymentBreakdownReportWizard < ::Pages::BasePage
     set_url "/finance/payment-breakdowns/choose-programme"
     set_primary_heading "Choose trainee payments scheme"
 

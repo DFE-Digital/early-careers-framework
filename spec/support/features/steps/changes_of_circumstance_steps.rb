@@ -45,7 +45,7 @@ module Steps
         privacy_policy.accept! user
 
         sign_in_as user
-        choose_programme_wizard = Pages::SITReportProgrammeWizard.new
+        choose_programme_wizard = Pages::SchoolReportProgrammeWizard.new
         choose_programme_wizard.complete(programme)
         sign_out
 
@@ -93,7 +93,7 @@ module Steps
 
       travel_to(@timestamp) do
         sign_in_as user
-        inductions_dashboard = Pages::SchoolPage.new
+        inductions_dashboard = Pages::SchoolDashboardPage.new
         wizard = inductions_dashboard.start_add_participant_wizard
         wizard.complete(participant_name, participant_email, participant_type, cohort_label)
         sign_out
@@ -139,7 +139,7 @@ module Steps
       end
 
       travel_to(@timestamp) do
-        declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+        declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.load tokens[lead_provider_name]
         declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, @timestamp - 2.days
 
         declarations_endpoint.has_declaration_type? declaration_type.to_s
@@ -158,7 +158,7 @@ module Steps
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(@timestamp) do
-        withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.new tokens[lead_provider_name]
+        withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.load tokens[lead_provider_name]
         withdraw_endpoint.post_withdraw_notice participant_profile.user.id, course_identifier, "moved-school"
 
         withdraw_endpoint.responded_with_full_name? participant_name
@@ -177,7 +177,7 @@ module Steps
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(@timestamp) do
-        defer_endpoint = APIs::ParticipantDeferEndpoint.new tokens[lead_provider_name]
+        defer_endpoint = APIs::ParticipantDeferEndpoint.load tokens[lead_provider_name]
         defer_endpoint.post_defer_notice participant_profile.user.id, course_identifier, "career-break"
 
         defer_endpoint.responded_with_full_name? participant_name
@@ -219,7 +219,7 @@ module Steps
       travel_to(@timestamp) do
         if circumstance == "FIP>FIP"
           sign_in_as user
-          inductions_dashboard = Pages::SchoolPage.new
+          inductions_dashboard = Pages::SchoolDashboardPage.new
           wizard = inductions_dashboard.start_transfer_participant_wizard
           wizard.complete(participant_name, participant_email, participant_trn, participant_dob, same_provider == :same_provider)
           sign_out
@@ -321,6 +321,97 @@ module Steps
         aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
         calculator: PaymentCalculator::ECF::PaymentCalculation,
       ).call(event_type: :started)
+    end
+
+    def self.then_finance_user_context(scenario)
+      str = "can see the participant as \"the Participant\"\n"
+      str += "          and can see the school as \"New SIT's school\"\n"
+      str += "          and can see the lead provider as \"#{scenario.new_lead_provider_name}\"\n"
+      str += "          and can see the participant status as \"#{scenario.new_participant_status}\"\n"
+      str += "          and can see the training status as \"#{scenario.new_training_status}\"\n"
+      str += "          and can see the declarations of \"#{scenario.see_new_declarations}\"\n"
+      str += "          and can see that Original Lead Provider has been allocated \"#{[scenario.original_started_declarations, scenario.original_retained_declarations, 0, 0]}\" declarations\n"
+      str += "          and can see that New Lead Provider has been allocated \"#{[scenario.new_started_declarations, scenario.new_retained_declarations, 0, 0]}\" declarations"
+      str
+    end
+
+    def then_the_finance_portal_shows_the_current_participant_record(participant_name, participant_type, sit_name, lead_provider_name, participant_status, training_status, new_declarations)
+      participant_user = find_user participant_name
+      school = find_school_for_sit sit_name
+
+      given_i_authenticate_as_a_finance_user
+
+      portal = Pages::FinancePortal.loaded
+      search = portal.view_participant_drilldown
+      drilldown = search.find participant_name
+
+      expect(drilldown).to have_participant(participant_user.id)
+      expect(drilldown).to have_school_urn(school.urn)
+      expect(drilldown).to have_lead_provider(lead_provider_name)
+      expect(drilldown).to have_status(participant_status)
+      expect(drilldown).to have_training_status(training_status)
+      new_declarations.each do |declaration_type|
+        # TODO: need to change course_identifier if it is a mentor
+        expect(drilldown).to have_declaration(declaration_type, participant_type == "ECT" ? "ecf-induction" : "ecf-mentor", "payable")
+      end
+
+      sign_out
+    end
+
+    def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, total_ects, total_mentors, started, retained, completed, voided)
+      given_i_authenticate_as_a_finance_user
+
+      portal = Pages::FinancePortal.loaded
+      wizard = portal.view_payment_breakdown
+      report = wizard.complete lead_provider_name
+
+      expect(report).to have_declaration_counts(started, retained, completed, voided)
+      expect(report).to have_started_declaration_payment_table(total_ects, total_mentors, started)
+      expect(report).to have_retained_1_declaration_payment_table(total_ects, total_mentors, retained)
+      expect(report).to have_other_fees_table(total_ects, total_mentors)
+
+      sign_out
+    end
+
+    def self.then_admin_user_context(scenario)
+      str = "can see the full name as \"the Participant\"\n"
+      str += "          and can see the school as \"New SIT's school\"\n"
+      str += "          and can see the validation status as \"Eligible to start\"\n"
+      str += "          and can see the lead provider as \"#{scenario.new_lead_provider_name}\""
+      str
+    end
+
+    def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, lead_provider_name, validation_status)
+      school = find_school_for_sit sit_name
+
+      given_i_authenticate_as_an_admin
+
+      portal = Pages::AdminSupportPortal.loaded
+      list = portal.view_participant_list
+      participant_detail = list.view_participant participant_name
+
+      # primary heading needs checking participant_name
+      expect(participant_detail).to have_primary_heading(participant_name)
+
+      expect(participant_detail).to have_full_name(participant_name)
+      expect(participant_detail).to have_school(school.name)
+      expect(participant_detail).to have_validation_status(validation_status)
+      expect(participant_detail).to have_lead_provider(lead_provider_name)
+
+      sign_out
+    end
+
+    def then_ecf_users_endpoint_shows_the_current_record(participant_name, participant_email, participant_type, induction_programme)
+      participant_user = find_user participant_name
+
+      user_endpoint = APIs::ECFUsersEndpoint.load
+      user_endpoint.get_user participant_user.id
+
+      expect(user_endpoint).to have_full_name(participant_name)
+      expect(user_endpoint).to have_email(participant_email)
+      expect(user_endpoint).to have_user_type(participant_type == "ECT" ? "early_career_teacher" : "mentor")
+      expect(user_endpoint).to have_core_induction_programme("none")
+      expect(user_endpoint).to have_induction_programme_choice(induction_programme == "CIP" ? "core_induction_programme" : "full_induction_programme")
     end
 
   private

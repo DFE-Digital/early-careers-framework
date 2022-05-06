@@ -46,7 +46,7 @@ module Steps
       PrivacyPolicy.current.accept! user
 
       sign_in_as user
-      choose_programme_wizard = Pages::SITReportProgrammeWizard.new
+      choose_programme_wizard = Pages::SchoolReportProgrammeWizard.new
       choose_programme_wizard.complete induction_programme
       sign_out
 

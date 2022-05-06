@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class PostParticipantDeclarationsEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
-    end
+  class PostParticipantDeclarationsEndpoint < APIs::BaseEndpoint
+    attr_reader :current_id
 
     def post_training_declaration(participant_id, course_identifier, declaration_type, declaration_date)
       @current_id = participant_id
@@ -38,14 +33,14 @@ module APIs
       @response = nil
 
       url = "/api/v1/participant-declarations"
-      @attributes = {
+      attributes = {
         participant_id: @current_id,
         declaration_type: declaration_type.to_s.gsub("_", "-"),
         declaration_date: declaration_date.rfc3339,
         course_identifier: course_identifier,
         evidence_held: evidence_held ? "self-study-material-completed" : nil,
       }
-      params = build_params(@attributes)
+      params = build_params(attributes)
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",
@@ -58,6 +53,8 @@ module APIs
         error = JSON.pretty_generate JSON.parse(session.response.body)["errors"]
         raise "POST request to <#{url}> with request body \n#{JSON.pretty_generate @attributes}\n failed due to \n===\n#{error}\n===\n"
       end
+
+      @response
     end
 
     def build_params(attributes)

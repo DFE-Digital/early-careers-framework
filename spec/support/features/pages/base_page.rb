@@ -38,7 +38,7 @@ module Sections
 end
 
 module Pages
-  class Base < SitePrism::Page
+  class BasePage < SitePrism::Page
     element :header, "h1"
 
     section :cookie_banner, ::Sections::CookieConsentBanner

@@ -7,31 +7,33 @@ class ChangesOfCircumstanceScenario
               :participant_trn,
               :participant_dob,
               :original_programme,
+              :starting_school_status,
               :new_programme,
+              :new_lead_provider_name,
               :transfer,
               :withdrawn_by,
-              :new_lead_provider_name,
-              :prior_declarations,
-              :new_declarations,
-              :duplicate_declarations,
-              :all_declarations,
-              :starting_school_status,
               :prior_school_status,
-              :new_school_status,
               :prior_participant_status,
-              :new_participant_status,
               :prior_training_status,
+              :prior_declarations,
+              :duplicate_declarations,
+              :new_school_status,
+              :new_participant_status,
               :new_training_status,
+              :new_declarations,
+              :all_declarations,
               :see_original_details,
-              :see_new_details,
               :see_original_declarations,
+              :see_new_details,
               :see_new_declarations,
               :original_payment_ects,
               :original_payment_mentors,
-              :original_payment_declarations,
+              :original_started_declarations,
+              :original_retained_declarations,
               :new_payment_ects,
               :new_payment_mentors,
-              :new_payment_declarations
+              :new_started_declarations,
+              :new_retained_declarations
 
   def initialize(num, fixture_data)
     scenario = fixture_data.to_h.with_indifferent_access.freeze
@@ -51,7 +53,13 @@ class ChangesOfCircumstanceScenario
     @transfer = (scenario[:transfer] || "not_applicable").to_sym
     @withdrawn_by = (scenario[:withdrawn_by] || "not_applicable").to_sym
 
-    @new_lead_provider_name = @transfer == :same_provider ? "Original Lead Provider" : "New Lead Provider"
+    @new_lead_provider_name = if @new_programme == "CIP"
+                                ""
+                              elsif @transfer == :same_provider
+                                "Original Lead Provider"
+                              else
+                                "New Lead Provider"
+                              end
 
     @prior_declarations = (scenario[:prior_declarations] || "").split(",").map(&:to_sym)
     @new_declarations = (scenario[:new_declarations] || "").split(",").map(&:to_sym)
@@ -76,10 +84,12 @@ class ChangesOfCircumstanceScenario
 
     @original_payment_ects = (scenario[:original_payment_ects] || "0").to_i
     @original_payment_mentors = (scenario[:original_payment_mentors] || "0").to_i
-    @original_payment_declarations = (scenario[:original_payment_declarations] || "0").to_i
+    @original_started_declarations = @prior_declarations.filter { |sym| sym == :started }.count
+    @original_retained_declarations = @prior_declarations.filter { |sym| sym == :retained_1 }.count
 
     @new_payment_ects = (scenario[:new_payment_ects] || "0").to_i
     @new_payment_mentors = (scenario[:new_payment_mentors] || "0").to_i
-    @new_payment_declarations = (scenario[:new_payment_declarations] || "0").to_i
+    @new_started_declarations = @new_declarations.filter { |sym| sym == :started }.count
+    @new_retained_declarations = @new_declarations.filter { |sym| sym == :retained_1 }.count
   end
 end

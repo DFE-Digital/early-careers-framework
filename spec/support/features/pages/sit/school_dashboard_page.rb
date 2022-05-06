@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class SchoolPage < ::Pages::Base
+  class SchoolDashboardPage < ::Pages::BasePage
     set_url "/schools/{slug}"
     set_primary_heading "Manage your training"
 
@@ -40,7 +40,7 @@ module Pages
       Pages::SchoolCohortsPage.loaded
     end
 
-    def able_to_view_programme_details
+    def has_view_programme_details?
       has_partnership?
       has_selector?("a", text: "View details")
     end
@@ -52,7 +52,7 @@ module Pages
       Pages::ReportIncorrectPartnershipPage.loaded
     end
 
-    def able_to_report_school_has_been_confirmed_incorrectly?
+    def has_report_school_has_been_confirmed_incorrectly?
       has_no_partnership?
       has_selector?("a", text: "report that your school has been confirmed incorrectly")
     end
@@ -60,19 +60,19 @@ module Pages
     def view_participant_dashboard
       click_on "View your early career teacher and mentor details"
 
-      Pages::SITParticipantsDashboard.new
+      Pages::SchoolParticipantsDashboardPage.loaded
     end
 
     def start_add_participant_wizard
       click_on "Add your early career teacher and mentor details"
 
-      Pages::SITAddParticipantWizard.new
+      Pages::SchoolAddParticipantWizard.loaded
     end
 
     def start_transfer_participant_wizard
       click_on "Add your early career teacher and mentor details"
 
-      Pages::SITTransferParticipantWizard.new
+      Pages::SchoolTransferParticipantWizard.loaded
     end
   end
 end

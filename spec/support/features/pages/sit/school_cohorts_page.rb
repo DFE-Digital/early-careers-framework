@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class SchoolCohortsPage < ::Pages::Base
+  class SchoolCohortsPage < ::Pages::BasePage
     set_url "/schools/{slug}/cohorts/{cohort}"
     set_primary_heading "Choose an induction programme"
 

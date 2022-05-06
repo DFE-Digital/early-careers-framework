@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class ParticipantRegistrationWizard < ::Pages::Base
-    include Capybara::DSL
+  class ParticipantRegistrationWizard < ::Pages::BasePage
     include WebMock::API
+
+    set_url "ParticipantRegistrationWizard"
+    set_primary_heading "ParticipantRegistrationWizard"
 
     def complete_for_ect(participant_name, participant_dob, trn)
       setup_response_from_dqt participant_name, participant_dob, trn

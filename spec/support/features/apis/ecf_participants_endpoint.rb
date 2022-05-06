@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class ECFParticipantsEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
+  class ECFParticipantsEndpoint < APIs::BaseEndpoint
+    def initialize(args)
+      super args
       call_participants_endpoint
     end
 

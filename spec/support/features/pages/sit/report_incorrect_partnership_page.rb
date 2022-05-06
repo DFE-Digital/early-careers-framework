@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class ReportIncorrectPartnershipPage < ::Pages::Base
+  class ReportIncorrectPartnershipPage < ::Pages::BasePage
     set_url "/report-incorrect-partnership{?token}"
     set_primary_heading "Report that your school has been signed up incorrectly"
 
@@ -36,17 +36,17 @@ module Pages
     #   - We do not have any early career teachers this year
   end
 
-  class ReportIncorrectPartnershipSuccessPage < ::Pages::Base
+  class ReportIncorrectPartnershipSuccessPage < ::Pages::BasePage
     set_url "/report-incorrect-partnership/success"
     set_primary_heading "Your report has been submitted"
   end
 
-  class ReportIncorrectPartnershipAlreadyChallengedPage < ::Pages::Base
+  class ReportIncorrectPartnershipAlreadyChallengedPage < ::Pages::BasePage
     set_url "/report-incorrect-partnership/already-challenged"
     set_primary_heading(/^Someone at .* has already reported this issue$/)
   end
 
-  class ReportIncorrectPartnershipLinkExpiredPage < ::Pages::Base
+  class ReportIncorrectPartnershipLinkExpiredPage < ::Pages::BasePage
     set_url "/report-incorrect-partnership/link-expired"
     set_primary_heading "This link has expired"
   end

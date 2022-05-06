@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../base"
+require_relative "../base_page"
 
 module Pages
-  class CheckSchoolsPage < ::Pages::Base
+  class CheckSchoolsPage < ::Pages::BasePage
     set_url "/lead-providers/your-schools"
     set_primary_heading "Your schools"
 
