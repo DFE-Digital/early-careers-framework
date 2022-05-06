@@ -799,7 +799,7 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListFilter"
+              "$ref": "#/components/schemas/ParticipantListFilter"
             },
             "style": "deepObject",
             "explode": true,
@@ -863,7 +863,7 @@
             "name": "filter",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListFilter"
+              "$ref": "#/components/schemas/ParticipantListFilter"
             },
             "style": "deepObject",
             "explode": true,
