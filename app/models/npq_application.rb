@@ -55,6 +55,18 @@ class NPQApplication < ApplicationRecord
     end
   end
 
+  # this builds upon #eligible_for_funding
+  # eligible_for_funding is solely based on what NPQ app knows
+  # eg school, course etc
+  # here we need to account for previous enrollments too
+  def eligible_for_dfe_funding
+    if participant_identity.npq_applications.where(npq_course: npq_course).accepted.any?
+      false
+    else
+      eligible_for_funding
+    end
+  end
+
 private
 
   def push_enrollment_to_big_query

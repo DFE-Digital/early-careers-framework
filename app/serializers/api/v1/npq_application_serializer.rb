@@ -63,6 +63,8 @@ module Api
       attribute :cohort do |object|
         object.cohort.start_year.to_s
       end
+
+      attribute(:eligible_for_funding, &:eligible_for_dfe_funding)
     end
   end
 end

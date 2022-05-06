@@ -62,7 +62,7 @@ module Api
           record.school_ukprn,
           record.private_childcare_provider_urn,
           record.headteacher_status,
-          record.eligible_for_funding,
+          record.eligible_for_dfe_funding,
           record.funding_choice,
           record.npq_course.identifier,
           record.lead_provider_approval_status,

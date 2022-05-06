@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe NPQApplication, type: :model do
-  before { create(:schedule, name: "ECF September standard 2021") }
-
   it {
     is_expected.to define_enum_for(:headteacher_status).with_values(
       no: "no",
@@ -42,6 +40,83 @@ RSpec.describe NPQApplication, type: :model do
         expect {
           subject.touch
         }.not_to change(enqueued_jobs, :count)
+      end
+    end
+  end
+
+  describe "#eligible_for_dfe_funding" do
+    let(:npq_course) { create(:npq_leadship_course) }
+    let(:different_npq_course) { create(:npq_specialist_course) }
+
+    before do
+      create(:npq_leadership_schedule, :with_npq_milestones)
+    end
+
+    context "when first and only application and is eligible" do
+      subject { create(:npq_application, eligible_for_funding: true) }
+
+      it "returns true" do
+        expect(subject.eligible_for_dfe_funding).to be_truthy
+      end
+    end
+
+    context "when first and only application and is not eligible" do
+      subject { create(:npq_application, eligible_for_funding: false) }
+
+      it "returns false" do
+        expect(subject.eligible_for_dfe_funding).to be_falsey
+      end
+    end
+
+    context "when second application which is also eligble for funding" do
+      subject do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          npq_course: npq_course,
+        )
+      end
+
+      before do
+        create(
+          :npq_application,
+          :accepted,
+          participant_identity: subject.participant_identity,
+          eligible_for_funding: true,
+          npq_course: subject.npq_course,
+          npq_lead_provider: subject.npq_lead_provider,
+        )
+      end
+
+      it "returns false" do
+        expect(subject.eligible_for_dfe_funding).to be_falsey
+      end
+    end
+
+    context "when second application is for a different course which is also eligble for funding" do
+      subject do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          npq_course: npq_course,
+        )
+      end
+
+      before do
+        create(:npq_specialist_schedule, :with_npq_milestones)
+
+        create(
+          :npq_application,
+          :accepted,
+          participant_identity: subject.participant_identity,
+          eligible_for_funding: true,
+          npq_course: different_npq_course,
+          npq_lead_provider: subject.npq_lead_provider,
+        )
+      end
+
+      it "returns true" do
+        expect(subject.eligible_for_dfe_funding).to be_truthy
       end
     end
   end
