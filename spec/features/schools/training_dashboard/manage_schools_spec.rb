@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.feature "School Tutors should be abled to manage schools", type: :feature, js: true, rutabaga: false do
+RSpec.feature "School Tutors should be able to manage schools", type: :feature, js: true, rutabaga: false do
   include ManageTrainingSteps
 
   scenario "Change school" do
