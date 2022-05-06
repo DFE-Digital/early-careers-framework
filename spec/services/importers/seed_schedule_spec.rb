@@ -4,14 +4,20 @@ require "tempfile"
 
 RSpec.describe Importers::SeedSchedule do
   describe "#call" do
-    context "when a schedule changes name" do
-      let(:csv) { Tempfile.new("data.csv") }
-      let(:path_to_csv) { csv.path }
+    subject do
+      Importers::SeedSchedule.new(
+        path_to_csv: Rails.root.join("db/seeds/schedules/ecf_standard.csv"),
+        klass: Finance::Schedule::ECF,
+      )
+    end
 
+    context "when a schedule changes name" do
       subject do
         described_class.new(path_to_csv: path_to_csv, klass: Finance::Schedule::ECF)
       end
 
+      let(:csv) { Tempfile.new("data.csv") }
+      let(:path_to_csv) { csv.path }
       let!(:schedule) { create(:schedule, name: "foo extra", schedule_identifier: "foo") }
 
       before do
@@ -32,6 +38,13 @@ RSpec.describe Importers::SeedSchedule do
           subject.call
         }.to change { schedule.reload.name }.from("foo extra").to("just foo")
       end
+    end
+
+    it "is idempotent" do
+      subject.call
+      subject.call
+
+      expect(Finance::Schedule.find_by(name: "ECF Standard April").milestones.count).to eq(6)
     end
   end
 end

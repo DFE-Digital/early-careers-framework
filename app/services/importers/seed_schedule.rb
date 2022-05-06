@@ -28,7 +28,6 @@ class Importers::SeedSchedule
       schedule.update!(
         name: row["schedule-name"],
       )
-
       milestone = schedule.milestones.find_or_create_by!(
         name: row["milestone-name"],
         start_date: row["milestone-start-date"],
@@ -37,7 +36,7 @@ class Importers::SeedSchedule
         declaration_type: row["milestone-declaration-type"],
       )
 
-      schedule.schedule_milestones.create!(
+      schedule.schedule_milestones.find_or_create_by!(
         declaration_type: row["milestone-declaration-type"],
         name: row["milestone-name"],
         milestone: milestone,
