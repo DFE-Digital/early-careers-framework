@@ -42,11 +42,24 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
       end
 
+      context "when transitioned to another cohort" do
+        let(:next_cohort)   { create(:cohort, :next) }
+        let(:next_schedule) { create(:schedule, cohort: next_cohort) }
+        let!(:ect_profile)   { create(:ect_participant_profile, schedule: next_schedule) }
+        before do
+          create(:school_cohort, school: ect_profile.school, cohort: next_cohort)
+          create(:partnership, school: ect_profile.school, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort, delivery_partner: delivery_partner)
+        end
+
+        it "create declaration record and declaration attempt and return id when successful" do
+        end
+      end
+
       it "create declaration record and declaration attempt and return id when successful" do
         params = build_params(valid_params)
         expect { post "/api/v1/participant-declarations", params: params }
-            .to change(ParticipantDeclaration, :count).by(1)
-            .and change(ParticipantDeclarationAttempt, :count).by(1)
+          .to change(ParticipantDeclaration, :count).by(1)
+                .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
