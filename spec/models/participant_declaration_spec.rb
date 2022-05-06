@@ -207,7 +207,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       }
     end
 
-    let(:cohort)            { create(:cohort, start_year: Time.zone.today.year) }
+    let(:cohort)            { Cohort.current || create(:cohort, :current) }
     let(:school)            { create(:school) }
     let(:school_cohort)     { create(:school_cohort, school: school, cohort: cohort) }
 
