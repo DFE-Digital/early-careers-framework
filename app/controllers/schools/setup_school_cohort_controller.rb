@@ -59,8 +59,14 @@ module Schools
     end
 
     def what_changes_confirmation
+      what_changes_choice = @setup_school_cohort_form.what_changes_choice
       programme_choice = @setup_school_cohort_form.programme_choice
+
       set_cohort_induction_programme!(programme_choice)
+
+      if previous_school_cohort.full_induction_programme?
+        send_fip_programme_changed_email!(what_changes_choice)
+      end
 
       store_form_redirect_to_next_step :what_changes_submitted
     end
@@ -78,6 +84,19 @@ module Schools
     end
 
   private
+
+    def send_fip_programme_changed_email!(what_changes_choice)
+      previous_partnership = previous_school_cohort.default_induction_programme.partnership
+
+      previous_partnership.lead_provider.users.each do |lead_provider_user|
+        LeadProviderMailer.programme_changed_email(
+          partnership: previous_partnership,
+          user: lead_provider_user,
+          cohort_year: school_cohort.description,
+          what_changes_choice: what_changes_choice,
+        ).deliver_later
+      end
+    end
 
     def ects_expected
       setup_school_cohort_form_params[:expect_any_ects_choice] == "yes"

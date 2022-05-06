@@ -15,6 +15,11 @@ en:
     career_break: Career break
     passed_induction: Passed Induction
     other: "Other"
+  programme_changed_reasons:
+    change_lead_provider: The school wants to leave %{lead_provider_name} and use a different lead provider
+    change_delivery_partner: The school wants to stay with %{lead_provider_name} but change their delivery partner, %{delivery_partner_name}
+    change_to_core_induction_programme: The school wants to deliver their own programme using DfE-accredited materials
+    change_to_design_our_own: The school wants to design and deliver their own programme based on the early career framework (ECF)
 
   # Errors
   fail: "FAIL"

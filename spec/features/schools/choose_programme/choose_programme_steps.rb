@@ -33,6 +33,8 @@ module ChooseProgrammeSteps
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
     @school_cohort.update!(default_induction_programme: @induction_programme)
+    @lead_provider_user = create(:user)
+    @school_cohort.default_induction_programme.partnership.lead_provider.users << @lead_provider_user
   end
 
   # Then steps
@@ -96,6 +98,16 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_the_training_change_submitted_page
     expect(page).to have_content("You‘ve submitted your training information")
+  end
+
+  def then_a_notification_email_is_sent_to_the_lead_provider
+    expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
+      .with(
+        "LeadProviderMailer",
+        "programme_changed_email",
+        "deliver_now",
+        a_hash_including(:args),
+      )
   end
 
   # And steps
