@@ -27,24 +27,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active" } do
     context "when session has not been set up with the form" do
       before do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who"
-      end
-
-      it { is_expected.to redirect_to schools_cohort_path(school_id: school.slug, cohort_id: cohort.start_year) }
-    end
-
-    context "when form has been set up in the session" do
-      before do
-        set_session(:schools_add_participant_form, {
-          type: :teacher,
-          full_name: Faker::Name.name,
-          email: Faker::Internet.email,
-          mentor_id: "later",
-          school_cohort_id: school_cohort.id,
-          current_user_id: user.id,
-          start_term: "Autumn 2050",
-        })
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who", params: { type: :joining }
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/who"
       end
 
       it "renders the expected page" do
