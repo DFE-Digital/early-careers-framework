@@ -59,7 +59,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_training_submitted_page
-    expect(page).to have_content("You've submitted your training information")
+    expect(page).to have_content("You‘ve submitted your training information")
   end
 
   def then_i_am_taken_to_the_change_provider_page
@@ -86,7 +86,7 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
     expect(page).to have_content("Are you sure you want to change how you'll run your training?")
-    expect(page).to have_content("You've chosen to deliver your own programme using DfE accredited materials.")
+    expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE accredited materials.")
   end
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
@@ -95,7 +95,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_training_change_submitted_page
-    expect(page).to have_content("You've submitted your training information")
+    expect(page).to have_content("You‘ve submitted your training information")
   end
 
   # And steps
