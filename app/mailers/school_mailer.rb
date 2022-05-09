@@ -289,6 +289,7 @@ class SchoolMailer < ApplicationMailer
         name: name,
         school_name: school_name,
         sign_in_url: sign_in_url,
+        step_by_step: step_by_step_url,
       },
     )
   end
