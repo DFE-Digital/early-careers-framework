@@ -17,7 +17,7 @@ module Schools
       if no_ects_expected
         store_form_redirect_to_next_step :no_expected_ects
       elsif ects_expected
-        if previous_school_cohort.full_induction_programme?
+        if previous_school_cohort&.full_induction_programme?
           store_form_redirect_to_next_step(:change_provider)
         else
           store_form_redirect_to_next_step :how_will_you_run_training
