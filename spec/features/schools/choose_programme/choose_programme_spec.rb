@@ -4,7 +4,6 @@ require "rails_helper"
 require_relative "./choose_programme_steps"
 require_relative "../training_dashboard/manage_training_steps"
 
-
 RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false do
   include ChooseProgrammeSteps
 
