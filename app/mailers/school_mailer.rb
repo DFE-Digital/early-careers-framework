@@ -379,7 +379,9 @@ class SchoolMailer < ApplicationMailer
       to: user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
-      personalisation: {},
+      personalisation: {
+        sit_name: user.full_name,
+      },
     ).tag(:diy_wordpress_notification)
   end
 
