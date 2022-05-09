@@ -61,7 +61,7 @@ RSpec.describe "Manage CIP training", js: true do
     then_i_should_see_the_program_and_click_to_change_it(program_label: "Design and deliver your own programme")
     and_see_the_other_programs_before_choosing(labels: ["Use a training provider, funded by the DfE",
                                                         "Deliver your own programme using DfE accredited materials",
-                                                        "We don’t expect to have any early career teachers starting in 2021"],
+                                                        "We do not expect any early career teachers to join"],
                                                choice: "Deliver your own programme using DfE accredited materials",
                                                snapshot: "Design Our Own - change programme options")
 
