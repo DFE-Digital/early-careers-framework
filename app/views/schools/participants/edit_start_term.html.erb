@@ -6,7 +6,7 @@
       <%= f.govuk_radio_buttons_fieldset :start_term,
         legend: { text: I18n.t("schools.participants.change.start_term.#{@profile.participant_type}", full_name: @profile.user.full_name), tag: 'h1', size: 'xl' } do %>
 
-        <% ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS.each do |term| %>
+        <% @cohort.start_term_options.each do |term| %>
           <%= f.govuk_radio_button :start_term, term, label: { text: term.humanize } %>
         <% end %>
       <% end %>

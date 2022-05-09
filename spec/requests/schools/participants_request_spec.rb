@@ -258,7 +258,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-start-term"
 
       expect(response).to render_template("schools/participants/edit_start_term")
-      ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS.each do |option|
+      cohort.start_term_options.each do |option|
         expect(response.body).to include(CGI.escapeHTML(option.humanize))
       end
     end

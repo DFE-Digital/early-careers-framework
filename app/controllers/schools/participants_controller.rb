@@ -66,6 +66,7 @@ class Schools::ParticipantsController < Schools::BaseController
   def email_used; end
 
   def edit_start_term
+    @cohort = @profile.current_induction_record.school_cohort.cohort
     @start_term_form = build_start_term_form
     @start_term_form.start_term = @profile.start_term
   end

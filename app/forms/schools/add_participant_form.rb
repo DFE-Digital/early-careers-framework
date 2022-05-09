@@ -45,8 +45,7 @@ module Schools
       attribute :start_term
 
       validates :start_term,
-                presence: { message: I18n.t("errors.start_term.blank") },
-                inclusion: { in: ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS }
+                presence: { message: I18n.t("errors.start_term.blank") }
 
       next_step do
         if type == :ect && mentor_options.any?
@@ -111,7 +110,7 @@ module Schools
       if type == :self
         self.full_name = current_user.full_name
         self.email = current_user.email
-        self.start_term = "autumn_2021" if start_term.nil?
+        self.start_term = default_start_term if start_term.nil?
         self.participant_type = :mentor
       else
         self.participant_type = type
@@ -128,6 +127,10 @@ module Schools
 
     def current_user
       @current_user ||= Identity.find_user_by(id: current_user_id)
+    end
+
+    def default_start_term
+      school_cohort.cohort.start_term_options.first
     end
 
     def start_term_legend
