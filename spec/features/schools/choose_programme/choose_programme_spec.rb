@@ -133,6 +133,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       then_i_am_taken_to_the_manage_your_training_page
       and_i_see_the_current_lead_provider
       and_i_see_the_delivery_partner
+      and_i_see_the_challenge_link
     end
 
     context "Changing training" do
