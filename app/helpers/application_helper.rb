@@ -67,6 +67,14 @@ module ApplicationHelper
     params[:controller].start_with?("finance")
   end
 
+  def bool_to_tag(bool)
+    if bool
+      '<strong class="govuk-tag govuk-tag--green">YES</strong>'
+    else
+      '<strong class="govuk-tag govuk-tag--red">NO</strong>'
+    end.html_safe
+  end
+
 private
 
   def post_2020_ecf_participant?(user)

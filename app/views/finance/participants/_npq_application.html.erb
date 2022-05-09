@@ -30,6 +30,11 @@
   <% end %>
 
   <% summary_list.row do |row| %>
+    <% row.key { "Targeted support funding eligibility" } %>
+    <% row.value { bool_to_tag(application.targeted_support_funding_eligibility) } %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
     <% row.key { "Created at" } %>
     <% row.value { application.created_at.to_s(:govuk) } %>
   <% end %>

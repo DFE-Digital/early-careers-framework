@@ -73,14 +73,10 @@ RSpec.describe "finance/participants/show.html.erb" do
 
       expect(rendered).to have_content("Lead provider#{profile.npq_application.npq_lead_provider.name}")
       expect(rendered).to have_content("School URN#{profile.npq_application.school_urn}")
-    end
-
-    it "renders eligible for funding" do
-      assign :user, user
-
-      render
 
       expect(rendered).to have_content("Eligible for funding#{profile.fundable?.to_s.upcase}")
+
+      expect(rendered).to have_content("Targeted support funding eligibility#{profile.npq_application.targeted_support_funding_eligibility ? 'YES' : 'NO'}")
     end
   end
 end
