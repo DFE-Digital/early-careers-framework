@@ -91,6 +91,7 @@ module Api
             :works_in_school,
             :employer_name,
             :employment_role,
+            :targeted_support_funding_eligibility,
           ).transform_keys! { |key| key == "national_insurance_number" ? "nino" : key }
       end
 
