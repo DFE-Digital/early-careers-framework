@@ -136,6 +136,33 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_see_the_challenge_link
     end
 
+    scenario "Empty LP and DP names for challenged partnerships" do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_cohort_for_next_academic_year_is_created
+      and_the_next_cohort_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+      when_i_start_programme_selection_for_next_cohort
+      then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+      when_i_choose_ects_expected
+      and_i_click_continue
+      then_i_am_taken_to_the_change_provider_page
+      and_i_see_the_current_lead_provider
+      and_i_see_the_delivery_partner
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+
+      when_i_click_on_the_return_to_your_training_link
+      then_i_am_taken_to_the_manage_your_training_page
+
+      when_i_challenge_the_new_cohort_partnership
+      and_i_visit_the_school_manage_training
+      then_i_see_black_lp_and_dp_names
+      and_i_do_not_see_the_challenge_link
+    end
+
     context "Changing training" do
       scenario "A school chooses to use a different lead provider" do
         given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered

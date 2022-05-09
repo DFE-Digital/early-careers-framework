@@ -147,6 +147,10 @@ module ChooseProgrammeSteps
     expect(page).to have_link(text: "report that your school has been confirmed incorrectly")
   end
 
+  def and_i_do_not_see_the_challenge_link
+    expect(page).to_not have_link(text: "report that your school has been confirmed incorrectly")
+  end
+
   def and_cohort_for_next_academic_year_is_created
     create(:cohort, start_year: 2022)
   end
@@ -179,6 +183,10 @@ module ChooseProgrammeSteps
     expect(page).to have_css("h2", text: "Choose your training materials")
     expect(page).to have_link("Tell us which materials you’ll use")
     expect(page).to have_link("compare materials")
+  end
+
+  def and_i_visit_the_school_manage_training
+    visit(schools_dashboard_path(@school))
   end
 
   # When steps
@@ -237,5 +245,16 @@ module ChooseProgrammeSteps
 
   def when_i_choose_to_design_and_deliver_own_programme
     choose("Design and deliver you own programme based on the Early Career Framework (ECF)")
+  end
+
+  def when_i_challenge_the_new_cohort_partnership
+    click_on("report that your school has been confirmed incorrectly")
+    choose("This looks like a mistake")
+    click_on("Submit")
+  end
+
+  def then_i_see_black_lp_and_dp_names
+    expect(page).to have_summary_row("Training provider", "")
+    expect(page).to have_summary_row("Delivery partner", "")
   end
 end
