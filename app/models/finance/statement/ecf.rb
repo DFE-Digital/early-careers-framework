@@ -7,6 +7,7 @@ class Finance::Statement::ECF < Finance::Statement
 
   def contract
     CallOffContract.find_by!(
+      version: contract_version,
       cohort: cohort,
       lead_provider: lead_provider,
     )
