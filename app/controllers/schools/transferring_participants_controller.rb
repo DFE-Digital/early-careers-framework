@@ -90,7 +90,7 @@ module Schools
 
     def cannot_add; end
 
-    helper_method :with_same_provider_and_different_delivery_partner?
+    helper_method :with_same_provider_and_different_delivery_partner?, :show_mentor?
 
   private
 
@@ -229,6 +229,14 @@ module Schools
 
     def with_same_provider_and_different_delivery_partner?
       with_the_same_provider? && !with_the_same_delivery_partner?
+    end
+
+    def show_mentor?
+      if FeatureFlag.active?(:multiple_cohorts)
+        @latest_induction_record.participant_profile.ect? && @school_cohort.school.school_mentors.any?
+      else
+        @latest_induction_record.participant_profile.ect? && @school_cohort.active_mentors.any?
+      end
     end
 
     # Target lead provider

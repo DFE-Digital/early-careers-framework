@@ -112,6 +112,10 @@ class School < ApplicationRecord
     school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active_record || []
   end
 
+  def mentors
+    User.where(id: school_mentors.joins(preferred_identity: :user).select("users.id")).order(:full_name)
+  end
+
   def registered?
     induction_coordinator_profiles.any?
   end
