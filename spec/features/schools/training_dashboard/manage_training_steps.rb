@@ -609,7 +609,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_course_choice_page
-    expect(page).to have_text("Which training materials do you want this cohort to use?")
+    expect(page).to have_text("Which training materials do you want to use?")
   end
 
   def then_i_am_taken_to_participant_profile

@@ -61,7 +61,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_training_submitted_page
-    expect(page).to have_content("You‘ve submitted your training information")
+    expect(page).to have_content("You’ve submitted your training information")
   end
 
   def then_i_am_taken_to_the_change_provider_page
@@ -69,7 +69,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_complete_page
-    expect(page).to have_content("You can now add ECTs and mentors when you’re ready")
+    expect(page).to have_content("You’re ready to add new ECTs and mentors")
   end
 
   def then_i_am_taken_to_what_changes_page
@@ -93,11 +93,11 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
     expect(page).to have_content("Confirm your training programme")
-    expect(page).to have_content("You're choosing to design and deliver your own programme based on the early career framework (ECF).")
+    expect(page).to have_content("You’re choosing to design and deliver your own programme based on the early career framework (ECF).")
   end
 
   def then_i_am_taken_to_the_training_change_submitted_page
-    expect(page).to have_content("You‘ve submitted your training information")
+    expect(page).to have_content("You’ve submitted your training information")
   end
 
   def then_a_notification_email_is_sent_to_the_lead_provider
@@ -177,7 +177,7 @@ module ChooseProgrammeSteps
 
   def and_i_see_the_choose_training_material_content
     expect(page).to have_css("h2", text: "Choose your training materials")
-    expect(page).to have_link("Tell us which materials will you use")
+    expect(page).to have_link("Tell us which materials you’ll use")
     expect(page).to have_link("compare materials")
   end
 

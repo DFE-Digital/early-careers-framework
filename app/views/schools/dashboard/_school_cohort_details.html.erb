@@ -4,17 +4,17 @@
 <% partnership = school_cohort.school.partnerships.active.find_by(cohort: school_cohort.cohort) %>
 
 <% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? %>
-<div class="govuk-body">
+
   <h2 class="govuk-heading-m">Choose your training materials</h2>
-  <p><%= govuk_link_to "Tell us which materials will you use", info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></p>
-  <p>Read our guidance to <%= govuk_link_to 'compare materials (opens in new tab)', page_path(page: "core-materials-info"), target: "_blank" %>.</p>
-</div>
+  <p class="govuk-body"><%= govuk_link_to "Tell us which materials you’ll use", info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></p>
+  <p class="govuk-body">Read our guidance to <%= govuk_link_to 'compare materials (opens in new tab)', page_path(page: "core-materials-info"), target: "_blank" %>.</p>
+
 <% end %>
 
 <%= govuk_summary_list do |list| %>
   <% list.row do |row| %>
     <% row.key(text: "Length of induction") %>
-    <% row.value(text: "2") %>
+    <% row.value(text: "2 years")  %>
     <% row.action(text: :none) %>
   <% end %>
   <% unless school_cohort.school_chose_diy? %>
@@ -47,7 +47,7 @@
     <% end %>
   <% elsif school_cohort.core_induction_programme? %>
     <% list.row do |row| %>
-      <% row.key(text: "Materials") %>
+      <% row.key(text: "Materials supplier") %>
       <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
       <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
         <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
