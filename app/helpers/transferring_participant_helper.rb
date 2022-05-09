@@ -17,7 +17,13 @@ module TransferringParticipantHelper
   end
 
   def teachers_programme_path_previous_step(participant, school_cohort)
-    if participant.ect? && school_cohort.active_mentors.any?
+    if FeatureFlag.active?(:multiple_cohorts)
+      if participant.ect? && school_cohort.school.school_mentors.any?
+        choose_mentor_schools_transferring_participant_path
+      else
+        email_schools_transferring_participant_path
+      end
+    elsif participant.ect? && school_cohort.active_mentors.any?
       choose_mentor_schools_transferring_participant_path
     else
       email_schools_transferring_participant_path

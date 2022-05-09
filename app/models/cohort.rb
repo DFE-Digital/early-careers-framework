@@ -36,6 +36,15 @@ class Cohort < ApplicationRecord
   def previous
     Cohort.find_by(start_year: start_year - 1)
   end
+  
+  def start_term_options
+    # TODO: Set the terms dependant on dates provided by the team.
+    terms = []
+    terms << "autumn_#{start_year}" unless start_year == 2021
+    terms << "spring_#{start_year + 1}" unless start_year == 2022
+    terms << "summer_#{start_year + 1}" unless start_year == 2022
+    terms
+  end
 
   def display_name
     start_year.to_s

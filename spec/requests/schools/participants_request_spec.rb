@@ -14,7 +14,8 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
   let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user }
-  let!(:unrelated_mentor) { create(:mentor_participant_profile, school_cohort: another_cohort).user }
+  let!(:unrelated_mentor_profile) { create(:mentor_participant_profile, school_cohort: another_cohort) }
+  let!(:unrelated_mentor) { unrelated_mentor_profile.user }
   let!(:unrelated_ect) { create(:ect_participant_profile, school_cohort: another_cohort).user }
   let!(:delivery_partner) { create(:delivery_partner, name: "Delivery Partner") }
   let!(:lead_provider) { create(:lead_provider, name: "Lead Provider", cohorts: [cohort]) }
@@ -95,6 +96,29 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       it "uses the mentor from the induction record" do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
         expect(assigns(:mentor)).to eq mentor_user_2
+      end
+
+      context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
+        context "when there are mentors in the pool" do
+          let!(:school_mentors) { [mentor_profile, mentor_profile_2, unrelated_mentor_profile] }
+          before do
+            school_mentors.each do |profile|
+              Mentors::AddToSchool.call(school: school, mentor_profile: profile)
+            end
+          end
+
+          it "mentors_added is true" do
+            get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+            expect(assigns(:mentors_added)).to be true
+          end
+        end
+
+        context "when there are no mentors in the pool" do
+          it "mentors_added is false" do
+            get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
+            expect(assigns(:mentors_added)).to be false
+          end
+        end
       end
     end
   end
@@ -258,7 +282,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-start-term"
 
       expect(response).to render_template("schools/participants/edit_start_term")
-      ParticipantProfile::ECF::CURRENT_START_TERM_OPTIONS.each do |option|
+      cohort.start_term_options.each do |option|
         expect(response.body).to include(CGI.escapeHTML(option.humanize))
       end
     end

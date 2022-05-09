@@ -23,12 +23,12 @@ RSpec.describe "Manage No ECT training", js: true do
     given_there_is_a_school_that_has_chosen(induction_programme_choice: "design_our_own")
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_should_see_the_program_and_click_to_change_it(program_label: "Design and deliver your own programme")
-    and_see_the_other_programs_before_choosing(labels: ["Use a training provider, funded by the DfE (full induction programme)",
-                                                        "Deliver your own programme using DfE accredited materials (core induction programme)"],
-                                               choice: "We don’t expect to have any early career teachers starting in 2021",
+    and_see_the_other_programs_before_choosing(labels: ["Use a training provider, funded by the DfE",
+                                                        "Deliver your own programme using DfE accredited materials"],
+                                               choice: "We do not expect any early career teachers to join",
                                                snapshot: "Design Your Own - change programme options")
 
-    expect(page).to have_text "Training programme confirmed"
+    expect(page).to have_text "You’ve submitted your training information"
     expect(page).to have_text "Your school will not receive any more messages about statutory inductions for ECTs until the next academic year."
   end
 end

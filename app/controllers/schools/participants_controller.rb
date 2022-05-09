@@ -66,6 +66,7 @@ class Schools::ParticipantsController < Schools::BaseController
   def email_used; end
 
   def edit_start_term
+    @cohort = @profile.current_induction_record.school_cohort.cohort
     @start_term_form = build_start_term_form
     @start_term_form.start_term = @profile.start_term
   end
@@ -129,7 +130,11 @@ class Schools::ParticipantsController < Schools::BaseController
 private
 
   def set_mentors_added
-    @mentors_added = @school.mentor_profiles_for(@cohort).any?
+    @mentors_added = if FeatureFlag.active?(:multiple_cohorts)
+                       @school.school_mentors.any?
+                     else
+                       @school.mentor_profiles_for(@cohort).any?
+                     end
   end
 
   def build_mentor_form
