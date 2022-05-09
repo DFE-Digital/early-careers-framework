@@ -2,6 +2,14 @@
 <% delivery_partner =  school_cohort.default_induction_programme&.delivery_partner %>
 <% ects_count = school_cohort.current_induction_records.count %>
 
+<% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? %>
+<div class="govuk-body">
+  <h2 class="govuk-heading-m">Choose your training materials</h2>
+  <p><%= govuk_link_to "Tell us which materials will you use", info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></p>
+  <p>Read our guidance to <%= govuk_link_to 'compare materials (opens in new tab)', page_path(page: "core-materials-info"), target: "_blank" %>.</p>
+</div>
+<% end %>
+
 <%= govuk_summary_list do |list| %>
   <% list.row do |row| %>
     <% row.key(text: "Length of induction") %>

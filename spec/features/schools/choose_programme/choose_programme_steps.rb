@@ -171,6 +171,12 @@ module ChooseProgrammeSteps
     expect(page).to have_content(@school.name)
   end
 
+  def and_i_see_the_choose_training_material_content
+    expect(page).to have_css('h2', text: 'Choose your training materials')
+    expect(page).to have_link('Tell us which materials will you use')
+    expect(page).to have_link('compare materials')
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort
