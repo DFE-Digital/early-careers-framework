@@ -1,22 +1,22 @@
 <% cohort = Cohort.active_registration_cohort %>
-<h3 class="govuk-heading-m">How to set up training for ECTs starting in <%= cohort.description %> academic year</h3>
+<h2 class="govuk-heading-m">How to set up training for ECTs starting in <%= cohort.description %> academic year</h2>
 <% if previous_school_cohort&.full_induction_programme? %>
-  <p class="govuk-body">We need to know if:</p>
-  <ul class="govuk-list--bullet">
-    <li>your school expects any ECTs in the next academic year</li>
-    <li>you plan to change how you run training for any new ECTs</li>
-  </ul>
+    <p class="govuk-body">We need to know if:</p>
+    <ul class="govuk-list--bullet">
+        <li>your school expects any ECTs in the next academic year</li>
+        <li>you plan to change how you run training for any new ECTs</li>
+    </ul>
 <% else %>
-  <p class="govuk-body">We need to know:</p>
-  <ul class="govuk-list--bullet">
-    <li>if your school expects any ECTs in the next academic year</li>
-    <li>which training programme you want to use for any new ECTs</li>
-  </ul>
+    <p class="govuk-body">We need to know:</p>
+    <ul class="govuk-list--bullet">
+        <li>if your school expects any ECTs in the next academic year</li>
+        <li>which training programme you want to use for any new ECTs</li>
+    </ul>
 <% end %>
 
 <p class="govuk-body">You can change your answers later if you need to.</p>
 <p class="govuk-body">It should only take a few minutes to get set up.</p>
 <div class="govuk-inset-text">
-  You can do this later if you do not have the information you need yet.
+    You can do this later if you do not have the information you need yet.
 </div>
 <%= govuk_button_link_to("Start now", expect_any_ects_schools_setup_school_cohort_path(cohort_id: cohort.start_year)) %>
