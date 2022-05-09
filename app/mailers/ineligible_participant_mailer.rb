@@ -151,15 +151,16 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant_to_ect).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_now_eligible_previous_induction_email(induction_tutor_email:, participant_profile:)
+  def ect_now_eligible_previous_induction_email(induction_tutor:, participant_profile:)
     template_mail(
       ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE,
-      to: induction_tutor_email,
+      to: induction_tutor.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
         fip_ect_name: participant_profile.user.full_name,
         sign_in: new_user_session_url,
+        sit_name: induction_tutor.full_name,
       },
     ).tag(:now_eligible_previous_induction).associate_with(participant_profile, as: :participant_profile)
   end

@@ -77,7 +77,7 @@ private
   def send_now_eligible_email
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
       IneligibleParticipantMailer.ect_now_eligible_previous_induction_email(
-        induction_tutor_email: induction_tutor.email,
+        induction_tutor: induction_tutor,
         participant_profile: participant_profile,
       ).deliver_later
     end

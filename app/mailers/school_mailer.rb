@@ -3,7 +3,7 @@
 class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "2c740b37-bc4e-47eb-8657-1742b9b8eda7"
-  SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "99991fd9-fb41-48cf-846d-98a1fee7762a"
+  SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
   MINISTERIAL_LETTER_EMAIL_TEMPLATE = "f1310917-aa50-4789-b8c2-8cc5e9b91485"
   BETA_INVITE_EMAIL_TEMPLATE = "0ae827de-3caa-4a93-b464-c434cbbd02c0"
@@ -140,6 +140,7 @@ class SchoolMailer < ApplicationMailer
         sign_in_url: sign_in_url,
         challenge_url: challenge_url,
         challenge_deadline: partnership.challenge_deadline,
+        step_by_step: step_by_step_url,
         subject: "Training provider confirmed: add your ECTs and mentors",
       },
     ).tag(:partnership_created).associate_with(partnership, partnership.school)
@@ -289,6 +290,7 @@ class SchoolMailer < ApplicationMailer
         name: name,
         school_name: school_name,
         sign_in_url: sign_in_url,
+        step_by_step: step_by_step_url,
       },
     )
   end
@@ -379,7 +381,9 @@ class SchoolMailer < ApplicationMailer
       to: user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
-      personalisation: {},
+      personalisation: {
+        sit_name: user.full_name,
+      },
     ).tag(:diy_wordpress_notification)
   end
 
