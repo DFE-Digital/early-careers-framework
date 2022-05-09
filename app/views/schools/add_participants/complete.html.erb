@@ -10,6 +10,8 @@
 
       <p class="govuk-body">We’ll send you an email that explains what information we need from you.</p>
 
+    <% elsif exempt_from_induction?(participant_profile) %>
+      <% render partial: 'exempt_from_induction', locals: { profile: participant_profile } %>
     <% else %>
       <% if participant_profile.ect? %>
         <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as an ECT", text: nil, classes: "govuk-!-margin-bottom-8" %>
@@ -17,38 +19,14 @@
         <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-8" %>
       <% end %>
 
-      <h2 class="govuk-heading-m">What happens next</h2>
-
       <% if participant_profile.ecf_participant_eligibility.present? %>
+        <h2>What happens next</h2>
         <p class="govuk-body">We’ll let this person know you’ve registered them for ECF-based training at your school. They do not need to provide us with any more information.</p>
 
-        <% if participant_profile.fundable? %>
-          <h2 class="govuk-heading-m">Eligibility for funding</h2>
-          <p class="govuk-body">Our checks have confirmed this person is eligible for funded training, and time off timetable for training and mentoring.</p>
-        <% elsif participant_profile.ecf_participant_eligibility&.no_qts_reason? %>
-          <h2 class="govuk-heading-m">Eligibility for funding</h2>
-          <p class="govuk-body"><%= participant_profile.user.full_name %> does not have qualified teacher status (QTS) yet. They need this to be eligible for funded traning.</p>
-          <p class="govuk-body">We’ll keep checking their status and notify you if something changes.</p>
-        <% elsif participant_profile.ecf_participant_eligibility&.ineligible?
-          <h2><% participant_profile.user.full_name %> is not eligible for the early career teacher training programme</h2>
-
-          <h2>Why?</h2>
-          <p>Our records show they started or completed their statutory induction before 1 September 2021. Teachers are only eligible for the new 2-year funded training if they started their induction after that date.</p>
-
-          <h2>What to do if that start date is incorrect</h2>
-          <p>Contact your appropriate body and ask them to update the TRA records with the correct date. This should be the date their induction training formally began, which may be different to their contract start date.</p>
-          <p>Your appropriate body should let us know when the update has been made so that we can run our eligibility checks again.</p>
-        <% end %>
+        <h2 class="govuk-heading-m">Eligibility for funding</h2>
+        <%= render partial: 'eligibility_confirmation', locals: { profile: participant_profile } %>
       <% else %>
-        <p class="govuk-body">We’ll let this person know you’ve registered them for ECF-based training at your school.</p>
-        <p class="govuk-body">We’ll ask them to use this service to tell us their:</p>
-        <ul class="govuk-list govuk-list--bullet">
-          <li>full name</li>
-          <li>date of birth</li>
-          <li>teacher reference number (TRN) or National Insurance number</li>
-        </ul>
-        <p class="govuk-body">We can then confirm if they’re eligible for funded ECF-based training.</p>
-        <p class="govuk-body">We’ll also pass their information to your training provider.</p>
+        <%= render partial: 'no_eligibility_record' %>
       <% end %>
     <% end %>
 
