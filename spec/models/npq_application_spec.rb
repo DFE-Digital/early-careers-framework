@@ -93,6 +93,31 @@ RSpec.describe NPQApplication, type: :model do
       end
     end
 
+    context "when second application which is eligble for funding but first was not" do
+      subject do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          npq_course: npq_course,
+        )
+      end
+
+      before do
+        create(
+          :npq_application,
+          :accepted,
+          participant_identity: subject.participant_identity,
+          eligible_for_funding: false,
+          npq_course: subject.npq_course,
+          npq_lead_provider: subject.npq_lead_provider,
+        )
+      end
+
+      it "returns true" do
+        expect(subject.eligible_for_dfe_funding).to be_truthy
+      end
+    end
+
     context "when second application is for a different course which is also eligble for funding" do
       subject do
         create(
