@@ -143,6 +143,10 @@ module ChooseProgrammeSteps
     expect(page).to have_content(@delivery_partner.name)
   end
 
+  def and_i_see_the_challenge_link
+    expect(page).to have_link(text: "report that your school has been confirmed incorrectly")
+  end
+
   def and_cohort_for_next_academic_year_is_created
     create(:cohort, start_year: 2022)
   end
