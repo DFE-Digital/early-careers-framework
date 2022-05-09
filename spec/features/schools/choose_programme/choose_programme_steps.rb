@@ -87,12 +87,12 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
-    expect(page).to have_content("Are you sure you want to change how you'll run your training?")
+    expect(page).to have_content("Confirm your training programme")
     expect(page).to have_content("You‘ve chosen to deliver your own programme using DfE accredited materials.")
   end
 
   def then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
-    expect(page).to have_content("Are you sure you want to change how you'll run your training?")
+    expect(page).to have_content("Confirm your training programme")
     expect(page).to have_content("You're choosing to design and deliver your own programme based on the early career framework (ECF).")
   end
 
