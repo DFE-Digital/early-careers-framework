@@ -2989,7 +2989,9 @@
               "no",
               "yes_when_course_starts",
               "yes_in_first_two_years",
-              "yes_over_two_years"
+              "yes_over_two_years",
+              "yes_in_first_five_years",
+              "yes_over_five_years"
             ]
           },
           "eligible_for_funding": {
@@ -3130,7 +3132,9 @@
               false,
               "yes_when_course_starts",
               "yes_in_first_two_years",
-              "yes_over_two_years"
+              "yes_over_two_years",
+              "yes_in_first_five_years",
+              "yes_over_five_years"
             ]
           },
           "eligible_for_funding": {

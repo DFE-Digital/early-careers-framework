@@ -73,6 +73,8 @@ properties:
       - yes_when_course_starts
       - yes_in_first_two_years
       - yes_over_two_years
+      - yes_in_first_five_years
+      - yes_over_five_years
   eligible_for_funding:
     description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
     type: boolean
