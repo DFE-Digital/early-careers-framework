@@ -20,7 +20,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  "$ref": "#/components/schemas/ListFilter",
+                  "$ref": "#/components/schemas/ParticipantListFilter",
                 },
                 type: :object,
                 style: :deepObject,
@@ -66,7 +66,7 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  "$ref": "#/components/schemas/ListFilter",
+                  "$ref": "#/components/schemas/ParticipantListFilter",
                 },
                 type: :object,
                 style: :deepObject,

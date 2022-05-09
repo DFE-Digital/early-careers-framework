@@ -1,9 +1,9 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: finance_landing_page_path) %>
 
-<h1 class="govuk-heading-xl">Participants</h1>
+<h1 class="govuk-heading-xl">CPD contract data</h1>
 
 <%= render SearchBox.new(
   query: params[:query],
-  title: "Search participants",
-  hint: "Enter a participant or application ID",
+  title: "Search records",
+  hint: "Enter a participant, declaration or application ID",
 ) %>

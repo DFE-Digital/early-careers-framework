@@ -33,7 +33,7 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
     schedule = described_class.find_by(schedule_identifier: "ecf-standard-april")
 
     expect(schedule).to be_present
-    expect(schedule.milestones.count).to eql(7)
+    expect(schedule.milestones.count).to eql(6)
 
     schedule = described_class.find_by(schedule_identifier: "ecf-reduced-april")
 

@@ -25,6 +25,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def show
     @induction_record = @profile.induction_records.for_school(@school).latest
+    @first_induction_record = @profile.induction_records.for_school(@school).order(created_at: :asc).first
     @mentor = @induction_record.mentor
   end
 

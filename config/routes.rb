@@ -463,6 +463,8 @@ Rails.application.routes.draw do
 
             collection do
               multistep_form :add, Schools::AddParticipantForm, controller: :add_participants
+              get :who, path: "who", controller: :add_participants
+              put :chosen_who_to_add, path: "chosen-who-to-add", controller: :add_participants
             end
           end
 
