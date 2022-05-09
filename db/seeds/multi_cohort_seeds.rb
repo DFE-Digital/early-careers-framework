@@ -383,5 +383,4 @@ CreateInductionTutor.call(school: no_choice_school,
                           email: "cpd-test+tutor-940@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090040 No choice")
 
-ParticipantProfile::Mentor.joins(:induction_records).includes(induction_records: [induction_programme: [school_cohort: :school]]).merge(InductionRecord.active).find_each { |mp| Mentors::AddToSchool.call(school: mp.induction_records.active.latest.school, mentor_profile: mp)}
-
+ParticipantProfile::Mentor.joins(:induction_records).includes(induction_records: [induction_programme: [school_cohort: :school]]).merge(InductionRecord.active).find_each { |mp| Mentors::AddToSchool.call(school: mp.induction_records.active.latest.school, mentor_profile: mp) }
