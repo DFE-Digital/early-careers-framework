@@ -140,6 +140,7 @@ class SchoolMailer < ApplicationMailer
         sign_in_url: sign_in_url,
         challenge_url: challenge_url,
         challenge_deadline: partnership.challenge_deadline,
+        step_by_step: step_by_step_url,
         subject: "Training provider confirmed: add your ECTs and mentors",
       },
     ).tag(:partnership_created).associate_with(partnership, partnership.school)
