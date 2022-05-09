@@ -462,9 +462,10 @@ Rails.application.routes.draw do
             put :update_mentor, path: "update-mentor"
 
             collection do
-              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants
-              get :who, path: "who", controller: :add_participants
-              put :chosen_who_to_add, path: "chosen-who-to-add", controller: :add_participants
+              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
+                get :who, path: "who", controller: :add_participants
+                put :chosen_who_to_add, path: "chosen-who-to-add", controller: :add_participants
+              end
             end
           end
 
