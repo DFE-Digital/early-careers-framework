@@ -3,6 +3,7 @@
 class LeadProviderMailer < ApplicationMailer
   WELCOME_EMAIL_TEMPLATE = "07773cdf-9db6-4880-9ac6-ab4454a71d65"
   PARTNERSHIP_CHALLENGED_TEMPLATE_ID = "01c1ab30-1a45-4ce7-b994-e4df8334f23b"
+  PROGRAMME_CHANGED_TEMPLATE_ID = "821c3b28-27a7-4ed4-9d1f-58e8f341dac7"
 
   def welcome_email(user:, lead_provider_name:, start_url:)
     template_mail(
@@ -35,5 +36,29 @@ class LeadProviderMailer < ApplicationMailer
         reason: reason,
       },
     ).tag(:partnership_challenged).associate_with(partnership)
+  end
+
+  def programme_changed_email(partnership:, user:, cohort_year:, what_changes_choice:)
+    lead_provider_name = partnership.lead_provider.name
+    delivery_partner_name = partnership.delivery_partner.name
+
+    reason = I18n.t(what_changes_choice, scope: "programme_changed_reasons",
+                                         lead_provider_name: lead_provider_name,
+                                         delivery_partner_name: delivery_partner_name)
+
+    template_mail(
+      PROGRAMME_CHANGED_TEMPLATE_ID,
+      to: user.email,
+      rails_mailer: mailer_name,
+      rails_mailer_template: action_name,
+      personalisation: {
+        name: user.full_name,
+        school_name: partnership.school.name,
+        school_urn: partnership.school.urn,
+        delivery_partner_name: delivery_partner_name,
+        cohort_year: cohort_year,
+        reason: reason,
+      },
+    ).tag(:fip_programme_changed)
   end
 end

@@ -38,4 +38,25 @@ RSpec.describe LeadProviderMailer, type: :mailer do
       expect(nomination_confirmation_email.from).to eq(["mail@example.com"])
     end
   end
+
+  describe "#programme_changed_email" do
+    let(:user) { create :user }
+    let(:partnership) { create :partnership, :challenged }
+    let(:cohort_year) { 2022 }
+    let(:what_changes_choice) { "change_lead_provider" }
+
+    let(:programme_changed_email) do
+      LeadProviderMailer.programme_changed_email(
+        user: user,
+        partnership: partnership,
+        cohort_year: cohort_year,
+        what_changes_choice: what_changes_choice,
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(programme_changed_email.to).to eq([user.email])
+      expect(programme_changed_email.from).to eq(["mail@example.com"])
+    end
+  end
 end
