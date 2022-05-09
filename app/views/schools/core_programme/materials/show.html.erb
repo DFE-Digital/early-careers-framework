@@ -1,16 +1,18 @@
-<% content_for :title, "Core induction materials" %>
+<% content_for :title, "Changing your accredited materials" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
 
-<span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
-<h1 class="govuk-heading-xl">Your accredited materials</h1>
+<div class="govuk-grid-row">
+	<div class="govuk-grid-column-two-thirds">
 
-<p class="govuk-body-l"><strong>Your choice:</strong> <%= @school_cohort.core_induction_programme.name %></p>
+		<span class="govuk-caption-xl"><%= @school.name %></span>
+		<h1 class="govuk-heading-xl">Changing your accredited materials</h1>
+		
+		<p class="govuk-body">Each set of accredited materials is different. Before you change your materials:</p>
+		<ul class='govuk-list govuk-list--bullet'>
+  			<li>make sure the materials you want to change to are right for your school</li>
+  			<li>if your early career teachers and mentors have started their programme, they will lose any progress on the service</li>
+		</ul>
+		<p class="govuk-body">If you want to change the materials you are using, contact: <%= render MailToSupportComponent.new %></p>
 
-<h2 class="govuk-heading-m">Changing your materials</h2>
-<p>Each set of accredited materials is different. Before you change your materials:</p>
-<ul class='govuk-list govuk-list--bullet'>
-  <li>make sure the materials you want to change to are right for your school</li>
-  <li>if your early career teachers and mentors have started their programme, they will lose any progress on the service</li>
-</ul>
-
-<p class="govuk-body">If you want to change the materials you are using, contact: <%= render MailToSupportComponent.new %></p>
+	</div>
+</div>

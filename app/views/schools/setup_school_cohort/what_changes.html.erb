@@ -1,29 +1,29 @@
 <% title = "What change do you plan to make?" %>
 
 <% content_for :title, title %>
-
 <% content_for :before_content, govuk_back_link(text: "Back", href: change_provider_schools_setup_school_cohort_path) %>
 
-<span class="govuk-caption-xl"><%= @school.name %></span>
-
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
 
-    <%= form_for @setup_school_cohort_form, url: { action: :what_changes }, method: :put do |f| %>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        
+        <%= form_for @setup_school_cohort_form, url: { action: :what_changes }, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
 
-      <%= f.govuk_error_summary %>
+            <%= f.govuk_collection_radio_buttons(
+            :what_changes_choice,
+            @setup_school_cohort_form.what_changes_choices(@lead_provider_name, @delivery_partner_name),
+            :id, :name,
+            inline: true,
+            legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
-      <%= f.govuk_collection_radio_buttons(
-        :what_changes_choice,
-        @setup_school_cohort_form.what_changes_choices(@lead_provider_name, @delivery_partner_name),
-        :id, :name,
-        inline: true,
-        legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+            <p class="govuk-body">The change will only apply for ECTs and mentors starting in the 2022 to 2023 academic year.</p>
+            
+            <% end %>
 
-        <p class="govuk-body">The change will only apply for ECTs and mentors starting in the 2022 to 2023 academic year.</p>
-      <% end %>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
 
-      <%= f.govuk_submit "Continue" %>
-    <% end %>
-  </div>
+    </div>
 </div>
