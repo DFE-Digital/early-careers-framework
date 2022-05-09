@@ -64,6 +64,25 @@ RSpec.describe SchoolCohort, type: :model do
     end
   end
 
+  describe ".dashboard_cohorts" do
+    before do
+      FactoryBot.rewind_sequences
+      create_list(:school_cohort, 5, :consecutive_cohorts)
+    end
+
+    it "returns at most 3 cohorts" do
+      expect(described_class.dashboard_cohorts.count).to be_between(1, 3)
+    end
+
+    it "returns cohorts from the current year up to 2 years in the past" do
+      travel_to Date.new(2024, 5, 15)
+
+      described_class.dashboard_cohorts.each_with_index do |school_cohort, _index|
+        expect(school_cohort.cohort.start_year).to be_between(2022, 2024)
+      end
+    end
+  end
+
   describe "#lead_provider" do
     subject(:school_cohort) { create(:school_cohort) }
 
@@ -140,6 +159,24 @@ RSpec.describe SchoolCohort, type: :model do
 
       it "returns true" do
         expect(school_cohort.can_change_programme?).to eq(true)
+      end
+    end
+  end
+
+  describe "#school_chose_diy?" do
+    context "when school has chosen diy programme" do
+      let(:school_cohort) { build(:school_cohort, induction_programme_choice: "design_our_own") }
+
+      it "returns true" do
+        expect(school_cohort.school_chose_diy?).to be true
+      end
+    end
+
+    context "when school has not chosen diy programme" do
+      let(:school_cohort) { build(:school_cohort, induction_programme_choice: "core_induction_programme") }
+
+      it "returns false" do
+        expect(school_cohort.school_chose_diy?).to be false
       end
     end
   end

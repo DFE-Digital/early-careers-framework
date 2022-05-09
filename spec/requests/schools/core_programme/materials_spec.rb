@@ -6,7 +6,8 @@ RSpec.describe "Schools::CoreProgramme::Materials", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, start_year: 2021) }
-  let!(:school_cohort) { create :school_cohort, school: school, cohort: cohort, induction_programme_choice: "core_induction_programme" }
+  let(:default_induction_programme) { create(:induction_programme, :cip) }
+  let!(:school_cohort) { create :school_cohort, school: school, cohort: cohort, induction_programme_choice: "core_induction_programme", default_induction_programme: default_induction_programme }
   let(:cip) { create :core_induction_programme }
 
   before do

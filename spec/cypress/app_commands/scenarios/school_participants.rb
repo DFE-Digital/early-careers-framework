@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-cohort = Cohort.find_or_create_by!(start_year: 2021)
+cohort = Cohort.find_or_create_by!(start_year: 2021, registration_start_date: Date.new(2021, 5, 10), academic_year_start_date: Date.new(2021, 9, 1))
 school = FactoryBot.create(:school, name: "Hogwarts Academy", slug: "111111-hogwarts-academy")
 another_school = FactoryBot.create(:school, name: "Some High School", slug: "12344-some-high-school")
 

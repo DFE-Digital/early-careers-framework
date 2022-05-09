@@ -37,11 +37,21 @@ class SchoolCohort < ApplicationRecord
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
+  delegate :description, :academic_year, to: :cohort
+
   after_save do |school_cohort|
     unless school_cohort.saved_changes.empty?
       ecf_participant_profiles.touch_all
       ecf_participants.touch_all
     end
+  end
+
+  def self.dashboard_cohorts
+    joins(:cohort).where("cohorts.start_year BETWEEN 2021 AND ?", Time.zone.now.year).order(start_year: :desc).limit(3)
+  end
+
+  def self.previous
+    find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
   end
 
   def lead_provider
@@ -61,6 +71,11 @@ class SchoolCohort < ApplicationRecord
     induction_programme_choice == "full_induction_programme"
   end
   alias_method :fip?, :school_chose_fip?
+
+  def school_chose_diy?
+    induction_programme_choice == "design_our_own"
+  end
+  alias_method :diy?, :school_chose_diy?
 
   def school_chose_school_funded_fip?
     induction_programme_choice == "school_funded_fip"

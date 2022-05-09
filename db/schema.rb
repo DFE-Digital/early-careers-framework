@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 2022_05_09_091143) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "start_year", limit: 2, null: false
+    t.datetime "registration_start_date"
+    t.datetime "academic_year_start_date"
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 

@@ -7,12 +7,25 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
     load Rails.root.join("db/seeds/schedules.rb").to_s
   end
 
-  subject { described_class.default }
+  subject(:ecf_schedule) { described_class }
 
   describe "default" do
-    it "returns ECF September standard 2021 schedule" do
-      expect(subject.name).to eql "ECF Standard September"
-      expect(subject.cohort.start_year).to eql(2021)
+    context "when registration cohort is 2021", travel_to: Date.new(2021, 11, 1) do
+      it "returns ECF September standard 2021 schedule" do
+        expect(ecf_schedule.default.name).to eql "ECF Standard September"
+        expect(ecf_schedule.default.cohort.start_year).to eql(2021)
+      end
+    end
+  end
+
+  describe "default_for" do
+    context "when registration cohort is 2021" do
+      let(:cohort) { Cohort.find_by(start_year: 2021) }
+
+      it "returns ECF September standard 2021 schedule" do
+        expect(ecf_schedule.default_for(cohort: cohort).name).to eql "ECF Standard September"
+        expect(ecf_schedule.default_for(cohort: cohort).cohort.start_year).to eql(2021)
+      end
     end
   end
 

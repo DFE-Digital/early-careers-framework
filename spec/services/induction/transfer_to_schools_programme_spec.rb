@@ -20,7 +20,6 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
 
     let(:new_induction_programme) { school_cohort_2.induction_programmes.order(:created_at).last }
     let(:new_partnership) { school_2.partnerships.order(:created_at).last }
-    let(:new_induction_record) { participant_profile.induction_records.latest }
 
     subject(:service) { described_class }
 
@@ -50,6 +49,7 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
     context "record details" do
       before do
         service_call
+        @new_induction_record = participant_profile.induction_records.latest
       end
 
       it "updates the previous induction record to leaving status" do
@@ -58,36 +58,33 @@ RSpec.describe Induction::TransferToSchoolsProgramme do
       end
 
       it "enrols the participant in the new programme" do
-        expect(new_induction_record.induction_programme).to eq new_induction_programme
-        expect(new_induction_record).to be_active_induction_status
-        expect(new_induction_record.start_date).to be_within(1.second).of start_date
+        expect(@new_induction_record.induction_programme).to eq new_induction_programme
+        expect(@new_induction_record).to be_active_induction_status
+        expect(@new_induction_record.start_date).to be_within(1.second).of start_date
       end
 
       it "assigns the specified mentor to the induction" do
-        expect(new_induction_record.mentor_profile).to eq mentor_profile_2
+        expect(@new_induction_record.mentor_profile).to eq mentor_profile_2
       end
 
       it "assigns the preferred_identity to the induction" do
-        expect(new_induction_record.preferred_identity.email).to eq new_email_address
+        expect(@new_induction_record.preferred_identity.email).to eq new_email_address
       end
     end
 
     context "without optional params" do
-      let(:service_call) do
+      before do
         service.call(participant_profile: participant_profile,
                      induction_programme: induction_programme_2)
-      end
-
-      before do
-        service_call
+        @new_induction_record = participant_profile.induction_records.latest
       end
 
       it "uses the existing participant identity" do
-        expect(new_induction_record.preferred_identity).to eq participant_profile.participant_identity
+        expect(@new_induction_record.preferred_identity).to eq participant_profile.participant_identity
       end
 
       it "sets the start date on the new induction as the current time" do
-        expect(new_induction_record.start_date).to be_within(1.second).of Time.zone.now
+        expect(@new_induction_record.start_date).to be_within(1.second).of Time.zone.now
       end
 
       it "sets the end date on the previous induction as the current time" do

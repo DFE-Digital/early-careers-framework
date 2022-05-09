@@ -3,14 +3,6 @@
 module ManageTrainingSteps
   include Capybara::DSL
 
-  def freeze_dynamic_dates_or_times_for_percy
-    Timecop.freeze(Time.zone.local(2021, 9, 17, 16, 15, 0))
-  end
-
-  def return_from_timecop
-    Timecop.return
-  end
-
   # Given_steps
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
@@ -350,6 +342,14 @@ module ManageTrainingSteps
 
   def and_the_action_required_is_remove
     expect(page).to have_text("Remove")
+  end
+
+  def and_cohort_2022_is_created
+    create(:cohort, start_year: 2022)
+  end
+
+  def and_the_cohort_2022_tab_is_selected
+    expect(page).to have_text("How to set up training for ECTs starting in 2022 to 2023")
   end
 
   # When_steps
@@ -797,6 +797,19 @@ module ManageTrainingSteps
     expect(page).to have_text("Sally Teacher")
     expect(page).to have_text("Big Provider Ltd")
     expect(page).to have_text("Amazing Delivery Team")
+  end
+
+  def then_i_see_the_tab_for_the_cohort(cohort)
+    expect(page).to have_css(".govuk-tabs__tab", text: "#{cohort} to #{cohort + 1}")
+  end
+
+  def then_i_see_the_cohort_tabs
+    then_i_see_the_tab_for_the_cohort(2021)
+    then_i_see_the_tab_for_the_cohort(2022)
+  end
+
+  def then_i_am_on_the_expect_any_ects_page
+    expect(page).to have_text("Does your school expect any ECTs in the next academic year?")
   end
 
   # Set_steps

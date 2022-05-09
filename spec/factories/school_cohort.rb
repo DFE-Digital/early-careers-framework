@@ -17,5 +17,9 @@ FactoryBot.define do
     trait :school_funded_fip do
       induction_programme_choice { "school_funded_fip" }
     end
+
+    trait :consecutive_cohorts do
+      cohort { create(:cohort, :consecutive_years) }
+    end
   end
 end

@@ -9,13 +9,32 @@ class Cohort < ApplicationRecord
 
   def self.current
     # TODO: Register and Partner 262: Figure out how to update current year
-    find_by(start_year: 2021)
+    if FeatureFlag.active?(:multiple_cohorts)
+      where("academic_year_start_date <= ?", Time.zone.now).order(start_year: :desc).first
+    else
+      find_by(start_year: 2021)
+    end
   end
 
   def self.next
     year = FeatureFlag.active?(:multiple_cohorts) ? 2022 : 2021
-
     find_by(start_year: year)
+  end
+
+  def self.active_registration_cohort
+    where("registration_start_date <= ?", Time.zone.now).order(start_year: :desc).first
+  end
+
+  def description
+    "#{start_year} to #{start_year + 1}"
+  end
+
+  def next
+    Cohort.find_by(start_year: start_year + 1)
+  end
+
+  def previous
+    Cohort.find_by(start_year: start_year - 1)
   end
 
   def start_term_options

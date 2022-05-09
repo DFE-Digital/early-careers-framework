@@ -207,7 +207,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
       }
     end
 
-    let(:cohort)            { Cohort.current || create(:cohort, :current) }
+    let(:cohort)            { Cohort.find_by(start_year: "2021") }
     let(:school)            { create(:school) }
     let(:school_cohort)     { create(:school_cohort, school: school, cohort: cohort) }
 

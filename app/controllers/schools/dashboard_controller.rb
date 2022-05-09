@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Schools::DashboardController < Schools::BaseController
-  before_action :set_school_cohorts, only: :show
+  before_action :set_school_cohorts, only: :show, unless: -> { FeatureFlag.active?(:multiple_cohorts) }
+  before_action :set_multi_cohorts, only: :show, if: -> { FeatureFlag.active?(:multiple_cohorts) }
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
 
@@ -36,4 +37,22 @@ private
       redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year)
     end
   end
+
+  def set_multi_cohorts
+    @school = active_school
+    @school_cohorts = @school.school_cohorts.dashboard_cohorts
+    if @school_cohorts.empty?
+      redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year)
+    end
+  end
+
+  def set_up_new_cohort?
+    @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort).blank?
+  end
+
+  def previous_school_cohort
+    @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort.previous)
+  end
+
+  helper_method :set_up_new_cohort?, :previous_school_cohort
 end

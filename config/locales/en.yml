@@ -15,6 +15,11 @@ en:
     career_break: Career break
     passed_induction: Passed Induction
     other: "Other"
+  programme_changed_reasons:
+    change_lead_provider: the school wants to leave %{lead_provider_name} and use a different lead provider
+    change_delivery_partner: the school wants to stay with %{lead_provider_name} but change their delivery partner, %{delivery_partner_name}
+    change_to_core_induction_programme: the school wants to deliver their own programme using DfE-accredited materials
+    change_to_design_our_own: the school wants to design and deliver their own programme based on the early career framework (ECF)
 
   # Errors
   fail: "FAIL"
@@ -237,6 +242,14 @@ en:
           attributes:
             mentor_id:
               blank: "Choose a mentor"
+        schools/setup_school_cohort_form:
+          attributes:
+            expect_any_ects_choice:
+              blank: "Choose whether your school expect any ECTs"
+            how_will_you_run_training_choice:
+              blank: "Choose how you will run training for new starters"
+            what_changes_choice:
+              blank: "Choose what change you plan to make"
 
   page_titles:
     lead_providers:
@@ -253,7 +266,7 @@ en:
   manage_your_training:
     induction_programmes:
       full_induction_programme: "Use a training provider funded by the DfE"
-      core_induction_programme: "Use DfE-accredited materials"
+      core_induction_programme: "DfE accredited materials"
       design_our_own: "Design and deliver your own programme based on the Early Career Framework (ECF)"
       school_funded_fip: "Use a training provider funded by your school"
       no_early_career_teachers: "No early career teachers for this cohort"

@@ -22,7 +22,7 @@ module Mentors
 
         mentor_profile = ParticipantProfile::Mentor.create!({
           teacher_profile: teacher_profile,
-          schedule: Finance::Schedule::ECF.default,
+          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
           participant_identity: Identity::Create.call(user: user),
         }.merge(mentor_attributes))
 

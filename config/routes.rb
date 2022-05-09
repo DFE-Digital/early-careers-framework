@@ -395,6 +395,34 @@ Rails.application.routes.draw do
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
+          resource :setup_school_cohort, path: "register-programme", constraints: ->(_request) { FeatureFlag.active?(:multiple_cohorts) } do
+            get "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects", as: :expect_any_ects
+            put "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects"
+
+            get "no-expected-ects", to: "setup_school_cohort#no_expected_ects"
+            get "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
+            put "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
+
+            get "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
+
+            get "training-confirmation", to: "setup_school_cohort#training_confirmation"
+
+            post "save-programme", to: "setup_school_cohort#save_programme"
+
+            get "change-provider", to: "setup_school_cohort#change_provider"
+            put "change-provider", to: "setup_school_cohort#change_provider"
+
+            get "what-changes", to: "setup_school_cohort#what_changes"
+            put "what-changes", to: "setup_school_cohort#what_changes"
+
+            get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
+            put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
+
+            get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
+
+            get "complete", to: "setup_school_cohort#complete"
+          end
+
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
             get "what-we-need", to: "transferring_participants#what_we_need", as: :what_we_need
             get "full-name", to: "transferring_participants#full_name", as: :full_name

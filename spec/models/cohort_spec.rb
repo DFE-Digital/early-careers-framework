@@ -23,20 +23,20 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe ".next" do
-    context "when the feature flag is deactivated" do
-      it "returns the 2021 cohort" do
-        FeatureFlag.deactivate(:multiple_cohorts)
-
-        expect(Cohort.next).to eq cohort_2021
-      end
+    it "returns the 2021 cohort" do
+      expect(Cohort.next).to eq cohort_2021
     end
 
-    context "when the feature flag is activated" do
+    context "when multiple cohorts active", with_feature_flags: { multiple_cohorts: "active" } do
       it "returns the 2022 cohort" do
-        FeatureFlag.activate(:multiple_cohorts)
-
         expect(Cohort.next).to eq cohort_2022
       end
+    end
+  end
+
+  describe "description" do
+    it "displays the year range" do
+      expect(Cohort.new(start_year: 2022).description).to eq "2022 to 2023"
     end
   end
 

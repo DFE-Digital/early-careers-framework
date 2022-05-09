@@ -6,6 +6,10 @@ class Finance::Schedule::ECF < Finance::Schedule
   def self.default
     find_by(cohort: Cohort.current, schedule_identifier: "ecf-standard-september")
   end
+
+  def self.default_for(cohort:)
+    find_by(cohort: cohort, schedule_identifier: "ecf-standard-september")
+  end
 end
 
 require "finance/schedule/mentor"

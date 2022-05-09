@@ -29,7 +29,7 @@ private
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
     @school_cohort = school_cohort
-    @programme_choice = programme_choice
+    @programme_choice = programme_choice.to_s
     @opt_out_of_updates = opt_out_of_updates
     @core_induction_programme = core_induction_programme
   end
@@ -40,7 +40,7 @@ private
       school_cohort: school_cohort,
     }
 
-    case programme_choice.to_s
+    case programme_choice
     when "full_induction_programme"
       attrs[:partnership] = school_cohort.school.partnerships.where(cohort: school_cohort.cohort,
                                                                     relationship: false).active.first
