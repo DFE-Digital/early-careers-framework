@@ -334,7 +334,7 @@ module Schools
       participant_validation_record = validation_record(profile)
 
       send_added_and_validated_email(profile) if profile && participant_validation_record
-      profile
+      profile && !sit_adding_themselves?
     end
 
     def store_validation_result!(profile)
@@ -355,6 +355,10 @@ module Schools
 
     def validation_record(profile)
       ECFParticipantValidationData.find_by(participant_profile: profile)
+    end
+
+    def sit_adding_themselves?
+      type == :self
     end
   end
 end
