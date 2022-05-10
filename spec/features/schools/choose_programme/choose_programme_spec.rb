@@ -137,7 +137,12 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_see_the_lead_provider
       and_i_see_the_delivery_partner
 
-      when_i_choose_no
+      and_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+
+      when_i_go_back_to_change_provider_page
+      and_i_choose_no
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
