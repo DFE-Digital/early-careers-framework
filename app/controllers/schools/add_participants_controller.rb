@@ -46,6 +46,20 @@ module Schools
       end
     end
 
+    def transfer
+      if form.complete_step(:transfer, form_params)
+        if form.transfer?
+          session[:schools_transferring_participant_form] = form.serializable_hash(only: %i[full_name trn date_of_birth])
+          remove_form
+          redirect_to teacher_start_date_schools_transferring_participant_path
+        else
+          render form.next_step
+        end
+      else
+        render current_step
+      end
+    end
+
     abandon_journey_path do
       school_cohort.active_ecf_participants.any? ? schools_participants_path : schools_cohort_path
     end

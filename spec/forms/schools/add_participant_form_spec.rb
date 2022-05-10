@@ -21,21 +21,22 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email address") }
   it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
   it { is_expected.to validate_presence_of(:start_date).on(:start_date) }
+  it { is_expected.to validate_presence_of(:transfer).on(:transfer) }
 
   describe "when a SIT knows the teachers trn" do
     it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter the teacher reference number (TRN) for the teacher you are adding") }
     it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
-    it { is_expected.to validate_presence_of(:dob).on(:dob) }
+    it { is_expected.to validate_presence_of(:date_of_birth).on(:dob) }
 
     before do
       form.trn = "1234567"
-      form.dob = Date.new(1990, 1, 1)
+      form.date_of_birth = Date.new(1990, 1, 1)
       form.full_name = "Danny DeVito"
       allow(ParticipantValidationService).to receive(:validate).and_return(dqt_response)
     end
 
     it "returns a response from the dqt when a record matches" do
-      form.complete_step(:dob, dob: form.dob)
+      form.complete_step(:dob, date_of_birth: form.date_of_birth)
       expect(form.dqt_record).to eq(dqt_response)
     end
   end
@@ -207,7 +208,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         trn: form.trn,
         full_name: form.full_name,
         nino: nil,
-        dob: form.dob,
+        date_of_birth: form.date_of_birth,
         config: {},
       }
 
@@ -215,7 +216,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
       form.trn = "1234567"
-      form.dob = Date.new(1990, 1, 1)
+      form.date_of_birth = Date.new(1990, 1, 1)
       form.start_term = "autumn_2021"
       form.start_date = Date.new(2022, 9, 1)
       form.dqt_record = dqt_response
@@ -264,6 +265,13 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
           expect(ParticipantMailer).not_to have_received(:participant_added)
           expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant).with(participant_profile: profile, school_name: school_cohort.school.name)
         end
+      end
+    end
+
+    context "no dqt record is present" do
+      it "does not create ecf validation data" do
+        form.dqt_record = nil
+        expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
       end
     end
   end

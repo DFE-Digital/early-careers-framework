@@ -31,7 +31,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
           type: :teacher,
           full_name: Faker::Name.name,
           email: Faker::Internet.email,
-          dob: Date.new(1990, 1, 1),
+          date_of_birth: Date.new(1990, 1, 1),
           mentor_id: "later",
           school_cohort_id: school_cohort.id,
           current_user_id: user.id,
@@ -65,7 +65,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
             type: :ect,
             full_name: Faker::Name.name,
             email: Faker::Internet.email,
-            dob: Date.new(1990, 1, 1),
+            date_of_birth: Date.new(1990, 1, 1),
             mentor_id: "later",
             school_cohort_id: school_cohort.id,
             current_user_id: user.id,
@@ -98,7 +98,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
                     type: :ect,
                     full_name: Faker::Name.name,
                     email: email,
-                    dob: Date.new(1990, 1, 1),
+                    date_of_birth: Date.new(1990, 1, 1),
                     mentor_id: "later",
                     school_cohort_id: school_cohort.id,
                     current_user_id: user.id)
@@ -106,6 +106,46 @@ RSpec.describe "Schools::AddParticipant", type: :request do
       end
 
       it { is_expected.to render_template :email_taken }
+    end
+  end
+
+  describe "PUT /schools/cohort/:cohort_id/participants/add/transfer" do
+    context "when form has been set up in the session" do
+      let(:email) { Faker::Internet.email }
+      let!(:other_user) { create :user, email: email }
+      context "when participant is a transfer" do
+        before do
+          set_session(:schools_add_participant_form,
+                      type: :ect,
+                      full_name: Faker::Name.name,
+                      email: email,
+                      date_of_birth: Date.new(1990, 1, 1),
+                      mentor_id: "later",
+                      school_cohort_id: school_cohort.id,
+                      current_user_id: user.id,
+                      transfer: "true")
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/transfer", params: { step: :transfer }
+        end
+
+        it { is_expected.to redirect_to teacher_start_date_schools_transferring_participant_path }
+      end
+
+      context "when participant is not a transfer" do
+        before do
+          set_session(:schools_add_participant_form,
+                      type: :ect,
+                      full_name: Faker::Name.name,
+                      email: email,
+                      date_of_birth: Date.new(1990, 1, 1),
+                      mentor_id: "later",
+                      school_cohort_id: school_cohort.id,
+                      current_user_id: user.id,
+                      transfer: "false")
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/transfer", params: { step: :transfer }
+        end
+
+        it { is_expected.to render_template :cannot_add }
+      end
     end
   end
 end
