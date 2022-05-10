@@ -116,10 +116,12 @@ module Schools
       # with challenge date set to 31st Oct 2022
       #
       # TODO: we need a better way to set the challenge date
-      previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
-      previous_partnership_copy.cohort = cohort
-      previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
-      previous_partnership_copy.save!
+      if @school.partnerships.find_by(cohort: cohort).blank?
+        previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
+        previous_partnership_copy.cohort = cohort
+        previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
+        previous_partnership_copy.save!
+      end
 
       set_cohort_induction_programme!("full_induction_programme")
     end
