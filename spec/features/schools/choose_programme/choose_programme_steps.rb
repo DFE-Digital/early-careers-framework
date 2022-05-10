@@ -69,7 +69,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_complete_page
-    expect(page).to have_content("You’re ready to add new ECTs and mentors")
+    expect(page).to have_content("You can now add ECTs and mentors when you’re ready")
   end
 
   def then_i_am_taken_to_what_changes_page
