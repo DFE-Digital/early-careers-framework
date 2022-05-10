@@ -21,6 +21,6 @@ module DashboardHelper
   end
 
   def participants_active?(profiles)
-    profiles.eligible.any? || profiles.contacted_for_info.any? || profiles.details_being_checked.any?
+    profiles.eligible.any? || profiles.contacted_for_info.any? || profiles.details_being_checked.any? || profiles.no_qts_participants.any?
   end
 end

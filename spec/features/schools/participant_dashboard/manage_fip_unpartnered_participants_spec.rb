@@ -192,4 +192,35 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       then_i_can_view_details_being_checked_mentor_status
     end
   end
+
+  context "Details being checked ECT with mentor" do
+    before do
+      and_i_have_added_a_contacted_for_info_mentor
+      and_i_have_added_a_no_qts_ect_with_mentor
+    end
+
+    scenario "Induction coordinators can view and manage participant" do
+      given_i_can_view_the_fip_induction_dashboard_without_partnership_details
+      when_i_navigate_to_participants_dashboard
+      then_i_can_view_no_qts_ects
+
+      when_i_click_on_the_participants_name "No-qts With-Mentor"
+      then_i_am_taken_to_view_details_page
+      then_i_can_view_no_qts_status
+    end
+  end
+
+  context "Details being checked ECT without mentor" do
+    before { and_i_have_added_a_no_qts_ect_without_mentor }
+
+    scenario "Induction coordinators can view and manage participant" do
+      given_i_can_view_the_fip_induction_dashboard_without_partnership_details
+      when_i_navigate_to_participants_dashboard
+      then_i_can_view_no_qts_ects
+
+      when_i_click_on_the_participants_name "No-qts Without-Mentor"
+      then_i_am_taken_to_view_details_page
+      then_i_can_view_no_qts_status
+    end
+  end
 end

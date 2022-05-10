@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CocSetParticipantCategories < BaseService
-  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :transferring_in, :transferring_out, :transferred)
+  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :transferring_in, :transferring_out, :transferred, :no_qts_participants)
 
   # replace [] in call back to transferring_out_participants method once
   # transferring out journey is done
@@ -12,10 +12,11 @@ class CocSetParticipantCategories < BaseService
       ineligible_participants,
       withdrawn_participants,
       contacted_for_info_participants,
-      details_being_checked_participants,
+      details_being_checked,
       transferring_in_participants,
       [],
       transferred_participants,
+      no_qts_participants,
     )
   end
 
@@ -52,6 +53,14 @@ private
     active_induction_records
       .fip
       .merge(profile_type.details_being_checked)
+  end
+
+  def details_being_checked
+    details_being_checked_participants - no_qts_participants
+  end
+
+  def no_qts_participants
+    details_being_checked_participants.select { |record| record.participant_profile.ecf_participant_eligibility&.no_qts_reason? }
   end
 
   def transferring_in_participants

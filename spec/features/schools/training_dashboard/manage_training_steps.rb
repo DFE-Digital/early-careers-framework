@@ -324,20 +324,38 @@ module ManageTrainingSteps
 
   def and_i_have_added_a_details_being_checked_ect_with_mentor
     @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, start_term: "Spring 2022")
-    @details_being_checked_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    @details_being_checked_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
     Induction::Enrol.call(participant_profile: @details_being_checked_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_details_being_checked_ect_without_mentor
     @details_being_checked_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Without-Mentor"), school_cohort: @school_cohort)
-    @details_being_checked_ect_without_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    @details_being_checked_ect_without_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
     Induction::Enrol.call(participant_profile: @details_being_checked_ect_without_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_details_being_checked_mentor
     @details_being_checked_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC Mentor"), school_cohort: @school_cohort)
-    @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    @details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
     Induction::Enrol.call(participant_profile: @details_being_checked_mentor, induction_programme: @induction_programme)
+  end
+
+  def and_i_have_added_a_no_qts_ect_with_mentor
+    @no_qts_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "No-qts With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, start_term: "Spring 2022")
+    @no_qts_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    Induction::Enrol.call(participant_profile: @no_qts_ect_with_mentor, induction_programme: @induction_programme)
+  end
+
+  def and_i_have_added_a_no_qts_ect_without_mentor
+    @no_qts_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "No-qts Without-Mentor"), school_cohort: @school_cohort)
+    @no_qts_ect_without_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    Induction::Enrol.call(participant_profile: @no_qts_ect_without_mentor, induction_programme: @induction_programme)
+  end
+
+  def and_i_have_added_a_no_qts_mentor
+    @no_qts_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "No-qts Mentor"), school_cohort: @school_cohort)
+    @no_qts_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+    Induction::Enrol.call(participant_profile: @no_qts_mentor, induction_programme: @induction_programme)
   end
 
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
@@ -782,6 +800,10 @@ module ManageTrainingSteps
   end
 
   def then_i_can_view_details_being_checked_status
+    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency.")
+  end
+
+  def then_i_can_view_no_qts_status
     expect(page).to have_text("Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021.")
   end
 
@@ -831,6 +853,16 @@ module ManageTrainingSteps
   def then_i_can_view_details_being_checked_participants
     expect(page).to have_text("DfE checking eligibility")
     expect(page).to have_text("We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon.")
+  end
+
+  def then_i_can_view_no_qts_ects
+    expect(page).to have_text("Checking QTS")
+    expect(page).to have_text("These ECTs do not have qualified teacher status (QTS) yet.")
+  end
+
+  def then_i_can_view_no_qts_mentors
+    expect(page).to have_text("Checking QTS")
+    expect(page).to have_text("These mentors do not have qualified teacher status (QTS) yet.")
   end
 
   def then_i_can_view_eligible_participants
