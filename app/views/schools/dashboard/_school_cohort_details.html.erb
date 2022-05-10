@@ -1,7 +1,7 @@
 <% lead_provider = school_cohort.default_induction_programme&.lead_provider %>
 <% delivery_partner =  school_cohort.default_induction_programme&.delivery_partner %>
 <% ects_count = school_cohort.current_induction_records.count %>
-<% partnership = school_cohort.school.partnerships.active.find_by(cohort: school_cohort.cohort) %>
+<% latest_partnership = school_cohort.school.partnerships.where(cohort: school_cohort.cohort, relationship: false).order(created_at: :desc).limit(1).first %>
 
 <% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? %>
 
@@ -37,12 +37,20 @@
   <% if school_cohort.full_induction_programme? %>
     <% list.row do |row| %>
       <% row.key(text: "Training provider") %>
-      <% row.value(text: lead_provider&.name ? lead_provider.name : "To be confirmed") %>
+      <% if latest_partnership&.challenged? == true %>
+        <% row.value(text: nil) %>
+      <% else %>
+        <% row.value(text: lead_provider&.name ? lead_provider.name : "To be confirmed") %>
+      <% end %>
       <% row.action(text: :none) %>
     <% end %>
     <% list.row do |row| %>
       <% row.key(text: "Delivery partner") %>
-      <% row.value(text: delivery_partner&.name ? delivery_partner.name : "To be confirmed") %>
+      <% if latest_partnership&.challenged? == true %>
+        <% row.value(text: nil) %>
+      <% else %>
+        <% row.value(text: delivery_partner&.name ? delivery_partner.name : "To be confirmed") %>
+      <% end %>
       <% row.action(text: :none) %>
     <% end %>
   <% elsif school_cohort.core_induction_programme? %>
@@ -58,11 +66,10 @@
   <% end %>
 <% end %>
 
-
-<% if partnership %>
-  <% if partnership&.in_challenge_window? %>
+<% if latest_partnership&.challenged? == false %>
+  <% if latest_partnership&.in_challenge_window? %>
     <p class="govuk-body">
-      If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", challenge_partnership_path(partnership: partnership) %>. This link will expire on <%= partnership.challenge_deadline&.strftime("%d/%m/%Y") %>.
+      If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", challenge_partnership_path(partnership: latest_partnership) %>. This link will expire on <%= latest_partnership.challenge_deadline&.strftime("%d/%m/%Y") %>.
     </p>
   <% else %>
     <p class="govuk-body">
