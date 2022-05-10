@@ -10,7 +10,7 @@ class NPQLeadProvider < ApplicationRecord
   has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::NPQ", source: :npq_statements
   has_many :participant_declarations, class_name: "ParticipantDeclaration::NPQ", through: :cpd_lead_provider
 
-  def next_output_fee_statement
-    statements.next_output_fee_statements.first
+  def next_output_fee_statement(cohort)
+    statements.next_output_fee_statements.where(cohort: cohort).first
   end
 end

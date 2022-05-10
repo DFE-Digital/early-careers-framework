@@ -43,25 +43,32 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when transitioned to another cohort" do
-        let(:school)              { create(:school)}
+        let(:school)              { create(:school) }
         let(:next_cohort)         { create(:cohort, :next) }
         let(:next_school_cohort)  { create(:school_cohort, school: school, cohort: next_cohort) }
-        let(:next_schedule)       { create(:schedule, name: "ECF September 2022", cohort: next_cohort) }
-        let(:partnership)         { create(:partnership, school: school, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort, delivery_partner: delivery_partner) }
-        let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership) }
-        let(:profile)         { create(:ect_participant_profile, schedule: next_schedule) }
+        let(:next_schedule)       { create(:schedule, name: "ECF September 2022", cohort: next_cohort).tap { |schedule| create(:milestone, schedule: schedule, start_date: Date.new(2022, 9, 1), declaration_type: "started", milestone_date: Date.new(2022, 11, 30)) } }
+        let(:next_partnership)    { create(:partnership, school: school, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort, delivery_partner: delivery_partner) }
+        let(:induction_programme) { create(:induction_programme, :fip, partnership: next_partnership) }
+        let(:ect_profile)         { create(:ect_participant_profile, :ecf_participant_eligibility, schedule: next_schedule) }
 
         before do
-          create(:milestone, schedule: next_schedule, start_date: Date.new(2022, 9, 1), milestone_date: Date.new(2022, 11, 30)).tap do |milestone|
-            byebug
-          end
-          Induction::Enrol.call(participant_profile: ect, induction_programme: induction_programme)
+          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: induction_programme)
+          create(:ecf_statement, cohort: next_cohort, output_fee: true, deadline_date: next_schedule.milestones.first.milestone_date, cpd_lead_provider: cpd_lead_provider)
         end
-        it "create declaration record and declaration attempt and return id when successful" do
-          byebug
-          pp build_params(valid_params)
-          post "/api/v1/participant-declarations", params: build_params(valid_params)
 
+        it "create declaration record and declaration attempt and return id when successful" do
+          params = {
+            participant_id: ect_profile.user_id,
+            declaration_date: ect_profile.schedule.milestones.first.start_date.rfc3339,
+            declaration_type: "started",
+            course_identifier: "ecf-induction",
+          }
+
+          post "/api/v1/participant-declarations", params: build_params(params)
+
+          declaration = ParticipantDeclaration::ECF.find(JSON.parse(response.body).dig("data", "id"))
+          expect(declaration.participant_profile.schedule).to eq(next_schedule)
+          expect(declaration.statement.cohort).to eq(next_cohort)
         end
       end
 

@@ -39,11 +39,12 @@ class Finance::Statement < ApplicationRecord
   private
 
     def statement_for(participant_declaration)
+      cohort = participant_declaration.participant_profile.schedule.cohort
       case participant_declaration
       when ParticipantDeclaration::ECF
-        participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement
+        participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
       when ParticipantDeclaration::NPQ
-        participant_declaration.cpd_lead_provider.npq_lead_provider.next_output_fee_statement
+        participant_declaration.cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
       end
     end
   end
