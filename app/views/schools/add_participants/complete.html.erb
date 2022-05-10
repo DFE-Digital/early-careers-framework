@@ -11,7 +11,7 @@
       <p class="govuk-body">We’ll send you an email that explains what information we need from you.</p>
 
     <% elsif exempt_from_induction?(participant_profile) %>
-      <% render partial: 'exempt_from_induction', locals: { profile: participant_profile } %>
+      <%= render partial: 'schools/add_participants/eligibility_confirmation/exempt_from_induction', locals: { profile: participant_profile } %>
     <% else %>
       <% if participant_profile.ect? %>
         <%= govuk_panel title_text: "#{participant_profile.user.full_name} has been added as an ECT", text: nil, classes: "govuk-!-margin-bottom-8" %>
