@@ -33,6 +33,8 @@ module Mentors
                                 induction_programme: school_cohort.default_induction_programme,
                                 start_date: start_date)
         end
+
+        Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile: mentor_profile)
       end
 
       unless sit_validation

@@ -3,6 +3,7 @@
 RSpec.describe Mentors::Create, :with_default_schedules do
   let!(:user) { create :user }
   let(:school_cohort) { create :school_cohort }
+  let(:school) { school_cohort.school }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
   let(:uplift_school) { create :school, :sparsity_uplift, :pupil_premium_uplift }
@@ -17,6 +18,16 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
      .and not_change { User.count }
+  end
+
+  it "adds the mentor to the school mentors pool" do
+    expect {
+      described_class.call(
+        email: user.email,
+        full_name: user.full_name,
+        school_cohort: school_cohort,
+      )
+    }.to change { school.school_mentors.count }.by(1)
   end
 
   it "uses the existing teacher profile record" do
