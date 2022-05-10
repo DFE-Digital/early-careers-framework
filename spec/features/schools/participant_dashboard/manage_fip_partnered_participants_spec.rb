@@ -24,7 +24,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       and_i_am_signed_in_as_an_induction_coordinator
     end
 
-    context "in to a school" do
+    xcontext "in to a school" do
       before { and_i_have_added_a_transferring_in_participant }
 
       scenario "Induction coordinators can view and manage participant" do
