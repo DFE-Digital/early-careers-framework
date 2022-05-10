@@ -104,7 +104,7 @@ RSpec.shared_examples "FIP to CIP" do |scenario|
                                                                    "",
                                                                    "active",
                                                                    "active",
-                                                                   scenario.see_new_declarations
+                                                                   scenario.all_declarations
 
       when_i_am_on_the_finance_portal
       and_i_view_payment_breakdown_from_finance_portal

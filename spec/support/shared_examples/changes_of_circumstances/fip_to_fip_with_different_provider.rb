@@ -138,7 +138,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario|
                                                                    "New Lead Provider",
                                                                    "active",
                                                                    "active",
-                                                                   scenario.see_new_declarations
+                                                                   scenario.all_declarations
 
       when_i_am_on_the_finance_portal
       and_i_view_payment_breakdown_from_finance_portal
