@@ -27,6 +27,13 @@ module ChooseProgrammeSteps
     create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_but_partnership_was_challenged
+    given_there_is_a_school_that_has_chosen_fip_for_2021
+    @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+    @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
+    create(:partnership, :challenged, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
