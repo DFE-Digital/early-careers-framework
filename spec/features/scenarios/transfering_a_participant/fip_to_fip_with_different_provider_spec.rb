@@ -32,18 +32,17 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant", typ
 
     next unless scenario.original_programme == "FIP" && scenario.new_programme == "FIP" && scenario.transfer == :different_provider
 
-    let(:cohort) { create :cohort, :current }
-
     let(:tokens) { {} }
 
     before do
-      # given_a_cohort_with_start_year 2021
+      given_a_cohort_with_start_year 2021
+      given_a_cohort_with_start_year 2022
       given_a_privacy_policy_has_been_published
 
       and_feature_flag_is_active :eligibility_notifications
       and_feature_flag_is_active :change_of_circumstances
 
-      # given_schedules_have_been_seeded
+      given_schedules_have_been_seeded
 
       create :ecf_schedule
     end
@@ -99,12 +98,12 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant", typ
 
           and_eligible_training_declarations_are_made_payable
 
-          and_lead_provider_statements_have_been_created "Original Lead Provider"
-          and_lead_provider_statements_have_been_created "New Lead Provider"
-          and_lead_provider_statements_have_been_created "Another Lead Provider"
+          # and_lead_provider_statements_have_been_created "Original Lead Provider"
+          # and_lead_provider_statements_have_been_created "New Lead Provider"
+          # and_lead_provider_statements_have_been_created "Another Lead Provider"
         end
 
-        include_examples "FIP to FIP with different provider", scenario
+        include_examples "FIP to FIP with different provider", scenario, "active"
       end
     end
   end

@@ -32,18 +32,17 @@ RSpec.feature "CIP to FIP - Transfer a participant", type: :feature, end_to_end_
 
     next unless scenario.original_programme == "CIP" && scenario.new_programme == "FIP"
 
-    let(:cohort) { create :cohort, :current }
-
     let(:tokens) { {} }
 
     before do
-      # given_a_cohort_with_start_year 2021
+      given_a_cohort_with_start_year 2021
+      given_a_cohort_with_start_year 2022
       given_a_privacy_policy_has_been_published
 
       and_feature_flag_is_active :eligibility_notifications
       and_feature_flag_is_active :change_of_circumstances
 
-      # given_schedules_have_been_seeded
+      given_schedules_have_been_seeded
 
       create :ecf_schedule
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "FIP to FIP with different provider" do |scenario|
+RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_participant_status|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
@@ -56,7 +56,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario|
                                                         scenario.participant_trn,
                                                         scenario.participant_type,
                                                         "Original SIT's School",
-                                                        "active",
+                                                        prior_participant_status,
                                                         "active"
 
       then_participant_declarations_api_has_declarations "Original Lead Provider",
