@@ -13,6 +13,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
+  let!(:cohort_2021) { Cohort.current || create(:cohort, :current) }
+  let!(:cohort_2022) { create(:cohort, :next) }
 
   describe "#show" do
     before do
@@ -133,6 +135,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               eligible_for_funding: true,
               funding_choice: "school",
               targeted_support_funding_eligibility: true,
+              cohort: cohort_2022.start_year,
             },
             relationships: {
               user: {
@@ -182,6 +185,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(npq_application.funding_choice).to eql("school")
         expect(npq_application.lead_provider_approval_status).to eql("pending")
         expect(npq_application.targeted_support_funding_eligibility).to be_truthy
+        expect(npq_application.cohort.start_year).to eql(2022)
       end
 
       it "returns a 201" do
