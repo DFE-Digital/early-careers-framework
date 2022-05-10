@@ -333,8 +333,9 @@ module Schools
 
       participant_validation_record = validation_record(profile)
 
-      send_added_and_validated_email(profile) if profile && participant_validation_record
-      profile && !sit_adding_themselves?
+      send_added_and_validated_email(profile) if profile && participant_validation_record && !sit_adding_themselves?
+
+      profile
     end
 
     def store_validation_result!(profile)
