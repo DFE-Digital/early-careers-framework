@@ -349,7 +349,7 @@ module ManageTrainingSteps
   end
 
   def and_the_cohort_2022_tab_is_selected
-    expect(page).to have_text("How to set up training for ECTs starting in 2022 to 2023")
+    expect(page).to have_text("How to set up training for ECTs starting in the 2022 to 2023")
   end
 
   # When_steps
@@ -609,7 +609,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_course_choice_page
-    expect(page).to have_text("Which training materials do you want this cohort to use?")
+    expect(page).to have_text("Which training materials do you want to use?")
   end
 
   def then_i_am_taken_to_participant_profile

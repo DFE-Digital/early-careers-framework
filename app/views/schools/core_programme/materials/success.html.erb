@@ -1,5 +1,25 @@
 <% content_for :title, "Core induction materials selected" %>
 
-<%= govuk_panel title_text: "Study materials saved", text: nil, classes: "govuk-!-margin-bottom-8" %>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-<%= govuk_link_to "Back to #{@cohort.display_name} cohort", schools_dashboard_path(school_id: @school.slug) %>
+
+        <%= govuk_panel title_text: "Training materials confirmed", classes: "govuk-!-margin-bottom-7" do %>
+            Academic year
+            <br/>
+            <strong><%= @cohort.description %></strong>
+          <% end %>
+
+          <p>To access the training materials:</p>
+          <ol class="govuk-list govuk-list--number govuk-!-margin-bottom-7">
+            <li>Visit <%= govuk_link_to 'Support for early career teachers (opens in new tab)',
+            "https://support-for-early-career-teachers.education.gov.uk/users/sign-up",
+            target: :_blank,
+            rel: "noopener noreferrer" %>.</li>
+            <li>Enter your email address to create a new account.</li>
+          </ol>
+
+        <%= govuk_link_to "Return to manage your training", schools_dashboard_path(school_id: @school.slug) %>
+
+    </div>
+</div>

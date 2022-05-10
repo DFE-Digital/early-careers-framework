@@ -4,12 +4,13 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @cohort.start_year %> cohort</span>
+    
+    <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Do you know which accredited materials you want to use?</h1>
 
-    <p>You will be choosing materials for any new early career teachers. They will access these materials on our service and complete a programme over 2 years.</p>
-    <p>Not sure? <%= govuk_link_to "Check our guidance on materials", page_path(page: "core-materials-info") %></p>
-
+    <p class="govuk-body">You’ll be choosing materials for any new ECTs.</p>
+    <p class="govuk-body govuk-!-margin-bottom-7">They’ll access these materials on our service, and usually complete their training programme over 2 years.</p>
+        
     <%= govuk_link_to "Continue", { action: :edit }, class: "govuk-button" %>
   </div>
 </div>

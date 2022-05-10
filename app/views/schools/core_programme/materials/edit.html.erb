@@ -3,16 +3,18 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: info_schools_core_programme_materials_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-three-quarters">
-    <span class="govuk-caption-l"><%= @cohort.start_year %> cohort</span>
-    <%= form_for @form, url: { action: :update }, method: :put do |f| %>
-      <%= f.govuk_error_summary %>
-      <%= f.govuk_collection_radio_buttons :core_induction_programme_id,
+    <div class="govuk-grid-column-two-thirds">
+        
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <%= form_for @form, url: { action: :update }, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+            <%= f.govuk_collection_radio_buttons :core_induction_programme_id,
                                            CoreInductionProgramme.all,
                                            :id,
                                            :name,
-                                           legend: { text: "Which training materials do you want this cohort to use?", size: "xl", tag: "h1" } %>
-      <%= f.govuk_submit "Continue" %>
-    <% end %>
-  </div>
+                                           legend: { text: "Which training materials do you want to use?", size: "xl", tag: "h1" } %>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+
+    </div>
 </div>
