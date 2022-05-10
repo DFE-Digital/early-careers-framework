@@ -65,8 +65,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
 
-        click_on "Moving school"
-        then_i_should_see_the_transferring_participant
+        # click_on "Moving school"
+        # then_i_should_see_the_transferring_participant
       end
 
       scenario "Induction tutor can transfer an Mentor and they can continue their current programme" do
@@ -113,8 +113,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
 
-        click_on "Moving school"
-        then_i_should_see_the_transferring_participant_for_an_existing_induction
+        # click_on "Moving school"
+        # then_i_should_see_the_transferring_participant_for_an_existing_induction
       end
       # given
 

@@ -110,7 +110,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "returns induction_records in correct category" do
         # Transferring out needs to be removed from eligible when we build the transfer out journey
         # eligible
-        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, fip_transferring_out_participant].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, fip_transferring_in_participant, fip_transferring_out_participant].map(&:current_induction_record))
         expect(@mentor_categories.eligible).to match_array([fip_eligible_mentor, fip_ero_mentor, fip_primary_mentor, fip_secondary_mentor].map(&:current_induction_record))
 
         # ineligible
@@ -129,7 +129,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         expect(@ect_categories.withdrawn).to match_array(fip_withdrawn_ect.current_induction_record)
 
         # transferring_in
-        expect(@ect_categories.transferring_in).to match_array(fip_transferring_in_participant.induction_records.latest)
+        # expect(@ect_categories.transferring_in).to match_array(fip_transferring_in_participant.induction_records.latest)
 
         # transferring_out
         # expect(@ect_categories.transferring_out).to match_array(fip_transferring_out_participant.current_induction_record)
@@ -154,7 +154,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "returns participants in correct category" do
         # Transferring out needs to be removed from eligible when we build the transfer out journey
         # eligible
-        expect(@ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_transferring_in_participant, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
         expect(@mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
 
         # ineligible
@@ -173,7 +173,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         expect(@ect_categories.withdrawn).to match_array(cip_withdrawn_ect.current_induction_record)
 
         # transferring_in
-        expect(@ect_categories.transferring_in).to match_array(cip_transferring_in_participant.induction_records.latest)
+        # expect(@ect_categories.transferring_in).to match_array(cip_transferring_in_participant.induction_records.latest)
 
         # transferring_out
         # expect(@ect_categories.transferring_out).to match_array(cip_transferring_out_participant.current_induction_record)
@@ -196,7 +196,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "returns participants in correct category" do
         # Transferring out needs to be removed from eligible when we build the transfer out journey
         # eligible
-        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, fip_transferring_out_participant, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, fip_transferring_out_participant, cip_transferring_out_participant, fip_transferring_in_participant, cip_transferring_in_participant, cip_ect_no_qts].map(&:current_induction_record))
         expect(@mentor_categories.eligible).to match_array([fip_eligible_mentor, fip_ero_mentor, fip_primary_mentor, fip_secondary_mentor, cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
 
         # ineligible
@@ -215,7 +215,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         expect(@ect_categories.withdrawn).to match_array([fip_withdrawn_ect, cip_withdrawn_ect].map(&:current_induction_record))
 
         # transferring_in
-        expect(@ect_categories.transferring_in).to match_array([fip_transferring_in_participant, cip_transferring_in_participant].map { |profile| profile.induction_records.latest })
+        # expect(@ect_categories.transferring_in).to match_array([fip_transferring_in_participant, cip_transferring_in_participant].map { |profile| profile.induction_records.latest })
 
         # transferring_out
         # expect(@ect_categories.transferring_out).to match_array([fip_transferring_out_participant, cip_transferring_out_participant].map(&:current_induction_record))
@@ -257,7 +257,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       it "only returns ECTs for the selected school cohort" do
         ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
         # Transferring out needs to be removed when we build the transfer out journey
-        expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, cip_transferring_out_participant, cip_ect_no_qts].map(&:current_induction_record))
+        expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, cip_transferring_out_participant, fip_transferring_in_participant, cip_transferring_in_participant, cip_ect_no_qts].map(&:current_induction_record).compact)
       end
 
       it "only returns mentors for the selected school cohort" do
