@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module UserHelper
+  def given_i_authenticate_as_the_user_with_the_full_name(full_name)
+    sit_user = User.find_by(full_name: full_name)
+    sign_in_as sit_user
+  end
+  alias_method :and_i_authenticate_as_the_user_with_the_full_name, :given_i_authenticate_as_the_user_with_the_full_name
+  alias_method :when_i_authenticate_as_the_user_with_the_full_name, :given_i_authenticate_as_the_user_with_the_full_name
+
   def given_i_authenticate_as_the_user_with_the_email(email_address)
     sit_user = User.find_by(email: email_address)
     sign_in_as sit_user

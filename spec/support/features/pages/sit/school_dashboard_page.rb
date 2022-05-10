@@ -7,7 +7,7 @@ module Pages
     set_url "/schools/{slug}"
     set_primary_heading "Manage your training"
 
-    def has_induction_tutor(sit)
+    def has_induction_tutor?(sit)
       full_name = case sit.class
                   when InductionCoordinatorProfile
                     sit.user.full_name
@@ -17,20 +17,23 @@ module Pages
                     sit.to_s
                   end
 
-      has_content? "Induction tutor #{full_name}"
+      element_has_content? self, "Induction tutor #{full_name}"
     end
 
     def has_participants?
-      has_content?("View your early career teacher and mentor details") &&
-        !has_selector?("a", text: "Add your early career teacher and mentor details")
+      element_has_content? self, "View your early career teacher and mentor details"
+    end
+
+    def has_no_participants?
+      element_has_content? self, "Add your early career teacher and mentor details"
     end
 
     def has_partnership?
-      has_content? "Programme Use a training provider funded by the DfE"
+      element_has_content? self, "Programme Use a training provider funded by the DfE"
     end
 
     def has_no_partnership?
-      has_content? "Programme Use DfE-accredited materials"
+      element_has_content? self, "Programme Use DfE-accredited materials"
     end
 
     def view_programme_details
@@ -42,7 +45,7 @@ module Pages
 
     def has_view_programme_details?
       has_partnership?
-      has_selector?("a", text: "View details")
+      has_selector? "a", text: "View details"
     end
 
     def report_school_has_been_confirmed_incorrectly
@@ -54,7 +57,7 @@ module Pages
 
     def has_report_school_has_been_confirmed_incorrectly?
       has_no_partnership?
-      has_selector?("a", text: "report that your school has been confirmed incorrectly")
+      has_selector? "a", text: "report that your school has been confirmed incorrectly"
     end
 
     def view_participant_dashboard

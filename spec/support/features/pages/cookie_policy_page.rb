@@ -37,7 +37,7 @@ module Sections
     end
 
     def preferences_have_changed?
-      has_content? "You’ve set your cookie preferences."
+      element_has_content? self, "You’ve set your cookie preferences."
     end
   end
 end

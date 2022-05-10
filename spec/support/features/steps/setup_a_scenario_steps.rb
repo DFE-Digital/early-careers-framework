@@ -11,6 +11,10 @@ module Steps
       PrivacyPolicy::Publish.call
     end
 
+    def given_schedules_have_been_seeded
+      require "./db/seeds/schedules"
+    end
+
     def given_an_ecf_lead_provider(email_address, lead_provider_name)
       ecf_lead_provider = create :lead_provider,
                                  name: lead_provider_name

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "./changes_of_circumstance_scenario"
+require "./db/seeds/call_off_contracts"
+require "./spec/features/scenarios/changes_of_circumstance_scenario"
 
 def given_context(scenario)
   str = "[#{scenario.number}]"
@@ -97,13 +98,13 @@ RSpec.feature "Onboard a deferred participant", type: :feature, end_to_end_scena
                                                scenario.participant_email,
                                                scenario.participant_type
 
-          when_school_takes_on_the_deferred_participant "New SIT",
-                                                        "the Participant",
-                                                        scenario.participant_email,
-                                                        scenario.participant_trn,
-                                                        scenario.participant_dob,
-                                                        "#{scenario.original_programme}>#{scenario.new_programme}",
-                                                        scenario.transfer
+          when_developers_transfer_the_deferred_participant "New SIT",
+                                                            "the Participant",
+                                                            scenario.participant_email,
+                                                            scenario.participant_trn,
+                                                            scenario.participant_dob,
+                                                            "#{scenario.original_programme}>#{scenario.new_programme}",
+                                                            scenario.transfer
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type

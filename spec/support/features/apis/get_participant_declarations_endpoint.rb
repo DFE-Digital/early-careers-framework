@@ -9,8 +9,26 @@ module APIs
       get_declarations
     end
 
-    def has_declarations?(declaration_types)
-      list_declarations == declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
+    def has_declarations?(declaration_types = [])
+      found = list_declarations
+      expectation = declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
+
+      if found.sort == expectation.sort
+        true
+      else
+        raise RSpec::Expectations::ExpectationNotMetError, "expected the returned declarations of #{found} to equal #{expectation}"
+      end
+    end
+
+    def has_ordered_declarations?(declaration_types = [])
+      found = list_declarations
+      expectation = declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
+
+      if found == expectation
+        true
+      else
+        raise RSpec::Expectations::ExpectationNotMetError, "expected the returned declarations of #{found} to equal #{expectation}"
+      end
     end
 
     def get_declaration(declaration_type)

@@ -34,8 +34,10 @@ module Steps
     end
 
     def given_i_call(page_object, method_symbol, query_params = [], query_values = [])
-      if query_params.empty?
+      if query_params.empty? && query_values.empty?
         page_object.public_send(method_symbol)
+      elsif query_params.empty? && query_values.any?
+        page_object.public_send(method_symbol, *query_values)
       else
         args = {}
 

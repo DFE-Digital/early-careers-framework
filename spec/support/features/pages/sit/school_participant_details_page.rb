@@ -9,7 +9,7 @@ module Pages
     set_primary_heading(/^.*$/)
 
     def has_participant_name?(participant_name)
-      primary_heading.has_content? participant_name
+      element_has_content? primary_heading, participant_name
     end
 
     def has_email?(email)

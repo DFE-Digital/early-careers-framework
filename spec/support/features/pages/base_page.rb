@@ -1,47 +1,14 @@
 # frozen_string_literal: true
 
-module Sections
-  class CookieConsentBanner < SitePrism::Section
-    set_default_search_arguments ".govuk-cookie-banner", visible: false
-
-    element :heading, "h2"
-    element :success_message, :css, ".js-cookie-banner__success", visible: false
-
-    load_validation do
-      [has_heading?(text: "Cookies on Manage training for early career teachers"), "Cookie banner heading not found on page"]
-    end
-
-    def accept
-      click_on "Accept analytics cookies"
-    end
-
-    def reject
-      click_on "Reject analytics cookies"
-    end
-
-    def preferences_have_changed?
-      success_message.visible?
-      success_message.has_content? "You’ve set your cookie preferences."
-    end
-
-    def change_preferences
-      success_message.visible?
-      click_on "change your cookie settings"
-
-      Pages::CookiePolicyPage.loaded
-    end
-
-    def hide_success_message
-      click_on "Hide this message"
-    end
-  end
-end
+require_relative "../sections/cookie_consent_banner"
 
 module Pages
   class BasePage < SitePrism::Page
+    include RSpec::Matchers
+
     element :header, "h1"
 
-    section :cookie_banner, ::Sections::CookieConsentBanner
+    section :cookie_banner, Sections::CookieConsentBanner
 
     load_validation do
       [has_primary_heading?, "Primary heading \"#{primary_heading}\" not found on page"]
@@ -73,11 +40,23 @@ module Pages
     def has_primary_heading?(_seconds = Capybara.default_max_wait_time)
       raise "primary_heading has not been set" if primary_heading.nil?
 
-      unless header.has_content? primary_heading
-        raise "expected \"#{header.text}\" to match \"#{primary_heading}\""
-      end
+      element_has_content? header, primary_heading
+    end
 
-      true
+    def element_visible?(elem)
+      if elem.visible?
+        true
+      else
+        raise RSpec::Expectations::ExpectationNotMetError, "expected the element #{el} to be visible"
+      end
+    end
+
+    def element_has_content?(elem, expectation)
+      if elem.has_content? expectation
+        true
+      else
+        raise RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectation}\" within\n===\n#{el.text}\n==="
+      end
     end
 
     def go_back

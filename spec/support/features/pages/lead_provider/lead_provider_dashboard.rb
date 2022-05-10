@@ -9,7 +9,7 @@ module Pages
     set_primary_heading(/^.*$/)
 
     def has_lead_provider_name?(lead_provider_name)
-      primary_heading.has_content? lead_provider_name
+      element_has_content? primary_heading, lead_provider_name
     end
 
     def confirm_schools
