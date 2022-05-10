@@ -159,7 +159,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       when_i_choose_ects_expected
       and_i_click_continue
       then_i_am_taken_to_the_change_provider_page
-      and_i_see_the_current_lead_provider
+      and_i_see_the_lead_provider
       and_i_see_the_delivery_partner
 
       when_i_choose_no
