@@ -1,11 +1,13 @@
 <% if withdrawn.any? %>
   <h2 class="govuk-heading-m govuk-!-margin-bottom-0">No longer being trained</h2>
-  <p>
-    Your provider reported that they’re not training the people listed below. If this is wrong, contact <%= @school.lead_provider(@school_cohort.cohort.start_year).name %>
-    <% if @school.delivery_partner_for(@school_cohort.cohort.start_year) %>
-      or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>.
-    <% end %>
-  </p>
+  <% if @school.lead_provider(@school_cohort.cohort.start_year).present? %>
+    <p>
+      Your provider reported that they’re not training the people listed below. If this is wrong, contact <%= @school.lead_provider(@school_cohort.cohort.start_year).name %>
+      <% if @school.delivery_partner_for(@school_cohort.cohort.start_year) %>
+        or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>.
+      <% end %>
+    </p>
+  <% end %>
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="withdrawn_ects">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
       <%= render Schools::Participants::CocStatusTable.new(induction_records: withdrawn) %>
