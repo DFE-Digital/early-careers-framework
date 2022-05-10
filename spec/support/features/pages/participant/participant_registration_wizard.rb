@@ -13,6 +13,7 @@ module Pages
       setup_response_from_dqt participant_name, participant_dob, trn
 
       agree_to_privacy_policy
+      puts page.html
       add_teacher_reference_number trn
       add_date_of_birth participant_dob
     end

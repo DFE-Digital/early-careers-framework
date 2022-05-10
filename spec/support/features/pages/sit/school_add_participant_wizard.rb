@@ -16,14 +16,34 @@ module Pages
       when :ect
         choose_to_add_a_new_ect
         add_full_name participant_name
+
+        choose "No"
+        click_on "Continue"
+
         add_email_address participant_email
         choose_start_date cohort_label
+
+        fill_in "Day", with: "1"
+        fill_in "Month", with: "9"
+        fill_in "Year", with: "2021"
+        click_on "Continue"
+
         confirm_and_add
       when :mentor
         choose_to_add_a_new_mentor
         add_full_name participant_name
+
+        choose "No"
+        click_on "Continue"
+
         add_email_address participant_email
         choose_start_date cohort_label
+
+        fill_in "Day", with: "1"
+        fill_in "Month", with: "9"
+        fill_in "Year", with: "2021"
+        click_on "Continue"
+
         confirm_and_add
       when :sit_mentor
         start_to_add_sit_as_mentor
