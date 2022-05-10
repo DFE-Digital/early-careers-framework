@@ -313,23 +313,30 @@ module Steps
     end
 
     def and_eligible_training_declarations_are_made_payable
-      ParticipantDeclaration.eligible.each do |participant_declaration|
-        participant_declaration.make_payable!
-        participant_declaration.update! statement: participant_declaration.cpd_lead_provider.statements.first
+      next_ideal_time @timestamp + 3.days
+      travel_to(@timestamp) do
+        ParticipantDeclaration.eligible.each do |participant_declaration|
+          participant_declaration.make_payable!
+          participant_declaration.update! statement: participant_declaration.cpd_lead_provider.statements.first
+        end
       end
     end
 
     def and_lead_provider_statements_have_been_created(lead_provider_name)
       lead_provider = find_lead_provider lead_provider_name
 
-      nov_statement = lead_provider.cpd_lead_provider.statements.first
+      next_ideal_time @timestamp + 3.days
+      travel_to(@timestamp) do
+        # TODO: not sure this works for retained-1 declarations
+        current_statement = lead_provider.cpd_lead_provider.statements.first
 
-      Finance::ECF::CalculationOrchestrator.new(
-        statement: nov_statement,
-        contract: lead_provider.call_off_contract,
-        aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
-        calculator: PaymentCalculator::ECF::PaymentCalculation,
-      ).call(event_type: :started)
+        Finance::ECF::CalculationOrchestrator.new(
+          statement: current_statement,
+          contract: lead_provider.call_off_contract,
+          aggregator: Finance::ECF::ParticipantAggregator.new(statement: current_statement),
+          calculator: PaymentCalculator::ECF::PaymentCalculation,
+        ).call(event_type: :started)
+      end
     end
 
     def self.then_sit_context(scenario, is_hidden: false)
@@ -422,8 +429,12 @@ module Steps
       str += "          and the participant status as \"active\"\n"
       str += "          and the training status as \"active\"\n"
       str += "          and the declarations of \"#{scenario.see_new_declarations}\"\n"
-      str += "          and that Original Lead Provider has been allocated #{scenario.original_started_declarations} started and #{scenario.original_retained_declarations} retained declarations\n"
-      str += "          and that New Lead Provider has been allocated #{scenario.new_started_declarations} started and #{scenario.new_retained_declarations} retained declarations\n"
+      if scenario.original_programme == "FIP"
+        str += "          and that Original Lead Provider has been allocated #{scenario.original_started_declarations} started and #{scenario.original_retained_declarations} retained declarations\n"
+      end
+      if scenario.new_programme == "FIP" && scenario.transfer != :same_provider
+        str += "          and that New Lead Provider has been allocated #{scenario.new_started_declarations} started and #{scenario.new_retained_declarations} retained declarations\n"
+      end
       str += "          and that Other Lead Providers have been allocated 0 started and 0 retained declarations\n"
       str
     end

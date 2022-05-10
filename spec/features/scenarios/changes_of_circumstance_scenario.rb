@@ -7,18 +7,14 @@ class ChangesOfCircumstanceScenario
               :participant_trn,
               :participant_dob,
               :original_programme,
-              :starting_school_status,
               :new_programme,
               :new_lead_provider_name,
               :transfer,
-              :withdrawn_by,
               :prior_declarations,
               :duplicate_declarations,
               :new_declarations,
               :all_declarations,
-              :see_original_details,
               :see_original_declarations,
-              :see_new_details,
               :see_new_declarations,
               :original_payment_ects,
               :original_payment_mentors,
@@ -45,7 +41,6 @@ class ChangesOfCircumstanceScenario
     @new_programme = (scenario[:new_programme] || "").to_s
 
     @transfer = (scenario[:transfer] || "not_applicable").to_sym
-    @withdrawn_by = (scenario[:withdrawn_by] || "not_applicable").to_sym
 
     @new_lead_provider_name = if @new_programme == "CIP"
                                 ""
@@ -60,30 +55,41 @@ class ChangesOfCircumstanceScenario
     @duplicate_declarations = (scenario[:duplicate_declarations] || "").split(",").map(&:to_sym)
     @all_declarations = @prior_declarations + @new_declarations
 
-    @starting_school_status = (scenario[:starting_school_status] || "not_applicable").to_sym
+    if @transfer == :not_applicable && @original_programme == "FIP"
+      @original_started_declarations = @prior_declarations.filter { |sym| sym == :started }.count
+      @original_retained_declarations = @prior_declarations.filter { |sym| sym == :retained_1 }.count
+      @original_payment_ects = @participant_type == "ECT" && @prior_declarations.any? ? 1 : 0
+      @original_payment_mentors = @participant_type == "Mentor" && @prior_declarations.any? ? 1 : 0
 
-    @prior_school_status = (scenario[:prior_school_status] || "not_applicable").to_sym
-    @prior_participant_status = (scenario[:prior_participant_status] || "not_applicable").to_sym
-    @prior_training_status = (scenario[:prior_training_status] || "not_applicable").to_sym
+      @see_original_declarations = @prior_declarations
+    elsif @transfer == :not_applicable && @new_programme == "FIP"
+      @new_payment_ects = @participant_type == "ECT" && @new_declarations.any? ? 1 : 0
+      @new_payment_mentors = @participant_type == "Mentor" && @new_declarations.any? ? 1 : 0
+      @new_started_declarations = @new_declarations.filter { |sym| sym == :started }.count
+      @new_retained_declarations = @new_declarations.filter { |sym| sym == :retained_1 }.count
 
-    @new_school_status = (scenario[:new_school_status] || "not_applicable").to_sym
-    @new_participant_status = (scenario[:new_participant_status] || "not_applicable").to_sym
-    @new_training_status = (scenario[:new_training_status] || "not_applicable").to_sym
+      @see_new_declarations = @new_declarations
+    elsif @transfer == :same_provider
+      @original_started_declarations = @all_declarations.filter { |sym| sym == :started }.count
+      @original_retained_declarations = @all_declarations.filter { |sym| sym == :retained_1 }.count
+      @original_payment_ects = @participant_type == "ECT" && @all_declarations.any? ? 1 : 0
+      @original_payment_mentors = @participant_type == "Mentor" && @all_declarations.any? ? 1 : 0
 
-    @see_original_details = (scenario[:see_original_details] || "not_applicable").to_sym
-    @see_original_declarations = (scenario[:see_original_declarations] || "").split(",").map(&:to_sym)
+      @see_original_declarations = @all_declarations
+    elsif @transfer == :different_provider
+      @original_started_declarations = @prior_declarations.filter { |sym| sym == :started }.count
+      @original_retained_declarations = @prior_declarations.filter { |sym| sym == :retained_1 }.count
+      @original_payment_ects = @participant_type == "ECT" && @prior_declarations.any? ? 1 : 0
+      @original_payment_mentors = @participant_type == "Mentor" && @prior_declarations.any? ? 1 : 0
 
-    @see_new_details = (scenario[:see_new_details] || "not_applicable").to_sym
-    @see_new_declarations = (scenario[:see_new_declarations] || "").split(",").map(&:to_sym)
+      @see_original_declarations = @prior_declarations
 
-    @original_payment_ects = (scenario[:original_payment_ects] || "0").to_i
-    @original_payment_mentors = (scenario[:original_payment_mentors] || "0").to_i
-    @original_started_declarations = @prior_declarations.filter { |sym| sym == :started }.count
-    @original_retained_declarations = @prior_declarations.filter { |sym| sym == :retained_1 }.count
+      @new_payment_ects = @participant_type == "ECT" && @new_declarations.any? ? 1 : 0
+      @new_payment_mentors = @participant_type == "Mentor" && @new_declarations.any? ? 1 : 0
+      @new_started_declarations = @new_declarations.filter { |sym| sym == :started }.count
+      @new_retained_declarations = @new_declarations.filter { |sym| sym == :retained_1 }.count
 
-    @new_payment_ects = (scenario[:new_payment_ects] || "0").to_i
-    @new_payment_mentors = (scenario[:new_payment_mentors] || "0").to_i
-    @new_started_declarations = @new_declarations.filter { |sym| sym == :started }.count
-    @new_retained_declarations = @new_declarations.filter { |sym| sym == :retained_1 }.count
+      @see_new_declarations = @all_declarations
+    end
   end
 end

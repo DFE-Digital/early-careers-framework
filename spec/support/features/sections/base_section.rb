@@ -8,7 +8,7 @@ module Sections
       if elem.visible?
         true
       else
-        raise RSpec::Expectations::ExpectationNotMetError, "expected the element #{el} to be visible"
+        raise RSpec::Expectations::ExpectationNotMetError, "expected the element #{elem} to be visible"
       end
     end
 
@@ -16,7 +16,7 @@ module Sections
       if elem.has_content? expectation
         true
       else
-        raise RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectation}\" within\n===\n#{el.text}\n==="
+        raise RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectation}\" within\n===\n#{elem.text}\n==="
       end
     end
   end

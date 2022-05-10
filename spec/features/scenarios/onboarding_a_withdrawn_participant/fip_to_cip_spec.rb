@@ -13,7 +13,7 @@ end
 
 def when_context(scenario)
   str = "When they are onboarded by the new SIT"
-  str += " after being withdrawn by #{scenario.withdrawn_by}"
+  str += " after being withdrawn"
   str += " before any declarations are made" if (scenario.new_declarations + scenario.prior_declarations).empty?
   str += " after the declarations #{scenario.prior_declarations} have been made" if scenario.prior_declarations.any?
   str += " and the new declarations #{scenario.new_declarations} are then made" if scenario.new_declarations.any?
@@ -25,14 +25,12 @@ RSpec.feature "FIP to CIP - Onboarding a withdrawn participant", type: :feature,
 
   includes = ENV.fetch("SCENARIOS", "").split(",").map(&:to_i)
 
-  fixture_data_path = File.join(File.dirname(__FILE__), "./onboarding_a_withdrawn_participant_fixtures.csv")
+  fixture_data_path = File.join(File.dirname(__FILE__), "../changes_of_circumstances_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
     next if includes.any? && !includes.include?(index + 2)
 
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
-    # scenarios that must be skipped as they will not be possible
-    next if scenario.withdrawn_by == :lead_provider && scenario.new_declarations.any?
     next unless scenario.original_programme == "FIP" && scenario.new_programme == "CIP"
 
     let(:cohort) { create :cohort, :current }
@@ -92,162 +90,7 @@ RSpec.feature "FIP to CIP - Onboarding a withdrawn participant", type: :feature,
           and_lead_provider_statements_have_been_created "Another Lead Provider"
         end
 
-        context "Then the Original SIT" do
-          subject(:original_sit) { "Original SIT" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario, is_hidden: true),
-             :aggregate_failures do
-            given_i_authenticate_as_the_user_with_the_full_name "Original SIT"
-            and_i_am_on_the_school_dashboard_page
-            then_school_dashboard_page_does_not_have_participants
-
-            sign_out
-          end
-        end
-
-        context "Then the New SIT" do
-          subject(:new_sit) { "New SIT" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario),
-             :aggregate_failures do
-            given_i_authenticate_as_the_user_with_the_full_name "New SIT"
-            and_i_am_on_the_school_dashboard_page
-
-            when_i_view_participant_dashboard_from_school_dashboard_page
-            if scenario.participant_type == "ECT"
-              and_i_view_ects_from_school_participants_dashboard_page "the Participant"
-            else
-              and_i_view_mentors_from_school_participants_dashboard_page "the Participant"
-            end
-
-            then_school_participant_details_page_shows_participant_details "the Participant",
-                                                                           scenario.participant_email,
-                                                                           "Eligible to start"
-
-            sign_out
-          end
-
-          # what are the onward actions available to the new school - can they do them ??
-        end
-
-        context "Then the Original Lead Provider" do
-          subject(:original_lead_provider) { "Original Lead Provider" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, scenario.see_new_declarations, is_obfuscated: true),
-             :aggregate_failures do
-            then_ecf_participants_api_has_participant_details "Original Lead Provider",
-                                                              "the Participant",
-                                                              nil,
-                                                              scenario.participant_trn,
-                                                              scenario.participant_type,
-                                                              "Original SIT's School",
-                                                              "withdrawn",
-                                                              "active"
-
-            then_participant_declarations_api_has_declarations "Original Lead Provider",
-                                                               "the Participant",
-                                                               scenario.see_original_declarations
-          end
-
-          # previous lead provider can void ??
-        end
-
-        context "Then other Lead Providers" do
-          subject(:another_lead_provider) { "Another Lead Provider" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, is_hidden: true),
-             :aggregate_failures do
-            then_ecf_participants_api_does_not_have_participant_details "Another Lead Provider",
-                                                                        "the Participant"
-
-            then_participant_declarations_api_does_not_have_declarations "Another Lead Provider",
-                                                                         "the Participant"
-          end
-        end
-
-        context "Then the Support for Early Career Teachers Service" do
-          subject(:support_ects) { "Support for Early Career Teachers Service" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_support_service_context(scenario),
-             :aggregate_failures do
-            then_ecf_users_endpoint_shows_the_current_record "the Participant",
-                                                             scenario.participant_email,
-                                                             scenario.participant_type,
-                                                             "CIP"
-          end
-        end
-
-        context "Then a Teacher CPD Finance User" do
-          subject(:finance_user) { "Teacher CPD Finance User" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_finance_user_context(scenario),
-             :aggregate_failures do
-            given_i_authenticate_as_a_finance_user
-
-            and_i_am_on_the_finance_portal
-            and_i_view_participant_drilldown_from_finance_portal
-
-            when_i_find_from_finance_participant_drilldown_search "the Participant"
-
-            then_the_finance_portal_shows_the_current_participant_record "the Participant",
-                                                                         scenario.participant_type,
-                                                                         "New SIT",
-                                                                         "",
-                                                                         "active",
-                                                                         "active",
-                                                                         scenario.see_new_declarations
-
-            when_i_am_on_the_finance_portal
-            and_i_view_payment_breakdown_from_finance_portal
-            and_i_complete_from_finance_payment_breakdown_report_wizard "Original Lead Provider"
-
-            then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider",
-                                                                              scenario.original_payment_ects,
-                                                                              scenario.original_payment_mentors,
-                                                                              scenario.original_started_declarations,
-                                                                              scenario.original_retained_declarations,
-                                                                              0, 0
-
-            when_i_am_on_the_finance_portal
-            and_i_view_payment_breakdown_from_finance_portal
-            and_i_complete_from_finance_payment_breakdown_report_wizard "Another Lead Provider"
-
-            then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider",
-                                                                              0, 0, 0, 0, 0, 0
-
-            sign_out
-          end
-        end
-
-        context "Then a Teacher CPD Admin User" do
-          subject(:admin_user) { "Teacher CPD Admin User" }
-
-          it Steps::ChangesOfCircumstanceSteps.then_admin_user_context(scenario),
-             :aggregate_failures do
-            given_i_authenticate_as_an_admin
-
-            and_i_am_on_the_admin_support_portal
-            and_i_view_participant_list_from_admin_support_portal
-            and_i_view_participant_from_admin_support_participant_list "the Participant"
-
-            then_the_admin_portal_shows_the_current_participant_record "the Participant",
-                                                                       "New SIT",
-                                                                       "",
-                                                                       "Eligible to start"
-
-            sign_out
-          end
-        end
-
-        context "Then the Analytics Dashboards" do
-          subject(:analytics_user) { "Analysts" }
-
-          it "is expected to report the correct participant details for \"the Participant\"",
-             :aggregate_failures,
-             skip: "Not yet implemented" do
-            expect(subject).to report_correct_participant_details "the Participant"
-          end
-        end
+        include_examples "FIP to CIP", scenario
       end
     end
   end

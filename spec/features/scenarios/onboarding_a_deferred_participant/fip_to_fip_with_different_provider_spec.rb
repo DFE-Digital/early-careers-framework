@@ -13,7 +13,7 @@ end
 
 def when_context(scenario)
   str = "When they are onboarded by the new SIT"
-  str += " after being deferred by #{scenario.withdrawn_by}"
+  str += " after being deferred"
   str += " before any declarations are made" if (scenario.new_declarations + scenario.prior_declarations).empty?
   str += " after the declarations #{scenario.prior_declarations} have been made" if scenario.prior_declarations.any?
   str += " and the new declarations #{scenario.new_declarations} are then made" if scenario.new_declarations.any?
@@ -25,14 +25,12 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
 
   includes = ENV.fetch("SCENARIOS", "").split(",").map(&:to_i)
 
-  fixture_data_path = File.join(File.dirname(__FILE__), "./onboarding_a_deferred_participant_fixtures.csv")
+  fixture_data_path = File.join(File.dirname(__FILE__), "../changes_of_circumstances_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
     next if includes.any? && !includes.include?(index + 2)
 
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
-    # scenarios that must be skipped as they will not be possible
-    next if scenario.withdrawn_by == :lead_provider && scenario.new_declarations.any?
     next unless scenario.original_programme == "FIP" && scenario.new_programme == "FIP" && scenario.transfer == :different_provider
 
     let(:cohort) { create :cohort, :current }
