@@ -30,26 +30,31 @@ module Mentors
 
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: mentor_profile,
-                                induction_programme: school_cohort.default_induction_programme)
+                                induction_programme: school_cohort.default_induction_programme,
+                                start_date: start_date)
         end
       end
 
-      ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
-      mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
-      ParticipantDetailsReminderJob.schedule(mentor_profile)
+      unless sit_validation
+        ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
+        mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
+        ParticipantDetailsReminderJob.schedule(mentor_profile)
+      end
 
       mentor_profile
     end
 
   private
 
-    attr_reader :full_name, :email, :start_term, :school_cohort
+    attr_reader :full_name, :email, :start_term, :school_cohort, :start_date, :sit_validation
 
-    def initialize(full_name:, email:, school_cohort:, start_term: nil, **)
+    def initialize(full_name:, email:, school_cohort:, start_term: nil, start_date: nil, sit_validation: false, **)
       @full_name = full_name
       @email = email
       @start_term = start_term || school_cohort.cohort.start_term_options.first
+      @start_date = start_date
       @school_cohort = school_cohort
+      @sit_validation = sit_validation
     end
 
     def mentor_attributes

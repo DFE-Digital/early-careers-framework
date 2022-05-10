@@ -238,6 +238,16 @@ en:
               blank: "Choose a mentor"
             start_term:
               blank: "Choose a start term"
+            do_you_know_teachers_trn:
+              blank: "Select whether you know the teacher reference number (TRN) for the teacher you are adding"
+            trn:
+              blank: "Enter the teacher reference number (TRN) for the teacher you are adding"
+            dob:
+              blank: "Enter a date of birth"
+              invalid: "Enter a valid date of birth"
+            start_date:
+              blank: "Enter the teacher's induction start date"
+              invalid: "Enter a valid start date"
         participant_mentor_form:
           attributes:
             mentor_id:

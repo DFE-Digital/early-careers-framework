@@ -7,82 +7,109 @@
     <span class="govuk-caption-xl"><%= @school.name %> - <%= @cohort.display_name %> cohort</span>
     <h1 class="govuk-heading-xl">Check your answers</h1>
 
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Name
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div><%= add_participant_form.full_name %></div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <% unless add_participant_form.type == :self %>
-            <%= govuk_link_to({ action: :show, step: "name" }) do %>
-              Change <span class="govuk-visually-hidden">name</span>
+     <%= govuk_summary_list do |summary_list| %>
+       <% summary_list.row do |row| %>
+         <% row.key { "Name" } %>
+         <% row.value { add_participant_form.full_name.titleize } %>
+         <% unless add_participant_form.type == :self %>
+           <% unless add_participant_form.dqt_record %>
+             <% row.action text: "Change",
+                           visually_hidden_text: "name",
+                           href: url_for({ step: :name }
+                           ) %>
+            <% else %>
+              <% row.action() %>
+           <% end %>
+         <% end %>
+       <% end %>
+
+       <% if add_participant_form.trn %>
+         <% summary_list.row do |row| %>
+           <% row.key { "TRN" } %>
+           <% row.value { add_participant_form.trn } %>
+           <% unless add_participant_form.dqt_record.present? %>
+             <% row.action(text: "Change",
+                           visually_hidden_text: "TRN",
+                           href: url_for({ step: :trn })) %>
+           <% else %>
+             <% row.action() %>
+           <% end %>
+         <% end %>
+       <% end %>
+
+       <% if add_participant_form.dob %>
+         <% summary_list.row do |row| %>
+           <% row.key { "Date of birth" } %>
+           <% row.value { add_participant_form.dob.to_date.to_s(:govuk) } %>
+           <% unless add_participant_form.dqt_record.present? %>
+             <% row.action(text: "Change",
+                           visually_hidden_text: "dob",
+                           href: url_for({ step: :dob })) %>
+           <% else %>
+             <% row.action() %>
+           <% end %>
+         <% end %>
+       <% end %>
+
+       <% summary_list.row do |row| %>
+         <% row.key { "Email" } %>
+         <% row.value { add_participant_form.email } %>
+         <% unless add_participant_form.type == :self %>
+           <% row.action(text: "Change",
+                         visually_hidden_text: "email",
+                         href: url_for({ step: :email })) %>
+           <% else %>
+             <% row.action() %>
+         <% end %>
+       <% end %>
+
+       <% summary_list.row do |row| %>
+         <% row.key { "Start induction" } %>
+         <% row.value { add_participant_form.start_term.humanize  } %>
+         <% row.action(text: "Change",
+                       visually_hidden_text: "term",
+                       href: url_for({ step: "start\-term" })) %>
+       <% end %>
+
+       <% if add_participant_form.start_date %>
+         <% summary_list.row do |row| %>
+           <% row.key { "Induction start date" } %>
+           <% row.value { add_participant_form.start_date.to_date.to_s(:govuk) } %>
+           <% row.action(text: "Change",
+                         visually_hidden_text: "start date",
+                         href: url_for({ step: "start\-date" })) %>
+         <% end %>
+       <% end %>
+
+       <% if add_participant_form.type == :ect %>
+         <% summary_list.row do |row| %>
+           <% row.key { "Mentor" } %>
+           <% row.value { add_participant_form.mentor.present? ? add_participant_form.mentor.full_name : "Add later" } %>
+           <% if add_participant_form.type != :self && add_participant_form.mentor_options.any? %>
+             <% row.action(text: "Change",
+                           visually_hidden_text: "mentor",
+                           href: url_for({ step: "choose\-mentor" })) %>
+             <% else %>
+              <% row.action() %>
+           <% end %>
+         <% end %>
+       <% end %>
+
+       <% if @school_cohort.default_induction_programme %>
+         <% summary_list.row do |row| %>
+           <% row.key { "Training with" } %>
+           <% row.value do %>
+              <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %></p>
+              <p class="govuk-body"><%= @school_cohort.default_induction_programme.delivery_partner&.name %></p>
             <% end %>
-          <% end %>
-        </dd>
-      </div>
+           <% row.action() %>
+         <% end %>
+       <% end %>
+     <% end %>
 
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Email
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div><%= add_participant_form.email %></div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <% unless add_participant_form.type == :self %>
-            <%= govuk_link_to({ action: :show, step: "email" }) do %>
-              Change <span class="govuk-visually-hidden">email</span>
-            <% end %>
-          <% end %>
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Start induction
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <div>
-            <%= add_participant_form.start_term.humanize %>
-          </div>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <%= govuk_link_to({ action: :show, step: "start-term" }) do %>
-            Change <span class="govuk-visually-hidden">term</span>
-          <% end %>
-        </dd>
-      </div>
-
-
-      <% if add_participant_form.type == :ect %>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Mentor
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <div>
-              <% if add_participant_form.mentor %>
-                <%= add_participant_form.mentor.full_name %>
-              <% else %>
-                <i>Add later</i>
-              <% end %>
-            </div>
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            <% if add_participant_form.type != :self && add_participant_form.mentor_options.any? %>
-              <%= govuk_link_to({ action: :show, step: "choose-mentor" }) do %>
-                Change <span class="govuk-visually-hidden">mentor</span>
-              <% end %>
-            <% end %>
-          </dd>
-        </div>
-      <% end %>
-    </dl>
-
-    <p class="govuk-body">We’ll contact this person for information needed to check they’re eligible for this training programme.</p>
+     <% unless add_participant_form.dqt_record %>
+       <p class="govuk-body">We’ll contact this person for information needed to check they’re eligible for this training programme.</p>
+     <% end %>
 
     <%= form_for add_participant_form, url: { action: :complete }, method: :post do |f| %>
       <%= f.govuk_submit "Confirm and add" %>

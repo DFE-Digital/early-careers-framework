@@ -8,6 +8,7 @@ module Schools
     attribute :current_user_id
     attribute :participant_type
     attribute :type
+    attribute :dqt_record
 
     step :yourself do
       next_step :confirm
@@ -21,8 +22,69 @@ module Schools
       attribute :full_name
 
       validates :full_name, presence: { message: I18n.t("errors.full_name.blank") }
+      before_complete { validate_dqt_record if check_for_dqt_record? }
 
-      next_step :email
+      next_step do
+        if dqt_record.present?
+          :email
+        elsif check_for_dqt_record?
+          :cannot_find_their_details
+        else
+          :do_you_know_teachers_trn
+        end
+      end
+    end
+
+    step :do_you_know_teachers_trn do
+      attribute :do_you_know_teachers_trn
+      validates :do_you_know_teachers_trn,
+                presence: true,
+                inclusion: { in: %w[true false] }
+      next_step do
+        if trn_known?
+          :trn
+        else
+          :email
+        end
+      end
+    end
+
+    step :trn do
+      attribute :trn, :string
+
+      validates :trn,
+                presence: true,
+                format: { with: /\A\d+\z/ },
+                length: { within: 5..7 }
+      before_complete { validate_dqt_record if check_for_dqt_record? }
+      next_step do
+        if dqt_record.present?
+          :email
+        elsif check_for_dqt_record?
+          :cannot_find_their_details
+        else
+          :dob
+        end
+      end
+    end
+
+    step :dob, update: true do
+      attribute :dob, :date
+      validates :dob,
+                presence: true,
+                inclusion: {
+                  in: ->(_) { (Date.new(1900, 1, 1))..(Date.current - 18.years) },
+                  message: :invalid,
+                }
+
+      before_complete { validate_dqt_record if check_for_dqt_record? }
+      next_step do
+        if dqt_record.present?
+          :email
+        else
+          :cannot_find_their_details
+        end
+      end
     end
 
     step :email do
@@ -32,6 +94,7 @@ module Schools
                 presence: { message: I18n.t("errors.email_address.blank") },
                 notify_email: { allow_blank: true }
 
+      before_complete { reset_dqt_details unless trn_known? }
       next_step do
         if email_already_taken?
           :email_taken
@@ -48,7 +111,25 @@ module Schools
                 presence: { message: I18n.t("errors.start_term.blank") }
 
       next_step do
-        if type == :ect && mentor_options.any?
+        if type == :ect
+          :start_date
+        else
+          :confirm
+        end
+      end
+    end
+
+    step :start_date, update: true do
+      attribute :start_date, :date
+      validates :start_date,
+                presence: true,
+                inclusion: {
+                  in: ->(_) { (Date.current - 1.year)..(Date.current + 1.year) },
+                  message: :invalid,
+                }
+
+      next_step do
+        if mentor_options.any?
           :choose_mentor
         else
           :confirm
@@ -68,6 +149,8 @@ module Schools
     end
 
     step :email_taken
+
+    step :cannot_find_their_details
 
     step :confirm
 
@@ -97,6 +180,31 @@ module Schools
       @mentor = (User.find(mentor_id) if mentor_id.present? && mentor_id != "later")
     end
 
+    def trn_known?
+      do_you_know_teachers_trn == "true"
+    end
+
+    def validate_dqt_record
+      self.dqt_record = ParticipantValidationService.validate(
+        full_name: full_name,
+        trn: trn,
+        date_of_birth: dob,
+        config: {
+          check_first_name_only: true,
+        },
+      )
+    end
+
+    def check_for_dqt_record?
+      full_name.present? && trn.present? && dob.present?
+    end
+
+    def reset_dqt_details
+      self.dob = nil
+      self.trn = nil
+      self.dqt_record = nil
+    end
+
     def email_already_taken?
       ParticipantIdentity.find_by(email: email)
         &.user
@@ -115,6 +223,7 @@ module Schools
         self.full_name = current_user.full_name
         self.email = current_user.email
         self.start_term = default_start_term if start_term.nil?
+        self.start_date = Time.zone.now
         self.participant_type = :mentor
       else
         self.participant_type = type
@@ -153,13 +262,44 @@ module Schools
     end
 
     def save!
-      creators[participant_type].call(
-        full_name: full_name,
-        email: email,
-        start_term: start_term,
-        school_cohort: school_cohort,
-        mentor_profile_id: mentor&.mentor_profile&.id,
+      profile = nil
+      ActiveRecord::Base.transaction do
+        profile = creators[participant_type].call(
+          full_name: full_name,
+          email: email,
+          start_term: start_term,
+          school_cohort: school_cohort,
+          mentor_profile_id: mentor&.mentor_profile&.id,
+          start_date: start_date,
+          sit_validation: dqt_record.present? ? true : false,
+        )
+        store_validation_result!(profile) if dqt_record.present?
+      end
+
+      participant_validation_record = validation_record(profile)
+
+      send_added_and_validated_email(profile) if profile && participant_validation_record
+      profile
+    end
+
+    def store_validation_result!(profile)
+      ::Participants::ParticipantValidationForm.call(
+        profile,
+        data: {
+          trn: trn,
+          nino: nil,
+          date_of_birth: dob,
+          full_name: full_name,
+        },
       )
+    end
+
+    def send_added_and_validated_email(profile)
+      ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
+    end
+
+    def validation_record(profile)
+      ECFParticipantValidationData.find_by(participant_profile: profile)
     end
   end
 end
