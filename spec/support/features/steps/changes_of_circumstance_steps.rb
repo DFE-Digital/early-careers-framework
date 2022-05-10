@@ -241,8 +241,8 @@ module Steps
         participant_profile.update! school_cohort: school_cohort
 
         # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+        current_induction_record = participant_profile.current_induction_records.current.first
+        current_induction_record.changing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
@@ -261,18 +261,18 @@ module Steps
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
         # OLD way
+        profile_state = participant_profile.participant_profile_state
+        profile_state.delete
+        participant_profile.reload
+
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
 
-        profile_state = participant_profile.participant_profile_state
-        profile_state.delete
-        participant_profile.reload
-
         # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+        current_induction_record = participant_profile.current_induction_records.current.first
+        current_induction_record.changing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
@@ -291,18 +291,18 @@ module Steps
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
         # OLD way
+        profile_state = participant_profile.participant_profile_state
+        profile_state.delete
+        participant_profile.reload
+
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
 
-        profile_state = participant_profile.participant_profile_state
-        profile_state.delete
-        participant_profile.reload
-
         # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+        current_induction_record = participant_profile.current_induction_records.current.first
+        current_induction_record.changing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,

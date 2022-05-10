@@ -103,7 +103,7 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant", typ
           # and_lead_provider_statements_have_been_created "Another Lead Provider"
         end
 
-        include_examples "FIP to FIP with different provider", scenario, "active"
+        include_examples "FIP to FIP with different provider", scenario, "active", is_obfuscated: false
       end
     end
   end
