@@ -2,7 +2,6 @@
 
 require "rails_helper"
 require_relative "./choose_programme_steps"
-require_relative "../training_dashboard/manage_training_steps"
 
 RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false do
   include ChooseProgrammeSteps
@@ -122,7 +121,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       when_i_choose_ects_expected
       and_i_click_continue
       then_i_am_taken_to_the_change_provider_page
-      and_i_see_the_current_lead_provider
+      and_i_see_the_lead_provider
       and_i_see_the_delivery_partner
 
       when_i_choose_no
@@ -131,7 +130,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
       when_i_click_on_the_return_to_your_training_link
       then_i_am_taken_to_the_manage_your_training_page
-      and_i_see_the_current_lead_provider
+      and_i_see_the_lead_provider
       and_i_see_the_delivery_partner
       and_i_see_the_challenge_link
     end
@@ -148,7 +147,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_choose_ects_expected
         and_i_click_continue
         then_i_am_taken_to_the_change_provider_page
-        and_i_see_the_current_lead_provider
+        and_i_see_the_lead_provider
         and_i_see_the_delivery_partner
 
         when_i_choose_yes
@@ -163,6 +162,8 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_click_the_confirm_button
         then_a_notification_email_is_sent_to_the_lead_provider
         then_i_am_taken_to_the_training_change_submitted_page
+        and_i_see_the_lead_provider
+        and_i_see_the_delivery_partner
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
@@ -181,7 +182,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_choose_ects_expected
         and_i_click_continue
         then_i_am_taken_to_the_change_provider_page
-        and_i_see_the_current_lead_provider
+        and_i_see_the_lead_provider
         and_i_see_the_delivery_partner
 
         when_i_choose_yes
@@ -195,6 +196,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_click_the_confirm_button
         then_a_notification_email_is_sent_to_the_lead_provider
         then_i_am_taken_to_the_training_change_submitted_page
+        and_i_see_the_delivery_partner
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
@@ -213,7 +215,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_choose_ects_expected
         and_i_click_continue
         then_i_am_taken_to_the_change_provider_page
-        and_i_see_the_current_lead_provider
+        and_i_see_the_lead_provider
         and_i_see_the_delivery_partner
 
         when_i_choose_yes
@@ -244,7 +246,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         when_i_choose_ects_expected
         and_i_click_continue
         then_i_am_taken_to_the_change_provider_page
-        and_i_see_the_current_lead_provider
+        and_i_see_the_lead_provider
         and_i_see_the_delivery_partner
 
         when_i_choose_yes

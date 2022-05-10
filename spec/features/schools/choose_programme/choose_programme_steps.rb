@@ -135,7 +135,7 @@ module ChooseProgrammeSteps
     expect(page).to have_content("Your school has told us you do not expect any ECTs")
   end
 
-  def and_i_see_the_current_lead_provider
+  def and_i_see_the_lead_provider
     expect(page).to have_content(@lead_provider.name)
   end
 

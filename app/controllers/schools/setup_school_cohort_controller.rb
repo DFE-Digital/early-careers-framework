@@ -6,8 +6,8 @@ module Schools
     before_action :school
     before_action :cohort
     before_action :previous_cohort, only: %i[what_changes what_changes_confirmation]
-    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation]
-    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation]
+    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
+    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
     before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
 
     skip_after_action :verify_authorized
@@ -69,6 +69,8 @@ module Schools
 
       store_form_redirect_to_next_step :what_changes_submitted
     end
+
+    def what_changes_submitted; end
 
     def change_fip_programme_choice; end
 
