@@ -48,7 +48,7 @@ module Schools
         store_form_redirect_to_next_step :what_changes
       when "no"
         # skip if there is already a programme selected for the school cohort
-        use_the_same_training_programme!
+        use_the_same_training_programme! unless active_partnership?
 
         store_form_redirect_to_next_step :complete
       end
@@ -122,6 +122,10 @@ module Schools
       previous_partnership_copy.save!
 
       set_cohort_induction_programme!("full_induction_programme")
+    end
+
+    def active_partnership?
+      @school.active_partnerships.find_by(cohort: cohort, relationship: false).present?
     end
 
     def load_form

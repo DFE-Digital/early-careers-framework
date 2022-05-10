@@ -35,7 +35,7 @@ module ChooseProgrammeSteps
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = @cohort_2022 = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
@@ -131,7 +131,7 @@ module ChooseProgrammeSteps
   end
 
   def and_cohort_2022_is_created
-    create(:cohort, start_year: 2022)
+    @cohort_2022 = create(:cohort, start_year: 2022)
   end
 
   def and_the_next_cohort_is_open_for_registrations
@@ -159,7 +159,7 @@ module ChooseProgrammeSteps
   end
 
   def and_cohort_for_next_academic_year_is_created
-    create(:cohort, start_year: 2022)
+    @cohort_2022 = create(:cohort, start_year: 2022)
   end
 
   def and_i_see_add_ects_link
@@ -194,6 +194,10 @@ module ChooseProgrammeSteps
 
   def and_i_visit_the_school_manage_training
     visit(schools_dashboard_path(@school))
+  end
+
+  def and_i_choose_no
+    when_i_choose_no
   end
 
   # When steps
@@ -258,6 +262,10 @@ module ChooseProgrammeSteps
     click_on("report that your school has been confirmed incorrectly")
     choose("This looks like a mistake")
     click_on("Submit")
+  end
+
+  def when_i_go_back_to_change_provider_page
+    visit change_provider_schools_setup_school_cohort_path(@school, @cohort_2022)
   end
 
   def then_i_see_black_lp_and_dp_names
