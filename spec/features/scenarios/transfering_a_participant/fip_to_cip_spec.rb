@@ -81,10 +81,10 @@ RSpec.feature "FIP to CIP - Transfer a participant", type: :feature, end_to_end_
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable
-
           when_developers_transfer_the_active_participant "New SIT",
                                                           "the Participant"
+
+          and_eligible_training_declarations_are_made_payable
 
           and_lead_provider_statements_have_been_created "Original Lead Provider"
           and_lead_provider_statements_have_been_created "Another Lead Provider"

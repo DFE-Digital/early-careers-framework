@@ -48,11 +48,11 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario|
   context "Then the Original Lead Provider" do
     subject(:original_lead_provider) { "Original Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, scenario.prior_declarations),
+    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, scenario.prior_declarations, is_obfuscated: true),
        :aggregate_failures do
       then_ecf_participants_api_has_participant_details "Original Lead Provider",
                                                         "the Participant",
-                                                        scenario.participant_email,
+                                                        nil,
                                                         scenario.participant_trn,
                                                         scenario.participant_type,
                                                         "Original SIT's School",

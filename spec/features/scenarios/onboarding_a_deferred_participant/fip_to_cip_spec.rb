@@ -81,8 +81,8 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant", type: :feature, end
                                                             declaration_type
           end
 
-          when_developers_transfer_the_active_participant "New SIT",
-                                                          "the Participant"
+          when_developers_transfer_the_deferred_participant "New SIT",
+                                                            "the Participant"
 
           and_eligible_training_declarations_are_made_payable
 

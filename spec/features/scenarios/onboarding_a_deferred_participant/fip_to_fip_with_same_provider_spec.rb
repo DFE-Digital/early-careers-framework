@@ -82,12 +82,8 @@ RSpec.feature "FIP to FIP with same provider - Onboard a deferred participant", 
                                                             declaration_type
           end
 
-          when_school_uses_the_transfer_participant_wizard "New SIT",
-                                                           "the Participant",
-                                                           scenario.participant_email,
-                                                           scenario.participant_trn,
-                                                           scenario.participant_dob,
-                                                           same_provider: true
+          when_developers_transfer_the_deferred_participant "New SIT",
+                                                            "the Participant"
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "Original Lead Provider",

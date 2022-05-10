@@ -404,7 +404,7 @@ module Steps
       expect(endpoint).to have_training_status(training_status)
     end
 
-    def then_participant_declarations_api_has_declarations(lead_provider_name, participant_name, declarations)
+    def then_participant_declarations_api_has_declarations(lead_provider_name, participant_name, declarations = [])
       user = User.find_by(full_name: participant_name)
 
       endpoint = APIs::GetParticipantDeclarationsEndpoint.load tokens[lead_provider_name]
@@ -439,7 +439,7 @@ module Steps
       str
     end
 
-    def then_the_finance_portal_shows_the_current_participant_record(participant_name, participant_type, sit_name, lead_provider_name, participant_status, training_status, new_declarations)
+    def then_the_finance_portal_shows_the_current_participant_record(participant_name, participant_type, sit_name, lead_provider_name, participant_status, training_status, declarations = [])
       participant_user = find_user participant_name
       school = find_school_for_sit sit_name
 
@@ -452,7 +452,8 @@ module Steps
       expect(drilldown).to have_lead_provider(lead_provider_name)
       expect(drilldown).to have_status(participant_status)
       expect(drilldown).to have_training_status(training_status)
-      new_declarations.each do |declaration_type|
+
+      declarations.each do |declaration_type|
         expect(drilldown).to have_declaration(declaration_type, course_identifier, "payable")
       end
     end
