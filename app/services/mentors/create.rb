@@ -54,6 +54,7 @@ module Mentors
       @start_term = start_term || school_cohort.cohort.start_term_options.first
       @start_date = start_date
       @school_cohort = school_cohort
+      @sit_validation = sit_validation
     end
 
     def mentor_attributes

@@ -255,7 +255,7 @@ module Schools
     end
 
     def reset_dqt_details
-      self.dob = nil
+      self.date_of_birth = nil
       self.trn = nil
       self.dqt_record = nil
     end
