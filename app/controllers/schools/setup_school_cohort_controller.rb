@@ -70,6 +70,8 @@ module Schools
       store_form_redirect_to_next_step :what_changes_submitted
     end
 
+    def what_changes_submitted; end
+
     def change_fip_programme_choice; end
 
     def are_you_sure; end
