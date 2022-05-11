@@ -212,7 +212,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         config: {},
       }
 
-      form.type = form.type_options.sample
+      form.type = %i[ect mentor].sample
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
       form.trn = "1234567"
@@ -265,6 +265,26 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
           expect(ParticipantMailer).not_to have_received(:participant_added)
           expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant).with(participant_profile: profile, school_name: school_cohort.school.name)
         end
+      end
+
+      context "A SIT is adding themselves as a mentor" do
+        it " does not send the SIT an email saying they have been added and validated" do
+          form.type = :self
+          form.save!
+          expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
+        end
+      end
+    end
+
+    describe "sit_adding_themselves?" do
+      it "sit is adding themselves" do
+        form.type = :self
+        expect(form.sit_adding_themselves?).to be true
+      end
+
+      it "sit is adding a participant" do
+        form.type = :mentor
+        expect(form.sit_adding_themselves?).to be false
       end
     end
 
