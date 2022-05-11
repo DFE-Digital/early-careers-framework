@@ -18,12 +18,13 @@
                 inline: true,
                 legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
-                <p class="govuk-body">ECTs are teachers who have finished their initial teacher training.</p>
+
                 <p class="gocuk-body">Do not include:</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>ECTs who started training in the 2021 to 2022 academic year</li>
                     <li>any other teachers who started or completed their statutory induction before <%= Cohort.active_registration_cohort.academic_year_start_date.to_date.to_s(:govuk) %></li>
                 </ul>
+                <p class="govuk-body">ECTs are teachers who have finished their initial teacher training.</p>
             <% end %>
             <%= f.govuk_submit "Continue" %>
         <% end %>
