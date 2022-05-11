@@ -34,11 +34,16 @@ module NPQ
     attr_accessor :npq_application_params, :npq_course_id, :npq_lead_provider_id, :user_id
 
     def npq_application_attributes
-      npq_application_params.except(:user_id).merge(
+      npq_application_params.except(:user_id, :cohort).merge(
         npq_course: npq_course,
         npq_lead_provider: npq_lead_provider,
         participant_identity: participant_identity,
+        cohort: cohort,
       )
+    end
+
+    def cohort
+      @cohort ||= Cohort.find_by(start_year: npq_application_params[:cohort])
     end
 
     def npq_course

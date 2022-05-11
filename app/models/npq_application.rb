@@ -9,6 +9,7 @@ class NPQApplication < ApplicationRecord
   belongs_to :participant_identity
   belongs_to :npq_lead_provider
   belongs_to :npq_course
+  belongs_to :cohort, optional: true
 
   after_commit :push_enrollment_to_big_query
 
