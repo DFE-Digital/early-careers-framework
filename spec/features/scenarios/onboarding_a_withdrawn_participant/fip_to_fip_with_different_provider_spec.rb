@@ -20,7 +20,13 @@ def when_context(scenario)
   str
 end
 
-RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn participant", type: :feature, end_to_end_scenario: true do
+RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn participant",
+              with_feature_flags: {
+                eligibility_notifications: "active",
+                change_of_circumstances: "active",
+              },
+              type: :feature,
+              end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps
 
   includes = ENV.fetch("SCENARIOS", "").split(",").map(&:to_i)
@@ -39,9 +45,6 @@ RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn parti
       given_a_cohort_with_start_year 2021
       given_a_cohort_with_start_year 2022
       given_a_privacy_policy_has_been_published
-
-      and_feature_flag_is_active :eligibility_notifications
-      and_feature_flag_is_active :change_of_circumstances
 
       given_schedules_have_been_seeded
 
