@@ -3,7 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "Participant validations", with_feature_flags: { eligibility_notifications: "active" }, type: :request do
-  let!(:school_cohort) { create(:school_cohort) }
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let!(:new_cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+  let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
   let!(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
   let!(:ect_user) { ect_profile.user }
   let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
@@ -18,6 +20,12 @@ RSpec.describe "Participant validations", with_feature_flags: { eligibility_noti
       it "starts with :trn step" do
         get participants_validation_path
         expect(response).to redirect_to participants_validation_step_path(:trn)
+      end
+
+      context "current user is validating for previous cohort", travel_to: Date.new(2022, 12, 25) do
+        it "does not raise an error when starting journey" do
+          expect { get participants_validation_path }.not_to raise_error
+        end
       end
     end
 
