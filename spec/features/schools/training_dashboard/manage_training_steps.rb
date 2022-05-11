@@ -393,7 +393,7 @@ module ManageTrainingSteps
   end
 
   def and_the_cohort_2022_tab_is_selected
-    expect(page).to have_text("How to set up training for ECTs starting in the 2022 to 2023")
+    expect(page).to have_text("Tell us if any new ECTs will start training at your school in the 2022 to 2023 academic year")
   end
 
   # When_steps
@@ -968,7 +968,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_on_the_expect_any_ects_page
-    expect(page).to have_text("Does your school expect any ECTs in the next academic year?")
+    expect(page).to have_text("Does your school expect any new ECTs in the next academic year?")
   end
 
   # Set_steps
