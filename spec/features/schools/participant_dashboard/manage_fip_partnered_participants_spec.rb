@@ -37,7 +37,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       end
     end
 
-    xcontext "out of a school" do
+    context "out of a school" do
       before { and_i_have_a_transferring_out_participant }
 
       scenario "Induction coordinators can view and manage participant" do
