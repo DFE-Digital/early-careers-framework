@@ -6,7 +6,7 @@
         <p class="govuk-body">Use this service to set up a 2-year ECF-based training programme for your early career teachers (ECTs).</p>
 
         <div class="govuk-inset-text">
-        <%= govuk_link_to "Read our step by step guidance (opens in new tab)", step_by_step_path, target: "_blank" %> to find out what you need to do.
+        <%= govuk_link_to "Read our step by step guidance", step_by_step_path %> to find out what you need to do.
         </div>
 
         <p class="govuk-body">Sign in to this service to tell us:</p>
@@ -18,10 +18,15 @@
         <p class="govuk-body">Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
 
         <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
-        <p class="govuk-body">You can also use this service to tell us:</p>
+        <p class="govuk-body">Your induction tutor can use this service to:</p>
         <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
-            <li>whether or not you expect to have ECTs join your school</li>
-            <li>that you want to use a DfE-accredited programme, instead of designing and delivering your own</li>
+            <li>tell us whether or not you expect ECTs to join your school</li>
+            <li>nominate someone else to be your school’s induction tutor</li>
+            <li>change how your school runs your training programme (
+            <%= govuk_link_to 'check your options in our guidance', 
+            "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training#delivery-options-for-ecf-based-training" %>)</li>
+            <li>tell us that an ECT is transferring from another school, and let us know how you want them to continue their training</li>
+            
         </ul>
 
         <%= govuk_start_button text: "Start now", href: new_user_session_path %>
@@ -35,15 +40,12 @@
             </header>
             <nav role="navigation" aria-labelledby="subsection-title">
                 <ul class="govuk-list govuk-aside__links">
-                    <li><%= govuk_link_to "Guidance on the ECF and choosing programmes (opens in new tab)",
-                        "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview",
-                        target: :_blank,
-                        rel: "noopener noreferrer",
+                    <li><%= govuk_link_to "Induction, training and support for early career teachers (ECTs)",
+                        "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects",                        
                         class: "govuk-link govuk-link--no-visited-state" %>
                     </li>
-                    <li><%= govuk_link_to "Choose accredited study materials for your early career teachers (opens in new tab)", page_path("core-materials-info"),
-                    target: :_blank,
-                    rel: "noopener noreferrer",
+                    <li><%= govuk_link_to "Guidance for schools: how to manage ECF-based training", 
+                    "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training",                    
                     class: "govuk-link govuk-link--no-visited-state" %>
                     </li>
                 </ul>
