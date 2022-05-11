@@ -144,7 +144,7 @@ module Pages
     end
 
     def table_row_label_for(declaration_type)
-      declaration_type == :started ? "Starts" : declaration_type.humanize
+      declaration_type == :started ? "Starts" : declaration_type.to_s.humanize
     end
   end
 end
