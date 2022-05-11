@@ -631,7 +631,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_choose_mentor_page
-    expect(page).to have_selector("h1", text: "Who will mentor #{@participant_data[:full_name]}")
+    expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
 
   def then_i_am_taken_to_add_ect_or_mentor_email_page
