@@ -9,16 +9,15 @@
 <% else %>
     <p class="govuk-body">We need to know:</p>
     <ul class="govuk-list--bullet">
-        <li>if your school expects any ECTs in the next academic year</li>
+        <li>whether or not your school expects any new ECTs</li>
         <li>which training programme you want to use for any new ECTs</li>
     </ul>
 <% end %>
 
-<p class="govuk-body">You can change your answers later if you need to.</p>
-<p class="govuk-body">You can do this later if you do not have the information you need yet.</p>
+<p class="govuk-body">You can tell us this later if you do not know yet. You can also change your answers if you need to.</p>
 
 <div class="govuk-inset-text">
-    <p>Do not include ECTs who started their training in the 2021 to 2022 academic year.</p>
-    <p>You can manage their training in the ‘2021 to 2022’ tab.</p>
+    <p class="govuk-body">Do not include ECTs who started their training in the 2021 to 2022 academic year.</p>
+    <p class="govuk-body">You can manage their training in the ‘2021 to 2022’ tab.</p>
 </div>
 <%= govuk_button_link_to("Start now", expect_any_ects_schools_setup_school_cohort_path(cohort_id: cohort.start_year)) %>

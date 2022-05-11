@@ -1,13 +1,13 @@
-<% title = "Does your school expect any new ECTs in the next academic year?" %>
+<% title = "Does your school expect any new ECTs in the 2022 to 2023 academic year?" %>
 
 <% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path(@school)) %>
 
-<span class="govuk-caption-xl"><%= @school.name %></span>
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+        <span class="govuk-caption-xl"><%= @school.name %></span>
 
         <%= form_for @setup_school_cohort_form, url: { action: :expect_any_ects }, method: :put do |f| %>
         <%= f.govuk_error_summary %>
