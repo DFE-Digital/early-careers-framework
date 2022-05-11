@@ -60,22 +60,16 @@ module Pages
       has_selector? "a", text: "report that your school has been confirmed incorrectly"
     end
 
-    def view_participant_dashboard
+    def view_participant_details
       click_on "View your early career teacher and mentor details"
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
 
-    def start_add_participant_wizard
+    def add_participant_details
       click_on "Add your early career teacher and mentor details"
 
-      Pages::SchoolAddParticipantWizard.loaded
-    end
-
-    def start_transfer_participant_wizard
-      click_on "Add your early career teacher and mentor details"
-
-      Pages::SchoolTransferParticipantWizard.loaded
+      Pages::SchoolAddParticipantStartPage.loaded
     end
   end
 end

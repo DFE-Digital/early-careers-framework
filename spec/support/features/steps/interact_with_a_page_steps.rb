@@ -18,7 +18,6 @@ module Steps
 
       page_object = Pages.const_get(page_object_name.camelize).new
       query_params = query_params&.split("_") || []
-      query_values = query_values.map(&:to_s)
 
       given_i_call(page_object, method_name, query_params, query_values)
     end

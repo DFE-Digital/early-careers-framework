@@ -41,8 +41,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_add_ect_or_mentor_name
     when_i_click_on_continue
     then_i_am_taken_to_do_you_know_your_teachers_trn_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT do you know teachers TRN"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT do you know teachers TRN"
 
     when_i_submit_an_empty_form
     then_i_see_an_error_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding")
@@ -50,8 +50,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_select "Yes"
     when_i_click_on_continue
     then_i_am_taken_to_add_teachers_trn_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT trn"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT trn"
 
     when_i_submit_an_empty_form
     then_i_see_an_error_message("Enter the teacher reference number (TRN) for the teacher you are adding")
@@ -59,8 +59,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_add_the_trn
     when_i_click_on_continue
     then_i_am_taken_to_add_date_of_birth_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT date of birth"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT date of birth"
 
     when_i_submit_an_empty_form
     then_i_see_an_error_message("Enter a date of birth")
@@ -86,14 +86,14 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_choose_start_term
     when_i_click_on_continue
     then_i_am_taken_to_choose_start_date_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT induction start date"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECT induction start date"
 
     when_i_add_a_start_date
     when_i_click_on_continue
     then_i_am_taken_to_choose_mentor_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECTs mentor"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECTs mentor"
 
     when_i_select_a_mentor
     when_i_click_on_continue

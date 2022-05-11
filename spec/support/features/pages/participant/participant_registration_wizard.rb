@@ -13,6 +13,7 @@ module Pages
       setup_response_from_dqt participant_name, participant_dob, trn
 
       agree_to_privacy_policy
+      # TODO: Why are we blocked from registering here
       puts page.html
       add_teacher_reference_number trn
       add_date_of_birth participant_dob
@@ -41,10 +42,10 @@ module Pages
       click_on "Continue"
     end
 
-    def add_date_of_birth(dob)
-      fill_in "Day", with: dob[:day]
-      fill_in "Month", with: dob[:month]
-      fill_in "Year", with: dob[:year]
+    def add_date_of_birth(date_of_birth)
+      fill_in "Day", with: date_of_birth.day
+      fill_in "Month", with: date_of_birth.month
+      fill_in "Year", with: date_of_birth.year
       click_on "Continue"
     end
 

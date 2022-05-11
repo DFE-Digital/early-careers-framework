@@ -4,96 +4,138 @@ require_relative "../base_page"
 
 module Pages
   class SchoolAddParticipantWizard < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/roles"
-    set_primary_heading "Check what each person needs to do in the early career teacher training programme"
+    set_url "/schools/{slug}/cohorts/{cohort}/participants/add/who"
+    set_primary_heading "Who do you want to add?"
 
-    def complete(participant_name, participant_email, participant_type, cohort_label)
-      click_on "Continue"
-
-      start_to_add_a_participant
-
-      case participant_type.downcase.to_sym
-      when :ect
+    def complete(participant_type, full_name, participant_trn, date_of_birth, email_address, start_term = "summer_2021", start_date = Date.new(2021, 9, 1))
+      case participant_type
+      when "ECT"
         choose_to_add_a_new_ect
-        add_full_name participant_name
-
-        choose "No"
-        click_on "Continue"
-
-        add_email_address participant_email
-        choose_start_date cohort_label
-
-        fill_in "Day", with: "1"
-        fill_in "Month", with: "9"
-        fill_in "Year", with: "2021"
-        click_on "Continue"
-
-        confirm_and_add
-      when :mentor
+      when "Mentor"
         choose_to_add_a_new_mentor
-        add_full_name participant_name
-
-        choose "No"
-        click_on "Continue"
-
-        add_email_address participant_email
-        choose_start_date cohort_label
-
-        fill_in "Day", with: "1"
-        fill_in "Month", with: "9"
-        fill_in "Year", with: "2021"
-        click_on "Continue"
-
-        confirm_and_add
-      when :sit_mentor
-        start_to_add_sit_as_mentor
-        raise "Not implemented yet"
+      when "SIT"
+        choose_to_add_self_as_mentor
       end
-    end
 
-    def start_to_add_a_participant
-      click_on "Add an ECT or mentor"
+      add_full_name full_name
+
+      if participant_trn.blank?
+        choose_i_do_not_know_the_participants_trn
+      else
+        choose_i_know_the_participants_trn
+        add_teacher_reference_number full_name, participant_trn
+      end
+
+      add_date_of_birth date_of_birth
+      add_email_address email_address
+      choose_start_term start_term
+
+      if participant_type == "ECT"
+        add_start_date start_date
+        choose_mentor_later
+      end
+
+      confirm_and_add
     end
 
     def choose_to_add_a_new_ect
       choose "A new ECT"
       click_on "Continue"
+
+      self
     end
 
     def choose_to_add_a_new_mentor
       choose "A new mentor"
       click_on "Continue"
+
+      self
     end
 
-    def start_to_add_sit_as_mentor
+    def choose_to_add_self_as_mentor
       click_on "Add yourself as a mentor"
       click_on "Continue"
+
+      self
     end
 
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
       fill_in "Full_name", with: participant_name
       click_on "Continue"
+
+      self
+    end
+
+    def choose_i_know_the_participants_trn
+      choose "Yes"
+      click_on "Continue"
+
+      self
+    end
+
+    def add_teacher_reference_number(full_name, trn)
+      fill_in "What’s #{full_name}’s teacher reference number (TRN)?", with: trn
+      click_on "Continue"
+
+      self
+    end
+
+    def add_date_of_birth(date_of_birth)
+      fill_in "Day", with: date_of_birth.day
+      fill_in "Month", with: date_of_birth.month
+      fill_in "Year", with: date_of_birth.year
+      click_on "Continue"
+    end
+
+    def choose_i_do_not_know_the_participants_trn
+      choose "No"
+      click_on "Continue"
+
+      self
     end
 
     def add_email_address(participant_email)
       fill_in "Email", with: participant_email
       click_on "Continue"
+
+      self
     end
 
-    def choose_start_date(cohort_label)
-      choose cohort_label
+    def choose_start_term(start_term)
+      choose start_term
       click_on "Continue"
+
+      self
+    end
+
+    def add_start_date(start_date)
+      fill_in "Day", with: start_date.day
+      fill_in "Month", with: start_date.month
+      fill_in "Year", with: start_date.year
+      click_on "Continue"
+
+      self
+    end
+
+    def choose_a_mentor(mentor_full_name)
+      choose mentor_full_name
+      click_on "Continue"
+
+      self
+    end
+
+    def choose_mentor_later
+      choose "Do this later"
+      click_on "Continue"
+
+      self
     end
 
     def confirm_and_add
       click_on "Confirm and add"
-    end
 
-    def view_participants_dashboard
-      click_on "View your ECTs and mentors"
-
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolAddParticipantCompletedPage.loaded
     end
   end
 end

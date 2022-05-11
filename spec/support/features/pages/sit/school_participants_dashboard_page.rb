@@ -7,11 +7,8 @@ module Pages
     set_url "/schools/{slug}/cohorts/{cohort}/participants"
     set_primary_heading "Your ECTs and mentors"
 
-    def has_expected_content?
-      has_selector?("h1", text: "Your ECTs and mentors") &&
-        has_text?("Add a new ECT") &&
-        has_text?("Add a new mentor") &&
-        has_text?("Add yourself as a mentor")
+    def add_an_ect_or_mentor
+      click_on "Add an ECT or mentor"
     end
 
     def view_ects(participant_name)

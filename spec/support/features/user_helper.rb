@@ -2,22 +2,40 @@
 
 module UserHelper
   def given_i_authenticate_as_the_user_with_the_full_name(full_name)
-    sit_user = User.find_by(full_name: full_name)
-    sign_in_as sit_user
+    user = User.find_by(full_name: full_name)
+    sign_in_as user
   end
   alias_method :and_i_authenticate_as_the_user_with_the_full_name, :given_i_authenticate_as_the_user_with_the_full_name
   alias_method :when_i_authenticate_as_the_user_with_the_full_name, :given_i_authenticate_as_the_user_with_the_full_name
 
   def given_i_authenticate_as_the_user_with_the_email(email_address)
-    sit_user = User.find_by(email: email_address)
-    sign_in_as sit_user
+    user = User.find_by(email: email_address)
+    sign_in_as user
   end
   alias_method :and_i_authenticate_as_the_user_with_the_email, :given_i_authenticate_as_the_user_with_the_email
   alias_method :when_i_authenticate_as_the_user_with_the_email, :given_i_authenticate_as_the_user_with_the_email
 
+  def given_i_authenticate_as_an_induction_coordinator
+    sit_user = create :user,
+                      full_name: "Carl Coordinator"
+
+    @induction_coordinator_profile = create :induction_coordinator_profile,
+                                            schools: [@school_cohort.school],
+                                            user: sit_user
+    PrivacyPolicy.current.accept!(@induction_coordinator_profile.user)
+
+    sign_in_as sit_user
+  end
+  alias_method :and_i_authenticate_as_an_induction_coordinator, :given_i_authenticate_as_an_induction_coordinator
+  alias_method :when_i_authenticate_as_an_induction_coordinator, :given_i_authenticate_as_an_induction_coordinator
+
   def given_i_authenticate_as_an_admin
     token = "test-finance-token-#{Time.zone.now.to_f}"
-    create(:user, :admin, login_token: token)
+
+    create :user,
+           :admin,
+           login_token: token
+
     visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"
   end
@@ -25,7 +43,10 @@ module UserHelper
 
   def given_i_authenticate_as_a_finance_user
     token = "test-finance-token-#{Time.zone.now.to_f}"
-    create(:user, :finance, login_token: token)
+    create :user,
+           :finance,
+           login_token: token
+
     visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"
   end
@@ -33,7 +54,9 @@ module UserHelper
 
   def sign_in_as(user)
     token = "test-user-token-#{Time.zone.now.to_f}"
-    user.update!(login_token: token, login_token_valid_until: 1.hour.from_now)
+    user.update! login_token: token,
+                 login_token_valid_until: 1.hour.from_now
+
     visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"
   end
