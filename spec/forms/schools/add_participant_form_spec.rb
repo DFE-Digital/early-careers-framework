@@ -212,7 +212,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         config: {},
       }
 
-      form.type = form.type_options.sample
+      form.type = %i[ect mentor].sample
       form.full_name = Faker::Name.name
       form.email = Faker::Internet.email
       form.trn = "1234567"
