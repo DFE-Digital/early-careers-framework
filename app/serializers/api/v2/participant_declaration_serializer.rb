@@ -4,7 +4,7 @@ require "jsonapi/serializer/instrumentation"
 
 module Api
   module V2
-    class ParticipantDeclarationSerializer < V1::ParticipantDeclarationSerializer
+    class ParticipantDeclarationSerializer < Api::V1::ParticipantDeclarationSerializer
       include JSONAPI::Serializer
       include JSONAPI::Serializer::Instrumentation
     end
