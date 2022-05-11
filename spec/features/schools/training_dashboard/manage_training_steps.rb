@@ -225,8 +225,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_add_mentor_page
-    expect(page).to have_selector("h1", text: "Who will mentor")
-    expect(page).to have_text("You can tell us later if you’re not sure")
+    expect(page).to have_selector("h1", text: "Who will")
   end
 
   def when_i_select_a_mentor
@@ -479,7 +478,7 @@ module ManageTrainingSteps
   end
 
   def when_i_click_on_change_term
-    click_on("Change term", visible: false)
+    click_on("Change start term", visible: false)
   end
 
   def when_i_click_on_change_trn
