@@ -1,6 +1,6 @@
 <% content_for :title, "What we need from you" %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :teacher)) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: who_schools_add_participants_path) %>
 
 <span class="govuk-caption-xl"><%= @school.name %> cohort</span>
 <h1 class="govuk-heading-xl">What we need from you</h1>
