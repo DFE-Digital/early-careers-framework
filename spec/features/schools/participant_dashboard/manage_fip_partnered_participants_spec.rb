@@ -70,4 +70,16 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       then_i_am_taken_to_view_details_page
     end
   end
+
+  scenario "withdrawn partnership shouldn't cause an error" do
+    expect {
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
+      and_i_have_added_an_ect
+      and_an_ect_has_been_withdrawn_by_the_provider
+      and_i_am_signed_in_as_an_induction_coordinator
+      then_i_can_view_the_fip_induction_dashboard_without_partnership_details
+      and_i_click_on_view_your_early_career_teacher_and_mentor_details
+      click_on "Not training"
+    }.not_to raise_error
+  end
 end

@@ -20,6 +20,13 @@ module ManageTrainingSteps
     create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
+    given_there_is_a_school_that_has_chosen_fip_for_2021
+    @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+    @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
+    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 1.week.from_now, challenged_at: 1.day.ago, challenge_reason: "mistake")
+  end
+
   def given_there_is_a_school_that_has_chosen_cip_for_2021
     @cip = create(:core_induction_programme, name: "CIP Programme 1")
     @cohort = create(:cohort, start_year: 2021)
@@ -81,7 +88,10 @@ module ManageTrainingSteps
 
   def given_an_ect_has_been_withdrawn_by_the_provider
     @participant_profile_ect.training_status_withdrawn!
+    @participant_profile_ect.induction_records.latest.training_status_withdrawn!
   end
+
+  alias_method :and_an_ect_has_been_withdrawn_by_the_provider, :given_an_ect_has_been_withdrawn_by_the_provider
 
   # And_steps
 
@@ -906,6 +916,11 @@ module ManageTrainingSteps
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
     expect(page).to have_text(@school_cohort.delivery_partner.name)
+  end
+
+  def then_i_am_taken_to_fip_induction_dashboard_without_provider
+    expect(page).to have_selector("h1", text: "Manage your training")
+    expect(page).to have_text("Training provider")
   end
 
   def then_it_should_show_the_withdrawn_participant
