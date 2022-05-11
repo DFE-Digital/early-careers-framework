@@ -42,7 +42,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
       end
 
-      context "when transitioned to another cohort" do
+      context "when posting for the new cohort" do
         let(:school)              { create(:school) }
         let(:next_cohort)         { create(:cohort, :next) }
         let(:next_school_cohort)  { create(:school_cohort, school: school, cohort: next_cohort) }
@@ -76,7 +76,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         params = build_params(valid_params)
         expect { post "/api/v1/participant-declarations", params: params }
           .to change(ParticipantDeclaration, :count).by(1)
-                .and change(ParticipantDeclarationAttempt, :count).by(1)
+          .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
