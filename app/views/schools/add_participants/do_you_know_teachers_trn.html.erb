@@ -4,27 +4,25 @@
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
 
-<span class="govuk-caption-xl"><%= @school.name %></span>
-
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
 
-    <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
 
-      <%= f.govuk_error_summary %>
+        <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+        <%= f.govuk_error_summary %>
+            <%= f.govuk_radio_buttons_fieldset :do_you_know_teachers_trn,
+            inline: true,
+            legend: { text: title, tag: 'h1', size: 'xl' } do %>
+            <p class="govuk-body">We need this to confirm they’re eligible for this programme. Adding it now will help us do this more quickly.</p>
+            <p class="govuk-body">If you do not know it, we’ll ask <%= add_participant_form.full_name.titleize %> to tell us instead.</p>
 
-      <%= f.govuk_radio_buttons_fieldset :do_you_know_teachers_trn,
-        inline: true,
-        legend: { text: title, tag: 'h1', size: 'xl' } do %>
+            <%= f.govuk_radio_button :do_you_know_teachers_trn, :true, label: { text: "Yes" } %>
+            <%= f.govuk_radio_button :do_you_know_teachers_trn, :false, label: { text: "No" } %>
+            <% end %>
 
-        <p class="govuk-body govuk-!-margin-top-7">We need this to confirm they’re eligible for this programme. Adding it now will help us do this more quickly.</p>
-        <p class="govuk-body">If you do not know it, we’ll ask <%= add_participant_form.full_name.titleize %> to tell us instead.</p>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
 
-        <%= f.govuk_radio_button :do_you_know_teachers_trn, :true, label: { text: "Yes" } %>
-        <%= f.govuk_radio_button :do_you_know_teachers_trn, :false, label: { text: "No" } %>
-      <% end %>
-
-      <%= f.govuk_submit "Continue" %>
-    <% end %>
-  </div>
+    </div>
 </div>
