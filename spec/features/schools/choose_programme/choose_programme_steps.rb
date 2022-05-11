@@ -48,7 +48,7 @@ module ChooseProgrammeSteps
 
   def then_i_am_taken_to_ects_expected_in_next_academic_year_page
     expect(page).to have_content(@school.name)
-    expect(page).to have_content("Does your school expect any new ECTs in the next academic year?")
+    expect(page).to have_content("Does your school expect any new ECTs in the 2022 to 2023 academic year?")
   end
 
   def then_i_am_taken_to_the_submitted_page
