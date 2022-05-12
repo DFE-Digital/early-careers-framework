@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe NPQ::Accept do
   before { create(:npq_leadership_schedule) }
 
+  let(:cohort_2022) { create(:cohort, :next) }
+
   subject do
     described_class.new(npq_application: npq_application)
   end
@@ -206,6 +208,41 @@ RSpec.describe NPQ::Accept do
         expect {
           subject.call
         }.not_to change { npq_application.reload.lead_provider_approval_status }
+      end
+    end
+
+    context "when applying for 2022" do
+      let!(:npq_application) do
+        NPQApplication.create!(
+          teacher_reference_number: trn,
+          participant_identity: identity,
+          npq_course: npq_course,
+          npq_lead_provider: npq_lead_provider,
+          school_urn: "123456",
+          school_ukprn: "12345678",
+          cohort: cohort_2022,
+        )
+      end
+
+      context "there is a 2021 pending application" do
+        let!(:previous_npq_application) do
+          NPQApplication.create!(
+            teacher_reference_number: trn,
+            participant_identity: identity,
+            npq_course: npq_course,
+            npq_lead_provider: npq_lead_provider,
+            school_urn: "123456",
+            school_ukprn: "12345678",
+            cohort: Cohort.find_by!(start_year: 2021),
+          )
+        end
+
+        it "does not affect 2021 application" do
+          expect {
+            subject.call
+          }.to change { npq_application.reload.lead_provider_approval_status }
+           .and not_change { previous_npq_application.reload.lead_provider_approval_status }
+        end
       end
     end
   end
