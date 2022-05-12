@@ -12,6 +12,11 @@ User.find_or_create_by!(email: "finance@example.com") do |user|
   FinanceProfile.find_or_create_by!(user: user)
 end
 
+User.find_or_create_by!(email: "delivery-partner@example.com") do |user|
+  user.update!(full_name: "Delivery Partner User")
+  DeliveryPartnerProfile.find_or_create_by!(user: user, delivery_partner: DeliveryPartner.first)
+end
+
 User.find_or_create_by!(email: "lead-provider@example.com") do |user|
   user.update!(full_name: "LeadProvider User")
   LeadProviderProfile.find_or_create_by!(user: user, lead_provider: LeadProvider.first)

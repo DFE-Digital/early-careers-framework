@@ -201,6 +201,15 @@ ActiveRecord::Schema.define(version: 2022_05_12_140603) do
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
   end
 
+  create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "delivery_partner_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["delivery_partner_id"], name: "index_delivery_partner_profiles_on_delivery_partner_id"
+    t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
+  end
+
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -931,6 +940,8 @@ ActiveRecord::Schema.define(version: 2022_05_12_140603) do
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
+  add_foreign_key "delivery_partner_profiles", "delivery_partners"
+  add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "ecf_participant_eligibilities", "participant_profiles"
   add_foreign_key "ecf_participant_validation_data", "participant_profiles"

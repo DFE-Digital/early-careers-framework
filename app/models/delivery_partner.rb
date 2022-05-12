@@ -14,6 +14,9 @@ class DeliveryPartner < DiscardableRecord
   has_many :active_ecf_participant_profiles, through: :schools
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
+  has_many :delivery_partner_profiles, dependent: :destroy
+  has_many :users, through: :delivery_partner_profiles
+
   has_paper_trail
 
   after_discard do

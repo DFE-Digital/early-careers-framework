@@ -11,6 +11,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:participant_profiles) }
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:finance_profile) }
+    it { is_expected.to have_one(:delivery_partner_profile) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
     it { is_expected.to have_one(:lead_provider_profile) }
