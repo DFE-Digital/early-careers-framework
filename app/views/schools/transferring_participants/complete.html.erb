@@ -22,7 +22,7 @@
         <% end %>
 
         <% unless @participant_profile.mentor? %>
-        <h2 class="govuk-heading-m">Continuing induction and ECF-based training</h2>
+        <h3 class="govuk-heading-s">Continuing induction and ECF-based training</h3>
         <p class="govuk-body">Ask <%= participant_name %> or their previous school to provide records of any assessments and progress reviews completed so far.</p>
         <% if @transferring_participant_form.switch_to_schools_programme? %>
             <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %> will advise how <%= participant_name %> should transfer onto their programme.</p>
