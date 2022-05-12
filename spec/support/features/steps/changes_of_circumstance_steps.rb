@@ -60,19 +60,18 @@ module Steps
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
-
       user = find_user lead_provider_name
       lead_provider = user.lead_provider
       delivery_partner = lead_provider.delivery_partners.first
 
       school = find_school_for_sit sit_name
 
+      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
         sign_in_as user
-        dashboard = Pages::LeadProviderDashboard.new
-        wizard = dashboard.confirm_schools
-        wizard.complete delivery_partner.name, [school.urn]
+        Pages::LeadProviderDashboard.loaded
+                                    .confirm_schools
+                                    .complete delivery_partner.name, [school.urn]
         sign_out
 
         # TODO: This needs to be added to the partnership UI process
@@ -85,17 +84,16 @@ module Steps
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
-      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
-
       user = find_user sit_name
 
-      cohort_label = "Spring 2022"
-
+      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
         sign_in_as user
-        inductions_dashboard = Pages::SchoolDashboardPage.new
-        wizard = inductions_dashboard.start_add_participant_wizard
-        wizard.complete(participant_name, participant_email, participant_type, cohort_label)
+        Pages::SchoolDashboardPage.loaded
+                                  .add_participant_details
+                                  .continue
+                                  .add_an_ect_or_mentor
+                                  .create_participant participant_type, participant_name, participant_email, "Spring 2022", Date.new(2021, 9, 1)
         sign_out
 
         travel_to 1.minute.from_now
@@ -103,18 +101,22 @@ module Steps
     end
 
     def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      next_ideal_time Time.zone.local(2021, 8, 1, 9, 0, 0)
-
       user = find_user participant_name
 
+      next_ideal_time Time.zone.local(2021, 8, 1, 9, 0, 0)
       travel_to(@timestamp) do
         sign_in_as user
-        wizard = Pages::ParticipantRegistrationWizard.new
+
+        Pages::ParticipantPrivacyPolicyPage.loaded
+                                           .continue
+
         case participant_type
         when "ECT"
-          wizard.complete_for_ect participant_name, participant_dob, participant_trn
+          Pages::ParticipantRegistrationWizard.loaded
+                                              .complete_for_ect participant_name, participant_dob, participant_trn
         when "Mentor"
-          wizard.complete_for_mentor participant_name, participant_dob, participant_trn
+          Pages::ParticipantRegistrationWizard.loaded
+                                              .complete_for_mentor participant_name, participant_dob, participant_trn
         else
           raise "Participant_type not recognised"
         end
@@ -216,9 +218,9 @@ module Steps
       travel_to(@timestamp) do
         sign_in_as user
 
-        inductions_dashboard = Pages::SchoolDashboardPage.new
-        wizard = inductions_dashboard.start_transfer_participant_wizard
-        wizard.complete(participant_name, participant_email, participant_trn, participant_dob, same_provider)
+        Pages::SchoolDashboardPage.loaded
+                                  .start_transfer_participant_wizard
+                                  .complete participant_name, participant_email, participant_trn, participant_dob, same_provider
 
         sign_out
 

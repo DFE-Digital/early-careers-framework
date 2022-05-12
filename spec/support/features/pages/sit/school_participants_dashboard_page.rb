@@ -9,6 +9,8 @@ module Pages
 
     def add_an_ect_or_mentor
       click_on "Add an ECT or mentor"
+
+      Pages::SchoolAddParticipantWizard.loaded
     end
 
     def view_ects(participant_name)

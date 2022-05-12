@@ -7,7 +7,7 @@ module Pages
     set_url "/schools/{slug}/cohorts/{cohort}/participants/add/who"
     set_primary_heading "Who do you want to add?"
 
-    def complete(participant_type, full_name, participant_trn, date_of_birth, email_address, start_term = "summer_2021", start_date = Date.new(2021, 9, 1))
+    def create_participant(participant_type, full_name, email_address, start_term, start_date, participant_trn = nil, date_of_birth = nil)
       case participant_type
       when "ECT"
         choose_to_add_a_new_ect
@@ -24,16 +24,54 @@ module Pages
       else
         choose_i_know_the_participants_trn
         add_teacher_reference_number full_name, participant_trn
+        add_date_of_birth date_of_birth
       end
 
-      add_date_of_birth date_of_birth
       add_email_address email_address
       choose_start_term start_term
 
       if participant_type == "ECT"
         add_start_date start_date
-        choose_mentor_later
       end
+
+      confirm_and_add
+    end
+
+    def create_ect(full_name, email_address, start_term, start_date, participant_trn = nil, date_of_birth = nil, _mentor_full_name = nil)
+      choose_to_add_a_new_ect
+
+      add_full_name full_name
+
+      if participant_trn.blank?
+        choose_i_do_not_know_the_participants_trn
+      else
+        choose_i_know_the_participants_trn
+        add_teacher_reference_number full_name, participant_trn
+        add_date_of_birth date_of_birth
+      end
+
+      add_email_address email_address
+      choose_start_term start_term
+      add_start_date start_date
+
+      confirm_and_add
+    end
+
+    def create_mentor(full_name, email_address, start_term, _start_date, participant_trn = nil, date_of_birth = nil, _mentor_full_name = nil)
+      choose_to_add_a_new_mentor
+
+      add_full_name full_name
+
+      if participant_trn.blank?
+        choose_i_do_not_know_the_participants_trn
+      else
+        choose_i_know_the_participants_trn
+        add_teacher_reference_number full_name, participant_trn
+        add_date_of_birth date_of_birth
+      end
+
+      add_email_address email_address
+      choose_start_term start_term
 
       confirm_and_add
     end
@@ -126,6 +164,7 @@ module Pages
     end
 
     def choose_mentor_later
+      puts page.html
       choose "Do this later"
       click_on "Continue"
 
