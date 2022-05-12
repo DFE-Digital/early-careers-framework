@@ -72,12 +72,14 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
         @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
+        @ect = create(:ect_participant_profile, school_cohort: @school_cohort_one)
         @partnership_one = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
         @partnership_two = create(:partnership, school: @school_two, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
         @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_one)
         @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_two)
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
         @school_cohort_two.update!(default_induction_programme: @induction_programme_two)
+        Induction::Enrol.call(participant_profile: @ect, induction_programme: @induction_programme_one)
       end
 
       # when
