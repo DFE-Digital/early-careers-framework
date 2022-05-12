@@ -1,22 +1,23 @@
 <% cohort = Cohort.active_registration_cohort %>
-<h2 class="govuk-heading-m">How to set up training for ECTs starting in the <%= cohort.description %> academic year</h2>
+<h2 class="govuk-heading-m">Tell us if any new ECTs will start training at your school in the <%= cohort.description %> academic year</h2>
 <% if previous_school_cohort&.full_induction_programme? %>
-    <p class="govuk-body">We need to know if:</p>
+    <p class="govuk-body">We need to know:</p>
     <ul class="govuk-list--bullet">
-        <li>your school expects any ECTs in the next academic year</li>
-        <li>you plan to change how you run training for any new ECTs</li>
+        <li>whether or not your school expects any new ECTs</li>
+        <li>if you plan to change how you run training for any new ECTs</li>
     </ul>
 <% else %>
     <p class="govuk-body">We need to know:</p>
     <ul class="govuk-list--bullet">
-        <li>if your school expects any ECTs in the next academic year</li>
+        <li>whether or not your school expects any new ECTs</li>
         <li>which training programme you want to use for any new ECTs</li>
     </ul>
 <% end %>
 
-<p class="govuk-body">You can change your answers later if you need to.</p>
-<p class="govuk-body">It should only take a few minutes to get set up.</p>
+<p class="govuk-body">You can tell us this later if you do not know yet. You can also change your answers if you need to.</p>
+
 <div class="govuk-inset-text">
-    You can do this later if you do not have the information you need yet.
+    <p class="govuk-body">Do not include ECTs who started their training in the <%= Cohort.active_registration_cohort.previous.description %> academic year.</p>
+    <p class="govuk-body">You can manage their training in the ‘<%= Cohort.active_registration_cohort.previous.description %>’ tab.</p>
 </div>
 <%= govuk_button_link_to("Start now", expect_any_ects_schools_setup_school_cohort_path(cohort_id: cohort.start_year)) %>
