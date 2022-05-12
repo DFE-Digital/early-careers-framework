@@ -3,6 +3,7 @@
 require "rake"
 
 namespace :update_participant_profile_states do
+  desc "Back filling cpd_lead_providers on participant_profile_states"
   task populate_cpd_lead_provider: :environment do
     PaperTrail.request.controller_info = {
       reason: "Back filling cpd_lead_providers on participant_profile_states",
@@ -12,7 +13,7 @@ namespace :update_participant_profile_states do
 
     participant_profiles_with_a_single_induction_record.each do |pp|
       pp.participant_profile_states.each do |ps|
-        ps.update_attribute(:cpd_lead_provider_id, pp.school&.partnerships&.first&.lead_provider&.cpd_lead_provider&.id)
+        ps.update_column(:cpd_lead_provider_id, pp.school&.partnerships&.first&.lead_provider&.cpd_lead_provider&.id)
       end
     end
   end
