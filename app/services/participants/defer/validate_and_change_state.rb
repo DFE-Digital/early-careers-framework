@@ -14,7 +14,7 @@ module Participants
 
       def perform_action!
         ActiveRecord::Base.transaction do
-          ParticipantProfileState.create!(participant_profile: user_profile, state: ParticipantProfileState.states[:deferred], reason: reason)
+          ParticipantProfileState.create!(participant_profile: user_profile, state: ParticipantProfileState.states[:deferred], cpd_lead_provider: cpd_lead_provider, reason: reason)
           user_profile.training_status_deferred!
 
           relevant_induction_record.update!(training_status: "deferred") if relevant_induction_record

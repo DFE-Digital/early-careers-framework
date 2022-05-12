@@ -7,6 +7,8 @@ class ParticipantProfileState < ApplicationRecord
   validate :deferral,   if: -> { deferred? }
 
   belongs_to :participant_profile
+  belongs_to :cpd_lead_provider, optional: true
+
   enum state: {
     active: "active",
     deferred: "deferred",

@@ -74,9 +74,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       it "create declaration record and declaration attempt and return id when successful" do
         params = build_params(valid_params)
-        expect { post "/api/v1/participant-declarations", params: params }
-            .to change(ParticipantDeclaration, :count).by(1)
-            .and change(ParticipantDeclarationAttempt, :count).by(1)
+        expect { post "/api/v1/participant-declarations", params: params }.to change(ParticipantDeclaration, :count).by(1).and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
@@ -187,8 +185,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         context "when the participant has been withdrawn" do
           before do
             induction_record.leaving!(milestone_start_date + 1)
-            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: milestone_start_date + 1)
+            Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: milestone_start_date)
             put url, params: build_params(params)
+            ParticipantProfileState.create!(participant_profile: ect_profile, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: cpd_lead_provider)
           end
 
           it "is possible for new lead provider to post a declaration" do
@@ -197,6 +196,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             post "/api/v1/participant-declarations", params: build_params(updated_params)
 
             expect(response.status).to eq 200
+          end
+
+          it "is possible for previous lead provider to submit backdated declarations" do
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 1).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 200
+          end
+
+          it "is not possible for previous lead provider to submit a declaration after withdrawal date" do
+            updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
+            post "/api/v1/participant-declarations", params: build_params(updated_params)
+
+            expect(response.status).to eq 422
+            expect(response.body).to include("Declaration must be before withdrawal date")
           end
 
           it "is not possible for previous lead provider to view future declarations" do
@@ -277,6 +291,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             induction_record.leaving!(milestone_start_date + 1)
             Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: milestone_start_date)
             put url, params: build_params(params)
+            ParticipantProfileState.create!(participant_profile: ect_profile, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: cpd_lead_provider)
           end
 
           it "is possible for the same lead provider to post a declaration" do
