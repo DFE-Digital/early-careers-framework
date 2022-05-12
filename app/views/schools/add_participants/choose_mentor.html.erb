@@ -2,24 +2,27 @@
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
 
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-<%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
-  <%= f.govuk_error_summary %>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
 
-  <%= f.hidden_field :mentor_id, value: '' %>
-  <%= f.govuk_radio_buttons_fieldset :mentor_id,
-    legend: { text: "Who will mentor #{add_participant_form.full_name}?", tag: 'h1', size: 'xl' },
-    hint: { text: "You can tell us later if you’re not sure." },
-    caption: { text: "#{@school.name} - #{@cohort.display_name} cohort", size: 'xl' } do %>
+        <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+        <%= f.govuk_error_summary %>
+            <%= f.hidden_field :mentor_id, value: '' %>
+            <%= f.govuk_radio_buttons_fieldset :mentor_id,
+                legend: { text: "Who will #{add_participant_form.full_name}’s mentor be?", tag: 'h1', size: 'xl' } do %>
 
-    <% add_participant_form.mentor_options.each_with_index do |mentor, i| %>
-      <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
-    <% end %>
+                <% add_participant_form.mentor_options.each_with_index do |mentor, i| %>
+                <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
+            <% end %>
 
-    <%= f.govuk_radio_divider %>
+            <%= f.govuk_radio_divider %>
+                <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
+            <% end %>
 
-    <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
-  <% end %>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
 
-  <%= f.govuk_submit "Continue" %>
-<% end %>
+    </div>
+</div>
