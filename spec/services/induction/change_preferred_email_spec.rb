@@ -31,12 +31,8 @@ RSpec.describe Induction::ChangePreferredEmail do
         expect(induction_record.reload.end_date).to be_within(1.second).of Time.zone.now
       end
 
-      it "sets the new induction record data correctly" do
+      it "sets the preferred identity email" do
         new_induction_record = induction_programme.active_induction_records.first
-
-        expect(new_induction_record).to be_active_induction_status
-        expect(new_induction_record.start_date).to be_within(1.second).of Time.zone.now
-        expect(new_induction_record.participant_profile).to eq participant_profile
         expect(new_induction_record.preferred_identity.email).to eq new_email
       end
     end
