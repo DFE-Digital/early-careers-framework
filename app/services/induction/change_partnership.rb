@@ -8,7 +8,7 @@ class Induction::ChangePartnership < BaseService
         default_induction_programme.full_induction_programme?
 
       if default_induction_programme.partnership.blank?
-        # there was no partnership we presume there was none when the school chose FIP
+        # there is no partnership, we presume there was none when the school chose FIP
         # so we can just update the programme
         default_induction_programme.update!(partnership: partnership)
 
