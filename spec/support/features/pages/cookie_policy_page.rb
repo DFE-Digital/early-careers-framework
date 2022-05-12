@@ -1,46 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base_page"
-
-module Sections
-  class CookieConsentForm < SitePrism::Section
-    set_default_search_arguments "#new_cookies_form"
-
-    element :legend, "fieldset > legend"
-    element :on_field, "#cookies-form-analytics-consent-on-field", visible: false
-    element :off_field, "#cookies-form-analytics-consent-off-field", visible: false
-
-    def save_preference
-      click_on "Save cookie settings"
-    end
-
-    def give_consent
-      choose "Yes"
-      save_preference
-
-      Pages::CookiePolicyPage.loaded
-    end
-
-    def revoke_consent
-      choose "No"
-      save_preference
-
-      Pages::CookiePolicyPage.loaded
-    end
-
-    def consent_given?
-      on_field.checked? && !off_field.checked?
-    end
-
-    def consent_not_given?
-      !on_field.checked? && off_field.checked?
-    end
-
-    def preferences_have_changed?
-      element_has_content? self, "You’ve set your cookie preferences."
-    end
-  end
-end
+require_relative "../sections/cookie_consent_form"
 
 module Pages
   class CookiePolicyPage < ::Pages::BasePage
@@ -48,5 +9,21 @@ module Pages
     set_primary_heading "Cookies"
 
     section :cookie_consent_form, ::Sections::CookieConsentForm
+
+    def confirm_cookie_consent_is_not_given
+      !cookie_consent_form.on_field.checked? && cookie_consent_form.off_field.checked?
+    end
+
+    def confirm_cookie_consent_is_given
+      cookie_consent_form.on_field.checked? && !cookie_consent_form.off_field.checked?
+    end
+
+    def give_cookie_consent
+      cookie_consent_form.give_consent
+    end
+
+    def revoke_cookie_consent
+      cookie_consent_form.revoke_consent
+    end
   end
 end

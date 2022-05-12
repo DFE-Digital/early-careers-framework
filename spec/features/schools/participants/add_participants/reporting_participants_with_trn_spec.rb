@@ -1,9 +1,20 @@
 # frozen_string_literal: true
 
+class InvalidDate
+  attr_reader :day, :month, :year
+
+  def initialize(day, month, year)
+    @day = day
+    @month = month
+    @year = year
+  end
+end
+
 require "rails_helper"
 
 RSpec.describe "Reporting participants with a known TRN",
                with_feature_flags: { change_of_circumstances: "active" },
+               type: :feature,
                js: true do
   before do
     given_a_cohort_with_start_year 2021
@@ -11,7 +22,7 @@ RSpec.describe "Reporting participants with a known TRN",
 
     given_a_school_that_has_chosen_fip_for_2021_and_partnered
 
-    and_i_authenticate_as_an_induction_coordinator
+    given_i_authenticate_as_an_induction_coordinator
 
     @participant_data = {
       trn: "1234567",
@@ -23,12 +34,6 @@ RSpec.describe "Reporting participants with a known TRN",
       start_date: Date.new(2022, 9, 1),
     }
 
-    @updated_participant_data = {
-      full_name: "Jane Teacher",
-      email: "jane@school.com",
-      start_term: "spring_2021",
-    }
-
     allow_any_instance_of(ParticipantValidationService).to receive(:validate)
                                                              .and_return({
                                                                trn: @participant_data[:trn],
@@ -38,8 +43,7 @@ RSpec.describe "Reporting participants with a known TRN",
                                                                config: {},
                                                              })
 
-    given_i_has_added_an_ect
-    given_i_has_added_a_mentor
+    given_i_have_added_a_mentor
 
     then_i_am_on_the_school_dashboard_page
   end
@@ -65,6 +69,9 @@ RSpec.describe "Reporting participants with a known TRN",
                                                                            @participant_data[:trn]
     click_on "Continue"
     then_i_see_an_error_message "Enter a date of birth"
+
+    when_i_add_date_of_birth_from_school_add_participant_wizard InvalidDate.new(1983, 2, 29)
+    then_i_see_an_error_message "Enter a valid date of birth"
 
     when_i_add_date_of_birth_from_school_add_participant_wizard @participant_data[:date_of_birth]
     click_on "Continue"
@@ -211,14 +218,7 @@ private
            challenge_deadline: 2.weeks.ago
   end
 
-  def given_i_has_added_an_ect
-    user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
-    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
-  end
-
-  def given_i_has_added_a_mentor
+  def given_i_have_added_a_mentor
     user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
     teacher_profile = create(:teacher_profile, user: user)
     @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)

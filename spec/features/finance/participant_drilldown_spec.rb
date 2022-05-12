@@ -10,7 +10,7 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
     let(:ect_identity) { create :participant_identity, user: ect_user, external_identifier: SecureRandom.uuid }
 
     before do
-      given_i_am_logged_in_as_a_finance_user
+      given_i_authenticate_as_a_finance_user
       and_an_ect_user_with_profile_and_declarations
       when_i_visit_the_finance_homepage
       and_i_click_on("Participant drilldown")
@@ -48,7 +48,7 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
     let(:npq_identity) { create(:participant_identity, :npq_origin, user: npq_user) }
 
     before do
-      given_i_am_logged_in_as_a_finance_user
+      given_i_authenticate_as_a_finance_user
       and_an_npq_user_with_application_and_profile_and_declarations
       when_i_visit_the_finance_homepage
       and_i_click_on("Participant drilldown")

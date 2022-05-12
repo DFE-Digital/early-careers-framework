@@ -33,31 +33,27 @@ module Pages
     end
 
     def has_no_partnership?
-      element_has_content? self, "Programme Use DfE-accredited materials"
+      element_has_content? self, "Programme DfE-accredited materials"
     end
 
     def view_programme_details
-      has_partnership?
       click_on "View details"
 
       Pages::SchoolCohortsPage.loaded
     end
 
-    def has_view_programme_details?
-      has_partnership?
-      has_selector? "a", text: "View details"
-    end
-
     def report_school_has_been_confirmed_incorrectly
-      has_no_partnership?
       click_on "report that your school has been confirmed incorrectly"
 
       Pages::ReportIncorrectPartnershipPage.loaded
     end
 
-    def has_report_school_has_been_confirmed_incorrectly?
-      has_no_partnership?
-      has_selector? "a", text: "report that your school has been confirmed incorrectly"
+    def confirm_can_report_school_has_been_confirmed_incorrectly
+      element_has_content? self, "report that your school has been confirmed incorrectly"
+    end
+
+    def confirm_cannot_report_school_has_been_confirmed_incorrectly
+      element_without_content? self, "report that your school has been confirmed incorrectly"
     end
 
     def view_participant_details

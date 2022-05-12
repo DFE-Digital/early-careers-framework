@@ -6,34 +6,23 @@ module Pages
   class ParticipantRegistrationWizard < ::Pages::BasePage
     include WebMock::API
 
-    set_url "ParticipantRegistrationWizard"
-    set_primary_heading "ParticipantRegistrationWizard"
+    set_url "/participants/validation/trn"
+    set_primary_heading "What’s your teacher reference number (TRN)?"
 
     def complete_for_ect(participant_name, participant_dob, trn)
       setup_response_from_dqt participant_name, participant_dob, trn
 
-      agree_to_privacy_policy
-      # TODO: Why are we blocked from registering here
-      puts page.html
       add_teacher_reference_number trn
       add_date_of_birth participant_dob
-    end
-
-    def complete_for_mentor(participant_name, participant_dob, trn)
-      setup_response_from_dqt participant_name, participant_dob, trn
-
-      agree_to_privacy_policy
-      confirm_have_trn
-      add_teacher_reference_number trn
-      add_date_of_birth participant_dob
-    end
-
-    def agree_to_privacy_policy
-      click_on "Continue"
     end
 
     def confirm_have_trn
       choose "Yes"
+      click_on "Continue"
+    end
+
+    def confirm_do_not_have_trn
+      choose "No"
       click_on "Continue"
     end
 
@@ -46,6 +35,29 @@ module Pages
       fill_in "Day", with: date_of_birth.day
       fill_in "Month", with: date_of_birth.month
       fill_in "Year", with: date_of_birth.year
+      click_on "Continue"
+    end
+
+    def choose_add_your_national_insurance_number
+      click_on "Add your National Insurance number"
+    end
+
+    def add_national_insurance_number(nino)
+      fill_in "National Insurance Number", with: nino
+      click_on "Continue"
+    end
+
+    def choose_confirm_your_name
+      click_on "Continue to confirm your name"
+    end
+
+    def choose_last_name_has_changed
+      choose "No"
+      click_on "Continue"
+    end
+
+    def add_full_name(full_name)
+      fill_in "What was your full name when you started your initial teacher training?", with: full_name
       click_on "Continue"
     end
 

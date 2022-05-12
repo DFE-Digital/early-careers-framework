@@ -21,7 +21,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
     when_i_start_programme_selection_for_next_cohort
     then_i_am_taken_to_ects_expected_in_next_academic_year_page
-    and_the_page_should_be_accessible
+    then_the_page_is_accessible
 
     when_i_choose_no_ects
     and_i_click_continue
@@ -40,7 +40,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
     when_i_start_programme_selection_for_next_cohort
     then_i_am_taken_to_ects_expected_in_next_academic_year_page
-    and_the_page_should_be_accessible
+    then_the_page_is_accessible
 
     when_i_choose_ects_expected
     and_i_click_continue
@@ -67,7 +67,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
     when_i_start_programme_selection_for_next_cohort
     then_i_am_taken_to_ects_expected_in_next_academic_year_page
-    and_the_page_should_be_accessible
+    then_the_page_is_accessible
 
     when_i_choose_ects_expected
     and_i_click_continue
@@ -92,7 +92,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
     when_i_start_programme_selection_for_next_cohort
     then_i_am_taken_to_ects_expected_in_next_academic_year_page
-    and_the_page_should_be_accessible
+    then_the_page_is_accessible
 
     when_i_choose_ects_expected
     and_i_click_continue

@@ -86,7 +86,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_report_school_has_been_confirmed_incorrectly_from_school_page
+      when_i_report_school_has_been_confirmed_incorrectly_from_school_dashboard_page
       and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
@@ -98,7 +98,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details_from_school_page
+      when_i_view_programme_details_from_school_dashboard_page
       and_i_enter_partnership_details_url_from_school_cohorts_page
       and_i_report_school_partnership_has_been_confirmed_incorrectly_from_school_partnerships_page
       and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
@@ -112,7 +112,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      then_i_cannot_report_school_has_been_confirmed_incorrectly
+      then_i_confirm_cannot_report_school_has_been_confirmed_incorrectly_from_school_dashboard_page
     end
 
     scenario "Cannot challenge an expired challenge" do
@@ -121,7 +121,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_fip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      then_i_cannot_report_school_has_been_confirmed_incorrectly
+      then_i_confirm_cannot_report_school_has_been_confirmed_incorrectly_from_school_dashboard_page
     end
   end
 
@@ -132,7 +132,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_report_school_has_been_confirmed_incorrectly_from_school_page
+      when_i_report_school_has_been_confirmed_incorrectly_from_school_dashboard_page
       and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
@@ -144,7 +144,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_can_be_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details_from_school_page
+      when_i_view_programme_details_from_school_dashboard_page
       and_i_enter_partnership_details_url_from_school_cohorts_page
       and_i_report_school_partnership_has_been_confirmed_incorrectly_from_school_partnerships_page
       and_i_report_an_unrecognised_provider_from_report_incorrect_partnership_page
@@ -158,7 +158,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_has_previously_been_challenged @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details_from_school_page
+      when_i_view_programme_details_from_school_dashboard_page
       and_i_enter_partnership_details_url_from_school_cohorts_page
 
       then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
@@ -170,7 +170,7 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       given_a_cip_school_with_a_partnership_that_has_an_expired_challenge @scenario.sit_email_address, @scenario.school_name, @scenario.school_slug, @scenario.partnership_challenge_token
       and_i_authenticate_as_the_user_with_the_email @scenario.sit_email_address
 
-      when_i_view_programme_details_from_school_page
+      when_i_view_programme_details_from_school_dashboard_page
       and_i_enter_partnership_details_url_from_school_cohorts_page
 
       then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
