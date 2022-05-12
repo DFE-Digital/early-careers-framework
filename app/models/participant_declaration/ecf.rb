@@ -11,6 +11,7 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
     previous_induction_record = participant_profile.relevant_induction_record(lead_provider: cpd_lead_provider.lead_provider)
 
     return if previous_induction_record.nil?
+    return if previous_induction_record.end_date.nil?
     return if participant_profile.current_induction_record == previous_induction_record
 
     if previous_induction_record.end_date < declaration_date
