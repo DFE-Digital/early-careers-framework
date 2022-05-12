@@ -22,6 +22,7 @@ class LeadProviderMailer < ApplicationMailer
 
   def partnership_challenged_email(partnership:, user:)
     reason = I18n.t(partnership.challenge_reason, scope: "partnerships.challenge_reasons")
+    lead_provider_name = partnership.lead_provider.name
 
     template_mail(
       PARTNERSHIP_CHALLENGED_TEMPLATE_ID,
@@ -33,6 +34,8 @@ class LeadProviderMailer < ApplicationMailer
         school_name: partnership.school.name,
         school_urn: partnership.school.urn,
         delivery_partner_name: partnership.delivery_partner.name,
+        lead_provider_name: lead_provider_name,
+        cohort_year: partnership.cohort.academic_year,
         reason: reason,
       },
     ).tag(:partnership_challenged).associate_with(partnership)
@@ -57,6 +60,7 @@ class LeadProviderMailer < ApplicationMailer
         school_urn: partnership.school.urn,
         delivery_partner_name: delivery_partner_name,
         cohort_year: cohort_year,
+        lead_provider_name: lead_provider_name,
         reason: reason,
       },
     ).tag(:fip_programme_changed)
