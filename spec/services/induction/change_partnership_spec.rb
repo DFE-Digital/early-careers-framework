@@ -26,7 +26,6 @@ RSpec.describe Induction::ChangePartnership do
       school_cohort.update!(default_induction_programme: induction_programme)
     end
 
-
     it "adds a new induction programme" do
       expect {
         service.call(school_cohort: school_cohort,

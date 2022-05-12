@@ -13,7 +13,7 @@ class Induction::ChangePartnership < BaseService
         default_induction_programme.update!(partnership: partnership)
 
       elsif default_induction_programme.partnership != partnership &&
-        default_induction_programme.partnership.challenged?
+          default_induction_programme.partnership.challenged?
 
         ActiveRecord::Base.transaction do
           # existing FIP partnership replaced so create a new programme and migrate

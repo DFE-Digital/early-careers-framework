@@ -21,7 +21,6 @@ RSpec.describe Induction::MigrateParticipantsToNewProgramme do
                             mentor_profile: mentor_profile)
     end
 
-
     it "adds new induction records for the participants" do
       expect {
         service.call(from_programme: induction_programme,
