@@ -28,13 +28,17 @@ module NPQ
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
         @participant_profile = create_profile
-        result = npq_application.update(lead_provider_approval_status: "accepted") && other_applications.update(lead_provider_approval_status: "rejected")
+        result = npq_application.update(lead_provider_approval_status: "accepted") && other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected")
         deduplicate_by_trn!
         result
       end
     end
 
   private
+
+    def cohort
+      npq_application.cohort
+    end
 
     def has_other_accepted_applications_with_same_course?
       NPQApplication.joins(:participant_identity)
@@ -45,11 +49,13 @@ module NPQ
         .exists?
     end
 
-    def other_applications
-      @other_applications ||= NPQApplication.joins(:participant_identity)
-                                            .where(participant_identity: { user_id: user.id })
-                                            .where(npq_course: npq_course)
-                                            .where.not(id: npq_application.id)
+    def other_applications_in_same_cohort
+      @other_applications_in_same_cohort ||= NPQApplication
+        .joins(:participant_identity)
+        .where(participant_identity: { user_id: user.id })
+        .where(npq_course: npq_course)
+        .where(cohort: cohort)
+        .where.not(id: npq_application.id)
     end
 
     def create_profile
