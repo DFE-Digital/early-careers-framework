@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(Pathname.new(__dir__).join(".ruby-version")).strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.5"
+gem "rails", "~> 6.1.6"
 
 # User management and rbac
 gem "devise", ">= 4.8.0"
@@ -15,8 +15,8 @@ gem "pretender", ">= 0.4.0"
 gem "pundit"
 
 # Error and performance monitoring
-gem "sentry-rails", "~> 5.2"
-gem "sentry-ruby", "~> 5.2"
+gem "sentry-rails", "~> 5.3"
+gem "sentry-ruby", "~> 5.3"
 gem "sentry-sidekiq"
 
 gem "secure_headers"
