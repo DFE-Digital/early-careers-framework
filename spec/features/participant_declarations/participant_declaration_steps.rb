@@ -193,7 +193,7 @@ module ParticipantDeclarationSteps
   end
 
   def then_the_declaration_made_against_the_withdrawn_participant_is_still_accepted
-    params = common_params(participant_id: @participant_id, declaration_date: @declaration_date + 3.days)
+    params = common_params(participant_id: @participant_id, declaration_date: @declaration_date + 1.day)
     travel_to @submission_date + 2.days do
       submit_request(params)
     end
