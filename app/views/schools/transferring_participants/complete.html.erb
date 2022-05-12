@@ -2,37 +2,35 @@
 <% participant_name = @transferring_participant_form.formatted_full_name %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
 
-    <%= govuk_panel title_text: "#{participant_name} has been registered at your school", text: nil, classes: "govuk-!-margin-bottom-8" %>
+        <%= govuk_panel title_text: "#{participant_name} has been registered at your school", text: nil, classes: "govuk-!-margin-bottom-7" %>
 
-    <h2 class="govuk-heading-m">What happens next</h2>
+        <h2 class="govuk-heading-m">What happens next</h2>
+        <p class="govuk-body">We’ll let <%= participant_name %> know you’ve registered them for ECF-based training at your school.</p>
 
-    <p class="govuk-body">We’ll let <%= participant_name %> know you’ve registered them for ECF-based training at your school.</p>
+        <% if @transferring_participant_form.start_date.future? %>
+            <p class="govuk-body">They’ll appear in the ’Moving school’ tab on your dashboard until their start date.</p>
+        <% end %>
 
-    <% if @transferring_participant_form.start_date.future? %>
-      <p class="govuk-body">They’ll appear in the ’Moving school’ tab on your dashboard until their start date.</p>
-    <% end %>
+        <% if @transferring_participant_form.same_programme %>
+            <p class="govuk-body">They’re already training with the same provider used by your school. We’ll let your provider know about the transfer.</p>
+        <% elsif @transferring_participant_form.continue_teachers_programme? %>
+            <p class="govuk-body">We’ll contact their training lead provider, <%= @latest_induction_record.induction_programme.lead_provider&.name %>, to let them know that you’ve reported their transfer too.</p>
+        <% elsif @transferring_participant_form.switch_to_schools_programme? %>
+            <p class="govuk-body">We’ll contact your training lead provider, <%= @school_cohort.default_induction_programme.lead_provider&.name %>, to let them know that you’ve reported this transfer. We recommend you confirm this with them directly too.</p>
+        <% end %>
 
-    <% if @transferring_participant_form.same_programme %>
-      <p class="govuk-body">They’re already training with the same provider used by your school. We’ll let your provider know about the transfer.</p>
-    <% elsif @transferring_participant_form.continue_teachers_programme? %>
-      <p class="govuk-body">We’ll contact their training lead provider, <%= @latest_induction_record.induction_programme.lead_provider&.name %>, to let them know that you’ve reported their transfer too.</p>
-    <% elsif @transferring_participant_form.switch_to_schools_programme? %>
-      <p class="govuk-body">We’ll contact your training lead provider, <%= @school_cohort.default_induction_programme.lead_provider&.name %>, to let them know that you’ve reported this transfer. We recommend you confirm this with them directly too.</p>
-    <% end %>
+        <% unless @participant_profile.mentor? %>
+        <h2 class="govuk-heading-m">Continuing induction and ECF-based training</h2>
+        <p class="govuk-body">Ask <%= participant_name %> or their previous school to provide records of any assessments and progress reviews completed so far.</p>
+        <% if @transferring_participant_form.switch_to_schools_programme? %>
+            <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %> will advise how <%= participant_name %> should transfer onto their programme.</p>
+        <% end %>
+        <p class="govuk-body">Contact us if you need to make any changes: <%= render MailToSupportComponent.new %></p>
+        <% end %>
+        
+        <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
 
-    <% unless @participant_profile.mentor? %>
-      <h2 class="govuk-heading-m">Continuing induction and ECF-based training</h2>
-
-      <p class="govuk-body">Ask <%= participant_name %> or their previous school to provide records of any assessments and progress reviews completed so far.</p>
-
-      <% if @transferring_participant_form.switch_to_schools_programme? %>
-        <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %> will advise how <%= participant_name %> should transfer onto their programme.</p>
-      <% end %>
-
-      <p class="govuk-body">Contact us if you need to make any changes: <%= render MailToSupportComponent.new %></p>
-    <% end %>
-    <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
-  </div>
+    </div>
 </div>
