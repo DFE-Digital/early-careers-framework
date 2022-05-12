@@ -29,13 +29,8 @@ module Partnerships
 
         # if a FIP has been chosen but the partnership was not present at the time
         # add it to the programme when it's reported
-        induction_programme = school_cohort.default_induction_programme
-        if induction_programme.present? &&
-            induction_programme.full_induction_programme? &&
-            induction_programme.partnership.blank?
-
-          school_cohort.default_induction_programme.update!(partnership: partnership)
-        end
+        Induction::ChangePartnership.call(school_cohort: school_cohort,
+                                          partnership: partnership)
 
         partnership.event_logs.create!(
           event: :reported,
