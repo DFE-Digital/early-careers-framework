@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.17.5",
-    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/plugin-transform-runtime": "^7.17.10",
     "@babel/preset-env": "^7.16.11",
     "@babel/runtime": "^7.17.2",
     "@sentry/browser": "^6.19.7",
@@ -37,7 +37,7 @@
     "@percy/cli": "^1.0.8",
     "@percy/cypress": "^3.1.1",
     "axe-core": "^4.3.5",
-    "cypress": "9.5.3",
+    "cypress": "9.6.1",
     "cypress-axe": "^0.14.0",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-file-upload": "^5.0.8",
