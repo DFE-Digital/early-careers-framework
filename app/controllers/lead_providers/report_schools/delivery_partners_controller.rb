@@ -21,7 +21,10 @@ module LeadProviders
     private
 
       def delivery_partners
-        @delivery_partners ||= current_user.lead_provider.delivery_partners
+        @delivery_partners ||= current_user
+                                 .lead_provider
+                                 .delivery_partners
+                                 .where("provider_relationships.cohort_id = ?", Cohort.active_registration_cohort)
       end
       helper_method :delivery_partners
     end
