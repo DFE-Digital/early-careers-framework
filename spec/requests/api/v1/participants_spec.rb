@@ -291,10 +291,6 @@ RSpec.describe "Participants API", :with_default_schdules, type: :request do
           let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
 
-          let!(:induction_record) do
-            Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme: induction_programme)
-          end
-
           it "changes the training status of a participant to withdrawn" do
             put url, params: params
 
