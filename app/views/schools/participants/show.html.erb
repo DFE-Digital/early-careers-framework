@@ -2,17 +2,16 @@
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: schools_participants_path) %>
 
-<span class="govuk-caption-xl"><%= @school.name %></span>
-<h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>
-
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m">Participant details</h2>
+    <div class="govuk-grid-column-two-thirds">
+        
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>        
 
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-7">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Full name
+          Name
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @profile.user.full_name %>
@@ -38,7 +37,7 @@
           <dd class="govuk-summary-list__actions">
             <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
               <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
-                Change <span class="govuk-visually-hidden">email</span>
+                Change <span class="govuk-visually-hidden">email address</span>
               <% end %>
             <% end %>
           </dd>
@@ -46,7 +45,7 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Start induction
+          Start term
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @profile.start_term.humanize %>
@@ -54,14 +53,14 @@
         <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_start_term? %>
             <%= govuk_link_to schools_participant_edit_start_term_path(participant_id: @profile) do %>
-              Change <span class="govuk-visually-hidden">start induction</span>
+              Change <span class="govuk-visually-hidden">start term</span>
             <% end %>
           <% end %>
         </dd>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Start date
+          Induction start
         </dt>
         <dd class="govuk-summary-list__value">
           <%= @first_induction_record&.start_date.to_date.to_s(:govuk) %>
@@ -112,9 +111,11 @@
         </div>
       <% end %>
     </dl>
-  </div>
-</div>
+  
 
 <% unless @profile.training_status_withdrawn? %>
-  <%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile, current_user: current_user) %>
+  <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile, current_user: current_user) %></p>
 <% end %>
+
+</div>
+</div>

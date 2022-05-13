@@ -1,11 +1,16 @@
 <% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @profile.user, url: schools_participant_update_name_path, method: :put do |f| %>
+      
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+
+      <%= form_for @profile.user, url: schools_participant_update_name_path, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_text_field :full_name, label: { text: "Change #{@profile.ect? ? "ECT’s" : "mentor’s"} name", tag: 'h1', size: 'xl' } %>
       <%= f.govuk_submit %>
     <% end %>
-  </div>
+    
+    </div>
 </div>
