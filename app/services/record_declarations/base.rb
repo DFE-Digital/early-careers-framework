@@ -135,7 +135,7 @@ module RecordDeclarations
     def declaration_date_after_withdrawal_date?
       return unless user_profile.participant_profile_states.exists?
 
-      invalid_declaration = user_profile.participant_profile_states.where(cpd_lead_provider: cpd_lead_provider, state: ParticipantProfileState.states[:withdrawn]).where("created_at <= ?", declaration_date)
+      invalid_declaration = user_profile.participant_profile_states.withdrawn.where(cpd_lead_provider: cpd_lead_provider).where("created_at <= ?", declaration_date)
       invalid_declaration.exists?
     end
 
