@@ -5,23 +5,23 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: back_link_path) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
 
-    <%= form_for add_participant_form, url: { action: :transfer, step: :transfer }, method: :put do |f| %>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+      
+        <%= form_for add_participant_form, url: { action: :transfer, step: :transfer }, method: :put do |f| %>
+        <%= f.govuk_error_summary %>
+            <%= f.govuk_radio_buttons_fieldset :transfer,
+                inline: true,        
+                legend: { text: title, tag: 'h1', size: 'xl' } do %>
 
-      <%= f.govuk_error_summary %>
+                <%= f.govuk_radio_button :transfer, :true, label: { text: "Yes" } %>
+                <%= f.govuk_radio_button :transfer, :false, label: { text: "No" } %>
+            <% end %>
 
-      <%= f.govuk_radio_buttons_fieldset :transfer,
-        inline: true,
-        caption: { text: @school.name, size: 'xl' },
-        legend: { text: title, tag: 'h1', size: 'xl' } do %>
+            <%= f.govuk_submit "Continue" %>
 
-        <%= f.govuk_radio_button :transfer, :true, label: { text: "Yes" } %>
-        <%= f.govuk_radio_button :transfer, :false, label: { text: "No" } %>
-      <% end %>
+        <% end %>
 
-      <%= f.govuk_submit "Continue" %>
-
-    <% end %>
-  </div>
+    </div>
 </div>
