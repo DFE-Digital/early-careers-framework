@@ -45,7 +45,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_click_on_continue
     then_i_am_taken_to_the_cannot_find_their_details
 
-    click_on "Continue and confirm"
+    click_on "Confirm and continue"
     then_i_am_taken_to_add_ect_or_mentor_email_page
 
     when_i_add_ect_or_mentor_email
