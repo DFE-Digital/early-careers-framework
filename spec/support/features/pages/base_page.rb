@@ -14,9 +14,15 @@ module Pages
       [has_primary_heading?, "Primary heading \"#{primary_heading}\" not found on page"]
     end
 
-    def self.loaded
+    def self.load(*args)
       page_object = new
-      is_displayed = page_object.displayed?
+      page_object.load(*args)
+      page_object
+    end
+
+    def self.loaded(*args)
+      page_object = new
+      is_displayed = page_object.displayed?(*args)
       is_loaded = page_object.loaded?
 
       if is_displayed && is_loaded

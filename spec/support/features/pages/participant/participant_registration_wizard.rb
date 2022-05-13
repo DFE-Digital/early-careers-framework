@@ -16,6 +16,13 @@ module Pages
       add_date_of_birth participant_dob
     end
 
+    def complete_for_mentor(participant_name, participant_dob, trn)
+      setup_response_from_dqt participant_name, participant_dob, trn
+
+      add_teacher_reference_number trn
+      add_date_of_birth participant_dob
+    end
+
     def confirm_have_trn
       choose "Yes"
       click_on "Continue"

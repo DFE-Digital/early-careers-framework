@@ -30,41 +30,19 @@ RSpec.describe "Reporting participants without a known TRN",
   end
 
   scenario "Adding an ECT" do
-    when_i_add_participant_details_from_school_dashboard_page
-    and_i_continue_from_school_add_participant_start_page
-    and_i_add_an_ect_or_mentor_from_school_participants_dashboard_page
-    and_i_choose_to_add_a_new_ect_from_school_add_participant_wizard
-    and_i_add_full_name_from_school_add_participant_wizard @participant_data[:full_name]
-    and_i_choose_i_do_not_know_the_participants_trn_from_school_add_participant_wizard
-    and_i_add_email_address_from_school_add_participant_wizard @participant_data[:email]
-    and_i_choose_start_term_from_school_add_participant_wizard @participant_data[:start_term].humanize
-    and_i_add_start_date_from_school_add_participant_wizard @participant_data[:start_date]
-    and_i_choose_a_mentor_from_school_add_participant_wizard @participant_profile_mentor.user.full_name.to_s
-    and_i_confirm_and_add_from_school_add_participant_wizard
+    when_i_report_a_new_ect_at_the_school
 
     then_i_am_on_the_school_add_participant_completed_page
-
-    page_object = Pages::SchoolAddParticipantCompletedPage.loaded
-    expect(page_object).to have_participant_name @participant_data[:full_name]
-    expect(page_object).to have_participant_type "ECT"
+    and_i_confirm_has_full_name_from_school_add_participant_completed_page @participant_data[:full_name]
+    and_i_confirm_has_participant_type_from_school_add_participant_completed_page "ECT"
   end
 
   scenario "Adding a mentor" do
-    when_i_add_participant_details_from_school_dashboard_page
-    and_i_continue_from_school_add_participant_start_page
-    and_i_add_an_ect_or_mentor_from_school_participants_dashboard_page
-    and_i_choose_to_add_a_new_mentor_from_school_add_participant_wizard
-    and_i_add_full_name_from_school_add_participant_wizard @participant_data[:full_name]
-    and_i_choose_i_do_not_know_the_participants_trn_from_school_add_participant_wizard
-    and_i_add_email_address_from_school_add_participant_wizard @participant_data[:email]
-    and_i_choose_start_term_from_school_add_participant_wizard @participant_data[:start_term].humanize
-    and_i_confirm_and_add_from_school_add_participant_wizard
+    when_i_report_a_new_mentor_at_the_school
 
     then_i_am_on_the_school_add_participant_completed_page
-
-    page_object = Pages::SchoolAddParticipantCompletedPage.loaded
-    expect(page_object).to have_participant_name @participant_data[:full_name]
-    expect(page_object).to have_participant_type "mentor"
+    and_i_confirm_has_full_name_from_school_add_participant_completed_page @participant_data[:full_name]
+    and_i_confirm_has_participant_type_from_school_add_participant_completed_page "mentor"
   end
 
 private
@@ -108,5 +86,30 @@ private
     @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
 
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
+  end
+
+  def when_i_report_a_new_ect_at_the_school
+    Pages::SchoolDashboardPage.loaded
+                              .add_participant_details
+                              .continue
+                              .add_an_ect_or_mentor
+                              .add_ect @participant_data[:full_name],
+                                       @participant_data[:email],
+                                       @participant_data[:start_term].humanize,
+                                       @participant_data[:start_date],
+                                       nil,
+                                       nil,
+                                       @participant_profile_mentor.user.full_name.to_s
+  end
+
+  def when_i_report_a_new_mentor_at_the_school
+    Pages::SchoolDashboardPage.loaded
+                              .add_participant_details
+                              .continue
+                              .add_an_ect_or_mentor
+                              .add_mentor @participant_data[:full_name],
+                                          @participant_data[:email],
+                                          @participant_data[:start_term].humanize,
+                                          @participant_data[:start_date]
   end
 end

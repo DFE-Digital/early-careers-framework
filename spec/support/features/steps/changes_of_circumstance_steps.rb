@@ -89,11 +89,15 @@ module Steps
       next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
         sign_in_as user
-        Pages::SchoolDashboardPage.loaded
-                                  .add_participant_details
-                                  .continue
-                                  .add_an_ect_or_mentor
-                                  .create_participant participant_type, participant_name, participant_email, "Spring 2022", Date.new(2021, 9, 1)
+        wizard = Pages::SchoolDashboardPage.loaded
+                                           .add_participant_details
+                                           .continue
+                                           .add_an_ect_or_mentor
+        if participant_type == "ECT"
+          wizard.add_ect participant_name, participant_email, "Spring 2022", Date.new(2021, 9, 1)
+        else
+          wizard.add_mentor participant_name, participant_email, "Spring 2022", Date.new(2021, 9, 1)
+        end
         sign_out
 
         travel_to 1.minute.from_now
@@ -105,17 +109,19 @@ module Steps
 
       next_ideal_time Time.zone.local(2021, 8, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        sign_in_as user
+        Pages::ParticipantRegistrationStartPage.load
+                                               .continue
 
-        Pages::ParticipantPrivacyPolicyPage.loaded
-                                           .continue
+        Pages::SignInPage.loaded
+                         .add_email_address(user.email)
+                         .continue
 
         case participant_type
         when "ECT"
-          Pages::ParticipantRegistrationWizard.loaded
+          Pages::ParticipantRegistrationWizard.load
                                               .complete_for_ect participant_name, participant_dob, participant_trn
         when "Mentor"
-          Pages::ParticipantRegistrationWizard.loaded
+          Pages::ParticipantRegistrationWizard.load
                                               .complete_for_mentor participant_name, participant_dob, participant_trn
         else
           raise "Participant_type not recognised"
@@ -581,6 +587,17 @@ module Steps
       raise "Could not find Lead Provider for #{lead_provider}" if lead_provider.nil?
 
       lead_provider
+    end
+
+    # helper whilst debugging scenarios with --fail-fast
+
+    def full_stop
+      puts "==="
+      puts page.current_url
+      puts "---"
+      puts page.find("main").text
+      puts "==="
+      raise
     end
   end
 end

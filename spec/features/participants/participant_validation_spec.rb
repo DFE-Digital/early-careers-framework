@@ -18,11 +18,6 @@ RSpec.feature "Participant validation journey",
   let(:mentor_full_name) { "Spike Spiegel" }
 
   before do
-    school = create :school,
-                    name: "Awesome school"
-
-    @school_cohort = create :school_cohort, :fip,
-                            school: school
     given_a_fip_school
 
     given_i_have_reported_an_ect ect_full_name

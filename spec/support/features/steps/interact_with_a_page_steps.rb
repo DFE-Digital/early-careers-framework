@@ -16,7 +16,7 @@ module Steps
       page_object_name, query_params = match_data[2].split("_with_")
       return super if page_object_name.nil? || method_name.nil?
 
-      page_object = Pages.const_get(page_object_name.camelize).new
+      page_object = Pages.const_get(page_object_name.camelize)
       query_params = query_params&.split("_") || []
 
       given_i_call(page_object, method_name, query_params, query_values)
@@ -33,18 +33,17 @@ module Steps
     end
 
     def given_i_call(page_object, method_symbol, query_params = [], query_values = [])
-      if query_params.empty? && query_values.empty?
-        page_object.public_send(method_symbol)
-      elsif query_params.empty? && query_values.any?
-        page_object.public_send(method_symbol, *query_values)
+      if query_params.blank? && query_values.blank?
+        page_object.new.public_send(method_symbol)
+      elsif query_params.blank? && query_values.any?
+        page_object.new.public_send(method_symbol, *query_values)
       else
         args = {}
-
         query_params.each_with_index do |key, i|
           args[key.to_sym] = query_values[i]
         end
 
-        page_object.public_send(method_symbol, args)
+        page_object.new.public_send(method_symbol, args)
       end
     end
   end

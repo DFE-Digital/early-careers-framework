@@ -15,7 +15,7 @@ module Steps
       page_object_name, query_params = match_data[1].split("_with_")
       return super if page_object_name.nil?
 
-      page_object = Pages.const_get(page_object_name.camelize).new
+      page_object = Pages.const_get(page_object_name.camelize)
       query_params = query_params&.split("_") || []
       query_values = query_values.map(&:to_s)
 
@@ -33,15 +33,18 @@ module Steps
     end
 
     def then_i_am_on(page_object, query_params = [], query_values = [])
-      args = {}
-      unless query_params.empty?
+      if query_params.blank? && query_values.blank?
+        page_object.loaded
+      elsif query_params.blank? && query_values.any?
+        page_object.loaded(*query_values)
+      else
+        args = {}
         query_params.each_with_index do |key, i|
           args[key.to_sym] = query_values[i]
         end
-      end
 
-      expect(page_object).to be_displayed(args)
-      expect(page_object).to have_primary_heading
+        page_object.loaded args
+      end
     end
   end
 end
