@@ -134,7 +134,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               headteacher_status: "no",
               eligible_for_funding: true,
               funding_choice: "school",
-              targeted_support_funding_eligibility: true,
+              targeted_delivery_funding_eligibility: true,
               cohort: cohort_2022.start_year,
             },
             relationships: {
@@ -184,7 +184,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(npq_application.eligible_for_funding).to eql(true)
         expect(npq_application.funding_choice).to eql("school")
         expect(npq_application.lead_provider_approval_status).to eql("pending")
-        expect(npq_application.targeted_support_funding_eligibility).to be_truthy
+        expect(npq_application.targeted_delivery_funding_eligibility).to be_truthy
         expect(npq_application.cohort.start_year).to eql(2022)
       end
 

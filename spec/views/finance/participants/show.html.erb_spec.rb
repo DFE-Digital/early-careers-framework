@@ -76,7 +76,7 @@ RSpec.describe "finance/participants/show.html.erb" do
 
       expect(rendered).to have_content("Eligible for funding#{profile.fundable?.to_s.upcase}")
 
-      expect(rendered).to have_content("Targeted support funding eligibility#{profile.npq_application.targeted_support_funding_eligibility ? 'YES' : 'NO'}")
+      expect(rendered).to have_content("Targeted support funding eligibility#{profile.npq_application.targeted_delivery_funding_eligibility ? 'YES' : 'NO'}")
     end
   end
 end
