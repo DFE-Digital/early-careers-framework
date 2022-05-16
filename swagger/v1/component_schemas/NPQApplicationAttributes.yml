@@ -122,3 +122,7 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  targeted_delivery_funding_eligibility:
+    description: "Indicates if the application is eligible for targeted delivery funding"
+    type: boolean
+    example: true
