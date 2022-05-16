@@ -42,7 +42,6 @@ RSpec.feature "CIP to FIP - Onboarding a withdrawn participant",
     let(:tokens) { {} }
 
     before do
-      given_a_cohort_with_start_year 2021
       given_a_cohort_with_start_year 2022
       given_a_privacy_policy_has_been_published
 

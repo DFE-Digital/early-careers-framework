@@ -123,6 +123,8 @@ module Pages
       fill_in "Month", with: date_of_birth.month
       fill_in "Year", with: date_of_birth.year
       click_on "Continue"
+
+      self
     end
 
     def choose_i_do_not_know_the_participants_trn

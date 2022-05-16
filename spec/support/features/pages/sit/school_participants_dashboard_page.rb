@@ -7,10 +7,28 @@ module Pages
     set_url "/schools/{slug}/cohorts/{cohort}/participants"
     set_primary_heading "Your ECTs and mentors"
 
-    def add_an_ect_or_mentor
+    def add_an_ect
       click_on "Add an ECT or mentor"
 
       Pages::SchoolAddParticipantWizard.loaded
+    end
+
+    def add_a_mentor
+      click_on "Add an ECT or mentor"
+
+      Pages::SchoolAddParticipantWizard.loaded
+    end
+
+    def transfer_an_ect
+      click_on "Add an ECT or mentor"
+
+      Pages::SchoolTransferParticipantWizard.loaded
+    end
+
+    def transfer_a_mentor
+      click_on "Add an ECT or mentor"
+
+      Pages::SchoolTransferParticipantWizard.loaded
     end
 
     def view_ects(participant_name)

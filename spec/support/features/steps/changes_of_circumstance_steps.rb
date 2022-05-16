@@ -5,7 +5,7 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      next_ideal_time Time.zone.local(2021, 2, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2022, 2, 1, 9, 0, 0)
 
       travel_to(@timestamp) do
         user = create :user, full_name: lead_provider_name
@@ -13,15 +13,6 @@ module Steps
         cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
         create :lead_provider_profile, user: user, lead_provider: lead_provider
         create :call_off_contract, lead_provider: lead_provider
-
-        create :ecf_statement,
-               name: "November 2021",
-               cpd_lead_provider: cpd_lead_provider,
-               deadline_date: Date.new(2021, 11, 25)
-
-        create :ecf_statement,
-               cpd_lead_provider: cpd_lead_provider,
-               deadline_date: 10.days.from_now
 
         token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
                                                                lead_provider: lead_provider,
@@ -34,7 +25,7 @@ module Steps
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2022, 4, 1, 9, 0, 0)
 
       travel_to(@timestamp) do
         school = create :school, :pupil_premium_uplift, name: "#{sit_name}'s School"
@@ -60,15 +51,15 @@ module Steps
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      user = find_user lead_provider_name
-      lead_provider = user.lead_provider
+      lead_provider = LeadProvider.find_by(name: lead_provider_name)
       delivery_partner = lead_provider.delivery_partners.first
 
       school = find_school_for_sit sit_name
 
-      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2022, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        sign_in_as user
+        given_i_authenticate_as_the_user_with_the_full_name lead_provider_name
+
         Pages::LeadProviderDashboard.loaded
                                     .confirm_schools
                                     .complete delivery_partner.name, [school.urn]
@@ -84,19 +75,20 @@ module Steps
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
-      user = find_user sit_name
-
-      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2022, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        sign_in_as user
+        given_i_authenticate_as_the_user_with_the_full_name sit_name
+
         wizard = Pages::SchoolDashboardPage.loaded
                                            .add_participant_details
                                            .continue
-                                           .add_an_ect_or_mentor
+
         if participant_type == "ECT"
-          wizard.add_ect participant_name, participant_email, "Spring 2022", Date.new(2021, 9, 1)
+          wizard.add_an_ect
+                .add_ect participant_name, participant_email, "Spring 2022", Date.new(2022, 9, 1)
         else
-          wizard.add_mentor participant_name, participant_email, "Spring 2022", Date.new(2021, 9, 1)
+          wizard.add_an_mentor
+                .add_mentor participant_name, participant_email, "Spring 2022", Date.new(2022, 9, 1)
         end
         sign_out
 
@@ -105,24 +97,19 @@ module Steps
     end
 
     def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      user = find_user participant_name
-
-      next_ideal_time Time.zone.local(2021, 8, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2022, 9, 2, 9, 0, 0)
       travel_to(@timestamp) do
-        Pages::ParticipantRegistrationStartPage.load
-                                               .continue
-
-        Pages::SignInPage.loaded
-                         .add_email_address(user.email)
-                         .continue
+        given_i_authenticate_as_the_user_with_the_full_name participant_name
 
         case participant_type
         when "ECT"
-          Pages::ParticipantRegistrationWizard.load
-                                              .complete_for_ect participant_name, participant_dob, participant_trn
+          Pages::PrivacyPolicyPage.loaded
+                                  .continue_for_ect
+                                  .complete participant_name, participant_dob, participant_trn
         when "Mentor"
-          Pages::ParticipantRegistrationWizard.load
-                                              .complete_for_mentor participant_name, participant_dob, participant_trn
+          Pages::PrivacyPolicyPage.loaded
+                                  .continue_for_mentor
+                                  .complete participant_name, participant_dob, participant_trn
         else
           raise "Participant_type not recognised"
         end
@@ -216,21 +203,27 @@ module Steps
     end
 
     def when_school_uses_the_transfer_participant_wizard(sit_name, participant_name, participant_email, participant_trn, participant_dob, same_provider: false)
-      user = find_user sit_name
-
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
-        sign_in_as user
+        given_i_authenticate_as_the_user_with_the_full_name sit_name
 
-        Pages::SchoolDashboardPage.loaded
-                                  .start_transfer_participant_wizard
-                                  .complete participant_name, participant_email, participant_trn, participant_dob, same_provider
+        page_object = Pages::SchoolDashboardPage.loaded
+                                                .add_participant_details
+                                                .continue
+
+        if participant_profile.ect?
+          page_object.transfer_an_ect
+                     .transfer_ect participant_name, participant_email, @timestamp + 1.day, same_provider, participant_trn, participant_dob
+        else
+          page_object.transfer_a_mentor
+                     .transfer_mentor participant_name, participant_email, @timestamp + 1.day, same_provider, participant_trn, participant_dob
+        end
 
         sign_out
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
@@ -330,30 +323,34 @@ module Steps
       end
     end
 
-    def and_lead_provider_statements_have_been_created(lead_provider_name)
+    def and_lead_provider_statements_have_been_calculated(lead_provider_name, statement_name)
       lead_provider = find_lead_provider lead_provider_name
 
-      next_ideal_time @timestamp + 3.days
+      statement = lead_provider.cpd_lead_provider.statements.where(name: statement_name).first
+
+      next_ideal_time statement.payment_date
       travel_to(@timestamp) do
         # TODO: not sure this works for retained-1 declarations
-        current_statement = lead_provider.cpd_lead_provider.statements.first
 
         Finance::ECF::CalculationOrchestrator.new(
-          statement: current_statement,
+          statement: statement,
           contract: lead_provider.call_off_contract,
-          aggregator: Finance::ECF::ParticipantAggregator.new(statement: current_statement),
+          aggregator: Finance::ECF::ParticipantAggregator.new(statement: statement),
           calculator: PaymentCalculator::ECF::PaymentCalculation,
         ).call(event_type: :started)
       end
     end
 
-    def self.then_sit_context(scenario, is_hidden: false)
+    def self.then_sit_context(scenario, is_hidden: false, is_training: true)
       str = "can#{is_hidden ? 'not' : ''} see the participant as \"the Participant\"\n"
       str += "          and the participant email as \"#{scenario.participant_email}\"\n"
       str += "          and the participant type as \"#{scenario.participant_type}\"\n"
       str += "          and the participant training status as \"Eligible to start\"\n"
-      str += is_hidden ? "          and the participant is being trained\n" : ""
-      str
+      if is_hidden
+        str
+      else
+        str + "          and the participant is#{is_training ? '' : ' not'} being trained\n"
+      end
     end
 
     def then_school_dashboard_page_does_not_have_participants
@@ -591,11 +588,19 @@ module Steps
 
     # helper whilst debugging scenarios with --fail-fast
 
-    def full_stop
+    def full_stop(html: false)
+      links = page.all("main a").map { |link| "  -  #{link.text} href: #{link['href']}" }
+
       puts "==="
       puts page.current_url
       puts "---"
-      puts page.find("main").text
+      if html
+        puts page.html
+      else
+        puts page.find("main").text
+      end
+      puts "---\nLinks:"
+      puts links
       puts "==="
       raise
     end

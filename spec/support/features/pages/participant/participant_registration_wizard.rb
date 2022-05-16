@@ -9,33 +9,40 @@ module Pages
     set_url "/participants/validation/trn"
     set_primary_heading "What’s your teacher reference number (TRN)?"
 
-    def complete_for_ect(participant_name, participant_dob, trn)
-      setup_response_from_dqt participant_name, participant_dob, trn
+    def complete_for_ect(full_name, date_of_birth, trn)
+      setup_response_from_dqt full_name, date_of_birth, trn
 
       add_teacher_reference_number trn
-      add_date_of_birth participant_dob
+      add_date_of_birth date_of_birth
     end
 
-    def complete_for_mentor(participant_name, participant_dob, trn)
-      setup_response_from_dqt participant_name, participant_dob, trn
+    def complete_for_mentor(full_name, date_of_birth, trn)
+      setup_response_from_dqt full_name, date_of_birth, trn
 
+      confirm_have_trn
       add_teacher_reference_number trn
-      add_date_of_birth participant_dob
+      add_date_of_birth date_of_birth
     end
 
     def confirm_have_trn
       choose "Yes"
       click_on "Continue"
+
+      self
     end
 
     def confirm_do_not_have_trn
       choose "No"
       click_on "Continue"
+
+      self
     end
 
     def add_teacher_reference_number(trn)
       fill_in "Teacher reference number (TRN)", with: trn
       click_on "Continue"
+
+      self
     end
 
     def add_date_of_birth(date_of_birth)
@@ -43,33 +50,46 @@ module Pages
       fill_in "Month", with: date_of_birth.month
       fill_in "Year", with: date_of_birth.year
       click_on "Continue"
+
+      self
     end
 
     def choose_add_your_national_insurance_number
       click_on "Add your National Insurance number"
+
+      self
     end
 
     def add_national_insurance_number(nino)
       fill_in "National Insurance Number", with: nino
       click_on "Continue"
+
+      self
     end
 
     def choose_confirm_your_name
       click_on "Continue to confirm your name"
+
+      self
     end
 
     def choose_last_name_has_changed
       choose "No"
       click_on "Continue"
+
+      self
     end
 
     def add_full_name(full_name)
       fill_in "What was your full name when you started your initial teacher training?", with: full_name
       click_on "Continue"
+
+      self
     end
 
     def setup_response_from_dqt(participant_name, dob, trn)
-      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{dob[:year]}-#{dob[:month]}-#{dob[:day]}")
+      birth_date = "#{dob.year}-#{sprintf('%02i', dob.month)}-#{sprintf('%02i', dob.day)}"
+      stub_request(:get, "https://dtqapi.example.com/dqt-crm/v1/teachers/#{trn}?birthdate=#{birth_date}")
         .with(
           headers: {
             "Accept" => "*/*",
@@ -81,7 +101,7 @@ module Pages
         )
         .to_return(status: 200, body: JSON.generate({
           "name": participant_name,
-          "dob": "#{dob[:year]}-#{dob[:month]}-#{dob[:day]}T00:00:00",
+          "dob": "#{birth_date}T00:00:00",
           "trn": trn,
           "ni_number": "AB123456D",
           "active_alert": false,
@@ -93,6 +113,8 @@ module Pages
             "start_date": "2021-09-02T00:00:00Z",
           },
         }), headers: {})
+
+      self
     end
   end
 end

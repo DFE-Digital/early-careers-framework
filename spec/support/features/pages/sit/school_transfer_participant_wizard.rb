@@ -4,19 +4,34 @@ require_relative "../base_page"
 
 module Pages
   class SchoolTransferParticipantWizard < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/roles"
-    set_primary_heading "Check what each person needs to do in the early career teacher training programme"
+    set_url "/schools/{slug}/cohorts/{cohort}/participants/add/who"
+    set_primary_heading "Who do you want to add?"
 
-    def complete(participant_name, participant_email, participant_trn, participant_dob, same_provider)
-      click_on "Continue"
+    def transfer_participant(participant_type, participant_name, participant_email, participant_trn, participant_dob, start_date, same_provider)
+      case participant_type
+      when "ECT"
+        transfer_ect(participant_name, participant_email, participant_trn, participant_dob, start_date, same_provider)
+      when "Mentor"
+        transfer_mentor(participant_name, participant_email, participant_trn, participant_dob, start_date, same_provider)
+      end
+    end
 
-      start_to_transfer_a_participant
+    def transfer_ect(full_name, email_address, start_date, same_provider, participant_trn, date_of_birth)
+      choose_to_add_a_new_ect
 
-      add_full_name participant_name
-      add_teacher_reference_number participant_trn
-      add_date_of_birth participant_dob
-      add_start_date year: Time.zone.now.year, month: Time.zone.now.month, day: Time.zone.now.day
-      add_email_address participant_email
+      add_full_name full_name
+
+      if participant_trn.blank?
+        choose_i_do_not_know_the_participants_trn
+      else
+        choose_i_know_the_participants_trn
+        add_teacher_reference_number full_name, participant_trn
+        add_date_of_birth date_of_birth
+      end
+
+      choose_to_transfer_from_another_school
+      add_start_date start_date
+      add_email_address email_address
 
       if same_provider
         # UI does not ask about provider
@@ -29,68 +44,117 @@ module Pages
       confirm_and_add
     end
 
-    def start_to_transfer_a_participant
-      start_to_add_a_participant
+    def transfer_mentor(full_name, email_address, start_date, same_provider, participant_trn, date_of_birth)
+      choose_to_add_a_new_ect
+
+      add_full_name full_name
+
+      if participant_trn.blank?
+        choose_i_do_not_know_the_participants_trn
+      else
+        choose_i_know_the_participants_trn
+        add_teacher_reference_number full_name, participant_trn
+        add_date_of_birth date_of_birth
+      end
+
       choose_to_transfer_from_another_school
-      confirm_have_all_details
-    end
+      add_start_date start_date
+      add_email_address email_address
 
-    def start_to_add_a_participant
-      click_on "Add an ECT or mentor"
-    end
+      if same_provider
+        # UI does not ask about provider
+      else
+        choose_schools_current_training_provider
+        # choose_participants_current_training_provider
+        # choose_a_new_training_provider
+      end
 
-    def choose_to_transfer_from_another_school
-      choose "A teacher transferring from another school where they’ve started ECF-based training or mentoring"
-      click_on "Continue"
-    end
-
-    def confirm_have_all_details
-      click_on "Continue"
+      confirm_and_add
     end
 
     def choose_to_add_a_new_ect
       choose "A new ECT"
       click_on "Continue"
+
+      self
     end
 
     def choose_to_add_a_new_mentor
       choose "A new mentor"
       click_on "Continue"
+
+      self
+    end
+
+    def choose_to_transfer_from_another_school
+      element_has_content? self, "Is The Participant transferring from another school?"
+      choose "Yes"
+      click_on "Continue"
+
+      self
     end
 
     def start_to_add_sit_as_mentor
       click_on "Add yourself as a mentor"
       click_on "Continue"
+
+      self
     end
 
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
       fill_in "Full_name", with: participant_name
       click_on "Continue"
+
+      self
     end
 
-    def add_teacher_reference_number(trn)
-      fill_in "Teacher reference number (TRN)", with: trn
+    def choose_i_know_the_participants_trn
+      choose "Yes"
       click_on "Continue"
+
+      self
     end
 
-    def add_date_of_birth(dob)
-      fill_in "Day", with: dob[:day]
-      fill_in "Month", with: dob[:month]
-      fill_in "Year", with: dob[:year]
+    def add_teacher_reference_number(full_name, trn)
+      element_has_content? self, "What’s #{full_name.titleize}’s teacher reference number (TRN)?"
+
+      fill_in "What’s #{full_name.titleize}’s teacher reference number (TRN)?", with: trn
       click_on "Continue"
+
+      self
     end
 
-    def add_start_date(dob)
-      fill_in "Day", with: dob[:day]
-      fill_in "Month", with: dob[:month]
-      fill_in "Year", with: dob[:year]
+    def add_date_of_birth(date_of_birth)
+      fill_in "Day", with: date_of_birth.day
+      fill_in "Month", with: date_of_birth.month
+      fill_in "Year", with: date_of_birth.year
       click_on "Continue"
+
+      self
+    end
+
+    def choose_i_do_not_know_the_participants_trn
+      choose "No"
+      click_on "Continue"
+
+      self
+    end
+
+    def add_start_date(start_date)
+      fill_in "Day", with: start_date.day
+      fill_in "Month", with: start_date.month
+      fill_in "Year", with: start_date.year
+      click_on "Continue"
+
+      self
     end
 
     def add_email_address(participant_email)
       fill_in "Email", with: participant_email
       click_on "Continue"
+
+      self
     end
 
     def choose_schools_current_training_provider
@@ -99,16 +163,14 @@ module Pages
 
       choose "Yes"
       click_on "Continue"
+
+      self
     end
 
     def confirm_and_add
       click_on "Confirm and add"
-    end
 
-    def view_participants_dashboard
-      click_on "View your ECTs and mentors"
-
-      Pages::SchoolParticipantsDashboardPage.loaded
+      Pages::SchoolTransferParticipantCompletedPage.loaded
     end
   end
 end

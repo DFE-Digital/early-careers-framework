@@ -8,11 +8,7 @@ module Pages
     set_primary_heading "Have you been given a teacher reference number (TRN)?"
 
     def complete(participant_name, participant_dob, trn)
-      setup_response_from_dqt participant_name, participant_dob, trn
-
-      confirm_have_trn
-      add_teacher_reference_number trn
-      add_date_of_birth participant_dob
+      complete_for_mentor participant_name, participant_dob, trn
     end
   end
 end
