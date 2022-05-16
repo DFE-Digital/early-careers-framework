@@ -16,6 +16,8 @@ class User < ApplicationRecord
 
   has_one :teacher_profile, dependent: :destroy
 
+  has_one :delivery_partner_profile, dependent: :destroy
+
   # TODO: Legacy associations, to be removed
   has_many :participant_profiles, through: :teacher_profile
   has_one :early_career_teacher_profile, through: :teacher_profile
@@ -43,6 +45,10 @@ class User < ApplicationRecord
 
   def finance?
     finance_profile.present?
+  end
+
+  def delivery_partner?
+    delivery_partner_profile.present?
   end
 
   def supplier_name
@@ -97,6 +103,8 @@ class User < ApplicationRecord
       "Induction tutor"
     elsif finance?
       "DfE Finance"
+    elsif delivery_partner?
+      "Delivery partner"
     elsif lead_provider?
       "Lead provider"
     elsif early_career_teacher?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_10_115548) do
+ActiveRecord::Schema.define(version: 2022_05_12_140603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -199,6 +199,15 @@ ActiveRecord::Schema.define(version: 2022_05_10_115548) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "state_reason"
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
+  end
+
+  create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "delivery_partner_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["delivery_partner_id"], name: "index_delivery_partner_profiles_on_delivery_partner_id"
+    t.index ["user_id"], name: "index_delivery_partner_profiles_on_user_id"
   end
 
   create_table "delivery_partners", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -487,6 +496,7 @@ ActiveRecord::Schema.define(version: 2022_05_10_115548) do
     t.string "employment_role"
     t.boolean "targeted_support_funding_eligibility", default: false
     t.uuid "cohort_id"
+    t.boolean "targeted_delivery_funding_eligibility", default: false
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
@@ -930,6 +940,8 @@ ActiveRecord::Schema.define(version: 2022_05_10_115548) do
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
+  add_foreign_key "delivery_partner_profiles", "delivery_partners"
+  add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "district_sparsities", "local_authority_districts"
   add_foreign_key "ecf_participant_eligibilities", "participant_profiles"
   add_foreign_key "ecf_participant_validation_data", "participant_profiles"

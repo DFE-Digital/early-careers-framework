@@ -694,7 +694,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_participant_profile
-    expect(page).to have_selector("h2", text: "Participant details")
+    expect(page).to have_text("Name")
   end
 
   def then_i_am_taken_to_do_you_know_your_teachers_trn_page
@@ -785,7 +785,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_view_details_page
-    expect(page).to have_text("Participant details")
+    expect(page).to have_text("Name")
   end
 
   def then_i_can_view_ineligible_participant_status

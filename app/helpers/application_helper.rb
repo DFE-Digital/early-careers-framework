@@ -10,6 +10,8 @@ module ApplicationHelper
       admin_schools_path
     elsif user.finance?
       finance_landing_page_path
+    elsif user.delivery_partner?
+      delivery_partners_participants_path
     elsif user.induction_coordinator_and_mentor?
       induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?
@@ -86,7 +88,7 @@ module ApplicationHelper
 private
 
   def post_2020_ecf_participant?(user)
-    user.teacher_profile.current_ecf_profile.present?
+    user.teacher_profile.ecf_profiles.where.not(cohort: Cohort.find_by(start_year: 2020)).any?
   end
 
   def induction_coordinator_mentor_path(user)

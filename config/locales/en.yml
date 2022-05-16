@@ -138,6 +138,10 @@ en:
         lead_provider_approval_status: Status
     errors:
       models:
+        participant_identity:
+          attributes:
+            email:
+              <<: *email_error_messages
         user:
           attributes:
             email:
