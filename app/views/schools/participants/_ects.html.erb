@@ -1,6 +1,10 @@
 <% if ect_profiles.contacted_for_info.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Contacted for information</h2>
-  <p class="govuk-!-margin-bottom-3">We need this to check their eligibility with the Teaching Regulation Agency.</p>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Contacted for information</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">We need this to check their eligibility with the Teaching Regulation Agency.</p>
+    </div>
+  </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked_ects">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
@@ -12,9 +16,12 @@
 <% end %>
 
 <% if ect_profiles.details_being_checked.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">DfE checking eligibility</h2>
-  <p class="govuk-!-margin-bottom-3">We’re checking these people’s details with the Teaching Regulation Agency.
-    We’ll confirm if they’re eligible for this programme soon.</p>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">DfE checking eligibility</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon.</p>
+    </div>
+  </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="details_ects">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
@@ -26,11 +33,12 @@
 <% end %>
 
 <% if ect_profiles.no_qts_participants.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Checking QTS</h2>
-  <p class="govuk-!-margin-bottom-3">
-    These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training.
-    We’ll keep checking their status and notify you if something changes.
-  </p>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Checking QTS</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training. We’ll keep checking their status and notify you if something changes.</p>
+    </div>
+  </div>
 
 <table class="govuk-table govuk-!-margin-bottom-9" data-test="no_qts">
   <% if FeatureFlag.active?(:change_of_circumstances) %>
@@ -42,15 +50,18 @@
 <% end %>
 
 <% if ect_profiles.eligible.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
-
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Eligible to start</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
   <% if @school_cohort.core_induction_programme? %>
-    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
+    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
   <% elsif @school_cohort.delivery_partner.present? %>
-    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
+    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
   <% else %>
-    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
+    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
   <% end %>
+    </div>
+  </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible_ects">
     <% if FeatureFlag.active?(:change_of_circumstances) %>

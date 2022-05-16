@@ -1,6 +1,10 @@
 <% if mentor_profiles.contacted_for_info.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Contacted for information</h2>
-  <p class="govuk-!-margin-bottom-3">We need this to check their eligibility with the Teaching Regulation Agency.</p>
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Contacted for information</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">We need this to check their eligibility with the Teaching Regulation Agency.</p>
+    </div>
+  </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
@@ -12,10 +16,12 @@
 <% end %>
 
 <% if mentor_profiles.details_being_checked.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">DfE checking eligibility</h2>
-  <p class="govuk-!-margin-bottom-3">We’re checking these people’s details with the Teaching Regulation Agency.
-    We’ll confirm if they’re eligible for this programme soon.</p>
-
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">DfE checking eligibility</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-!-margin-bottom-3">We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon.</p>
+    </div>
+  </div>
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="details">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
       <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.details_being_checked) %>
@@ -26,15 +32,18 @@
 <% end %>
 
 <% if mentor_profiles.eligible.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Eligible to start</h2>
-
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Eligible to start</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
   <% if @school_cohort.core_induction_programme? %>
-    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
+    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
   <% elsif @school_cohort.delivery_partner.present? %>
-    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
+    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
   <% else %>
-    <p class="govuk-!-margin-bottom-3">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
+    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
   <% end %>
+  </div>
+</div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
