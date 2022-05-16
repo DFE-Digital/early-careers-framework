@@ -36,8 +36,8 @@ module Steps
         PrivacyPolicy.current.accept! user
 
         sign_in_as user
-        choose_programme_wizard = Pages::SchoolReportProgrammeWizard.new
-        choose_programme_wizard.complete(programme)
+        Pages::SchoolReportProgrammeWizard.loaded
+                                          .complete(programme)
         sign_out
 
         if programme == "CIP"

@@ -5,7 +5,7 @@ require_relative "../base_page"
 module Pages
   class SchoolReportProgrammeWizard < ::Pages::BasePage
     set_url "SITReportProgrammeWizard"
-    set_primary_heading "SITReportProgrammeWizard"
+    set_primary_heading "How do you want to run your training in 2021 to 2022?"
 
     def complete(programme_type)
       choose_programme_type programme_type

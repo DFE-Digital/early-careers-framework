@@ -51,7 +51,7 @@ RSpec.describe "Reporting participants with a known TRN",
   scenario "Adding an ECT validates input" do
     when_i_add_participant_details_from_school_dashboard_page
     and_i_continue_from_school_add_participant_start_page
-    and_i_add_an_ect_or_mentor_from_school_participants_dashboard_page
+    and_i_add_an_ect_from_school_participants_dashboard_page
 
     when_i_choose_to_add_a_new_ect_from_school_add_participant_wizard
     click_on "Continue"
@@ -99,7 +99,7 @@ RSpec.describe "Reporting participants with a known TRN",
     then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
 
-    when_i_add_an_ect_or_mentor_from_school_participants_dashboard_page
+    when_i_add_an_ect_from_school_participants_dashboard_page
     and_i_choose_to_add_a_new_ect_from_school_add_participant_wizard
     then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT name"
@@ -142,17 +142,15 @@ RSpec.describe "Reporting participants with a known TRN",
     then_percy_is_sent_a_snapshot_named "Induction tutor receives add ECT Confirmation"
 
     then_i_am_on_the_school_add_participant_completed_page
-
-    page_object = Pages::SchoolAddParticipantCompletedPage.loaded
-    expect(page_object).to have_participant_name @participant_data[:full_name]
-    expect(page_object).to have_participant_type "ECT"
+    and_i_confirm_has_full_name_from_school_add_participant_completed_page @participant_data[:full_name]
+    and_i_confirm_has_participant_type_from_school_add_participant_completed_page "ECT"
   end
 
   scenario "Adding a Mentor is accessible" do
     when_i_add_participant_details_from_school_dashboard_page
     and_i_continue_from_school_add_participant_start_page
 
-    when_i_add_an_ect_or_mentor_from_school_participants_dashboard_page
+    when_i_add_a_mentor_from_school_participants_dashboard_page
     and_i_choose_to_add_a_new_mentor_from_school_add_participant_wizard
     then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor adds mentor name"
@@ -178,10 +176,8 @@ RSpec.describe "Reporting participants with a known TRN",
     then_percy_is_sent_a_snapshot_named "Induction tutor receives add mentor Confirmation"
 
     then_i_am_on_the_school_add_participant_completed_page
-
-    page_object = Pages::SchoolAddParticipantCompletedPage.loaded
-    expect(page_object).to have_participant_name @participant_data[:full_name]
-    expect(page_object).to have_participant_type "Mentor"
+    and_i_confirm_has_full_name_from_school_add_participant_completed_page @participant_data[:full_name]
+    and_i_confirm_has_participant_type_from_school_add_participant_completed_page "Mentor"
   end
 
 private
