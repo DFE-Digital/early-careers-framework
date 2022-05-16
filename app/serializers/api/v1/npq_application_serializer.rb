@@ -25,7 +25,8 @@ module Api
                  :employment_role,
                  :status,
                  :created_at,
-                 :updated_at
+                 :updated_at,
+                 :targeted_delivery_funding_eligibility
 
       attribute(:participant_id) do |object|
         object.participant_identity.external_identifier
