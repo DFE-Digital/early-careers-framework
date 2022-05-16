@@ -7,6 +7,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   let(:admin_user) { create(:user, :admin) }
   let(:finance_user) { create(:user, :finance) }
+  let(:delivery_partner_user) { create(:user, :delivery_partner) }
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
@@ -22,6 +23,10 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it "returns the finance path for finance" do
       expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/manage-cpd-contracts")
+    end
+
+    it "returns the correct path for delivery partner" do
+      expect(helper.profile_dashboard_path(delivery_partner_user)).to eq("/delivery-partners/participants")
     end
 
     it "returns schools/choose-programme for induction coordinators" do

@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 class DeliveryPartnerProfilePolicy < ApplicationPolicy
-  def create?
-    admin_only
+  def index?
+    !!user&.delivery_partner?
   end
 
-  def update?
-    admin_only
+  def show?
+    !!user&.delivery_partner?
   end
 
   class Scope < Scope
     def resolve
-      scope.all
+      return scope.all if user.delivery_partner?
+
+      scope.none
     end
   end
 end

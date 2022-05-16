@@ -20,6 +20,8 @@ RSpec.describe DeliveryPartner, type: :model do
     it { is_expected.to have_many(:partnerships) }
     it { is_expected.to have_many(:active_partnerships) }
     it { is_expected.to have_many(:schools).through(:active_partnerships) }
+    it { is_expected.to have_many(:delivery_partner_profiles) }
+    it { is_expected.to have_many(:users) }
   end
 
   describe "#cohorts_with_lead_provider" do

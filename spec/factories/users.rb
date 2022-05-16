@@ -51,5 +51,9 @@ FactoryBot.define do
     trait :finance do
       finance_profile
     end
+
+    trait :delivery_partner do
+      delivery_partner_profile
+    end
   end
 end

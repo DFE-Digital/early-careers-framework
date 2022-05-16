@@ -10,6 +10,8 @@ module ApplicationHelper
       admin_schools_path
     elsif user.finance?
       finance_landing_page_path
+    elsif user.delivery_partner?
+      delivery_partners_participants_path
     elsif user.induction_coordinator_and_mentor?
       induction_coordinator_mentor_path(user)
     elsif user.induction_coordinator?

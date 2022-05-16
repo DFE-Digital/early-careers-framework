@@ -498,6 +498,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :delivery_partners, path: "delivery-partners" do
+    resources :participants, only: %i[index]
+  end
+
   get "/403", to: "errors#forbidden", via: :all
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
