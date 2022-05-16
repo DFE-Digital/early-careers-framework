@@ -58,7 +58,6 @@ class SchoolMailer < ApplicationMailer
         school_name: school.name,
         nomination_link: nomination_url,
         expiry_date: expiry_date,
-        subject: "Important: NQT induction changes",
       },
     ).tag(:request_to_nominate_sit).associate_with(school)
   end

@@ -36,7 +36,7 @@ class NominationRequestForm
       ActiveRecord::Base.transaction do
         raise TooManyEmailsError if reached_email_limit
 
-        invite_schools_service.run([school.urn])
+        invite_schools_service.perform([school.urn])
       end
     end
   end

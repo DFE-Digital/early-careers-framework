@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class InviteSchools
+  include Sidekiq::Worker
+
   EMAIL_LIMITS = [
     { max: 5, within: 24.hours },
     { max: 1, within: 5.minutes },
   ].freeze
 
-  def run(school_urns)
+  def perform(school_urns)
     logger.info "Emailing schools"
 
     school_urns.each do |urn|
@@ -23,8 +25,8 @@ class InviteSchools
     rescue Notifications::Client::RateLimitError
       sleep(1)
       send_nomination_email(nomination_email)
-    rescue StandardError
-      logger.info "Error emailing school, urn: #{urn} ... skipping"
+    rescue StandardError => e
+      logger.info "Error emailing school, urn: #{urn} ... skipping. Error: #{e}"
     end
   end
 
