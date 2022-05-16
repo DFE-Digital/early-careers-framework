@@ -142,7 +142,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def then_i_should_be_taken_to_the_cannot_add_page
-        expect(page).to have_selector("h1", text: "Contact us to transfer #{@participant_data[:full_name]}")
+        expect(page).to have_selector("h1", text: "You cannot add #{@participant_data[:full_name]}")
         expect(page).to have_text("Contact us for help to register this person at your school")
       end
 

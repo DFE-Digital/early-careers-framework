@@ -4,27 +4,31 @@
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: {action:  @transferring_participant_form.previous_step }) %>
 
-<span class="govuk-caption-xl"><%= @school.name %></span>
+<div class="govuk-grid-row">
+	<div class="govuk-grid-column-two-thirds">
 
-<%= form_for @transferring_participant_form, url: { action: :choose_mentor }, method: :put do |f| %>
-  <%= f.govuk_radio_buttons_fieldset :mentor_id,
-    legend: { text: title, tag: 'h1', size: 'xl' },
-    hint: { text: "You can tell us later if you’re not sure." } do %>
+        <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <% if FeatureFlag.active?(:multiple_cohorts) %>
-      <% @school_cohort.school.mentors.each do |mentor| %>
-        <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name } %>
-      <% end %>
-    <% else %>
-      <% @school_cohort.current_induction_records.mentors.each do |mentor| %>
-        <%= f.govuk_radio_button :mentor_id, mentor.user.id, label: { text: mentor.user.full_name } %>
-      <% end %>
-    <% end %>
+        <%= form_for @transferring_participant_form, url: { action: :choose_mentor }, method: :put do |f| %>
+            <%= f.govuk_radio_buttons_fieldset :mentor_id,
+                legend: { text: title, tag: 'h1', size: 'xl' } do %>
 
-    <%= f.govuk_radio_divider %>
+                <% if FeatureFlag.active?(:multiple_cohorts) %>
+                <% @school_cohort.school.mentors.each do |mentor| %>
+                    <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name } %>
+                <% end %>
+                <% else %>
+                <% @school_cohort.current_induction_records.mentors.each do |mentor| %>
+                    <%= f.govuk_radio_button :mentor_id, mentor.user.id, label: { text: mentor.user.full_name } %>
+                <% end %>
+                <% end %>
 
-    <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign a mentor later' } %>
-  <% end %>
+                <%= f.govuk_radio_divider %>
 
-  <%= f.govuk_submit "Continue" %>
-<% end %>
+                <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign a mentor later' } %>
+            <% end %>
+
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+    </div>
+</div>

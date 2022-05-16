@@ -2,23 +2,23 @@
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :teacher)) %>
 
-<span class="govuk-caption-xl"><%= @school.name %> cohort</span>
-<h1 class="govuk-heading-xl">What we need from you</h1>
-
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-body">We need to find the right person in our database so we can transfer their record to your school.</p>
-    <p class="govuk-body">To do this, you need to tell us their:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>full name</li>
-      <li>teacher reference number (TRN)</li>
-      <li>date of birth</li>
-      <li>email address (personal or school)</li>
-      <li>start date at your school</li>
-    </ul>
+	<div class="govuk-grid-column-two-thirds">
 
-    <p class="govuk-body">If your school does not have this information, contact the person directly to ask for it.</p>
+  		<span class="govuk-caption-xl"><%= @school.name %></span>
+		<h1 class="govuk-heading-xl">What we need from you</h1>
 
-    <%= govuk_button_link_to "Continue", full_name_schools_transferring_participant_path %>
-  </div>
+    	<p class="govuk-body">We need to find the right person in our database so we can transfer their record to your school.</p>
+    	<p class="govuk-body">To do this, you need to tell us their:</p>
+    	<ul class="govuk-list govuk-list--bullet">
+			<li>full name</li>
+			<li>teacher reference number (TRN)</li>
+			<li>date of birth</li>
+			<li>email address (personal or school)</li>
+      		<li>start date at your school</li>
+    	</ul>
+    	<p class="govuk-body govuk-!-margin-bottom-7">If your school does not have this information, contact the person directly to ask for it.</p>
+    	<%= govuk_button_link_to "Continue", full_name_schools_transferring_participant_path %>
+
+  	</div>
 </div>
