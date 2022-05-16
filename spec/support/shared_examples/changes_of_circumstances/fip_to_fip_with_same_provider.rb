@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "FIP to FIP with same provider" do |scenario|
+RSpec.shared_examples "FIP to FIP with same provider" do |scenario, _prior_participant_status = [], is_obfuscated: true|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario),
+    it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario, is_training: false, is_obfuscated: is_obfuscated),
        :aggregate_failures do
       given_i_authenticate_as_the_user_with_the_full_name "Original SIT"
       and_i_am_on_the_school_dashboard_page
 
-      when_i_view_participant_dashboard_from_school_dashboard_page
-      and_i_view_not_training_from_school_participants_dashboard_page "the Participant"
+      if is_obfuscated
+        then_school_dashboard_page_does_not_have_participants
+      else
+        when_i_view_participant_details_from_school_dashboard_page
+        and_i_view_not_training_from_school_participants_dashboard_page "the Participant"
 
-      then_school_participant_details_page_shows_participant_details "the Participant",
-                                                                     scenario.participant_email,
-                                                                     "Eligible to start"
+        then_school_participant_details_page_shows_participant_details "the Participant",
+                                                                       scenario.participant_email,
+                                                                       "Eligible to start"
+      end
 
       sign_out
     end
@@ -28,7 +32,7 @@ RSpec.shared_examples "FIP to FIP with same provider" do |scenario|
       given_i_authenticate_as_the_user_with_the_full_name "New SIT"
       and_i_am_on_the_school_dashboard_page
 
-      when_i_view_participant_dashboard_from_school_dashboard_page
+      when_i_view_participant_details_from_school_dashboard_page
       if scenario.participant_type == "ECT"
         and_i_view_ects_from_school_participants_dashboard_page "the Participant"
       else

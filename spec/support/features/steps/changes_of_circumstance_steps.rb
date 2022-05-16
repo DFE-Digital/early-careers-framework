@@ -341,9 +341,9 @@ module Steps
       end
     end
 
-    def self.then_sit_context(scenario, is_hidden: false, is_training: true)
+    def self.then_sit_context(scenario, is_hidden: false, is_obfuscated: false, is_training: true)
       str = "can#{is_hidden ? 'not' : ''} see the participant as \"the Participant\"\n"
-      str += "          and the participant email as \"#{scenario.participant_email}\"\n"
+      str += "          and the participant email \"#{is_obfuscated ? 'is obfuscated' : "as #{scenario.participant_email}"}\"\n"
       str += "          and the participant type as \"#{scenario.participant_type}\"\n"
       str += "          and the participant training status as \"Eligible to start\"\n"
       if is_hidden

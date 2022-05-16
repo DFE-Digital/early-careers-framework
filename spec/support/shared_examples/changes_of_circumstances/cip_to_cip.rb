@@ -26,7 +26,7 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
       given_i_authenticate_as_the_user_with_the_full_name "New SIT"
       and_i_am_on_the_school_dashboard_page
 
-      when_i_view_participant_dashboard_from_school_dashboard_page
+      when_i_view_participant_details_from_school_dashboard_page
       if scenario.participant_type == "ECT"
         and_i_view_ects_from_school_participants_dashboard_page "the Participant"
       else

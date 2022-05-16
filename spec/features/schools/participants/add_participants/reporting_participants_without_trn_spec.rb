@@ -92,7 +92,7 @@ private
     Pages::SchoolDashboardPage.loaded
                               .add_participant_details
                               .continue
-                              .add_an_ect_or_mentor
+                              .add_an_ect
                               .add_ect @participant_data[:full_name],
                                        @participant_data[:email],
                                        @participant_data[:start_term].humanize,
@@ -106,7 +106,7 @@ private
     Pages::SchoolDashboardPage.loaded
                               .add_participant_details
                               .continue
-                              .add_an_ect_or_mentor
+                              .add_a_mentor
                               .add_mentor @participant_data[:full_name],
                                           @participant_data[:email],
                                           @participant_data[:start_term].humanize,
