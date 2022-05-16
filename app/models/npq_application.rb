@@ -3,7 +3,7 @@
 class NPQApplication < ApplicationRecord
   has_paper_trail only: %i[user_id npq_lead_provider_id npq_course_id created_at updated_at lead_provider_approval_status]
 
-  self.ignored_columns = %w[user_id]
+  self.ignored_columns = %w[user_id targeted_support_funding_eligibility]
 
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :participant_identity
