@@ -1,46 +1,50 @@
 <% if withdrawn.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">No longer being trained</h2>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-  <% if @school.lead_provider(@school_cohort.cohort.start_year).present? %>
-    <p class="govuk-body">
-      Your provider reported that they’re not training the people listed below. If this is wrong, contact <%= @school.lead_provider(@school_cohort.cohort.start_year).name %>
-      <% if @school.delivery_partner_for(@school_cohort.cohort.start_year) %>
-        or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>.
-      <% end %>
-    </p>
-  <% end %>
-  </div>
-</div>
-  <table class="govuk-table govuk-!-margin-bottom-9" data-test="withdrawn_ects">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">No longer being trained</h2>
+    <div class="govuk-grid-row">
+
+        <div class="govuk-grid-column-two-thirds">
+            <% if @school.lead_provider(@school_cohort.cohort.start_year).present? %>
+            <p class="govuk-body">Your provider reported that they’re not training the people listed below. If this is wrong, contact <%= @school.lead_provider(@school_cohort.cohort.start_year).name %>
+            <% if @school.delivery_partner_for(@school_cohort.cohort.start_year) %>
+            or <%= @school.delivery_partner_for(@school_cohort.cohort.start_year).name %>.
+            <% end %>
+            </p>
+            <% end %>
+        </div>
+    </div>
+    <table class="govuk-table govuk-!-margin-bottom-9" data-test="withdrawn_ects">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: withdrawn) %>
+        <%= render Schools::Participants::CocStatusTable.new(induction_records: withdrawn) %>
     <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: withdrawn, school_cohort: @school_cohort) %>
+        <%= render Schools::Participants::StatusTable.new(participant_profiles: withdrawn, school_cohort: @school_cohort) %>
     <% end %>
-  </table>
+    </table>
 <% end %>
 
 <% if ineligible.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Not eligible for funded training</h2>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <p class="govuk-body">We’ve checked these people’s details and found they’re not eligible for this programme.</p>
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Not eligible for funded training</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body">We’ve checked these people’s details and found they’re not eligible for this programme.</p>
+        </div>
     </div>
-  </div>
-  <table class="govuk-table govuk-!-margin-bottom-9" data-test="ineligble_ects">
+    <table class="govuk-table govuk-!-margin-bottom-9" data-test="ineligble_ects">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
       <%= render Schools::Participants::CocStatusTable.new(induction_records: ineligible) %>
     <% else %>
       <%= render Schools::Participants::StatusTable.new(participant_profiles: ineligible, school_cohort: @school_cohort) %>
     <% end %>
-  </table>
+    </table>
 <% end %>
 
 <% if transferred.any? %>
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Transferred from your school</h2>
-  <p class="govuk-!-margin-bottom-3">You told us these people moved to a new school.</p>
-  <table class="govuk-table govuk-!-margin-bottom-9" data-test="ineligble_ects">
-    <%= render Schools::Participants::CocStatusTable.new(induction_records: transferred) %>
-  </table>
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Transferred from your school</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-!-margin-bottom-3">You told us these people moved to a new school.</p>
+        </div>
+    </div>
+    <table class="govuk-table govuk-!-margin-bottom-9" data-test="ineligble_ects">
+        <%= render Schools::Participants::CocStatusTable.new(induction_records: transferred) %>
+    </table>
 <% end %>
