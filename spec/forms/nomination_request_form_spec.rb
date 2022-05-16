@@ -36,7 +36,7 @@ RSpec.describe NominationRequestForm, type: :model do
 
   describe "#save!" do
     it "calls InviteSchools with the correct school" do
-      expect_any_instance_of(InviteSchools).to receive(:run).with([school.urn])
+      expect_any_instance_of(InviteSchools).to receive(:perform).with([school.urn])
 
       nomination_request_form.save!
     end
@@ -47,7 +47,7 @@ RSpec.describe NominationRequestForm, type: :model do
       end
 
       it "does not call run on InviteSchools" do
-        expect_any_instance_of(InviteSchools).not_to receive(:run)
+        expect_any_instance_of(InviteSchools).not_to receive(:perform)
       end
 
       it "raises TooManyEmailsError if the school has been emailed in the last 24 hours" do
