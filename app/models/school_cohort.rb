@@ -59,8 +59,24 @@ class SchoolCohort < ApplicationRecord
     school.lead_provider(cohort.start_year)
   end
 
+  def lead_provider_to_be_confirmed?
+    default_induction_programme.lead_provider_to_be_confirmed
+  end
+
+  def previous_lead_provider
+    school.lead_provider(cohort.start_year - 1)
+  end
+
   def delivery_partner
     school.delivery_partner_for(cohort.start_year)
+  end
+
+  def delivery_partner_to_be_confirmed?
+    default_induction_programme.delivery_partner_to_be_confirmed
+  end
+
+  def previous_delivery_partner
+    school.delivery_partner_for(cohort.start_year - 1)
   end
 
   def school_chose_cip?

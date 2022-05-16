@@ -1,5 +1,5 @@
-<% lead_provider = school_cohort.default_induction_programme&.lead_provider %>
-<% delivery_partner =  school_cohort.default_induction_programme&.delivery_partner %>
+<% lead_provider = school_cohort_lead_provider_name(school_cohort) %>
+<% delivery_partner = school_cohort_delivery_partner_name(school_cohort) %>
 <% ects_count = school_cohort.current_induction_records.count %>
 <% latest_partnership = school_cohort.school.partnerships.where(cohort: school_cohort.cohort, relationship: false).order(created_at: :desc).limit(1).first %>
 
@@ -40,7 +40,7 @@
       <% if latest_partnership&.challenged? == true %>
         <% row.value(text: nil) %>
       <% else %>
-        <% row.value(text: lead_provider&.name ? lead_provider.name : "To be confirmed") %>
+        <% row.value(text: lead_provider) %>
       <% end %>
       <% row.action(text: :none) %>
     <% end %>
@@ -49,7 +49,7 @@
       <% if latest_partnership&.challenged? == true %>
         <% row.value(text: nil) %>
       <% else %>
-        <% row.value(text: delivery_partner&.name ? delivery_partner.name : "To be confirmed") %>
+        <% row.value(text: delivery_partner) %>
       <% end %>
       <% row.action(text: :none) %>
     <% end %>
