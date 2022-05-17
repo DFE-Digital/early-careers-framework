@@ -424,6 +424,8 @@ Rails.application.routes.draw do
           end
 
           resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
+            get "check_transfer", to: "transferring_participants#check_transfer", as: :check_transfer
+            put "check_transfer", to: "transferring_participants#check_transfer"
             get "what-we-need", to: "transferring_participants#what_we_need", as: :what_we_need
             get "full-name", to: "transferring_participants#full_name", as: :full_name
             put "full-name", to: "transferring_participants#full_name"
