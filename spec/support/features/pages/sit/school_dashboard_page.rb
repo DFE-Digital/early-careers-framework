@@ -24,7 +24,7 @@ module Pages
       element_has_content? self, "View your early career teacher and mentor details"
     end
 
-    def has_no_participants?
+    def confirm_has_no_participants
       element_has_content? self, "Add your early career teacher and mentor details"
     end
 

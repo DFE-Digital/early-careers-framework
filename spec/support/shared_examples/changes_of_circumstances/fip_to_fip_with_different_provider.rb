@@ -1,49 +1,28 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_participant_status = [], is_obfuscated: true|
+RSpec.shared_examples "FIP to FIP with different provider" do |scenario, _prior_participant_status = "active", is_obfuscated: true, is_hidden: false, see_prior_school: false|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario, is_training: false, is_obfuscated: is_obfuscated),
-       :aggregate_failures do
-      given_i_authenticate_as_the_user_with_the_full_name "Original SIT"
-      and_i_am_on_the_school_dashboard_page
-
-      if is_obfuscated
-        then_school_dashboard_page_does_not_have_participants
-      else
-        when_i_view_participant_details_from_school_dashboard_page
-        and_i_view_not_training_from_school_participants_dashboard_page "the Participant"
-
-        then_school_participant_details_page_shows_participant_details "the Participant",
-                                                                       scenario.participant_email,
-                                                                       "Eligible to start"
+    if is_hidden
+      it Steps::ChangesOfCircumstanceSteps.then_sit_cannot_see_context(scenario),
+         :aggregate_failures do
+        then_sit_cannot_see_participant_in_school_portal subject
       end
-
-      sign_out
+    else
+      it Steps::ChangesOfCircumstanceSteps.then_sit_can_see_context(scenario, is_training: false),
+         :aggregate_failures do
+        then_sit_can_see_participant_in_school_portal subject, scenario
+      end
     end
   end
 
   context "Then the New SIT" do
     subject(:new_sit) { "New SIT" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario),
+    it Steps::ChangesOfCircumstanceSteps.then_sit_can_see_context(scenario),
        :aggregate_failures do
-      given_i_authenticate_as_the_user_with_the_full_name "New SIT"
-      and_i_am_on_the_school_dashboard_page
-
-      when_i_view_participant_details_from_school_dashboard_page
-      if scenario.participant_type == "ECT"
-        and_i_view_ects_from_school_participants_dashboard_page "the Participant"
-      else
-        and_i_view_mentors_from_school_participants_dashboard_page "the Participant"
-      end
-
-      then_school_participant_details_page_shows_participant_details "the Participant",
-                                                                     scenario.participant_email,
-                                                                     "Eligible to start"
-
-      sign_out
+      then_sit_can_see_participant_in_school_portal subject, scenario
     end
 
     # what are the onward actions available to the new school - can they do them ??
@@ -52,20 +31,22 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_p
   context "Then the Original Lead Provider" do
     subject(:original_lead_provider) { "Original Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, scenario.prior_declarations, is_obfuscated: is_obfuscated),
-       :aggregate_failures do
-      then_ecf_participants_api_has_participant_details "Original Lead Provider",
-                                                        "the Participant",
-                                                        is_obfuscated ? nil : scenario.participant_email,
-                                                        scenario.participant_trn,
-                                                        scenario.participant_type,
-                                                        "Original SIT's School",
-                                                        prior_participant_status,
-                                                        "active"
-
-      then_participant_declarations_api_has_declarations "Original Lead Provider",
-                                                         "the Participant",
-                                                         scenario.prior_declarations
+    if is_obfuscated
+      it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_obfuscated_context(scenario, scenario.prior_declarations, see_prior_school: true),
+         :aggregate_failures do
+        then_lead_provider_can_see_obfuscated_participant_in_api subject,
+                                                                 scenario,
+                                                                 scenario.prior_declarations,
+                                                                 see_prior_school: see_prior_school
+      end
+    else
+      it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.prior_declarations, see_prior_school: true),
+         :aggregate_failures do
+        then_lead_provider_can_see_participant_in_api subject,
+                                                      scenario,
+                                                      scenario.prior_declarations,
+                                                      see_prior_school: see_prior_school
+      end
     end
 
     # previous lead provider can void ??
@@ -74,26 +55,15 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_p
   context "Then the New Lead Provider" do
     subject(:new_lead_provider) { "New Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, scenario.all_declarations),
+    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.all_declarations),
        :aggregate_failures do
-      then_ecf_participants_api_has_participant_details "New Lead Provider",
-                                                        "the Participant",
-                                                        scenario.participant_email,
-                                                        scenario.participant_trn,
-                                                        scenario.participant_type,
-                                                        "New SIT's School",
-                                                        "active",
-                                                        "active"
-
-      then_participant_declarations_api_has_declarations "New Lead Provider",
-                                                         "the Participant",
-                                                         scenario.all_declarations
+      then_lead_provider_can_see_participant_in_api subject, scenario, scenario.all_declarations
 
       if scenario.duplicate_declarations.any?
         scenario.duplicate_declarations.each do |declaration_type|
-          is_expected.to_not make_duplicate_training_declaration "the Participant",
-                                                                 scenario.participant_type,
-                                                                 declaration_type
+          expect(subject).to_not make_duplicate_training_declaration "the Participant",
+                                                                     scenario.participant_type,
+                                                                     declaration_type
         end
       end
     end
@@ -102,13 +72,9 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_p
   context "Then other Lead Providers" do
     subject(:another_lead_provider) { "Another Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, is_hidden: true),
+    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_cannot_see_context(scenario),
        :aggregate_failures do
-      then_ecf_participants_api_does_not_have_participant_details "Another Lead Provider",
-                                                                  "the Participant"
-
-      then_participant_declarations_api_does_not_have_declarations "Another Lead Provider",
-                                                                   "the Participant"
+      then_lead_provider_cannot_see_participant_in_api subject, scenario
     end
   end
 
@@ -117,10 +83,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_p
 
     it Steps::ChangesOfCircumstanceSteps.then_support_service_context(scenario),
        :aggregate_failures do
-      then_ecf_users_endpoint_shows_the_current_record "the Participant",
-                                                       scenario.participant_email,
-                                                       scenario.participant_type,
-                                                       "FIP"
+      then_ecf_users_endpoint_shows_the_current_record scenario
     end
   end
 
@@ -181,18 +144,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_p
 
     it Steps::ChangesOfCircumstanceSteps.then_admin_user_context(scenario),
        :aggregate_failures do
-      given_i_authenticate_as_an_admin
-
-      and_i_am_on_the_admin_support_portal
-      and_i_view_participant_list_from_admin_support_portal
-      and_i_view_participant_from_admin_support_participant_list "the Participant"
-
-      then_the_admin_portal_shows_the_current_participant_record "the Participant",
-                                                                 "New SIT",
-                                                                 "New Lead Provider",
-                                                                 "Eligible to start"
-
-      sign_out
+      then_admin_user_can_see_participant scenario
     end
   end
 
@@ -202,7 +154,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, prior_p
     it "is expected to report the correct participant details for \"the Participant\"",
        :aggregate_failures,
        skip: "Not yet implemented" do
-      expect(subject).to report_correct_participant_details "the Participant"
+      is_expected.to report_correct_participant_details "the Participant"
     end
   end
 end

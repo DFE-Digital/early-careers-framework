@@ -8,36 +8,18 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario, is_hidden: true),
+    it Steps::ChangesOfCircumstanceSteps.then_sit_cannot_see_context(scenario),
        :aggregate_failures do
-      given_i_authenticate_as_the_user_with_the_full_name "Original SIT"
-      and_i_am_on_the_school_dashboard_page
-      then_school_dashboard_page_does_not_have_participants
-
-      sign_out
+      then_sit_cannot_see_participant_in_school_portal subject
     end
   end
 
   context "Then the New SIT" do
     subject(:new_sit) { "New SIT" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_sit_context(scenario),
+    it Steps::ChangesOfCircumstanceSteps.then_sit_can_see_context(scenario),
        :aggregate_failures do
-      given_i_authenticate_as_the_user_with_the_full_name "New SIT"
-      and_i_am_on_the_school_dashboard_page
-
-      when_i_view_participant_details_from_school_dashboard_page
-      if scenario.participant_type == "ECT"
-        and_i_view_ects_from_school_participants_dashboard_page "the Participant"
-      else
-        and_i_view_mentors_from_school_participants_dashboard_page "the Participant"
-      end
-
-      then_school_participant_details_page_shows_participant_details "the Participant",
-                                                                     scenario.participant_email,
-                                                                     "Eligible to start"
-
-      sign_out
+      then_sit_can_see_participant_in_school_portal subject, scenario
     end
 
     # what are the onward actions available to the new school - can they do them ??
@@ -46,13 +28,9 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
   context "Then other Lead Providers" do
     subject(:another_lead_provider) { "Another Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_context(scenario, is_hidden: true),
+    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_cannot_see_context(scenario),
        :aggregate_failures do
-      then_ecf_participants_api_does_not_have_participant_details "Another Lead Provider",
-                                                                  "the Participant"
-
-      then_participant_declarations_api_does_not_have_declarations "Another Lead Provider",
-                                                                   "the Participant"
+      then_lead_provider_cannot_see_participant_in_api subject, scenario
     end
   end
 
@@ -61,10 +39,7 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
 
     it Steps::ChangesOfCircumstanceSteps.then_support_service_context(scenario),
        :aggregate_failures do
-      then_ecf_users_endpoint_shows_the_current_record "the Participant",
-                                                       scenario.participant_email,
-                                                       scenario.participant_type,
-                                                       "CIP"
+      then_ecf_users_endpoint_shows_the_current_record scenario
     end
   end
 
@@ -104,18 +79,7 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
 
     it Steps::ChangesOfCircumstanceSteps.then_admin_user_context(scenario),
        :aggregate_failures do
-      given_i_authenticate_as_an_admin
-
-      and_i_am_on_the_admin_support_portal
-      and_i_view_participant_list_from_admin_support_portal
-      and_i_view_participant_from_admin_support_participant_list "the Participant"
-
-      then_the_admin_portal_shows_the_current_participant_record "the Participant",
-                                                                 "New SIT",
-                                                                 "",
-                                                                 "Eligible to start"
-
-      sign_out
+      then_admin_user_can_see_participant scenario
     end
   end
 
@@ -125,7 +89,7 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
     it "is expected to report the correct participant details for \"the Participant\"",
        :aggregate_failures,
        skip: "Not yet implemented" do
-      expect(subject).to report_correct_participant_details "the Participant"
+      is_expected.to report_correct_participant_details "the Participant"
     end
   end
 end

@@ -8,11 +8,17 @@ module Steps
       next_ideal_time Time.zone.local(2022, 2, 1, 9, 0, 0)
 
       travel_to(@timestamp) do
-        user = create :user, full_name: lead_provider_name
-        lead_provider = create :lead_provider, :with_delivery_partner, name: lead_provider_name
+        lead_provider = create :lead_provider, name: lead_provider_name
         cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
-        create :lead_provider_profile, user: user, lead_provider: lead_provider
         create :call_off_contract, lead_provider: lead_provider
+
+        delivery_partner = create :delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021"
+        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
+        delivery_partner = create :delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2022"
+        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
+
+        user = create :user, full_name: lead_provider_name
+        create :lead_provider_profile, user: user, lead_provider: lead_provider
 
         token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
                                                                lead_provider: lead_provider,
@@ -180,7 +186,7 @@ module Steps
       end
     end
 
-    def and_school_withdraws_participant(_sit_name, participant_name)
+    def and_developer_withdraws_participant(participant_name)
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
@@ -333,16 +339,44 @@ module Steps
       end
     end
 
-    def self.then_sit_context(scenario, is_hidden: false, is_obfuscated: false, is_training: true)
-      str = "can#{is_hidden ? 'not' : ''} see the participant as \"the Participant\"\n"
-      str += "          and the participant email \"#{is_obfuscated ? 'is obfuscated' : "as #{scenario.participant_email}"}\"\n"
-      str += "          and the participant type as \"#{scenario.participant_type}\"\n"
-      str += "          and the participant training status as \"Eligible to start\"\n"
-      if is_hidden
-        str
+    def self.then_sit_cannot_see_context(scenario)
+      "cannot see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+    end
+
+    def then_sit_cannot_see_participant_in_school_portal(sit_name, _scenario = {})
+      given_i_authenticate_as_the_user_with_the_full_name sit_name
+      Pages::SchoolDashboardPage.loaded
+                                .confirm_has_no_participants
+      sign_out
+    end
+
+    def self.then_sit_can_see_context(scenario, is_training: true)
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the Email address of \"#{scenario.participant_email}\"\n"
+      str += "          and with the Training status of \"Eligible to start\"\n"
+      str += "          and that they are#{is_training ? '' : ' not'} being trained\n"
+      str
+    end
+
+    def then_sit_can_see_participant_in_school_portal(sit_name, scenario, _is_training: true)
+      given_i_authenticate_as_the_user_with_the_full_name sit_name
+      and_i_am_on_the_school_dashboard_page
+
+      when_i_view_participant_details_from_school_dashboard_page
+      case scenario.participant_type
+      when "ECT"
+        and_i_view_ects_from_school_participants_dashboard_page "the Participant"
+      when "Mentor"
+        and_i_view_mentors_from_school_participants_dashboard_page "the Participant"
       else
-        str + "          and the participant is#{is_training ? '' : ' not'} being trained\n"
+        raise "Participant Type \"#{scenario.participant_type}\" not recognised"
       end
+
+      then_school_participant_details_page_shows_participant_details "the Participant",
+                                                                     scenario.participant_email,
+                                                                     "Eligible to start"
+
+      sign_out
     end
 
     def then_school_dashboard_page_does_not_have_participants
@@ -359,22 +393,66 @@ module Steps
       expect(page_object).to have_status(participant_status)
     end
 
-    def self.then_lead_provider_context(scenario, declarations = [], is_hidden: false, is_obfuscated: false)
-      str = "can#{is_hidden ? 'not' : ''} see the participant as \"the Participant\"\n"
-      str += if is_obfuscated
-               "          and the participant email is obfuscated\n"
-             else
-               "          and the participant email as \"#{scenario.participant_email}\"\n"
-             end
-      str += "          and the participant trn as \"#{scenario.participant_trn}\"\n"
-      str += "          and the participant type as \"#{scenario.participant_type}\"\n"
-      str += "          and the participants school as \"New SIT's School\"\n"
-      str += if is_hidden
-               "          and none of the participants declarations\n"
-             else
-               "          and the participants declarations #{declarations}\n"
-             end
+    def self.then_lead_provider_cannot_see_context(scenario)
+      "cannot see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+    end
+
+    def then_lead_provider_cannot_see_participant_in_api(lead_provider_name, _scenario)
+      then_ecf_participants_api_does_not_have_participant_details lead_provider_name,
+                                                                  "the Participant"
+
+      then_participant_declarations_api_does_not_have_declarations lead_provider_name,
+                                                                   "the Participant"
+    end
+
+    def self.then_lead_provider_can_see_context(scenario, declarations, see_prior_school: false)
+      school_name = see_prior_school ? "Original SIT's School" : "New SIT's School"
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the participant email as \"#{scenario.participant_email}\"\n"
+      str += "          and with the participant trn as \"#{scenario.participant_trn}\"\n"
+      str += "          and with the participants school as \"#{school_name}\"\n"
+      str += "          and with the participants declarations #{declarations}\n"
       str
+    end
+
+    def then_lead_provider_can_see_participant_in_api(lead_provider_name, scenario, declarations, see_prior_school: false)
+      then_ecf_participants_api_has_participant_details lead_provider_name,
+                                                        "the Participant",
+                                                        scenario.participant_email,
+                                                        scenario.participant_trn,
+                                                        scenario.participant_type,
+                                                        see_prior_school ? "Original SIT's School" : "New SIT's School",
+                                                        "active",
+                                                        "active"
+
+      then_participant_declarations_api_has_declarations lead_provider_name,
+                                                         "the Participant",
+                                                         declarations
+    end
+
+    def self.then_lead_provider_can_see_obfuscated_context(scenario, declarations, see_prior_school: false)
+      school_name = see_prior_school ? "Original SIT's School" : "New SIT's School"
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the participant email is obfuscated\n"
+      str += "          and with the participant trn as \"#{scenario.participant_trn}\"\n"
+      str += "          and with the participants school as \"#{school_name}\"\n"
+      str += "          and with the participants declarations #{declarations}\n"
+      str
+    end
+
+    def then_lead_provider_can_see_obfuscated_participant_in_api(lead_provider_name, scenario, declarations, see_prior_school: false)
+      then_ecf_participants_api_has_participant_details lead_provider_name,
+                                                        "the Participant",
+                                                        nil,
+                                                        scenario.participant_trn,
+                                                        scenario.participant_type,
+                                                        see_prior_school ? "Original SIT's School" : "New SIT's School",
+                                                        "active",
+                                                        "active"
+
+      then_participant_declarations_api_has_declarations lead_provider_name,
+                                                         "the Participant",
+                                                         declarations
     end
 
     def then_ecf_participants_api_does_not_have_participant_details(lead_provider_name, participant_name)
@@ -420,12 +498,12 @@ module Steps
     end
 
     def self.then_finance_user_context(scenario)
-      str = "can see the participant as \"the Participant\"\n"
-      str += "          and the school as \"New SIT's school\"\n"
-      str += "          and the lead provider as \"#{scenario.new_lead_provider_name}\"\n"
-      str += "          and the participant status as \"active\"\n"
-      str += "          and the training status as \"active\"\n"
-      str += "          and the declarations of \"#{scenario.see_new_declarations}\"\n"
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the school as \"New SIT's school\"\n"
+      str += "          and with the lead provider as \"#{scenario.new_lead_provider_name}\"\n"
+      str += "          and with the participant status as \"active\"\n"
+      str += "          and with the training status as \"active\"\n"
+      str += "          and with the declarations of \"#{scenario.see_new_declarations}\"\n"
       if scenario.original_programme == "FIP"
         str += "          and that Original Lead Provider has been allocated #{scenario.original_started_declarations} started and #{scenario.original_retained_declarations} retained declarations\n"
       end
@@ -480,11 +558,26 @@ module Steps
     end
 
     def self.then_admin_user_context(scenario)
-      str = "can see the full name as \"the Participant\"\n"
-      str += "          and the school as \"New SIT's school\"\n"
-      str += "          and the validation status as \"Eligible to start\"\n"
-      str += "          and the lead provider as \"#{scenario.new_lead_provider_name}\""
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the school as \"New SIT's school\"\n"
+      str += "          and with the validation status as \"Eligible to start\"\n"
+      str += "          and with the lead provider as \"#{scenario.new_lead_provider_name}\""
       str
+    end
+
+    def then_admin_user_can_see_participant(scenario)
+      given_i_authenticate_as_an_admin
+
+      and_i_am_on_the_admin_support_portal
+      and_i_view_participant_list_from_admin_support_portal
+      and_i_view_participant_from_admin_support_participant_list "the Participant"
+
+      then_the_admin_portal_shows_the_current_participant_record "the Participant",
+                                                                 "New SIT",
+                                                                 scenario.new_lead_provider_name,
+                                                                 "Eligible to start"
+
+      sign_out
     end
 
     def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, lead_provider_name, validation_status)
@@ -502,27 +595,26 @@ module Steps
     end
 
     def self.then_support_service_context(scenario)
-      str = "can see the full name as \"the Participant\"\n"
-      str += "          and the participant email as \"#{scenario.participant_email}\"\n"
-      str += "          and the participant type as \"#{scenario.participant_type}\"\n"
-      str += "          and the participant induction programme as \"#{scenario.new_programme == 'CIP' ? 'core_induction_programme' : 'full_induction_programme'}\"\n"
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the email address as \"#{scenario.participant_email}\"\n"
+      str += "          and with the induction programme as \"#{scenario.new_programme == 'CIP' ? 'core_induction_programme' : 'full_induction_programme'}\"\n"
       str
     end
 
-    def then_ecf_users_endpoint_shows_the_current_record(participant_name, participant_email, participant_type, induction_programme)
-      participant_user = find_user participant_name
+    def then_ecf_users_endpoint_shows_the_current_record(scenario)
+      participant_user = find_user "the Participant"
 
-      course_identifier = participant_type == "ECT" ? "early_career_teacher" : "mentor"
-      induction_programme_identifier = induction_programme == "CIP" ? "core_induction_programme" : "full_induction_programme"
+      participant_type = scenario.participant_type == "ECT" ? "early_career_teacher" : "mentor"
+      induction_programme_identifier = scenario.new_programme == "CIP" ? "core_induction_programme" : "full_induction_programme"
 
       user_endpoint = APIs::ECFUsersEndpoint.load
       user_endpoint.get_user participant_user.id
 
-      expect(user_endpoint).to have_full_name(participant_name)
-      expect(user_endpoint).to have_email(participant_email)
-      expect(user_endpoint).to have_user_type(course_identifier)
-      expect(user_endpoint).to have_core_induction_programme("none")
-      expect(user_endpoint).to have_induction_programme_choice(induction_programme_identifier)
+      expect(user_endpoint).to have_full_name "the Participant"
+      expect(user_endpoint).to have_email scenario.participant_email
+      expect(user_endpoint).to have_user_type participant_type
+      expect(user_endpoint).to have_core_induction_programme "none"
+      expect(user_endpoint).to have_induction_programme_choice induction_programme_identifier
     end
 
   private
