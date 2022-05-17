@@ -43,7 +43,10 @@ module APIs
       @response = nil
 
       url = "/api/v1/participant-declarations"
-      params = build_filter_params participant_id: @current_id
+      attributes = {
+        participant_id: @current_id,
+      }
+      params = build_filter_params attributes
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",
@@ -54,7 +57,7 @@ module APIs
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
         error = JSON.parse(session.response.body)
-        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        raise "GET request at #{Time.zone.now} to <#{url}> with request params \n#{JSON.pretty_generate attributes}\n failed due to \n===\n#{error}\n===\n"
       end
     end
 

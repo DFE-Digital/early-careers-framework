@@ -87,8 +87,10 @@ RSpec.feature "FIP to CIP - Onboarding a withdrawn participant",
 
           and_eligible_training_declarations_are_made_payable
 
-          and_lead_provider_statements_have_been_created "Original Lead Provider"
-          and_lead_provider_statements_have_been_created "Another Lead Provider"
+          and_lead_provider_statements_have_been_calculated "Original Lead Provider", "November 2022"
+          and_lead_provider_statements_have_been_calculated "Original Lead Provider", "January 2022"
+          and_lead_provider_statements_have_been_calculated "Another Lead Provider", "November 2022"
+          and_lead_provider_statements_have_been_calculated "Another Lead Provider", "January 2022"
         end
 
         include_examples "FIP to CIP", scenario

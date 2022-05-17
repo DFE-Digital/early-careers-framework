@@ -87,7 +87,7 @@ module Steps
           wizard.add_an_ect
                 .add_ect participant_name, participant_email, "Spring 2022", Date.new(2022, 9, 1)
         else
-          wizard.add_an_mentor
+          wizard.add_a_mentor
                 .add_mentor participant_name, participant_email, "Spring 2022", Date.new(2022, 9, 1)
         end
         sign_out
@@ -123,19 +123,15 @@ module Steps
       participant_profile = find_participant_profile participant_name
 
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+      milestone = participant_profile.schedule.milestones
+                                     .where(declaration_type: declaration_type.to_s.gsub("_", "-"))
+                                     .first
 
-      case declaration_type
-      when :started
-        next_ideal_time participant_profile.schedule.milestones.first.start_date + 4.days
-      when :retained_1
-        next_ideal_time participant_profile.schedule.milestones.second.start_date + 4.days
-      else
-        raise "declaration type was #{declaration_type} but expected [started, retained_1]"
-      end
-
+      next_ideal_time milestone.milestone_date - 2.days
       travel_to(@timestamp) do
+        event_date = milestone.milestone_date - 4.days
         declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.load tokens[lead_provider_name]
-        declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, @timestamp - 2.days
+        declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, event_date
 
         declarations_endpoint.has_declaration_type? declaration_type.to_s
         declarations_endpoint.has_eligible_for_payment? true
@@ -185,8 +181,6 @@ module Steps
     end
 
     def and_school_withdraws_participant(_sit_name, participant_name)
-      # TODO: This needs to be automated through the inductions portal
-
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days

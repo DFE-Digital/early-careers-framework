@@ -64,7 +64,7 @@ module APIs
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
         error = JSON.parse(session.response.body)
-        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        raise "GET request at #{Time.zone.now} to <#{url}> failed due to \n===\n#{error}\n===\n"
       end
     end
 

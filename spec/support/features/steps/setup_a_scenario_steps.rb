@@ -3,11 +3,22 @@
 module Steps
   module SetupAScenarioSteps
     def given_a_cohort_with_start_year(year)
-      Cohort.find_or_create_by! start_year: year
+      Cohort.find_or_create_by!(start_year: year) do |c|
+        # TODO: makes registration fail...
+        # c.registration_start_date = Date.new(year, 4, 10)
+        # c.academic_year_start_date = Date.new(year, 9, 1)
+      end
     end
 
     def given_a_privacy_policy_has_been_published
       create :privacy_policy
+      PrivacyPolicy::Publish.call
+    end
+
+    def given_a_privacy_policy_has_been_created_and_published
+      PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
+                   .tap { |pp| pp.html = "<p>A Privacy Policy</p>" }
+                   .save!
       PrivacyPolicy::Publish.call
     end
 
