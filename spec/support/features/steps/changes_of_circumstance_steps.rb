@@ -324,8 +324,6 @@ module Steps
 
       next_ideal_time statement.payment_date
       travel_to(@timestamp) do
-        # TODO: not sure this works for retained-1 declarations
-
         Finance::ECF::CalculationOrchestrator.new(
           statement: statement,
           contract: lead_provider.call_off_contract,

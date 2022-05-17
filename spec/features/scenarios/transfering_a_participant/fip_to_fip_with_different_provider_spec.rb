@@ -108,7 +108,7 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant",
           and_lead_provider_statements_have_been_calculated "Another Lead Provider", "January 2022"
         end
 
-        include_examples "FIP to FIP with different provider", scenario, "active", is_obfuscated: false
+        include_examples "FIP to FIP with different provider", scenario, "active"
       end
     end
   end
