@@ -8,7 +8,11 @@ module Support
       match do |actual|
         key_node = find_key_node(actual, key)
         value_node = find_value_node(key_node)
-        expect(value_node).to have_content(value)
+        if value_node.text != value
+          @failure_message = "Expected summary row \"#{key}\" with value \"#{value}\" but value \"#{value_node.text}\" found instead"
+          return false
+        end
+        true
       rescue Capybara::ElementNotFound
         false
       end
