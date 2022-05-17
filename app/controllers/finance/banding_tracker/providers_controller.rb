@@ -21,7 +21,9 @@ module Finance
       end
 
       def payable_participant_count_per_bands
-        @payable_participant_count_per_bands ||= lead_provider.participant_declarations.payable
+        @payable_participant_count_per_bands ||= lead_provider
+                                                   .participant_declarations
+                                                   .payable
                                                    .group(:declaration_type)
                                                    .count
       end
