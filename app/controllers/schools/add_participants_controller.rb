@@ -37,13 +37,12 @@ module Schools
         render "schools/add_participants/who" and return
       end
 
-      if @who_to_add_form.type == "transfer"
-        redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year)
-      else
-        add_participant_form.assign_attributes(type: @who_to_add_form.type)
-        store_form_in_session
-        redirect_to action: :show, step: :name
-      end
+      redirect_to check_transfer_schools_transferring_participant_path and return if selected_transfer_journey? && in_current_active_cohort?
+      redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year) and return if selected_transfer_journey?
+
+      add_participant_form.assign_attributes(type: @who_to_add_form.type)
+      store_form_in_session
+      redirect_to action: :show, step: :name
     end
 
     def transfer
@@ -96,6 +95,14 @@ module Schools
 
       set_school_cohort
       @school_cohort
+    end
+
+    def selected_transfer_journey?
+      @who_to_add_form.type == "transfer"
+    end
+
+    def in_current_active_cohort?
+      school_cohort.cohort.start_year == Cohort.active_registration_cohort.start_year
     end
   end
 end
