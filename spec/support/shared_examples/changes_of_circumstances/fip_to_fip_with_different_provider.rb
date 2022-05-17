@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "FIP to FIP with different provider" do |scenario, _prior_participant_status = "active", is_obfuscated: true, is_hidden: false, see_prior_school: false|
+RSpec.shared_examples "FIP to FIP with different provider" do |scenario, is_obfuscated: true, is_hidden: false, see_prior_school: false|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
