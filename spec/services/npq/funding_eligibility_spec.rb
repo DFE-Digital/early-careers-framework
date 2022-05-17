@@ -42,6 +42,27 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       end
     end
 
+    context "when previously funded with multiple teacher profiles" do
+      let(:trn) { application.teacher_reference_number }
+      let(:application) do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          teacher_reference_number_verified: true,
+        )
+      end
+      let(:npq_course) { application.npq_course }
+
+      before do
+        create(:teacher_profile, trn: trn)
+        NPQ::Accept.new(npq_application: application).call
+      end
+
+      it "returns truthy" do
+        expect(subject.call[:previously_funded]).to be_truthy
+      end
+    end
+
     context "when trn does not yield any teachers" do
       let(:trn) { "0000000" }
       let(:npq_course) { create(:npq_course) }

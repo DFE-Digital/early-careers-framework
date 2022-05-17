@@ -21,23 +21,22 @@ module NPQ
       @npq_course ||= NPQCourse.find_by!(identifier: npq_course_identifier)
     end
 
-    def user
-      teacher_profile.user if teacher_profile
+    def users
+      User.where(teacher_profile: teacher_profiles)
     end
 
-    def teacher_profile
-      @teacher_profile ||= TeacherProfile.find_by(trn: trn)
+    def teacher_profiles
+      @teacher_profiles ||= TeacherProfile.where(trn: trn)
     end
 
     def previously_funded?
-      return false unless user
-
-      user
-        .npq_applications
+      users.flat_map.any? do |user|
+        user.npq_applications
         .where(npq_course: npq_course)
         .where(eligible_for_funding: true)
         .accepted
         .any?
+      end
     end
   end
 end
