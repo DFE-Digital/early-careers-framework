@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_18_140603) do
+ActiveRecord::Schema.define(version: 2022_05_18_120740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -874,6 +874,16 @@ ActiveRecord::Schema.define(version: 2022_05_18_140603) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "statement_line_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "statement_id", null: false
+    t.uuid "participant_declaration_id", null: false
+    t.text "state", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declaration_id"], name: "index_statement_line_items_on_participant_declaration_id"
+    t.index ["statement_id"], name: "index_statement_line_items_on_statement_id"
   end
 
   create_table "statements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
