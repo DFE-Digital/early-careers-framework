@@ -12,7 +12,14 @@ module Finance
     end
 
     def call
-      statement.participant_declarations << participant_declaration
+      ApplicationRecord.transaction do
+        statement.participant_declarations << participant_declaration
+        StatementLineItem.create!(
+          statement: statement,
+          participant_declaration: participant_declaration,
+          state: participant_declaration.state,
+        )
+      end
     end
 
   private
