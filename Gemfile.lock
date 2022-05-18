@@ -308,15 +308,10 @@ GEM
     nori (2.6.0)
     notifications-ruby-client (5.3.0)
       jwt (>= 1.5, < 3)
-    open_api-rswag-api (0.1.0)
-      railties (>= 3.1, < 7.0)
     open_api-rswag-specs (0.1.0)
       activesupport (>= 3.1, < 7.0)
       hashie
       json-schema (~> 2.2)
-      railties (>= 3.1, < 7.0)
-    open_api-rswag-ui (0.1.0)
-      actionpack (>= 3.1, < 7.0)
       railties (>= 3.1, < 7.0)
     openapi3_parser (0.9.2)
       commonmarker (~> 0.17)
@@ -641,9 +636,7 @@ DEPENDENCIES
   mail-notify (~> 1.0, >= 1.0.4)
   memory_profiler
   multi_json
-  open_api-rswag-api (~> 0.1.0)
   open_api-rswag-specs (~> 0.1.0)
-  open_api-rswag-ui (~> 0.1.0)
   openapi3_parser (~> 0.9.2)
   pagy (~> 5.10, >= 5.10.1)
   paper_trail
