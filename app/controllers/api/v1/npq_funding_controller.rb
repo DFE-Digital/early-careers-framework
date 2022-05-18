@@ -5,7 +5,7 @@ module Api
     class NPQFundingController < Api::ApiController
       include ApiTokenAuthenticatable
 
-      def index
+      def show
         render json: service.call
       end
 

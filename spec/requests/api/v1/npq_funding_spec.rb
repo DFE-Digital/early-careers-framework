@@ -14,7 +14,11 @@ RSpec.describe "NPQ Funding API", type: :request do
       end
 
       it "returns correct response" do
-        get "/api/v1/npq-funding?trn=1234567"
+        expect(NPQ::FundingEligibility).to receive(:new)
+          .with(trn: "1234567", npq_course_identifier: "npq-leading-literacy")
+          .and_call_original
+
+        get "/api/v1/npq-funding/1234567?npq_course_identifier=npq-leading-literacy"
         expect(parsed_response["previously_funded"]).to be(false)
       end
     end
@@ -22,7 +26,7 @@ RSpec.describe "NPQ Funding API", type: :request do
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        get "/api/v1/npq-funding?trn=1234567"
+        get "/api/v1/npq-funding/1234567"
         expect(response.status).to eq 401
       end
     end
