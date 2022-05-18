@@ -17,6 +17,10 @@ module Pages
     section :adjustments_panel, Sections::AdjustmentsFinancePanel
     section :contract_information_panel, Sections::ContractInformationFinancePanel
 
+    def select_statment(statement_name)
+      statement_selector.view_statement statement_name
+    end
+
     def has_payment_summary?(total)
       summary_panel.has_output_payment? total
     end

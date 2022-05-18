@@ -66,6 +66,7 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
       when_i_am_on_the_finance_portal
       and_i_view_payment_breakdown_from_finance_portal
       and_i_complete_from_finance_payment_breakdown_report_wizard "Another Lead Provider"
+      and_i_select_statment_from_finance_payment_breakdown_report "January 2023"
 
       then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider",
                                                                         0, 0, 0, 0, 0, 0
