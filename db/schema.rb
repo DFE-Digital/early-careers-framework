@@ -638,8 +638,8 @@ ActiveRecord::Schema.define(version: 2022_05_16_123711) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "notes"
     t.string "start_term", default: "autumn_2021", null: false
+    t.string "notes"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -756,9 +756,9 @@ ActiveRecord::Schema.define(version: 2022_05_16_123711) do
     t.string "declaration_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["milestone_id", "schedule_id"], name: "index_schedule_milestones_on_milestone_id_and_schedule_id"
+    t.index ["milestone_id", "schedule_id", "declaration_type"], name: "milestones_schedules_schedule_milestone_declaration_type", unique: true
     t.index ["milestone_id"], name: "index_schedule_milestones_on_milestone_id"
-    t.index ["schedule_id", "milestone_id"], name: "index_schedule_milestones_on_schedule_id_and_milestone_id"
+    t.index ["schedule_id", "milestone_id", "declaration_type"], name: "schedules_milestones_schedule_milestone_declaration_type", unique: true
     t.index ["schedule_id"], name: "index_schedule_milestones_on_schedule_id"
   end
 
@@ -886,8 +886,8 @@ ActiveRecord::Schema.define(version: 2022_05_16_123711) do
     t.datetime "updated_at", precision: 6, null: false
     t.decimal "original_value"
     t.uuid "cohort_id", null: false
-    t.string "contract_version", default: "0.0.1"
     t.boolean "output_fee", default: true
+    t.string "contract_version", default: "0.0.1"
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end

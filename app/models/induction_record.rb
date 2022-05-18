@@ -43,8 +43,6 @@ class InductionRecord < ApplicationRecord
   scope :fip, -> { joins(:induction_programme).merge(InductionProgramme.full_induction_programme) }
   scope :cip, -> { joins(:induction_programme).merge(InductionProgramme.core_induction_programme) }
 
-  # scope :active, -> { active_induction_status.where("start_date < ? AND (end_date IS NULL OR end_date > ?)", Time.zone.now, Time.zone.now) }
-  # FIXME: issue with start of cohort adding participants with future start date
   scope :active, -> { active_induction_status.where("(end_date IS NULL OR end_date > ?) AND (start_date < ? OR school_transfer=false)", Time.zone.now, Time.zone.now) }
   scope :current, -> { active.or(transferring_out) }
   scope :transferring_in, -> { active_induction_status.where("start_date > ? AND school_transfer=true", Time.zone.now) }

@@ -13,9 +13,7 @@ class CocSetParticipantCategories < BaseService
       withdrawn_participants,
       contacted_for_info_participants,
       details_being_checked,
-      # FIXME: remove transferring in as future start date is an issue for onboarding
-      # transferring_in_participants,
-      [],
+      transferring_in_participants,
       [],
       transferred_participants,
       no_qts_participants,
