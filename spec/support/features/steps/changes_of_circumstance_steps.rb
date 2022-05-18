@@ -57,8 +57,7 @@ module Steps
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      lead_provider = LeadProvider.find_by(name: lead_provider_name)
-      delivery_partner = lead_provider.delivery_partners.first
+      delivery_partner = DeliveryPartner.find_by name: "#{lead_provider_name}'s Delivery Partner 2022"
 
       school = find_school_for_sit sit_name
 
@@ -70,11 +69,6 @@ module Steps
                                     .confirm_schools
                                     .complete delivery_partner.name, [school.urn]
         sign_out
-
-        # TODO: This needs to be added to the partnership UI process
-        school_cohort = school.school_cohorts.first
-        Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
-                                                    programme_choice: school_cohort.induction_programme_choice
 
         travel_to 1.minute.from_now
       end
@@ -198,7 +192,7 @@ module Steps
         current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
@@ -215,10 +209,10 @@ module Steps
 
         if participant_profile.ect?
           page_object.transfer_an_ect
-                     .transfer_ect participant_name, participant_email, @timestamp + 1.day, same_provider, participant_trn, participant_dob
+                     .transfer_ect participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob
         else
           page_object.transfer_a_mentor
-                     .transfer_mentor participant_name, participant_email, @timestamp + 1.day, same_provider, participant_trn, participant_dob
+                     .transfer_mentor participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob
         end
 
         sign_out
@@ -247,9 +241,9 @@ module Steps
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
-                              start_date: @timestamp
+                              start_date: 1.day.from_now
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
@@ -277,9 +271,9 @@ module Steps
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
-                              start_date: @timestamp
+                              start_date: 1.day.from_now
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
@@ -307,9 +301,9 @@ module Steps
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
-                              start_date: @timestamp
+                              start_date: 1.day.from_now
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
