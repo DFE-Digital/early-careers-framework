@@ -104,7 +104,7 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
           and_lead_provider_statements_have_been_calculated "Another Lead Provider", "January 2022"
         end
 
-        include_examples "FIP to FIP with different provider", scenario, "deferred"
+        include_examples "FIP to FIP with different provider", scenario, "withdrawn"
       end
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "FIP to FIP with different provider" do |scenario, is_obfuscated: true, is_hidden: false, see_prior_school: false|
+RSpec.shared_examples "FIP to FIP with different provider" do |scenario, participant_status, is_obfuscated: true, is_hidden: false|
   context "Then the Original SIT" do
     subject(:original_sit) { "Original SIT" }
 
@@ -32,20 +32,22 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, is_obfu
     subject(:original_lead_provider) { "Original Lead Provider" }
 
     if is_obfuscated
-      it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_obfuscated_context(scenario, scenario.prior_declarations, see_prior_school: true),
+      it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_obfuscated_context(scenario, scenario.prior_declarations, participant_status, see_prior_school: true),
          :aggregate_failures do
         then_lead_provider_can_see_obfuscated_participant_in_api subject,
                                                                  scenario,
                                                                  scenario.prior_declarations,
-                                                                 see_prior_school: see_prior_school
+                                                                 participant_status,
+                                                                 see_prior_school: true
       end
     else
-      it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.prior_declarations, see_prior_school: true),
+      it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.prior_declarations, participant_status, see_prior_school: true),
          :aggregate_failures do
         then_lead_provider_can_see_participant_in_api subject,
                                                       scenario,
                                                       scenario.prior_declarations,
-                                                      see_prior_school: see_prior_school
+                                                      participant_status,
+                                                      see_prior_school: true
       end
     end
 

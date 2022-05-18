@@ -93,7 +93,7 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant",
           and_lead_provider_statements_have_been_calculated "Another Lead Provider", "January 2022"
         end
 
-        include_examples "FIP to CIP", scenario
+        include_examples "FIP to CIP", scenario, "withdrawn"
       end
     end
   end
