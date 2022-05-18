@@ -320,16 +320,28 @@ module Steps
     def and_lead_provider_statements_have_been_calculated(lead_provider_name, statement_name)
       lead_provider = find_lead_provider lead_provider_name
 
-      statement = lead_provider.cpd_lead_provider.statements.where(name: statement_name).first
+      statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: lead_provider.cpd_lead_provider)
 
       next_ideal_time statement.payment_date
       travel_to(@timestamp) do
+        aggregator = Finance::ECF::ParticipantAggregator.new(
+          statement: statement,
+          recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
+        )
+
         Finance::ECF::CalculationOrchestrator.new(
           statement: statement,
           contract: lead_provider.call_off_contract,
-          aggregator: Finance::ECF::ParticipantAggregator.new(statement: statement),
+          aggregator: aggregator,
           calculator: PaymentCalculator::ECF::PaymentCalculation,
         ).call(event_type: :started)
+
+        Finance::ECF::CalculationOrchestrator.new(
+          statement: statement,
+          contract: lead_provider.call_off_contract,
+          aggregator: aggregator,
+          calculator: PaymentCalculator::ECF::PaymentCalculation,
+        ).call(event_type: :retained_1)
       end
     end
 
