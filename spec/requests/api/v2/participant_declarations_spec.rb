@@ -128,11 +128,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: Time.zone.now - 1.hour })
         end
 
-        it "returns 422" do
+        it "returns 200" do
           params = build_params(valid_params)
           post "/api/v1/participant-declarations", params: params
-          expect(response.status).to eq 422
-          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+          expect(response.status).to eq 200
         end
       end
 
@@ -141,11 +140,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           ect_profile.participant_profile_states.create({ state: "deferred", created_at: Time.zone.now - 1.hour })
         end
 
-        it "returns 422" do
+        it "returns 200" do
           params = build_params(valid_params)
           post "/api/v1/participant-declarations", params: params
-          expect(response.status).to eq 422
-          expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:declaration_on_incorrect_state) }] }.to_json)
+          expect(response.status).to eq 200
         end
       end
 

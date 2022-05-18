@@ -14,6 +14,6 @@ RSpec.feature "Declaration on withdrawn participant", type: :feature do
     given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
     when_the_participant_details_are_passed_to_the_lead_provider
     and_the_provider_withdraws_a_participant
-    then_the_declaration_made_against_the_withdrawn_participant_is_rejected
+    then_the_declaration_made_against_the_withdrawn_participant_is_still_accepted
   end
 end

@@ -37,7 +37,7 @@ module RecordDeclarations
       declaration_attempt = create_declaration_attempt!
       validate_provider!
       validate_milestone!
-      validate_participant_state!
+      validate_withdrawals!
 
       raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
@@ -128,9 +128,15 @@ module RecordDeclarations
       end
     end
 
-    def validate_participant_state!
-      last_state = user_profile.state_at(declaration_date)
-      raise ActionController::ParameterMissing, I18n.t(:declaration_on_incorrect_state) unless last_state&.state.nil? || last_state.active?
+    def validate_withdrawals!
+      raise ActionController::ParameterMissing, I18n.t(:declaration_must_be_before_withdrawal_date) if declaration_date_after_withdrawal_date?
+    end
+
+    def declaration_date_after_withdrawal_date?
+      return unless user_profile.participant_profile_states.exists?
+
+      invalid_declaration = user_profile.participant_profile_states.withdrawn.where(cpd_lead_provider: cpd_lead_provider).where("created_at <= ?", declaration_date)
+      invalid_declaration.exists?
     end
 
     def validate_schedule_present

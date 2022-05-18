@@ -67,7 +67,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
 
     context "when status is withdrawn" do
       before do
-        ParticipantProfileState.create!(participant_profile: profile, state: "withdrawn")
+        ParticipantProfileState.create!(participant_profile: profile, state: "withdrawn", cpd_lead_provider: cpd_lead_provider)
         profile.update!(status: "withdrawn")
       end
 

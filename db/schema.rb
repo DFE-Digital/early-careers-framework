@@ -610,6 +610,8 @@ ActiveRecord::Schema.define(version: 2022_05_12_140603) do
     t.text "reason"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "cpd_lead_provider_id"
+    t.index ["cpd_lead_provider_id"], name: "index_participant_profile_states_on_cpd_lead_provider_id"
     t.index ["participant_profile_id"], name: "index_participant_profile_states_on_participant_profile_id"
   end
 

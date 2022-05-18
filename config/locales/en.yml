@@ -59,12 +59,13 @@ en:
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   schedule_invalid_for_course: Selected schedule is not valid for the course
   withdrawn_participant: Cannot perform actions on a withdrawn participant
-  declaration_on_incorrect_state: "The declaration on withdrawn or deferred participant can not be accepted"
   declaration_already_voided: "Declaration is already voided"
   declaration_not_voidable: "Declaration not voidable"
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
+  declaration_must_be_before_end_date: "Declaration date must be before induction record end date"
+  declaration_must_be_before_withdrawal_date: "Declaration must be before withdrawal date"
   invalid_data_structure: correct json data structure required. See API docs for reference
   admin_nqt_1_email_used_ect: "A user with this email address is currently participating as an ECT at school with urn %{urn}"
   admin_nqt_1_email_used_nqt: "A user with this email address is currently participating as an NQT+1 at school with urn %{urn}"

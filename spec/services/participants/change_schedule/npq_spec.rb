@@ -98,7 +98,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
     let(:user) { profile.user }
     let(:profile) { create(:npq_participant_profile) }
     let!(:declaration) do
-      create(:participant_declaration,
+      create(:npq_participant_declaration,
              user: user,
              participant_profile: profile,
              course_identifier: profile.npq_course.identifier)

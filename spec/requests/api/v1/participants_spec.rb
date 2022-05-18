@@ -3,11 +3,11 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", :with_default_schdules, type: :request do
+RSpec.describe "Participants API", :with_default_schedules, type: :request do
   describe "GET /api/v1/participants" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current) }
+    let!(:cohort) { Cohort.find_by(start_year: 2021) }
     let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
     let(:induction_programme) { create(:induction_programme, partnership: partnership) }
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
