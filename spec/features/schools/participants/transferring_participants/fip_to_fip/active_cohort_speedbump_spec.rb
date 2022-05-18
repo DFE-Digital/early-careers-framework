@@ -64,6 +64,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
+        and_there_should_only_be_a_new_ect_in_the_previous_cohort
 
         # click_on "Moving school"
         # then_i_should_see_the_transferring_participant
@@ -235,6 +236,11 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def and_it_should_list_the_schools_mentors
         expect(page).to have_text(@mentor.user.full_name)
+      end
+
+      def and_there_should_only_be_a_new_ect_in_the_previous_cohort
+        expect(@school_one_2022_cohort_induction_programme.induction_records.count).to eq 1
+        expect(@school_cohort_one.induction_records.count).to eq 1
       end
 
       def and_the_participant_should_be_notified_with(notification_method)
