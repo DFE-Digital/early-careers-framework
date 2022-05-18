@@ -32,9 +32,6 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
         then_i_should_be_on_full_name_page
 
-        click_on "Continue"
-        then_i_receive_a_missing_name_error_message
-
         when_i_update_the_name_with(@participant_data[:full_name])
         click_on "Continue"
         then_i_should_be_on_trn_page
@@ -206,46 +203,6 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       def then_i_should_be_on_the_complete_page
         expect(page).to have_selector("h2", text: "What happens next")
         expect(page).to have_text("We’ll let #{@participant_profile_ect.user.full_name}")
-      end
-
-      def then_i_receive_a_missing_name_error_message
-        expect(page).to have_text("Enter a full name")
-      end
-
-      def then_i_should_see_a_enter_trn_error_message
-        expect(page).to have_text("Enter the teachers TRN (teacher reference number)")
-      end
-
-      def then_i_should_see_invalid_trn_message
-        expect(page).to have_text("Teacher reference number is at least 5 digits long")
-      end
-
-      def then_i_should_see_enter_date_of_birth_error_message
-        expect(page).to have_text("Enter date of birth")
-      end
-
-      def then_i_should_see_invalid_date_of_birth_error_message
-        expect(page).to have_text("Invalid date of birth")
-      end
-
-      def then_i_should_see_enter_start_date_error_message
-        expect(page).to have_text("Enter start date")
-      end
-
-      def then_i_should_see_invalid_start_date_error_message
-        expect(page).to have_text("Invalid start date")
-      end
-
-      def then_i_should_see_blank_email_date_error_message
-        expect(page).to have_text("Enter an email")
-      end
-
-      def then_i_should_see_invalid_email_date_error_message
-        expect(page).to have_text("Enter an email address in the correct format, like name@example.com")
-      end
-
-      def then_i_should_see_select_option_error_message
-        expect(page).to have_text("Select an option")
       end
 
       def then_i_should_see_the_transferring_participant
