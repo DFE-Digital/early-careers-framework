@@ -102,7 +102,7 @@ module Schools
     end
 
     def in_current_active_cohort?
-      school_cohort.cohort.start_year == Cohort.active_registration_cohort.start_year
+      school_cohort.cohort == Cohort.active_registration_cohort
     end
   end
 end
