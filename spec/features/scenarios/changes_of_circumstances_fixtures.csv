@@ -1,47 +1,47 @@
-original_programme,new_programme,transfer,participant_type,prior_declarations,new_declarations,duplicate_declarations
-CIP,CIP,,ECT,,,
-CIP,CIP,,Mentor,,,
-CIP,FIP,,ECT,,,
-CIP,FIP,,ECT,,started,
-CIP,FIP,,ECT,,"started,retained_1",
-CIP,FIP,,Mentor,,,
-CIP,FIP,,Mentor,,started,
-CIP,FIP,,Mentor,,started,
-FIP,CIP,,ECT,,,
-FIP,CIP,,ECT,started,,
-FIP,CIP,,ECT,"started,retained_1",,
-FIP,CIP,,Mentor,,,
-FIP,CIP,,Mentor,started,,
-FIP,CIP,,Mentor,"started,retained_1",,
-FIP,FIP,different_provider,ECT,,,
-FIP,FIP,different_provider,ECT,started,,
-FIP,FIP,different_provider,ECT,"started,retained_1",,
-FIP,FIP,different_provider,ECT,started,retained_1,
-FIP,FIP,different_provider,ECT,started,,started
-FIP,FIP,different_provider,ECT,"started,retained_1",,"started,retained_1"
-FIP,FIP,different_provider,ECT,,started,
-FIP,FIP,different_provider,ECT,,"started,retained_1",
-FIP,FIP,different_provider,Mentor,,,
-FIP,FIP,different_provider,Mentor,started,,
-FIP,FIP,different_provider,Mentor,"started,retained_1",,
-FIP,FIP,different_provider,Mentor,started,retained_1,
-FIP,FIP,different_provider,Mentor,started,,started
-FIP,FIP,different_provider,Mentor,"started,retained_1",,"started,retained_1"
-FIP,FIP,different_provider,Mentor,,started,
-FIP,FIP,different_provider,Mentor,,"started,retained_1",
-FIP,FIP,same_provider,ECT,,,
-FIP,FIP,same_provider,ECT,started,,
-FIP,FIP,same_provider,ECT,"started,retained_1",,
-FIP,FIP,same_provider,ECT,started,retained_1,
-FIP,FIP,same_provider,ECT,started,,started
-FIP,FIP,same_provider,ECT,"started,retained_1",,"started,retained_1"
-FIP,FIP,same_provider,ECT,,started,
-FIP,FIP,same_provider,ECT,,"started,retained_1",
-FIP,FIP,same_provider,Mentor,,,
-FIP,FIP,same_provider,Mentor,started,,
-FIP,FIP,same_provider,Mentor,"started,retained_1",,
-FIP,FIP,same_provider,Mentor,started,retained_1,
-FIP,FIP,same_provider,Mentor,started,,started
-FIP,FIP,same_provider,Mentor,"started,retained_1",,"started,retained_1"
-FIP,FIP,same_provider,Mentor,,started,
-FIP,FIP,same_provider,Mentor,,"started,retained_1",
+original_programme,new_programme,transfer,participant_type,prior_declarations,new_declarations,duplicate_declarations,Known failures
+CIP,CIP,,ECT,,,,
+CIP,CIP,,Mentor,,,,
+CIP,FIP,,ECT,,,,
+CIP,FIP,,ECT,,started,,Finance Portal not showing correct number of payable declarations
+CIP,FIP,,ECT,,"started,retained_1",,Finance Portal not showing correct number of payable declarations
+CIP,FIP,,Mentor,,,,
+CIP,FIP,,Mentor,,started,,Finance Portal not showing correct number of payable declarations
+CIP,FIP,,Mentor,,"started,retained_1",,Finance Portal not showing correct number of payable declarations
+FIP,CIP,,ECT,,,,
+FIP,CIP,,ECT,started,,,Finance Portal not showing correct number of payable declarations
+FIP,CIP,,ECT,"started,retained_1",,,Finance Portal not showing correct number of payable declarations
+FIP,CIP,,Mentor,,,,
+FIP,CIP,,Mentor,started,,,Finance Portal not showing correct number of payable declarations
+FIP,CIP,,Mentor,"started,retained_1",,,Finance Portal not showing correct number of payable declarations except for - Onboard a deferred participant
+FIP,FIP,different_provider,ECT,,,,
+FIP,FIP,different_provider,ECT,started,,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,ECT,"started,retained_1",,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,ECT,started,retained_1,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,ECT,started,,started,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,ECT,"started,retained_1",,"started,retained_1",Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,ECT,,started,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,ECT,,"started,retained_1",,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,Mentor,,,,
+FIP,FIP,different_provider,Mentor,started,,,Finance Portal not showing correct number of payable declarations except for - Onboard a withdrawn participant
+FIP,FIP,different_provider,Mentor,"started,retained_1",,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,Mentor,started,retained_1,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,Mentor,started,,started,Finance Portal not showing correct number of payable declarations except for - Onboard a withdrawn participant
+FIP,FIP,different_provider,Mentor,"started,retained_1",,"started,retained_1",Finance Portal not showing correct number of payable declarations except for - Onboard a deferred participant
+FIP,FIP,different_provider,Mentor,,started,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,different_provider,Mentor,,"started,retained_1",,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,,,,
+FIP,FIP,same_provider,ECT,started,,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,"started,retained_1",,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,started,retained_1,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,started,,started,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,"started,retained_1",,"started,retained_1",Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,,started,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,ECT,,"started,retained_1",,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,,,,
+FIP,FIP,same_provider,Mentor,started,,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,"started,retained_1",,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,started,retained_1,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,started,,started,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,"started,retained_1",,"started,retained_1",Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,,started,,Finance Portal not showing correct number of payable declarations
+FIP,FIP,same_provider,Mentor,,"started,retained_1",,Finance Portal not showing correct number of payable declarations
