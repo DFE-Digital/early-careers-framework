@@ -174,6 +174,16 @@ module ChooseProgrammeSteps
     expect(page).to have_summary_row("Delivery partner", "To be confirmed")
   end
 
+  def and_i_see_delivery_partner_to_be_the_previous_one
+    name = @school_cohort.delivery_partner.name
+    expect(page).to have_summary_row("Delivery partner", name)
+  end
+
+  def and_i_see_training_partner_to_be_the_previous_one
+    name = @school_cohort.lead_provider.name
+    expect(page).to have_summary_row("Training provider", name)
+  end
+
   def and_i_see_programme_to_dfe_accredited_materials
     expect(page).to have_summary_row("Programme", "DfE accredited materials")
   end
