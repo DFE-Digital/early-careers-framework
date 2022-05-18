@@ -7,14 +7,11 @@ module Finance
 
       def initialize(participant_count_per_bands, bands)
         self.bands = bands
-        self.data  = {
-          "started" => Hash[bands.zip(Array.new(bands.size, 0))],
-          "retained-1" => Hash[bands.zip(Array.new(bands.size, 0))],
-          "retained-2" => Hash[bands.zip(Array.new(bands.size, 0))],
-          "retained-3" => Hash[bands.zip(Array.new(bands.size, 0))],
-          "retained-4" => Hash[bands.zip(Array.new(bands.size, 0))],
-          "completed" => Hash[bands.zip(Array.new(bands.size, 0))],
-        }
+        self.data  = Hash[
+          DECLARATION_TYPES.zip(
+            Array.new(DECLARATION_TYPES.size) { Hash[bands.zip(Array.new(bands.size, 0))] },
+          )
+        ]
 
         DECLARATION_TYPES.each do |declaration_type|
           declaration_type_count = participant_count_per_bands.fetch(declaration_type, 0)
