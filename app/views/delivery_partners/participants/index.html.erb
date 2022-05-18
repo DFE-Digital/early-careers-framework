@@ -1,3 +1,23 @@
 <h1 class="govuk-heading-xl">Participants</h1>
 
-<p>Hello world</p>
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Full name</th>
+      <th scope="col" class="govuk-table__header">Email address</th>
+      <th scope="col" class="govuk-table__header">TRN</th>
+      <th scope="col" class="govuk-table__header">Role</th>
+      <th scope="col" class="govuk-table__header">Lead provider</th>
+      <th scope="col" class="govuk-table__header">School</th>
+      <th scope="col" class="govuk-table__header">School unique reference number</th>
+      <th scope="col" class="govuk-table__header">Academic year</th>
+      <th scope="col" class="govuk-table__header">Training status</th>
+      <th scope="col" class="govuk-table__header">Status</th>
+    </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles) %>
+  </tbody>
+</table>
+<%== govuk_paginate @participant_profiles, @pagy %>
