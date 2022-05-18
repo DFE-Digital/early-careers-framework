@@ -38,6 +38,18 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
       then_i_see(ect_user.id)
       then_i_see(ect_declaration.id)
     end
+
+    scenario "Edit a partipant" do
+      visit finance_participant_path(ect_user)
+
+      actions = page.find("dt.govuk-summary-list__key", text: "Training status").sibling("dd.govuk-summary-list__actions")
+      within(actions) { click_on "Change" }
+      select "Withdrawn", from: "Change training status"
+      click_on "Change profile"
+
+      expect(page.find("dt.govuk-summary-list__key", text: "Training status"))
+        .to have_sibling("dd.govuk-summary-list__value", text: "withdrawn")
+    end
   end
 
   describe "NPQ user" do

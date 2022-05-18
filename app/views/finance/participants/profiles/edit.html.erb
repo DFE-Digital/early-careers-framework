@@ -1,0 +1,8 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_participant_path(@user)) %>
+
+<h1 class="govuk-heading-xl">Edit <%= @user.full_name %> <%= @profile.type.demodulize %> profile</h1>
+
+<%= form_for @profile, as: :profile, url: finance_participant_profile_path(@user, @profile) do |f| %>
+  <%= f.govuk_collection_select :training_status, training_status_select_options, :value, :label, label: { text: "Change training status" } %>
+  <%= f.govuk_submit "Change profile" %>
+<% end %>

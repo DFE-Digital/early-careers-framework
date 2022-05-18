@@ -306,7 +306,9 @@ Rails.application.routes.draw do
   namespace :finance do
     resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
 
-    resources :participants, only: %i[index show]
+    resources :participants, only: %i[index show] do
+      resources :profiles, only: %i[edit update], module: "participants", path_names: { edit: "" }
+    end
 
     namespace :banding_tracker, path: "banding-tracker" do
       resources :providers, only: %i[show]
