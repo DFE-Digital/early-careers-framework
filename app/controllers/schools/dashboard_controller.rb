@@ -56,14 +56,18 @@ private
 
   def school_cohort_lead_provider_name(school_cohort)
     return school_cohort.lead_provider.name if school_cohort.lead_provider.present?
+
     return "To be confirmed" if school_cohort.default_induction_programme&.lead_provider_to_be_confirmed?
-    return school_cohort.previous_lead_provider&.name || "To be confirmed"
+
+    school_cohort.previous_lead_provider&.name || "To be confirmed"
   end
 
   def school_cohort_delivery_partner_name(school_cohort)
     return school_cohort.delivery_partner.name if school_cohort.delivery_partner.present?
+
     return "To be confirmed" if school_cohort.default_induction_programme&.delivery_partner_to_be_confirmed?
-    return school_cohort.previous_delivery_partner&.name || "To be confirmed"
+
+    school_cohort.previous_delivery_partner&.name || "To be confirmed"
   end
 
   helper_method :set_up_new_cohort?, :previous_school_cohort, :school_cohort_lead_provider_name, :school_cohort_delivery_partner_name

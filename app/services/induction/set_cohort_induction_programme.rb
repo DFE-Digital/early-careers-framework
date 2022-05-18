@@ -25,7 +25,11 @@ private
 
   attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :lead_provider_to_be_confirmed, :delivery_partner_to_be_confirmed
 
-  def initialize(school_cohort:, programme_choice:, opt_out_of_updates: false, core_induction_programme: nil, lead_provider_to_be_confirmed: false, delivery_partner_to_be_confirmed: false)
+  def initialize(school_cohort:, programme_choice:,
+                 opt_out_of_updates: false,
+                 core_induction_programme: nil,
+                 lead_provider_to_be_confirmed: false,
+                 delivery_partner_to_be_confirmed: false)
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
     @school_cohort = school_cohort
@@ -41,7 +45,7 @@ private
       training_programme: programme_choice,
       school_cohort: school_cohort,
       lead_provider_to_be_confirmed: lead_provider_to_be_confirmed,
-      delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed
+      delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed,
     }
 
     case programme_choice
