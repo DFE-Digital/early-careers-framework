@@ -362,7 +362,6 @@ ActiveRecord::Schema.define(version: 2022_05_16_123711) do
     t.string "training_programme", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "lead_provider_to_be_confirmed", default: false
     t.boolean "delivery_partner_to_be_confirmed", default: false
     t.index ["core_induction_programme_id"], name: "index_induction_programmes_on_core_induction_programme_id"
     t.index ["partnership_id"], name: "index_induction_programmes_on_partnership_id"
