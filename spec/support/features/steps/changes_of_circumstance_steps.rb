@@ -361,15 +361,15 @@ module Steps
     def then_school_dashboard_page_does_not_have_participants
       page_object = Pages::SchoolDashboardPage.loaded
 
-      expect(page_object).to have_no_participants
+      page_object.confirm_has_no_participants
     end
 
     def then_school_participant_details_page_shows_participant_details(participant_name, participant_email, participant_status)
       page_object = Pages::SchoolParticipantDetailsPage.loaded
 
-      expect(page_object).to have_full_name(participant_name)
-      expect(page_object).to have_email(participant_email)
-      expect(page_object).to have_status(participant_status)
+      page_object.has_full_name? participant_name
+      page_object.has_email? participant_email
+      page_object.has_status? participant_status
     end
 
     def self.then_lead_provider_cannot_see_context(scenario)
@@ -507,14 +507,14 @@ module Steps
 
       drilldown = Pages::FinanceParticipantDrilldown.loaded
 
-      expect(drilldown).to have_participant(participant_user.id)
-      expect(drilldown).to have_school_urn(school.urn)
-      expect(drilldown).to have_lead_provider(lead_provider_name)
-      expect(drilldown).to have_status(participant_status)
-      expect(drilldown).to have_training_status(training_status)
+      drilldown.has_participant? participant_user.id
+      drilldown.has_school_urn? school.urn
+      drilldown.has_lead_provider? lead_provider_name
+      drilldown.has_status? participant_status
+      drilldown.has_training_status? training_status
 
       declarations.each do |declaration_type|
-        expect(drilldown).to have_declaration(declaration_type, course_identifier, "payable")
+        drilldown.has_declaration? declaration_type, course_identifier, "payable"
       end
     end
 
@@ -531,20 +531,9 @@ module Steps
       report.has_completed_declarations_total? completed
       report.has_voided_declarations_total? voided
 
-      expect(report).to have_started_declaration_payment_table(
-        num_ects: total_ects,
-        num_mentors: total_mentors,
-        num_declarations: started,
-      )
-      expect(report).to have_retained_1_declaration_payment_table(
-        num_ects: total_ects,
-        num_mentors: total_mentors,
-        num_declarations: retained,
-      )
-      expect(report).to have_other_fees_table(
-        num_ects: uplift ? total_ects : 0,
-        num_mentors: uplift ? total_mentors : 0,
-      )
+      report.has_started_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: started
+      report.has_retained_1_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: retained
+      report.has_other_fees_table? num_ects: uplift ? total_ects : 0, num_mentors: uplift ? total_mentors : 0
     end
 
     def self.then_admin_user_context(scenario)
@@ -576,12 +565,12 @@ module Steps
       participant_detail = Pages::AdminSupportParticipantDetail.loaded
 
       # primary heading needs checking participant_name
-      expect(participant_detail).to have_primary_heading(participant_name)
+      participant_detail.has_primary_heading? participant_name
 
-      expect(participant_detail).to have_full_name(participant_name)
-      expect(participant_detail).to have_school(school.name)
-      expect(participant_detail).to have_validation_status(validation_status)
-      expect(participant_detail).to have_lead_provider(lead_provider_name)
+      participant_detail.has_full_name? participant_name
+      participant_detail.has_school? school.name
+      participant_detail.has_validation_status? validation_status
+      participant_detail.has_lead_provider? lead_provider_name
     end
 
     def self.then_support_service_context(scenario)

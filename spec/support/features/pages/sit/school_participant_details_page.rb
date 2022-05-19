@@ -13,15 +13,15 @@ module Pages
     end
 
     def has_email?(email)
-      has_text?("Email address #{email}")
+      element_has_content? self, "Email address #{email}"
     end
 
     def has_full_name?(full_name)
-      has_text?("Full name #{full_name}")
+      element_has_content? self, "Name #{full_name}"
     end
 
     def has_status?(status)
-      has_text?("Status\n#{status}")
+      element_has_content? self, "Status\n#{status}"
     end
   end
 end
