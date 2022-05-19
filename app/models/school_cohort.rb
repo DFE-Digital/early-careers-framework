@@ -39,6 +39,7 @@ class SchoolCohort < ApplicationRecord
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
   delegate :description, :academic_year, to: :cohort
+  delegate :delivery_partner_to_be_confirmed, to: :default_induction_programme
 
   after_save do |school_cohort|
     unless school_cohort.saved_changes.empty?
@@ -65,14 +66,6 @@ class SchoolCohort < ApplicationRecord
 
   def delivery_partner
     school.delivery_partner_for(cohort.start_year)
-  end
-
-  def delivery_partner_to_be_confirmed?
-    default_induction_programme.delivery_partner_to_be_confirmed
-  end
-
-  def previous_delivery_partner
-    school.delivery_partner_for(cohort.start_year - 1)
   end
 
   def school_chose_cip?
