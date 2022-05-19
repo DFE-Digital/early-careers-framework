@@ -167,7 +167,8 @@ module Schools
     def set_cohort_induction_programme!(programme_choice, opt_out_of_updates: false)
       Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
                                                   programme_choice: programme_choice,
-                                                  opt_out_of_updates: opt_out_of_updates)
+                                                  opt_out_of_updates: opt_out_of_updates,
+                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?)
     end
 
     def school_cohort
@@ -192,6 +193,10 @@ module Schools
 
     def save_school_choice!
       set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
+    end
+
+    def delivery_partner_to_be_confirmed?
+      @setup_school_cohort_form.attributes[:what_changes_choice] == "change_delivery_partner"
     end
   end
 end
