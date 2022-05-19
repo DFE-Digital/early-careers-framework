@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.feature "Privacy policy page", type: :feature, js: true, rutabaga: false do
-  before do
-    given_a_privacy_policy_has_been_published
+  let!(:privacy_policy) do
+    create :privacy_policy
+    PrivacyPolicy::Publish.call
   end
 
   scenario "Privacy policy is accessible" do
