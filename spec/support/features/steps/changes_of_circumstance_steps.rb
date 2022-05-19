@@ -518,7 +518,7 @@ module Steps
       end
     end
 
-    def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, statement_name, total_ects, total_mentors, started, retained, completed, voided)
+    def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, statement_name, total_ects, total_mentors, started, retained, completed, voided, uplift: true)
       when_i_am_on_the_finance_portal
       and_i_view_payment_breakdown_from_finance_portal
       and_i_complete_from_finance_payment_breakdown_report_wizard lead_provider_name
@@ -542,8 +542,8 @@ module Steps
         num_declarations: retained,
       )
       expect(report).to have_other_fees_table(
-        num_ects: total_ects,
-        num_mentors: total_mentors,
+        num_ects: uplift ? total_ects : 0,
+        num_mentors: uplift ? total_mentors : 0,
       )
     end
 
