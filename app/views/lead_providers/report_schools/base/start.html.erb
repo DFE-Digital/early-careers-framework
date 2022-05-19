@@ -11,11 +11,7 @@
       <% end %>
     <% end %>
 
-    <h1 class="govuk-heading-xl">You can only confirm schools for the cohort that starts in the next academic year
-      (<%= report_schools_form.cohort.display_name %>).</h1>
-
-    <p>If you want to add schools to your <%= report_schools_form.cohort.display_name %> cohort after 31 October <%= report_schools_form.cohort.start_year %>, you need to contact:
-      <%= render MailToSupportComponent.new %></p>
+    <h1 class="govuk-heading-xl">You’ve chosen to confirm schools for the <%= @report_schools_form.cohort.description %> academic year</h1>
 
     <%= govuk_button_link_to "Continue", lead_providers_report_schools_delivery_partner_path %>
   </div>

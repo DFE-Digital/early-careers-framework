@@ -1,18 +1,19 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-three-quarters">
+  <div class="govuk-grid-column-two-thirds">
     <% if current_user.lead_provider? %>
-      <div class="govuk-grid-column-two-thirds">
-        <%= render partial: "navigation" %>
-        <h1 class="govuk-heading-xl"><%= @lead_provider.name %></h1>
+      <%= render partial: "navigation" %>
+      <h1 class="govuk-heading-xl"><%= @lead_provider.name %></h1>
+      <% @lead_provider.cohorts.each do |cohort| %>
         <h2 class="govuk-heading-m">
-          <%= govuk_link_to "Confirm your schools", lead_providers_report_schools_start_path %>
+          <%= govuk_link_to "Confirm your schools for the #{cohort.description} academic year", lead_providers_report_schools_start_path(cohort: cohort) %>
         </h2>
-        <p>Choose a delivery partner and upload schools using a CSV.</p>
-        <h2 class="govuk-heading-m">
-          <%= govuk_link_to "Check your schools", lead_providers_your_schools_path(cohort: Cohort.next) %>
-        </h2>
-        <p>See which schools have added their early career teachers and mentors.</p>
-      </div>
+      <% end %>
+
+      <p>Choose a delivery partner and upload schools using a CSV.</p>
+      <h2 class="govuk-heading-m">
+        <%= govuk_link_to "Check your schools", lead_providers_your_schools_path(cohort: Cohort.next) %>
+      </h2>
+      <p>See which schools have added their early career teachers and mentors.</p>
     <% else %>
       <h1 class="govuk-heading-xl">You cannot use this service yet</h1>
       <p class="govuk-body">

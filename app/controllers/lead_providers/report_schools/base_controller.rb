@@ -5,6 +5,7 @@ module LeadProviders
     class BaseController < ::LeadProviders::BaseController
       SESSION_KEY = :lp_report_schools_form
 
+      before_action :set_cohort
       after_action :store_form
       after_action :clean_form!, only: :success
 
@@ -13,7 +14,7 @@ module LeadProviders
       def start
         clean_form!
 
-        report_schools_form.cohort_id = Cohort.next.id
+        report_schools_form.cohort_id = @cohort&.id || Cohort.next.id
         report_schools_form.lead_provider_id = current_user.lead_provider_profile.lead_provider.id
       end
 
@@ -26,6 +27,10 @@ module LeadProviders
       def success; end
 
     private
+
+      def set_cohort
+        @cohort = current_user.lead_provider.cohorts.find_by(start_year: params[:cohort])
+      end
 
       def clean_form!
         session.delete(SESSION_KEY)
