@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CheckParticipantsInductionJob do
+RSpec.describe CheckParticipantsInductionAndQtsJob do
   context "When there are participants that have had their induction information filled" do
     let(:validation_result) do
       lambda do |trn, no_induction|
@@ -216,6 +216,88 @@ RSpec.describe CheckParticipantsInductionJob do
         still_previous_induction_participant.ecf_participant_eligibility.reload.no_induction
       }
       expect(new_later_induction_participant.ecf_participant_eligibility).to be_eligible_status
+    end
+  end
+
+  context "When there are participants that have no_qts reason on their ecf eligibility record" do
+    let(:validation_result) do
+      lambda do |trn, qts_status|
+        {
+          trn: trn,
+          qts: qts_status,
+          active_alert: false,
+          previous_participation: false,
+          previous_induction: false,
+          no_induction: false,
+        }
+      end
+    end
+
+    let(:still_no_qts_participant) do
+      create(:ect_participant_profile).tap do |profile|
+        create(
+          :ecf_participant_eligibility,
+          :manual_check,
+          qts: false,
+          participant_profile: profile,
+          )
+        create(
+          :ecf_participant_validation_data,
+          trn: profile.teacher_profile.trn,
+          participant_profile: profile,
+          )
+      end
+    end
+
+    let(:added_qts_participant) do
+      create(:ect_participant_profile).tap do |profile|
+        create(
+          :ecf_participant_eligibility,
+          :manual_check,
+          qts: false,
+          participant_profile: profile,
+          )
+        create(
+          :ecf_participant_validation_data,
+          trn: profile.teacher_profile.trn,
+          participant_profile: profile,
+          )
+      end
+    end
+
+    before do
+      still_no_qts_trn = still_no_qts_participant.ecf_participant_validation_data.trn
+      expect(ParticipantValidationService).to(
+        receive(:validate).with(
+          hash_including(
+            trn: still_no_qts_trn,
+            ),
+          ).and_return(
+          validation_result[still_no_qts_trn, false],
+          ),
+        )
+
+      added_qts_trn = added_qts_participant.ecf_participant_validation_data.trn
+      expect(ParticipantValidationService).to(
+        receive(:validate).with(
+          hash_including(
+            trn: added_qts_trn,
+            ),
+          ).and_return(
+          validation_result[added_qts_trn, true],
+          ),
+        )
+    end
+
+    it "Updates the value of qts from dqt" do
+      expect {
+        subject.perform_now
+      }.to change {
+        added_qts_participant.ecf_participant_eligibility.reload.qts
+      }.from(false).to(true).and not_change {
+        still_no_qts_participant.ecf_participant_eligibility.reload.qts
+      }
+      expect(added_qts_participant.ecf_participant_eligibility).to be_eligible_status
     end
   end
 end
