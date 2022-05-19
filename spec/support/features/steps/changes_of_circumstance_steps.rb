@@ -501,6 +501,10 @@ module Steps
 
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
+      and_i_am_on_the_finance_portal
+      and_i_view_participant_drilldown_from_finance_portal
+      when_i_find_from_finance_participant_drilldown_search participant_name
+
       drilldown = Pages::FinanceParticipantDrilldown.loaded
 
       expect(drilldown).to have_participant(participant_user.id)
@@ -514,7 +518,12 @@ module Steps
       end
     end
 
-    def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(_lead_provider_name, total_ects, total_mentors, started, retained, completed, voided)
+    def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, statement_name, total_ects, total_mentors, started, retained, completed, voided)
+      when_i_am_on_the_finance_portal
+      and_i_view_payment_breakdown_from_finance_portal
+      and_i_complete_from_finance_payment_breakdown_report_wizard lead_provider_name
+      and_i_select_statment_from_finance_payment_breakdown_report statement_name
+
       report = Pages::FinancePaymentBreakdownReport.loaded
 
       report.has_started_declarations_total? started

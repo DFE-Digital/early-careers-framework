@@ -74,11 +74,6 @@ RSpec.shared_examples "FIP to FIP with same provider" do |scenario, participant_
        :aggregate_failures do
       given_i_authenticate_as_a_finance_user
 
-      and_i_am_on_the_finance_portal
-      and_i_view_participant_drilldown_from_finance_portal
-
-      when_i_find_from_finance_participant_drilldown_search "the Participant"
-
       then_the_finance_portal_shows_the_current_participant_record "the Participant",
                                                                    scenario.participant_type,
                                                                    "New SIT",
@@ -87,24 +82,14 @@ RSpec.shared_examples "FIP to FIP with same provider" do |scenario, participant_
                                                                    "active",
                                                                    scenario.all_declarations
 
-      when_i_am_on_the_finance_portal
-      and_i_view_payment_breakdown_from_finance_portal
-      and_i_complete_from_finance_payment_breakdown_report_wizard "Original Lead Provider"
-      and_i_select_statment_from_finance_payment_breakdown_report "January 2023"
-
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider", "January 2023",
                                                                         scenario.original_payment_ects,
                                                                         scenario.original_payment_mentors,
                                                                         scenario.original_started_declarations,
                                                                         scenario.original_retained_declarations,
                                                                         0, 0
 
-      when_i_am_on_the_finance_portal
-      and_i_view_payment_breakdown_from_finance_portal
-      and_i_complete_from_finance_payment_breakdown_report_wizard "Another Lead Provider"
-      and_i_select_statment_from_finance_payment_breakdown_report "January 2023"
-
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider", "January 2023",
                                                                         0, 0, 0, 0, 0, 0
 
       sign_out
