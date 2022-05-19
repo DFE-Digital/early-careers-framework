@@ -117,7 +117,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
                                                                         scenario.new_started_declarations,
                                                                         scenario.new_retained_declarations,
                                                                         0, 0,
-                                                                        uplift: false
+                                                                        uplift: scenario.prior_declarations.empty?
 
       then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider", "January 2023",
                                                                         0, 0, 0, 0, 0, 0
