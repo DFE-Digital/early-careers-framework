@@ -7,7 +7,10 @@ class Finance::Statement < ApplicationRecord
 
   belongs_to :cpd_lead_provider
   belongs_to :cohort
+
   has_many :participant_declarations
+  has_many :statement_line_items, class_name: "Finance::StatementLineItem"
+
   scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,                    -> { where("payment_date < ?", Date.current) }
   scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }

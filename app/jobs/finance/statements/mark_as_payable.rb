@@ -6,8 +6,15 @@ module Finance
       def perform
         Finance::Statement.where(deadline_date: 1.day.ago.to_date).find_each do |statement|
           Finance::Statement.transaction do
-            statement.participant_declarations.find_each(&:make_payable!)
             statement.payable!
+
+            statement.participant_declarations.find_each do |declaration|
+              declaration.make_payable!
+
+              line_item = StatementLineItem.find_by(statement: statement, participant_declaration: declaration)
+
+              line_item.update!(state: "payable") if line_item
+            end
           end
         end
       end
