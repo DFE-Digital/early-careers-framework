@@ -17,7 +17,7 @@ RSpec.describe Identity::Transfer do
       expect(user2.participant_identities.count).to eq 2
     end
 
-    context "when profiles are attached to the user" do
+    context "when participant profiles are attached to the user" do
       let(:school_cohort) { create(:school_cohort) }
       let(:teacher_profile1) { create(:teacher_profile, user: user1) }
       let!(:participant_profile) { create(:ecf_participant_profile, teacher_profile: teacher_profile1, school_cohort: school_cohort) }
@@ -41,6 +41,37 @@ RSpec.describe Identity::Transfer do
         it "moves the participant_profiles to the teacher_profile" do
           service.call(from_user: user1, to_user: user2)
           expect(user2.teacher_profile.participant_profiles).to match_array [participant_profile]
+        end
+      end
+    end
+
+    context "when the from user is an induction coordinator" do
+      let(:from_school) { create(:school) }
+      let!(:from_user_sit_profile) { create(:induction_coordinator_profile, user: user1, schools: [from_school]) }
+
+      before do
+        service.call(from_user: user1, to_user: user2)
+        user1.reload
+      end
+
+      context "when the destination user is also an induction coordinator" do
+        let(:to_school) { create(:school) }
+        let!(:to_user_sit_profile) { create(:induction_coordinator_profile, user: user2, schools: [to_school]) }
+
+        it "transfers the schools to the new user" do
+          expect(user2.schools).to match_array [from_school, to_school]
+          expect(user1.schools).to be_empty
+        end
+      end
+
+      context "when the destination user is not an induction coordinator" do
+        it "transfers the induction coordinator profile" do
+          expect(user2).to be_induction_coordinator
+          expect(user1).not_to be_induction_coordinator
+        end
+
+        it "transfers the schools to the new user" do
+          expect(user2.schools).to match_array [from_school]
         end
       end
     end
