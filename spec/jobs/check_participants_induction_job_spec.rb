@@ -240,12 +240,12 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
           :manual_check,
           qts: false,
           participant_profile: profile,
-          )
+        )
         create(
           :ecf_participant_validation_data,
           trn: profile.teacher_profile.trn,
           participant_profile: profile,
-          )
+        )
       end
     end
 
@@ -256,12 +256,12 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
           :manual_check,
           qts: false,
           participant_profile: profile,
-          )
+        )
         create(
           :ecf_participant_validation_data,
           trn: profile.teacher_profile.trn,
           participant_profile: profile,
-          )
+        )
       end
     end
 
@@ -271,22 +271,22 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
         receive(:validate).with(
           hash_including(
             trn: still_no_qts_trn,
-            ),
-          ).and_return(
-          validation_result[still_no_qts_trn, false],
           ),
-        )
+        ).and_return(
+          validation_result[still_no_qts_trn, false],
+        ),
+      )
 
       added_qts_trn = added_qts_participant.ecf_participant_validation_data.trn
       expect(ParticipantValidationService).to(
         receive(:validate).with(
           hash_including(
             trn: added_qts_trn,
-            ),
-          ).and_return(
-          validation_result[added_qts_trn, true],
           ),
-        )
+        ).and_return(
+          validation_result[added_qts_trn, true],
+        ),
+      )
     end
 
     it "Updates the value of qts from dqt" do
