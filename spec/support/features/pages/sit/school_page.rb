@@ -17,20 +17,20 @@ module Pages
                     sit.to_s
                   end
 
-      has_text? "Induction tutor #{full_name}"
+      has_content? "Induction tutor #{full_name}"
     end
 
     def has_participants?
-      has_text?("View your early career teacher and mentor details") &&
-        !has_selector?("a.govuk-link", text: "Add your early career teacher and mentor details")
+      has_content?("View your early career teacher and mentor details") &&
+        !has_selector?("a", text: "Add your early career teacher and mentor details")
     end
 
     def has_partnership?
-      has_text? "Programme Use a training provider funded by the DfE"
+      has_content? "Programme Use a training provider funded by the DfE"
     end
 
     def has_no_partnership?
-      has_text? "Programme Use DfE-accredited materials"
+      has_content? "Programme Use DfE-accredited materials"
     end
 
     def view_programme_details
@@ -40,11 +40,21 @@ module Pages
       Pages::SchoolCohortsPage.loaded
     end
 
+    def able_to_view_programme_details
+      has_partnership?
+      has_selector?("a", text: "View details")
+    end
+
     def report_school_has_been_confirmed_incorrectly
       has_no_partnership?
       click_on "report that your school has been confirmed incorrectly"
 
       Pages::ReportIncorrectPartnershipPage.loaded
+    end
+
+    def able_to_report_that_the_school_has_been_confirmed_incorrectly?
+      has_no_partnership?
+      has_selector?("a", text: "report that your school has been confirmed incorrectly")
     end
 
     def view_participant_dashboard

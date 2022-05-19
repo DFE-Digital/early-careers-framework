@@ -11,7 +11,7 @@ module Support
 
         sign_in_as user
 
-        induction_dashboard = Pages::SchoolPage.new
+        induction_dashboard = Pages::SchoolPage.loaded
         participants_dashboard = induction_dashboard.view_participant_dashboard
 
         if is_being_trained

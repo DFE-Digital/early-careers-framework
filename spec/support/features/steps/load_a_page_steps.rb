@@ -8,21 +8,6 @@ module Steps
       visit "/"
     end
 
-    def given_i_am_on_the_swagger_api_docs
-      visit "/api-docs"
-      expect(page.find("h2")).to have_content "Manage teacher CPD - lead provider API"
-    end
-
-    def given_i_am_on_the_user_research_page_for_ects
-      visit "/pages/user-research"
-      expect(page.find("h1")).to have_content "All research sessions are currently booked"
-    end
-
-    def given_i_am_on_the_user_research_page_for_mentors
-      visit "/pages/user-research?mentor=true"
-      expect(page.find("h1")).to have_content "All research sessions are currently booked"
-    end
-
     def given_i_use_the_report_incorrect_partnership_token(challenge_token)
       Pages::ReportIncorrectPartnershipPage.load_from_email challenge_token
     end
