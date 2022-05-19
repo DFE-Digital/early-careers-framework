@@ -4,12 +4,8 @@ require_relative "../base"
 
 module Pages
   class LeadProviderLandingPage < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/lead-providers"
-      @title = "Manage your records quickly and easily"
-    end
+    set_url "/lead-providers"
+    set_primary_heading "Manage your records quickly and easily"
 
     def get_started
       click_on "Get started"

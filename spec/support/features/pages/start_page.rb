@@ -4,12 +4,10 @@ require_relative "./base"
 
 module Pages
   class StartPage < ::Pages::Base
-    include Capybara::DSL
+    set_url "/"
+    set_primary_heading "Manage training for early career teachers"
 
-    def initialize
-      @url = "/"
-      @title = "Manage training for early career teachers"
-    end
+    element :start_now_button, "a.govuk-button--start", text: "Start now"
 
     def start_now
       click_on "Start now"
@@ -21,6 +19,12 @@ module Pages
       click_on "Accessibility"
 
       Pages::AccessibilityStatementPage.new
+    end
+
+    def view_privacy_policy
+      click_on "Privacy"
+
+      Pages::PrivacyPolicyPage.new
     end
   end
 end

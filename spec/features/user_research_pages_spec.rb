@@ -4,30 +4,20 @@ require "rails_helper"
 
 RSpec.feature "User research pages", js: true, rutabaga: false do
   scenario "Viewing the page as a mentor" do
-    when_i_visit the_mentor_research_page
-    then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Mentor user research page")
+    given_i_am_on_the_user_research_page_for_mentors
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Mentor user research page"
   end
 
   scenario "Viewing the page as an ECT" do
-    when_i_visit the_ect_research_page
-    then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("ECT user research page")
+    given_i_am_on_the_user_research_page_for_ects
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "ECT user research page"
   end
 
   scenario "Viewing the page when the sessions are fully booked" do
-    when_i_visit the_ect_research_page
-    then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Fully booked user research page")
-  end
-
-private
-
-  def the_ect_research_page
-    "/pages/user-research"
-  end
-
-  def the_mentor_research_page
-    "/pages/user-research?mentor=true"
+    given_i_am_on_the_user_research_page_for_ects
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Fully booked user research page"
   end
 end

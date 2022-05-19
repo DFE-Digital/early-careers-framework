@@ -188,8 +188,8 @@ RSpec.describe "Update participants details", js: true do
     when_i_click_on_continue
 
     then_i_am_taken_to_add_mentor_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor chooses mentor for ECT"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor chooses mentor for ECT"
 
     when_i_choose_a_mentor
     when_i_click_on_continue
@@ -211,26 +211,26 @@ RSpec.describe "Update participants details", js: true do
     and_i_click_on_view_your_early_career_teacher_and_mentor_details
     click_on "Not training"
     then_it_should_show_the_withdrawn_participant
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Withdrawn participant shown on dashboard"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Withdrawn participant shown on dashboard"
 
     when_i_click_on_the_participants_name "Sally Teacher"
     then_i_am_taken_to_view_details_page
     and_it_should_not_allow_a_sit_to_edit_the_participant_details
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Participant details without change links"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Participant details without change links"
   end
 
   scenario "Induction tutor can change ECT / mentor name from participant profile page" do
     click_on "Sally Teacher"
     then_i_am_taken_to_participant_profile
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor sees ECT profile"
 
     when_i_click_on_change_name
     then_i_am_taken_to_change_ect_name_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor changes existing ECT name"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor changes existing ECT name"
 
     when_i_change_ect_name_to_blank
     when_i_click_on_continue
@@ -248,7 +248,7 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_click_on_change_email
     then_i_am_taken_to_change_ect_email_page
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor changes existing ECT email"
+    then_percy_is_sent_a_snapshot_named "Induction tutor changes existing ECT email"
 
     when_i_change_ect_email_to_blank
     when_i_click_on_continue

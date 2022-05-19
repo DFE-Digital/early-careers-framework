@@ -19,19 +19,19 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       scenario "Induction tutor can transfer an ECT to their school" do
         when_i_click_to_add_an_ect_or_mentor
         then_i_should_be_on_the_who_to_add_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - who to add"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - who to add"
 
         when_i_select_transfer_teacher_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - what we need"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - what we need"
 
         click_on "Continue"
         then_i_should_be_on_full_name_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - full name"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - full name"
 
         click_on "Continue"
         then_i_receive_a_missing_name_error_message
@@ -39,8 +39,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         when_i_update_the_name_with(@participant_data[:full_name])
         click_on "Continue"
         then_i_should_be_on_trn_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - trn"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - trn"
 
         click_on "Continue"
         then_i_should_see_a_enter_trn_error_message
@@ -52,8 +52,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         when_i_add_a_valid_trn
         click_on "Continue"
         then_i_should_be_on_the_date_of_birth_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - dob"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - dob"
 
         click_on "Continue"
         then_i_should_see_enter_date_of_birth_error_message
@@ -66,8 +66,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
 
         then_i_should_be_on_the_teacher_start_date_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - teacher start date"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - teacher start date"
 
         click_on "Continue"
         then_i_should_see_enter_start_date_error_message
@@ -79,8 +79,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
 
         then_i_should_be_on_the_add_email_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - email"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - email"
 
         click_on "Continue"
         then_i_should_see_blank_email_date_error_message
@@ -92,8 +92,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         when_i_update_the_email_with("sally-teacher@example.com")
         click_on "Continue"
         then_i_should_be_on_the_select_mentor_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - select mentor"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - select mentor"
         and_it_should_list_the_schools_mentors
 
         click_on "Continue"
@@ -103,13 +103,13 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
 
         then_i_should_be_taken_to_the_check_your_answers_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - check answers"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - check answers"
 
         click_on "Confirm and add"
         then_i_should_be_on_the_complete_page
-        then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - transfer complete"
+        then_the_page_is_accessible
+        then_percy_is_sent_a_snapshot_named "Transfer journey - transfer complete"
         and_the_participant_should_be_notified_with(:participant_transfer_in_notification)
         and_the_schools_current_provider_is_notified_with(:provider_existing_school_transfer_notification)
 

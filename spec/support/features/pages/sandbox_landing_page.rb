@@ -4,12 +4,8 @@ require_relative "./base"
 
 module Pages
   class SandboxLandingPage < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/sandbox"
-      @title = "Use our sandbox to test Manage teacher CPD"
-    end
+    set_url "/sandbox"
+    set_primary_heading "Use our sandbox to test Manage teacher CPD"
 
     def continue_as_an_npq_participant
       click_on "Continue as an NPQ participant"

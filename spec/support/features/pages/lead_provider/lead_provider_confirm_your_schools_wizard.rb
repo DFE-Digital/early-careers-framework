@@ -4,12 +4,8 @@ require_relative "../base"
 
 module Pages
   class LeadProviderConfirmYourSchoolsWizard < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/lead-providers/report-schools/start"
-      @title = "You can only confirm schools for the cohort that starts in the next academic year (2021)"
-    end
+    set_url "/lead-providers/report-schools/start"
+    set_primary_heading "XXX"
 
     def complete(delivery_partner_name, school_urns)
       click_on "Continue"

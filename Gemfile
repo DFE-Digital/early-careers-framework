@@ -173,3 +173,5 @@ group :test do
   gem "webmock", "~> 3.14"
   gem "with_model"
 end
+
+gem "site_prism", "~> 3.7"

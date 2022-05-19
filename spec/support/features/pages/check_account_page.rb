@@ -4,12 +4,8 @@ require_relative "./base"
 
 module Pages
   class CheckAccountPage < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/check-account"
-      @title = "How to access this service"
-    end
+    set_url "/check-account"
+    set_primary_heading "How to access this service"
 
     def send_school_link
       # /nominations/resend-email > Send your school a link

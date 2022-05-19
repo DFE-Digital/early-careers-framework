@@ -12,8 +12,8 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
 
     click_on "Change"
     then_i_should_be_on_the_change_sit_name_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "SIT adds new SITs name"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "SIT adds new SITs name"
 
     click_on "Continue"
     then_i_should_receive_a_full_name_error_message
@@ -21,8 +21,8 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
     when_i_fill_in_the_sits_name
     click_on "Continue"
     then_i_should_be_on_the_change_sit_email_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "SIT adds new SITs email"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "SIT adds new SITs email"
 
     click_on "Continue"
     then_i_should_receive_a_blank_email_error_message
@@ -37,13 +37,13 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
 
     click_on "Accept and continue"
     then_i_should_be_on_confirm_sit_change_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Confirm new SIT details"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Confirm new SIT details"
 
     click_on "Confirm and replace"
     then_i_should_be_on_the_nominate_sit_success_page
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Replace SIT completed"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Replace SIT completed"
 
     visit "/schools"
     then_i_should_have_been_signed_out_of_the_service

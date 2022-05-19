@@ -43,13 +43,13 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     and_voided_payable_declarations_are_submitted
     and_breakdowns_are_calculated
     when_i_click_on_payment_breakdown_header
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named("Payment breakdown select programme")
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named("Payment breakdown select programme")
 
     when_i_select_ecf
     and_i_click_the_continue_button
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named("Payment breakdown select ECF provider")
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named("Payment breakdown select ECF provider")
 
     when_i_select_a_provider
     and_i_click_the_continue_button
@@ -57,7 +57,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     then_i_should_see_the_correct_payment_summary
     then_i_should_see_the_correct_output_fees
     then_i_should_see_the_correct_uplift_fee
-    and_the_page_should_be_accessible
+    and_the_page_is_accessible
 
     when_i_click_on_view_contract_link
     then_i_see_contract_information
@@ -67,7 +67,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
-    and_the_page_should_be_accessible
+    and_the_page_is_accessible
   end
 
 private

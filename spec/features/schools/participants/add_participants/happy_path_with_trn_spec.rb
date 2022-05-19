@@ -18,13 +18,13 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
   scenario "Induction tutor can add new ECT participant" do
     when_i_click_on_add_your_early_career_teacher_and_mentor_details
     then_i_am_taken_to_roles_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "ECF roles information"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "ECF roles information"
 
     when_i_click_on_continue
     then_i_am_taken_to_your_ect_and_mentors_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
 
     when_i_click_to_add_a_new_ect_or_mentor
     then_i_should_be_on_the_who_to_add_page
@@ -32,8 +32,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_select_to_add_a "A new ECT"
     when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT name"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT name"
 
     when_i_submit_an_empty_form
     then_i_see_an_error_message("Enter a full name")
@@ -68,8 +68,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_add_a_date_of_birth
     when_i_click_on_continue
     then_i_am_taken_to_add_ect_or_mentor_email_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds ECT email"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT email"
 
     when_i_submit_an_empty_form
     then_i_see_an_error_message("Enter an email address")
@@ -77,8 +77,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
     then_i_am_taken_to_choose_term_page_as_ect
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT start term"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECT start term"
 
     when_i_submit_an_empty_form
     then_i_see_an_error_message("Choose a start term")
@@ -98,13 +98,13 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_select_a_mentor
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor checks ECT details"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor checks ECT details"
 
     when_i_click_confirm_and_add
     then_i_am_taken_to_ect_confirmation_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor receives add ECT Confirmation"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor receives add ECT Confirmation"
   end
 
   scenario "Induction tutor can add new mentor participant" do
@@ -119,8 +119,8 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_select_to_add_a "A new mentor"
     when_i_click_on_continue
     then_i_am_taken_to_add_mentor_name_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor adds mentor name"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor adds mentor name"
 
     when_i_add_ect_or_mentor_name
     when_i_click_on_continue
@@ -145,12 +145,12 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_choose_start_term
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor checks mentor details"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor checks mentor details"
 
     when_i_click_confirm_and_add
     then_i_am_taken_to_mentor_confirmation_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor receives add mentor Confirmation"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Induction tutor receives add mentor Confirmation"
   end
 end

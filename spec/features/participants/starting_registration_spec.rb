@@ -7,8 +7,8 @@ RSpec.feature "Participant start registration journey", type: :feature do
     when_i_visit_the_start_registration_page
     then_i_should_see_the_registration_heading
     and_i_should_see_a_continue_button
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Participants start registration landing page"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Participants start registration landing page"
   end
 
 private

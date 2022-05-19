@@ -5,6 +5,8 @@ require "capybara/rspec"
 require "axe-rspec"
 require "webdrivers/chromedriver"
 require "percy/capybara"
+require "site_prism"
+require "site_prism/all_there" # Optional but needed to perform more complex matching
 
 Capybara.register_driver :chrome_headless do |app|
   options = ::Selenium::WebDriver::Chrome::Options.new
@@ -26,6 +28,9 @@ RSpec.configure do |config|
   config.include InteractionHelper, type: :feature
   config.include PageAssertionsHelper, type: :feature
   config.include UserHelper, type: :feature
+
+  config.include Steps::LoadAPageSteps, type: :feature
+  config.include Steps::VerifyAPageSteps, type: :feature
 
   # need this for percy and axe
   config.before(:each, type: :feature) do

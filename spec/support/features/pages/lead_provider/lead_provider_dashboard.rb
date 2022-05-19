@@ -4,12 +4,8 @@ require_relative "../base"
 
 module Pages
   class LeadProviderDashboard < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/dashboard"
-      @title = "Lead Provider"
-    end
+    set_url "/dashboard"
+    set_primary_heading "Lead Provider Dashboard"
 
     def start_confirm_your_schools_wizard
       click_on "Confirm your schools"

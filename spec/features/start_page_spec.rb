@@ -3,25 +3,23 @@
 require "rails_helper"
 
 RSpec.feature "Start user journey", type: :feature, js: true, rutabaga: false do
-  scenario "Root URL should be the home page" do
-    when_i_visit_the_home_page
-    then_i_should_see_the_service_name
-    and_i_should_see_a_start_button
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Start page"
+  scenario "Start page is accessible" do
+    given_i_am_on_the_start_page
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Start page"
+  end
+
+  scenario "Root URL should be the Start page" do
+    given_i_am_at_the_root_of_the_service
+    and_i_am_on_the_start_page
+    when_i_click_start_now
+    then_i_am_on_the_sign_in_page
   end
 
 private
 
-  def when_i_visit_the_home_page
-    visit "/"
-  end
-
-  def then_i_should_see_the_service_name
-    expect(page).to have_selector("h1", text: "Manage training for early career teachers")
-  end
-
-  def and_i_should_see_a_start_button
-    expect(page).to have_selector("a.govuk-button--start", text: "Start now")
+  def when_i_click_start_now
+    start_page = Pages::StartPage.new
+    start_page.start_now
   end
 end

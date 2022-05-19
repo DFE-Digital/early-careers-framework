@@ -3,44 +3,21 @@
 require "rails_helper"
 
 RSpec.feature "Error pages", type: :feature, js: true, rutabaga: false do
-  scenario "Seeing the Page Not Found page" do
+  scenario "Page Not Found page is accessible" do
     given_i_am_on_the_page_not_found_page
-    then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Page Not Found page"
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Page Not Found page"
   end
 
-  scenario "Seeing the Internal Server Error page" do
+  scenario "Internal Server Error page is accessible" do
     given_i_am_on_the_internal_server_error_page
-    then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Internal Server Error page"
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Internal Server Error page"
   end
 
-  scenario "Seeing the Forbidden page" do
+  scenario "Forbidden page is accessible" do
     given_i_am_on_the_forbidden_page
-    then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Forbidden page"
-  end
-
-private
-
-  def given_i_am_on_the_page_not_found_page
-    not_found_error_page = Pages::PageNotFoundPage.new
-    not_found_error_page.load
-
-    not_found_error_page.is_current_page?
-  end
-
-  def given_i_am_on_the_internal_server_error_page
-    not_found_error_page = Pages::InternalServerErrorPage.new
-    not_found_error_page.load
-
-    not_found_error_page.is_current_page?
-  end
-
-  def given_i_am_on_the_forbidden_page
-    not_found_error_page = Pages::ForbiddenPage.new
-    not_found_error_page.load
-
-    not_found_error_page.is_current_page?
+    then_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Forbidden page"
   end
 end

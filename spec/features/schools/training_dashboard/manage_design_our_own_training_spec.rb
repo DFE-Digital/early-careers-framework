@@ -10,8 +10,8 @@ RSpec.describe "Manage Design Our Own training", js: true do
     given_there_is_a_school_that_has_chosen_design_our_own_for_2021
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_view_the_design_our_own_induction_dashboard
-    and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Design Our Own dashboard"
+    and_the_page_is_accessible
+    and_percy_is_sent_a_snapshot_named "Design Our Own dashboard"
   end
 
   scenario "Change induction programme to Design Your Own" do

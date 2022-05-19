@@ -4,11 +4,7 @@ require_relative "../base"
 
 module Pages
   class ForbiddenPage < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/403"
-      @title = "Page not found"
-    end
+    set_url "/403"
+    set_primary_heading "Page not found"
   end
 end

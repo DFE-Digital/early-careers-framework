@@ -10,8 +10,8 @@ RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021,
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_fip_induction_dashboard
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "FIP dashboard with partnership"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "FIP dashboard with partnership"
 
     when_i_click_on_add_your_early_career_teacher_and_mentor_details
     then_i_am_taken_to_roles_page
@@ -19,21 +19,21 @@ RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021,
     when_i_visit_manage_training_dashboard
     when_i_click_on_view_details
     then_i_am_taken_to_fip_programme_choice_info_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "FIP programme info"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "FIP programme info"
   end
 
   scenario "FIP Induction Coordinator without training provider" do
     given_there_is_a_school_that_has_chosen_fip_for_2021
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_view_the_fip_induction_dashboard_without_partnership_details
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "FIP dashboard without partnership"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "FIP dashboard without partnership"
 
     when_i_click_on_sign_up
     then_i_am_taken_to_sign_up_to_training_provider_page
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Sign up to training provider"
+    then_the_page_is_accessible
+    then_percy_is_sent_a_snapshot_named "Sign up to training provider"
   end
 
   scenario "Change induction programme to FIP" do

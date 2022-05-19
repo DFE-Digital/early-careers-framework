@@ -4,11 +4,7 @@ require_relative "../base"
 
 module Pages
   class PageNotFoundPage < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/404"
-      @title = "Page not found"
-    end
+    set_url "/404"
+    set_primary_heading "Page not found"
   end
 end

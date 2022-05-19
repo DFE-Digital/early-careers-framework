@@ -4,12 +4,8 @@ require_relative "./base"
 
 module Pages
   class SignInPage < ::Pages::Base
-    include Capybara::DSL
-
-    def initialize
-      @url = "/users/sign_in"
-      @title = "Sign in"
-    end
+    set_url "/users/sign_in"
+    set_primary_heading "Sign in"
 
     def find_out_how_to_get_access
       click_on "find out how to get access"
