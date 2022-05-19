@@ -15,20 +15,6 @@ module UserHelper
   alias_method :and_i_authenticate_as_the_user_with_the_email, :given_i_authenticate_as_the_user_with_the_email
   alias_method :when_i_authenticate_as_the_user_with_the_email, :given_i_authenticate_as_the_user_with_the_email
 
-  def given_i_authenticate_as_an_induction_coordinator
-    sit_user = create :user,
-                      full_name: "Carl Coordinator"
-
-    @induction_coordinator_profile = create :induction_coordinator_profile,
-                                            schools: [@school_cohort.school],
-                                            user: sit_user
-    PrivacyPolicy.current.accept!(@induction_coordinator_profile.user)
-
-    sign_in_as sit_user
-  end
-  alias_method :and_i_authenticate_as_an_induction_coordinator, :given_i_authenticate_as_an_induction_coordinator
-  alias_method :when_i_authenticate_as_an_induction_coordinator, :given_i_authenticate_as_an_induction_coordinator
-
   def given_i_authenticate_as_an_admin
     token = "test-finance-token-#{Time.zone.now.to_f}"
 
