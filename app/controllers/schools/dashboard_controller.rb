@@ -54,11 +54,18 @@ private
     @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort.previous)
   end
 
+  def previous_lead_provider(school_cohort)
+    school = school_cohort.school
+    previous_start_year = school_cohort.cohort.start_year - 1
+    previous_school_cohort = school.school_cohorts.find_by(cohort: Cohort.find_by(start_year: previous_start_year))
+    previous_school_cohort.lead_provider
+  end
+
   def school_cohort_lead_provider_name(school_cohort)
     if school_cohort.lead_provider.present?
       school_cohort.lead_provider.name
     elsif school_cohort.default_induction_programme&.delivery_partner_to_be_confirmed?
-      school_cohort.previous_lead_provider&.name
+      previous_lead_provider(school_cohort)&.name
     else
       "To be confirmed"
     end

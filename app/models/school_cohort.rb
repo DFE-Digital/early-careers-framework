@@ -60,10 +60,6 @@ class SchoolCohort < ApplicationRecord
     school.lead_provider(cohort.start_year)
   end
 
-  def previous_lead_provider
-    school.lead_provider(cohort.start_year - 1)
-  end
-
   def delivery_partner
     school.delivery_partner_for(cohort.start_year)
   end
