@@ -311,10 +311,7 @@ module Steps
       next_ideal_time @timestamp + 3.days
       travel_to(@timestamp) do
         ParticipantDeclaration.eligible.each do |participant_declaration|
-          puts participant_declaration
-
           participant_declaration.make_payable!
-
           statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: participant_declaration.cpd_lead_provider)
           participant_declaration.update! statement: statement
         end
