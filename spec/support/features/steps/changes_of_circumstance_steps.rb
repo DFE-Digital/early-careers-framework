@@ -307,41 +307,17 @@ module Steps
       end
     end
 
-    def and_eligible_training_declarations_are_made_payable
+    def and_eligible_training_declarations_are_made_payable(statement_name)
       next_ideal_time @timestamp + 3.days
       travel_to(@timestamp) do
         ParticipantDeclaration.eligible.each do |participant_declaration|
+          puts participant_declaration
+
           participant_declaration.make_payable!
-          participant_declaration.update! statement: participant_declaration.cpd_lead_provider.statements.first
+
+          statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: participant_declaration.cpd_lead_provider)
+          participant_declaration.update! statement: statement
         end
-      end
-    end
-
-    def and_lead_provider_statements_have_been_calculated(lead_provider_name, statement_name)
-      lead_provider = find_lead_provider lead_provider_name
-
-      statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: lead_provider.cpd_lead_provider)
-
-      next_ideal_time statement.payment_date
-      travel_to(@timestamp) do
-        aggregator = Finance::ECF::ParticipantAggregator.new(
-          statement: statement,
-          recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
-        )
-
-        Finance::ECF::CalculationOrchestrator.new(
-          statement: statement,
-          contract: lead_provider.call_off_contract,
-          aggregator: aggregator,
-          calculator: PaymentCalculator::ECF::PaymentCalculation,
-        ).call(event_type: :started)
-
-        Finance::ECF::CalculationOrchestrator.new(
-          statement: statement,
-          contract: lead_provider.call_off_contract,
-          aggregator: aggregator,
-          calculator: PaymentCalculator::ECF::PaymentCalculation,
-        ).call(event_type: :retained_1)
       end
     end
 

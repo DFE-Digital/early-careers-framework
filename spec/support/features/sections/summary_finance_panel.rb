@@ -17,19 +17,19 @@ module Sections
     end
 
     def has_output_payment?(output_payment)
-      element_has_content? payment_breakdown, "Output payment £#{output_payment}".strip
+      element_has_content? payment_breakdown, "Output payment\n£#{output_payment}".strip
     end
 
     def has_service_fee?(service_fee)
-      element_has_content? payment_breakdown, "Output payment £#{service_fee}".strip
+      element_has_content? payment_breakdown, "Service fee\n£#{service_fee}".strip
     end
 
     def has_adjustments?(adjustments)
-      element_has_content? payment_breakdown, "Output payment £#{adjustments}".strip
+      element_has_content? payment_breakdown, "Adjustments\n£#{adjustments}".strip
     end
 
     def has_vat?(vat_total)
-      element_has_content? payment_breakdown, "Output payment £#{vat_total}".strip
+      element_has_content? payment_breakdown, "VAT\n£#{vat_total}".strip
     end
 
     def has_milestone_cutoff_date?(cutoff_date)

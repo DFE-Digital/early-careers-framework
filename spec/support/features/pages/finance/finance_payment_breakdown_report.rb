@@ -21,9 +21,13 @@ module Pages
       statement_selector.view_statement statement_name
     end
 
-    def has_payment_summary?(total)
-      summary_panel.has_output_payment? total
-    end
+    delegate :has_payment_total?, to: :summary_panel
+
+    delegate :has_output_payment?, to: :summary_panel
+
+    delegate :has_service_fee?, to: :summary_panel
+
+    delegate :has_vat?, to: :summary_panel
 
     def has_started_declarations_total?(total)
       summary_panel.has_total_starts? total
