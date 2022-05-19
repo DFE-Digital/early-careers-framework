@@ -5,13 +5,8 @@ require "rails_helper"
 RSpec.feature "Participant registration start page",
               type: :feature,
               js: true do
-  let(:email_address) { "participant-registration-user@example.com" }
-
-  before do
-    create :user,
-           full_name: "Participant Registration Test User",
-           email: email_address
-  end
+  let!(:user) { create(:user, full_name: "Participant Registration Test User", email: "participant-registration-user@example.com") }
+  let(:email_address) { user.email }
 
   scenario "Participant registration start page is accessible" do
     given_i_am_on_the_participant_registration_start_page
