@@ -116,7 +116,10 @@ module Api
       end
 
       attribute :updated_at do |induction_record|
-        induction_record.participant_profile.user.updated_at.rfc3339
+        [
+          induction_record.participant_profile.user.updated_at,
+          induction_record.updated_at,
+        ].max.rfc3339
       end
     end
   end

@@ -9,7 +9,7 @@ module Api
 
       subject { described_class.new(induction_record) }
 
-      describe "status" do
+      describe "#status" do
         context "when active" do
           it "returns active" do
             expect(subject.serializable_hash[:data][:attributes][:status]).to eql("active")
@@ -46,6 +46,19 @@ module Api
           it "returns withdrawn" do
             expect(subject.serializable_hash[:data][:attributes][:status]).to eql("withdrawn")
           end
+        end
+      end
+
+      describe "#updated_at" do
+        let(:induction_record) { create(:induction_record, updated_at: 1.day.ago) }
+        let(:user) { induction_record.participant_profile.user }
+
+        before do
+          user.update!(updated_at: 10.days.ago)
+        end
+
+        it "considers updated_at of induction record" do
+          expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to be_within(2.days).of(1.day.ago)
         end
       end
     end
