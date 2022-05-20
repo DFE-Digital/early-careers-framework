@@ -1,47 +1,47 @@
 <%= govuk_summary_list do |summary_list| %>
   <% summary_list.row do |row| %>
     <% row.key { "Declaration ID" } %>
-    <% row.value { declaration.id } %>
+    <% row.value { npq.id } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Declaration type" } %>
-    <% row.value { declaration.declaration_type } %>
+    <% row.value { npq.declaration_type } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Declaration date" } %>
-    <% row.value { declaration.declaration_date.to_s(:govuk) } %>
+    <% row.value { npq.declaration_date.to_s(:govuk) } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Course identifier" } %>
-    <% row.value { declaration.course_identifier } %>
+    <% row.value { npq.course_identifier } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Evidence held" } %>
-    <% row.value { declaration.evidence_held } %>
+    <% row.value { npq.evidence_held } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Lead provider" } %>
-    <% row.value { declaration.cpd_lead_provider.name } %>
+    <% row.value { npq.cpd_lead_provider.name } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "State" } %>
-    <% row.value { declaration.state } %>
+    <% row.value { npq.state } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Created at" } %>
-    <% row.value { declaration.created_at.to_s(:govuk) } %>
+    <% row.value { npq.created_at.to_s(:govuk) } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Updated at" } %>
-    <% row.value { declaration.updated_at.to_s(:govuk) } %>
+    <% row.value { npq.updated_at.to_s(:govuk) } %>
   <% end %>
 <% end %>
 
@@ -57,19 +57,7 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body nhsuk-table__body">
-      <% declaration.declaration_states.each do |declaration_state| %>
-        <tr class="govuk-table__row nhsuk-table__row">
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <%= declaration_state.state %>
-          </td>
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <%= declaration_state.created_at.to_s(:govuk) %>
-          </td>
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <%= declaration_state.state_reason || 'N/A' %>
-          </td>
-        </tr>
-      <% end %>
+      <%= render npq.declaration_states %>
     </tbody>
   </table>
 </div>

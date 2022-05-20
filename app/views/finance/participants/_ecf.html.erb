@@ -122,6 +122,4 @@
   No declarations have been made
 <% end %>
 
-<% pp.participant_declarations.each do |declaration| %>
-  <%= render partial: "finance/participants/declaration", locals: { declaration: declaration } %>
-<% end %>
+<%= render pp.participant_declarations %>
