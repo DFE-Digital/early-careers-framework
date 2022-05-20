@@ -42,6 +42,8 @@ module Participants
       attr_reader :schedule_identifier, :cohort_year
 
       def relevant_induction_record
+        return if user_profile.nil?
+
         user_profile
           .induction_records
           .joins(induction_programme: { partnership: [:lead_provider] })
