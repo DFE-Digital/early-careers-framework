@@ -4,10 +4,10 @@ require "rails_helper"
 
 RSpec.feature "Finance users participant drilldown", type: :feature do
   describe "ECT user" do
-    let(:ect_user) { create(:user, :early_career_teacher) }
-    let(:ect_profile) { ect_user.early_career_teacher_profile }
+    let(:ect_profile)     { create :ect }
+    let(:ect_user)        { ect_profile.user }
     let(:ect_declaration) { create(:ect_participant_declaration, user: ect_user, participant_profile: ect_profile) }
-    let(:ect_identity) { create :participant_identity, user: ect_user, external_identifier: SecureRandom.uuid }
+    let(:ect_identity)    { ect_profile.participant_identity }
 
     before do
       given_i_am_logged_in_as_a_finance_user
@@ -99,6 +99,28 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
       and_i_see("ParticipantProfile::NPQ")
       then_i_see(npq_user.id)
       then_i_see(npq_declaration.id)
+    end
+
+    scenario "Edit a partipant" do
+      visit finance_participant_path(npq_user)
+
+      actions = page
+                  .find("dt.govuk-summary-list__key", text: "Training status")
+                  .sibling("dd.govuk-summary-list__actions")
+      within(actions) { click_on "Change" }
+
+      select "Withdrawn", from: "Change training status"
+      click_on "Change profile"
+
+      expect(page.find("dt.govuk-summary-list__key", text: "Training status"))
+        .to have_sibling("dd.govuk-summary-list__value", text: "withdrawn")
+
+      actions = page
+                  .find("dt.govuk-summary-list__key", text: "Training status")
+                  .sibling("dd.govuk-summary-list__actions")
+      within(actions) { click_on "Change" }
+
+      expect(page).to have_select("Change training status", selected: "Withdrawn")
     end
   end
 

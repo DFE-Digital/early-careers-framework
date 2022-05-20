@@ -8,12 +8,13 @@ module Finance
       end
 
       def update
-        @profile = user.participant_profiles.find(params[:id])
-        @profile.assign_attributes(profile_attributes)
+        profile = user.participant_profiles.find(params[:id])
+        Participants::Update.new(profile).call(profile_attributes)
 
-        return render :edit unless @profile.save
+        return redirect_to finance_participant_path(user) if profile.errors.none?
 
-        redirect_to finance_participant_path(user)
+        @profile = profile
+        render :edit
       end
 
     private
