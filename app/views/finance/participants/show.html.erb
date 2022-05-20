@@ -27,10 +27,7 @@
 
 <h2>Profiles</h2>
 
-<% @user.participant_profiles.each do |pp| %>
-  <h3><%= pp.type %></h3>
-  <%= render pp %>
-<% end %>
+<%= render @user.participant_profiles %>
 
 <h2>NPQ applications</h2>
 
