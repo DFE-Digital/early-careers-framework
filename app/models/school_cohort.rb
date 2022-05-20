@@ -41,6 +41,8 @@ class SchoolCohort < ApplicationRecord
   delegate :description, :academic_year, to: :cohort
   delegate :delivery_partner_to_be_confirmed, to: :default_induction_programme
 
+  after_save :update_analytics
+
   after_save do |school_cohort|
     unless school_cohort.saved_changes.empty?
       ecf_participant_profiles.touch_all
@@ -85,5 +87,11 @@ class SchoolCohort < ApplicationRecord
 
   def can_change_programme?
     induction_programme_choice.in? %w[design_our_own no_early_career_teachers school_funded_fip]
+  end
+
+private
+
+  def update_analytics
+    Analytics::UpsertECFSchoolCohortJob.perform_later(school_cohort: self) if saved_changes?
   end
 end
