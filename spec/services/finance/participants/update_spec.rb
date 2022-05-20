@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::Update do
+RSpec.describe Finance::Participants::Update do
   let(:ect) { create :ect }
 
   subject(:service) { described_class.new(ect) }
@@ -10,7 +10,7 @@ RSpec.describe Participants::Update do
   describe "#call" do
     context "when changing the training status" do
       it "creates a participant profile status" do
-        service.call(training_status: "withdrawn")
+        expect { service.call(training_status: "withdrawn") }.to change(ect, :training_status).from("active").to("withdrawn")
       end
     end
   end
