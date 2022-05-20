@@ -42,13 +42,23 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
     scenario "Edit a partipant" do
       visit finance_participant_path(ect_user)
 
-      actions = page.find("dt.govuk-summary-list__key", text: "Training status").sibling("dd.govuk-summary-list__actions")
+      actions = page
+                  .find("dt.govuk-summary-list__key", text: "Training status")
+                  .sibling("dd.govuk-summary-list__actions")
       within(actions) { click_on "Change" }
+
       select "Withdrawn", from: "Change training status"
       click_on "Change profile"
 
       expect(page.find("dt.govuk-summary-list__key", text: "Training status"))
         .to have_sibling("dd.govuk-summary-list__value", text: "withdrawn")
+
+      actions = page
+                  .find("dt.govuk-summary-list__key", text: "Training status")
+                  .sibling("dd.govuk-summary-list__actions")
+      within(actions) { click_on "Change" }
+
+      expect(page).to have_select("Change training status", selected: "Withdrawn")
     end
   end
 
