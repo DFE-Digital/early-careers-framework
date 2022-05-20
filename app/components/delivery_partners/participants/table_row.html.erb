@@ -15,13 +15,13 @@
     <%= lead_provider_name %>
   </td>
   <td class="govuk-table__cell">
-    <%= school_cohort&.school&.name %>
+    <%= school&.name %>
   </td>
   <td class="govuk-table__cell">
-    <%= school_cohort&.school&.urn %>
+    <%= school&.urn %>
   </td>
   <td class="govuk-table__cell">
-    <%= schedule&.cohort&.start_year %>
+    <%= cohort&.start_year %>
   </td>
   <td class="govuk-table__cell">
     <%= training_status %>
