@@ -39,6 +39,16 @@ RSpec.describe SchoolCohort, type: :model do
     expect(profile.reload.updated_at).to be_within(1.second).of 2.weeks.ago
   end
 
+  it "updates analytics when any attributes changes", :with_default_schedules do
+    school_cohort = create(:school_cohort, opt_out_of_updates: false)
+    school_cohort.opt_out_of_updates = true
+    expect {
+      school_cohort.save!
+    }.to have_enqueued_job(Analytics::UpsertECFSchoolCohortJob).with(
+      school_cohort: school_cohort,
+    )
+  end
+
   it {
     is_expected.to define_enum_for(:induction_programme_choice).with_values(
       full_induction_programme: "full_induction_programme",

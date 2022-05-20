@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_31_150652) do
+ActiveRecord::Schema.define(version: 2022_05_20_074752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -42,6 +42,19 @@ ActiveRecord::Schema.define(version: 2022_01_31_150652) do
     t.string "schedule_identifier"
     t.string "external_id"
     t.index ["participant_profile_id"], name: "index_ecf_participants_on_participant_profile_id"
+  end
+
+  create_table "ecf_school_cohorts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "school_cohort_id"
+    t.uuid "school_id"
+    t.string "school_name"
+    t.string "school_urn"
+    t.uuid "cohort_id"
+    t.string "cohort"
+    t.string "induction_programme_choice"
+    t.string "default_induction_programme_training_choice"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "ecf_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
