@@ -52,6 +52,9 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       concern :participant_actions, Participants::Routing.new
+
+      resources :npq_funding, only: [:show], path: "npq-funding", param: :trn
+
       resources :ecf_participants, path: "participants/ecf", only: %i[index] do
         concerns :participant_actions
       end

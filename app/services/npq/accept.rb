@@ -8,7 +8,7 @@ module NPQ
       end
     end
 
-    attr_reader :npq_application, :participant_profile
+    attr_reader :npq_application
 
     def initialize(npq_application:)
       @npq_application = npq_application
@@ -27,7 +27,7 @@ module NPQ
 
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
-        @participant_profile = create_profile
+        participant_profile
         result = npq_application.update(lead_provider_approval_status: "accepted") && other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected")
         deduplicate_by_trn!
         result
@@ -58,8 +58,10 @@ module NPQ
         .where.not(id: npq_application.id)
     end
 
-    def create_profile
-      ParticipantProfile::NPQ.create!(
+    def participant_profile
+      return @participant_profile if @participant_profile
+
+      @participant_profile ||= ParticipantProfile::NPQ.create!(
         id: npq_application.id,
         schedule: NPQCourse.schedule_for(npq_application.npq_course),
         npq_course: npq_application.npq_course,
@@ -67,9 +69,13 @@ module NPQ
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
         participant_identity: npq_application.participant_identity,
-      ) do |participant_profile|
-        ParticipantProfileState.find_or_create_by!(participant_profile: participant_profile)
-      end
+      )
+
+      find_or_create_initial_profile_state
+    end
+
+    def find_or_create_initial_profile_state
+      ParticipantProfileState.find_or_create_by(participant_profile: participant_profile)
     end
 
     def teacher_profile
