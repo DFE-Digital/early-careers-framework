@@ -16,9 +16,7 @@ class LeadProviderDashboardScenario
 end
 
 RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: false do
-  before do
-    given_a_cohort_with_start_year 2021
-  end
+  let!(:cohort) { create :cohort, start_year: 2021 }
 
   scenario "Lead provider dashboard is accessible" do
     @scenario = LeadProviderDashboardScenario.new(1)

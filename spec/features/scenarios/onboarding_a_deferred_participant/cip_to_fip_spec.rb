@@ -41,13 +41,34 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
 
     let(:tokens) { {} }
 
-    before do
-      given_a_cohort_with_start_year 2022
-      given_a_privacy_policy_has_been_published
-
-      given_schedules_have_been_seeded
-
-      create :ecf_schedule
+    let!(:cohort) do
+      cohort = create(:cohort, start_year: 2021)
+      allow(Cohort).to receive(:current).and_return(cohort)
+      allow(Cohort).to receive(:next).and_return(cohort)
+      cohort
+    end
+    let!(:schedule) do
+      schedule = create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort: cohort)
+      create :milestone,
+             schedule: schedule,
+             name: "Output 1 - Participant Start",
+             start_date: Date.new(2022, 9, 1),
+             milestone_date: Date.new(2022, 11, 30),
+             payment_date: Date.new(2022, 11, 30),
+             declaration_type: "started"
+      create :milestone,
+             schedule: schedule,
+             name: "Output 2 - Retention Point 1",
+             start_date: Date.new(2022, 11, 1),
+             milestone_date: Date.new(2023, 1, 31),
+             payment_date: Date.new(2023, 2, 28),
+             declaration_type: "retained-1"
+      schedule
+    end
+    let!(:privacy_policy) do
+      privacy_policy = create(:privacy_policy)
+      PrivacyPolicy::Publish.call
+      privacy_policy
     end
 
     context given_context(scenario) do
