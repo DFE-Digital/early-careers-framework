@@ -27,7 +27,15 @@
 
 <h2>Profiles</h2>
 
-<%= render @user.participant_profiles %>
+<% @user.participant_profiles.each do |pp| %>
+  <h3><%= pp.type %></h3>
+
+  <% if pp.ecf? %>
+    <%= render partial: "finance/participants/ecf_profile", locals: { pp: pp } %>
+  <% else %>
+    <%= render partial: "finance/participants/npq_profile", locals: { pp: pp } %>
+  <% end %>
+<% end %>
 
 <h2>NPQ applications</h2>
 
