@@ -22,10 +22,6 @@ check_no_induction_or_no_qts_participants:
   cron: "0 7 * * 1"
   class: "CheckParticipantsInductionAndQtsJob"
   queue: default
-check_no_qts_participants:
-  cron: "0 7 * * 1"
-  class: "CheckNoQtsParticipantsJob"
-  queue: default
 enrol_school_cohorts:
   cron: "0 3 * * *"
   class: "EnrolSchoolCohortsJob"
