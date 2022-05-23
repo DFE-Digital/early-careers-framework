@@ -63,7 +63,6 @@ module DeliveryPartners
     end
 
     def filter_academic_year(scoped, academic_year)
-      scoped = ParticipantProfile::ECF.merge(scoped)
       scoped.includes(
         :cohort,
       ).where(cohort: { start_year: academic_year })

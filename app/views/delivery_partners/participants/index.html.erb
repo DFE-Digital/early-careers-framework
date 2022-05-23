@@ -42,7 +42,15 @@
   </thead>
 
   <tbody class="govuk-table__body">
-    <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles) %>
+    <% if @participant_profiles.any? %>
+      <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles) %>
+    <% else %>
+      <tr class="govuk-table__row">
+        <td colspan="10" class="govuk-table__cell">
+          No results found
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 <%== govuk_paginate @participant_profiles, @pagy %>

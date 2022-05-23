@@ -8,7 +8,19 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, training_status: "withdrawn") }
 
   let(:delivery_partner_user) { create(:user, :delivery_partner) }
-  let(:partnership) { create(:partnership, school: school, delivery_partner: delivery_partner_user.delivery_partner_profile.delivery_partner) }
+  let(:partnership) do
+    create(
+      :partnership,
+      school: school,
+      delivery_partner: delivery_partner_user.delivery_partner_profile.delivery_partner,
+      challenged_at: nil,
+      challenge_reason: nil,
+      pending: false,
+    )
+  end
+
+  let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership, school_cohort: school_cohort) }
+  let!(:induction_record) { create(:induction_record, participant_profile: participant_profile, induction_programme: induction_programme) }
 
   let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
 
