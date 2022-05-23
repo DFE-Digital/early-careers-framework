@@ -19,7 +19,8 @@ class Induction::TransferAndContinueExistingFip < BaseService
                             induction_programme: programme,
                             start_date: start_date,
                             preferred_email: email,
-                            mentor_profile: mentor_profile)
+                            mentor_profile: mentor_profile,
+                            school_transfer: true)
     end
   end
 

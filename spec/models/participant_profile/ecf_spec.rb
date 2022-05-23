@@ -85,12 +85,18 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when an active induction record exists with a start_date in the future" do
-      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, induction_status: "active", start_date: 2.days.from_now) }
+      let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme, start_date: 2.days.from_now) }
 
-      it "returns nil" do
+      it "returns the induction record" do
         expect(profile.current_induction_record).to eq induction_record
-        # FIXME: this should be the case when we fix transfer future date
-        # expect(profile.current_induction_record).to be_nil
+      end
+
+      context "when this is a school transfer" do
+        let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme, start_date: 2.days.from_now, school_transfer: true) }
+
+        it "returns nil" do
+          expect(profile.current_induction_record).to be_nil
+        end
       end
     end
   end

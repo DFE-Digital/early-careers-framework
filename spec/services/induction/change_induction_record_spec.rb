@@ -55,6 +55,41 @@ RSpec.describe Induction::ChangeInductionRecord do
       end
     end
 
+    context "when the induction record start date is in the future" do
+      before do
+        induction_record.update!(start_date: 1.month.from_now)
+        service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+      end
+
+      it "preserves the start_date" do
+        expect(ect_profile.induction_records.latest.start_date).to be_within(1.second).of induction_record.start_date
+      end
+    end
+
+    context "when the induction record is a school transfer" do
+      context "when the start_date is in the past" do
+        before do
+          induction_record.update!(school_transfer: true)
+          service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+        end
+
+        it "clears the school_transfer flag" do
+          expect(ect_profile.current_induction_record).not_to be_school_transfer
+        end
+      end
+
+      context "when the start_date is in the future" do
+        before do
+          induction_record.update!(school_transfer: true, start_date: 1.month.from_now)
+          service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+        end
+
+        it "preserves the school_transfer flag" do
+          expect(ect_profile.induction_records.latest).to be_school_transfer
+        end
+      end
+    end
+
     context "when the induction record is withdrawn" do
       before do
         induction_record.training_status_withdrawn!

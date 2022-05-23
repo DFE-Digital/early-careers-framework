@@ -14,7 +14,8 @@ class Induction::TransferToSchoolsProgramme < BaseService
                             induction_programme: induction_programme,
                             start_date: start_date,
                             preferred_email: email,
-                            mentor_profile: mentor_profile)
+                            mentor_profile: mentor_profile,
+                            school_transfer: true)
     end
   end
 
