@@ -27,24 +27,36 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active" } do
     context "when form has been set up in the session" do
       before do
-        set_session(:schools_add_participant_form, {
-          type: :teacher,
-          full_name: Faker::Name.name,
-          email: Faker::Internet.email,
-          date_of_birth: Date.new(1990, 1, 1),
-          mentor_id: "later",
-          school_cohort_id: school_cohort.id,
-          current_user_id: user.id,
-          start_term: "Autumn 2050",
-          start_date: Date.new(2022, 5, 5),
-        })
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who", params: { type: :joining }
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who"
       end
 
       it "renders the expected page" do
         expect(subject).to render_template(:who)
         expect(response.body).to include("A teacher transferring from another school")
         expect(response.body).to include("A new ECT")
+      end
+    end
+  end
+
+  describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" } do
+    context "when transfer in the active_registration_cohort" do
+      before do
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/chosen-who-to-add", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
+      end
+
+      it "redirects to the check transfers page" do
+        expect(subject).to redirect_to check_transfer_schools_transferring_participant_path
+      end
+    end
+
+    context "when transferring in the previous cohort" do
+      before do
+        create(:cohort, :next)
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/chosen-who-to-add", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
+      end
+
+      it "redirects to the what we need schools transferring page" do
+        expect(subject).to redirect_to what_we_need_schools_transferring_participant_path
       end
     end
   end

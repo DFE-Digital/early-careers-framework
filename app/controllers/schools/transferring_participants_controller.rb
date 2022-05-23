@@ -10,6 +10,8 @@ module Schools
 
     skip_after_action :verify_authorized
 
+    def check_transfer; end
+
     def what_we_need
       reset_form_data
     end
@@ -31,7 +33,7 @@ module Schools
     end
 
     def email
-      if participant_profile.ect? && @school_cohort.active_induction_records.mentors.any?
+      if show_mentor?
         store_form_redirect_to_next_step(:choose_mentor)
       elsif matching_lead_provider_and_delivery_partner?
         @transferring_participant_form.same_programme = true

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true do
+RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true do
   context "Transferring an ECT to a school" do
     context "ECT is with a different lead provider" do
       before do
@@ -12,7 +12,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
         and_there_is_an_ect_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
-        when_i_click_on_view_your_early_career_teacher_and_mentor_details
+        when_i_click_to_view_ects_and_mentors
         then_i_am_taken_to_your_ect_and_mentors_page
       end
 
@@ -141,6 +141,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @cohort = create(:cohort, start_year: 2021)
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
+        create(:school_cohort, school: @school_one, cohort: create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -157,12 +158,13 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
         @school_cohort_two.update!(default_induction_programme: @induction_programme_two)
         Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
+        Mentors::AddToSchool.call(school: @school_one, mentor_profile: @mentor)
       end
 
       # when
 
-      def when_i_click_on_view_your_early_career_teacher_and_mentor_details
-        click_on("View your early career teacher and mentor details")
+      def when_i_click_to_view_ects_and_mentors
+        click_on("Manage")
       end
 
       def when_i_click_to_add_a_new_ect_or_mentor
