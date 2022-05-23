@@ -267,8 +267,16 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         end
       end
 
-      context "A SIT is adding themselves as a mentor" do
-        it " does not send the SIT an email saying they have been added and validated" do
+      context "A SIT is adding themselves as a mentor and type is not self" do
+        it "does not send the SIT an email saying they have been added and validated" do
+          create(:induction_coordinator_profile, user: user)
+          form.save!
+          expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
+        end
+      end
+
+      context "A SIT is adding themselves as a mentor and type is set to self" do
+        it "does not send the SIT an email saying they have been added and validated" do
           form.type = :self
           form.save!
           expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
@@ -277,12 +285,12 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     describe "sit_adding_themselves?" do
-      it "sit is adding themselves" do
+      it "returns true when type is set to self" do
         form.type = :self
         expect(form.sit_adding_themselves?).to be true
       end
 
-      it "sit is adding a participant" do
+      it "returns false when type is not self" do
         form.type = :mentor
         expect(form.sit_adding_themselves?).to be false
       end
