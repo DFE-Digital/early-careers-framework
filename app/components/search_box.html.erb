@@ -16,7 +16,7 @@
           filter[:options],
           :id,
           :name,
-          label: { text: "Filter by #{filter[:field]}" },
+          label: { text: "Filter by #{filter[:label] || filter[:field]}" },
           options: { selected: filter[:value] } %>
       </div>
     <% end %>
