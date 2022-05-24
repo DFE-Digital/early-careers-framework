@@ -19,10 +19,8 @@ module Schools
         case add_participant_form.type
         when :self
           redirect_to action: :show, step: :yourself
-        when :ect, :mentor
-          redirect_to action: :show, step: :name
         else
-          redirect_to action: :show, step: :started
+          redirect_to action: :show, step: :name
         end
       end
     end
