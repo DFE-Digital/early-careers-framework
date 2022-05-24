@@ -96,6 +96,9 @@ en:
       blank: "Enter start date"
       invalid: "Invalid start date"
       before_schedule_start_date: "Start date must be after %{date}"
+    end_date:
+      blank: "Enter end date"
+      invalid: "Invalid end date"
     name:
       blank: "Enter a name"
     full_name: &full_name_error_messages
