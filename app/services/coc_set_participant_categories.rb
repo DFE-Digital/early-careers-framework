@@ -14,7 +14,7 @@ class CocSetParticipantCategories < BaseService
       contacted_for_info_participants,
       details_being_checked,
       transferring_in_participants,
-      [],
+      transferring_out_participants,
       transferred_participants,
       no_qts_participants,
     )
@@ -105,7 +105,7 @@ private
     InductionRecordPolicy::Scope.new(
       user,
       school_cohort
-        .current_induction_records
+        .active_induction_records
         .where.not(training_status: :withdrawn)
         .joins(:participant_profile)
         .where(participant_profiles: { type: profile_type.to_s })

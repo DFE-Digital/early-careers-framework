@@ -36,6 +36,8 @@ module Schools
       def date_column_heading
         if transferring_in_participants?
           "Joining"
+        elsif transferring_out_participants?
+          "Leaving"
         elsif transferred_participants?
           "Transferred"
         else
