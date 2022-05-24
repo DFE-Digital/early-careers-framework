@@ -14,4 +14,19 @@ class Finance::StatementLineItem < ApplicationRecord
     voided: "voided",
     ineligible: "ineligible",
   }
+
+  scope :billable, -> { where(state: %w[eligible payable paid]) }
+
+  validate :validate_single_billable_relationship, on: [:create]
+
+private
+
+  def validate_single_billable_relationship
+    if Finance::StatementLineItem
+      .where(participant_declaration: participant_declaration)
+      .billable
+      .exists?
+      errors.add(:participant_declaration, "is already asscociated to another statement as a billable")
+    end
+  end
 end
