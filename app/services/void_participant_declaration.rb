@@ -16,7 +16,7 @@ class VoidParticipantDeclaration
 
     ApplicationRecord.transaction do
       declaration.make_voided!
-      line_item.update!(state: "voided") if line_item
+      line_item.voided! if line_item
     end
 
     Api::V1::ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
