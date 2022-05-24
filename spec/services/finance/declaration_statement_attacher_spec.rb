@@ -11,7 +11,7 @@ RSpec.describe Finance::DeclarationStatementAttacher do
     it "creates line item" do
       expect {
         subject.call
-      }.to change(Finance::StatementLineItem, :count).by(1)
+      }.to change { statement.reload.statement_line_items.count }.by(1)
     end
 
     it "create line item with same state as declaration" do
