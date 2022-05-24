@@ -98,15 +98,30 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
     end
 
     describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/full-name" do
-      it "redirects to the teacher start date template" do
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/full-name",
-            params: { schools_transferring_participant_form: {
-              full_name: ect.user.full_name,
-              trn: ecf_participant_validation_data.trn,
-              date_of_birth: ecf_participant_validation_data.date_of_birth,
-            } }
+      context "user has provided exact name as in dqt" do
+        it "redirects to the teacher start date template" do
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/full-name",
+              params: { schools_transferring_participant_form: {
+                full_name: ect.user.full_name,
+                trn: ecf_participant_validation_data.trn,
+                date_of_birth: ecf_participant_validation_data.date_of_birth,
+              } }
 
-        expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/teacher-start-date"
+          expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/teacher-start-date"
+        end
+      end
+
+      context "user has provided correct first name" do
+        it "redirects to the teacher start date template" do
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/full-name",
+              params: { schools_transferring_participant_form: {
+                full_name: ect.user.full_name.split(" ").first,
+                trn: ecf_participant_validation_data.trn,
+                date_of_birth: ecf_participant_validation_data.date_of_birth,
+              } }
+
+          expect(subject).to redirect_to "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/teacher-start-date"
+        end
       end
     end
 
