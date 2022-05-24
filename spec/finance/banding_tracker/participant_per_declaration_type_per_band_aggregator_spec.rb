@@ -21,28 +21,28 @@ RSpec.describe Finance::BandingTracker::ParticipantPerDeclarationTypePerBandAggr
   end
 
   let(:participants_per_declaration_state) do
-    { "retained-1" => 20, "retained-3" => 8, "retained-2" => 13, "completed" => 2, "retained-4" => 6, "started" => 15 }
+    { "started" => 186, "retained-1" => 20, "retained-3" => 49, "retained-2" => 13, "completed" => 2, "retained-4" => 6 }
   end
 
   it "aggregates participants per band" do
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[0])).to eq(0)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[1])).to eq(0)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[2])).to eq(11)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[3])).to eq(4)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[0])).to eq(20)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[1])).to eq(20)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[2])).to eq(20)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "started", band: bands[3])).to eq(126)
 
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[0])).to eq(0)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[1])).to eq(11)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[2])).to eq(9)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[0])).to eq(20)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[1])).to eq(0)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[2])).to eq(0)
     expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-1", band: bands[3])).to eq(0)
 
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-2", band: bands[0])).to eq(4)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-2", band: bands[1])).to eq(9)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-2", band: bands[0])).to eq(13)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-2", band: bands[1])).to eq(0)
     expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-2", band: bands[2])).to eq(0)
     expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-2", band: bands[3])).to eq(0)
 
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[0])).to eq(8)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[1])).to eq(0)
-    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[2])).to eq(0)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[0])).to eq(20)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[1])).to eq(20)
+    expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[2])).to eq(9)
     expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-3", band: bands[3])).to eq(0)
 
     expect(aggregator.participants_for_declaration_type_in_band(declaration_type: "retained-4", band: bands[0])).to eq(6)
