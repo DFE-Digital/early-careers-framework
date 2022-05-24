@@ -3,12 +3,12 @@
 <% content_for :before_content, govuk_back_link( text: "Back", href: schools_participants_path) %>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-xl"><%= @school.name %></span>
-        <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>
 
-        <dl class="govuk-summary-list govuk-!-margin-bottom-7">
+    <dl class="govuk-summary-list govuk-!-margin-bottom-7">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Name
@@ -97,10 +97,14 @@
       <% end %>
     </dl>
 
+    <% if @induction_record.training_status_active? %>
+      <h3 class="govuk-heading-m">No longer training?</h3>
+      <p class="govuk-body">Tell us <%= govuk_link_to "#{@profile.user.full_name} is transferring to another school", schools_transfer_out_participant_check_transfer_path(transfer_out_participant_id: @profile.id) %> </p>
+    <% end %>
 
-<% unless @induction_record.training_status_withdrawn? %>
-  <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(induction_record: @induction_record, current_user: current_user) %></p>
-<% end %>
+    <% unless @induction_record.training_status_withdrawn? %>
+      <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(induction_record: @induction_record, current_user: current_user) %></p>
+    <% end %>
 
-    </div>
+  </div>
 </div>
