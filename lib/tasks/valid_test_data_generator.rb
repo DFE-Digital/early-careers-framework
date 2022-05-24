@@ -112,7 +112,12 @@ module ValidTestDataGenerator
         started_declaration.make_payable!
         started_declaration.update!(
           created_at: profile.schedule.milestones.first.start_date + 1.day,
+        )
+
+        Finance::StatementLineItem.create!(
           statement: november_statement,
+          participant_declaration: started_declaration,
+          state: started_declaration.state,
         )
 
         return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
@@ -156,7 +161,12 @@ module ValidTestDataGenerator
         started_declaration.make_payable!
         started_declaration.update!(
           created_at: profile.schedule.milestones.first.start_date + 1.day,
+        )
+
+        Finance::StatementLineItem.create!(
           statement: november_statement,
+          participant_declaration: started_declaration,
+          state: started_declaration.state,
         )
 
         return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now

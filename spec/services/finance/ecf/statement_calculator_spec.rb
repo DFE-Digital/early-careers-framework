@@ -24,12 +24,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
       let!(:other_contract) { create(:call_off_contract, :with_minimal_bands, lead_provider: other_lead_provider) }
 
       before do
-        create_list(
+        declarations = create_list(
           :ect_participant_declaration, 1,
           cpd_lead_provider: other_cpd_lead_provider,
-          state: "eligible",
-          statement: other_statement
+          state: "eligible"
         )
+
+        declarations.each do |declaration|
+          Finance::StatementLineItem.create!(
+            statement: other_statement,
+            participant_declaration: declaration,
+            state: declaration.state,
+          )
+        end
       end
 
       it "returns zero" do
@@ -39,12 +46,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     context "when band is partially populated" do
       before do
-        create_list(
+        declarations = create_list(
           :ect_participant_declaration, 1,
           cpd_lead_provider: cpd_lead_provider,
-          state: "eligible",
-          statement: statement
+          state: "eligible"
         )
+
+        declarations.each do |declaration|
+          Finance::StatementLineItem.create!(
+            statement: statement,
+            participant_declaration: declaration,
+            state: declaration.state,
+          )
+        end
       end
 
       it "returns the number of declarations" do
@@ -54,12 +68,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     context "when the band had overflowed" do
       before do
-        create_list(
+        declarations = create_list(
           :ect_participant_declaration, 3,
           cpd_lead_provider: cpd_lead_provider,
-          state: "eligible",
-          statement: statement
+          state: "eligible"
         )
+
+        declarations.each do |declaration|
+          Finance::StatementLineItem.create!(
+            statement: statement,
+            participant_declaration: declaration,
+            state: declaration.state,
+          )
+        end
       end
 
       it "returns the maximum number allowed in the band" do
@@ -71,12 +92,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
       let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 5.weeks.ago) }
 
       before do
-        create_list(
+        declarations = create_list(
           :ect_participant_declaration, 1,
           cpd_lead_provider: cpd_lead_provider,
-          state: "eligible",
-          statement: previous_statement
+          state: "eligible"
         )
+
+        declarations.each do |declaration|
+          Finance::StatementLineItem.create!(
+            statement: previous_statement,
+            participant_declaration: declaration,
+            state: declaration.state,
+          )
+        end
       end
 
       context "there are no declarations on this statement" do
@@ -87,12 +115,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       context "there are declarations on this statement, partly filling it" do
         before do
-          create_list(
+          declarations = create_list(
             :ect_participant_declaration, 1,
             cpd_lead_provider: cpd_lead_provider,
-            state: "eligible",
-            statement: statement
+            state: "eligible"
           )
+
+          declarations.each do |declaration|
+            Finance::StatementLineItem.create!(
+              statement: statement,
+              participant_declaration: declaration,
+              state: declaration.state,
+            )
+          end
         end
 
         it "returns number of permitted declarations" do
@@ -102,12 +137,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       context "there are declarations on this statement, over filling it" do
         before do
-          create_list(
+          declarations = create_list(
             :ect_participant_declaration, 2,
             cpd_lead_provider: cpd_lead_provider,
-            state: "eligible",
-            statement: statement
+            state: "eligible"
           )
+
+          declarations.each do |declaration|
+            Finance::StatementLineItem.create!(
+              statement: statement,
+              participant_declaration: declaration,
+              state: declaration.state,
+            )
+          end
         end
 
         it "returns max number of permitted declarations" do
@@ -120,19 +162,33 @@ RSpec.describe Finance::ECF::StatementCalculator do
       let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 5.weeks.ago) }
 
       before do
-        create_list(
+        declarations = create_list(
           :ect_participant_declaration, 2,
           cpd_lead_provider: cpd_lead_provider,
-          state: "eligible",
-          statement: previous_statement
+          state: "eligible"
         )
 
-        create_list(
+        declarations.each do |declaration|
+          Finance::StatementLineItem.create!(
+            statement: previous_statement,
+            participant_declaration: declaration,
+            state: declaration.state,
+          )
+        end
+
+        declarations = create_list(
           :ect_participant_declaration, 1,
           cpd_lead_provider: cpd_lead_provider,
-          state: "eligible",
-          statement: statement
+          state: "eligible"
         )
+
+        declarations.each do |declaration|
+          Finance::StatementLineItem.create!(
+            statement: statement,
+            participant_declaration: declaration,
+            state: declaration.state,
+          )
+        end
       end
 
       it "returns zero" do
@@ -150,12 +206,17 @@ RSpec.describe Finance::ECF::StatementCalculator do
       let(:profile) { create(:ect_participant_profile) }
 
       before do
-        create(
+        declaration = create(
           :ect_participant_declaration,
           cpd_lead_provider: cpd_lead_provider,
           state: "eligible",
-          statement: statement,
           participant_profile: profile,
+        )
+
+        Finance::StatementLineItem.create!(
+          statement: statement,
+          participant_declaration: declaration,
+          state: declaration.state,
         )
       end
 
@@ -166,14 +227,20 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     context "when uplift is applicable" do
       let(:profile) { create(:ect_participant_profile, :uplift_flags) }
-
-      before do
+      let(:declaration) do
         create(
           :ect_participant_declaration,
           cpd_lead_provider: cpd_lead_provider,
           state: "eligible",
-          statement: statement,
           participant_profile: profile,
+        )
+      end
+
+      before do
+        Finance::StatementLineItem.create!(
+          statement: statement,
+          participant_declaration: declaration,
+          state: declaration.state,
         )
       end
 

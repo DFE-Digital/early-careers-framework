@@ -3,16 +3,26 @@
 class ParticipantDeclaration < ApplicationRecord
   self.ignored_columns = %w[statement_type]
 
-  has_many :declaration_states
-  has_many :participant_declaration_attempts, dependent: :destroy
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
-  belongs_to :statement, optional: true, class_name: "Finance::Statement"
+
+  has_many :declaration_states
+  has_many :participant_declaration_attempts, dependent: :destroy
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   has_many :statement_line_items, class_name: "Finance::StatementLineItem"
+  has_many :statements, class_name: "Finance::Statement", through: :statement_line_items
+
+  has_many :billable_statement_line_items,
+           -> { where(state: %w[eligible payable paid]) },
+           class_name: "Finance::StatementLineItem"
+
+  has_many :billable_statements,
+           class_name: "Finance::Statement",
+           through: :billable_statement_line_items,
+           source: :statement
 
   enum state: {
     submitted: "submitted",
@@ -28,7 +38,6 @@ class ParticipantDeclaration < ApplicationRecord
 
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
 
-  # Helper scopes
   scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
   scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
@@ -87,6 +96,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_mentors_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).mentor }
   scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
+
+  scope :billable, -> { where(state: %w[eligible payable paid]) }
 
   before_create :build_initial_declaration_state
 
