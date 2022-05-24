@@ -64,14 +64,6 @@
          <% end %>
        <% end %>
 
-       <% summary_list.row do |row| %>
-         <% row.key { "Start term" } %>
-         <% row.value { add_participant_form.start_term.humanize  } %>
-         <% row.action(text: "Change",
-                       visually_hidden_text: "start term",
-                       href: url_for({ step: "start\-term" })) %>
-       <% end %>
-
        <% if add_participant_form.start_date %>
          <% summary_list.row do |row| %>
            <% row.key { "Induction start" } %>
