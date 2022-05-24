@@ -16,10 +16,10 @@
 
     <p class="govuk-body">If a teacher has not started their ECF-based training or mentoring at another school:</p>
     <div class="govuk-inset-text">
-      <%= govuk_link_to "Report a new ECT", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :ect), class: "govuk-link" %>
+      <%= govuk_link_to "Report a new ECT", add_schools_participants_path(type: :ect), class: "govuk-link" %>
     </div>
     <div class="govuk-inset-text">
-      <%= govuk_link_to "Report a new mentor", add_schools_participants_path(cohort_id: @school_cohort.cohort.start_year, type: :mentor), class: "govuk-link" %>
+      <%= govuk_link_to "Report a new mentor", add_schools_participants_path(type: :mentor), class: "govuk-link" %>
     </div>
 
     <p>If you need support to report a transfer, contact us:
