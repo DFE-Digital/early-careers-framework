@@ -116,7 +116,7 @@ RSpec.describe VoidParticipantDeclaration do
       it "update line item state to voided" do
         subject.call
         expect(declaration.reload).to be_voided
-        expect(line_item.reload.state).to eql("voided")
+        expect(line_item.reload).to be_voided
       end
     end
   end
