@@ -76,15 +76,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_ect
-    then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT start term"
-
-    when_i_submit_an_empty_form
-    then_i_see_an_error_message("Choose a start term")
-
-    when_i_choose_start_term
-    when_i_click_on_continue
     then_i_am_taken_to_choose_start_date_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor selects ECT induction start date"
@@ -139,10 +130,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     then_i_am_taken_to_add_ect_or_mentor_email_page
 
     when_i_add_ect_or_mentor_email
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_mentor
-
-    when_i_choose_start_term
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
     then_the_page_should_be_accessible
