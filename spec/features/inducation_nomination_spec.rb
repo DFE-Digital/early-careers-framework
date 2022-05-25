@@ -78,6 +78,7 @@ RSpec.feature "Nominating tutors", :js do
       expect(page).to have_css(".govuk-panel--confirmation", text: "Induction tutor nominated")
 
       and_the_page_should_be_accessible
+      and_percy_should_be_sent_a_snapshot_named "Start nominations email already used again"
 
       expect(SchoolMailer)
         .to have_received(:nomination_confirmation_email)
