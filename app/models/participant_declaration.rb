@@ -12,6 +12,8 @@ class ParticipantDeclaration < ApplicationRecord
   belongs_to :statement, optional: true, class_name: "Finance::Statement"
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
+  has_many :statement_line_items, class_name: "Finance::StatementLineItem"
+
   enum state: {
     submitted: "submitted",
     eligible: "eligible",

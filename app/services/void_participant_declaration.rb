@@ -14,12 +14,19 @@ class VoidParticipantDeclaration
     raise Api::Errors::InvalidTransitionError, I18n.t(:declaration_already_voided) if declaration.voided?
     raise Api::Errors::InvalidTransitionError, I18n.t(:declaration_not_voidable) unless declaration.voidable?
 
-    declaration.make_voided!
+    ApplicationRecord.transaction do
+      declaration.make_voided!
+      line_item.voided! if line_item
+    end
 
     Api::V1::ParticipantDeclarationSerializer.new(declaration).serializable_hash.to_json
   end
 
 private
+
+  def line_item
+    declaration.statement_line_items.find_by(state: %w[eligible payable])
+  end
 
   def declaration
     @declaration ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(id)
