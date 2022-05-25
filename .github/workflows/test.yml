@@ -35,6 +35,9 @@ jobs:
       ANALYTICS_DB_PASSWORD: ''
       ANALYTICS_DB_HOSTNAME: 127.0.0.1
       ANALYTICS_DB_PORT: 5432
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
+      PERCY_PARALLEL_TOTAL: 12
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
 
@@ -71,68 +74,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: bundle exec bin/rspec_ci
-
-  feature-tests:
-    name: Run Capybara features
-    runs-on: ubuntu-20.04
-    needs: create-nonce
-    strategy:
-      fail-fast: false
-      matrix:
-        ci_node_total: [ 6 ]
-        ci_node_index: [ 0, 1, 2, 3, 4, 5 ]
-
-    env:
-      RAILS_ENV: test
-      DB_USERNAME: postgres
-      DB_PASSWORD: ''
-      DB_HOSTNAME: 127.0.0.1
-      DB_PORT: 5432
-      ANALYTICS_DB_USERNAME: postgres
-      ANALYTICS_DB_PASSWORD: ''
-      ANALYTICS_DB_HOSTNAME: 127.0.0.1
-      ANALYTICS_DB_PORT: 5432
-      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
-      PERCY_PARALLEL_TOTAL: 12
-      CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
-      CI_NODE_INDEX: ${{ matrix.ci_node_index }}
-
-    services:
-      postgres:
-        image: postgres:11.6-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.106.0
-        with:
-          bundler-cache: true
-          ruby-version: '2.7.5'
-
-      - name: Set up Node
-        uses: actions/setup-node@v2.5.1
-        with:
-          node-version: '16.14.x'
-          cache: 'yarn'
-
-      - name: Install node.js dependencies
-        run: yarn install --production=false --frozen-lockfile --ignore-engines --prefer-offline
-
-      - name: Set up test database
-        run: bin/rails db:create db:schema:load
-
-      - name: Run tests
-        run: yarn percy exec --parallel -- bundle exec bin/features_ci
+        run: yarn percy exec --parallel -- bundle exec bin/rspec_ci
 
   e2e-tests:
     name: Run Cypress
@@ -206,8 +148,8 @@ jobs:
           PERCY_PARALLEL_TOTAL: 12
 
   rspec_and_cypress_success:
-    name: Rspec, Features and Cypress success
+    name: Rspec and Cypress success
     runs-on: ubuntu-20.04
-    needs: [e2e-tests, feature-tests, backend-tests]
+    needs: [e2e-tests, backend-tests]
     steps:
       - run: echo Done!
