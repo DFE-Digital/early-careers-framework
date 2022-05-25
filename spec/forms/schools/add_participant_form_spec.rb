@@ -166,32 +166,6 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
   end
 
-  describe "start_term_legend" do
-    before do
-      form.full_name = "John Doe"
-    end
-
-    context "when the user is not a mentor" do
-      before do
-        form.participant_type = :ect
-      end
-
-      it "returns the right legend" do
-        expect(form.start_term_legend).to eq(I18n.t("schools.participants.add.start_term.ect", full_name: "John Doe"))
-      end
-    end
-
-    context "when the user is a mentor" do
-      before do
-        form.participant_type = :mentor
-      end
-
-      it "returns the right string" do
-        expect(form.start_term_legend).to eq(I18n.t("schools.participants.add.start_term.mentor", full_name: "John Doe"))
-      end
-    end
-  end
-
   describe "#trn_known?" do
     before do
       form.do_you_know_teachers_trn = "true"
@@ -217,7 +191,6 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       form.email = Faker::Internet.email
       form.trn = "1234567"
       form.date_of_birth = Date.new(1990, 1, 1)
-      form.start_term = "autumn_2021"
       form.start_date = Date.new(2022, 9, 1)
       form.dqt_record = dqt_response
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect

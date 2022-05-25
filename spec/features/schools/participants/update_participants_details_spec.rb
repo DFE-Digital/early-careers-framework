@@ -34,10 +34,6 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_ect
-
-    when_i_choose_start_term
-    when_i_click_on_continue
     then_i_am_taken_to_choose_start_date_page
 
     when_i_add_a_start_date
@@ -59,9 +55,6 @@ RSpec.describe "Update participants details", js: true do
     when_i_click_on_continue
     then_i_am_taken_to_add_ect_or_mentor_updated_email_page
 
-    when_i_click_on_continue
-
-    when_i_choose_start_term
     when_i_click_on_continue
     then_i_am_taken_to_updated_choose_start_date_page
 
@@ -90,10 +83,6 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_email
     when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_ect
-
-    when_i_choose_start_term
-    when_i_click_on_continue
     then_i_am_taken_to_choose_start_date_page
 
     when_i_add_a_start_date
@@ -108,57 +97,12 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_updated_email
     when_i_click_on_continue
-    when_i_choose_start_term
-    when_i_click_on_continue
     when_i_add_a_start_date
     when_i_click_on_continue
     when_i_choose_assign_mentor_later
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
     then_i_can_view_updated_email
-  end
-
-  scenario "Induction tutor can change ECT / mentor start_term from check details page" do
-    when_i_click_on_add_ect
-    then_i_am_taken_to_the_ect_already_started_page
-
-    when_i_click_on_continue
-    then_i_am_taken_to_add_ect_name_page
-
-    when_i_add_ect_or_mentor_name
-    when_i_click_on_continue
-    then_i_am_taken_to_do_you_know_your_teachers_trn_page
-
-    when_i_select "No"
-    when_i_click_on_continue
-    then_i_am_taken_to_add_ect_or_mentor_email_page
-
-    when_i_add_ect_or_mentor_email
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_ect
-
-    when_i_choose_start_term
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_start_date_page
-
-    when_i_add_a_start_date
-    when_i_click_on_continue
-
-    when_i_choose_assign_mentor_later
-    when_i_click_on_continue
-    then_i_am_taken_to_check_details_page
-
-    when_i_click_on_change_term
-    then_i_am_taken_to_choose_term_page_as_ect
-
-    when_i_add_ect_or_mentor_updated_term
-    when_i_click_on_continue
-    when_i_add_a_start_date
-    when_i_click_on_continue
-    when_i_choose_assign_mentor_later
-    when_i_click_on_continue
-    then_i_am_taken_to_check_details_page
-    then_i_can_view_updated_term
   end
 
   scenario "Induction tutor can change ECTs mentor from check details page" do
@@ -177,10 +121,6 @@ RSpec.describe "Update participants details", js: true do
     then_i_am_taken_to_add_ect_or_mentor_email_page
 
     when_i_add_ect_or_mentor_email
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_term_page_as_ect
-
-    when_i_choose_start_term
     when_i_click_on_continue
     then_i_am_taken_to_choose_start_date_page
 

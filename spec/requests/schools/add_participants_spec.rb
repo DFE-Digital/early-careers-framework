@@ -81,7 +81,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
             mentor_id: "later",
             school_cohort_id: school_cohort.id,
             current_user_id: user.id,
-            start_term: "Autumn 2050",
             start_date: Date.new(2022, 5, 5),
           })
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
