@@ -59,7 +59,7 @@ module Participants
       end
 
       def validate_provider
-        unless matches_lead_provider?
+        unless user_profile && matches_lead_provider?
           errors.add(:participant_id, I18n.t(:invalid_participant))
         end
       end

@@ -24,6 +24,25 @@ RSpec.describe Participants::ChangeSchedule::ECF do
   end
 
   describe "validations" do
+    context "when participant is withdrawn" do
+      let(:user) { profile.user }
+      let(:profile) { create(:mentor_participant_profile, status: :withdrawn) }
+      let(:schedule) { create(:ecf_mentor_schedule) }
+
+      subject do
+        Participants::ChangeSchedule::Mentor.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: CpdLeadProvider.new,
+        })
+      end
+
+      it "should have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /must be a valid Participant ID/)
+      end
+    end
+
     context "when null schedule_identifier given" do
       let(:user) { profile.user }
       let(:profile) { create(:ecf_participant_profile) }
