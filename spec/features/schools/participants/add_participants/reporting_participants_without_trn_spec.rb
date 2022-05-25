@@ -20,7 +20,6 @@ RSpec.describe "Reporting participants without a known TRN",
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "",
-      start_term: "summer_2022",
       start_date: Date.new(2022, 9, 1),
     }
   end
@@ -85,13 +84,13 @@ private
     Pages::SchoolDashboardPage.loaded
                               .view_participant_details
                               .choose_to_add_an_ect_or_mentor
-                              .add_ect(participant_data[:full_name], participant_data[:email], participant_data[:start_term].humanize, participant_data[:start_date], nil, nil, "Billy Mentor")
+                              .add_ect(participant_data[:full_name], participant_data[:email], participant_data[:start_date], nil, nil, "Billy Mentor")
   end
 
   def when_i_report_a_new_mentor_at_the_school
     Pages::SchoolDashboardPage.loaded
                               .view_participant_details
                               .choose_to_add_an_ect_or_mentor
-                              .add_mentor(participant_data[:full_name], participant_data[:email], participant_data[:start_term].humanize, participant_data[:start_date])
+                              .add_mentor(participant_data[:full_name], participant_data[:email], participant_data[:start_date])
   end
 end

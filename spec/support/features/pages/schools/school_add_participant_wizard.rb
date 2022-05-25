@@ -7,12 +7,11 @@ module Pages
     set_url "/schools/{slug}/cohorts/{cohort}/participants/add/who"
     set_primary_heading "Who do you want to add?"
 
-    def add_participant(participant_type, full_name, email_address, start_term, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
+    def add_participant(participant_type, full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
       case participant_type
       when "ECT"
         add_ect full_name,
                 email_address,
-                start_term,
                 start_date,
                 participant_trn,
                 date_of_birth,
@@ -20,7 +19,6 @@ module Pages
       when "Mentor"
         add_mentor full_name,
                    email_address,
-                   start_term,
                    start_date,
                    participant_trn,
                    date_of_birth
@@ -29,7 +27,7 @@ module Pages
       end
     end
 
-    def add_ect(full_name, email_address, start_term, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
+    def add_ect(full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
       choose_to_add_a_new_ect
 
       add_full_name full_name
@@ -43,7 +41,6 @@ module Pages
       end
 
       add_email_address email_address
-      choose_start_term start_term
       add_start_date start_date
 
       # this will need skipping if no mentors added to the school yet
@@ -56,7 +53,7 @@ module Pages
       confirm_and_add
     end
 
-    def add_mentor(full_name, email_address, start_term, _start_date, participant_trn = nil, date_of_birth = nil)
+    def add_mentor(full_name, email_address, _start_date, participant_trn = nil, date_of_birth = nil)
       choose_to_add_a_new_mentor
 
       add_full_name full_name
@@ -70,7 +67,6 @@ module Pages
       end
 
       add_email_address email_address
-      choose_start_term start_term
 
       confirm_and_add
     end
@@ -136,13 +132,6 @@ module Pages
 
     def add_email_address(participant_email)
       fill_in "Email", with: participant_email
-      click_on "Continue"
-
-      self
-    end
-
-    def choose_start_term(start_term)
-      choose start_term
       click_on "Continue"
 
       self

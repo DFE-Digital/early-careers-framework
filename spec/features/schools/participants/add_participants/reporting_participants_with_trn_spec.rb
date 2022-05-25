@@ -30,7 +30,6 @@ RSpec.describe "Reporting participants with a known TRN",
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "",
-      start_term: "summer_2022",
       start_date: Date.new(2022, 9, 1),
     }
   end
@@ -106,10 +105,6 @@ RSpec.describe "Reporting participants with a known TRN",
 
     when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
     click_on "Continue"
-    then_i_see_an_error_message "Choose a start term"
-
-    when_i_choose_start_term_to_the_school_add_participant_wizard participant_data[:start_term].humanize
-    click_on "Continue"
     then_i_see_an_error_message "Enter the teacher's induction start date"
 
     when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
@@ -149,10 +144,6 @@ RSpec.describe "Reporting participants with a known TRN",
 
     when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECT start term"
-
-    when_i_choose_start_term_from_the_school_add_participant_wizard participant_data[:start_term].humanize
-    then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor selects ECT induction start date"
 
     when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
@@ -187,10 +178,6 @@ RSpec.describe "Reporting participants with a known TRN",
     when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
 
     when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
-    then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECT start term"
-
-    when_i_choose_start_term_on_the_school_add_participant_wizard participant_data[:start_term].humanize
     then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor checks mentor details"
 
