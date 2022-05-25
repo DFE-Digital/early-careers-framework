@@ -29,7 +29,8 @@ module Schools
     end
 
     def teacher_start_date
-      store_form_redirect_to_next_step(:email)
+      check_start_date_is_later_than_induction_start
+      store_form_redirect_to_next_step(:email) unless @transferring_participant_form.errors.any?
     end
 
     def email
@@ -299,6 +300,14 @@ module Schools
           check_first_name_only: true,
         },
       )
+    end
+
+    def check_start_date_is_later_than_induction_start
+      start_date = @transferring_participant_form.start_date
+      previous_date = participant_profile.induction_records.latest.schedule.milestones.first.start_date
+      if start_date < previous_date
+        @transferring_participant_form.errors.add(:start_date, I18n.t("errors.start_date.before_schedule_start_date", date: previous_date.to_date.to_s(:govuk)))
+      end
     end
 
     def reset_form_data
