@@ -91,6 +91,6 @@ private
     Pages::SchoolDashboardPage.loaded
                               .view_participant_details
                               .choose_to_add_an_ect_or_mentor
-                              .add_mentor(participant_data[:full_name], participant_data[:email], participant_data[:start_date])
+                              .add_mentor(participant_data[:full_name], participant_data[:email])
   end
 end

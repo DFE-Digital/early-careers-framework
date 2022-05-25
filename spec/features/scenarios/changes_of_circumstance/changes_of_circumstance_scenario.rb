@@ -39,11 +39,7 @@ class ChangesOfCircumstanceScenario
     @number = num
     @participant_email = "the-participant-#{num}@example.com"
     @participant_trn = rand(1..9_999_999).to_s.rjust(7, "0")
-    @participant_dob = {
-      year: "1972",
-      month: "02",
-      day: "10",
-    }
+    @participant_dob = Date.new(1972, 2, 10)
     @participant_type = (scenario[:participant_type] || "").to_s
     @original_programme = (scenario[:original_programme] || "").to_s
     @new_programme = (scenario[:new_programme] || "").to_s

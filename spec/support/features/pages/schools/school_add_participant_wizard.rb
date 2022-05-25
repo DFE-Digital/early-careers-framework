@@ -19,7 +19,6 @@ module Pages
       when "Mentor"
         add_mentor full_name,
                    email_address,
-                   start_date,
                    participant_trn,
                    date_of_birth
       when "SIT"
@@ -53,7 +52,7 @@ module Pages
       confirm_and_add
     end
 
-    def add_mentor(full_name, email_address, _start_date, participant_trn = nil, date_of_birth = nil)
+    def add_mentor(full_name, email_address, participant_trn = nil, date_of_birth = nil)
       choose_to_add_a_new_mentor
 
       add_full_name full_name
@@ -108,7 +107,7 @@ module Pages
     end
 
     def add_teacher_reference_number(full_name, trn)
-      fill_in "What’s #{full_name}’s teacher reference number (TRN)?", with: trn
+      fill_in "What’s #{full_name.titleize}’s teacher reference number (TRN)?", with: trn
       click_on "Continue"
 
       self

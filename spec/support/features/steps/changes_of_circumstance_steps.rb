@@ -5,97 +5,82 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      next_ideal_time Time.zone.local(2021, 2, 1, 9, 0, 0)
-
+      next_ideal_time Time.zone.local(2022, 2, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        user = create :user, full_name: lead_provider_name
-        lead_provider = create :lead_provider, :with_delivery_partner, name: lead_provider_name
-        cpd_lead_provider = create :cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name
-        create :lead_provider_profile, user: user, lead_provider: cpd_lead_provider.lead_provider
-        create :call_off_contract, lead_provider: cpd_lead_provider.lead_provider
+        lead_provider = create(:lead_provider, name: lead_provider_name)
+        cpd_lead_provider = create(:cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name)
+        create :call_off_contract, lead_provider: lead_provider
 
-        create :ecf_statement,
-               name: "November 2021",
-               cpd_lead_provider: cpd_lead_provider,
-               deadline_date: Date.new(2021, 11, 25)
+        delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
+        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
+        delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2022")
+        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
 
-        create :ecf_statement,
-               cpd_lead_provider: cpd_lead_provider,
-               deadline_date: 10.days.from_now
+        user = create(:user, full_name: lead_provider_name)
+        create :lead_provider_profile, user: user, lead_provider: lead_provider
 
-        token = LeadProviderApiToken.create_with_random_token! cpd_lead_provider: cpd_lead_provider,
-                                                               lead_provider: lead_provider,
-                                                               private_api_access: true
-
-        tokens[lead_provider_name] = token
+        tokens[lead_provider_name] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, lead_provider: lead_provider, private_api_access: true)
 
         travel_to 1.minute.from_now
       end
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
-
+      next_ideal_time Time.zone.local(2022, 4, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        school = create :school, :pupil_premium_uplift, name: "#{sit_name}'s School"
-        user = create :user, full_name: sit_name
-        create :induction_coordinator_profile,
-               schools: [school],
-               user: user
-        privacy_policy.accept! user
+        school = create(:school, :pupil_premium_uplift, name: "#{sit_name}'s School")
+        user = create(:user, full_name: sit_name)
+        create :induction_coordinator_profile, schools: [school], user: user
+        PrivacyPolicy.current.accept! user
 
         sign_in_as user
-        choose_programme_wizard = Pages::SITReportProgrammeWizard.new
-        choose_programme_wizard.complete(programme)
-        sign_out
+        Pages::SchoolReportProgrammeWizard.loaded
+                                          .complete(programme)
 
         if programme == "CIP"
-          school_cohort = school.school_cohorts.first
+          school_cohort = school.school_cohorts.where(cohort: Cohort.find_by_start_year(2021)).first
           Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
                                                       programme_choice: school_cohort.induction_programme_choice
         end
+        sign_out
 
         travel_to 1.minute.from_now
       end
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
+      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner 2022")
 
-      user = find_user lead_provider_name
-      lead_provider = user.lead_provider
-      delivery_partner = lead_provider.delivery_partners.first
+      school = find_school_for_sit(sit_name)
 
-      school = find_school_for_sit sit_name
-
+      next_ideal_time Time.zone.local(2022, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        sign_in_as user
-        dashboard = Pages::LeadProviderDashboard.new
-        wizard = dashboard.start_confirm_your_schools_wizard
-        wizard.complete delivery_partner.name, [school.urn]
-        sign_out
+        given_i_sign_in_as_the_user_with_the_full_name lead_provider_name
 
-        # TODO: This needs to be added to the partnership UI process
-        school_cohort = school.school_cohorts.first
-        Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
-                                                    programme_choice: school_cohort.induction_programme_choice
+        Pages::LeadProviderDashboard.loaded
+                                    .confirm_schools
+                                    .complete delivery_partner.name, [school.urn]
+        sign_out
 
         travel_to 1.minute.from_now
       end
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
-      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
-
-      user = find_user sit_name
-
-      cohort_label = "Spring 2022"
-
+      next_ideal_time Time.zone.local(2022, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
-        sign_in_as user
-        inductions_dashboard = Pages::SITInductionDashboard.new
-        wizard = inductions_dashboard.start_add_participant_wizard
-        wizard.complete(participant_name, participant_email, participant_type, cohort_label)
+        given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+        wizard = Pages::SchoolDashboardPage.loaded
+                                           .add_participant_details
+                                           .continue
+                                           .choose_to_add_an_ect_or_mentor
+
+        if participant_type == "ECT"
+          wizard.add_ect participant_name, participant_email, Date.new(2022, 9, 1)
+        else
+          wizard.add_mentor participant_name, participant_email
+        end
         sign_out
 
         travel_to 1.minute.from_now
@@ -103,18 +88,19 @@ module Steps
     end
 
     def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      next_ideal_time Time.zone.local(2021, 8, 1, 9, 0, 0)
-
-      user = find_user participant_name
-
+      next_ideal_time Time.zone.local(2022, 9, 2, 9, 0, 0)
       travel_to(@timestamp) do
-        sign_in_as user
-        wizard = Pages::ParticipantRegistrationWizard.new
+        given_i_sign_in_as_the_user_with_the_full_name participant_name
+
         case participant_type
         when "ECT"
-          wizard.complete_for_ect participant_name, participant_dob, participant_trn
+          Pages::PrivacyPolicyPage.loaded
+                                  .continue_for_ect
+                                  .complete participant_name, participant_dob, participant_trn
         when "Mentor"
-          wizard.complete_for_mentor participant_name, participant_dob, participant_trn
+          Pages::PrivacyPolicyPage.loaded
+                                  .continue_for_mentor
+                                  .complete participant_name, participant_dob, participant_trn
         else
           raise "Participant_type not recognised"
         end
@@ -128,19 +114,15 @@ module Steps
       participant_profile = find_participant_profile participant_name
 
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+      milestone = participant_profile.schedule.milestones
+                                     .where(declaration_type: declaration_type.to_s.gsub("_", "-"))
+                                     .first
 
-      case declaration_type
-      when :started
-        next_ideal_time participant_profile.schedule.milestones.first.start_date + 4.days
-      when :retained_1
-        next_ideal_time participant_profile.schedule.milestones.second.start_date + 4.days
-      else
-        raise "declaration type was #{declaration_type} but expected [started, retained_1]"
-      end
-
+      next_ideal_time milestone.milestone_date - 2.days
       travel_to(@timestamp) do
+        event_date = milestone.milestone_date - 4.days
         declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
-        declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, @timestamp - 2.days
+        declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, event_date
 
         declarations_endpoint.has_declaration_type? declaration_type.to_s
         declarations_endpoint.has_eligible_for_payment? true
@@ -308,19 +290,6 @@ module Steps
         participant_declaration.make_payable!
         participant_declaration.update! statement: participant_declaration.cpd_lead_provider.statements.first
       end
-    end
-
-    def and_lead_provider_statements_have_been_created(lead_provider_name)
-      lead_provider = find_lead_provider lead_provider_name
-
-      nov_statement = lead_provider.cpd_lead_provider.statements.first
-
-      Finance::ECF::CalculationOrchestrator.new(
-        statement: nov_statement,
-        contract: lead_provider.call_off_contract,
-        aggregator: Finance::ECF::ParticipantAggregator.new(statement: nov_statement),
-        calculator: PaymentCalculator::ECF::PaymentCalculation,
-      ).call(event_type: :started)
     end
 
   private

@@ -9,7 +9,7 @@ module Support
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
         induction_dashboard = Pages::SchoolDashboardPage.loaded
-        participants_dashboard = induction_dashboard.view_participant_dashboard
+        participants_dashboard = induction_dashboard.view_participant_details
 
         if is_being_trained
           case participant_type
@@ -26,9 +26,9 @@ module Support
 
         @text = page.find("main").text
 
-        participant_details.can_see_full_name? participant_name
-        participant_details.can_see_email? participant_email
-        participant_details.can_see_status? participant_status.to_s unless participant_status.nil?
+        participant_details.has_full_name? participant_name
+        participant_details.has_email? participant_email
+        participant_details.has_status? participant_status.to_s unless participant_status.nil?
 
         sign_out
 
