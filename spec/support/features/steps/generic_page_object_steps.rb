@@ -34,7 +34,7 @@ module Steps
   private
 
     def generic_step_matcher
-      /^(given|when|then|and)_i_(.*)_(?:from|on)_the_(.*)$/
+      /^(given|when|then|and)_i_(.*)_(?:from|on|to)_the_(.*)$/
     end
 
     def generic_call(page_object, method_symbol, query_params = [], query_values = [])

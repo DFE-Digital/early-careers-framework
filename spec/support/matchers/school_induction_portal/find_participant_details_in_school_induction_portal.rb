@@ -6,12 +6,9 @@ module Support
 
     RSpec::Matchers.define :find_participant_details_in_school_induction_portal do |participant_name, participant_email, participant_type, participant_status, is_being_trained: true|
       match do |sit_name|
-        user = User.find_by(full_name: sit_name)
-        raise "Could not find User for #{sit_name}" if user.nil?
+        given_i_sign_in_as_the_user_with_the_full_name sit_name
 
-        sign_in_as user
-
-        induction_dashboard = Pages::SITInductionDashboard.new
+        induction_dashboard = Pages::SchoolDashboardPage.loaded
         participants_dashboard = induction_dashboard.view_participant_dashboard
 
         if is_being_trained
