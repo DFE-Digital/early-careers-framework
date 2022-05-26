@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require_relative "../base_page"
+
 module Pages
-  class LeadProviderConfirmYourSchoolsWizard
-    include Capybara::DSL
+  class ConfirmSchoolsWizard < ::Pages::BasePage
+    set_url "/lead-providers/report-schools/start"
+    set_primary_heading "You’ve chosen to confirm schools for the 2021 to 2022 academic year"
 
     def complete(delivery_partner_name, school_urns)
       click_on "Continue"

@@ -38,8 +38,8 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
   end
 
   it "displays the distribution of declaration by band, retention type and declaration state" do
-    given_i_am_logged_in_as_a_finance_user
-    then_the_page_should_be_accessible
+    given_i_sign_in_as_a_finance_user
+    then_the_page_is_accessible
 
     visit new_finance_banding_tracker_provider_choice_path
     click_on "Continue"
