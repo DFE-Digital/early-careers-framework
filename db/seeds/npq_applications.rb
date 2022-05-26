@@ -18,7 +18,7 @@ module Seeds
           active_alert: false,
           date_of_birth: rand(60.years.ago.to_date..23.years.ago.to_date),
           teacher_reference_number: trn,
-          eligible_for_funding: [true, false].sample,
+          eligible_for_funding: eligible_for_funding?,
           funding_choice: ::NPQApplication.funding_choices.keys.sample,
           headteacher_status: ::NPQApplication.headteacher_statuses.keys.sample,
           nino: SecureRandom.hex,
@@ -28,6 +28,11 @@ module Seeds
           works_in_school: works_in_school,
           employer_name: employer_name,
           employment_role: employment_role,
+          works_in_nursery: works_in_nursery,
+          works_in_childcare: works_in_childcare,
+          kind_of_nursery: kind_of_nursery,
+          private_childcare_provider_urn: private_childcare_provider_urn,
+          funding_eligiblity_status_code: funding_eligiblity_status_code,
         },
         npq_course_id: NPQCourse.all.sample.id,
         npq_lead_provider_id: npq_lead_provider.id,
@@ -43,6 +48,41 @@ module Seeds
 
     def works_in_school
       @works_in_school ||= [true, false].sample
+    end
+
+    def works_in_nursery
+      works_in_childcare
+    end
+
+    def works_in_childcare
+      @works_in_childcare ||= !works_in_school
+    end
+
+    def kind_of_nursery
+      @kind_of_nursery = %w[
+        local_authority_maintained_nursery
+        preschool_class_as_part_of_school
+        private_nursery
+      ].sample
+    end
+
+    def private_nursery?
+      kind_of_nursery == "private_nursery"
+    end
+
+    def private_childcare_provider_urn
+      "EY123456" if private_nursery?
+    end
+
+    def eligible_for_funding?
+      @eligible_for_funding ||= [true, false].sample
+    end
+
+    def funding_eligiblity_status_code
+      return "funded" if eligible_for_funding?
+      return "not_on_early_years_register" if private_nursery?
+
+      "ineligible_establishment_type"
     end
 
     def employment_role
