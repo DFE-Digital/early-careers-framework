@@ -1,0 +1,24 @@
+<% content_for :title, "Delivery partner users" %>
+
+<%= render "admin/delivery_partners/heading" %>
+
+<%= govuk_button_link_to "Add a new user", new_admin_delivery_partners_user_path %>
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Full name</th>
+      <th scope="col" class="govuk-table__header">Email address</th>
+      <th scope="col" class="govuk-table__header">Delivery partner</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @users.each do |user| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= user.full_name %></td>
+        <td class="govuk-table__cell"><%= user.email %></td>
+        <td class="govuk-table__cell"><%= user.delivery_partner_profile.delivery_partner.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%== govuk_paginate @users, @pagy %>

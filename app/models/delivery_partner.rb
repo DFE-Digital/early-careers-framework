@@ -17,6 +17,8 @@ class DeliveryPartner < DiscardableRecord
   has_many :delivery_partner_profiles, dependent: :destroy
   has_many :users, through: :delivery_partner_profiles
 
+  scope :name_order, -> { order("UPPER(name)") }
+
   has_paper_trail
 
   after_discard do

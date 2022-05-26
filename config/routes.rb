@@ -291,6 +291,10 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :delivery_partners, path: "delivery-partners" do
+      resources :users, only: %i[index new create]
+    end
+
     scope :administrators, module: "administrators" do
       resources :administrators, only: %i[index new create edit update destroy], path: "/" do
         collection do
