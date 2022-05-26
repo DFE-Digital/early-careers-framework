@@ -53,16 +53,16 @@ RSpec.feature "Transfer a participant",
       create :milestone,
              schedule: schedule,
              name: "Output 1 - Participant Start",
-             start_date: Date.new(2022, 9, 1),
-             milestone_date: Date.new(2022, 11, 30),
-             payment_date: Date.new(2022, 11, 30),
+             start_date: Date.new(2021, 9, 1),
+             milestone_date: Date.new(2021, 11, 30),
+             payment_date: Date.new(2021, 11, 30),
              declaration_type: "started"
       create :milestone,
              schedule: schedule,
              name: "Output 2 - Retention Point 1",
-             start_date: Date.new(2022, 11, 1),
-             milestone_date: Date.new(2023, 1, 31),
-             payment_date: Date.new(2023, 2, 28),
+             start_date: Date.new(2021, 11, 1),
+             milestone_date: Date.new(2022, 1, 31),
+             payment_date: Date.new(2022, 2, 28),
              declaration_type: "retained-1"
       schedule
     end
@@ -118,37 +118,35 @@ RSpec.feature "Transfer a participant",
             and_lead_provider_has_made_training_declaration "Original Lead Provider", scenario.participant_type, "the Participant", declaration_type
           end
 
-          when_school_takes_on_the_active_participant "New SIT",
-                                                      "the Participant",
-                                                      scenario.participant_email,
-                                                      scenario.participant_trn,
-                                                      scenario.participant_dob,
-                                                      "#{scenario.original_programme}>#{scenario.new_programme}",
-                                                      scenario.transfer
+          if scenario.original_programme == "FIP" && scenario.new_programme == "FIP"
+            when_school_uses_the_transfer_participant_wizard "New SIT",
+                                                             "the Participant",
+                                                             scenario.participant_email,
+                                                             scenario.participant_trn,
+                                                             scenario.participant_dob,
+                                                             same_provider: scenario.transfer == :same_provider
+          else
+            when_developers_transfer_the_active_participant "New SIT",
+                                                            "the Participant"
+          end
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable
+          and_eligible_training_declarations_are_made_payable "January 2022"
         end
 
         context "Then the Original SIT" do
           subject(:original_sit) { "Original SIT" }
 
-          it do
-            if scenario.original_programme == "FIP" && scenario.new_programme == "FIP"
-              is_expected.to find_participant_details_in_school_induction_portal "the Participant",
-                                                                                 scenario.participant_email,
-                                                                                 scenario.participant_type,
-                                                                                 scenario.new_school_status,
-                                                                                 is_being_trained: false
-            else
-              is_expected.to_not find_participant_details_in_school_induction_portal "the Participant",
-                                                                                     scenario.participant_email,
-                                                                                     scenario.participant_type,
-                                                                                     scenario.new_school_status,
-                                                                                     is_being_trained: false
+          if scenario.original_programme == "FIP" && scenario.new_programme == "FIP"
+            it "can see the participant in the school portal" do
+              then_sit_can_see_participant_in_school_portal original_sit, scenario
+            end
+          else
+            it "cannot see the participant in the school portal" do
+              then_sit_cannot_see_participant_in_school_portal original_sit
             end
           end
         end
@@ -156,12 +154,8 @@ RSpec.feature "Transfer a participant",
         context "Then the New SIT" do
           subject(:new_sit) { "New SIT" }
 
-          it do
-            is_expected.to find_participant_details_in_school_induction_portal "the Participant",
-                                                                               scenario.participant_email,
-                                                                               scenario.participant_type,
-                                                                               scenario.new_school_status,
-                                                                               is_being_trained: true
+          it "can see the participant in the school portal" do
+            then_sit_can_see_participant_in_school_portal new_sit, scenario
           end
 
           # what are the onward actions available to the new school - can they do them ??

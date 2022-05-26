@@ -120,42 +120,29 @@ RSpec.feature "Onboard a deferred participant",
                                                scenario.participant_email,
                                                scenario.participant_type
 
-          when_school_takes_on_the_deferred_participant "New SIT",
-                                                        "the Participant",
-                                                        scenario.participant_email,
-                                                        scenario.participant_trn,
-                                                        scenario.participant_dob,
-                                                        "#{scenario.original_programme}>#{scenario.new_programme}",
-                                                        scenario.transfer
+          when_developers_transfer_the_active_participant "New SIT",
+                                                          "the Participant"
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration scenario.new_lead_provider_name, scenario.participant_type, "the Participant", declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable
+          and_eligible_training_declarations_are_made_payable "January 2022"
         end
 
         context "Then the Original SIT" do
           subject(:original_sit) { "Original SIT" }
 
-          it do
-            is_expected.to_not find_participant_details_in_school_induction_portal "the Participant",
-                                                                                   scenario.participant_email,
-                                                                                   scenario.participant_type,
-                                                                                   scenario.new_school_status,
-                                                                                   is_being_trained: false
+          it "cannot see the participant in the school portal" do
+            then_sit_cannot_see_participant_in_school_portal original_sit
           end
         end
 
         context "Then the New SIT" do
           subject(:new_sit) { "New SIT" }
 
-          it do
-            is_expected.to find_participant_details_in_school_induction_portal "the Participant",
-                                                                               scenario.participant_email,
-                                                                               scenario.participant_type,
-                                                                               scenario.new_school_status,
-                                                                               is_being_trained: true
+          it "can see the participant in the school portal" do
+            then_sit_can_see_participant_in_school_portal new_sit, scenario
           end
 
           # what are the onward actions available to the new school - can they do them ??

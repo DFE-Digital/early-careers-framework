@@ -171,9 +171,7 @@ module Steps
       end
     end
 
-    def and_school_withdraws_participant(_sit_name, participant_name)
-      # TODO: This needs to be automated through the inductions portal
-
+    def and_developer_withdraws_participant(participant_name)
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
@@ -185,47 +183,35 @@ module Steps
         current_induction_record = participant_profile.current_induction_records.first
         current_induction_record.withdrawing! unless current_induction_record.nil?
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
-    def when_school_takes_on_the_active_participant(sit_name, participant_name, participant_email, participant_trn, participant_dob, circumstance, same_provider)
-      user = find_user sit_name
-
-      school = find_school_for_sit sit_name
-      school_cohort = school.school_cohorts.first
-
+    def when_school_uses_the_transfer_participant_wizard(sit_name, participant_name, participant_email, participant_trn, participant_dob, same_provider: false)
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
-        if circumstance == "FIP>FIP"
-          sign_in_as user
-          inductions_dashboard = Pages::SITInductionDashboard.new
-          wizard = inductions_dashboard.start_transfer_participant_wizard
-          wizard.complete(participant_name, participant_email, participant_trn, participant_dob, same_provider == :same_provider)
-          sign_out
+        given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+        page_object = Pages::SchoolDashboardPage.loaded
+                                                .add_participant_details
+                                                .continue
+                                                .choose_to_transfer_an_ect_or_mentor
+
+        if participant_profile.ect?
+          page_object.transfer_ect participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob
         else
-          # OLD way
-          participant_profile.teacher_profile.update! school: school
-          participant_profile.active_record!
-          participant_profile.training_status_active!
-          participant_profile.update! school_cohort: school_cohort
-
-          # NEW way
-          current_induction_record = participant_profile.current_induction_records.first
-          current_induction_record.withdrawing! unless current_induction_record.nil?
-
-          Induction::Enrol.call participant_profile: participant_profile,
-                                induction_programme: school_cohort.default_induction_programme,
-                                start_date: @timestamp
+          page_object.transfer_mentor participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob
         end
 
-        travel_to 1.minute.from_now
+        sign_out
+
+        travel_to 2.days.from_now
       end
     end
 
-    def when_school_takes_on_the_withdrawn_participant(sit_name, participant_name, _participant_email, _participant_trn, _participant_dob, _circumstance, _same_provider)
+    def when_developers_transfer_the_active_participant(sit_name, participant_name)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
 
@@ -239,23 +225,19 @@ module Steps
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
 
-        profile_state = participant_profile.participant_profile_state
-        profile_state.delete
-        participant_profile.reload
-
         # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+        current_induction_record = participant_profile.current_induction_records.current.first
+        current_induction_record.changing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
-                              start_date: @timestamp
+                              start_date: 1.day.from_now
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
-    def when_school_takes_on_the_deferred_participant(sit_name, participant_name, _participant_email, _participant_trn, _participant_dob, _circumstance, _same_provider)
+    def when_developers_transfer_the_withdrawn_participant(sit_name, participant_name)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
 
@@ -264,32 +246,95 @@ module Steps
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
         # OLD way
+        profile_state = participant_profile.participant_profile_state
+        profile_state.delete
+        participant_profile.reload
+
         participant_profile.teacher_profile.update! school: school
         participant_profile.active_record!
         participant_profile.training_status_active!
         participant_profile.update! school_cohort: school_cohort
 
+        # NEW way
+        current_induction_record = participant_profile.current_induction_records.current.first
+        current_induction_record.changing! unless current_induction_record.nil?
+
+        Induction::Enrol.call participant_profile: participant_profile,
+                              induction_programme: school_cohort.default_induction_programme,
+                              start_date: 1.day.from_now
+
+        travel_to 2.days.from_now
+      end
+    end
+
+    def when_developers_transfer_the_deferred_participant(sit_name, participant_name)
+      school = find_school_for_sit sit_name
+      school_cohort = school.school_cohorts.first
+
+      participant_profile = find_participant_profile participant_name
+
+      next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
+      travel_to(@timestamp) do
+        # OLD way
         profile_state = participant_profile.participant_profile_state
         profile_state.delete
         participant_profile.reload
 
+        participant_profile.teacher_profile.update! school: school
+        participant_profile.active_record!
+        participant_profile.training_status_active!
+        participant_profile.update! school_cohort: school_cohort
+
         # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
+        current_induction_record = participant_profile.current_induction_records.current.first
+        current_induction_record.changing! unless current_induction_record.nil?
 
         Induction::Enrol.call participant_profile: participant_profile,
                               induction_programme: school_cohort.default_induction_programme,
-                              start_date: @timestamp
+                              start_date: 1.day.from_now
 
-        travel_to 1.minute.from_now
+        travel_to 2.days.from_now
       end
     end
 
-    def and_eligible_training_declarations_are_made_payable
-      ParticipantDeclaration.eligible.each do |participant_declaration|
-        participant_declaration.make_payable!
-        participant_declaration.update! statement: participant_declaration.cpd_lead_provider.statements.first
+    def and_eligible_training_declarations_are_made_payable(statement_name)
+      next_ideal_time @timestamp + 3.days
+      travel_to(@timestamp) do
+        ParticipantDeclaration.eligible.each do |participant_declaration|
+          participant_declaration.make_payable!
+          statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: participant_declaration.cpd_lead_provider)
+          participant_declaration.update! statement: statement
+        end
       end
+    end
+
+    def then_sit_cannot_see_participant_in_school_portal(sit_name)
+      given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+      then_i_confirm_has_no_participants_on_the_school_dashboard_page
+
+      sign_out
+    end
+
+    def then_sit_can_see_participant_in_school_portal(sit_name, scenario)
+      given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+      when_i_view_participant_details_from_the_school_dashboard_page
+      case scenario.participant_type
+      when "ECT"
+        and_i_view_ects_from_the_school_participants_dashboard_page "the Participant"
+      when "Mentor"
+        and_i_view_mentors_from_the_school_participants_dashboard_page "the Participant"
+      else
+        raise "Participant Type \"#{scenario.participant_type}\" not recognised"
+      end
+
+      then_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
+      then_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
+      then_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      then_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
+
+      sign_out
     end
 
   private
