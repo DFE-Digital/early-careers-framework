@@ -332,7 +332,7 @@ module Schools
     end
 
     def sit_adding_themselves?
-      type == :self
+      type == :self || current_user.induction_coordinator?
     end
   end
 end
