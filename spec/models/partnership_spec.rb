@@ -101,4 +101,14 @@ RSpec.describe Partnership, type: :model do
       expect(Partnership.active).to contain_exactly(partnership)
     end
   end
+
+  it "updates analytics when any attributes changes", :with_default_schedules do
+    partnership = create(:partnership, pending: true)
+    partnership.pending = false
+    expect {
+      partnership.save!
+    }.to have_enqueued_job(Analytics::UpsertECFPartnershipJob).with(
+      partnership: partnership
+    )
+  end
 end
