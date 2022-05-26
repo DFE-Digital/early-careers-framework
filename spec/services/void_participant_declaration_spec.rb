@@ -85,5 +85,39 @@ RSpec.describe VoidParticipantDeclaration do
         }.to raise_error Api::Errors::InvalidTransitionError
       end
     end
+
+    context "when declaration is attached to a statement" do
+      let(:declaration) do
+        create(
+          :ect_participant_declaration,
+          user: user,
+          cpd_lead_provider: cpd_lead_provider,
+          declaration_date: declaration_date,
+          participant_profile: profile,
+          state: "payable",
+        )
+      end
+
+      let!(:statement) do
+        create(
+          :ecf_statement,
+          cpd_lead_provider: cpd_lead_provider,
+          output_fee: true,
+          deadline_date: 3.months.from_now,
+        )
+      end
+
+      let(:line_item) { declaration.statement_line_items.first }
+
+      before do
+        Finance::DeclarationStatementAttacher.new(participant_declaration: declaration).call
+      end
+
+      it "update line item state to voided" do
+        subject.call
+        expect(declaration.reload).to be_voided
+        expect(line_item.reload).to be_voided
+      end
+    end
   end
 end

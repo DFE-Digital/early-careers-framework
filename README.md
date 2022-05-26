@@ -121,7 +121,7 @@ bundle exec bin/scenarios_ci
 or
 
 ```
-bundle exec rspec --tag end_to_end_scenario --fail-fast
+bundle exec bin/scenarios_ci --fail-fast
 ```
 
 To run a specific scenario test include the environment variable `SCENARIOS`, for example to run scenarios 2, 12 and 20 use:
@@ -148,11 +148,19 @@ Then in separate windows:
 
 ```
 bin/rails server -e test -p 5017
-```
 
-```
 yarn cypress:open
 ```
+
+#### Moving to capybara
+
+Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using: 
+
+```
+bundle exec bin/features_ci
+```
+
+For more information on how we now write feature scenarios please our [feature testing documentation](./documentation/feature_testing.md)
 
 ## Smoke tests
 

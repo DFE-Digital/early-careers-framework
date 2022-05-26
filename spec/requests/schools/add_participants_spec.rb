@@ -16,7 +16,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add" do
     before do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add", params: { type: :joining }
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add", params: { type: :ect }
     end
 
     it "sets up the form in the session" do
@@ -81,7 +81,6 @@ RSpec.describe "Schools::AddParticipant", type: :request do
             mentor_id: "later",
             school_cohort_id: school_cohort.id,
             current_user_id: user.id,
-            start_term: "Autumn 2050",
             start_date: Date.new(2022, 5, 5),
           })
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"

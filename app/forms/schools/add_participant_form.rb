@@ -102,20 +102,7 @@ module Schools
       next_step do
         if email_already_taken?
           :email_taken
-        else
-          :start_term
-        end
-      end
-    end
-
-    step :start_term do
-      attribute :start_term
-
-      validates :start_term,
-                presence: { message: I18n.t("errors.start_term.blank") }
-
-      next_step do
-        if type == :ect
+        elsif type == :ect
           :start_date
         else
           :confirm
@@ -273,7 +260,6 @@ module Schools
       if type == :self
         self.full_name = current_user.full_name
         self.email = current_user.email
-        self.start_term = default_start_term if start_term.nil?
         self.start_date = Time.zone.now
         self.participant_type = :mentor
       else
@@ -293,18 +279,6 @@ module Schools
       @current_user ||= Identity.find_user_by(id: current_user_id)
     end
 
-    def default_start_term
-      school_cohort.cohort.start_term_options.first
-    end
-
-    def start_term_legend
-      if participant_type == :mentor
-        I18n.t("schools.participants.add.start_term.mentor", full_name: full_name)
-      else
-        I18n.t("schools.participants.add.start_term.ect", full_name: full_name)
-      end
-    end
-
     def creators
       {
         ect: EarlyCareerTeachers::Create,
@@ -318,7 +292,6 @@ module Schools
         profile = creators[participant_type].call(
           full_name: full_name,
           email: email,
-          start_term: start_term,
           school_cohort: school_cohort,
           mentor_profile_id: mentor&.mentor_profile&.id,
           start_date: start_date,
@@ -355,7 +328,7 @@ module Schools
     end
 
     def sit_adding_themselves?
-      type == :self
+      type == :self || current_user.induction_coordinator?
     end
   end
 end

@@ -75,6 +75,10 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
         then_i_should_see_invalid_start_date_error_message
 
+        when_i_add_a_date_prior_to_the_participants_induction_start
+        click_on "Continue"
+        then_i_should_see_start_date_must_be_after_error_message
+
         when_i_add_a_valid_start_date
         click_on "Continue"
 
@@ -184,6 +188,12 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         fill_in "Year", with: "23"
       end
 
+      def when_i_add_a_date_prior_to_the_participants_induction_start
+        fill_in "Day", with: "24"
+        fill_in "Month", with: "10"
+        fill_in "Year", with: "1998"
+      end
+
       def when_i_add_a_valid_start_date
         fill_in "Day", with: "24"
         fill_in "Month", with: "10"
@@ -277,6 +287,10 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def then_i_should_see_invalid_start_date_error_message
         expect(page).to have_text("Invalid start date")
+      end
+
+      def then_i_should_see_start_date_must_be_after_error_message
+        expect(page).to have_text("Start date must be after #{@mentor.induction_records.first.schedule.milestones.first.start_date.to_date.to_s(:govuk)}")
       end
 
       def then_i_should_see_blank_email_date_error_message

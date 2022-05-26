@@ -15,14 +15,20 @@ module Finance
       def paid_participant_count_per_bands
         @paid_participant_count_per_bands ||= lead_provider
                                                 .participant_declarations
+                                                .joins(:statement)
                                                 .paid
                                                 .group(:declaration_type)
+                                                .where(statements: { cohort: Cohort.current })
                                                 .count
       end
 
       def payable_participant_count_per_bands
-        @payable_participant_count_per_bands ||= lead_provider.participant_declarations.payable
+        @payable_participant_count_per_bands ||= lead_provider
+                                                   .participant_declarations
+                                                   .joins(:statement)
+                                                   .payable
                                                    .group(:declaration_type)
+                                                   .where(statements: { cohort: Cohort.current })
                                                    .count
       end
 

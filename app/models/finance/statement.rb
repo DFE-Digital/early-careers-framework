@@ -7,7 +7,10 @@ class Finance::Statement < ApplicationRecord
 
   belongs_to :cpd_lead_provider
   belongs_to :cohort
+
   has_many :participant_declarations
+  has_many :statement_line_items, class_name: "Finance::StatementLineItem"
+
   scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,                    -> { where("payment_date < ?", Date.current) }
   scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
@@ -32,20 +35,7 @@ class Finance::Statement < ApplicationRecord
     end
 
     def attach(participant_declaration)
-      statement = statement_for(participant_declaration)
-      statement.participant_declarations << participant_declaration
-    end
-
-  private
-
-    def statement_for(participant_declaration)
-      cohort = participant_declaration.participant_profile.schedule.cohort
-      case participant_declaration
-      when ParticipantDeclaration::ECF
-        participant_declaration.cpd_lead_provider.lead_provider.next_output_fee_statement(cohort)
-      when ParticipantDeclaration::NPQ
-        participant_declaration.cpd_lead_provider.npq_lead_provider.next_output_fee_statement(cohort)
-      end
+      Finance::DeclarationStatementAttacher.new(participant_declaration: participant_declaration).call
     end
   end
 

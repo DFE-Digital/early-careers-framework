@@ -38,6 +38,8 @@ class School < ApplicationRecord
   has_many :school_mentors, dependent: :destroy
   has_many :mentor_profiles, through: :school_mentors, source: :participant_profile
 
+  has_many :current_induction_records, through: :school_cohorts, class_name: "InductionRecord"
+
   has_many :ecf_participant_profiles, through: :school_cohorts, source: :ecf_participant_profiles, class_name: "ParticipantProfile::ECF"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
   has_many :active_ecf_participant_profiles, through: :school_cohorts

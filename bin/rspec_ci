@@ -11,4 +11,4 @@ tests = Dir["spec/**/*_spec.rb"].
   select.
   with_index { |el, i| i % ci_node_total.to_i == ci_node_index.to_i }
 
-exec "bundle exec rspec #{tests.join(" ")} --format documentation --profile"
+exec "bundle exec rspec #{tests.join(" ")} --format documentation --profile #{ARGV.any? ? ARGV.join(' ') : ''}"
