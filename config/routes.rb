@@ -503,6 +503,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get "/delivery-partners", to: "start#delivery_partners", as: :delivery_partners
   namespace :delivery_partners, path: "delivery-partners" do
     resources :participants, only: %i[index]
   end
