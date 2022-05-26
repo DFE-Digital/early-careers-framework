@@ -44,9 +44,10 @@ class InductionRecord < ApplicationRecord
   scope :cip, -> { joins(:induction_programme).merge(InductionProgramme.core_induction_programme) }
 
   scope :active, -> { active_induction_status.where("(end_date IS NULL OR end_date > ?) AND (start_date < ? OR school_transfer=false)", Time.zone.now, Time.zone.now) }
-  scope :current, -> { active.or(transferring_out) }
+  scope :current, -> { active.or(sit_unknown_transferring_out) }
   scope :transferring_in, -> { active_induction_status.where("start_date > ? AND school_transfer=true", Time.zone.now) }
-  scope :transferring_out, -> { leaving_induction_status.where("end_date > ?", Time.zone.now) }
+  scope :transferring_out, -> { leaving_induction_status.where("end_date > ? AND school_transfer=true", Time.zone.now) }
+  scope :sit_unknown_transferring_out, -> { leaving_induction_status.where("end_date > ? AND school_transfer=false", Time.zone.now) }
   scope :transferred, -> { leaving_induction_status.where("end_date < ?", Time.zone.now) }
   scope :mentors, -> { joins(:participant_profile).where(participant_profiles: { type: "ParticipantProfile::Mentor" }) }
   scope :ects, -> { joins(:participant_profile).where(participant_profiles: { type: "ParticipantProfile::ECT" }) }
