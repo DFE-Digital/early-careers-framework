@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_18_120740) do
+ActiveRecord::Schema.define(version: 2022_05_23_120336) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -499,6 +499,11 @@ ActiveRecord::Schema.define(version: 2022_05_18_120740) do
     t.boolean "targeted_support_funding_eligibility", default: false
     t.uuid "cohort_id"
     t.boolean "targeted_delivery_funding_eligibility", default: false
+    t.boolean "works_in_nursery"
+    t.boolean "works_in_childcare"
+    t.string "kind_of_nursery"
+    t.string "private_childcare_provider_urn"
+    t.string "funding_eligiblity_status_code"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"

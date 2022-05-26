@@ -93,13 +93,18 @@ module Api
             :employment_role,
             :targeted_delivery_funding_eligibility,
             :cohort,
+            :works_in_nursery,
+            :works_in_childcare,
+            :kind_of_nursery,
+            :private_childcare_provider_urn,
+            :funding_eligiblity_status_code,
           ).transform_keys! { |key| key == "national_insurance_number" ? "nino" : key }
       end
 
       def npq_application_update_params
         params
           .require(:data)
-          .permit(attributes: :eligible_for_funding)
+          .permit(attributes: %i[eligible_for_funding funding_eligiblity_status_code])
       end
     end
   end

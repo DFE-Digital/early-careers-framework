@@ -53,6 +53,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             type: "npq_profiles",
             attributes: {
               eligible_for_funding: true,
+              funding_eligiblity_status_code: "funded",
             },
           },
         }
@@ -60,9 +61,15 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
       it "updates the record" do
         expect { patch "/api/v1/npq-profiles/#{npq_application.id}", params: json }
-          .to change { npq_application.reload.eligible_for_funding }
-          .from(false)
-          .to(true)
+          .to change { npq_application.reload.slice(:eligible_for_funding, :funding_eligiblity_status_code) }
+          .from({
+            eligible_for_funding: false,
+            funding_eligiblity_status_code: nil,
+          })
+          .to({
+            eligible_for_funding: true,
+            funding_eligiblity_status_code: "funded",
+          })
 
         expect(response).to be_ok
       end
@@ -82,7 +89,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
       it "returns an error" do
         expect { patch "/api/v1/npq-profiles/#{npq_application.id}", params: json }
-          .to_not change { npq_application.reload.eligible_for_funding }
+          .to_not change { npq_application.reload.slice(:eligible_for_funding, :funding_eligiblity_status_code) }
 
         expect(response).to be_bad_request
       end
@@ -136,6 +143,14 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               funding_choice: "school",
               targeted_delivery_funding_eligibility: true,
               cohort: cohort_2022.start_year,
+              employer_name: nil,
+              employment_role: nil,
+              works_in_school: "true",
+              works_in_nursery: "false",
+              works_in_childcare: "false",
+              kind_of_nursery: nil,
+              private_childcare_provider_urn: nil,
+              funding_eligiblity_status_code: "funded",
             },
             relationships: {
               user: {
@@ -169,23 +184,39 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
         npq_application = NPQApplication.order(created_at: :desc).first
 
-        expect(npq_application.user).to eql(user)
+        application_as_json = npq_application.as_json(except: %i[
+          id
+          created_at
+          updated_at
+          participant_identity_id
+          targeted_support_funding_eligibility
+        ])
 
-        expect(npq_application.npq_lead_provider).to eql(npq_lead_provider)
-        expect(npq_application.date_of_birth).to eql(Date.new(1990, 12, 13))
-        expect(npq_application.nino).to eql("AB123456C")
-        expect(npq_application.teacher_reference_number).to eql("1234567")
-        expect(npq_application.teacher_reference_number_verified).to be_truthy
-        expect(npq_application.active_alert).to be_truthy
-        expect(npq_application.school_urn).to eql("123456")
-        expect(npq_application.school_ukprn).to eql("12345678")
-        expect(npq_application.headteacher_status).to eql("no")
-        expect(npq_application.npq_course).to eql(npq_course)
-        expect(npq_application.eligible_for_funding).to eql(true)
-        expect(npq_application.funding_choice).to eql("school")
-        expect(npq_application.lead_provider_approval_status).to eql("pending")
-        expect(npq_application.targeted_delivery_funding_eligibility).to be_truthy
-        expect(npq_application.cohort.start_year).to eql(2022)
+        expect(application_as_json).to match({
+          "npq_lead_provider_id" => npq_lead_provider.id,
+          "date_of_birth" => "1990-12-13",
+          "nino" => "AB123456C",
+          "teacher_reference_number" => "1234567",
+          "teacher_reference_number_verified" => true,
+          "active_alert" => true,
+          "school_urn" => "123456",
+          "school_ukprn" => "12345678",
+          "headteacher_status" => "no",
+          "npq_course_id" => npq_course.id,
+          "eligible_for_funding" => true,
+          "funding_choice" => "school",
+          "lead_provider_approval_status" => "pending",
+          "targeted_delivery_funding_eligibility" => true,
+          "cohort_id" => cohort_2022.id,
+          "employer_name" => nil,
+          "employment_role" => nil,
+          "works_in_school" => true,
+          "works_in_nursery" => false,
+          "works_in_childcare" => false,
+          "kind_of_nursery" => nil,
+          "private_childcare_provider_urn" => nil,
+          "funding_eligiblity_status_code" => "funded",
+        })
       end
 
       it "returns a 201" do

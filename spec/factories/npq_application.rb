@@ -27,5 +27,15 @@ FactoryBot.define do
       employer_name { "Some Company Ltd" }
       employment_role { "Director" }
     end
+
+    trait :in_private_childcare_provider do
+      works_in_school { false }
+      school_urn { nil }
+      school_ukprn { nil }
+      works_in_nursery { true }
+      works_in_childcare { true }
+      kind_of_nursery { "private_nursery" }
+      private_childcare_provider_urn { "EY#{rand(100_000..999_999)}" }
+    end
   end
 end
