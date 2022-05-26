@@ -108,7 +108,7 @@ RSpec.describe Partnership, type: :model do
     expect {
       partnership.save!
     }.to have_enqueued_job(Analytics::UpsertECFPartnershipJob).with(
-      partnership: partnership
+      partnership: partnership,
     )
   end
 end
