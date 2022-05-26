@@ -122,6 +122,7 @@ module Schools
       target_lead_provider_users = participant_lead_provider&.users || []
 
       if matching_lead_provider_and_delivery_partner?
+
         current_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_existing_school_transfer_notification(
             induction_record: induction_record,

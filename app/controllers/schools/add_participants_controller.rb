@@ -16,11 +16,11 @@ module Schools
       if type_param
         add_participant_form.assign_attributes(type: type_param)
         store_form_in_session
-
-        if add_participant_form.type == :self
+        case add_participant_form.type
+        when :self
           redirect_to action: :show, step: :yourself
         else
-          redirect_to action: :show, step: :started
+          redirect_to action: :show, step: :name
         end
       end
     end
