@@ -105,7 +105,7 @@ private
     InductionRecordPolicy::Scope.new(
       user,
       school_cohort
-        .active_induction_records
+        .current_induction_records
         .where.not(training_status: :withdrawn)
         .joins(:participant_profile)
         .where(participant_profiles: { type: profile_type.to_s })
