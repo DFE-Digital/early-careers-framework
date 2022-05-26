@@ -17,7 +17,7 @@ module Schools
 
     def check_answers
       @induction_record.leaving_induction_status!
-      @induction_record.update!(end_date: @transfer_out_form.end_date)
+      @induction_record.update!(end_date: @transfer_out_form.end_date, school_transfer: true)
       store_form_redirect_to_next_step(:complete)
     end
 
