@@ -74,11 +74,6 @@ RSpec.feature "Onboard a withdrawn participant",
 
     let(:tokens) { {} }
 
-    before do
-      and_feature_flag_is_active :eligibility_notifications
-      and_feature_flag_is_active :change_of_circumstances
-    end
-
     context given_context(scenario) do
       before do
         given_lead_providers_contracted_to_deliver_ecf "Original Lead Provider"
