@@ -106,12 +106,7 @@
       <div class="app-application__panel">
         <div class="moj-filter-layout__content">
           <% @npq_contracts.each do |npq_contract| %>
-            <section class="app-application__card">
-              <h2 class="govuk-heading-s"><%= t("#{ npq_contract.course_identifier }", scope: "npq_courses") %></h2>
-              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTableHeader.new(npq_contract, @statement) %>
-              <span class="govuk-label--s govuk-visually-hidden">Payment details</span>
-              <%= render Finance::NPQ::PaymentOverviews::PaymentOverviewTable.new(npq_contract, @statement) %>
-            </section>
+            <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
 
             <br>
           <% end %>

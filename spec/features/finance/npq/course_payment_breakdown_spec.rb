@@ -3,8 +3,6 @@
 require "rails_helper"
 
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
-  include Finance::NPQPaymentsHelper
-
   let(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
   let(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Lead Provider") }
@@ -280,5 +278,73 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
 
   def overall_total
     total_payment + overall_vat
+  end
+
+  def statement_declarations_per_contract(contract)
+    statement
+      .participant_declarations
+      .for_course_identifier(contract.course_identifier)
+      .unique_id
+      .count
+  end
+
+  def number_to_pounds(number)
+    number_to_currency number, precision: 2, unit: "£"
+  end
+
+  def total_starts
+    statement_declarations.where(declaration_type: "started").count
+  end
+
+  def statement_declarations
+    statement.participant_declarations
+  end
+
+  def total_retained
+    statement_declarations.where(declaration_type: %w[retained-1 retained-2]).count
+  end
+
+  def total_completed
+    statement_declarations.where(declaration_type: "completed").count
+  end
+
+  def total_voided
+    voided_declarations.count
+  end
+
+  def voided_declarations
+    statement.voided_participant_declarations.unique_id
+  end
+
+  def total_declarations(contract)
+    statement
+      .participant_declarations
+      .for_course_identifier(contract.course_identifier)
+      .unique_id
+      .count
+  end
+
+  def output_payment_per_participant
+    output_payment[:per_participant]
+  end
+
+  def output_payment_subtotal
+    output_payment[:subtotal]
+  end
+
+  def service_fees_per_participant
+    service_fees[:per_participant]
+  end
+
+  def monthly_service_fees
+    service_fees[:monthly]
+  end
+
+  def course_total
+    course_payment
+  end
+
+  def course_payment
+    monthly_service_fees + output_payment_subtotal
   end
 end
