@@ -79,27 +79,39 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
         end
 
         context "filtering" do
-          before do
-            create_list :npq_application, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456"
+          context "with filter[updated_at]" do
+            before do
+              create_list :npq_application, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456"
+            end
+
+            it "returns content updated after specified timestamp" do
+              get "/api/v2/npq-applications", params: { filter: { updated_since: 2.days.ago.iso8601 } }
+              expect(parsed_response["data"].size).to eql(3)
+            end
+
+            context "with invalid filter of a string" do
+              it "returns an error" do
+                get "/api/v2/npq-applications", params: { filter: 2.days.ago.iso8601 }
+                expect(response).to be_bad_request
+                expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+                  "errors": [
+                    {
+                      "title": "Bad parameter",
+                      "detail": "Filter must be a hash",
+                    },
+                  ],
+                }))
+              end
+            end
           end
 
-          it "returns content updated after specified timestamp" do
-            get "/api/v2/npq-applications", params: { filter: { updated_since: 2.days.ago.iso8601 } }
-            expect(parsed_response["data"].size).to eql(3)
-          end
+          context "with filter[cohort]" do
+            let(:next_cohort) { create(:cohort, :next) }
+            let!(:cohort_2022_npq_applications) { create_list :npq_application, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
 
-          context "with invalid filter of a string" do
-            it "returns an error" do
-              get "/api/v2/npq-applications", params: { filter: 2.days.ago.iso8601 }
-              expect(response).to be_bad_request
-              expect(parsed_response).to eql(HashWithIndifferentAccess.new({
-                "errors": [
-                  {
-                    "title": "Bad parameter",
-                    "detail": "Filter must be a hash",
-                  },
-                ],
-              }))
+            it "returns npq applications only for the 2022 cohort" do
+              get "/api/v1/npq-applications", params: { filter: { cohort: 2022 } }
+              expect(parsed_response["data"].size).to eq(2)
             end
           end
         end
