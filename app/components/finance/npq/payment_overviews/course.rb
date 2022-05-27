@@ -4,6 +4,8 @@ module Finance
   module NPQ
     module PaymentOverviews
       class Course < BaseComponent
+        include FinanceHelper
+
         attr_reader :statement, :contract
 
         def initialize(statement:, contract:)
@@ -16,10 +18,6 @@ module Finance
             statement: statement,
             contract: contract,
           )
-        end
-
-        def number_to_pounds(number)
-          number_to_currency number, precision: 2, unit: "£"
         end
       end
     end

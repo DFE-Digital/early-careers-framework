@@ -3,7 +3,8 @@
 module Finance
   module ECF
     class Contract < BaseComponent
-      include ECFPaymentsHelper
+      include FinanceHelper
+
       attr_accessor :contract
 
       delegate :uplift_target, :uplift_amount, :recruitment_target, :revised_target, :set_up_fee, to: :contract

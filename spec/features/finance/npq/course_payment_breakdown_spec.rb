@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
+  include FinanceHelper
+
   let(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
   let(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
 
@@ -289,10 +291,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       .for_course_identifier(contract.course_identifier)
       .unique_id
       .count
-  end
-
-  def number_to_pounds(number)
-    number_to_currency number, precision: 2, unit: "£"
   end
 
   def total_starts

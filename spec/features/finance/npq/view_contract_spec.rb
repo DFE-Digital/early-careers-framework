@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.feature "NPQ view contract" do
+  include FinanceHelper
+
   scenario "see the contract information for all courses of an NPQ lead provider" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_an_npq_lead_provider_with_contracts
@@ -60,9 +62,5 @@ RSpec.feature "NPQ view contract" do
       expect(page).to have_content(@npq_lbc.recruitment_target)
       expect(page).to have_content(number_to_pounds(@npq_lbc.per_participant))
     end
-  end
-
-  def number_to_pounds(number)
-    number_to_currency number, precision: 2, unit: "£"
   end
 end
