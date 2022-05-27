@@ -37,6 +37,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :retained_2, -> { for_declaration("retained-2").order(declaration_date: "desc").unique_id }
   scope :retained_3, -> { for_declaration("retained-3").order(declaration_date: "desc").unique_id }
   scope :retained_4, -> { for_declaration("retained-4").order(declaration_date: "desc").unique_id }
+  scope :retained, -> { where(declaration_type: %w[retained-1 retained-2 retained-3 retained-4]).order(declaration_date: "desc").unique_id }
   scope :completed, -> { for_declaration("completed").order(declaration_date: "desc").unique_id }
 
   scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }

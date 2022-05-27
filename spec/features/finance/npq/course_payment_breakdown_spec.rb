@@ -296,7 +296,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def total_starts
-    statement_declarations.where(declaration_type: "started").count
+    statement_declarations.started.count
   end
 
   def statement_declarations
@@ -304,11 +304,11 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def total_retained
-    statement_declarations.where(declaration_type: %w[retained-1 retained-2]).count
+    statement_declarations.retained.count
   end
 
   def total_completed
-    statement_declarations.where(declaration_type: "completed").count
+    statement_declarations.completed.count
   end
 
   def total_voided
