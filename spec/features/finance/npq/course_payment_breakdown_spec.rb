@@ -5,14 +5,17 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
   let(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
   let(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
+
   let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Lead Provider") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider, name: "NPQ Lead Provider") }
-  let(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider: npq_lead_provider) }
-  let(:npq_leading_behaviour_culture_contract) { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider: npq_lead_provider) }
-  let(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider: npq_lead_provider) }
-  let(:npq_course_leading_teaching) { create(:npq_course, identifier: npq_leading_teaching_contract.course_identifier, name: "Leading Teaching") }
-  let(:npq_course_leading_behaviour_culture) { create(:npq_course, identifier: npq_leading_behaviour_culture_contract.course_identifier, name: "Leading Behaviour Culture") }
-  let(:npq_course_leading_teaching_development) { create(:npq_course, identifier: npq_leading_teaching_development_contract.course_identifier, name: "Leading Teaching Development") }
+
+  let(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching) }
+  let(:npq_leading_behaviour_culture_contract) { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_behaviour_culture) }
+  let(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider: npq_lead_provider, npq_course: npq_course_leading_teaching_development) }
+
+  let(:npq_course_leading_teaching) { create(:npq_course, identifier: "npq-leading-teaching", name: "Leading Teaching") }
+  let(:npq_course_leading_behaviour_culture) { create(:npq_course, identifier: "npq-leading-behaviour-culture", name: "Leading Behaviour Culture") }
+  let(:npq_course_leading_teaching_development) { create(:npq_course, identifier: "npq-leading-teaching-development", name: "Leading Teaching Development") }
 
   let!(:statement) do
     create(
@@ -161,8 +164,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
       expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_leading_behaviour_culture_contract))
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(output_payment_per_participant))
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(output_payment_subtotal))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(160))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(1440))
     end
   end
 
@@ -205,15 +208,15 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Service fee")
       expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: npq_leading_behaviour_culture_contract.recruitment_target)
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(service_fees_per_participant))
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(monthly_service_fees))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(16.84))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(1_212.63))
     end
   end
 
   def then_i_should_see_the_correct_total
     within first(".app-application__card") do
       expect(page).to have_content("Course total")
-      expect(page).to have_content(number_to_pounds(course_total))
+      expect(page).to have_content(number_to_pounds(2_652.63))
     end
   end
 
@@ -322,29 +325,5 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       .for_course_identifier(contract.course_identifier)
       .unique_id
       .count
-  end
-
-  def output_payment_per_participant
-    output_payment[:per_participant]
-  end
-
-  def output_payment_subtotal
-    output_payment[:subtotal]
-  end
-
-  def service_fees_per_participant
-    service_fees[:per_participant]
-  end
-
-  def monthly_service_fees
-    service_fees[:monthly]
-  end
-
-  def course_total
-    course_payment
-  end
-
-  def course_payment
-    monthly_service_fees + output_payment_subtotal
   end
 end

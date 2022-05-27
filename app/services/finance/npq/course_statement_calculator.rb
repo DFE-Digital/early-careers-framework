@@ -71,7 +71,7 @@ module Finance
     private
 
       def course
-        contract.course
+        contract.npq_course
       end
 
       def participants_per_declaration_type

@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe NPQ::BuildApplication do
   let!(:user)                   { create(:user) }
   let(:npq_lead_provider)       { create(:npq_lead_provider) }
-  let(:npq_contract)            { create(:npq_contract, npq_lead_provider: npq_lead_provider) }
-  let(:npq_course)              { create(:npq_course, identifier: npq_contract.course_identifier) }
+  let(:npq_contract)            { create(:npq_contract, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
+  let(:npq_course)              { create(:npq_course) }
   let(:npq_application_attributes) { build(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider) }
   let(:nino)                       { SecureRandom.hex }
   let(:npq_application_params) do
