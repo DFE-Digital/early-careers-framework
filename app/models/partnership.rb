@@ -25,6 +25,8 @@ class Partnership < ApplicationRecord
     end
   end
 
+  after_save :update_analytics
+
   def challenged?
     challenge_reason.present?
   end
@@ -44,4 +46,10 @@ class Partnership < ApplicationRecord
   end
 
   scope :active, -> { unchallenged.where(pending: false) }
+
+private
+
+  def update_analytics
+    Analytics::UpsertECFPartnershipJob.perform_later(partnership: self) if saved_changes?
+  end
 end
