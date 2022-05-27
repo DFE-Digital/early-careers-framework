@@ -43,7 +43,7 @@
 
   <tbody class="govuk-table__body">
     <% if @participant_profiles.any? %>
-      <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles) %>
+      <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles, delivery_partner: current_user.delivery_partner_profile.delivery_partner) %>
     <% else %>
       <tr class="govuk-table__row">
         <td colspan="10" class="govuk-table__cell">
