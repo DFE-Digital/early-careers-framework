@@ -8,24 +8,25 @@ module Api
       include JSONAPI::Serializer
       include JSONAPI::Serializer::Instrumentation
 
-      attributes :participant_id,
-                 :full_name,
+      attributes :course_identifier,
+                 :created_at,
+                 :eligible_for_funding,
                  :email,
                  :email_validated,
+                 :employer_name,
+                 :employment_role,
+                 :full_name,
+                 :funding_choice,
+                 :headteacher_status,
+                 :participant_id,
+                 :private_childcare_provider_urn,
                  :teacher_reference_number,
                  :teacher_reference_number_validated,
                  :school_urn,
                  :school_ukprn,
-                 :headteacher_status,
-                 :eligible_for_funding,
-                 :funding_choice,
-                 :course_identifier,
-                 :works_in_school,
-                 :employer_name,
-                 :employment_role,
                  :status,
-                 :created_at,
-                 :updated_at
+                 :updated_at,
+                 :works_in_school
 
       attribute(:participant_id) do |object|
         object.participant_identity.external_identifier
