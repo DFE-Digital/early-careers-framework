@@ -14,7 +14,7 @@ describe "Analytics::ECFPartnershipService" do
   end
 
   it "updates an existing record" do
-    analytics_record = Analytics::ECFPartnership.find_by(partnership_id: partnership.id)
+    Analytics::ECFPartnership.find_by(partnership_id: partnership.id)
     Analytics::ECFPartnershipService.upsert_record(partnership)
 
     partnership.update!(pending: true)
