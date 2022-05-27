@@ -117,7 +117,7 @@ RSpec.feature "FIP to FIP with same provider - Onboarding a withdrawn participan
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable "January 2022"
+          and_eligible_training_declarations_are_made_payable "February 2022"
         end
 
         include_examples "FIP to FIP with same provider",

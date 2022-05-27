@@ -46,6 +46,7 @@ RSpec.feature "FIP to FIP with same provider - Onboard a deferred participant",
       allow(Cohort).to receive(:current).and_return(cohort)
       allow(Cohort).to receive(:next).and_return(cohort)
       allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
+
       allow(cohort).to receive(:next).and_return(cohort)
       allow(cohort).to receive(:previous).and_return(cohort)
       cohort
@@ -117,7 +118,7 @@ RSpec.feature "FIP to FIP with same provider - Onboard a deferred participant",
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable "January 2022"
+          and_eligible_training_declarations_are_made_payable "February 2022"
         end
 
         include_examples "FIP to FIP with same provider",

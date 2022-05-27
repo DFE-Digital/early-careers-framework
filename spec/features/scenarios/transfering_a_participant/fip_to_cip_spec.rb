@@ -109,7 +109,7 @@ RSpec.feature "FIP to CIP - Transfer a participant",
           when_developers_transfer_the_active_participant "New SIT",
                                                           "the Participant"
 
-          and_eligible_training_declarations_are_made_payable "January 2022"
+          and_eligible_training_declarations_are_made_payable "February 2022"
         end
 
         include_examples "FIP to CIP", scenario, "withdrawn"

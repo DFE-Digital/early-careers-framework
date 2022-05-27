@@ -82,14 +82,14 @@ RSpec.shared_examples "FIP to FIP with same provider" do |scenario, participant_
                                                                    "active",
                                                                    scenario.all_declarations
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider", "January 2023",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider", "February 2022",
                                                                         scenario.original_payment_ects,
                                                                         scenario.original_payment_mentors,
                                                                         scenario.original_started_declarations,
                                                                         scenario.original_retained_declarations,
                                                                         0, 0
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider", "January 2023",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider", "February 2022",
                                                                         0, 0, 0, 0, 0, 0
 
       sign_out
