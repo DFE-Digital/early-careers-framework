@@ -19,7 +19,8 @@ module Admin
         end
 
         def update
-          ChangeInductionService.new(school: @school, cohort: @cohort).change_induction_provision(@induction_choice_form.programme_choice)
+          Induction::ChangeCohortInductionProgramme.call(school_cohort: school_cohort,
+                                                         programme_choice: @induction_choice_form.programme_choice)
 
           set_success_message heading: "Induction programme has been changed"
           redirect_to admin_school_cohorts_path
