@@ -9,7 +9,7 @@ module Analytics
         record = Analytics::ECFPartnership.find_or_initialize_by(partnership_id: partnership.id)
         record.school_id = partnership.school.id
         record.school_name = partnership.school.name
-        record.school_url = partnership.school.urn
+        record.school_urn = partnership.school.urn
 
         record.lead_provider_id = partnership.lead_provider.id
         record.lead_provider_name = partnership.lead_provider.name
@@ -30,7 +30,7 @@ module Analytics
 
         record.relationship = partnership.relationship
 
-        record.created_at = partnership.create_at
+        record.created_at = partnership.created_at
         record.updated_at = partnership.updated_at
 
         record.save!

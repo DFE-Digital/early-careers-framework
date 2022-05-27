@@ -44,7 +44,8 @@ ActiveRecord::Schema.define(version: 2022_05_26_112409) do
     t.index ["participant_profile_id"], name: "index_ecf_participants_on_participant_profile_id"
   end
 
-  create_table "ecf_partnership_analytics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "ecf_partnerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "partnership_id"
     t.uuid "school_id"
     t.string "school_name"
     t.string "school_urn"
