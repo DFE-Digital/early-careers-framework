@@ -45,7 +45,9 @@ module Schools
     end
 
     def choose_mentor
-      if matching_lead_provider_and_delivery_partner?
+      if withdrawn_participant?
+        store_form_redirect_to_next_step(:check_answers)
+      elsif matching_lead_provider_and_delivery_partner?
         @transferring_participant_form.same_programme = true
         store_form_redirect_to_next_step(:check_answers)
       else
@@ -70,8 +72,10 @@ module Schools
     end
 
     def check_answers
+      was_withdrawn_participant = withdrawn_participant?
+
       # Finish enroll process and send notification emails
-      induction_record = if matching_lead_provider_and_delivery_partner?
+      induction_record = if matching_lead_provider_and_delivery_partner? || withdrawn_participant?
                            transfer_fip_participant_to_schools_programme
                          elsif @transferring_participant_form.switch_to_schools_programme?
                            transfer_fip_participant_to_schools_programme
@@ -79,7 +83,7 @@ module Schools
                            transfer_fip_participant_and_continue_existing_programme
                          end
 
-      send_notification_emails!(induction_record)
+      send_notification_emails!(induction_record, was_withdrawn_participant)
       store_form_redirect_to_next_step(:complete)
     end
 
@@ -117,12 +121,18 @@ module Schools
     #   a. Send email to current lead provider, notifying them to expect a new school.
     #   b. Send email to participant to notify them.
     #
-    def send_notification_emails!(induction_record)
+    def send_notification_emails!(induction_record, was_withdrawn_participant)
       current_lead_provider_users = current_lead_provider&.users || []
       target_lead_provider_users = participant_lead_provider&.users || []
 
-      if matching_lead_provider_and_delivery_partner?
-
+      if was_withdrawn_participant
+        current_lead_provider_users.each do |user|
+          ParticipantTransferMailer.provider_transfer_in_notification(
+            induction_record: induction_record,
+            lead_provider_profile: user.lead_provider_profile,
+          ).deliver_later
+        end
+      elsif matching_lead_provider_and_delivery_partner?
         current_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_existing_school_transfer_notification(
             induction_record: induction_record,
@@ -264,11 +274,7 @@ module Schools
     def validate_or_next_step(valid_step:, next_step:)
       if check_against_dqt?
         if valid_participant_details?
-          if withdrawn_participant?
-            store_form_redirect_to_next_step(:cannot_add)
-          else
-            store_form_redirect_to_next_step(valid_step)
-          end
+          store_form_redirect_to_next_step(valid_step)
         else
           store_form_redirect_to_next_step(:cannot_find_their_details)
         end
