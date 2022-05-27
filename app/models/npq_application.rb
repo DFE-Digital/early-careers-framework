@@ -6,10 +6,11 @@ class NPQApplication < ApplicationRecord
   self.ignored_columns = %w[user_id]
 
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
+  has_one :schedule, through: :profile
+  has_one :cohort, through: :schedule
   belongs_to :participant_identity
   belongs_to :npq_lead_provider
   belongs_to :npq_course
-  belongs_to :cohort, optional: true
 
   after_commit :push_enrollment_to_big_query
 
