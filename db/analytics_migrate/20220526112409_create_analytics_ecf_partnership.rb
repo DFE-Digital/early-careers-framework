@@ -2,9 +2,7 @@
 
 class CreateAnalyticsECFPartnership < ActiveRecord::Migration[6.1]
   def change
-    create_table :ecf_partnerships do |t|
-      t.uuid :partnership_id
-
+    create_table :ecf_partnership_analytics do |t|
       t.uuid :school_id
       t.string :school_name
       t.string :school_urn
