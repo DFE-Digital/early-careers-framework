@@ -21,7 +21,7 @@ module Pages
       confirm_transferring_an_ect_or_mentor
 
       add_full_name full_name
-      add_teacher_reference_number full_name, participant_trn
+      add_teacher_reference_number participant_trn
       add_date_of_birth date_of_birth
       add_start_date start_date
       add_email_address email_address
@@ -42,7 +42,7 @@ module Pages
       confirm_transferring_an_ect_or_mentor
 
       add_full_name full_name
-      add_teacher_reference_number full_name, participant_trn
+      add_teacher_reference_number participant_trn
       add_date_of_birth date_of_birth
       add_start_date start_date
       add_email_address email_address
@@ -80,7 +80,7 @@ module Pages
       self
     end
 
-    def add_teacher_reference_number(_full_name, trn)
+    def add_teacher_reference_number(trn)
       fill_in "Teacher reference number (TRN)", with: trn
       click_on "Continue"
 
