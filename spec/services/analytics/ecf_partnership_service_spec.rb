@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Analytics::ECFPartnershipService' do
+describe "Analytics::ECFPartnershipService" do
   let(:partnership) { create(:partnership) }
 
   it "saves a new record" do
