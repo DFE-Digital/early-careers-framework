@@ -5,15 +5,13 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      next_ideal_time Time.zone.local(2022, 2, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 2, 1, 9, 0, 0)
       travel_to(@timestamp) do
         lead_provider = create(:lead_provider, name: lead_provider_name)
         cpd_lead_provider = create(:cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name)
         create :call_off_contract, lead_provider: lead_provider
 
         delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
-        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
-        delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2022")
         create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
 
         user = create(:user, full_name: lead_provider_name)
@@ -26,7 +24,7 @@ module Steps
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      next_ideal_time Time.zone.local(2022, 4, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
       travel_to(@timestamp) do
         school = create(:school, :pupil_premium_uplift, name: "#{sit_name}'s School")
         user = create(:user, full_name: sit_name)
@@ -48,10 +46,10 @@ module Steps
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner 2022")
+      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner 2021")
       school = find_school_for_sit(sit_name)
 
-      next_ideal_time Time.zone.local(2022, 5, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name lead_provider_name
 
@@ -65,7 +63,7 @@ module Steps
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
-      next_ideal_time Time.zone.local(2022, 6, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
@@ -75,7 +73,7 @@ module Steps
                                            .choose_to_add_an_ect_or_mentor
 
         if participant_type == "ECT"
-          wizard.add_ect participant_name, participant_email, Date.new(2022, 9, 1)
+          wizard.add_ect participant_name, participant_email, Date.new(2021, 9, 1)
         else
           wizard.add_mentor participant_name, participant_email
         end
@@ -86,7 +84,7 @@ module Steps
     end
 
     def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      next_ideal_time Time.zone.local(2022, 9, 2, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 9, 2, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name participant_name
 
@@ -331,6 +329,20 @@ module Steps
       else
         raise "Participant Type \"#{scenario.participant_type}\" not recognised"
       end
+
+      and_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
+
+      sign_out
+    end
+
+    def then_sit_can_see_not_training_in_school_portal(sit_name, scenario)
+      given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+      when_i_view_participant_details_from_the_school_dashboard_page
+      and_i_view_not_training_on_the_school_participants_dashboard_page "the Participant"
 
       and_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
       and_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
