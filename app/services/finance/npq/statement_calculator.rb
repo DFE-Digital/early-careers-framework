@@ -14,7 +14,7 @@ module Finance
       end
 
       def total_output_payment_subtotal
-        output_payment.sum { |output_payment| output_payment[:subtotal] }
+        output_payments.sum { |output_payment| output_payment[:subtotal] }
       end
 
       def total_service_fees
@@ -63,7 +63,7 @@ module Finance
         statement.participant_declarations
       end
 
-      def output_payment
+      def output_payments
         contracts.map do |contract|
           PaymentCalculator::NPQ::OutputPayment.call(
             contract: contract,
