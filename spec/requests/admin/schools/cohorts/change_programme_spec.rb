@@ -36,9 +36,9 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
   end
 
   describe "PUT /admin/schools/:school_slug/cohorts/:id/change-programme" do
-    it "call ChangeInductionService with the correct argument" do
-      expect_any_instance_of(Admin::ChangeInductionService).to receive(:change_induction_provision)
-                                                                 .with(:full_induction_programme)
+    it "calls Induction::ChangeCohortInductionProgramme" do
+      expect_any_instance_of(Induction::ChangeCohortInductionProgramme)
+        .to receive(:call)
 
       put "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/change-programme", params: {
         induction_choice_form: { programme_choice: "full_induction_programme" },
