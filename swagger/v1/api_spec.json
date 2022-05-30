@@ -1091,6 +1091,202 @@
           }
         }
       }
+    },
+    "/api/v1/participants/{id}/defer": {
+      "put": {
+        "summary": "Notify that an ECF participant is taking a break from their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to defer",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being deferred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/resume": {
+      "put": {
+        "summary": "Notify that an ECF participant is resuming their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to resume",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/withdraw": {
+      "put": {
+        "summary": "Notify that an ECF participant has withdrawn from their course",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant to withdraw",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant being withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/participants/{id}/change-schedule": {
+      "put": {
+        "summary": "Notify that an ECF participant is changing training schedule",
+        "operationId": "participant",
+        "tags": [
+          "ECF Participant"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ECF participant changing schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
