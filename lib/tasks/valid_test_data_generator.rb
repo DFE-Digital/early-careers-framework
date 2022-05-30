@@ -114,9 +114,12 @@ module ValidTestDataGenerator
           created_at: profile.schedule.milestones.first.start_date + 1.day,
         )
 
-        Finance::StatementLineItem.create!(
-          statement: november_statement,
+        line_item = Finance::StatementLineItem.find_or_initialize_by(
           participant_declaration: started_declaration,
+        )
+
+        line_item.update!(
+          statement: november_statement,
           state: started_declaration.state,
         )
 
@@ -163,9 +166,12 @@ module ValidTestDataGenerator
           created_at: profile.schedule.milestones.first.start_date + 1.day,
         )
 
-        Finance::StatementLineItem.create!(
-          statement: november_statement,
+        line_item = Finance::StatementLineItem.find_or_initialize_by(
           participant_declaration: started_declaration,
+        )
+
+        line_item.update!(
+          statement: november_statement,
           state: started_declaration.state,
         )
 
