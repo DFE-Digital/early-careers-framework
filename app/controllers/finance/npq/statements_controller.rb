@@ -11,6 +11,8 @@ module Finance
         @statement         = @cpd_lead_provider.npq_lead_provider.statements.find_by(name: identifier_to_name)
         @statements        = @npq_lead_provider.statements.upto_current.order(payment_date: :desc)
         @npq_contracts     = @npq_lead_provider.npq_contracts.where(version: @statement.contract_version).order(course_identifier: :asc)
+
+        @calculator = StatementCalculator.new(statement: @statement)
       end
 
     private

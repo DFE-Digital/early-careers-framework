@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type: :feature, js: true do
-  include Finance::ECFPaymentsHelper
+  include FinanceHelper
 
   let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
@@ -386,6 +386,23 @@ private
 
   def total_payment_with_vat_breakdown
     total_payment_with_vat_combined(@jan_starts, @jan_retained_1, lead_provider)
+  end
+
+  def total_payment_with_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
+    total_payment_combined(breakdown_started, breakdown_retained_1) + total_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
+  end
+
+  def total_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
+    total_payment_combined(breakdown_started, breakdown_retained_1) * (lead_provider.vat_chargeable ? 0.2 : 0.0)
+  end
+
+  def total_payment_combined(breakdown_started, breakdown_retained_1)
+    service_fee = breakdown_started[:service_fees].map { |params| params[:monthly] }.sum
+    output_payment = breakdown_started[:output_payments].map { |params| params[:subtotal] }.sum
+    other_fees = breakdown_started[:other_fees].values.map { |other_fee| other_fee[:subtotal] }.sum
+    retained_output_payment = breakdown_retained_1[:output_payments].map { |params| params[:subtotal] }.sum
+
+    service_fee + output_payment + other_fees + retained_output_payment
   end
 
   def and_there_is_a_schedule

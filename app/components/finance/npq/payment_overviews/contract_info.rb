@@ -4,7 +4,7 @@ module Finance
   module NPQ
     module PaymentOverviews
       class ContractInfo < BaseComponent
-        include NPQPaymentsHelper
+        include FinanceHelper
 
         def initialize(npq_contracts, npq_lead_provider)
           @npq_contracts = npq_contracts

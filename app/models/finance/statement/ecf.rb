@@ -41,6 +41,15 @@ private
       recorder: ParticipantDeclaration::ECF.where.not(state: %w[voided]),
     )
   end
+
+  def total_payment_combined(breakdown_started, breakdown_retained_1)
+    service_fee = breakdown_started[:service_fees].map { |params| params[:monthly] }.sum
+    output_payment = breakdown_started[:output_payments].map { |params| params[:subtotal] }.sum
+    other_fees = breakdown_started[:other_fees].values.map { |other_fee| other_fee[:subtotal] }.sum
+    retained_output_payment = breakdown_retained_1[:output_payments].map { |params| params[:subtotal] }.sum
+
+    service_fee + output_payment + other_fees + retained_output_payment
+  end
 end
 
 require "finance/statement/ecf/payable"
