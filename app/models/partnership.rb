@@ -47,6 +47,10 @@ class Partnership < ApplicationRecord
 
   scope :active, -> { unchallenged.where(pending: false) }
 
+  def active?
+    challenged_at.nil? && challenge_reason.nil? && pending == false
+  end
+
 private
 
   def update_analytics

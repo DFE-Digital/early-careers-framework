@@ -26,9 +26,8 @@ module Admin
       private
 
         def update_training_materials
-          service = ChangeInductionService.new(school: @school, cohort: @cohort)
-          new_materials = @core_induction_programme_choice_form.core_induction_programme
-          service.change_cip_materials(new_materials)
+          Induction::ChangeCoreInductionProgramme.call(school_cohort: SchoolCohort.find_by!(school: @school, cohort: @cohort),
+                                                       core_induction_programme: @core_induction_programme_choice_form.core_induction_programme)
         end
 
         def set_school_and_cohort
