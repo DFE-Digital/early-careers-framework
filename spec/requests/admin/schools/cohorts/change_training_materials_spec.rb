@@ -43,22 +43,18 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeTrainingMaterials", type: :reques
 
   describe "POST /admin/schools/:school_slug/cohorts/:id/change-training-materials" do
     let(:core_induction_programme) { create(:core_induction_programme) }
-    let(:service_instance) { instance_double(Admin::ChangeInductionService) }
 
-    before do
-      allow(Admin::ChangeInductionService).to receive(:new).and_return service_instance
-      allow(service_instance).to receive(:change_cip_materials)
-    end
+    it "calls Induction::ChangeCoreInductionProgramme with the correct arguments" do
+      expect(Induction::ChangeCoreInductionProgramme).to receive(:call).with(
+        school_cohort: school_cohort,
+        core_induction_programme: core_induction_programme,
+      )
 
-    it "calls change_cip_materials with the correct arguments" do
       put "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/change-training-materials", params: {
         core_induction_programme_choice_form: {
           core_induction_programme_id: core_induction_programme.id,
         },
       }
-
-      expect(Admin::ChangeInductionService).to have_received(:new).with(school: school, cohort: cohort)
-      expect(service_instance).to have_received(:change_cip_materials).with(core_induction_programme)
     end
 
     it "redirects to the cohorts page and shows a success message" do
