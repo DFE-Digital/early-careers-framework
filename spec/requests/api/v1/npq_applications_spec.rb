@@ -17,7 +17,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
     before :each do
       list = []
-      list << create_list(:npq_application, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
+      list << create_list(:npq_application, 3, :in_private_childcare_provider, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
       list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course: npq_course)
 
       list.flatten.each do |npq_application|
@@ -67,6 +67,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(parsed_response["data"][0]["attributes"]["works_in_school"]).to eql(profile.works_in_school)
           expect(parsed_response["data"][0]["attributes"]["employment_role"]).to eql(profile.employment_role)
           expect(parsed_response["data"][0]["attributes"]["employer_name"]).to eql(profile.employer_name)
+          expect(parsed_response["data"][0]["attributes"]["private_childcare_provider_urn"]).to eql(profile.private_childcare_provider_urn)
         end
 
         it "can return paginated data" do
