@@ -42,8 +42,8 @@ RSpec.describe Participants::Defer::NPQ do
         ).call # must be different instance from subject
       end
 
-      it "returns an error and does not update training_status" do
-        expect { subject.call }.to raise_error(ActiveRecord::RecordInvalid).and not_change { profile.reload.training_status }
+      it "creates a ParticipantProfileState" do
+        expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
       end
     end
 
