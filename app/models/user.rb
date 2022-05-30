@@ -127,10 +127,12 @@ class User < ApplicationRecord
     return induction_coordinator_profile.schools.first if induction_coordinator?
   end
 
+  scope :name_order, -> { order("UPPER(full_name)") }
   scope :induction_coordinators, -> { joins(:induction_coordinator_profile) }
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
   scope :finance_users, -> { joins(:finance_profile) }
+  scope :delivery_partner_users, -> { joins(:delivery_partner_profile) }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?
