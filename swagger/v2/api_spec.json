@@ -49,7 +49,7 @@
             "explode": true,
             "required": false,
             "description": "Refine NPQ applications to return.",
-            "example": "updated_since=2020-11-13T11:21:55Z"
+            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
@@ -857,7 +857,7 @@
             "explode": true,
             "required": false,
             "description": "Refine ECF participants to return.",
-            "example": "updated_since=2020-11-13T11:21:55Z"
+            "example": "filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z"
           },
           {
             "name": "page",
