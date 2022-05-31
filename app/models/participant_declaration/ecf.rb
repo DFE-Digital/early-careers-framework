@@ -15,7 +15,7 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
     return if participant_profile.current_induction_record == previous_induction_record
 
     if previous_induction_record.end_date < declaration_date
-      errors.add(:declaration_date, I18n.t("declaration_must_be_before_end_date"))
+      errors.add(:base, I18n.t("declaration_must_be_before_end_date"))
     end
   end
 end
