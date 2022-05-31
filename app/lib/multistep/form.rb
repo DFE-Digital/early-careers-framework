@@ -15,7 +15,7 @@ module Multistep
       include ActiveModel::Serialization
       include DateAttribute
 
-      attribute :completed_steps, default: -> { [] }
+      attribute :completed_steps
     end
 
     class_methods do
