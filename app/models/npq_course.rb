@@ -21,4 +21,15 @@ class NPQCourse < ApplicationRecord
       raise ArgumentError, "Invalid course identifier"
     end
   end
+
+  def rebranded_alternative_courses
+    case identifier
+    when "npq-additional-support-offer"
+      [self, NPQCourse.find_by(identifier: "npq-early-headship-coaching-offer")]
+    when "npq-early-headship-coaching-offer"
+      [self, NPQCourse.find_by(identifier: "npq-additional-support-offer")]
+    else
+      [self]
+    end
+  end
 end
