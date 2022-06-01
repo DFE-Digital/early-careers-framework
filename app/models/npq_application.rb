@@ -81,7 +81,7 @@ private
 
   def previously_funded?
     participant_identity.npq_applications
-      .where(npq_course: npq_course)
+      .where(npq_course: npq_course.rebranded_alternative_courses)
       .where(eligible_for_funding: true)
       .accepted
       .any?

@@ -185,5 +185,30 @@ RSpec.describe NPQApplication, type: :model do
         expect(subject.ineligible_for_funding_reason).to eql("previously-funded")
       end
     end
+
+    context "when there is a previously accepted ASO and applying for EHC0" do
+      let(:npq_aso_course) { create(:npq_aso_course) }
+      let(:npq_ehco_course) { create(:npq_ehco_course) }
+
+      subject { create(:npq_application, eligible_for_funding: true, npq_course: npq_ehco_course) }
+
+      before do
+        create(:npq_aso_schedule)
+        create(:npq_ehco_schedule)
+
+        create(
+          :npq_application,
+          :accepted,
+          participant_identity: subject.participant_identity,
+          eligible_for_funding: true,
+          npq_course: npq_aso_course,
+          npq_lead_provider: subject.npq_lead_provider,
+        )
+      end
+
+      it "returns previously-funded" do
+        expect(subject.ineligible_for_funding_reason).to eql("previously-funded")
+      end
+    end
   end
 end
