@@ -33,6 +33,14 @@ module Finance
         @statement = statement
       end
 
+      def bands
+        statement.contract.bands.order(max: :asc)
+      end
+
+      def band_letters
+        bands.zip(:a..:z).map { |e| e[1] }
+      end
+
       def vat
         total * vat_rate
       end
@@ -42,40 +50,53 @@ module Finance
       end
 
       event_types.each do |event_type|
-        band_mapping.each do |letter, number|
+        band_mapping.each do |letter, _number|
           define_method "#{event_type}_band_#{letter}_count" do
-            hash = orchestrator.call(event_type:)[:output_payments].find { |h| h[:band] == number } || { participants: 0 }
-            hash[:participants]
+            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_count"]
+          end
+
+          define_method "#{event_type}_band_#{letter}_additions" do
+            output_calculator.banding_breakdown.find { |e| e[:band] == letter }[:"#{event_type}_additions"]
           end
 
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
-            hash = orchestrator.call(event_type:)[:output_payments].find { |h| h[:band] == number } || { per_participant: 0 }
-            hash[:per_participant]
+            output_calculator.fee_for_declaration(band_letter: letter, type: event_type)
           end
         end
 
-        define_method "total_for_#{event_type}" do
-          orchestrator.call(event_type:)[:output_payments].sum { |hash| hash[:subtotal] }
+        define_method "additions_for_#{event_type}" do
+          output_calculator.banding_breakdown.sum do |hash|
+            hash[:"#{event_type}_additions"] * output_calculator.fee_for_declaration(band_letter: hash[:band], type: event_type)
+          end
+        end
+
+        define_method "deductions_for_#{event_type}" do
+          output_calculator.banding_breakdown.sum do |hash|
+            hash[:"#{event_type}_subtractions"] * output_calculator.fee_for_declaration(band_letter: hash[:band], type: event_type)
+          end
         end
       end
 
+      def fee_for_declaration(band_letter:, type:)
+        output_calculator.fee_for_declaration(band_letter:, type:)
+      end
+
       def started_count
-        orchestrator.call(event_type: :started)[:output_payments].sum { |hash| hash[:participants] }
+        output_calculator.banding_breakdown.sum do |hash|
+          hash[:started_additions]
+        end
       end
 
       def retained_count
-        %i[
-          retained_1
-          retained_2
-          retained_3
-          retained_4
-        ].sum do |event_type|
-          orchestrator.call(event_type:)[:output_payments].sum { |hash| hash[:participants] }
+        output_calculator.banding_breakdown.sum do |hash|
+          hash.select { |k, _| k.match(/retained_\d_additions/) }.values.sum
         end
       end
 
       def completed_count
-        orchestrator.call(event_type: :completed)[:output_payments].sum { |hash| hash[:participants] }
+        output_calculator.banding_breakdown.sum do |hash|
+          hash[:completed_additions]
+        end
       end
 
       def voided_count
@@ -83,19 +104,33 @@ module Finance
       end
 
       def uplift_count
-        orchestrator.call(event_type: :started).dig(:other_fees, :uplift, :participants)
+        output_calculator.uplift_breakdown[:count]
       end
 
       def uplift_fee_per_declaration
-        orchestrator.call(event_type: :started).dig(:other_fees, :uplift, :per_participant)
+        statement.contract.uplift_amount
       end
 
       def total_for_uplift
-        orchestrator.call(event_type: :started).dig(:other_fees, :uplift, :subtotal)
+        previous_uplift_count = output_calculator.uplift_breakdown[:previous_count]
+        previous_uplift_amount = previous_uplift_count * uplift_fee_per_declaration
+
+        delta_uplift_count = output_calculator.uplift_breakdown[:count]
+        delta_uplift_amount = delta_uplift_count * uplift_fee_per_declaration
+
+        available = [(statement.contract.uplift_cap - previous_uplift_amount), 0].max
+
+        [available, delta_uplift_amount].min
       end
 
       def adjustments_total
-        total_for_uplift
+        total_for_uplift - clawback_deductions
+      end
+
+      def clawback_deductions
+        event_types.sum do |event_type|
+          public_send(:"deductions_for_#{event_type}")
+        end
       end
 
       def total(with_vat: false)
@@ -109,12 +144,16 @@ module Finance
       end
 
       def output_fee
-        event_types.map { |event_type|
-          orchestrator.call(event_type:)[:output_payments].sum { |hash| hash[:subtotal] }
-        }.sum
+        event_types.sum do |event_type|
+          public_send(:"additions_for_#{event_type}")
+        end
       end
 
     private
+
+      def output_calculator
+        @output_calculator ||= OutputCalculator.new(statement:)
+      end
 
       def event_types
         self.class.event_types
@@ -122,26 +161,6 @@ module Finance
 
       def band_mapping
         self.class.band_mapping
-      end
-
-      def aggregator
-        @aggregator ||= ParticipantAggregator.new(
-          statement:,
-          recorder: aggregator_scope,
-        )
-      end
-
-      def aggregator_scope
-        ParticipantDeclaration::ECF
-          .where(state: %w[eligible payable paid])
-      end
-
-      def orchestrator
-        @orchestrator ||= Finance::ECF::CalculationOrchestrator.new(
-          aggregator:,
-          contract:,
-          statement:,
-        )
       end
 
       def vat_rate

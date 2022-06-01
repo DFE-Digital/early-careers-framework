@@ -14,9 +14,9 @@ RSpec.describe ParticipantBand, type: :model do
     describe "ranges" do
       it "orders the bands appropriately regardless of creation order" do
         expect(bands[0].min).to be_nil
-        expect(bands[1].min).to eq(bands[0].max + 1)
-        expect(bands[2].min).to eq(bands[1].max + 1)
-        expect(bands[2].max).to be_nil
+        expect(bands[1].min).to eql(bands[0].max + 1)
+        expect(bands[2].min).to eql(bands[1].max + 1)
+        expect(bands[2].max).to eql(6_000)
         expect(bands[3]).to be_nil
       end
 
@@ -38,7 +38,7 @@ RSpec.describe ParticipantBand, type: :model do
       it "uses three bands if there are enough participants for the first two bands" do
         expect(bands[0].number_of_participants_in_this_band(10_000)).to eq(2000)
         expect(bands[1].number_of_participants_in_this_band(10_000)).to eq(2000)
-        expect(bands[2].number_of_participants_in_this_band(10_000)).to eq(6000)
+        expect(bands[2].number_of_participants_in_this_band(10_000)).to eq(2000)
       end
     end
   end

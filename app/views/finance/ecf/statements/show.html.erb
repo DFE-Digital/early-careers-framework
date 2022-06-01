@@ -116,8 +116,8 @@
               <% body.row do |row| %>
                 <% row.cell(text: t(".#{event_type}"), header: true) %>
 
-                <% @calculator.class.band_mapping.each do |letter, number| %>
-                  <% row.cell(text: @calculator.public_send("#{event_type}_band_#{letter}_count"), numeric: true) %>
+                <% @calculator.band_letters.each do |letter| %>
+                  <% row.cell(text: @calculator.public_send("#{event_type}_band_#{letter}_additions"), numeric: true) %>
                 <% end %>
 
                 <% row.cell(text: "") %>
@@ -126,11 +126,11 @@
               <% body.row do |row| %>
                 <% row.cell(text: "Fee per trainee") %>
 
-                <% @calculator.class.band_mapping.each do |letter, number| %>
+                <% @calculator.band_letters.each do |letter| %>
                   <% row.cell(text: number_to_pounds(@calculator.public_send("#{event_type}_band_#{letter}_fee_per_declaration")), numeric: true) %>
                 <% end %>
 
-                <% row.cell(text: number_to_pounds(@calculator.public_send("total_for_#{event_type}")), numeric: true) %>
+                <% row.cell(text: number_to_pounds(@calculator.public_send("additions_for_#{event_type}")), numeric: true) %>
               <% end %>
             <% end %>
           <% end %>
@@ -164,6 +164,24 @@
               <% row.cell(text: @calculator.uplift_count) %>
               <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration)) %>
               <% row.cell(text: number_to_pounds(@calculator.total_for_uplift), numeric: true) %>
+            <% end %>
+
+            <% @calculator.send(:output_calculator).banding_breakdown.each do |hash| %>
+              <% relevant_hash = hash.select { |k,v| k.match?(/_subtractions/) } %>
+              <% relevant_hash = relevant_hash.transform_keys { |k| k.to_s.gsub("_subtractions", "").to_sym } %>
+
+              <% relevant_hash.each do |name, count| %>
+                <% next if count.zero? %>
+
+                <% body.row do |row| %>
+                  <% fee = @calculator.fee_for_declaration(band_letter: hash[:band], type: name) %>
+
+                  <% row.cell(text: "Clawback for #{name.to_s.humanize} (Band: #{hash[:band].to_s.upcase})") %>
+                  <% row.cell(text: count) %>
+                  <% row.cell(text: number_to_pounds(-fee)) %>
+                  <% row.cell(text: number_to_pounds(-count * fee), numeric: true) %>
+                <% end %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>

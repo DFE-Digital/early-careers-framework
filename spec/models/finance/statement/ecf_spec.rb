@@ -8,13 +8,6 @@ RSpec.describe Finance::Statement::ECF do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: ecf_lead_provider) }
   subject { create(:ecf_statement, cpd_lead_provider:) }
 
-  describe "#cache_original_value!" do
-    it "persists value of statement" do
-      subject.cache_original_value!
-      expect(subject.reload.original_value).to be_within(1).of(22_287.89)
-    end
-  end
-
   describe "#payable!" do
     it "transitions the statement to payable" do
       expect {

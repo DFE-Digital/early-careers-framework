@@ -13,16 +13,23 @@ class Finance::StatementLineItem < ApplicationRecord
     paid: "paid",
     voided: "voided",
     ineligible: "ineligible",
+    awaiting_clawback: "awaiting_clawback",
+    clawed_back: "clawed_back",
   }
 
   scope :billable, -> { where(state: %w[eligible payable paid]) }
+  scope :refundable, -> { where(state: %w[awaiting_clawback clawed_back]) }
 
   validate :validate_single_billable_relationship, on: [:create]
+
+  def billable?
+    %w[eligible payable paid].include?(state)
+  end
 
 private
 
   def validate_single_billable_relationship
-    if Finance::StatementLineItem
+    if billable? && Finance::StatementLineItem
       .where(participant_declaration:)
       .billable
       .exists?
