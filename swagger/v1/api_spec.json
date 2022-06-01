@@ -3050,6 +3050,11 @@
             "format": "date-time",
             "example": "2021-05-31T02:21:32.000Z"
           },
+          "cohort": {
+            "description": "The start year of the cohort this application belongs to",
+            "type": "string",
+            "example": "2021"
+          },
           "updated_at": {
             "description": "The date the application was last updated",
             "type": "string",
@@ -3197,6 +3202,11 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
+          },
+          "cohort": {
+            "description": "The start year of the cohort this application belongs to",
+            "type": "string",
+            "example": "2021"
           }
         }
       },
