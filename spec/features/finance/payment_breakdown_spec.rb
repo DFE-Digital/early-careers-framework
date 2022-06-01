@@ -351,7 +351,6 @@ private
   end
 
   def then_i_should_see_the_correct_output_fees
-    all(".finance-panel")[0]
     expect(page).to have_content("Output payments")
     expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:per_participant]))
     expect(page).to have_content(@jan_starts[:output_payments][0][:participants])
@@ -359,7 +358,6 @@ private
   end
 
   def then_i_should_see_the_correct_uplift_fee
-    all(".finance-panel")[1]
     expect(page).to have_content("Uplift fee")
     expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:per_participant]))
     expect(page).to have_content(@jan_starts[:other_fees][:uplift][:participants])
