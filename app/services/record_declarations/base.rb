@@ -75,7 +75,7 @@ module RecordDeclarations
     end
 
     def create_declaration_attempt!
-      ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile))
+      ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile, :pupil_premium_uplift, :sparsity_uplift))
     end
 
     def participant_declaration
@@ -90,6 +90,8 @@ module RecordDeclarations
         cpd_lead_provider: cpd_lead_provider,
         participant_profile: user_profile,
         user: user,
+        pupil_premium_uplift: user_profile.pupil_premium_uplift,
+        sparsity_uplift: user_profile.sparsity_uplift,
       }
     end
 
