@@ -80,11 +80,13 @@ class NPQApplication < ApplicationRecord
 private
 
   def previously_funded?
-    participant_identity.npq_applications
+    accepted_applications = participant_identity
+      .npq_applications
       .where(npq_course: npq_course.rebranded_alternative_courses)
       .where(eligible_for_funding: true)
       .accepted
-      .any?
+
+    (accepted_applications - [self]).any?
   end
 
   def push_enrollment_to_big_query

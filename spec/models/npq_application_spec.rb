@@ -144,6 +144,22 @@ RSpec.describe NPQApplication, type: :model do
         expect(subject.eligible_for_dfe_funding).to be_truthy
       end
     end
+
+    context "when it is the only accepted application" do
+      let(:course) { create(:npq_leadship_course) }
+
+      subject { create(:npq_application, eligible_for_funding: true, npq_course: course) }
+
+      before do
+        create(:npq_leadership_schedule)
+
+        NPQ::Accept.new(npq_application: subject).call
+      end
+
+      it "returns eligible for funding" do
+        expect(subject.eligible_for_dfe_funding).to be_truthy
+      end
+    end
   end
 
   describe "#ineligible_for_funding_reason" do
