@@ -33,11 +33,11 @@ module Schools
     end
 
     def email_already_taken?
-      ParticipantProfile.active_record.ects.joins(:user).where(user: { email: email }).any?
+      ParticipantProfile.active_record.ects.joins(:user).where(user: { email: }).any?
     end
 
     def store_new_participant
-      self.participants = get_participants << { full_name: full_name, email: email, index: new_participant_index }
+      self.participants = get_participants << { full_name:, email:, index: new_participant_index }
       self.full_name = nil
       self.email = nil
     end
@@ -75,16 +75,16 @@ module Schools
 
     def save!
       ActiveRecord::Base.transaction do
-        school_cohort = SchoolCohort.find_or_initialize_by(school: school, cohort: cohort)
-        Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+        school_cohort = SchoolCohort.find_or_initialize_by(school:, cohort:)
+        Induction::SetCohortInductionProgramme.call(school_cohort:,
                                                     programme_choice: "core_induction_programme",
-                                                    core_induction_programme: core_induction_programme)
+                                                    core_induction_programme:)
 
         participants = get_participants.each do |participant|
           EarlyCareerTeachers::Create.call(
             full_name: participant[:full_name],
             email: participant[:email],
-            school_cohort: school_cohort,
+            school_cohort:,
             mentor_profile_id: nil,
             year_2020: true,
           )

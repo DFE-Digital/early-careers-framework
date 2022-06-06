@@ -3,11 +3,11 @@
 require "swagger_helper"
 
 describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_spec.json" do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider: npq_lead_provider) }
+  let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
   path "/api/v1/participants/npq" do
     get "Retrieve multiple NPQ participants" do
@@ -109,7 +109,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
           participant_id: npq_application.participant_identity.external_identifier,
           reason: Participants::Defer::NPQ.reasons.sample,
           course_identifier: npq_application.npq_course.identifier,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         },
       )
     end

@@ -26,13 +26,13 @@ module NPQ
     end
 
     def teacher_profiles
-      @teacher_profiles ||= TeacherProfile.where(trn: trn)
+      @teacher_profiles ||= TeacherProfile.where(trn:)
     end
 
     def previously_funded?
       users.flat_map.any? do |user|
         user.npq_applications
-        .where(npq_course: npq_course)
+        .where(npq_course:)
         .where(eligible_for_funding: true)
         .accepted
         .any?

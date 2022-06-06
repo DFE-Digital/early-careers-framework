@@ -17,7 +17,7 @@ module Finance
     }.freeze
 
     def call(event_type: :started)
-      aggregations(event_type: event_type).tap do |h|
+      aggregations(event_type:).tap do |h|
         h[:previous_participants] =
           recorder
           .where(statement: previous_statements)
@@ -38,7 +38,7 @@ module Finance
 
     def aggregators(event_type:)
       Hash.new do |hash, key|
-        hash[key] = aggregate(aggregation_type: key, event_type: event_type)
+        hash[key] = aggregate(aggregation_type: key, event_type:)
       end
     end
 
@@ -59,7 +59,7 @@ module Finance
 
     def aggregations(event_type:)
       self.class.aggregation_types[event_type].keys.index_with do |key|
-        aggregators(event_type: event_type)[key]
+        aggregators(event_type:)[key]
       end
     end
   end

@@ -50,7 +50,7 @@ module Api
       def users
         users = User.all
         users = users.changed_since(updated_since) if updated_since.present?
-        users = users.where(email: email) if email.present?
+        users = users.where(email:) if email.present?
         users
       end
     end

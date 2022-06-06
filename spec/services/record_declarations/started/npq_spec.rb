@@ -5,15 +5,15 @@ require "rails_helper"
 RSpec.describe RecordDeclarations::Started::NPQ do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let(:npq_application) { create(:npq_application, npq_lead_provider: npq_lead_provider) }
-  let(:profile) { create(:npq_participant_profile, npq_application: npq_application) }
+  let(:npq_application) { create(:npq_application, npq_lead_provider:) }
+  let(:profile) { create(:npq_participant_profile, npq_application:) }
   let(:user) { profile.user }
   let(:npq_course) { profile.npq_course }
   let(:declaration_date) { profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days }
   let(:declaration_date_string) { declaration_date.rfc3339 }
 
   before do
-    create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+    create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
   end
 
   subject do
@@ -21,7 +21,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
       params: {
         participant_id: user.id,
         course_identifier: npq_course.identifier,
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
         declaration_date: declaration_date_string,
         declaration_type: "started",
       },
@@ -39,7 +39,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
           params: {
             participant_id: user.id,
             course_identifier: npq_course.identifier,
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             declaration_date: (profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days).rfc3339,
             declaration_type: "started",
           },
@@ -56,7 +56,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
         params: {
           participant_id: user.id,
           course_identifier: npq_course.identifier,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           declaration_date: (profile.schedule.milestones.where(declaration_type: "started").first.start_date + 11.days).rfc3339,
           declaration_type: "started",
         },
@@ -135,10 +135,10 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   end
 
   context "user profile is in a withdrawn state, but was active on declaration date" do
-    let(:profile) { create(:npq_participant_profile, npq_application: npq_application, training_status: "withdrawn") }
+    let(:profile) { create(:npq_participant_profile, npq_application:, training_status: "withdrawn") }
 
     before do
-      ParticipantProfileState.create!(participant_profile: profile, state: "active", cpd_lead_provider: cpd_lead_provider, created_at: declaration_date - 2.days)
+      ParticipantProfileState.create!(participant_profile: profile, state: "active", cpd_lead_provider:, created_at: declaration_date - 2.days)
     end
 
     it "succeeds" do
@@ -147,7 +147,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
   end
 
   context "profile is in a deferred state, but was active on declaration date" do
-    let(:profile) { create(:npq_participant_profile, npq_application: npq_application, training_status: "deferred") }
+    let(:profile) { create(:npq_participant_profile, npq_application:, training_status: "deferred") }
 
     before do
       ParticipantProfileState.create!(participant_profile: profile, state: "active", created_at: declaration_date - 2.days)
@@ -164,7 +164,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
         params: {
           participant_id: user.id,
           course_identifier: npq_course.identifier,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           declaration_date: declaration_date_string,
           declaration_type: "started",
           evidence_held: "self-study-material-completed",

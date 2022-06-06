@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe Admin::ChangeInductionService do
   let(:cohort) { create(:cohort) }
-  let(:current_school_cohort) { school.school_cohorts.find_by(cohort: cohort) }
-  subject(:service) { Admin::ChangeInductionService.new(school: school, cohort: cohort) }
+  let(:current_school_cohort) { school.school_cohorts.find_by(cohort:) }
+  subject(:service) { Admin::ChangeInductionService.new(school:, cohort:) }
 
   describe "#change_induction_provision" do
     context "when the school has not selected an induction" do
@@ -28,7 +28,7 @@ RSpec.describe Admin::ChangeInductionService do
     end
 
     context "when the school has selected CIP" do
-      let!(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }
+      let!(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort:).school }
 
       it "should be able to choose FIP" do
         expect_to_change_to :full_induction_programme
@@ -47,7 +47,7 @@ RSpec.describe Admin::ChangeInductionService do
           create(:school_cohort,
                  induction_programme_choice: "core_induction_programme",
                  core_induction_programme: create(:core_induction_programme),
-                 cohort: cohort).school
+                 cohort:).school
         end
 
         it "should be able to choose FIP" do
@@ -68,7 +68,7 @@ RSpec.describe Admin::ChangeInductionService do
     end
 
     context "when the school has selected FIP" do
-      let!(:school) { create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort: cohort).school }
+      let!(:school) { create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort:).school }
       context "when it is not in a partnership" do
         it "should be able to choose CIP" do
           expect_to_change_to :full_induction_programme
@@ -84,7 +84,7 @@ RSpec.describe Admin::ChangeInductionService do
       end
 
       context "when a school is in a partnership" do
-        let!(:partnership) { create(:partnership, cohort: cohort, school: school) }
+        let!(:partnership) { create(:partnership, cohort:, school:) }
         it "should not be able to choose CIP" do
           expect { service.change_induction_provision(:core_induction_programme) }.to raise_error(ArgumentError)
                                                                                         .and not_change { current_school_cohort }
@@ -103,7 +103,7 @@ RSpec.describe Admin::ChangeInductionService do
     end
 
     context "when the school has selected NoECTs" do
-      let!(:school) { create(:school_cohort, induction_programme_choice: "no_early_career_teachers", cohort: cohort).school }
+      let!(:school) { create(:school_cohort, induction_programme_choice: "no_early_career_teachers", cohort:).school }
 
       it "should be able to choose CIP" do
         expect_to_change_to :core_induction_programme
@@ -119,7 +119,7 @@ RSpec.describe Admin::ChangeInductionService do
     end
 
     context "when the school has selected DIY" do
-      let!(:school) { create(:school_cohort, induction_programme_choice: "design_our_own", cohort: cohort).school }
+      let!(:school) { create(:school_cohort, induction_programme_choice: "design_our_own", cohort:).school }
 
       it "should be able to choose FIP" do
         expect_to_change_to :full_induction_programme
@@ -138,7 +138,7 @@ RSpec.describe Admin::ChangeInductionService do
       let!(:participant_profiles) { create_list(:ect_participant_profile, 5, school_cohort: school.school_cohorts.first) }
 
       context "when the school is doing CIP" do
-        let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }
+        let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort:).school }
         it "withdraws all participants when changing to NoECTs" do
           service.change_induction_provision(:no_early_career_teachers)
           expect(participant_profiles.each(&:reload)).to all be_withdrawn_record
@@ -157,7 +157,7 @@ RSpec.describe Admin::ChangeInductionService do
       end
 
       context "when the school is doing FIP" do
-        let(:school) { create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort: cohort).school }
+        let(:school) { create(:school_cohort, induction_programme_choice: "full_induction_programme", cohort:).school }
         it "withdraws all participants when changing to NoECTs" do
           service.change_induction_provision(:no_early_career_teachers)
           expect(participant_profiles.each(&:reload)).to all be_withdrawn_record
@@ -182,7 +182,7 @@ RSpec.describe Admin::ChangeInductionService do
   describe "#change_cip_materials" do
     context "when the school has selected CIP" do
       context "when the school has chosen materials" do
-        let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", core_induction_programme: create(:core_induction_programme), cohort: cohort).school }
+        let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", core_induction_programme: create(:core_induction_programme), cohort:).school }
 
         it "changes the choice of induction materials" do
           new_cip = create(:core_induction_programme)
@@ -192,7 +192,7 @@ RSpec.describe Admin::ChangeInductionService do
       end
 
       context "when the school has not chosen materials" do
-        let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }
+        let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort:).school }
 
         it "changes the choice of materials" do
           new_cip = create(:core_induction_programme)
@@ -205,11 +205,11 @@ RSpec.describe Admin::ChangeInductionService do
     context "when the school has not selected CIP" do
       it "does not change materials" do
         %i[full_induction_programme no_early_career_teachers design_our_own].each do |induction_programme_choice|
-          school_cohort = create(:school_cohort, induction_programme_choice: induction_programme_choice, cohort: cohort)
+          school_cohort = create(:school_cohort, induction_programme_choice:, cohort:)
           school = school_cohort.school
 
           expect {
-            described_class.new(school: school, cohort: cohort).change_cip_materials(create(:core_induction_programme))
+            described_class.new(school:, cohort:).change_cip_materials(create(:core_induction_programme))
           }.to raise_error ArgumentError
           expect(school_cohort.core_induction_programme).to be_nil
         end

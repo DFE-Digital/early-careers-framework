@@ -9,7 +9,7 @@ class SchemaValidator
 
   class << self
     def call(raw_event:)
-      new(raw_event: raw_event).call
+      new(raw_event:).call
     end
   end
 

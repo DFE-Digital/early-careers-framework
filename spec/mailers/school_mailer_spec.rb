@@ -11,8 +11,8 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:nomination_email) do
       SchoolMailer.nomination_email(
         recipient: primary_contact_email,
-        nomination_url: nomination_url,
-        school: school,
+        nomination_url:,
+        school:,
         expiry_date: "1/1/2000",
       ).deliver_now
     end
@@ -30,7 +30,7 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:cip_only_invite_email) do
       SchoolMailer.cip_only_invite_email(
         recipient: primary_contact_email,
-        nomination_url: nomination_url,
+        nomination_url:,
         school_name: "Great Ouse Academy",
       ).deliver_now
     end
@@ -48,7 +48,7 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:section_41_invite_email) do
       SchoolMailer.section_41_invite_email(
         recipient: primary_contact_email,
-        nomination_url: nomination_url,
+        nomination_url:,
         school_name: "Great Ouse Academy",
       ).deliver_now
     end
@@ -66,9 +66,9 @@ RSpec.describe SchoolMailer, type: :mailer do
 
     let(:nomination_confirmation_email) do
       SchoolMailer.nomination_confirmation_email(
-        sit_profile: sit_profile,
-        school: school,
-        start_url: start_url,
+        sit_profile:,
+        school:,
+        start_url:,
         step_by_step_url: start_url,
       ).deliver_now
     end
@@ -87,10 +87,10 @@ RSpec.describe SchoolMailer, type: :mailer do
 
     let(:partnership_notification_email) do
       SchoolMailer.coordinator_partnership_notification_email(
-        coordinator: coordinator,
-        partnership: partnership,
-        sign_in_url: sign_in_url,
-        challenge_url: challenge_url,
+        coordinator:,
+        partnership:,
+        sign_in_url:,
+        challenge_url:,
       )
     end
 
@@ -108,10 +108,10 @@ RSpec.describe SchoolMailer, type: :mailer do
 
     let(:partnership_notification_email) do
       SchoolMailer.school_partnership_notification_email(
-        partnership: partnership,
-        recipient: recipient,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
+        partnership:,
+        recipient:,
+        nominate_url:,
+        challenge_url:,
       )
     end
 
@@ -128,9 +128,9 @@ RSpec.describe SchoolMailer, type: :mailer do
 
     let(:reminder_email) do
       SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
-        induction_coordinator: induction_coordinator,
-        campaign: campaign,
-        school_name: school_name,
+        induction_coordinator:,
+        campaign:,
+        school_name:,
       )
     end
     it "renders the right headers" do
@@ -175,9 +175,9 @@ RSpec.describe SchoolMailer, type: :mailer do
 
     let(:email) do
       SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
-        induction_coordinator_profile: induction_coordinator_profile,
-        sign_in_url: sign_in_url,
-        school_name: school_name,
+        induction_coordinator_profile:,
+        sign_in_url:,
+        school_name:,
       )
     end
 
@@ -189,7 +189,7 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "sit_fip_provider_has_withdrawn_a_participant" do
     let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
-    let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort: school_cohort, user: create(:user, email: "john.clemence@example.com")) }
+    let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:, user: create(:user, email: "john.clemence@example.com")) }
     let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
     let(:email) do

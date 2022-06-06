@@ -15,9 +15,9 @@ module Partnerships
     def call
       ActiveRecord::Base.transaction do
         partnership = Partnership.find_or_initialize_by(
-          school_id: school_id,
-          cohort_id: cohort_id,
-          lead_provider_id: lead_provider_id,
+          school_id:,
+          cohort_id:,
+          lead_provider_id:,
         )
 
         partnership.challenge_reason = partnership.challenged_at = nil
@@ -29,22 +29,22 @@ module Partnerships
 
         # if a FIP has been chosen but the partnership was not present at the time
         # add it to the programme when it's reported
-        Induction::ChangePartnership.call(school_cohort: school_cohort,
-                                          partnership: partnership)
+        Induction::ChangePartnership.call(school_cohort:,
+                                          partnership:)
 
         partnership.event_logs.create!(
           event: :reported,
         )
 
-        PartnershipNotificationJob.perform_later(partnership: partnership)
+        PartnershipNotificationJob.perform_later(partnership:)
         PartnershipReminderJob.set(wait: REMINDER_EMAIL_DELAY).perform_later(
-          partnership: partnership,
+          partnership:,
           report_id: partnership.report_id,
         )
 
         if partnership.pending?
           PartnershipActivationJob.set(wait_until: partnership.challenge_deadline).perform_later(
-            partnership: partnership,
+            partnership:,
             report_id: partnership.report_id,
           )
         end
@@ -65,13 +65,13 @@ module Partnerships
       return @school_cohort if defined? @school_cohort
 
       @school_cohort = SchoolCohort.find_by(
-        school_id: school_id,
-        cohort_id: cohort_id,
+        school_id:,
+        cohort_id:,
       )
 
       @school_cohort ||= SchoolCohort.create!(
-        school_id: school_id,
-        cohort_id: cohort_id,
+        school_id:,
+        cohort_id:,
         induction_programme_choice: "full_induction_programme",
       )
     end

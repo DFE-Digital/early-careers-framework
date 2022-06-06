@@ -7,7 +7,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
   let(:participant_profile) { create :ect_participant_profile }
   let(:validation_result) { nil }
-  let(:eligibility_record) { build :ecf_participant_eligibility, participant_profile: participant_profile }
+  let(:eligibility_record) { build :ecf_participant_eligibility, participant_profile: }
 
   before do
     allow(ParticipantValidationService).to receive(:validate).and_return(validation_result)
@@ -27,7 +27,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       let(:eligibility_record) do
         create(
           :ecf_participant_eligibility,
-          participant_profile: participant_profile,
+          participant_profile:,
         )
       end
 
@@ -41,7 +41,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       let(:eligibility_record) do
         create(
           :ecf_participant_eligibility,
-          participant_profile: participant_profile,
+          participant_profile:,
           previous_participation: true,
         )
       end
@@ -53,7 +53,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       let(:eligibility_record) do
         create(
           :ecf_participant_eligibility,
-          participant_profile: participant_profile,
+          participant_profile:,
           exempt_from_induction: true,
         )
       end
@@ -172,7 +172,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
       describe "next_step" do
         subject(:next_step) { form.next_step }
-        before { form.complete_step(:dob, dob: dob) }
+        before { form.complete_step(:dob, dob:) }
 
         context "when validation attempt found no matching dqt record" do
           let(:validation_result) { nil }
@@ -184,19 +184,19 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
           let(:validation_result) { { trn: "1234567" } }
 
           context "resulting in eligible status" do
-            let(:eligibility_record) { create :ecf_participant_eligibility, :eligible, participant_profile: participant_profile }
+            let(:eligibility_record) { create :ecf_participant_eligibility, :eligible, participant_profile: }
 
             it { is_expected.to be :eligible }
           end
 
           context "requiring further manual checks" do
-            let(:eligibility_record) { create :ecf_participant_eligibility, :manual_check, participant_profile: participant_profile }
+            let(:eligibility_record) { create :ecf_participant_eligibility, :manual_check, participant_profile: }
 
             it { is_expected.to be :manual_check }
           end
 
           context "resulting in eligible status" do
-            let(:eligibility_record) { create :ecf_participant_eligibility, :ineligible, participant_profile: participant_profile }
+            let(:eligibility_record) { create :ecf_participant_eligibility, :ineligible, participant_profile: }
 
             it { is_expected.to be :ineligible }
           end
@@ -205,7 +205,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
 
       describe "on completion" do
         it "attempts to validate the participant" do
-          form.complete_step(:dob, dob: dob)
+          form.complete_step(:dob, dob:)
 
           expect(ParticipantValidationService).to have_received(:validate).with(
             hash_including(
@@ -248,7 +248,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
             form.complete_step(:no_match)
 
             expect(StoreValidationResult).to have_received(:call).with(
-              hash_including(participant_profile: participant_profile),
+              hash_including(participant_profile:),
             )
           end
         end

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
-  subject { described_class.new(trn: trn, npq_course_identifier: npq_course.identifier) }
+  subject { described_class.new(trn:, npq_course_identifier: npq_course.identifier) }
 
   describe "#call" do
     context "when not previously funded" do
@@ -54,7 +54,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       let(:npq_course) { application.npq_course }
 
       before do
-        create(:teacher_profile, trn: trn)
+        create(:teacher_profile, trn:)
         NPQ::Accept.new(npq_application: application).call
       end
 
@@ -67,7 +67,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       let(:trn) { "0000000" }
       let(:npq_course) { create(:npq_course) }
 
-      subject { described_class.new(trn: trn, npq_course_identifier: npq_course.identifier) }
+      subject { described_class.new(trn:, npq_course_identifier: npq_course.identifier) }
 
       it "returns falsey" do
         expect(subject.call[:previously_funded]).to be_falsey

@@ -30,7 +30,7 @@ module Partnerships
 
       partnership.lead_provider.users.each do |lead_provider_user|
         LeadProviderMailer.partnership_challenged_email(
-          partnership: partnership,
+          partnership:,
           user: lead_provider_user,
         ).deliver_later
       end

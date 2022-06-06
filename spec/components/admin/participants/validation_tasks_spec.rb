@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::Participants::ValidationTasks, type: :view_component do
-  component { described_class.new profile: profile }
+  component { described_class.new profile: }
 
   context "for NPQ profile" do
     let!(:profile) { create :npq_participant_profile }

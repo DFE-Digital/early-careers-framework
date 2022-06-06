@@ -29,7 +29,7 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
 
     it "updates the user and redirects to users page" do
       patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
-        user: { email: email },
+        user: { email: },
       }
 
       expect(lead_provider_user.reload.email).to eq email
@@ -53,7 +53,7 @@ RSpec.describe "Admin::LeadProviders::LeadProviderUsers", type: :request do
 
       before do
         patch "/admin/suppliers/lead-providers/users/#{lead_provider_user.id}", params: {
-          user: { email: email },
+          user: { email: },
         }
       end
 

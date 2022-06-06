@@ -16,7 +16,7 @@ RSpec.describe PartnershipActivationJob do
     end
 
     def execute
-      subject.perform(partnership: partnership, report_id: report_id)
+      subject.perform(partnership:, report_id:)
       partnership.reload
       school_cohort.reload
     end

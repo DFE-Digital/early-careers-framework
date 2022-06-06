@@ -39,7 +39,7 @@ RSpec.shared_examples "a participant declaration service" do
     it "raises ParameterMissing error" do
       params = given_params.merge({ declaration_date: "2021-06-21 08:46:29" })
       expected_msg = /The property '#\/declaration_date' must be a valid RCF3339 date/
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing, expected_msg)
+      expect { described_class.call(params:) }.to raise_error(ActionController::ParameterMissing, expected_msg)
     end
   end
 
@@ -47,21 +47,21 @@ RSpec.shared_examples "a participant declaration service" do
     it "raised ParameterMissing error" do
       params = given_params.merge({ declaration_date: (Time.zone.now + 100.years).rfc3339(9) })
       expected_msg = /The property '#\/declaration_date' can not declare a future date/
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing, expected_msg)
+      expect { described_class.call(params:) }.to raise_error(ActionController::ParameterMissing, expected_msg)
     end
   end
 
   context "when declaration date is in the past" do
     it "does not raise ParameterMissing error" do
       params = given_params.merge({ declaration_date: (Time.zone.now - 1.day).rfc3339(9) })
-      expect { described_class.call(params: params) }.to_not raise_error
+      expect { described_class.call(params:) }.to_not raise_error
     end
   end
 
   context "when declaration date is today" do
     it "does not raise ParameterMissing error" do
       params = given_params.merge({ declaration_date: Time.zone.now.rfc3339(9) })
-      expect { described_class.call(params: params) }.to_not raise_error
+      expect { described_class.call(params:) }.to_not raise_error
     end
   end
 
@@ -72,7 +72,7 @@ RSpec.shared_examples "a participant declaration service" do
 
     it "raises ParameterMissing error" do
       params = given_params.merge({ declaration_date: (cutoff_start_datetime - 2.days).rfc3339 })
-      expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+      expect { described_class.call(params:) }.to raise_error(ActionController::ParameterMissing)
     end
   end
 
@@ -83,7 +83,7 @@ RSpec.shared_examples "a participant declaration service" do
 
     it "does not raise ParameterMissing error" do
       params = given_params.merge({ declaration_date: (cutoff_start_datetime + 1.day).rfc3339 })
-      expect { described_class.call(params: params) }.not_to raise_error
+      expect { described_class.call(params:) }.not_to raise_error
     end
   end
 
@@ -94,7 +94,7 @@ RSpec.shared_examples "a participant declaration service" do
 
     it "does not raise ParameterMissing error" do
       params = given_params.merge({ declaration_date: (cutoff_start_datetime + 2.days).rfc3339 })
-      expect { described_class.call(params: params) }.to_not raise_error
+      expect { described_class.call(params:) }.to_not raise_error
     end
   end
 
@@ -103,7 +103,7 @@ RSpec.shared_examples "a participant declaration service" do
       unless npq_profile.type == "ParticipantProfile::NPQ" # does not apply to NPQ or soft schedules
         travel_to cutoff_end_datetime
         params = given_params.merge({ declaration_date: cutoff_end_datetime.rfc3339 })
-        expect { described_class.call(params: params) }.to_not raise_error
+        expect { described_class.call(params:) }.to_not raise_error
       end
     end
   end
@@ -113,7 +113,7 @@ RSpec.shared_examples "a participant declaration service" do
       unless npq_profile.type == "ParticipantProfile::NPQ" # does not apply to NPQ or soft schedules
         travel_to cutoff_end_datetime + 1.day
         params = given_params.merge({ declaration_date: (cutoff_end_datetime + 1.day).rfc3339 })
-        expect { described_class.call(params: params) }.to raise_error(ActionController::ParameterMissing)
+        expect { described_class.call(params:) }.to raise_error(ActionController::ParameterMissing)
       end
     end
   end

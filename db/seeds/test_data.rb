@@ -19,7 +19,7 @@ School.find_or_create_by!(urn: "000001") do |school|
     school_type_code: 1,
     administrative_district_code: "E123",
   )
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
 end
 
 School.find_or_create_by!(urn: "000002") do |school|
@@ -33,7 +33,7 @@ School.find_or_create_by!(urn: "000002") do |school|
     school_type_code: 1,
     administrative_district_code: "E123",
   )
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
 end
 
 School.find_or_create_by!(urn: "000003") do |school|
@@ -46,12 +46,12 @@ School.find_or_create_by!(urn: "000003") do |school|
     school_type_code: 1,
     administrative_district_code: "E123",
   )
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
   NominationEmail.find_or_create_by!(
     token: "abc123",
     sent_to: "cpd-test+school-3#{DOMAIN}",
     sent_at: 1.year.ago,
-    school: school,
+    school:,
   )
 end
 
@@ -65,13 +65,13 @@ School.find_or_create_by!(urn: "000004") do |school|
     school_type_code: 1,
     administrative_district_code: "E123",
   )
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
   user = User.find_or_create_by!(full_name: "Induction Tutor for School 4", email: "cpd-test+tutor-1#{DOMAIN}")
-  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+  InductionCoordinatorProfile.find_or_create_by!(user:) do |profile|
     profile.update!(schools: [school])
   end
   cip = CoreInductionProgramme.first
-  SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
+  SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
 end
 
 lead_provider = LeadProvider.find_by(name: "Ambition Institute")
@@ -87,21 +87,21 @@ School.find_or_create_by!(urn: "000005") do |school|
     school_type_code: 1,
     administrative_district_code: "E123",
   )
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
   user = User.find_or_create_by!(full_name: "Induction Tutor for School 5", email: "cpd-test+tutor-2#{DOMAIN}")
-  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+  InductionCoordinatorProfile.find_or_create_by!(user:) do |profile|
     profile.update!(schools: [school])
   end
-  school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
+  school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider, challenge_deadline: 2.weeks.from_now)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner:, school:, lead_provider:, challenge_deadline: 2.weeks.from_now)
   InductionProgramme.find_or_create_by!(
-    school_cohort: school_cohort,
-    partnership: partnership,
+    school_cohort:,
+    partnership:,
     training_programme: "full_induction_programme",
   )
   PartnershipNotificationEmail.find_or_create_by!(
-    partnership: partnership,
+    partnership:,
     sent_to: "cpd-test+tutor-2#{DOMAIN}",
     email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
     token: "abc123",
@@ -117,10 +117,10 @@ School.find_or_create_by!(urn: "181818") do |school|
   school.school_type_code = 10
 
   user = User.find_or_create_by!(full_name: "Induction Tutor for CIP only school", email: "cip-only-induction-tutor@example.com")
-  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+  InductionCoordinatorProfile.find_or_create_by!(user:) do |profile|
     profile.update!(schools: [school])
   end
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
 end
 
 School.find_or_create_by!(urn: "181815") do |school|
@@ -130,13 +130,13 @@ School.find_or_create_by!(urn: "181815") do |school|
   school.primary_contact_email = "cip-only-school-info-2@example.com"
   school.school_status_code = 1
   school.school_type_code = 10
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
 end
 
 10.times do |idx|
   urn = (100 + idx).to_s.rjust(6, "0")
   item_num = 7 + idx
-  School.find_or_create_by!(urn: urn) do |school|
+  School.find_or_create_by!(urn:) do |school|
     school.update!(
       name: "ZZ Test School #{item_num}",
       postcode: "AX4 9AB",
@@ -146,22 +146,22 @@ end
       school_type_code: 1,
       administrative_district_code: "E#{900 + idx}",
     )
-    SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+    SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
     user = User.find_or_create_by!(full_name: "Induction Tutor for School #{item_num}", email: "cpd-test+tutor-#{item_num}@example.com")
-    InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+    InductionCoordinatorProfile.find_or_create_by!(user:) do |profile|
       profile.schools << school
     end
 
-    school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
+    school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "full_induction_programme")
     delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
-    partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider, challenge_deadline: 2.weeks.from_now)
+    partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner:, school:, lead_provider:, challenge_deadline: 2.weeks.from_now)
     InductionProgramme.find_or_create_by!(
-      school_cohort: school_cohort,
-      partnership: partnership,
+      school_cohort:,
+      partnership:,
       training_programme: "full_induction_programme",
     )
     PartnershipNotificationEmail.find_or_create_by!(
-      partnership: partnership,
+      partnership:,
       sent_to: "cpd-test+tutor-3#{DOMAIN}",
       email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
       token: "abc424#{item_num}",
@@ -169,7 +169,7 @@ end
 
     if idx.even?
       cip = CoreInductionProgramme.all.sample
-      SchoolCohort.find_or_create_by!(cohort: cohort_2022, school: school, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
+      SchoolCohort.find_or_create_by!(cohort: cohort_2022, school:, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
     end
   end
 end
@@ -184,33 +184,33 @@ School.find_or_create_by!(urn: "000006") do |school|
     school_type_code: 1,
     administrative_district_code: "E901",
   )
-  SchoolLocalAuthority.find_or_create_by!(school: school, local_authority: local_authority, start_year: 2019)
+  SchoolLocalAuthority.find_or_create_by!(school:, local_authority:, start_year: 2019)
   user = User.find_or_create_by!(full_name: "Induction Tutor for School 6", email: "cpd-test+tutor-3#{DOMAIN}")
-  InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+  InductionCoordinatorProfile.find_or_create_by!(user:) do |profile|
     profile.update!(schools: [school])
   end
-  school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "full_induction_programme")
+  school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
-  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: school, lead_provider: lead_provider)
+  partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner:, school:, lead_provider:)
   InductionProgramme.find_or_create_by!(
-    school_cohort: school_cohort,
-    partnership: partnership,
+    school_cohort:,
+    partnership:,
     training_programme: "full_induction_programme",
   )
   PartnershipNotificationEmail.find_or_create_by!(
-    partnership: partnership,
+    partnership:,
     sent_to: "cpd-test+tutor-3#{DOMAIN}",
     email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
     token: "abc424",
   )
-  PupilPremium.find_or_create_by!(school: school, start_year: 2021, total_pupils: 500, eligible_pupils: 300)
+  PupilPremium.find_or_create_by!(school:, start_year: 2021, total_pupils: 500, eligible_pupils: 300)
 end
 
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
 
 ProviderRelationship.find_or_create_by!(
-  lead_provider: lead_provider,
-  delivery_partner: delivery_partner,
+  lead_provider:,
+  delivery_partner:,
   cohort: Cohort.current,
 )
 
@@ -364,7 +364,7 @@ npq_specifics = [
 # NPQ contracts
 NPQLeadProvider.all.each do |npq_lead_provider|
   npq_specifics.each do |npq_contract|
-    attributes = npq_contract.merge(npq_lead_provider: npq_lead_provider, cohort: cohort_2021)
+    attributes = npq_contract.merge(npq_lead_provider:, cohort: cohort_2021)
     attributes.merge!(raw: attributes.to_json)
     NPQContract.create!(attributes)
   end
@@ -375,28 +375,28 @@ user = User.find_or_create_by!(email: "fip-ect@example.com") do |u|
   u.full_name = "FIP ECT"
 end
 
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 user = User.find_or_create_by!(email: "withdrawn-fip-ect@example.com") do |u|
   u.full_name = "WITHDRAWN FIP ECT"
 end
 
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000103").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ect_profile.training_status_withdrawn!
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
@@ -404,47 +404,47 @@ end
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 # FIP mentor
 user = User.find_or_create_by!(email: "fip-mentor@example.com") do |u|
   u.full_name = "FIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000104").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 # FIP mentor already doing an NPQ with the same email
 user = User.find_or_create_by!(email: "fip-mentor-npq@example.com") do |u|
   u.full_name = "FIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
   profile.trn = "1958553"
 end
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |profile|
   profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+  profile.participant_identity = Identity::Create.call(user:, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
@@ -453,140 +453,140 @@ user = User.find_or_create_by!(email: "fip-mentor-npq-other-email@example.com") 
   u.full_name = "FIP Mentor NPQ"
 end
 
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
   profile.trn = "2369848"
 end
 
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |profile|
   profile.schedule = Finance::Schedule::NPQSpecialist.default
-  profile.participant_identity = Identity::Create.call(user: user, origin: :npq)
+  profile.participant_identity = Identity::Create.call(user:, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 user = User.find_or_create_by!(email: "fip-mentor2@example.com") do |u|
   u.full_name = "FIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 # FIP mentor already mentoring at another school with another email
 user = User.find_or_create_by!(email: "fip-mentor-another-school@example.com") do |u|
   u.full_name = "FIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
   profile.trn = "1357010"
 end
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000105").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 user = User.find_or_create_by!(email: "fip-mentor3@example.com") do |u|
   u.full_name = "FIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000106").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 # SIT also a mentor
 user = User.find_by(email: "cpd-test+tutor-7@example.com")
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 # Extra participant records
 user = User.find_or_create_by!(email: "fip-ect2@example.com") do |u|
   u.full_name = "FIP ECT"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000107").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 
 user = User.find_or_create_by!(email: "fip-ect3@example.com") do |u|
   u.full_name = "FIP ECT"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 user = User.find_or_create_by!(email: "fip-mentor4@example.com") do |u|
   u.full_name = "FIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000108").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 user = User.find_or_create_by!(email: "fip-mentor5@example.com") do |u|
   u.full_name = "FIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000109").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 # TODO: add validation data and eligibility records when merged
 
@@ -601,17 +601,17 @@ Induction::Enrol.call(participant_profile: participant_profile, induction_progra
       administrative_district_code: "E123",
     )
     user = User.find_or_create_by!(full_name: "Induction Tutor for School #{index}", email: "cip-tutor-#{index}@example.com")
-    InductionCoordinatorProfile.find_or_create_by!(user: user) do |profile|
+    InductionCoordinatorProfile.find_or_create_by!(user:) do |profile|
       profile.schools << school
     end
 
     delivery_partner = lead_provider.delivery_partners.first
-    school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: school, induction_programme_choice: "core_induction_programme")
-    partnership = Partnership.find_or_create_by!(cohort: school_cohort.cohort, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner)
+    school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "core_induction_programme")
+    partnership = Partnership.find_or_create_by!(cohort: school_cohort.cohort, school:, lead_provider:, delivery_partner:)
 
     InductionProgramme.find_or_create_by!(
-      school_cohort: school_cohort,
-      partnership: partnership,
+      school_cohort:,
+      partnership:,
       training_programme: "full_induction_programme",
     )
   end
@@ -622,11 +622,11 @@ user = User.find_or_create_by!(email: "cip-ect@example.com") do |u|
   u.full_name = "CIP ECT"
 end
 
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+profile = ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
 end
 Induction::Enrol.call(participant_profile: profile, induction_programme: profile.school_cohort.induction_programmes.first)
@@ -635,11 +635,11 @@ Induction::Enrol.call(participant_profile: profile, induction_programme: profile
 user = User.find_or_create_by!(email: "cip-mentor@example.com") do |u|
   u.full_name = "CIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000201").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 Induction::Enrol.call(participant_profile: profile, induction_programme: profile.school_cohort.induction_programmes.first)
@@ -648,19 +648,19 @@ Induction::Enrol.call(participant_profile: profile, induction_programme: profile
 user = User.find_or_create_by!(email: "cip-mentor-npq@example.com") do |u|
   u.full_name = "CIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
   p.trn = "1162128"
 end
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000202").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
   Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |p|
   p.schedule = Finance::Schedule::NPQSpecialist.default
-  p.participant_identity = Identity::Create.call(user: user, origin: :npq)
+  p.participant_identity = Identity::Create.call(user:, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
@@ -668,23 +668,23 @@ ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 user = User.find_or_create_by!(email: "cip-mentor-npq-other-email@example.com") do |u|
   u.full_name = "CIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
   p.trn = "2631405"
 end
-npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |p|
   p.schedule = Finance::Schedule::NPQSpecialist.default
-  p.participant_identity = Identity::Create.call(user: user, origin: :npq)
+  p.participant_identity = Identity::Create.call(user:, origin: :npq)
 end
 ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
 user = User.find_or_create_by!(email: "cip-mentor2@example.com") do |u|
   u.full_name = "CIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000203").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
   Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
@@ -693,40 +693,40 @@ end
 user = User.find_or_create_by!(email: "cip-mentor-another-school@example.com") do |u|
   u.full_name = "CIP Mentor NPQ"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
   p.trn = "1835206"
 end
-participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+participant_profile = ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000204").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
 end
 
 induction_programme = participant_profile.school_cohort.induction_programmes.first
 raise unless induction_programme
 
-Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
+Induction::Enrol.call(participant_profile:, induction_programme:)
 
 user = User.find_or_create_by!(email: "cip-mentor3@example.com") do |u|
   u.full_name = "CIP Mentor"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = School.find_by(urn: "000205").school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
   Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
 
 # SIT also a mentor
 user = User.find_by(email: "cip-tutor-201@example.com")
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::Mentor.find_or_create_by!(teacher_profile: teacher_profile) do |mentor_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::Mentor.find_or_create_by!(teacher_profile:) do |mentor_profile|
   mentor_profile.school_cohort = user.induction_coordinator_profile.schools.first.school_cohorts.find_by(cohort: Cohort.current)
   mentor_profile.schedule = Finance::Schedule::ECF.default
-  mentor_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  mentor_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: mentor_profile)
   Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: mentor_profile.school_cohort.induction_programmes.first)
 end
@@ -735,11 +735,11 @@ end
 user = User.find_or_create_by!(email: "cip-ect2@example.com") do |u|
   u.full_name = "CIP ECT"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |ect_profile|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |ect_profile|
   ect_profile.school_cohort = School.find_by(urn: "000206").school_cohorts.find_by(cohort: Cohort.current)
   ect_profile.schedule = Finance::Schedule::ECF.default
-  ect_profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  ect_profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: ect_profile)
   Induction::Enrol.call(participant_profile: ect_profile, induction_programme: ect_profile.school_cohort.induction_programmes.first)
 end
@@ -769,11 +769,11 @@ def create_participant_with_eligibility(urn, name, participant_class, options = 
     u.full_name = name
   end
 
-  teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-  participant_class.find_or_create_by!(teacher_profile: teacher_profile) do |profile|
-    profile.school_cohort = School.find_by(urn: urn).school_cohorts.find_by(cohort: Cohort.current)
+  teacher_profile = TeacherProfile.find_or_create_by!(user:)
+  participant_class.find_or_create_by!(teacher_profile:) do |profile|
+    profile.school_cohort = School.find_by(urn:).school_cohorts.find_by(cohort: Cohort.current)
     profile.schedule = Finance::Schedule::ECF.default
-    profile.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+    profile.participant_identity = Identity::Create.call(user:, origin: :ecf)
     ParticipantProfileState.find_or_create_by!(participant_profile: profile)
     ECFParticipantValidationData.find_or_create_by!(participant_profile: profile)
     default_options = {
@@ -793,12 +793,12 @@ end
 user = User.find_or_create_by!(email: "cip-ect-email-sent@example.com") do |u|
   u.full_name = "CIP ECT Email Sent"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |p|
   p.request_for_details_sent_at = Time.zone.now
   p.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   p.schedule = Finance::Schedule::ECF.default
-  p.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  p.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: p)
   Email.create!(tags: [:request_for_details], status: "delivered").create_association_with(p)
   Induction::Enrol.call(participant_profile: p, induction_programme: p.school_cohort.induction_programmes.first)
@@ -807,12 +807,12 @@ end
 user = User.find_or_create_by!(email: "cip-ect-email-bounced@example.com") do |u|
   u.full_name = "CIP ECT Email bounced"
 end
-teacher_profile = TeacherProfile.find_or_create_by!(user: user)
-ParticipantProfile::ECT.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+teacher_profile = TeacherProfile.find_or_create_by!(user:)
+ParticipantProfile::ECT.find_or_create_by!(teacher_profile:) do |p|
   p.request_for_details_sent_at = Time.zone.now
   p.school_cohort = School.find_by(urn: "000200").school_cohorts.find_by(cohort: Cohort.current)
   p.schedule = Finance::Schedule::ECF.default
-  p.participant_identity = Identity::Create.call(user: user, origin: :ecf)
+  p.participant_identity = Identity::Create.call(user:, origin: :ecf)
   ParticipantProfileState.find_or_create_by!(participant_profile: p)
   Email.create!(tags: [:request_for_details], status: "permanent-failure").create_association_with(p)
   Induction::Enrol.call(participant_profile: p, induction_programme: p.school_cohort.induction_programmes.first)
@@ -864,7 +864,7 @@ create_npq_declarations = lambda {
         u.full_name = "NPQ #{i}"
       end
 
-      teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |p|
+      teacher_profile = TeacherProfile.find_or_create_by!(user:) do |p|
         p.trn = trn
       end
 
@@ -886,10 +886,10 @@ create_npq_declarations = lambda {
         user_id: user.id,
       ).tap(&:save!)
 
-      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile: teacher_profile) do |p|
+      npq_profile = ParticipantProfile::NPQ.find_or_create_by!(teacher_profile:) do |p|
         p.id = npq_application.id
         p.schedule = Finance::Schedule::NPQSpecialist.default
-        p.participant_identity = Identity::Create.call(user: user, origin: :npq)
+        p.participant_identity = Identity::Create.call(user:, origin: :npq)
       end
 
       ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
@@ -911,7 +911,7 @@ create_npq_declarations = lambda {
   create_npq_declarations[
     provider_name: "Ambition Institute",
     course: "npq-headship",
-    state: state,
+    state:,
     count: 10,
   ]
 end

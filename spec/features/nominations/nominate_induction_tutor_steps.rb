@@ -57,7 +57,7 @@ module NominateInductionTutorSteps
   end
 
   def when_i_select(option)
-    choose option: option, allow_label_click: true
+    choose option:, allow_label_click: true
   end
 
   def then_i_should_be_on_the_choose_how_to_continue_page

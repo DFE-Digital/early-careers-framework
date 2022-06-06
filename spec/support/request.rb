@@ -13,7 +13,7 @@ module Support
     end
 
     def set_session(key, value)
-      post "/__session", params: { key: key, value: value }.to_json, headers: { "CONTENT_TYPE" => "application/json" }
+      post "/__session", params: { key:, value: }.to_json, headers: { "CONTENT_TYPE" => "application/json" }
     end
 
     RSpec.configure do |rspec|

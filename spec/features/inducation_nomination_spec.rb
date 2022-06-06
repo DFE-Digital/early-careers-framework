@@ -10,13 +10,13 @@ RSpec.feature "Nominating tutors", :js do
     let!(:nomination_email) { create(:nomination_email, :email_address_already_used_for_another_school, token: "foo-bar-baz") }
 
     let(:teacher_profile) { create :teacher_profile }
-    let(:ect_participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
+    let(:ect_participant_profile) { create(:ect_participant_profile, teacher_profile:) }
 
     let(:different_user) { create(:user, email: "different-user-type@example.com") }
     let(:mailer) { double(SchoolMailer, deliver_later: nil) }
 
     before do
-      create(:school_cohort, school: school, cohort: cohort, induction_programme_choice: "core_induction_programme")
+      create(:school_cohort, school:, cohort:, induction_programme_choice: "core_induction_programme")
       create(:ect_participant_profile, teacher_profile: create(:teacher_profile, user: different_user))
       allow(SchoolMailer).to receive(:nomination_confirmation_email).and_return(mailer)
     end

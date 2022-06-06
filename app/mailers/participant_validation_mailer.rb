@@ -18,7 +18,7 @@ class ParticipantValidationMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name:,
         participant_start: start_url,
       },
     )
@@ -31,7 +31,7 @@ class ParticipantValidationMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name:,
         participant_start: start_url,
       },
     )
@@ -44,7 +44,7 @@ class ParticipantValidationMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name:,
         participant_start: start_url,
       },
     )
@@ -57,7 +57,7 @@ class ParticipantValidationMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        sign_in: sign_in,
+        sign_in:,
         participant_start: start_url,
       },
     ).tag(:sit_unvalidated_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)

@@ -18,7 +18,7 @@ class InviteSchools
       nomination_email = NominationEmail.create_nomination_email(
         sent_at: Time.zone.now,
         sent_to: school.contact_email,
-        school: school,
+        school:,
       )
 
       send_nomination_email(nomination_email)
@@ -32,7 +32,7 @@ class InviteSchools
 
   def reached_limit(school)
     EMAIL_LIMITS.find do |kwargs|
-      NominationEmail.where(school: school, sent_at: kwargs[:within].ago..Float::INFINITY).count >= kwargs[:max]
+      NominationEmail.where(school:, sent_at: kwargs[:within].ago..Float::INFINITY).count >= kwargs[:max]
     end
   end
 
@@ -50,7 +50,7 @@ class InviteSchools
             .select(:user_id),
     ).find_each do |user|
       SchoolMailer.diy_wordpress_notification(
-        user: user,
+        user:,
       ).deliver_later
     end
   end
@@ -96,7 +96,7 @@ private
   end
 
   def find_school(urn)
-    school = School.find_by(urn: urn)
+    school = School.find_by(urn:)
     logger.info "School not found, urn: #{urn} ... skipping" unless school&.can_access_service?
     school
   end
@@ -105,7 +105,7 @@ private
     nomination_email = NominationEmail.create_nomination_email(
       sent_at: Time.zone.now,
       sent_to: email,
-      school: school,
+      school:,
     )
     send_nomination_email(nomination_email)
   rescue Notifications::Client::RateLimitError
@@ -121,14 +121,14 @@ private
       expiry_date: email_expiry_date,
     ).deliver_now.delivery_method.response.id
 
-    nomination_email.update!(notify_id: notify_id)
+    nomination_email.update!(notify_id:)
   end
 
   def send_ministerial_letter(recipient)
-    SchoolMailer.ministerial_letter_email(recipient: recipient).deliver_now
+    SchoolMailer.ministerial_letter_email(recipient:).deliver_now
   rescue Notifications::Client::RateLimitError
     sleep(1)
-    SchoolMailer.ministerial_letter_email(recipient: recipient).deliver_now
+    SchoolMailer.ministerial_letter_email(recipient:).deliver_now
   end
 
   def email_expiry_date

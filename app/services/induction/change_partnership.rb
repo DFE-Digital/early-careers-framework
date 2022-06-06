@@ -10,7 +10,7 @@ class Induction::ChangePartnership < BaseService
       if default_induction_programme.partnership.blank?
         # there is no partnership, we presume there was none when the school chose FIP
         # so we can just update the programme
-        default_induction_programme.update!(partnership: partnership)
+        default_induction_programme.update!(partnership:)
 
       elsif default_induction_programme.partnership != partnership &&
           default_induction_programme.partnership.challenged?
@@ -18,9 +18,9 @@ class Induction::ChangePartnership < BaseService
         ActiveRecord::Base.transaction do
           # existing FIP partnership replaced so create a new programme and migrate
           # all the participants to the new one
-          programme = InductionProgramme.create!(school_cohort: school_cohort,
+          programme = InductionProgramme.create!(school_cohort:,
                                                  training_programme: "full_induction_programme",
-                                                 partnership: partnership)
+                                                 partnership:)
 
           Induction::MigrateParticipantsToNewProgramme.call(from_programme: default_induction_programme,
                                                             to_programme: programme)

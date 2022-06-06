@@ -20,7 +20,7 @@ class PrivacyPolicy < ApplicationRecord
 
     Acceptance
       .joins(:privacy_policy)
-      .where(user: user)
+      .where(user:)
       .where("privacy_policies.major_version >= ?", major_version)
       .none?
   end
@@ -31,7 +31,7 @@ class PrivacyPolicy < ApplicationRecord
 
   def accept!(user)
     Acceptance.create!(
-      user: user,
+      user:,
       privacy_policy: self,
     )
   end

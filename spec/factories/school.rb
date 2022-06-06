@@ -43,7 +43,7 @@ FactoryBot.define do
       end
 
       after :build do |school, evaluator|
-        create_list(:school_cohort, evaluator.school_cohorts_count, :consecutive_cohorts, school: school)
+        create_list(:school_cohort, evaluator.school_cohorts_count, :consecutive_cohorts, school:)
       end
     end
   end

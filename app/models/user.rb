@@ -159,7 +159,7 @@ private
 
   def sync_email_address_with_identity
     if saved_change_to_email?
-      participant_identities.original.first&.update!(email: email)
+      participant_identities.original.first&.update!(email:)
     end
   end
 end

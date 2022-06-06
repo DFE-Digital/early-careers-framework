@@ -12,7 +12,7 @@ module Support
         participant_profile = user.participant_profiles.first
         raise "Could not find ParticipantProfile for #{participant_name}" if participant_profile.nil?
 
-        expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile: participant_profile)
+        expect(Analytics::UpsertECFParticipantProfileJob).to have_been_enqueued.with(participant_profile:)
       end
 
       failure_message do |_analytics|

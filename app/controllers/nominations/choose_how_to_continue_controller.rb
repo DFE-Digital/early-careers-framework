@@ -6,9 +6,9 @@ class Nominations::ChooseHowToContinueController < ApplicationController
   before_action :check_token_status, only: :new
 
   def new
-    @how_to_continue_form = NominateHowToContinueForm.new(token: token,
-                                                          school: school,
-                                                          cohort: cohort)
+    @how_to_continue_form = NominateHowToContinueForm.new(token:,
+                                                          school:,
+                                                          cohort:)
   end
 
   def create
@@ -36,7 +36,7 @@ private
     opt_out = @how_to_continue_form.opt_out?
 
     if opt_out
-      school.school_cohorts.find_or_create_by!(cohort: cohort) do |school_cohort|
+      school.school_cohorts.find_or_create_by!(cohort:) do |school_cohort|
         school_cohort.induction_programme_choice = :no_early_career_teachers
         school_cohort.opt_out_of_updates = true
       end

@@ -9,7 +9,7 @@ RSpec.describe DeliveryPartnerForm, type: :model do
       let(:other_delivery_partner) { create(:delivery_partner) }
       let(:cohort) { create(:cohort, :current) }
       before do
-        ProviderRelationship.create!(lead_provider: lead_provider, delivery_partner: other_delivery_partner, cohort: cohort)
+        ProviderRelationship.create!(lead_provider:, delivery_partner: other_delivery_partner, cohort:)
       end
 
       it "does not affect provider relationships for other delivery partners when creating" do

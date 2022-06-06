@@ -20,7 +20,7 @@ module Multistep
 
     class_methods do
       def step(step_name, multiple: false, update: false, &block)
-        builder = Builder.new(step_name: step_name, form_class: self, multiple: multiple, update: update)
+        builder = Builder.new(step_name:, form_class: self, multiple:, update:)
         builder.instance_exec(&block) if block
 
         steps[step_name] = builder.to_step

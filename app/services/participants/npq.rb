@@ -22,7 +22,7 @@ module Participants
 
       @user_profile ||= ParticipantProfile::NPQ
         .includes(npq_application: :npq_course)
-        .where(participant_identity: participant_identity)
+        .where(participant_identity:)
         .npqs
         .active_record
         .where('npq_courses.identifier': course_identifier)

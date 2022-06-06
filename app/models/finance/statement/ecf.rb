@@ -8,8 +8,8 @@ class Finance::Statement::ECF < Finance::Statement
   def contract
     CallOffContract.find_by!(
       version: contract_version,
-      cohort: cohort,
-      lead_provider: lead_provider,
+      cohort:,
+      lead_provider:,
     )
   end
 
@@ -29,7 +29,7 @@ private
 
   def orchestrator
     Finance::ECF::CalculationOrchestrator.new(
-      aggregator: aggregator,
+      aggregator:,
       contract: cpd_lead_provider.lead_provider.call_off_contract,
       statement: self,
     )

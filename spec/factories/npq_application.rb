@@ -16,7 +16,7 @@ FactoryBot.define do
 
     trait :accepted do
       after :create do |npq_application|
-        NPQ::Accept.call(npq_application: npq_application)
+        NPQ::Accept.call(npq_application:)
       end
     end
 

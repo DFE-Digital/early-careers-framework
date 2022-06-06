@@ -8,20 +8,20 @@ RSpec.describe "Admin::Schools::Participants", type: :request do
 
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
-  let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort_2021) }
-  let(:school_cohort_22) { create(:school_cohort, school: school, cohort: cohort_2022) }
+  let(:school_cohort) { create(:school_cohort, school:, cohort: cohort_2021) }
+  let(:school_cohort_22) { create(:school_cohort, school:, cohort: cohort_2022) }
 
-  let!(:ect_profile) { create :ect_participant_profile, school_cohort: school_cohort }
+  let!(:ect_profile) { create :ect_participant_profile, school_cohort: }
   let!(:ect_profile_22) { create :ect_participant_profile, school_cohort: school_cohort_22 }
-  let!(:mentor_profile) { create :mentor_participant_profile, school_cohort: school_cohort }
-  let!(:npq_profile) { create(:npq_participant_profile, school: school) }
+  let!(:mentor_profile) { create :mentor_participant_profile, school_cohort: }
+  let!(:npq_profile) { create(:npq_participant_profile, school:) }
   let!(:unrelated_profile) { create :ecf_participant_profile }
-  let!(:withdrawn_profile_record) { create :mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort }
+  let!(:withdrawn_profile_record) { create :mentor_participant_profile, :withdrawn_record, school_cohort: }
 
   before do
     sign_in admin_user
 
-    school_cohort.update!(default_induction_programme: InductionProgramme.create!(school_cohort: school_cohort,
+    school_cohort.update!(default_induction_programme: InductionProgramme.create!(school_cohort:,
                                                                                   training_programme: :core_induction_programme))
 
     school_cohort_22.update!(default_induction_programme: InductionProgramme.create!(school_cohort: school_cohort_22,

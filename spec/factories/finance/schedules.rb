@@ -13,7 +13,7 @@ FactoryBot.define do
           { name: "Output 6 - Participant Completion", start_date: Date.new(2023, 2, 1), milestone_date: Date.new(2023, 4, 30), payment_date: Date.new(2023, 5, 31), declaration_type: "completed" },
         ].each do |hash|
           Finance::Milestone.find_or_create_by!(
-            schedule: schedule,
+            schedule:,
             name: hash[:name],
             start_date: hash[:start_date],
             milestone_date: hash[:milestone_date],
@@ -32,7 +32,7 @@ FactoryBot.define do
           { name: "Output 4 - Participant Completion", start_date: Date.new(2023, 2, 1), payment_date: Date.new(2023, 5, 31), declaration_type: "completed" },
         ].each do |hash|
           Finance::Milestone.find_or_create_by!(
-            schedule: schedule,
+            schedule:,
             name: hash[:name],
             start_date: hash[:start_date],
             payment_date: hash[:payment_date],

@@ -15,13 +15,13 @@ class RectifyParticipantSchool < BaseService
   # scenario.
   def call
     cohort = participant_profile.school_cohort.cohort
-    school_cohort = school.school_cohorts.find_by(cohort: cohort)
+    school_cohort = school.school_cohorts.find_by(cohort:)
     return if school_cohort.blank?
 
     ActiveRecord::Base.transaction do
-      participant_profile.teacher_profile.update!(school: school)
+      participant_profile.teacher_profile.update!(school:)
       attrs = {
-        school_cohort: school_cohort,
+        school_cohort:,
       }
 
       if transfer_pupil_premium_and_sparsity

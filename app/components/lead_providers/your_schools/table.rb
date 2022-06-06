@@ -14,9 +14,9 @@ module LeadProviders
 
       def paginate(data, page)
         if data.is_a? Array
-          pagy_array(data, page: page, items: 10)
+          pagy_array(data, page:, items: 10)
         else
-          pagy(data, page: page, items: 10)
+          pagy(data, page:, items: 10)
         end
       end
 

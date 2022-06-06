@@ -3,11 +3,11 @@
 RSpec.describe Schools::Participants::CocStatusTableRow, type: :view_component do
   let!(:school_cohort) { create :school_cohort, :fip }
   let!(:partnership) { create :partnership, school: school_cohort.school, cohort: school_cohort.cohort }
-  let(:participant_profile) { create :ect_participant_profile, school_cohort: school_cohort }
-  let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: participant_profile) }
-  let(:induction_record) { Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme) }
+  let(:participant_profile) { create :ect_participant_profile, school_cohort: }
+  let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
+  let(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme: programme) }
 
-  component { described_class.new induction_record: induction_record }
+  component { described_class.new induction_record: }
 
   context "participant is on full induction programme" do
     let(:programme) { create(:induction_programme, :fip) }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Finance::DeclarationStatementAttacher do
-  let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider: cpd_lead_provider) }
+  let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:) }
   let(:statement) { create(:ecf_statement, output_fee: true, deadline_date: 2.months.from_now) }
   let(:cpd_lead_provider) { statement.cpd_lead_provider }
 

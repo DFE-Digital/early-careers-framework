@@ -42,7 +42,7 @@ module APIs
         participant_id: @current_id,
         declaration_type: declaration_type.to_s.gsub("_", "-"),
         declaration_date: declaration_date.rfc3339,
-        course_identifier: course_identifier,
+        course_identifier:,
         evidence_held: evidence_held ? "self-study-material-completed" : nil,
       }
       params = build_params(@attributes)
@@ -64,7 +64,7 @@ module APIs
       {
         data: {
           type: "participant-declaration",
-          attributes: attributes,
+          attributes:,
         },
       }.to_json
     end

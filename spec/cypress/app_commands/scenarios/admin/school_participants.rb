@@ -2,8 +2,8 @@
 
 school = FactoryBot.create :school, name: "Test School", slug: "test-school", urn: "123456"
 cohort = FactoryBot.create :cohort, start_year: 2021
-school_cohort = FactoryBot.create(:school_cohort, :cip, school: school, cohort: cohort)
-induction_programme = FactoryBot.create(:induction_programme, school_cohort: school_cohort)
+school_cohort = FactoryBot.create(:school_cohort, :cip, school:, cohort:)
+induction_programme = FactoryBot.create(:induction_programme, school_cohort:)
 mentor_1 = FactoryBot.create :mentor_participant_profile,
                              user: FactoryBot.create(:user, full_name: "Mentor User 1"),
                              school_cohort: school_cohort,
@@ -28,14 +28,14 @@ ect_2 = FactoryBot.create :ect_participant_profile,
 [mentor_1, mentor_2, ect_1, ect_2].each do |ppt|
   Induction::Enrol.call(
     participant_profile: ppt,
-    induction_programme: induction_programme,
+    induction_programme:,
     start_date: 2.months.ago,
     mentor_profile: ppt.ect? ? mentor_1 : nil,
   )
 end
 
 another_school = FactoryBot.create(:school, name: "Some other school", urn: "222222")
-another_school_cohort = FactoryBot.create(:school_cohort, :cip, school: another_school, cohort: cohort)
+another_school_cohort = FactoryBot.create(:school_cohort, :cip, school: another_school, cohort:)
 
 FactoryBot.create :mentor_participant_profile,
                   user: FactoryBot.create(:user, full_name: "Unrelated mentor"),
@@ -62,5 +62,5 @@ Timecop.freeze(Date.parse("19/09/2019")) do
                                       school_urn: school.urn,
                                       npq_course: npq_course
 
-  NPQ::Accept.new(npq_application: npq_application).call
+  NPQ::Accept.new(npq_application:).call
 end

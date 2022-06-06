@@ -45,7 +45,7 @@ class DeliveryPartnerForm
         &.map { |relationship_params| ProviderRelationship.new(relationship_params) }
     else
       filtered_provider_relationships
-        &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(delivery_partner: delivery_partner, **relationship_params) }
+        &.map { |relationship_params| ProviderRelationship.find_or_initialize_by(delivery_partner:, **relationship_params) }
     end
   end
 

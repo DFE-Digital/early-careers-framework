@@ -21,8 +21,8 @@ lead_provider = LeadProvider.find_by(name: "Ambition Institute")
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
 Partnership.find_or_create_by!(school: fip_school,
                                cohort: seed_cohort,
-                               lead_provider: lead_provider,
-                               delivery_partner: delivery_partner) do |partnership|
+                               lead_provider:,
+                               delivery_partner:) do |partnership|
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
@@ -60,8 +60,8 @@ lead_provider = LeadProvider.find_by(name: "Ambition Institute")
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
 Partnership.find_or_create_by!(school: fip2_school,
                                cohort: seed_cohort,
-                               lead_provider: lead_provider,
-                               delivery_partner: delivery_partner) do |partnership|
+                               lead_provider:,
+                               delivery_partner:) do |partnership|
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
@@ -99,8 +99,8 @@ lead_provider = LeadProvider.find_by(name: "Ambition Institute")
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
 Partnership.find_or_create_by!(school: fip3_school,
                                cohort: seed_cohort,
-                               lead_provider: lead_provider,
-                               delivery_partner: delivery_partner) do |partnership|
+                               lead_provider:,
+                               delivery_partner:) do |partnership|
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 

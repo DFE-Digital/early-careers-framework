@@ -12,14 +12,14 @@ class Induction::TransferAndContinueExistingFip < BaseService
 
       # create a special programme to support the transferring participant
       programme = InductionProgramme.create!(training_programme: :full_induction_programme,
-                                             school_cohort: school_cohort,
+                                             school_cohort:,
                                              partnership: create_relationship)
 
-      Induction::Enrol.call(participant_profile: participant_profile,
+      Induction::Enrol.call(participant_profile:,
                             induction_programme: programme,
-                            start_date: start_date,
+                            start_date:,
                             preferred_email: email,
-                            mentor_profile: mentor_profile,
+                            mentor_profile:,
                             school_transfer: true)
     end
   end
@@ -39,7 +39,7 @@ private
 
   def create_relationship
     if participant_lead_provider.present?
-      Induction::CreateRelationship.call(school_cohort: school_cohort,
+      Induction::CreateRelationship.call(school_cohort:,
                                          lead_provider: participant_lead_provider,
                                          delivery_partner: participant_delivery_partner)
     end

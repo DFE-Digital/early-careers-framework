@@ -31,7 +31,7 @@ class CreatePrivacyPolicyAcceptances < ActiveRecord::Migration[6.1]
         User.where.not(privacy_policy_acceptance: nil).find_each do |user|
           PrivacyPolicyAcceptance.create(
             privacy_policy: policies[user.privacy_policy_acceptance["version"]],
-            user: user,
+            user:,
             created_at: user.privacy_policy_acceptance["accepted_at"],
             updated_at: user.privacy_policy_acceptance["accepted_at"],
           )

@@ -43,28 +43,28 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
   describe "mentor_options" do
     it "does not include mentors with withdrawn records" do
-      withdrawn_mentor_record = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
+      withdrawn_mentor_record = create(:mentor_participant_profile, :withdrawn_record, school_cohort:).user
 
       expect(form.mentor_options).not_to include(withdrawn_mentor_record)
     end
 
     it "includes active mentors" do
-      active_mentor_record = create(:mentor_participant_profile, school_cohort: school_cohort).user
+      active_mentor_record = create(:mentor_participant_profile, school_cohort:).user
 
       expect(form.mentor_options).to include(active_mentor_record)
     end
 
     context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
       let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
-      let(:school_cohort_2) { create(:school_cohort, school: school, cohort: cohort_2022) }
+      let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
 
       context "when there are mentors in the school mentor pool" do
-        let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+        let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
         let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort_2) }
 
         before do
-          Mentors::AddToSchool.call(school: school, mentor_profile: mentor_profile)
-          Mentors::AddToSchool.call(school: school, mentor_profile: mentor_profile_2)
+          Mentors::AddToSchool.call(school:, mentor_profile:)
+          Mentors::AddToSchool.call(school:, mentor_profile: mentor_profile_2)
         end
 
         it "includes to mentors in the pool" do
@@ -93,15 +93,15 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the email is in use by an ECT user" do
       let(:user) { create(:user, email: "ray.clemence@example.com") }
-      let(:teacher_profile) { create(:teacher_profile, user: user) }
-      let!(:ect_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
+      let(:teacher_profile) { create(:teacher_profile, user:) }
+      let!(:ect_profile) { create(:ect_participant_profile, teacher_profile:) }
 
       it "returns true" do
         expect(form).to be_email_already_taken
       end
 
       context "when the ECT profile record is withdrawn" do
-        let!(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, teacher_profile: teacher_profile) }
+        let!(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, teacher_profile:) }
 
         it "returns false" do
           expect(form).not_to be_email_already_taken
@@ -111,15 +111,15 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the email is in use by a Mentor" do
       let(:user) { create(:user, email: "ray.clemence@example.com") }
-      let(:teacher_profile) { create(:teacher_profile, user: user) }
-      let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile: teacher_profile) }
+      let(:teacher_profile) { create(:teacher_profile, user:) }
+      let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile:) }
 
       it "returns true" do
         expect(form).to be_email_already_taken
       end
 
       context "when the mentor profile record is withdrawn" do
-        let!(:mentor_profile) { create(:mentor_participant_profile, :withdrawn_record, teacher_profile: teacher_profile) }
+        let!(:mentor_profile) { create(:mentor_participant_profile, :withdrawn_record, teacher_profile:) }
 
         it "returns false" do
           expect(form).not_to be_email_already_taken
@@ -129,8 +129,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the email is in use by a NPQ registrant" do
       let(:user) { create(:user, email: "ray.clemence@example.com") }
-      let(:teacher_profile) { create(:teacher_profile, user: user) }
-      let!(:npq_profile) { create(:npq_participant_profile, teacher_profile: teacher_profile) }
+      let(:teacher_profile) { create(:teacher_profile, user:) }
+      let!(:npq_profile) { create(:npq_participant_profile, teacher_profile:) }
 
       it "returns false" do
         expect(form).not_to be_email_already_taken
@@ -147,7 +147,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the user is a mentor at another school" do
       before do
-        create(:mentor_participant_profile, user: user)
+        create(:mentor_participant_profile, user:)
       end
 
       it "returns false" do
@@ -157,7 +157,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     context "when the user is a mentor at this school" do
       before do
-        create(:mentor_participant_profile, user: user, school_cohort: school_cohort)
+        create(:mentor_participant_profile, user:, school_cohort:)
       end
 
       it "returns false" do
@@ -242,7 +242,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
       context "A SIT is adding themselves as a mentor and type is not self" do
         it "does not send the SIT an email saying they have been added and validated" do
-          create(:induction_coordinator_profile, user: user)
+          create(:induction_coordinator_profile, user:)
           form.save!
           expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
         end

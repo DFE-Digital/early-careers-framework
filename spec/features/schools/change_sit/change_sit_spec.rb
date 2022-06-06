@@ -143,12 +143,12 @@ private
 
   def create_induction_tutor(*schools)
     user = create(:user, full_name: "Induction Coordinator", email: "ic@example.com")
-    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: schools, user: user)
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools:, user:)
   end
 
   def create_partnership(school)
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, school: school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
+    create(:partnership, school:, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
   end
 end

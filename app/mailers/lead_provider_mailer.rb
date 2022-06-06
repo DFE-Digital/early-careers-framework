@@ -13,8 +13,8 @@ class LeadProviderMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         name: user.full_name,
-        lead_provider_name: lead_provider_name,
-        start_url: start_url,
+        lead_provider_name:,
+        start_url:,
         subject: "Your account to confirm schools",
       },
     ).tag(:lead_provider_account_created)
@@ -34,9 +34,9 @@ class LeadProviderMailer < ApplicationMailer
         school_name: partnership.school.name,
         school_urn: partnership.school.urn,
         delivery_partner_name: partnership.delivery_partner.name,
-        lead_provider_name: lead_provider_name,
+        lead_provider_name:,
         cohort_year: partnership.cohort.academic_year,
-        reason: reason,
+        reason:,
       },
     ).tag(:partnership_challenged).associate_with(partnership)
   end
@@ -46,8 +46,8 @@ class LeadProviderMailer < ApplicationMailer
     delivery_partner_name = partnership.delivery_partner.name
 
     reason = I18n.t(what_changes_choice, scope: "programme_changed_reasons",
-                                         lead_provider_name: lead_provider_name,
-                                         delivery_partner_name: delivery_partner_name)
+                                         lead_provider_name:,
+                                         delivery_partner_name:)
 
     template_mail(
       PROGRAMME_CHANGED_TEMPLATE_ID,
@@ -58,10 +58,10 @@ class LeadProviderMailer < ApplicationMailer
         name: user.full_name,
         school_name: partnership.school.name,
         school_urn: partnership.school.urn,
-        delivery_partner_name: delivery_partner_name,
-        cohort_year: cohort_year,
-        lead_provider_name: lead_provider_name,
-        reason: reason,
+        delivery_partner_name:,
+        cohort_year:,
+        lead_provider_name:,
+        reason:,
       },
     ).tag(:fip_programme_changed)
   end

@@ -2,10 +2,10 @@
 
 RSpec.describe Schools::Participants::RemoveFromCohortComponent, type: :view_component do
   let(:school_cohort) { create :school_cohort }
-  let(:profile) { create :ecf_participant_profile, school_cohort: school_cohort }
-  component { described_class.new(profile: profile) }
+  let(:profile) { create :ecf_participant_profile, school_cohort: }
+  component { described_class.new(profile:) }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [school_cohort.school]) }
-  component { described_class.new(current_user: induction_coordinator, profile: profile) }
+  component { described_class.new(current_user: induction_coordinator, profile:) }
 
   context "when the validation hasn’t started yet" do
     it "displays the link to remove the participant" do
@@ -29,9 +29,9 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, type: :view_com
 
       it "displays the lead_provider name" do
         Partnership.create!(cohort: school_cohort.cohort,
-                            lead_provider: lead_provider,
+                            lead_provider:,
                             school: school_cohort.school,
-                            delivery_partner: delivery_partner)
+                            delivery_partner:)
 
         expect(rendered).to have_content(lead_provider.name)
       end

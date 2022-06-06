@@ -9,7 +9,7 @@ RSpec.describe AdminProfile, type: :model do
     let(:name) { Faker::Name.name }
     let(:email) { Faker::Internet.email }
     let(:sign_in_url) { "www.example.com/sign-in" }
-    let(:created_user) { User.find_by(email: email) }
+    let(:created_user) { User.find_by(email:) }
 
     it "creates an admin user" do
       expect {

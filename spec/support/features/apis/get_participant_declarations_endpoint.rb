@@ -61,7 +61,7 @@ module APIs
 
     def build_filter_params(filter)
       {
-        filter: filter,
+        filter:,
       }.to_json
     end
 

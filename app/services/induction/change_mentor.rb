@@ -3,10 +3,10 @@
 class Induction::ChangeMentor < BaseService
   def call
     ActiveRecord::Base.transaction do
-      Induction::ChangeInductionRecord.call(induction_record: induction_record,
-                                            changes: { mentor_profile: mentor_profile })
+      Induction::ChangeInductionRecord.call(induction_record:,
+                                            changes: { mentor_profile: })
 
-      induction_record.participant_profile.update!(mentor_profile: mentor_profile)
+      induction_record.participant_profile.update!(mentor_profile:)
     end
   end
 

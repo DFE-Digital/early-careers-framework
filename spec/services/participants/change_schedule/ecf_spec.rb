@@ -112,17 +112,17 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     let(:cohort) { create(:cohort) }
     let(:schedule) do
       Finance::Schedule.create!(
-        cohort: cohort,
+        cohort:,
         schedule_identifier: "soft-schedule",
         name: "soft-schedule",
       )
     end
-    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule: schedule) }
+    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule:) }
     let(:user) { profile.user }
     let(:profile) { create(:ecf_participant_profile) }
     let!(:declaration) do
       create(:participant_declaration,
-             user: user,
+             user:,
              participant_profile: profile,
              course_identifier: "ecf-induction")
     end

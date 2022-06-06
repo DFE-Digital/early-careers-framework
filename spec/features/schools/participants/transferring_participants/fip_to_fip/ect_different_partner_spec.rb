@@ -326,7 +326,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         induction_record = @participant_profile_ect.induction_records.latest
         expect(ParticipantTransferMailer).to have_received(notification_method)
                                                .with(hash_including(
-                                                       induction_record: induction_record,
+                                                       induction_record:,
                                                        lead_provider_profile: @lead_provider_two_profile,
                                                      ))
       end
@@ -336,7 +336,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         expect(ParticipantTransferMailer).to have_received(notification_method)
                                                .with(hash_including(
-                                                       induction_record: induction_record,
+                                                       induction_record:,
                                                        lead_provider_profile: @lead_provider_profile,
                                                      ))
       end

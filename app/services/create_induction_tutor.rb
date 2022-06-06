@@ -13,22 +13,22 @@ class CreateInductionTutor < BaseService
     ActiveRecord::Base.transaction do
       remove_existing_induction_coordinator
 
-      user = Identity.find_user_by(email: email)
+      user = Identity.find_user_by(email:)
 
       if user&.induction_coordinator?
         raise if user.full_name != full_name
 
         user.induction_coordinator_profile.schools << school
       else
-        user ||= User.create!(email: email, full_name: full_name)
-        InductionCoordinatorProfile.create!(user: user, schools: [school])
+        user ||= User.create!(email:, full_name:)
+        InductionCoordinatorProfile.create!(user:, schools: [school])
       end
 
       SchoolMailer.nomination_confirmation_email(
         sit_profile: user.induction_coordinator_profile,
-        school: school,
-        start_url: start_url,
-        step_by_step_url: step_by_step_url,
+        school:,
+        start_url:,
+        step_by_step_url:,
       ).deliver_later
     end
   end

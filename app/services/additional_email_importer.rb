@@ -24,7 +24,7 @@ private
 
   def import_email(row)
     urn = row.fetch("urn")
-    school = School.find_by(urn: urn)
+    school = School.find_by(urn:)
     logger.info "Could not find school with URN #{urn}" and return unless school
 
     email = row.fetch("email")
@@ -32,7 +32,7 @@ private
     email.gsub!(/[\/:]/, "")
     return unless email_good?(email)
 
-    AdditionalSchoolEmail.find_or_create_by!(school: school, email_address: email)
+    AdditionalSchoolEmail.find_or_create_by!(school:, email_address: email)
   end
 
   def email_good?(email)

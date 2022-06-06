@@ -6,8 +6,8 @@ require "csv"
 RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request do
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
@@ -18,11 +18,11 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
     before :each do
       list = []
-      list << create_list(:npq_application, 3, :in_private_childcare_provider, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course, cohort: cohort)
-      list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course: npq_course, cohort: cohort)
+      list << create_list(:npq_application, 3, :in_private_childcare_provider, npq_lead_provider:, school_urn: "123456", npq_course:, cohort:)
+      list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:, cohort:)
 
       list.flatten.each do |npq_application|
-        NPQ::Accept.new(npq_application: npq_application).call
+        NPQ::Accept.new(npq_application:).call
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
         context "filtering" do
           context "with filter[updated_at]" do
             before do
-              create_list :npq_application, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456"
+              create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456"
             end
 
             it "returns content updated after specified timestamp" do
@@ -108,7 +108,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
           context "with filter[cohort]" do
             let(:next_cohort) { create(:cohort, :next) }
-            let!(:cohort_2022_npq_applications) { create_list :npq_application, 2, npq_lead_provider: npq_lead_provider, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
+            let!(:cohort_2022_npq_applications) { create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
 
             it "returns npq applications only for the 2022 cohort" do
               get "/api/v1/npq-applications", params: { filter: { cohort: 2022 } }
@@ -130,7 +130,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
         end
 
         it "returns scoped profiles" do
-          expect(parsed_response.length).to eql(NPQApplication.where(npq_lead_provider: npq_lead_provider).count)
+          expect(parsed_response.length).to eql(NPQApplication.where(npq_lead_provider:).count)
         end
 
         it "returns the correct headers" do
@@ -195,9 +195,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     end
 
     context "when token belongs to provider that does not handle NPQs" do
-      let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
       let(:lead_provider) { create(:lead_provider) }
-      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
       let(:bearer_token) { "Bearer #{token}" }
 
       it "returns 403" do
@@ -219,7 +219,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
   end
 
   describe "POST /api/v1/npq-applications/:id/reject" do
-    let(:npq_profile) { create(:npq_application, npq_lead_provider: npq_lead_provider) }
+    let(:npq_profile) { create(:npq_application, npq_lead_provider:) }
 
     before do
       default_headers[:Authorization] = bearer_token
@@ -239,7 +239,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     end
 
     context "application has been accepted" do
-      let(:npq_profile) { create(:npq_application, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "accepted") }
+      let(:npq_profile) { create(:npq_application, npq_lead_provider:, lead_provider_approval_status: "accepted") }
 
       it "return 400 bad request " do
         post "/api/v1/npq-applications/#{npq_profile.id}/reject"
@@ -260,7 +260,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
   end
 
   describe "POST /api/v1/npq-applications/:id/accept" do
-    let(:default_npq_application) { create(:npq_application, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
+    let(:default_npq_application) { create(:npq_application, npq_lead_provider:, npq_course:) }
     let(:user) { default_npq_application.user }
 
     before do
@@ -282,8 +282,8 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
     context "when participant has applied for multiple NPQs" do
       let(:participant_identity) { default_npq_application.participant_identity }
-      let!(:other_npq_application) { create(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider, participant_identity: participant_identity) }
-      let!(:other_accepted_npq_application) { create(:npq_application, npq_course: another_npq_course, npq_lead_provider: npq_lead_provider, participant_identity: participant_identity, lead_provider_approval_status: "accepted") }
+      let!(:other_npq_application) { create(:npq_application, npq_course:, npq_lead_provider:, participant_identity:) }
+      let!(:other_accepted_npq_application) { create(:npq_application, npq_course: another_npq_course, npq_lead_provider:, participant_identity:, lead_provider_approval_status: "accepted") }
 
       it "rejects all pending NPQs on same course" do
         post "/api/v1/npq-applications/#{default_npq_application.id}/accept"
@@ -299,7 +299,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     end
 
     context "application has been rejected" do
-      let(:npq_profile) { create(:npq_application, npq_lead_provider: npq_lead_provider, lead_provider_approval_status: "rejected", npq_course: npq_course) }
+      let(:npq_profile) { create(:npq_application, npq_lead_provider:, lead_provider_approval_status: "rejected", npq_course:) }
 
       it "return 400 bad request " do
         post "/api/v1/npq-applications/#{npq_profile.id}/accept"

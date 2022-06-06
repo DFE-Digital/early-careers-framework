@@ -3,12 +3,12 @@
 require "swagger_helper"
 
 describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_spec.json" do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
   let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-  let(:npq_application) { create(:npq_application, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
+  let(:npq_application) { create(:npq_application, npq_lead_provider:, npq_course:) }
 
   path "/api/v2/npq-applications" do
     get "Retrieve multiple NPQ applications" do

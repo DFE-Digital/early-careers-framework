@@ -30,6 +30,6 @@ class LeadProvider < ApplicationRecord
   validates :name, presence: { message: "Enter a name" }
 
   def next_output_fee_statement(cohort)
-    statements.next_output_fee_statements.where(cohort: cohort).first
+    statements.next_output_fee_statements.where(cohort:).first
   end
 end

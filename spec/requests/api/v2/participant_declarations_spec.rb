@@ -7,7 +7,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   include_context "lead provider profiles and courses"
   let(:parsed_response) { JSON.parse(response.body) }
 
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
 
   describe "POST /api/v1/participant-declarations" do
@@ -28,14 +28,14 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       {
         data: {
           type: "participant-declaration",
-          attributes: attributes,
+          attributes:,
         },
       }.to_json
     end
 
     context "when authorized" do
       let(:fake_logger) { double("logger", info: nil) }
-      let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider) }
+      let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:) }
 
       before do
         default_headers[:Authorization] = bearer_token
@@ -44,7 +44,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       it "create declaration record and declaration attempt and return id when successful" do
         params = build_params(valid_params)
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclaration, :count).by(1)
             .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
@@ -66,9 +66,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclaration, :count).by(1)
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response.status).to eq 200
@@ -86,7 +86,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
@@ -225,13 +225,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   end
 
   describe "JSON Index Api" do
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
 
     let!(:participant_declaration) do
       create(:participant_declaration,
              user: ect_profile.user,
-             cpd_lead_provider: cpd_lead_provider,
+             cpd_lead_provider:,
              participant_profile: ect_profile,
              course_identifier: "ecf-induction")
     end
@@ -314,7 +314,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         let!(:second_participant_declaration) do
           create(:participant_declaration,
                  user: second_ect_profile.user,
-                 cpd_lead_provider: cpd_lead_provider,
+                 cpd_lead_provider:,
                  course_identifier: "ecf-induction",
                  participant_profile: second_ect_profile)
         end
@@ -359,21 +359,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
   describe "CSV Index API" do
     let(:parsed_response) { CSV.parse(response.body, headers: true) }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
 
     let!(:participant_declaration_one) do
       create(:ect_participant_declaration,
              participant_profile: ect_profile,
              user: ect_profile.user,
-             cpd_lead_provider: cpd_lead_provider)
+             cpd_lead_provider:)
     end
 
     let!(:participant_declaration_two) do
       create(:ect_participant_declaration,
              participant_profile: ect_profile,
              user: ect_profile.user,
-             cpd_lead_provider: cpd_lead_provider)
+             cpd_lead_provider:)
     end
 
     before do
@@ -421,7 +421,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when declaration is submitted" do
-      let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider: cpd_lead_provider) }
+      let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:) }
 
       it "can be voided" do
         expect {
@@ -436,7 +436,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when declaration is payable" do
-      let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider: cpd_lead_provider) }
+      let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider:) }
 
       it "can be voided" do
         expect {
@@ -457,7 +457,7 @@ private
     {
       "data" =>
           [
-            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
+            single_json_declaration(declaration:, profile:, course_identifier:, state:),
           ],
     }
   end
@@ -465,7 +465,7 @@ private
   def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
+          single_json_declaration(declaration:, profile:, course_identifier:, state:),
     }
   end
 

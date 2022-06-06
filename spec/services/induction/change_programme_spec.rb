@@ -3,10 +3,10 @@
 RSpec.describe Induction::ChangeProgramme do
   describe "#call" do
     let(:school_cohort) { create :school_cohort }
-    let(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
-    let(:new_induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
-    let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-    let!(:induction_record) { Induction::Enrol.call(induction_programme: induction_programme, participant_profile: participant_profile, start_date: 6.months.ago) }
+    let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+    let(:new_induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+    let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+    let!(:induction_record) { Induction::Enrol.call(induction_programme:, participant_profile:, start_date: 6.months.ago) }
     let(:action_date) { Time.zone.now }
     let(:mentor_profile) { create(:mentor_participant_profile) }
 
@@ -14,16 +14,16 @@ RSpec.describe Induction::ChangeProgramme do
 
     it "adds a new induction record to the new programme for the participant" do
       expect {
-        service.call(participant_profile: participant_profile,
+        service.call(participant_profile:,
                      end_date: action_date,
-                     new_induction_programme: new_induction_programme,
+                     new_induction_programme:,
                      start_date: action_date)
       }.to change { new_induction_programme.induction_records.count }.by 1
     end
 
     describe "induction records" do
       before do
-        service.call(participant_profile: participant_profile, end_date: action_date, new_induction_programme: new_induction_programme, start_date: action_date, mentor_profile: mentor_profile)
+        service.call(participant_profile:, end_date: action_date, new_induction_programme:, start_date: action_date, mentor_profile:)
       end
 
       it "updates the current induction record with status :changed" do

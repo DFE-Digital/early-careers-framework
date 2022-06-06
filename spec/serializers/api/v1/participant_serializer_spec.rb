@@ -8,7 +8,7 @@ module Api
       describe "serialization" do
         let(:mentor_profile) { create(:mentor_participant_profile) }
         let(:mentor) { mentor_profile.user }
-        let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_profile) }
+        let(:ect_profile) { create(:ect_participant_profile, mentor_profile:) }
         let(:ect) { ect_profile.user }
         let(:ect_cohort) { ect.early_career_teacher_profile.cohort }
         let(:mentor_cohort) { mentor.mentor_profile.cohort }
@@ -32,7 +32,7 @@ module Api
 
         context "when the participant record is withdrawn" do
           let(:mentor_profile) { create(:mentor_participant_profile, :withdrawn_record) }
-          let(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, mentor_profile: mentor_profile) }
+          let(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, mentor_profile:) }
 
           it "outputs correctly formatted serialized Mentors" do
             expected_json = {

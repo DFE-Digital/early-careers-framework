@@ -6,9 +6,9 @@ RSpec.describe "Your schools", type: :request do
   let(:current_cohort) { create :cohort, :current }
   let(:other_cohort) { create :cohort, start_year: current_cohort.start_year - 1 }
   let(:lead_provider) { create :lead_provider, cohorts: [current_cohort, other_cohort] }
-  let(:user) { create :user, :lead_provider, lead_provider: lead_provider }
+  let(:user) { create :user, :lead_provider, lead_provider: }
 
-  let!(:partnerships) { create_list :partnership, rand(2..4), lead_provider: lead_provider, cohort: current_cohort }
+  let!(:partnerships) { create_list :partnership, rand(2..4), lead_provider:, cohort: current_cohort }
   let(:schools) { partnerships.map(&:school) }
 
   before do

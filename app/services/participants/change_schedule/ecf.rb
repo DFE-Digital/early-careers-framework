@@ -28,10 +28,10 @@ module Participants
         end
 
         ActiveRecord::Base.transaction do
-          ParticipantProfileSchedule.create!(participant_profile: user_profile, schedule: schedule)
+          ParticipantProfileSchedule.create!(participant_profile: user_profile, schedule:)
           user_profile.update_schedule!(schedule)
 
-          relevant_induction_record.update!(schedule: schedule) if relevant_induction_record
+          relevant_induction_record.update!(schedule:) if relevant_induction_record
         end
 
         user_profile
@@ -45,7 +45,7 @@ module Participants
         user_profile
           .induction_records
           .joins(induction_programme: { partnership: [:lead_provider] })
-          .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
+          .where(induction_programme: { partnerships: { lead_provider: } })
           .order(start_date: :desc)
           .first
       end
@@ -75,12 +75,12 @@ module Participants
       def alias_search_query
         Finance::Schedule
           .where("identifier_alias IS NOT NULL")
-          .where(identifier_alias: schedule_identifier, cohort: cohort)
+          .where(identifier_alias: schedule_identifier, cohort:)
       end
 
       def schedule
         @schedule ||= Finance::Schedule
-          .where(schedule_identifier: schedule_identifier, cohort: cohort)
+          .where(schedule_identifier:, cohort:)
           .or(alias_search_query)
           .first
       end

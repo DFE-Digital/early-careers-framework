@@ -26,13 +26,13 @@ RSpec.describe ParticipantValidationService do
     let(:induction_completion_date) { Date.parse("2021-07-05T00:00:00Z") }
     let(:induction) { nil }
     let(:inactive_record) { false }
-    let(:dqt_record) { build_dqt_record(trn: trn, nino: nino, full_name: full_name, dob: dob, alert: alert, qts: qts, induction: induction, inactive: inactive_record) }
+    let(:dqt_record) { build_dqt_record(trn:, nino:, full_name:, dob:, alert:, qts:, induction:, inactive: inactive_record) }
     let(:dqt_records) { [dqt_record] }
 
-    let(:validation_result) { ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: dob) }
+    let(:validation_result) { ParticipantValidationService.validate(trn:, nino:, full_name:, date_of_birth: dob) }
 
     it "calls get_record on the DQT API client" do
-      expect_any_instance_of(FullDQT::Client).to receive(:get_record).with({ trn: trn, birthdate: dob, nino: nino })
+      expect_any_instance_of(FullDQT::Client).to receive(:get_record).with({ trn:, birthdate: dob, nino: })
 
       validation_result
     end
@@ -50,7 +50,7 @@ RSpec.describe ParticipantValidationService do
       let(:trn) { nil }
 
       it "queries dqt with fake trn" do
-        expect_any_instance_of(FullDQT::Client).to receive(:get_record).with({ trn: "0000001", birthdate: dob, nino: nino })
+        expect_any_instance_of(FullDQT::Client).to receive(:get_record).with({ trn: "0000001", birthdate: dob, nino: })
         validation_result
       end
     end
@@ -84,56 +84,56 @@ RSpec.describe ParticipantValidationService do
           ParticipantValidationService.validate(
             trn: entered_trn,
             nino: "WRONG",
-            full_name: full_name,
+            full_name:,
             date_of_birth: dob,
           )
         end
 
         it "returns record with padded trn when trn is not padded" do
-          expect(validation_result).to eql(build_validation_result(trn: trn))
+          expect(validation_result).to eql(build_validation_result(trn:))
         end
       end
 
       context "when the participant has qts and no active flags" do
         it "returns true when all fields match" do
-          expect(validation_result).to eql(build_validation_result(trn: trn))
+          expect(validation_result).to eql(build_validation_result(trn:))
         end
 
         it "returns the validated details when date of birth is wrong" do
           expect(
-            ParticipantValidationService.validate(trn: trn, nino: nino, full_name: full_name, date_of_birth: Date.new(1980, 1, 2)),
-          ).to eql(build_validation_result(trn: trn))
+            ParticipantValidationService.validate(trn:, nino:, full_name:, date_of_birth: Date.new(1980, 1, 2)),
+          ).to eql(build_validation_result(trn:))
         end
 
         it "returns the validated details when name is wrong" do
           expect(
-            ParticipantValidationService.validate(trn: trn, nino: nino, full_name: "Johnne Smithe", date_of_birth: dob),
-          ).to eql(build_validation_result(trn: trn))
+            ParticipantValidationService.validate(trn:, nino:, full_name: "Johnne Smithe", date_of_birth: dob),
+          ).to eql(build_validation_result(trn:))
         end
 
         it "returns the validated details when nino is wrong" do
           expect(
-            ParticipantValidationService.validate(trn: trn, nino: "AA654321A", full_name: full_name, date_of_birth: dob),
-          ).to eql(build_validation_result(trn: trn))
+            ParticipantValidationService.validate(trn:, nino: "AA654321A", full_name:, date_of_birth: dob),
+          ).to eql(build_validation_result(trn:))
         end
 
         it "returns the validated details when name is wrong and nino is cased differently" do
           expect(
-            ParticipantValidationService.validate(trn: trn, nino: nino.downcase, full_name: "Johnne Smithe", date_of_birth: dob),
-          ).to eql(build_validation_result(trn: trn))
+            ParticipantValidationService.validate(trn:, nino: nino.downcase, full_name: "Johnne Smithe", date_of_birth: dob),
+          ).to eql(build_validation_result(trn:))
         end
 
         it "returns validated details when the name is cased differently and the nino is missing" do
           expect(
-            ParticipantValidationService.validate(trn: trn, nino: "", full_name: "JoHN SMITH", date_of_birth: dob),
-          ).to eql(build_validation_result(trn: trn))
+            ParticipantValidationService.validate(trn:, nino: "", full_name: "JoHN SMITH", date_of_birth: dob),
+          ).to eql(build_validation_result(trn:))
         end
       end
 
       context "when 3 of 4 things match and only first name matches" do
         let(:validation_result) do
           ParticipantValidationService.validate(
-            trn: trn,
+            trn:,
             nino: "WRONG",
             full_name: full_name.split(" ").first.to_s,
             date_of_birth: dob,
@@ -148,7 +148,7 @@ RSpec.describe ParticipantValidationService do
         context "when config check_first_name_only: true" do
           let(:validation_result) do
             ParticipantValidationService.validate(
-              trn: trn,
+              trn:,
               nino: "WRONG",
               full_name: full_name.split(" ").first.to_s,
               date_of_birth: dob,
@@ -158,7 +158,7 @@ RSpec.describe ParticipantValidationService do
           let(:dqt_records) { [dqt_record] }
 
           it "returns validated details" do
-            expect(validation_result).to eql(build_validation_result(trn: trn))
+            expect(validation_result).to eql(build_validation_result(trn:))
           end
         end
       end
@@ -179,10 +179,10 @@ RSpec.describe ParticipantValidationService do
         it "returns the correct details" do
           expect(ParticipantValidationService.validate(
                    trn: other_trn,
-                   nino: nino,
-                   full_name: full_name,
+                   nino:,
+                   full_name:,
                    date_of_birth: dob,
-                 )).to eql(build_validation_result(trn: trn))
+                 )).to eql(build_validation_result(trn:))
         end
       end
 
@@ -190,7 +190,7 @@ RSpec.describe ParticipantValidationService do
         let(:qts_date) { nil }
 
         it "returns correct QTS information" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { qts: false }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { qts: false }))
         end
       end
 
@@ -198,7 +198,7 @@ RSpec.describe ParticipantValidationService do
         let(:alert) { true }
 
         it "returns returns the correct alert details" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { active_alert: true }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { active_alert: true }))
         end
       end
 
@@ -207,15 +207,15 @@ RSpec.describe ParticipantValidationService do
         let(:dqt_records) { [dqt_record, nil] }
 
         it "does not count blank NINos as matching" do
-          expect(ParticipantValidationService.validate(trn: trn, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
+          expect(ParticipantValidationService.validate(trn:, nino: "", full_name: "John Smithe", date_of_birth: dob)).to be_nil
         end
       end
 
       context "when the participant has previously participated" do
-        let!(:eligibility) { create(:ineligible_participant, trn: trn, reason: :previous_induction_and_participation) }
+        let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_induction_and_participation) }
 
         it "returns returns the correct previous_participation flags" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_participation: true }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_participation: true }))
         end
       end
 
@@ -231,7 +231,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns returns the correct previous_participation flags" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, no_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false }))
         end
       end
 
@@ -256,7 +256,7 @@ RSpec.describe ParticipantValidationService do
       end
 
       context "when the participant has previously had an induction and participation" do
-        let!(:eligibility) { create(:ineligible_participant, trn: trn, reason: :previous_participation) }
+        let!(:eligibility) { create(:ineligible_participant, trn:, reason: :previous_participation) }
         let(:induction) do
           {
             "start_date" => induction_start_date,
@@ -268,7 +268,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns returns both flags" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, previous_participation: true, no_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, previous_participation: true, no_induction: false }))
         end
       end
 
@@ -286,7 +286,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns false for previous induction" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false, no_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false }))
         end
       end
 
@@ -304,7 +304,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns false for previous induction and parses timezones correctly" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: false, no_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: false, no_induction: false }))
         end
       end
 
@@ -322,7 +322,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "returns true for previous induction" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { previous_induction: true, no_induction: false }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { previous_induction: true, no_induction: false }))
         end
       end
 
@@ -338,7 +338,7 @@ RSpec.describe ParticipantValidationService do
         end
 
         it "sets exempt_from_induction to true" do
-          expect(validation_result).to eql(build_validation_result(trn: trn, options: { exempt_from_induction: true, no_induction: true }))
+          expect(validation_result).to eql(build_validation_result(trn:, options: { exempt_from_induction: true, no_induction: true }))
         end
       end
     end
@@ -346,7 +346,7 @@ RSpec.describe ParticipantValidationService do
 
   def build_validation_result(trn:, options: {})
     {
-      trn: trn,
+      trn:,
       qts: true,
       active_alert: false,
       previous_participation: false,

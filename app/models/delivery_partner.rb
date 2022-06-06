@@ -26,6 +26,6 @@ class DeliveryPartner < DiscardableRecord
   end
 
   def cohorts_with_provider(lead_provider)
-    provider_relationships.joins(:cohort).includes(:cohort).where(lead_provider: lead_provider).map(&:cohort)
+    provider_relationships.joins(:cohort).includes(:cohort).where(lead_provider:).map(&:cohort)
   end
 end

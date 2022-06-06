@@ -61,7 +61,7 @@ module APIs
       {
         data: {
           type: "participant-withdraw",
-          attributes: attributes,
+          attributes:,
         },
       }.to_json
     end

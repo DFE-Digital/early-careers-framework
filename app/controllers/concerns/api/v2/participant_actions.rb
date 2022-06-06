@@ -23,7 +23,7 @@ module Api
     private
 
       def relevant_induction_record_for_profile(profile)
-        profile.relevant_induction_record(lead_provider: lead_provider)
+        profile.relevant_induction_record(lead_provider:)
       end
 
       def perform_action(service_namespace:)
@@ -53,13 +53,13 @@ module Api
       end
 
       def participant_profile_for(service_namespace)
-        recorder(service_namespace: service_namespace).call(params: params_for_recorder)
+        recorder(service_namespace:).call(params: params_for_recorder)
       end
 
       def params_for_recorder
         HashWithIndifferentAccess.new(
           cpd_lead_provider: current_user,
-          participant_id: participant_id,
+          participant_id:,
         ).merge(permitted_params["attributes"] || {})
       end
     end

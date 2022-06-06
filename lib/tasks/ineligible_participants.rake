@@ -7,7 +7,7 @@ namespace :ineligible_participants do
   task :import, %i[csv_path reason] => :environment do |_t, args|
     logger = Logger.new($stdout)
     logger.info "Importing ineligible participants, this may take a couple minutes..."
-    Importers::IneligibleParticipants.call(path_to_csv: args.csv_path, reason: args.reason, logger: logger)
+    Importers::IneligibleParticipants.call(path_to_csv: args.csv_path, reason: args.reason, logger:)
     logger.info "Ineligible participant data import complete!"
   end
 end

@@ -4,7 +4,7 @@ module NewSupplierHelper
   # rubocop:disable Naming/MethodName
   def when_I_choose_a_delivery_partner_name(name)
     get "/admin/suppliers/new/delivery-partner/choose-name"
-    post "/admin/suppliers/new/delivery-partner/choose-name", params: { delivery_partner_form: { name: name } }
+    post "/admin/suppliers/new/delivery-partner/choose-name", params: { delivery_partner_form: { name: } }
   end
 
   alias_method :given_I_have_chosen_delivery_partner_name, :when_I_choose_a_delivery_partner_name

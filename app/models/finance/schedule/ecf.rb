@@ -8,7 +8,7 @@ class Finance::Schedule::ECF < Finance::Schedule
   end
 
   def self.default_for(cohort:)
-    find_by(cohort: cohort, schedule_identifier: "ecf-standard-september")
+    find_by(cohort:, schedule_identifier: "ecf-standard-september")
   end
 end
 

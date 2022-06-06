@@ -11,8 +11,8 @@ RSpec.describe InviteSchools do
   let(:school) do
     create(
       :school,
-      primary_contact_email: primary_contact_email,
-      secondary_contact_email: secondary_contact_email,
+      primary_contact_email:,
+      secondary_contact_email:,
     )
   end
 
@@ -48,7 +48,7 @@ RSpec.describe InviteSchools do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
             recipient: school.primary_contact_email,
-            school: school,
+            school:,
             nomination_url: String,
             expiry_date: "22/01/2000",
           ),
@@ -64,13 +64,13 @@ RSpec.describe InviteSchools do
     end
 
     context "when the school is cip only" do
-      let(:school) { create(:school, :cip_only, primary_contact_email: primary_contact_email) }
+      let(:school) { create(:school, :cip_only, primary_contact_email:) }
 
       it "still sends the nomination email" do
         travel_to(Time.utc("2000-1-1")) do
           expect(SchoolMailer).to receive(:nomination_email).with(
             hash_including(
-              school: school,
+              school:,
               nomination_url: String,
               recipient: school.primary_contact_email,
               expiry_date: "22/01/2000",
@@ -88,7 +88,7 @@ RSpec.describe InviteSchools do
       it "sends the nomination email to the secondary contact" do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
-            school: school,
+            school:,
             nomination_url: String,
             recipient: school.secondary_contact_email,
           ),
@@ -120,7 +120,7 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed more than 5 minutes ago" do
       before do
-        create(:nomination_email, school: school, sent_at: 6.minutes.ago)
+        create(:nomination_email, school:, sent_at: 6.minutes.ago)
       end
 
       it { is_expected.to be nil }
@@ -128,7 +128,7 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed within the last 5 minutes" do
       before do
-        create(:nomination_email, school: school, sent_at: 4.minutes.ago)
+        create(:nomination_email, school:, sent_at: 4.minutes.ago)
       end
 
       it { is_expected.to eq(max: 1, within: 5.minutes) }
@@ -136,7 +136,7 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed four times in the last 24 hours" do
       before do
-        create_list(:nomination_email, 4, school: school, sent_at: 22.hours.ago)
+        create_list(:nomination_email, 4, school:, sent_at: 22.hours.ago)
       end
 
       it { is_expected.to be nil }
@@ -144,8 +144,8 @@ RSpec.describe InviteSchools do
 
     context "when the school has been emailed five times in the last 24 hours" do
       before do
-        create_list(:nomination_email, 4, school: school, sent_at: 22.hours.ago)
-        create(:nomination_email, school: school, sent_at: 3.minutes.ago)
+        create_list(:nomination_email, 4, school:, sent_at: 22.hours.ago)
+        create(:nomination_email, school:, sent_at: 3.minutes.ago)
       end
 
       it { is_expected.to eq(max: 5, within: 24.hours) }

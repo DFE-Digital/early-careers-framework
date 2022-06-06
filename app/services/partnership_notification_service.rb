@@ -53,7 +53,7 @@ class PartnershipNotificationService
 
           notify_id = SchoolMailer.partnered_school_invite_sit_email(
             recipient: notification_email.sent_to,
-            school: school,
+            school:,
             lead_provider_name: notification_email.lead_provider.name,
             delivery_partner_name: notification_email.delivery_partner.name,
             nominate_url: nomination_email.nomination_url(utm_source: :partnered_invite_sit_reminder),
@@ -62,7 +62,7 @@ class PartnershipNotificationService
 
           # This would usually be two weeks, but we don't want providers to be able challenge after the first milestone date.
           partnership.update!(challenge_deadline: Date.parse("Oct 31 2021").end_of_day)
-          notification_email.update!(notify_id: notify_id)
+          notification_email.update!(notify_id:)
         end
       end
   end
@@ -73,7 +73,7 @@ private
     PartnershipNotificationEmail.create!(
       token: generate_token,
       sent_to: partnership.school.contact_email.presence || "ecf-tech@digital.education.gov.uk",
-      partnership: partnership,
+      partnership:,
       email_type: PartnershipNotificationEmail.email_types[type],
     )
   end
@@ -93,12 +93,12 @@ private
       challenge_url: challenge_url(notification_email.token),
     ).deliver_now.delivery_method.response.id
 
-    notification_email.update!(notify_id: notify_id)
+    notification_email.update!(notify_id:)
   end
 
   def send_notification_email_to_coordinator(notification_email, coordinator)
     notify_id = SchoolMailer.coordinator_partnership_notification_email(
-      coordinator: coordinator,
+      coordinator:,
       partnership: notification_email.partnership,
       sign_in_url: Rails.application.routes.url_helpers.new_user_session_url(
         host: Rails.application.config.domain,
@@ -107,12 +107,12 @@ private
       challenge_url: challenge_url(notification_email.token),
     ).deliver_now.delivery_method.response.id
 
-    notification_email.update!(notify_id: notify_id)
+    notification_email.update!(notify_id:)
   end
 
   def challenge_url(token, utm_source: :challenge_partnership)
     Rails.application.routes.url_helpers.challenge_partnership_url(
-      token: token,
+      token:,
       host: Rails.application.config.domain,
       **UTMService.email(utm_source, utm_source),
     )

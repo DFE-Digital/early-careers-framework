@@ -24,7 +24,7 @@ module Identity
       from_user.participant_identities.each do |identity|
         identity.update!(user: to_user)
         identity.participant_profiles.each do |profile|
-          profile.update!(teacher_profile: teacher_profile)
+          profile.update!(teacher_profile:)
         end
       end
     end

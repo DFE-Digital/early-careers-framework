@@ -61,7 +61,7 @@ module APIs
       {
         data: {
           type: "participant-defer",
-          attributes: attributes,
+          attributes:,
         },
       }.to_json
     end

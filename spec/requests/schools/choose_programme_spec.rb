@@ -20,7 +20,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
 
     context "when the school has chosen provision" do
       before do
-        SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: "full_induction_programme")
+        SchoolCohort.create!(school:, cohort:, induction_programme_choice: "full_induction_programme")
       end
 
       it "redirects to the dashboard" do

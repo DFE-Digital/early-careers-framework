@@ -4,10 +4,10 @@ RSpec.describe Finance::ECF::StatementCalculator do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
 
-  let!(:statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 1.week.ago) }
-  let!(:contract) { create(:call_off_contract, :with_minimal_bands, lead_provider: lead_provider) }
+  let!(:statement) { create(:ecf_statement, cpd_lead_provider:, deadline_date: 1.week.ago) }
+  let!(:contract) { create(:call_off_contract, :with_minimal_bands, lead_provider:) }
 
-  subject { described_class.new(statement: statement) }
+  subject { described_class.new(statement:) }
 
   describe "#started_band_a_count" do
     context "when there are no declarations" do
@@ -41,9 +41,9 @@ RSpec.describe Finance::ECF::StatementCalculator do
       before do
         create_list(
           :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
-          statement: statement
+          statement:
         )
       end
 
@@ -56,9 +56,9 @@ RSpec.describe Finance::ECF::StatementCalculator do
       before do
         create_list(
           :ect_participant_declaration, 3,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
-          statement: statement
+          statement:
         )
       end
 
@@ -68,12 +68,12 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when there is a previous statement partially filling the band" do
-      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 5.weeks.ago) }
+      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider:, deadline_date: 5.weeks.ago) }
 
       before do
         create_list(
           :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
           statement: previous_statement
         )
@@ -89,9 +89,9 @@ RSpec.describe Finance::ECF::StatementCalculator do
         before do
           create_list(
             :ect_participant_declaration, 1,
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             state: "eligible",
-            statement: statement
+            statement:
           )
         end
 
@@ -104,9 +104,9 @@ RSpec.describe Finance::ECF::StatementCalculator do
         before do
           create_list(
             :ect_participant_declaration, 2,
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             state: "eligible",
-            statement: statement
+            statement:
           )
         end
 
@@ -117,21 +117,21 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when there is a previous statement totally filling the band" do
-      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 5.weeks.ago) }
+      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider:, deadline_date: 5.weeks.ago) }
 
       before do
         create_list(
           :ect_participant_declaration, 2,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
           statement: previous_statement
         )
 
         create_list(
           :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
-          statement: statement
+          statement:
         )
       end
 
@@ -152,9 +152,9 @@ RSpec.describe Finance::ECF::StatementCalculator do
       before do
         create(
           :ect_participant_declaration,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
-          statement: statement,
+          statement:,
           participant_profile: profile,
         )
       end
@@ -170,9 +170,9 @@ RSpec.describe Finance::ECF::StatementCalculator do
       before do
         create(
           :ect_participant_declaration,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible",
-          statement: statement,
+          statement:,
           participant_profile: profile,
         )
       end

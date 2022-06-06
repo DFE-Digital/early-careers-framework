@@ -89,8 +89,8 @@ RSpec.describe User, type: :model do
       end
 
       context "when the user is a participant" do
-        let(:teacher_profile) { create(:teacher_profile, user: user) }
-        let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile: teacher_profile) }
+        let(:teacher_profile) { create(:teacher_profile, user:) }
+        let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile:) }
 
         context "when an original participant identity exists" do
           before do
@@ -106,7 +106,7 @@ RSpec.describe User, type: :model do
           let(:identity2) { create(:participant_identity, :npq, email: "mary.e.jones@example.com") }
 
           before do
-            identity2.update!(user: user)
+            identity2.update!(user:)
             user.update!(email: "mary.jones@example.com")
           end
 
@@ -250,14 +250,14 @@ RSpec.describe User, type: :model do
   describe "#cohort" do
     it "is expected to return mentor cohort for mentor users" do
       cohort = create(:cohort)
-      user = create(:mentor_participant_profile, cohort: cohort).user
+      user = create(:mentor_participant_profile, cohort:).user
 
       expect(user.cohort).to eq cohort
     end
 
     it "is expected to return ect cohort for ect users" do
       cohort = create(:cohort)
-      user = create(:ect_participant_profile, cohort: cohort).user
+      user = create(:ect_participant_profile, cohort:).user
 
       expect(user.cohort).to eq cohort
     end
@@ -271,16 +271,16 @@ RSpec.describe User, type: :model do
   describe "#school" do
     it "is expected to return mentor school for mentor users" do
       school = create(:school)
-      school_cohort = create(:school_cohort, school: school)
-      user = create(:mentor_participant_profile, school_cohort: school_cohort).user
+      school_cohort = create(:school_cohort, school:)
+      user = create(:mentor_participant_profile, school_cohort:).user
 
       expect(user.school).to eq school
     end
 
     it "is expected to return ect school for ect users" do
       school = create(:school)
-      school_cohort = create(:school_cohort, school: school)
-      user = create(:ect_participant_profile, school_cohort: school_cohort).user
+      school_cohort = create(:school_cohort, school:)
+      user = create(:ect_participant_profile, school_cohort:).user
 
       expect(user.school).to eq school
     end

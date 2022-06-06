@@ -8,7 +8,7 @@ module Participants
     private
 
       def initialize(params:)
-        super(params: params)
+        super(params:)
         self.reason = params[:reason]
       end
     end

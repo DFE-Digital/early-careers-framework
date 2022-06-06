@@ -24,7 +24,7 @@ module Participants
         nino: validation_data.nino,
         dob: validation_data.date_of_birth,
         full_name: validation_data.full_name,
-      ).call(save_validation_data_without_match: save_validation_data_without_match)
+      ).call(save_validation_data_without_match:)
     end
 
     # lifted from https://github.com/dwp/nino-format-validation
@@ -128,10 +128,10 @@ module Participants
 
     def check_eligibility!
       self.dqt_response = ParticipantValidationService.validate(
-        full_name: full_name,
-        trn: trn,
+        full_name:,
+        trn:,
         date_of_birth: dob,
-        nino: nino,
+        nino:,
         config: {
           check_first_name_only: true,
         },
@@ -160,20 +160,20 @@ module Participants
       return unless dqt_response || save_validation_data_without_match
 
       StoreValidationResult.call(
-        participant_profile: participant_profile,
+        participant_profile:,
         validation_data: {
-          trn: trn,
-          nino: nino,
-          full_name: full_name,
-          dob: dob,
+          trn:,
+          nino:,
+          full_name:,
+          dob:,
         },
-        dqt_response: dqt_response,
+        dqt_response:,
       )
     end
 
     def store_analytics!
       Analytics::RecordValidationJob.perform_later(
-        participant_profile: participant_profile,
+        participant_profile:,
         real_time_attempts: attempts,
         real_time_success: dqt_response.present?,
         nino_entered: nino.present?,
@@ -192,7 +192,7 @@ module Participants
 
     def call(save_validation_data_without_match: true)
       check_eligibility!
-      store_validation_result!(save_validation_data_without_match: save_validation_data_without_match)
+      store_validation_result!(save_validation_data_without_match:)
     end
   end
 end

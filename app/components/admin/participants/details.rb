@@ -9,7 +9,7 @@ module Admin
 
       def call
         delegate_component = self.class.const_get("#{profile.participant_type.to_s.classify}#{:Pending if profile.pending?}")
-        render delegate_component.new(profile: profile)
+        render delegate_component.new(profile:)
       end
 
     private

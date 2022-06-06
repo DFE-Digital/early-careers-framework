@@ -10,7 +10,7 @@ module DQT
     end
 
     def v1
-      @v1 ||= V1.new(client: client)
+      @v1 ||= V1.new(client:)
     end
 
   private

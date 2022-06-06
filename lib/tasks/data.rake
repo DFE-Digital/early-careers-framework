@@ -25,7 +25,7 @@ namespace :data do
       DeclarationState.where(state: "eligible").all.each do |declaration_state|
         participant_declaration = declaration_state.participant_declaration
         unless participant_declaration.nil? || participant_declaration.declaration_states.any?(state: "submitted")
-          DeclarationState.create!(participant_declaration: participant_declaration, state: "submitted", created_at: participant_declaration.created_at)
+          DeclarationState.create!(participant_declaration:, state: "submitted", created_at: participant_declaration.created_at)
         end
       end
     end

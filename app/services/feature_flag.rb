@@ -8,7 +8,7 @@ class FeatureFlag
   end
 
   def feature
-    Feature.find_or_initialize_by(name: name)
+    Feature.find_or_initialize_by(name:)
   end
 
   # Long-lived settings that are often environment-specific
@@ -23,7 +23,7 @@ class FeatureFlag
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
-    FeatureFlag.new(name: name)
+    FeatureFlag.new(name:)
   }.with_indifferent_access.freeze
 
   def self.activate(feature_name, **opts)
@@ -63,10 +63,10 @@ class FeatureFlag
     ActiveRecord::Base.transaction do
       feature = Feature.find_or_create_by!(name: feature_name)
       if active
-        feature.selected_objects.find_or_create_by!(object: object)
+        feature.selected_objects.find_or_create_by!(object:)
       else
         scope = feature.selected_objects
-        scope = scope.where(object: object) unless object == :all
+        scope = scope.where(object:) unless object == :all
         scope.destroy_all
       end
     end

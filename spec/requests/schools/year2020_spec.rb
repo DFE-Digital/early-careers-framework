@@ -6,7 +6,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   let!(:default_schedule) { create(:ecf_schedule) }
   let!(:school) { create :school }
   let!(:cohort) { create :cohort, start_year: 2020 }
-  let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+  let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
   let!(:core_induction_programme) { create :core_induction_programme }
 
   subject { response }
@@ -84,7 +84,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
     it "saves the data" do
       post "/schools/#{school.slug}/year-2020/check-your-answers"
-      school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
+      school_cohort = SchoolCohort.find_by(school:, cohort:)
 
       expect(school_cohort).not_to be_nil
       expect(school_cohort.ecf_participants.count).to eq(1)
@@ -162,7 +162,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
   context "trying to add more ects when a schools 2020 cohort has already been to the service" do
     before do
-      create(:ect_participant_profile, school_cohort: school_cohort)
+      create(:ect_participant_profile, school_cohort:)
     end
 
     describe "GET /schools/:school_id/year-2020/start" do
@@ -220,7 +220,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
       it "does not save additional teachers trying to be added" do
         post "/schools/#{school.slug}/year-2020/check-your-answers"
-        school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
+        school_cohort = SchoolCohort.find_by(school:, cohort:)
 
         expect(school_cohort.ecf_participants.count).to eq(1)
         expect(additional_teacher_has_saved?).to be false

@@ -10,7 +10,7 @@ module Api
       include ApiFilter
 
       def create
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: cpd_lead_provider }).merge(permitted_params["attributes"] || {})
+        params = HashWithIndifferentAccess.new({ cpd_lead_provider: }).merge(permitted_params["attributes"] || {})
 
         log_schema_validation_results
 
@@ -18,7 +18,7 @@ module Api
       end
 
       def void
-        render json: VoidParticipantDeclaration.new(cpd_lead_provider: cpd_lead_provider, id: params[:id]).call
+        render json: VoidParticipantDeclaration.new(cpd_lead_provider:, id: params[:id]).call
       end
 
       def index
@@ -48,8 +48,8 @@ module Api
 
       def query_scope
         ParticipantDeclarations::Index.new(
-          cpd_lead_provider: cpd_lead_provider,
-          updated_since: updated_since,
+          cpd_lead_provider:,
+          updated_since:,
           participant_id: participant_id_filter,
         ).scope
       end

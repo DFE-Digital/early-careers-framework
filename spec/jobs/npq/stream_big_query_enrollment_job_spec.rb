@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
   let(:employer_name)   { "john doe" }
   let(:employment_role) { "teacher" }
-  let(:npq_application) { create(:npq_application, employment_role: employment_role, employer_name: employer_name) }
+  let(:npq_application) { create(:npq_application, employment_role:, employer_name:) }
 
   let(:bigquery) { instance_double(Google::Cloud::Bigquery::Project) }
   let(:dataset)  { instance_double(Google::Cloud::Bigquery::Dataset) }

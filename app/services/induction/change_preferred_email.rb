@@ -2,8 +2,8 @@
 
 class Induction::ChangePreferredEmail < BaseService
   def call
-    Induction::ChangeInductionRecord.call(induction_record: induction_record,
-                                          changes: { preferred_identity: preferred_identity })
+    Induction::ChangeInductionRecord.call(induction_record:,
+                                          changes: { preferred_identity: })
   end
 
 private

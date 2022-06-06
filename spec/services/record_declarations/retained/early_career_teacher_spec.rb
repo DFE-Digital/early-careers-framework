@@ -15,7 +15,7 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
 
   before do
     travel_to cutoff_start_datetime + 2.days
-    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
   end
 
   it_behaves_like "a participant declaration with evidence held service" do
@@ -31,7 +31,7 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
   context "when valid user is an early_career_teacher" do
     %w[training-event-attended self-study-material-completed other].each do |evidence_held|
       it "creates a participant and profile declaration for evidence #{evidence_held}" do
-        expect { described_class.call(params: retained_ect_params.merge(evidence_held: evidence_held)) }
+        expect { described_class.call(params: retained_ect_params.merge(evidence_held:)) }
             .to change { ParticipantDeclaration.count }.by(1)
       end
     end

@@ -5,10 +5,10 @@ module NPQ
     class << self
       def call(npq_application_params:, npq_course_id:, npq_lead_provider_id:, user_id:)
         new(
-          npq_application_params: npq_application_params,
-          npq_course_id: npq_course_id,
-          npq_lead_provider_id: npq_lead_provider_id,
-          user_id: user_id,
+          npq_application_params:,
+          npq_course_id:,
+          npq_lead_provider_id:,
+          user_id:,
         ).npq_application
       end
     end
@@ -35,10 +35,10 @@ module NPQ
 
     def npq_application_attributes
       npq_application_params.except(:user_id, :cohort).merge(
-        npq_course: npq_course,
-        npq_lead_provider: npq_lead_provider,
-        participant_identity: participant_identity,
-        cohort: cohort,
+        npq_course:,
+        npq_lead_provider:,
+        participant_identity:,
+        cohort:,
       )
     end
 
@@ -59,7 +59,7 @@ module NPQ
     end
 
     def participant_identity
-      Identity::Create.call(user: user, origin: :npq) if user_id.present?
+      Identity::Create.call(user:, origin: :npq) if user_id.present?
     end
   end
 end

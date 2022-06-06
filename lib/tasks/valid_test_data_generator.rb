@@ -7,7 +7,7 @@ module ValidTestDataGenerator
   class LeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 50)
-        new(name: name).call(total_schools: total_schools, participants_per_school: participants_per_school)
+        new(name:).call(total_schools:, participants_per_school:)
       end
     end
 
@@ -17,7 +17,7 @@ module ValidTestDataGenerator
       lead_provider.schools.order("created_at desc").limit(total_schools).each do |school|
         sparsity_uplift = weighted_choice(selection: [true, false], odds: [11, 89])
         pupil_premium_uplift = weighted_choice(selection: [true, false], odds: [11, 39])
-        find_or_create_participants(school: school, number_of_participants: participants_per_school, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+        find_or_create_participants(school:, number_of_participants: participants_per_school, sparsity_uplift:, pupil_premium_uplift:)
       end
     end
 
@@ -26,7 +26,7 @@ module ValidTestDataGenerator
     attr_reader :lead_provider
 
     def initialize(name:)
-      @lead_provider = ::LeadProvider.find_or_create_by!(name: name)
+      @lead_provider = ::LeadProvider.find_or_create_by!(name:)
     end
 
     def generate_new_schools(count:)
@@ -34,7 +34,7 @@ module ValidTestDataGenerator
     end
 
     def find_or_create_participants(school:, number_of_participants:, sparsity_uplift:, pupil_premium_uplift:)
-      generate_new_participants(school: school, count: number_of_participants - school.ecf_participants.count, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift) if school.ecf_participants.count < number_of_participants
+      generate_new_participants(school:, count: number_of_participants - school.ecf_participants.count, sparsity_uplift:, pupil_premium_uplift:) if school.ecf_participants.count < number_of_participants
     end
 
     def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
@@ -43,28 +43,28 @@ module ValidTestDataGenerator
         profile_type = weighted_choice(selection: %i[mentor ect], odds: [9, 1])
         count -= 1
         if profile_type == :mentor
-          mentor = create_participant(school_cohort: school_cohort(school: school), profile_type: :mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+          mentor = create_participant(school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
           rand(0..3).times do
-            create_participant(school_cohort: school_cohort(school: school), profile_type: :ect, mentor_profile: mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+            create_participant(school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
             count -= 1
           end
         else
-          create_participant(school_cohort: school_cohort(school: school), profile_type: :ect, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+          create_participant(school_cohort: school_cohort(school:), profile_type: :ect, status:, sparsity_uplift:, pupil_premium_uplift:)
         end
       end
     end
 
     def create_participant(school_cohort:, profile_type: :ect, mentor_profile: nil, status: "active", sparsity_uplift: false, pupil_premium_uplift: false)
       name = Faker::Name.name
-      user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
-      teacher_profile = TeacherProfile.create!(user: user, trn: random_or_nil_trn)
+      user = User.create!(full_name: name, email: Faker::Internet.email(name:))
+      teacher_profile = TeacherProfile.create!(user:, trn: random_or_nil_trn)
       schedule = ecf_schedules.sample
-      participant_identity = Identity::Create.call(user: user, origin: :ecf)
+      participant_identity = Identity::Create.call(user:, origin: :ecf)
 
       cpd_lead_provider = school_cohort.lead_provider.cpd_lead_provider
       lead_provider = cpd_lead_provider.lead_provider
       november_statement = Finance::Statement::ECF.find_by(
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
         name: "November 2021",
       )
 
@@ -72,19 +72,19 @@ module ValidTestDataGenerator
 
       partnership = Partnership.find_or_create_by!(
         cohort: school_cohort.cohort,
-        delivery_partner: delivery_partner,
+        delivery_partner:,
         school: school_cohort.school,
-        lead_provider: lead_provider,
+        lead_provider:,
       )
 
       InductionProgramme.find_or_create_by!(
-        school_cohort: school_cohort,
-        partnership: partnership,
+        school_cohort:,
+        partnership:,
         training_programme: "full_induction_programme",
       )
 
       if profile_type == :ect
-        profile = ParticipantProfile::ECT.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, mentor_profile: mentor_profile, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
+        profile = ParticipantProfile::ECT.create!(teacher_profile:, school_cohort:, mentor_profile:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
           ParticipantProfileState.create!(participant_profile: pp)
           ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
@@ -92,7 +92,7 @@ module ValidTestDataGenerator
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
 
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:)
 
         return unless profile.active_record?
 
@@ -128,7 +128,7 @@ module ValidTestDataGenerator
           },
         )
       else
-        profile = ParticipantProfile::Mentor.create!(teacher_profile: teacher_profile, school_cohort: school_cohort, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift, schedule: schedule, participant_identity: participant_identity) do |pp|
+        profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
           ParticipantProfileState.create!(participant_profile: pp)
           ECFParticipantEligibility.create!(participant_profile_id: pp.id).eligible_status!
         end
@@ -136,7 +136,7 @@ module ValidTestDataGenerator
         induction_programme = profile.school_cohort.induction_programmes.first
         raise unless induction_programme
 
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:)
 
         return profile unless profile.active_record?
 
@@ -185,33 +185,33 @@ module ValidTestDataGenerator
     end
 
     def school_cohort(school:)
-      SchoolCohort.find_or_create_by!(school: school, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+      SchoolCohort.find_or_create_by!(school:, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
     end
 
     def create_fip_school_with_cohort(urn:)
-      school = School.find_or_create_by!(urn: urn) do |s|
+      school = School.find_or_create_by!(urn:) do |s|
         s.name = Faker::Company.name
         s.address_line1 = Faker::Address.street_address
         s.postcode = Faker::Address.postcode
       end
-      school_cohort = school_cohort(school: school)
-      partnership = attach_partnership_to_school(school: school)
+      school_cohort = school_cohort(school:)
+      partnership = attach_partnership_to_school(school:)
       InductionProgramme.find_or_create_by!(
-        partnership: partnership,
+        partnership:,
         training_programme: "full_induction_programme",
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     end
 
     def attach_partnership_to_school(school:)
       Partnership.find_or_create_by!(
-        school: school,
-        lead_provider: lead_provider,
+        school:,
+        lead_provider:,
         cohort: Cohort.current,
       ) do |partnership|
         partnership.delivery_partner = DeliveryPartner.create!(name: Faker::Company.name)
         ProviderRelationship.find_or_create_by!(
-          lead_provider: lead_provider,
+          lead_provider:,
           cohort: Cohort.current,
           delivery_partner: partnership.delivery_partner,
         )
@@ -234,25 +234,25 @@ module ValidTestDataGenerator
       FIRST_AMBITION_SEED_DATA_TIME = ("2021-08-18 13:43".."2021-08-18 13:49")
 
       def call(name:, total_schools: 3, participants_per_school: 3000)
-        generator = new(name: name)
+        generator = new(name:)
         generator.remove_old_data(created_at: FIRST_AMBITION_SEED_DATA_TIME)
-        generator.call(total_schools: total_schools, participants_per_school: participants_per_school)
+        generator.call(total_schools:, participants_per_school:)
       end
     end
 
     def remove_old_data(created_at:)
-      lead_provider.ecf_participants.where(created_at: created_at).each(&:destroy)
-      schools = lead_provider.schools.where(created_at: created_at)
+      lead_provider.ecf_participants.where(created_at:).each(&:destroy)
+      schools = lead_provider.schools.where(created_at:)
       schools.each do |school|
-        partnership = Partnership.find_by(lead_provider: lead_provider, school: school, cohort: Cohort.current)
+        partnership = Partnership.find_by(lead_provider:, school:, cohort: Cohort.current)
         delivery_partner = partnership.delivery_partner
-        provider_relationship = ProviderRelationship.find_by(lead_provider: lead_provider,
+        provider_relationship = ProviderRelationship.find_by(lead_provider:,
                                                              cohort: Cohort.current,
-                                                             delivery_partner: delivery_partner)
+                                                             delivery_partner:)
         provider_relationship.destroy!
         partnership.destroy!
         delivery_partner.destroy!
-        school_cohort = SchoolCohort.find_by(school: school, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+        school_cohort = SchoolCohort.find_by(school:, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
         school_cohort.ecf_participant_profiles.destroy_all
         school_cohort.destroy!
         school.destroy!
@@ -262,8 +262,8 @@ module ValidTestDataGenerator
     def generate_new_participants(school:, count:, sparsity_uplift:, pupil_premium_uplift:)
       (count / 2).times do
         status = "active"
-        mentor = create_participant(school_cohort: school_cohort(school: school), profile_type: :mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
-        create_participant(school_cohort: school_cohort(school: school), profile_type: :ect, mentor_profile: mentor, status: status, sparsity_uplift: sparsity_uplift, pupil_premium_uplift: pupil_premium_uplift)
+        mentor = create_participant(school_cohort: school_cohort(school:), profile_type: :mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
+        create_participant(school_cohort: school_cohort(school:), profile_type: :ect, mentor_profile: mentor, status:, sparsity_uplift:, pupil_premium_uplift:)
       end
     end
 
@@ -275,7 +275,7 @@ module ValidTestDataGenerator
   class NPQLeadProviderPopulater
     class << self
       def call(name:, total_schools: 10, participants_per_school: 10)
-        new(name: name, participants_per_school: participants_per_school).call(total_schools: total_schools)
+        new(name:, participants_per_school:).call(total_schools:)
       end
     end
 
@@ -288,7 +288,7 @@ module ValidTestDataGenerator
     attr_reader :lead_provider, :participants_per_school
 
     def initialize(name:, participants_per_school:)
-      @lead_provider = ::NPQLeadProvider.find_or_create_by!(name: name)
+      @lead_provider = ::NPQLeadProvider.find_or_create_by!(name:)
       @participants_per_school = participants_per_school
     end
 
@@ -297,19 +297,19 @@ module ValidTestDataGenerator
     end
 
     def find_or_create_participants(school:, number_of_participants:)
-      generate_new_participants(school: school, count: number_of_participants)
+      generate_new_participants(school:, count: number_of_participants)
     end
 
     def generate_new_participants(school:, count:)
       count.times do
-        create_participant(school: school)
+        create_participant(school:)
       end
     end
 
     def create_participant(school:)
       name = Faker::Name.name
-      user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
-      identity = Identity::Create.call(user: user, origin: :npq)
+      user = User.create!(full_name: name, email: Faker::Internet.email(name:))
+      identity = Identity::Create.call(user:, origin: :npq)
 
       npq_application = NPQApplication.create!(
         active_alert: "",
@@ -354,7 +354,7 @@ module ValidTestDataGenerator
     end
 
     def accept_application(npq_application)
-      NPQ::Accept.call(npq_application: npq_application)
+      NPQ::Accept.call(npq_application:)
       npq_application.reload
     end
 
@@ -371,12 +371,12 @@ module ValidTestDataGenerator
     end
 
     def create_fip_school_with_cohort(urn:)
-      school = School.find_or_create_by!(urn: urn) do |s|
+      school = School.find_or_create_by!(urn:) do |s|
         s.name = Faker::Company.name
         s.address_line1 = Faker::Address.street_address
         s.postcode = Faker::Address.postcode
       end
-      find_or_create_participants(school: school, number_of_participants: participants_per_school)
+      find_or_create_participants(school:, number_of_participants: participants_per_school)
     end
   end
 end

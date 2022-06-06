@@ -4,14 +4,14 @@ require "rails_helper"
 
 RSpec.feature "Delivery partner users participants", type: :feature do
   let(:school) { create(:school) }
-  let(:school_cohort) { create(:school_cohort, school: school) }
-  let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, training_status: "withdrawn") }
+  let(:school_cohort) { create(:school_cohort, school:) }
+  let(:participant_profile) { create(:ect_participant_profile, school_cohort:, training_status: "withdrawn") }
 
   let(:delivery_partner_user) { create(:user, :delivery_partner) }
   let(:partnership) do
     create(
       :partnership,
-      school: school,
+      school:,
       delivery_partner: delivery_partner_user.delivery_partner_profile.delivery_partner,
       challenged_at: nil,
       challenge_reason: nil,
@@ -19,8 +19,8 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     )
   end
 
-  let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership, school_cohort: school_cohort) }
-  let!(:induction_record) { create(:induction_record, participant_profile: participant_profile, induction_programme: induction_programme) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
+  let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
   let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
 
@@ -90,7 +90,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   end
 
   context "Filter status" do
-    let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort, training_status: "withdrawn") }
+    let(:participant_profile) { create(:ect_participant_profile, school_cohort:, training_status: "withdrawn") }
 
     scenario "None existing status" do
       when_i_choose("status", with: "Checking QTS")
@@ -134,7 +134,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   end
 
   def when_i_fill_in(selector, with:)
-    page.fill_in selector, with: with
+    page.fill_in selector, with:
   end
 
   def when_i_choose(selector, with:)

@@ -15,20 +15,20 @@ RSpec.describe ApiRequestJob do
     it "detects the provider making the request from the authorization header" do
       cpd_lead_provider = create(:cpd_lead_provider, name: "Ambition")
 
-      token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider)
+      token = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:)
 
       headers = { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
-      described_class.new.perform({ headers: headers }, {}, 500, Time.zone.now)
+      described_class.new.perform({ headers: }, {}, 500, Time.zone.now)
 
-      expect(ApiRequest.find_by(cpd_lead_provider: cpd_lead_provider)).not_to be_nil
-      expect(ApiRequest.find_by(cpd_lead_provider: cpd_lead_provider).user_description).to eq "CPD lead provider: Ambition"
+      expect(ApiRequest.find_by(cpd_lead_provider:)).not_to be_nil
+      expect(ApiRequest.find_by(cpd_lead_provider:).user_description).to eq "CPD lead provider: Ambition"
     end
 
     it "detects the application making the request from the authorization header" do
       token = EngageAndLearnApiToken.create_with_random_token!
 
       headers = { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
-      described_class.new.perform({ headers: headers }, {}, 500, Time.zone.now)
+      described_class.new.perform({ headers: }, {}, 500, Time.zone.now)
 
       expect(ApiRequest.find_by(user_description: "Engage and learn application")).not_to be_nil
     end

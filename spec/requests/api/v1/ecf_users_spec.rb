@@ -13,11 +13,11 @@ RSpec.describe "API Users", type: :request do
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
       cohort = create(:cohort, start_year: 2021)
-      school_cohort = create(:school_cohort, school: school)
-      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
-      create(:npq_participant_profile, school: school)
-      create(:npq_participant_profile, school: school, teacher_profile: mentor_profile.teacher_profile)
-      create_list(:ect_participant_profile, 2, school_cohort: school_cohort, core_induction_programme: cip, cohort: cohort)
+      school_cohort = create(:school_cohort, school:)
+      mentor_profile = create(:mentor_participant_profile, school_cohort:, core_induction_programme: cip, cohort:)
+      create(:npq_participant_profile, school:)
+      create(:npq_participant_profile, school:, teacher_profile: mentor_profile.teacher_profile)
+      create_list(:ect_participant_profile, 2, school_cohort:, core_induction_programme: cip, cohort:)
     end
 
     context "when authorized" do
@@ -97,14 +97,14 @@ RSpec.describe "API Users", type: :request do
       context "when filtering by email" do
         it "returns users that match" do
           email = User.is_ecf_participant.sample.email
-          get "/api/v1/ecf-users", params: { filter: { email: email } }
+          get "/api/v1/ecf-users", params: { filter: { email: } }
           expect(parsed_response["data"].size).to eql(1)
           expect(parsed_response.dig("data", 0, "attributes", "email")).to eql(email)
         end
 
         it "returns no users if no matches" do
           email = "dontexist@example.com"
-          get "/api/v1/ecf-users", params: { filter: { email: email } }
+          get "/api/v1/ecf-users", params: { filter: { email: } }
           expect(parsed_response["data"].size).to eql(0)
         end
       end

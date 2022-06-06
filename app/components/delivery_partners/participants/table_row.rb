@@ -47,7 +47,7 @@ module DeliveryPartners
         @induction_record ||= participant_profile.induction_records.includes(induction_programme: [:partnership]).where(
           induction_programme: {
             partnerships: {
-              delivery_partner: delivery_partner,
+              delivery_partner:,
               challenged_at: nil,
               challenge_reason: nil,
               pending: false,
@@ -58,7 +58,7 @@ module DeliveryPartners
 
       def status_name
         @status_name ||= DeliveryPartners::ParticipantProfileStatus.new(
-          participant_profile: participant_profile,
+          participant_profile:,
         ).status_name
       end
     end

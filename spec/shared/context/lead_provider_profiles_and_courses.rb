@@ -16,14 +16,14 @@ RSpec.shared_context "lead provider profiles and courses" do
   let(:delivery_partner) { create(:delivery_partner) }
   let!(:school_cohort) { create(:school_cohort, school: ect_profile.school, cohort: ect_profile.cohort) }
 
-  let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
 
   let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+    Induction::Enrol.call(participant_profile: profile, induction_programme:)
   end
 
   let!(:mentor_induction_record) do
-    Induction::Enrol.call(participant_profile: mentor_profile, induction_programme: induction_programme)
+    Induction::Enrol.call(participant_profile: mentor_profile, induction_programme:)
   end
 
   let!(:partnership) do
@@ -31,27 +31,27 @@ RSpec.shared_context "lead provider profiles and courses" do
            school: ect_profile.school,
            lead_provider: cpd_lead_provider.lead_provider,
            cohort: ect_profile.cohort,
-           delivery_partner: delivery_partner)
+           delivery_partner:)
   end
 
-  let(:induction_programme) { create(:induction_programme, partnership: partnership, school_cohort: school_cohort) }
+  let(:induction_programme) { create(:induction_programme, partnership:, school_cohort:) }
 
   let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: ect_profile, induction_programme: induction_programme)
+    Induction::Enrol.call(participant_profile: ect_profile, induction_programme:)
   end
 
   # NPQ setup
-  let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider) }
+  let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider:) }
   let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
   let!(:npq_profile) do
     npq_application = create(
       :npq_application,
-      npq_lead_provider: npq_lead_provider,
-      npq_course: npq_course,
+      npq_lead_provider:,
+      npq_course:,
     )
     create(
       :npq_participant_profile,
-      npq_application: npq_application,
+      npq_application:,
       user: npq_application.user,
       teacher_profile: npq_application.user.teacher_profile,
       schedule: create(:npq_specialist_schedule),

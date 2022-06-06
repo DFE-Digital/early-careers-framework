@@ -3,16 +3,16 @@
 require "rails_helper"
 
 RSpec.describe "NPQ Participants API", type: :request do
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
 
   before { default_headers[:Authorization] = bearer_token }
 
   describe "GET /api/v1/participants/npq", :with_default_schedules do
     let!(:npq_applications) do
-      create_list(:npq_application, 3, :accepted, npq_lead_provider: npq_lead_provider, school_urn: "123456")
+      create_list(:npq_application, 3, :accepted, npq_lead_provider:, school_urn: "123456")
     end
 
     context "when authorized" do
@@ -75,10 +75,10 @@ RSpec.describe "NPQ Participants API", type: :request do
           before do
             current_time = Time.zone.now
             travel_to 10.days.ago
-            list = create_list(:npq_application, 3, npq_lead_provider: npq_lead_provider, school_urn: "123456", npq_course: npq_course)
+            list = create_list(:npq_application, 3, npq_lead_provider:, school_urn: "123456", npq_course:)
 
             list.each do |npq_application|
-              NPQ::Accept.new(npq_application: npq_application).call
+              NPQ::Accept.new(npq_application:).call
             end
             travel_to current_time
           end
@@ -125,19 +125,19 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:course_identifier) { npq_course.identifier }
         let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/defer" }
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
-        let(:params)            { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::NPQ.reasons.sample } } } }
-        let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+        let(:params)            { { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
       end
 
       it_behaves_like "JSON Participant Resume endpoint", "npq-participant" do
         let(:course_identifier) { npq_course.identifier }
         let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/resume" }
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
-        let(:params)            { { data: { attributes: { course_identifier: course_identifier } } } }
-        let(:withdrawal_params) { { data: { attributes: { course_identifier: course_identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+        let(:params)            { { data: { attributes: { course_identifier: } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
         before do
           put "/api/v1/participants/npq/#{npq_application.user.id}/defer",
-              params: { data: { attributes: { course_identifier: course_identifier, reason: Participants::Defer::NPQ.reasons.sample } } }
+              params: { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } }
         end
       end
     end
@@ -162,7 +162,7 @@ RSpec.describe "NPQ Participants API", type: :request do
   end
 
   describe "PUT /api/v1/participants/npq/:id/change-schedule", :with_default_schedules do
-    let(:npq_application)         { create(:npq_application, :accepted, npq_lead_provider: npq_lead_provider) }
+    let(:npq_application)         { create(:npq_application, :accepted, npq_lead_provider:) }
     let(:profile)                 { npq_application.profile }
     let(:new_schedule)            do
       if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)

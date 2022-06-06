@@ -20,7 +20,7 @@ module Finance
           .map do |name|
             OpenStruct.new(
               id: name.downcase.gsub(" ", "-"),
-              name: name,
+              name:,
             )
           end
       end

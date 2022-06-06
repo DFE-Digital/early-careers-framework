@@ -208,15 +208,15 @@ class ValidationBetaService
 
           SchoolMailer.sit_fip_participant_validation_deadline_reminder_email(
             induction_coordinator_profile: sit,
-            participant_name_list: participant_name_list,
-            participant_start_url: participant_start_url,
-            sign_in_url: sign_in_url,
+            participant_name_list:,
+            participant_start_url:,
+            sign_in_url:,
           ).deliver_later
 
           participants.each do |participant_profile|
             ParticipantValidationMailer.fip_participant_validation_deadline_reminder_email(
-              participant_profile: participant_profile,
-              participant_start_url: participant_start_url,
+              participant_profile:,
+              participant_start_url:,
             ).deliver_later
           end
         end
@@ -245,7 +245,7 @@ class ValidationBetaService
         SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
           induction_coordinator_profile: sit,
           school_name: user.school.name,
-          sign_in_url: sign_in_url,
+          sign_in_url:,
         ).deliver_later
         sit_ids << sit.id
       else
@@ -301,8 +301,8 @@ class ValidationBetaService
       tutor_email = participant_profile.school.contact_email
       ParticipantValidationMailer.induction_coordinator_participant_email_bounced_email(
         recipient: tutor_email,
-        sign_in_url: sign_in_url,
-        participant_profile: participant_profile,
+        sign_in_url:,
+        participant_profile:,
       ).deliver_later
     end
   end

@@ -20,7 +20,7 @@ private
   end
 
   def nomination_email
-    @nomination_email ||= NominationEmail.find_by(token: token)
+    @nomination_email ||= NominationEmail.find_by(token:)
   end
 
   def school

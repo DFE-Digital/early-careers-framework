@@ -24,7 +24,7 @@ describe DummyController, type: :controller do
 
     context "when authorization header is provided" do
       let(:lead_provider) { create(:lead_provider) }
-      let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
+      let(:token) { LeadProviderApiToken.create_with_random_token!(lead_provider:) }
       let(:bearer_token) { "Bearer #{token}" }
 
       it "requests authentication via the http header" do

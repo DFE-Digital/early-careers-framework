@@ -17,7 +17,7 @@ class PopulateCpdLeadProviders < ActiveRecord::Migration[6.1]
     all_provider_names = (MigrationLeadProvider.pluck(:name) + MigrationNPQLeadProvider.pluck(:name)).uniq
 
     all_provider_names.each do |name|
-      MigrationCpdLeadProvider.create!(name: name)
+      MigrationCpdLeadProvider.create!(name:)
     end
   end
 

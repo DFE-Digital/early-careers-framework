@@ -15,7 +15,7 @@ RSpec.describe PartnershipNotificationService do
            lead_provider: @lead_provider,
            delivery_partner: @delivery_partner,
            cohort: @cohort,
-           school: school)
+           school:)
   end
   let(:partnership_notification_email) { partnership.partnership_notification_emails.last }
   let(:notify_id) { Faker::Alphanumeric.alphanumeric(number: 16) }
@@ -36,7 +36,7 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
-            partnership: partnership,
+            partnership:,
             nominate_url: String,
             challenge_url: String,
             recipient: contact_email,
@@ -67,8 +67,8 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
-            partnership: partnership,
-            coordinator: coordinator,
+            partnership:,
+            coordinator:,
             sign_in_url: String,
             challenge_url: String,
           ),
@@ -99,7 +99,7 @@ RSpec.describe PartnershipNotificationService do
       it "emails the school primary contact" do
         expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
           hash_including(
-            partnership: partnership,
+            partnership:,
             nominate_url: String,
             challenge_url: String,
             recipient: contact_email,
@@ -129,8 +129,8 @@ RSpec.describe PartnershipNotificationService do
       it "emails the induction coordinator" do
         expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
           hash_including(
-            partnership: partnership,
-            coordinator: coordinator,
+            partnership:,
+            coordinator:,
             sign_in_url: String,
             challenge_url: String,
           ),
@@ -164,7 +164,7 @@ RSpec.describe PartnershipNotificationService do
     it "emails schools that are fip partnered with no SIT, and extends the challenge deadline by 2 weeks" do
       expect(SchoolMailer).to receive(:partnered_school_invite_sit_email).with(
         hash_including(
-          school: school,
+          school:,
           lead_provider_name: partnership.lead_provider.name,
           delivery_partner_name: partnership.delivery_partner.name,
           challenge_url: a_string_including("utm_campaign=partnered-invite-sit-reminder&utm_medium=email&utm_source=partnered-invite-sit-reminder"),

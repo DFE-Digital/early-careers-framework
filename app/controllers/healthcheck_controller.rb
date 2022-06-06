@@ -10,13 +10,13 @@ class HealthcheckController < ApplicationController
       environment: Rails.env,
       database: {
         connected: database_connected?,
-        migration_version: migration_version,
+        migration_version:,
       },
       sidekiq: {
         job_count: sidekiq_jobs_count,
         errors: sidekiq_jobs_with_errors,
         failed: sidekiq_failures,
-        sidekiq_last_failure: sidekiq_last_failure,
+        sidekiq_last_failure:,
       },
       notify: {
         incident_status: notify_incident,

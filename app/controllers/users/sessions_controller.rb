@@ -81,7 +81,7 @@ private
     email = params.dig(:user, :email)
     return unless TEST_DOMAINS.any? { |domain| email.include?(domain) }
 
-    user = Identity.find_user_by(email: email) || return
+    user = Identity.find_user_by(email:) || return
 
     sign_in(user, scope: :user)
     redirect_to profile_dashboard_path(user)

@@ -8,13 +8,13 @@ RSpec.describe NPQ::Accept do
   let(:cohort_2022) { create(:cohort, :next) }
 
   subject do
-    described_class.new(npq_application: npq_application)
+    described_class.new(npq_application:)
   end
 
   describe "#call" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user) }
-    let(:identity) { create(:participant_identity, user: user) }
+    let(:identity) { create(:participant_identity, user:) }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
@@ -22,8 +22,8 @@ RSpec.describe NPQ::Accept do
       NPQApplication.new(
         teacher_reference_number: trn,
         participant_identity: identity,
-        npq_course: npq_course,
-        npq_lead_provider: npq_lead_provider,
+        npq_course:,
+        npq_lead_provider:,
         school_urn: "123456",
         school_ukprn: "12345678",
       )
@@ -36,7 +36,7 @@ RSpec.describe NPQ::Accept do
         NPQApplication.new(
           teacher_reference_number: trn,
           participant_identity: identity,
-          npq_course: npq_course,
+          npq_course:,
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
           school_ukprn: "12345678",
@@ -49,7 +49,7 @@ RSpec.describe NPQ::Accept do
       end
 
       it "rejects other_npq_application" do
-        described_class.call(npq_application: npq_application)
+        described_class.call(npq_application:)
         expect(npq_application.reload.lead_provider_approval_status).to eql("accepted")
         expect(other_npq_application.reload.lead_provider_approval_status).to eql("rejected")
       end
@@ -62,7 +62,7 @@ RSpec.describe NPQ::Accept do
         NPQApplication.create!(
           teacher_reference_number: trn,
           participant_identity: identity,
-          npq_course: npq_course,
+          npq_course:,
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
           school_ukprn: "12345678",
@@ -106,7 +106,7 @@ RSpec.describe NPQ::Accept do
       end
 
       it "does not reject the other course" do
-        described_class.call(npq_application: npq_application)
+        described_class.call(npq_application:)
         expect(npq_application.reload.lead_provider_approval_status).to eql("accepted")
         expect(other_npq_application.reload.lead_provider_approval_status).to eql("pending")
       end
@@ -142,8 +142,8 @@ RSpec.describe NPQ::Accept do
             teacher_reference_number: trn,
             teacher_reference_number_verified: true,
             participant_identity: identity,
-            npq_course: npq_course,
-            npq_lead_provider: npq_lead_provider,
+            npq_course:,
+            npq_lead_provider:,
           )
         end
 
@@ -154,7 +154,7 @@ RSpec.describe NPQ::Accept do
         end
 
         context "when another user with same TRN exists" do
-          let!(:previous_user) { create(:teacher_profile, trn: trn).user }
+          let!(:previous_user) { create(:teacher_profile, trn:).user }
 
           it "transfers participation record onto the previous user" do
             expect { subject.call }
@@ -216,8 +216,8 @@ RSpec.describe NPQ::Accept do
         NPQApplication.create!(
           teacher_reference_number: trn,
           participant_identity: identity,
-          npq_course: npq_course,
-          npq_lead_provider: npq_lead_provider,
+          npq_course:,
+          npq_lead_provider:,
           school_urn: "123456",
           school_ukprn: "12345678",
           cohort: cohort_2022,
@@ -229,8 +229,8 @@ RSpec.describe NPQ::Accept do
           NPQApplication.create!(
             teacher_reference_number: trn,
             participant_identity: identity,
-            npq_course: npq_course,
-            npq_lead_provider: npq_lead_provider,
+            npq_course:,
+            npq_lead_provider:,
             school_urn: "123456",
             school_ukprn: "12345678",
             cohort: Cohort.find_by!(start_year: 2021),

@@ -16,7 +16,7 @@ RSpec.describe SchoolCohort, type: :model do
   it "updates the updated_at on participant profiles and users when meaningfully updated" do
     freeze_time
     school_cohort = create(:school_cohort)
-    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort:, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
@@ -29,7 +29,7 @@ RSpec.describe SchoolCohort, type: :model do
   it "does not update the updated_at on participant profiles and users when not changed" do
     freeze_time
     school_cohort = create(:school_cohort)
-    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort:, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
@@ -45,7 +45,7 @@ RSpec.describe SchoolCohort, type: :model do
     expect {
       school_cohort.save!
     }.to have_enqueued_job(Analytics::UpsertECFSchoolCohortJob).with(
-      school_cohort: school_cohort,
+      school_cohort:,
     )
   end
 
@@ -63,7 +63,7 @@ RSpec.describe SchoolCohort, type: :model do
   describe ".for_year" do
     let(:school) { create(:school) }
     let(:cohort) { create(:cohort, start_year: 2020) }
-    subject(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+    subject(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
     before do
       school_cohort
@@ -103,9 +103,9 @@ RSpec.describe SchoolCohort, type: :model do
       before do
         Partnership.create!(
           cohort: school_cohort.cohort,
-          lead_provider: lead_provider,
+          lead_provider:,
           school: school_cohort.school,
-          delivery_partner: delivery_partner,
+          delivery_partner:,
         )
       end
 
@@ -138,9 +138,9 @@ RSpec.describe SchoolCohort, type: :model do
       before do
         Partnership.create!(
           cohort: school_cohort.cohort,
-          lead_provider: lead_provider,
+          lead_provider:,
           school: school_cohort.school,
-          delivery_partner: delivery_partner,
+          delivery_partner:,
         )
       end
 

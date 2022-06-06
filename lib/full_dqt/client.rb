@@ -5,7 +5,7 @@ require "net/http"
 module FullDQT
   class Client
     def get_record(trn:, birthdate:, nino: nil)
-      uri_for_record = uri(trn: trn, birthdate: birthdate, nino: nino)
+      uri_for_record = uri(trn:, birthdate:, nino:)
 
       request = Net::HTTP::Get.new(uri_for_record)
       request["Authorization"] = "Bearer #{api_key}"
@@ -39,12 +39,12 @@ module FullDQT
     end
 
     def uri(trn:, birthdate:, nino: nil)
-      URI("#{Rails.configuration.dqt_api_url}/v1/teachers/#{trn}?#{query_string_object(birthdate: birthdate, nino: nino).to_query}")
+      URI("#{Rails.configuration.dqt_api_url}/v1/teachers/#{trn}?#{query_string_object(birthdate:, nino:).to_query}")
     end
 
     def query_string_object(birthdate:, nino: nil)
       object = {
-        birthdate: birthdate,
+        birthdate:,
       }
 
       object[:nino] = nino if nino

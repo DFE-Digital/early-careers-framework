@@ -16,7 +16,7 @@ RSpec.describe DeliveryPartnerProfile, type: :model do
     let(:name) { Faker::Name.name }
     let(:email) { Faker::Internet.email }
     let(:delivery_partner) { create(:delivery_partner) }
-    let(:created_user) { User.find_by(email: email) }
+    let(:created_user) { User.find_by(email:) }
     let(:created_delivery_partner_profile) { DeliveryPartnerProfile.find_by!(user: created_user) }
 
     it "creates a delivery partner user" do

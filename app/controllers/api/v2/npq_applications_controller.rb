@@ -33,7 +33,7 @@ module Api
 
       def accept
         npq_application = npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course).find(params[:id])
-        if NPQ::Accept.call(npq_application: npq_application)
+        if NPQ::Accept.call(npq_application:)
           render json: NPQApplicationSerializer.new(npq_application).serializable_hash
         else
           render json: { errors: Api::ErrorFactory.new(model: npq_application).call }, status: :bad_request

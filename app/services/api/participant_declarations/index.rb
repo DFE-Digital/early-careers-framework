@@ -35,7 +35,7 @@ module Api
     def previous_declarations_scope
       ParticipantDeclaration
         .joins(participant_profile: { induction_records: { induction_programme: { partnership: [:lead_provider] } } })
-        .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider: lead_provider } } } })
+        .where(participant_profile: { induction_records: { induction_programme: { partnerships: { lead_provider: } } } })
         .where(participant_profile: { induction_records: { induction_status: "active" } }) # only want induction records that are the winning latest ones
         .where(state: %w[submitted eligible payable paid])
     end
