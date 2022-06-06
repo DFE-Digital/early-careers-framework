@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class ECFParticipantsEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
+  class ECFParticipantsEndpoint < APIs::BaseEndpoint
+    def initialize(args)
+      super args
       call_participants_endpoint
     end
 
@@ -21,7 +18,7 @@ module APIs
       has_attribute_value? "full_name", expected_value
     end
 
-    def has_email?(expected_value)
+    def has_email_address?(expected_value)
       has_attribute_value? "email", expected_value
     end
 
@@ -67,7 +64,7 @@ module APIs
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
         error = JSON.parse(session.response.body)
-        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        raise "GET request at #{Time.zone.now} to <#{url}> failed due to \n===\n#{error}\n===\n"
       end
     end
 

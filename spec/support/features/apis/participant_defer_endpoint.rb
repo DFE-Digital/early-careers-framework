@@ -1,16 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class ParticipantDeferEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
-    end
-
+  class ParticipantDeferEndpoint < APIs::BaseEndpoint
     def post_defer_notice(participant_id, course_identifier, reason_code)
       @current_id = participant_id
       post_request course_identifier, reason_code
@@ -42,7 +35,11 @@ module APIs
       @response = nil
 
       url = "/api/v1/participants/#{@current_id}/defer"
-      params = build_params reason: reason_code, course_identifier: course_identifier
+      attributes = {
+        reason: reason_code,
+        course_identifier: course_identifier,
+      }
+      params = build_params attributes
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",
@@ -53,7 +50,7 @@ module APIs
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
         error = JSON.parse(session.response.body)
-        raise "PUT request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        raise "POST request at #{Time.zone.now} to <#{url}> with request body \n#{JSON.pretty_generate attributes}\n failed due to \n===\n#{error}\n===\n"
       end
     end
 

@@ -97,7 +97,7 @@
 
 <div class="govuk-grid-row govuk-!-margin-top-5">
   <div class="govuk-grid-column-full">
-    <div class="finance-panel">
+    <div class="finance-panel finance-panel__output-payments">
       <%= govuk_table classes: ["output-payments"] do |table| %>
         <% table.caption(size: 'm', text: "Output payments") %>
 
@@ -146,7 +146,7 @@
       </div>
     </div>
 
-    <div class="finance-panel govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+    <div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5">
       <%= govuk_table do |table| %>
         <% table.caption(size: "m", text: "Adjustments") %>
 
