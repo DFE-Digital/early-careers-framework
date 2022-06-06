@@ -97,7 +97,7 @@ RSpec.describe Multistep::Form do
     end
   end
 
-  describe "#omplete_step" do
+  describe "#complete_step" do
     before do
       form.complete_step(:first_step, first_step_attribute: :value)
       form.complete_step(:interim_step)

@@ -15,7 +15,7 @@ module Multistep
       include ActiveModel::Serialization
       include DateAttribute
 
-      attribute :completed_steps
+      attribute :completed_steps, default: -> { [] }
     end
 
     class_methods do
@@ -66,13 +66,13 @@ module Multistep
     end
 
     def step_completed?(step)
-      completed_steps.include?(step)
+      completed_steps&.include?(step)
     end
 
   private
 
     def record_completed_step(step)
-      if completed_steps.include?(step) && !self.class.steps[step].multiple?
+      if completed_steps&.include?(step) && !self.class.steps[step].multiple?
         self.completed_steps = completed_steps[0..(completed_steps.index(step))]
       else
         completed_steps << step

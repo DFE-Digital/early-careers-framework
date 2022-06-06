@@ -34,7 +34,7 @@ module Participants
     attribute :participant_profile_id
     attribute :eligibility
     attribute :dqt_response
-    attribute :attempts
+    attribute :attempts, default: 0
 
     step :check_trn_given, update: true do
       attribute :check_trn_given, :boolean
