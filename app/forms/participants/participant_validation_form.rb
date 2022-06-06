@@ -48,7 +48,7 @@ module Participants
 
     step :trn, update: true do
       attribute :trn, :string
-      attribute :no_trn, :boolean
+      attribute :no_trn, :boolean, default: false
 
       validates :trn,
                 presence: true,
