@@ -109,7 +109,7 @@ RSpec.feature "CIP to FIP - Transfer a participant",
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable "February 2022"
+          and_eligible_training_declarations_are_made_payable scenario.statement_name
         end
 
         include_examples "CIP to FIP", scenario

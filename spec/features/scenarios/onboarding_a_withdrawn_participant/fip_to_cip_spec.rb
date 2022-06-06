@@ -109,7 +109,7 @@ RSpec.feature "FIP to CIP - Onboarding a withdrawn participant",
           when_developers_transfer_the_withdrawn_participant "New SIT",
                                                              "the Participant"
 
-          and_eligible_training_declarations_are_made_payable "February 2022"
+          and_eligible_training_declarations_are_made_payable scenario.statement_name
         end
 
         include_examples "FIP to CIP", scenario, "withdrawn"

@@ -75,14 +75,16 @@ RSpec.shared_examples "CIP to FIP" do |scenario|
                                                                    "active",
                                                                    scenario.all_declarations
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "New Lead Provider", "February 2022",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "New Lead Provider",
+                                                                        scenario.statement_name,
                                                                         scenario.new_payment_ects,
                                                                         scenario.new_payment_mentors,
                                                                         scenario.new_started_declarations,
                                                                         scenario.new_retained_declarations,
                                                                         0, 0
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider", "February 2022",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider",
+                                                                        scenario.statement_name,
                                                                         0, 0, 0, 0, 0, 0
 
       sign_out

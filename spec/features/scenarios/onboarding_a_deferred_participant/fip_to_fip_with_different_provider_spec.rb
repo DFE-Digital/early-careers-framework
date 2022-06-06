@@ -118,7 +118,7 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable "February 2022"
+          and_eligible_training_declarations_are_made_payable scenario.statement_name
         end
 
         include_examples "FIP to FIP with different provider", scenario, "withdrawn", is_hidden: true

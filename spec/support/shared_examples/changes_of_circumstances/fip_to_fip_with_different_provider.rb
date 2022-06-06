@@ -104,14 +104,16 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
                                                                    "active",
                                                                    scenario.all_declarations
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider", "February 2022",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Original Lead Provider",
+                                                                        scenario.statement_name,
                                                                         scenario.original_payment_ects,
                                                                         scenario.original_payment_mentors,
                                                                         scenario.original_started_declarations,
                                                                         scenario.original_retained_declarations,
                                                                         0, 0
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "New Lead Provider", "February 2022",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "New Lead Provider",
+                                                                        scenario.statement_name,
                                                                         scenario.new_payment_ects,
                                                                         scenario.new_payment_mentors,
                                                                         scenario.new_started_declarations,
@@ -119,7 +121,8 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
                                                                         0, 0,
                                                                         uplift: scenario.prior_declarations.empty?
 
-      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider", "February 2022",
+      then_the_finance_portal_shows_the_lead_provider_payment_breakdown "Another Lead Provider",
+                                                                        scenario.statement_name,
                                                                         0, 0, 0, 0, 0, 0
 
       sign_out

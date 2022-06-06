@@ -101,7 +101,7 @@ RSpec.feature "CIP to CIP - Transfer a participant",
           when_developers_transfer_the_active_participant "New SIT",
                                                           "the Participant"
 
-          and_eligible_training_declarations_are_made_payable "February 2022"
+          and_eligible_training_declarations_are_made_payable scenario.statement_name
         end
 
         include_examples "CIP to CIP", scenario
