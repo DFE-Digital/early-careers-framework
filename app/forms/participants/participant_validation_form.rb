@@ -28,7 +28,7 @@ module Participants
     end
 
     # lifted from https://github.com/dwp/nino-format-validation
-    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/.freeze
+    NINO_REGEX = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/
     EXTRA_STEPS = %i[nino name_changed].freeze
 
     attribute :participant_profile_id
