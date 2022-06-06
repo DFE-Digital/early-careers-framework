@@ -34,7 +34,7 @@ module Finance
       end
 
       def milestones
-        NPQCourse.schedule_for(course).milestones
+        NPQCourse.schedule_for(npq_course: course).milestones
       end
 
       def total_participants_for(milestone)

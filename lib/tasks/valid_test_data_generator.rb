@@ -321,9 +321,10 @@ module ValidTestDataGenerator
         school_urn: school.urn,
         teacher_reference_number: TRNGenerator.next,
         teacher_reference_number_verified: true,
-        npq_course: NPQCourse.all.sample,
+        npq_course: NPQCourse.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }.sample,
         npq_lead_provider: lead_provider,
         participant_identity: identity,
+        cohort: Cohort.find_by!(start_year: 2021),
       )
 
       return if [true, false].sample
