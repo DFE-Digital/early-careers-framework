@@ -46,6 +46,18 @@ RSpec.describe "Admin::Schools", type: :request do
         get "/admin/schools", params: { query: "mary" }
         expect(assigns(:schools)).to match_array [included_school]
       end
+
+      context "when there is more than one induction coordinator" do
+        before do
+          create(:user, :induction_coordinator, email: "john@schools.org", schools: [included_school])
+          create(:user, :induction_coordinator, email: "mary@schools.org", schools: [included_school])
+        end
+
+        it "only returns the school once" do
+          get "/admin/schools", params: { query: "090120" }
+          expect(assigns(:schools)).to match_array [included_school]
+        end
+      end
     end
   end
 
