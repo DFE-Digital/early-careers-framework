@@ -15,7 +15,7 @@ jobs:
       - id: generate-nonce
         run: echo "::set-output name=nonce::$(tr -dc 0-9 </dev/urandom | head -c 18 ; echo '')"
 
-  e2e-scenarios:
+  e2e_scenarios:
     name: Run End to End Scenarios
     runs-on: ubuntu-20.04
     needs: create-nonce
@@ -76,7 +76,7 @@ jobs:
       - name: Run tests
         run: bundle exec bin/scenarios_ci
 
-end_to_end_scebario_success:
+  end_to_end_scebario_success:
     name: E2E scenario success
     runs-on: ubuntu-20.04
     needs: [e2e-scenarios]
