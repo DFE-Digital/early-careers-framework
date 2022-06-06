@@ -155,6 +155,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               employment_role
               created_at
               updated_at
+              cohort
             ],
           )
         end

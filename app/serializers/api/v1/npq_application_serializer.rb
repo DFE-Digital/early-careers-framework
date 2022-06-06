@@ -59,6 +59,10 @@ module Api
       end
 
       attribute(:status, &:lead_provider_approval_status)
+
+      attribute :cohort do |object|
+        object.cohort.start_year.to_s
+      end
     end
   end
 end
