@@ -19,7 +19,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.106.0
         with:
-          ruby-version: 3.0.4
+          ruby-version: 3.1.2
       - name: Install dependencies
         run: bundle install
       - name: Create mail log file
