@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe NPQ::Accept do
   before { create(:npq_leadership_schedule) }
 
+  let(:cohort_2021) { Cohort.current }
   let(:cohort_2022) { create(:cohort, :next) }
 
   subject do
@@ -26,6 +27,7 @@ RSpec.describe NPQ::Accept do
         npq_lead_provider: npq_lead_provider,
         school_urn: "123456",
         school_ukprn: "12345678",
+        cohort: cohort_2021,
       )
     end
 
@@ -40,6 +42,7 @@ RSpec.describe NPQ::Accept do
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
           school_ukprn: "12345678",
+          cohort: cohort_2021,
         )
       end
 
@@ -66,6 +69,7 @@ RSpec.describe NPQ::Accept do
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
           school_ukprn: "12345678",
+          cohort: cohort_2021,
         )
       end
 
@@ -97,6 +101,7 @@ RSpec.describe NPQ::Accept do
           npq_lead_provider: other_npq_lead_provider,
           school_urn: "123456",
           school_ukprn: "12345678",
+          cohort: cohort_2021,
         )
       end
 
@@ -144,6 +149,7 @@ RSpec.describe NPQ::Accept do
             participant_identity: identity,
             npq_course: npq_course,
             npq_lead_provider: npq_lead_provider,
+            cohort: cohort_2021,
           )
         end
 
@@ -212,6 +218,8 @@ RSpec.describe NPQ::Accept do
     end
 
     context "when applying for 2022" do
+      let!(:schedule_2022) { create(:npq_leadership_schedule, cohort: cohort_2022) }
+
       let!(:npq_application) do
         NPQApplication.create!(
           teacher_reference_number: trn,
