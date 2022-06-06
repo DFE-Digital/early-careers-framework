@@ -31,7 +31,7 @@ class InviteSchools
   end
 
   def reached_limit(school)
-    EMAIL_LIMITS.find do |**kwargs|
+    EMAIL_LIMITS.find do |kwargs|
       NominationEmail.where(school: school, sent_at: kwargs[:within].ago..Float::INFINITY).count >= kwargs[:max]
     end
   end
