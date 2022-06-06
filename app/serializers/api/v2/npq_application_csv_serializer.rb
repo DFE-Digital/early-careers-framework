@@ -45,6 +45,7 @@ module Api
           employment_role
           created_at
           updated_at
+          ineligible_for_funding_reason
         ]
       end
 
@@ -61,7 +62,7 @@ module Api
           record.school_ukprn,
           record.private_childcare_provider_urn,
           record.headteacher_status,
-          record.eligible_for_funding,
+          record.eligible_for_dfe_funding,
           record.funding_choice,
           record.npq_course.identifier,
           record.lead_provider_approval_status,
@@ -70,6 +71,7 @@ module Api
           record.employment_role,
           record.created_at.rfc3339,
           record.updated_at.rfc3339,
+          record.ineligible_for_funding_reason,
         ]
       end
     end

@@ -158,6 +158,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               created_at
               updated_at
               cohort
+              ineligible_for_funding_reason
             ],
           )
         end
