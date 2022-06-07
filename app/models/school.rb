@@ -95,11 +95,11 @@ class School < ApplicationRecord
   end
 
   def lead_provider(year)
-    partnerships.unchallenged.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+    partnerships.unchallenged.where(relationship: false).joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
 
   def delivery_partner_for(year)
-    partnerships.unchallenged.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
+    partnerships.unchallenged.where(relationship: false).joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
   def participants_for(cohort)
