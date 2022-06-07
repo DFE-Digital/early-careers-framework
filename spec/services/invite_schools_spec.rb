@@ -44,7 +44,7 @@ RSpec.describe InviteSchools do
     end
 
     it "sends the nomination email" do
-      travel_to(Time.utc("2000-1-1")) do
+      travel_to(Time.utc(2000, 1, 1)) do
         expect(SchoolMailer).to receive(:nomination_email).with(
           hash_including(
             recipient: school.primary_contact_email,
@@ -67,7 +67,7 @@ RSpec.describe InviteSchools do
       let(:school) { create(:school, :cip_only, primary_contact_email:) }
 
       it "still sends the nomination email" do
-        travel_to(Time.utc("2000-1-1")) do
+        travel_to(Time.utc(2000, 1, 1)) do
           expect(SchoolMailer).to receive(:nomination_email).with(
             hash_including(
               school:,
