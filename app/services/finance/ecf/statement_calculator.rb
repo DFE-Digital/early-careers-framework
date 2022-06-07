@@ -38,7 +38,7 @@ module Finance
       end
 
       def voided_declarations
-        statement.voided_participant_declarations
+        statement.participant_declarations.voided
       end
 
       event_types.each do |event_type|

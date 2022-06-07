@@ -8,7 +8,10 @@ module Finance
           Finance::Statement.transaction do
             statement.payable!
 
-            statement.participant_declarations.find_each do |declaration|
+            statement
+              .participant_declarations
+              .billable
+              .find_each do |declaration|
               declaration.make_payable!
 
               line_item = StatementLineItem.find_by(statement: statement, participant_declaration: declaration)

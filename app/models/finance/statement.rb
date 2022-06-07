@@ -8,8 +8,17 @@ class Finance::Statement < ApplicationRecord
   belongs_to :cpd_lead_provider
   belongs_to :cohort
 
-  has_many :participant_declarations
   has_many :statement_line_items, class_name: "Finance::StatementLineItem"
+  has_many :participant_declarations, through: :statement_line_items
+
+  has_many :billable_statement_line_items,
+           -> { where(state: %w[eligible payable paid]) },
+           class_name: "Finance::StatementLineItem"
+
+  has_many :billable_participant_declarations,
+           class_name: "ParticipantDeclaration",
+           through: :billable_statement_line_items,
+           source: :participant_declaration
 
   scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,                    -> { where("payment_date < ?", Date.current) }
