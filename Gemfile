@@ -105,9 +105,9 @@ gem "google-cloud-bigquery"
 gem "sidekiq"
 gem "sidekiq-cron"
 
-gem 'net-smtp', require: false
-gem 'net-imap', require: false
-gem 'net-pop', require: false
+gem "net-imap", require: false
+gem "net-pop", require: false
+gem "net-smtp", require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -137,6 +137,7 @@ group :development, :test do
 end
 
 group :development, :deployed_development, :test, :sandbox do
+  gem "dotenv-rails", "~> 2.7.6"
   gem "factory_bot_rails", "~> 6.2.0"
   gem "faker"
   gem "timecop"
