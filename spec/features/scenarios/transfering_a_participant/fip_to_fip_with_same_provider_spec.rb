@@ -121,7 +121,7 @@ RSpec.feature "FIP to FIP with same provider - Transfer a participant",
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable scenario.statement_name
+          and_eligible_training_declarations_are_made_payable
         end
 
         include_examples "FIP to FIP with same provider", scenario, "active", see_prior_school: false

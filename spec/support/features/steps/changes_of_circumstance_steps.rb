@@ -288,14 +288,10 @@ module Steps
       end
     end
 
-    def and_eligible_training_declarations_are_made_payable(statement_name)
+    def and_eligible_training_declarations_are_made_payable
       next_ideal_time @timestamp + 3.days
       travel_to(@timestamp) do
-        ParticipantDeclaration.eligible.each do |participant_declaration|
-          participant_declaration.make_payable!
-          statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: participant_declaration.cpd_lead_provider)
-          participant_declaration.update! statement: statement
-        end
+        ParticipantDeclaration.eligible.each(&:make_payable!)
       end
     end
 
