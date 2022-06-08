@@ -114,6 +114,21 @@ RSpec.describe SchoolCohort, type: :model do
       end
     end
 
+    context "when FIP is chosen and there are relationship partnerships" do
+      let(:lead_provider) { create(:lead_provider, name: "Super Smashing Great Provider") }
+      let(:delivery_partner) { create(:delivery_partner, name: "Wunderbar Partner") }
+
+      before do
+        Induction::CreateRelationship.call(school_cohort: school_cohort,
+                                           lead_provider: lead_provider,
+                                           delivery_partner: delivery_partner)
+      end
+
+      it "does not return the relationship provider" do
+        expect(school_cohort.lead_provider).to be_nil
+      end
+    end
+
     context "when the school has chosen CIP for the cohort" do
       let(:cip) { create(:core_induction_programme) }
 
@@ -146,6 +161,21 @@ RSpec.describe SchoolCohort, type: :model do
 
       it "returns the delivery partner" do
         expect(school_cohort.delivery_partner).to eq(delivery_partner)
+      end
+    end
+
+    context "when FIP is chosen and there are relationship partnerships" do
+      let(:lead_provider) { create(:lead_provider, name: "Super Smashing Great Provider") }
+      let(:delivery_partner) { create(:delivery_partner, name: "Wunderbar Partner") }
+
+      before do
+        Induction::CreateRelationship.call(school_cohort: school_cohort,
+                                           lead_provider: lead_provider,
+                                           delivery_partner: delivery_partner)
+      end
+
+      it "does not return the relationship delivery partner" do
+        expect(school_cohort.delivery_partner).to be_nil
       end
     end
 
