@@ -15,7 +15,7 @@ module Finance
       def paid_participant_count_per_bands
         @paid_participant_count_per_bands ||= lead_provider
                                                 .participant_declarations
-                                                .joins(:statement)
+                                                .joins(:billable_statements)
                                                 .paid
                                                 .group(:declaration_type)
                                                 .where(statements: { cohort: Cohort.current })
@@ -25,7 +25,7 @@ module Finance
       def payable_participant_count_per_bands
         @payable_participant_count_per_bands ||= lead_provider
                                                    .participant_declarations
-                                                   .joins(:statement)
+                                                   .joins(:billable_statements)
                                                    .payable
                                                    .group(:declaration_type)
                                                    .where(statements: { cohort: Cohort.current })

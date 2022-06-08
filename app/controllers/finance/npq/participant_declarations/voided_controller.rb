@@ -10,7 +10,7 @@ module Finance
           @npq_lead_provider   = lead_provider_scope.find(params[:lead_provider_id])
           @cpd_lead_provider   = @npq_lead_provider.cpd_lead_provider
           @statement           = @cpd_lead_provider.npq_lead_provider.statements.find_by_humanised_name(params[:statement_id])
-          @voided_declarations = @statement.voided_participant_declarations
+          @voided_declarations = @statement.participant_declarations.voided
         end
 
       private

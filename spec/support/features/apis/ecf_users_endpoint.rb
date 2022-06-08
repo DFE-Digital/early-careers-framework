@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class ECFUsersEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize
-      @token = EngageAndLearnApiToken.create_with_random_token!
+  class ECFUsersEndpoint < APIs::BaseEndpoint
+    def initialize(*_args)
+      super EngageAndLearnApiToken.create_with_random_token!
       call_users_endpoint
     end
 
@@ -56,7 +53,7 @@ module APIs
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
         error = JSON.parse(session.response.body)
-        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        raise "GET request at #{Time.zone.now} to <#{url}> failed due to \n===\n#{error}\n===\n"
       end
     end
 

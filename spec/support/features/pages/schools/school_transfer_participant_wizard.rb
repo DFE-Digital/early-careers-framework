@@ -17,19 +17,12 @@ module Pages
     end
 
     def transfer_ect(full_name, email_address, start_date, same_provider, participant_trn, date_of_birth)
-      choose_to_add_a_new_ect
+      choose_to_transfer_from_another_school
+      confirm_transferring_an_ect_or_mentor
 
       add_full_name full_name
-
-      if participant_trn.blank?
-        choose_i_do_not_know_the_participants_trn
-      else
-        choose_i_know_the_participants_trn
-        add_teacher_reference_number full_name, participant_trn
-        add_date_of_birth date_of_birth
-      end
-
-      choose_to_transfer_from_another_school
+      add_teacher_reference_number participant_trn
+      add_date_of_birth date_of_birth
       add_start_date start_date
       add_email_address email_address
 
@@ -45,19 +38,12 @@ module Pages
     end
 
     def transfer_mentor(full_name, email_address, start_date, same_provider, participant_trn, date_of_birth)
-      choose_to_add_a_new_ect
+      choose_to_transfer_from_another_school
+      confirm_transferring_an_ect_or_mentor
 
       add_full_name full_name
-
-      if participant_trn.blank?
-        choose_i_do_not_know_the_participants_trn
-      else
-        choose_i_know_the_participants_trn
-        add_teacher_reference_number full_name, participant_trn
-        add_date_of_birth date_of_birth
-      end
-
-      choose_to_transfer_from_another_school
+      add_teacher_reference_number participant_trn
+      add_date_of_birth date_of_birth
       add_start_date start_date
       add_email_address email_address
 
@@ -72,30 +58,15 @@ module Pages
       confirm_and_add
     end
 
-    def choose_to_add_a_new_ect
-      choose "A new ECT"
-      click_on "Continue"
-
-      self
-    end
-
-    def choose_to_add_a_new_mentor
-      choose "A new mentor"
-      click_on "Continue"
-
-      self
-    end
-
     def choose_to_transfer_from_another_school
-      element_has_content? self, "Is The Participant transferring from another school?"
-      choose "Yes"
+      choose "A teacher transferring from another school where they’ve started ECF-based training or mentoring"
       click_on "Continue"
 
       self
     end
 
-    def start_to_add_sit_as_mentor
-      click_on "Add yourself as a mentor"
+    def confirm_transferring_an_ect_or_mentor
+      click_on "Report a transferring ECT or mentor"
       click_on "Continue"
 
       self
@@ -109,17 +80,8 @@ module Pages
       self
     end
 
-    def choose_i_know_the_participants_trn
-      choose "Yes"
-      click_on "Continue"
-
-      self
-    end
-
-    def add_teacher_reference_number(full_name, trn)
-      element_has_content? self, "What’s #{full_name.titleize}’s teacher reference number (TRN)?"
-
-      fill_in "What’s #{full_name.titleize}’s teacher reference number (TRN)?", with: trn
+    def add_teacher_reference_number(trn)
+      fill_in "Teacher reference number (TRN)", with: trn
       click_on "Continue"
 
       self
@@ -129,13 +91,6 @@ module Pages
       fill_in "Day", with: date_of_birth.day
       fill_in "Month", with: date_of_birth.month
       fill_in "Year", with: date_of_birth.year
-      click_on "Continue"
-
-      self
-    end
-
-    def choose_i_do_not_know_the_participants_trn
-      choose "No"
       click_on "Continue"
 
       self

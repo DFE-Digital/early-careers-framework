@@ -34,7 +34,7 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def fundable?
-      npq_application&.eligible_for_funding
+      npq_application&.eligible_for_dfe_funding
     end
 
   private

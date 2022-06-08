@@ -37,6 +37,7 @@ PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
   { name: "Teacher Development Trust", id: "30fd937e-b93c-4f81-8fff-3c27544193f1" },
   { name: "Teach First", id: "a02ae582-f939-462f-90bc-cebf20fa8473" },
   { name: "UCL Institute of Education", id: "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7" },
+  { name: "National Institute of Teaching", id: "3ec607f2-7a3a-421f-9f1a-9aca8a634aeb" },
 ].each do |hash|
   NPQLeadProvider.find_or_create_by!(name: hash[:name], id: hash[:id])
 end

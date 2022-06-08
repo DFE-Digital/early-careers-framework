@@ -3,16 +3,26 @@
 class ParticipantDeclaration < ApplicationRecord
   self.ignored_columns = %w[statement_type]
 
-  has_many :declaration_states
-  has_many :participant_declaration_attempts, dependent: :destroy
   belongs_to :cpd_lead_provider
   belongs_to :user
   belongs_to :participant_profile
   belongs_to :superseded_by, class_name: "ParticipantDeclaration", optional: true
-  belongs_to :statement, optional: true, class_name: "Finance::Statement"
+
+  has_many :declaration_states
+  has_many :participant_declaration_attempts, dependent: :destroy
   has_many :supersedes, class_name: "ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by
 
   has_many :statement_line_items, class_name: "Finance::StatementLineItem"
+  has_many :statements, class_name: "Finance::Statement", through: :statement_line_items
+
+  has_many :billable_statement_line_items,
+           -> { where(state: %w[eligible payable paid]) },
+           class_name: "Finance::StatementLineItem"
+
+  has_many :billable_statements,
+           class_name: "Finance::Statement",
+           through: :billable_statement_line_items,
+           source: :statement
 
   enum state: {
     submitted: "submitted",
@@ -28,9 +38,8 @@ class ParticipantDeclaration < ApplicationRecord
 
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
 
-  # Helper scopes
-  scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider:) }
-  scope :for_declaration, ->(declaration_type) { where(declaration_type:) }
+  scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
+  scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
   scope :retained_1, -> { for_declaration("retained-1").order(declaration_date: "desc").unique_id }
@@ -71,7 +80,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :unique_uplift,  -> { unique_id.uplift }
   scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
 
-  scope :for_course_identifier, ->(course_identifier) { where(course_identifier:) }
+  scope :for_course_identifier, ->(course_identifier) { where(course_identifier: course_identifier) }
   scope :unique_for_lead_provider_and_course_identifier, ->(lead_provider, course_identifier) { for_lead_provider(lead_provider).for_course_identifier(course_identifier).unique_id }
 
   scope :not_payable_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
@@ -87,6 +96,8 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_mentors_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).mentor }
   scope :paid_npqs_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).npq }
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
+
+  scope :billable, -> { where(state: %w[eligible payable paid]) }
 
   before_create :build_initial_declaration_state
 
@@ -127,11 +138,11 @@ class ParticipantDeclaration < ApplicationRecord
     self.class.joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
       .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
-      .where.not(user_id:, id:)
+      .where.not(user_id: user_id, id: id)
       .where.not(state: self.class.states[:voided])
       .where(
-        declaration_type:,
-        course_identifier:,
+        declaration_type: declaration_type,
+        course_identifier: course_identifier,
         superseded_by_id: nil,
       )
   end
@@ -139,7 +150,7 @@ class ParticipantDeclaration < ApplicationRecord
 private
 
   def build_initial_declaration_state
-    declaration_states.build(state:)
+    declaration_states.build(state: state)
   end
 end
 

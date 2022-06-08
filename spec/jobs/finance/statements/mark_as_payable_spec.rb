@@ -11,19 +11,19 @@ RSpec.describe Finance::Statements::MarkAsPayable do
       :ecf_statement,
       output_fee: true,
       deadline_date: Date.new(2021, 12, 31),
-      cpd_lead_provider:,
+      cpd_lead_provider: cpd_lead_provider,
     )
   end
 
   before do
     travel_to Date.new(2021, 12, 31) do
-      eligible_dec = create(:ect_participant_declaration, :eligible, statement:)
-      ineligible_dec = create(:ect_participant_declaration, :ineligible, statement:)
-      voided_dec = create(:ect_participant_declaration, :voided, statement:)
+      eligible_dec = create(:ect_participant_declaration, :eligible)
+      ineligible_dec = create(:ect_participant_declaration, :ineligible)
+      voided_dec = create(:ect_participant_declaration, :voided)
 
-      Finance::StatementLineItem.create!(statement:, participant_declaration: eligible_dec, state: "eligible")
-      Finance::StatementLineItem.create!(statement:, participant_declaration: ineligible_dec, state: "ineligible")
-      Finance::StatementLineItem.create!(statement:, participant_declaration: voided_dec, state: "voided")
+      Finance::StatementLineItem.create!(statement: statement, participant_declaration: eligible_dec, state: "eligible")
+      Finance::StatementLineItem.create!(statement: statement, participant_declaration: ineligible_dec, state: "ineligible")
+      Finance::StatementLineItem.create!(statement: statement, participant_declaration: voided_dec, state: "voided")
     end
   end
 

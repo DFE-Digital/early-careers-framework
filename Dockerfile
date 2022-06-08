@@ -28,31 +28,31 @@ WORKDIR /app
 
 COPY Gemfile Gemfile.lock package.json yarn.lock .ruby-version ./
 
-RUN apk -U upgrade 
-RUN apk add --update --no-cache --virtual .gem-installdeps $BUILD_DEPS
-RUN gem update --system
-RUN find / -wholename '*default/bundler-*.gemspec' -delete
-RUN rm -rf /usr/local/bin/bundle
-RUN gem install bundler -v 2.3.9
-RUN bundler -v
-RUN bundle config set no-cache 'true'
-RUN bundle config set no-binstubs 'true'
-RUN bundle --retry=5 --jobs=4 --without=development test
-RUN yarn install --check-files --production
-RUN apk del .gem-installdeps
-RUN rm -rf /usr/local/bundle/cache
-RUN find /usr/local/bundle/gems -name "*.c" -delete
-RUN find /usr/local/bundle/gems -name "*.h" -delete
-RUN find /usr/local/bundle/gems -name "*.o" -delete
+RUN apk -U upgrade && \
+    apk add --update --no-cache --virtual .gem-installdeps $BUILD_DEPS && \
+    gem update --system && \
+    find / -wholename '*default/bundler-*.gemspec' -delete && \
+    rm -rf /usr/local/bin/bundle && \
+    gem install bundler -v 2.3.9 && \
+    bundler -v && \
+    bundle config set no-cache 'true' && \
+    bundle config set no-binstubs 'true' && \
+    bundle --retry=5 --jobs=4 --without=development test && \
+    yarn install --check-files --production && \
+    apk del .gem-installdeps && \
+    rm -rf /usr/local/bundle/cache && \
+    find /usr/local/bundle/gems -name "*.c" -delete && \
+    find /usr/local/bundle/gems -name "*.h" -delete && \
+    find /usr/local/bundle/gems -name "*.o" -delete
 
 # Stage 2: early-careers-framework-gems-node-modules, reduce size of gems-node-modules and only keep required files.
 # published as dfedigital/early-careers-framework-gems-node-modules
 FROM ${BASE_RUBY_IMAGE} AS early-careers-framework-gems-node-modules
 
-RUN apk -U upgrade 
-RUN apk add --update --no-cache nodejs yarn tzdata libpq libxml2 libxslt graphviz
-RUN echo "Europe/London" > /etc/timezone
-RUN cp /usr/share/zoneinfo/Europe/London /etc/localtime
+RUN apk -U upgrade && \
+    apk add --update --no-cache nodejs yarn tzdata libpq libxml2 libxslt graphviz && \
+    echo "Europe/London" > /etc/timezone && \
+    cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
@@ -70,10 +70,10 @@ ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
 WORKDIR /app
 COPY . .
 
-RUN bundle exec rake assets:precompile 
-RUN apk del nodejs yarn
-RUN rm -rf yarn.lock
-RUN rm -rf tmp/* log/* node_modules /usr/local/share/.cache /tmp/*
+RUN bundle exec rake assets:precompile && \
+    apk del nodejs yarn && \
+    rm -rf yarn.lock && \
+    rm -rf tmp/* log/* node_modules /usr/local/share/.cache /tmp/*
 
 # Stage 4: production, copy application code and compiled assets to base ruby image.
 # Depends on assets-precompile stage which can be cached from a pre-built image
@@ -85,10 +85,10 @@ ARG SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
     SHA=${SHA}
 
-RUN apk -U upgrade 
-RUN apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz
-RUN echo "Europe/London" > /etc/timezone
-RUN cp /usr/share/zoneinfo/Europe/London /etc/localtime
+RUN apk -U upgrade && \
+    apk add --update --no-cache tzdata libpq libxml2 libxslt graphviz && \
+    echo "Europe/London" > /etc/timezone && \
+    cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/

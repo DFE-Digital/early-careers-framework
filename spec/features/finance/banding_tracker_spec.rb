@@ -14,18 +14,28 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
       end
     end
   end
-  let(:statement)             { create :ecf_statement, :output_fee, cpd_lead_provider: }
+  let(:statement)             { create :ecf_statement, :output_fee, cpd_lead_provider: cpd_lead_provider }
   let(:next_cohort)           { create(:cohort, :next) }
-  let(:next_cohort_statement) { create :ecf_statement, :output_fee, cpd_lead_provider:, cohort: next_cohort }
+  let(:next_cohort_statement) { create :ecf_statement, :output_fee, cpd_lead_provider: cpd_lead_provider, cohort: next_cohort }
 
   def generate_declarations(state:)
-    with_options(cpd_lead_provider:, state:, statement:) do
-      create_list(:ect_participant_declaration, 17, declaration_type: "started")
-      create_list(:ect_participant_declaration, 5,  declaration_type: "retained-1")
-      create_list(:ect_participant_declaration, 4,  declaration_type: "retained-2")
-      create_list(:ect_participant_declaration, 3,  declaration_type: "retained-3")
-      create_list(:ect_participant_declaration, 1,  declaration_type: "retained-4")
-      create_list(:ect_participant_declaration, 0,  declaration_type: "completed")
+    declarations = []
+
+    with_options(cpd_lead_provider: cpd_lead_provider, state: state) do
+      declarations << create_list(:ect_participant_declaration, 17, declaration_type: "started")
+      declarations << create_list(:ect_participant_declaration, 5,  declaration_type: "retained-1")
+      declarations << create_list(:ect_participant_declaration, 4,  declaration_type: "retained-2")
+      declarations << create_list(:ect_participant_declaration, 3,  declaration_type: "retained-3")
+      declarations << create_list(:ect_participant_declaration, 1,  declaration_type: "retained-4")
+      declarations << create_list(:ect_participant_declaration, 0,  declaration_type: "completed")
+    end
+
+    declarations.flatten.each do |declaration|
+      Finance::StatementLineItem.create!(
+        statement: statement,
+        participant_declaration: declaration,
+        state: declaration.state,
+      )
     end
   end
 
@@ -33,8 +43,30 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
     create(:ecf_schedule)
     generate_declarations(state: :payable)
     generate_declarations(state: :paid)
-    create(:ect_participant_declaration, :paid, declaration_type: "started", statement: next_cohort_statement, cpd_lead_provider:)
-    create(:ect_participant_declaration, :payable, declaration_type: "started", statement: next_cohort_statement, cpd_lead_provider:)
+
+    declaration = create(
+      :ect_participant_declaration, :paid,
+      declaration_type: "started",
+      cpd_lead_provider: cpd_lead_provider
+    )
+
+    Finance::StatementLineItem.create!(
+      statement: next_cohort_statement,
+      participant_declaration: declaration,
+      state: declaration.state,
+    )
+
+    declaration = create(
+      :ect_participant_declaration, :payable,
+      declaration_type: "started",
+      cpd_lead_provider: cpd_lead_provider
+    )
+
+    Finance::StatementLineItem.create!(
+      statement: next_cohort_statement,
+      participant_declaration: declaration,
+      state: declaration.state,
+    )
   end
 
   it "displays the distribution of declaration by band, retention type and declaration state" do

@@ -1,28 +1,39 @@
 # frozen_string_literal: true
 
+require_relative "./base_endpoint"
+
 module APIs
-  class GetParticipantDeclarationsEndpoint
-    include Capybara::DSL
-    include RSpec::Matchers
-
-    attr_reader :response
-
-    def initialize(token)
-      @token = token
-    end
-
+  class GetParticipantDeclarationsEndpoint < APIs::BaseEndpoint
     def get_training_declarations(participant_id)
       @current_id = participant_id
       get_declarations
     end
 
+    def has_declarations?(declaration_types = [])
+      found = list_declarations
+      expectation = declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
+
+      if found.sort == expectation.sort
+        true
+      else
+        raise RSpec::Expectations::ExpectationNotMetError, "expected the returned declarations of #{found} to equal #{expectation}"
+      end
+    end
+
+    def has_ordered_declarations?(declaration_types = [])
+      found = list_declarations
+      expectation = declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
+
+      if found == expectation
+        true
+      else
+        raise RSpec::Expectations::ExpectationNotMetError, "expected the returned declarations of #{found} to equal #{expectation}"
+      end
+    end
+
     def get_declaration(declaration_type)
       @current_type = declaration_type.to_s.gsub("_", "-")
       select_declaration
-    end
-
-    def has_declarations?(declaration_types)
-      list_declarations == declaration_types.map { |dt| dt.to_s.gsub("_", "-") }
     end
 
   private
@@ -32,7 +43,10 @@ module APIs
       @response = nil
 
       url = "/api/v1/participant-declarations"
-      params = build_filter_params participant_id: @current_id
+      attributes = {
+        participant_id: @current_id,
+      }
+      params = build_filter_params attributes
       headers = {
         "Authorization": "Bearer #{@token}",
         "Content-type": "application/json",
@@ -43,7 +57,7 @@ module APIs
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
         error = JSON.parse(session.response.body)
-        raise "GET request to <#{url}> failed due to \n===\n#{error}\n===\n"
+        raise "GET request at #{Time.zone.now} to <#{url}> with request params \n#{JSON.pretty_generate attributes}\n failed due to \n===\n#{error}\n===\n"
       end
     end
 

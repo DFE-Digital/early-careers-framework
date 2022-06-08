@@ -16,6 +16,7 @@ module Finance
       def total_declarations
         statement
           .participant_declarations
+          .where(state: %w[eligible payable paid]) # needs to be on join table
           .for_course_identifier(course.identifier)
           .unique_id
           .count
@@ -27,14 +28,15 @@ module Finance
 
       def not_eligible_declarations
         statement
-          .not_eligible_participant_declarations
+          .participant_declarations
+          .where(state: %w[ineligible voided]) # needs to be on join table
           .for_course_identifier(course.identifier)
           .unique_id
           .count
       end
 
       def milestones
-        NPQCourse.schedule_for(course).milestones
+        NPQCourse.schedule_for(npq_course: course).milestones
       end
 
       def total_participants_for(milestone)
@@ -77,6 +79,7 @@ module Finance
       def participants_per_declaration_type
         @participants_per_declaration_type ||= statement
           .participant_declarations
+          .where(state: %w[eligible payable paid]) # needs to be on join table
           .for_course_identifier(course.identifier)
           .group(:declaration_type)
           .count

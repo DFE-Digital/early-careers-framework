@@ -20,7 +20,9 @@ module Finance
       aggregations(event_type:).tap do |h|
         h[:previous_participants] =
           recorder
-          .where(statement: previous_statements)
+          .joins(:billable_statements)
+          .where(statements: { deadline_date: ..(statement.deadline_date - 1.day) })
+          .where(statements: { cpd_lead_provider: statement.cpd_lead_provider })
           .public_send(event_type)
           .count
       end
@@ -40,13 +42,6 @@ module Finance
       Hash.new do |hash, key|
         hash[key] = aggregate(aggregation_type: key, event_type:)
       end
-    end
-
-    def previous_statements
-      Finance::Statement::ECF.where(
-        deadline_date: ..(statement.deadline_date - 1.day),
-        cpd_lead_provider: statement.cpd_lead_provider,
-      )
     end
 
     def aggregate(aggregation_type:, event_type:)

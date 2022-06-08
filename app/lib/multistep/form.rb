@@ -66,7 +66,7 @@ module Multistep
     end
 
     def step_completed?(step)
-      completed_steps&.include?(step)
+      completed_steps.include?(step)
     end
 
   private

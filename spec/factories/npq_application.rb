@@ -5,6 +5,7 @@ FactoryBot.define do
     participant_identity
     npq_course
     npq_lead_provider
+    cohort { Cohort.current || create(:cohort, :current) }
 
     headteacher_status { NPQApplication.headteacher_statuses.keys.sample }
     funding_choice { NPQApplication.funding_choices.keys.sample }

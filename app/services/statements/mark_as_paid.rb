@@ -12,6 +12,11 @@ module Statements
           .participant_declarations
           .payable
           .each(&:make_paid!)
+
+        statement
+          .statement_line_items
+          .payable
+          .each(&:paid!)
       end
     end
 

@@ -12,9 +12,9 @@ module Multistep
 
     attr_reader :attributes
 
-    def attribute(name, *args)
+    def attribute(name, *args, **kwargs)
       @attributes << name
-      @form_class.attribute name, *args
+      @form_class.attribute name, *args, **kwargs
     end
 
     def before_complete(callback = nil, &block)

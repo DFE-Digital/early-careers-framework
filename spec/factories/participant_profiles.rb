@@ -30,7 +30,7 @@ FactoryBot.define do
                    elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(npq_application.npq_course.identifier)
                      Finance::Schedule::NPQSpecialist.default || create(:npq_specialist_schedule)
                    else
-                     NPQCourse.schedule_for(npq_application.npq_course)
+                     NPQCourse.schedule_for(npq_course: npq_application.npq_course)
                    end
 
         participant_profile.npq_application ||= npq_application

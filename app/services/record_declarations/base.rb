@@ -25,7 +25,7 @@ module RecordDeclarations
 
     class << self
       def call(params:)
-        new(params:).call
+        new(params: params).call
       end
     end
 
@@ -45,7 +45,7 @@ module RecordDeclarations
         set_eligibility
 
         Finance::Statement.attach(participant_declaration) unless participant_declaration.submitted?
-        declaration_attempt.update!(participant_declaration:)
+        declaration_attempt.update!(participant_declaration: participant_declaration)
       end
 
       Api::V1::ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
@@ -75,7 +75,7 @@ module RecordDeclarations
     end
 
     def create_declaration_attempt!
-      ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile))
+      ParticipantDeclarationAttempt.create!(declaration_parameters.except(:participant_profile, :pupil_premium_uplift, :sparsity_uplift))
     end
 
     def participant_declaration
@@ -84,12 +84,14 @@ module RecordDeclarations
 
     def declaration_parameters
       {
-        course_identifier:,
-        declaration_date:,
-        declaration_type:,
-        cpd_lead_provider:,
+        course_identifier: course_identifier,
+        declaration_date: declaration_date,
+        declaration_type: declaration_type,
+        cpd_lead_provider: cpd_lead_provider,
         participant_profile: user_profile,
-        user:,
+        user: user,
+        pupil_premium_uplift: user_profile.pupil_premium_uplift,
+        sparsity_uplift: user_profile.sparsity_uplift,
       }
     end
 
@@ -97,9 +99,9 @@ module RecordDeclarations
       declaration = self.class.declaration_model
                       .where.not(state: self.class.declaration_model.states[:voided])
                       .find_by(
-                        user:,
-                        course_identifier:,
-                        declaration_type:,
+                        user: user,
+                        course_identifier: course_identifier,
+                        declaration_type: declaration_type,
                       )
 
       declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
@@ -135,7 +137,7 @@ module RecordDeclarations
     def declaration_date_after_withdrawal_date?
       return unless user_profile.participant_profile_states.exists?
 
-      invalid_declaration = user_profile.participant_profile_states.withdrawn.where(cpd_lead_provider:).where("created_at <= ?", declaration_date)
+      invalid_declaration = user_profile.participant_profile_states.withdrawn.where(cpd_lead_provider: cpd_lead_provider).where("created_at <= ?", declaration_date)
       invalid_declaration.exists?
     end
 
@@ -146,7 +148,7 @@ module RecordDeclarations
     end
 
     def milestone
-      schedule&.milestones&.find_by(declaration_type:)
+      schedule&.milestones&.find_by(declaration_type: declaration_type)
     end
 
     def validate_milestone_exists

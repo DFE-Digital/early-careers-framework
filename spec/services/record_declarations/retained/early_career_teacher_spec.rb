@@ -2,48 +2,91 @@
 
 require "rails_helper"
 
-require_relative "../../../shared/context/service_record_declaration_params"
-require_relative "../../../shared/context/lead_provider_profiles_and_courses"
-
 RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
-  include_context "lead provider profiles and courses"
-  include_context "service record declaration params"
-
-  let(:cutoff_start_datetime) { ect_profile.schedule.milestones[1].start_date.beginning_of_day }
-  let(:cutoff_end_datetime) { ect_profile.schedule.milestones[1].milestone_date.end_of_day }
-  let(:retained_ect_params) { ect_params.merge(declaration_type: "retained-1", declaration_date: (cutoff_start_datetime + 1.day).rfc3339, evidence_held: "other") }
+  let(:profile) { create(:ect_participant_profile, schedule: schedule) }
+  let(:user) { profile.user }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let(:declaration_date) { Date.new(2021, 11, 10) }
+  let(:declaration_type) { "retained-1" }
+  let(:schedule) { create(:ecf_schedule) }
+  let(:cohort) { Cohort.current || create(:cohort, start_year: 2021) }
+  let(:school_cohort) { create(:school_cohort, cohort: cohort, school: profile.school) }
+  let(:partnership) { create(:partnership, school: profile.school, lead_provider: lead_provider, cohort: cohort) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership, school_cohort: school_cohort) }
 
   before do
-    travel_to cutoff_start_datetime + 2.days
-    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
   end
 
-  it_behaves_like "a participant declaration with evidence held service" do
-    def given_params
-      retained_ect_params
+  context "happy path" do
+    subject do
+      described_class.new(
+        params: {
+          participant_id: user.id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: cpd_lead_provider,
+          declaration_date: declaration_date.rfc3339,
+          declaration_type: declaration_type,
+          evidence_held: "other",
+        },
+      )
     end
 
-    def given_profile
-      ect_profile
+    it "creates a participant declaration" do
+      expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+    end
+
+    it "caches uplift flags on declaration" do
+      subject.call
+
+      declaration = ParticipantDeclaration.last
+
+      expect(declaration.pupil_premium_uplift).to eql(profile.pupil_premium_uplift)
+      expect(declaration.sparsity_uplift).to eql(profile.sparsity_uplift)
     end
   end
 
-  context "when valid user is an early_career_teacher" do
-    %w[training-event-attended self-study-material-completed other].each do |evidence_held|
-      it "creates a participant and profile declaration for evidence #{evidence_held}" do
-        expect { described_class.call(params: retained_ect_params.merge(evidence_held:)) }
-            .to change { ParticipantDeclaration.count }.by(1)
-      end
+  context "when course is incorrect" do
+    subject do
+      described_class.new(
+        params: {
+          participant_id: user.id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider: cpd_lead_provider,
+          declaration_date: declaration_date.rfc3339,
+          declaration_type: declaration_type,
+          evidence_held: "other",
+        },
+      )
+    end
+
+    it "raises an error" do
+      expect { subject.call }.to raise_error(ActionController::ParameterMissing).with_message(/course_identifier' must be an available course to/)
     end
   end
 
-  it_behaves_like "a participant service for ect" do
-    def given_params
-      retained_ect_params
+  context "when user is in 2020 cohort" do
+    let(:cohort_2020) { create(:cohort, start_year: 2020) }
+    let(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: profile.school) }
+    let(:partnership) { create(:partnership, school: profile.school, lead_provider: lead_provider, cohort: cohort_2020) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership, school_cohort: school_cohort_2020) }
+
+    subject do
+      described_class.new(
+        params: {
+          participant_id: user.id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: cpd_lead_provider,
+          declaration_date: declaration_date.rfc3339,
+          declaration_type: declaration_type,
+          evidence_held: "other",
+        },
+      )
     end
 
-    def user_profile
-      ect_profile
+    it "raises an error" do
+      expect { subject.call }.to raise_error(ActionController::ParameterMissing).with_message(/participant_id' must be a valid Participant ID/)
     end
   end
 end

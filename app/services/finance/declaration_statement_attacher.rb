@@ -13,7 +13,6 @@ module Finance
 
     def call
       ApplicationRecord.transaction do
-        statement.participant_declarations << participant_declaration
         StatementLineItem.create!(
           statement:,
           participant_declaration:,

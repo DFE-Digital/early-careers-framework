@@ -48,19 +48,18 @@ module Finance
     private
 
       def voided_declarations
-        statement.voided_participant_declarations.unique_id
+        statement.participant_declarations.voided.unique_id
       end
 
       def statement_declarations_per_contract(contract)
-        statement
-          .participant_declarations
+        statement_declarations
           .for_course_identifier(contract.course_identifier)
           .unique_id
           .count
       end
 
       def statement_declarations
-        statement.participant_declarations
+        statement.billable_participant_declarations
       end
 
       def output_payments

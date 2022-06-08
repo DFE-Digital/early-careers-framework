@@ -60,6 +60,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(parsed_response["data"][0]["attributes"]["email_validated"]).to eql(true)
           expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(profile.school_urn)
           expect(parsed_response["data"][0]["attributes"]["school_ukprn"]).to eql(profile.school_ukprn)
+          expect(parsed_response["data"][0]["attributes"]["private_childcare_provider_urn"]).to eql(profile.private_childcare_provider_urn)
           expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(profile.teacher_reference_number)
           expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified)
           expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
@@ -145,6 +146,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               teacher_reference_number_validated
               school_urn
               school_ukprn
+              private_childcare_provider_urn
               headteacher_status
               eligible_for_funding
               funding_choice
@@ -155,6 +157,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               employment_role
               created_at
               updated_at
+              ineligible_for_funding_reason
             ],
           )
         end
@@ -172,6 +175,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["teacher_reference_number_validated"]).to eql(application.teacher_reference_number_verified.to_s)
           expect(row["school_urn"]).to eql(application.school_urn)
           expect(row["school_ukprn"]).to eql(application.school_ukprn)
+          expect(row["private_childcare_provider_urn"]).to eql(application.private_childcare_provider_urn)
           expect(row["headteacher_status"]).to eql(application.headteacher_status)
           expect(row["eligible_for_funding"]).to eql(application.eligible_for_funding.to_s)
           expect(row["funding_choice"]).to eql(application.funding_choice)

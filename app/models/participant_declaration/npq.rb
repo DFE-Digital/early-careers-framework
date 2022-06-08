@@ -4,8 +4,10 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
   include RecordDeclarations::NPQ
 
   belongs_to :participant_profile, class_name: "ParticipantProfile::NPQ"
+
   has_one :npq_application, through: :participant_profile
-  belongs_to :statement, optional: true, class_name: "Finance::Statement::NPQ"
+
+  has_many :statements, class_name: "Finance::Statement::NPQ", through: :statement_line_items
 
   scope :for_course, ->(course_identifier) { where(course_identifier:) }
   scope :eligible_for_lead_provider_and_course, ->(cpd_lead_provider, course_identifier) { for_lead_provider(cpd_lead_provider).for_course(course_identifier).eligible }

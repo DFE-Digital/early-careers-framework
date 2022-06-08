@@ -2,7 +2,9 @@
 
 class ParticipantDeclaration::ECF < ParticipantDeclaration
   include RecordDeclarations::ECF
-  belongs_to :statement, optional: true, class_name: "Finance::Statement::ECF"
+
+  has_many :statements, class_name: "Finance::Statement::ECF", through: :statement_line_items
+
   validate :validate_backdated_declaration_before_induction_record_end_date
 
   def validate_backdated_declaration_before_induction_record_end_date
@@ -15,7 +17,7 @@ class ParticipantDeclaration::ECF < ParticipantDeclaration
     return if participant_profile.current_induction_record == previous_induction_record
 
     if previous_induction_record.end_date < declaration_date
-      errors.add(:declaration_date, I18n.t("declaration_must_be_before_end_date"))
+      errors.add(:base, I18n.t("declaration_must_be_before_end_date"))
     end
   end
 end

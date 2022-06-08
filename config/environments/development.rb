@@ -22,7 +22,7 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :sidekiq
 
-  config.domain = ENV["DOMAIN"]
+  config.domain = ENV["DOMAIN"] || "example.com"
 
   config.support_email = "continuing-professional-development@digital.education.gov.uk"
 
