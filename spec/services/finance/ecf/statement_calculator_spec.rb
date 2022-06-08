@@ -210,7 +210,7 @@ RSpec.describe Finance::ECF::StatementCalculator do
         :ect_participant_declaration, :without_uplift,
           cpd_lead_provider:,
           state: "eligible",
-          participant_profile: profile,
+          participant_profile: profile
         )
 
         Finance::StatementLineItem.create!(
@@ -232,7 +232,7 @@ RSpec.describe Finance::ECF::StatementCalculator do
           :ect_participant_declaration, :pupil_premium_uplift,
           cpd_lead_provider:,
           state: "eligible",
-          participant_profile: profile,
+          participant_profile: profile
         )
       end
 
