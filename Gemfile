@@ -137,7 +137,6 @@ group :development, :test do
 end
 
 group :development, :deployed_development, :test, :sandbox do
-  gem "dotenv-rails", "~> 2.7.6"
   gem "factory_bot_rails", "~> 6.2.0"
   gem "faker"
   gem "timecop"
