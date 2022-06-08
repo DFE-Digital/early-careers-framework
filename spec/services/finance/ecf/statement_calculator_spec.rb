@@ -207,7 +207,7 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       before do
         declaration = create(
-          :ect_participant_declaration,
+        :ect_participant_declaration, :without_uplift,
           cpd_lead_provider:,
           state: "eligible",
           participant_profile: profile,
@@ -226,10 +226,10 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when uplift is applicable" do
-      let(:profile) { create(:ect_participant_profile, :uplift_flags) }
+      let(:profile) { create(:ect_participant_profile) }
       let(:declaration) do
         create(
-          :ect_participant_declaration,
+          :ect_participant_declaration, :pupil_premium_uplift,
           cpd_lead_provider:,
           state: "eligible",
           participant_profile: profile,
