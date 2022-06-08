@@ -30,7 +30,7 @@ module NPQ
     end
 
     def teacher_profiles
-      @teacher_profiles ||= TeacherProfile.where(trn: trn)
+      @teacher_profiles ||= TeacherProfile.where(trn:)
     end
 
     def previously_funded?

@@ -38,8 +38,8 @@ class ParticipantDeclaration < ApplicationRecord
 
   validates :course_identifier, :user, :cpd_lead_provider, :declaration_date, :declaration_type, presence: true
 
-  scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider: cpd_lead_provider) }
-  scope :for_declaration, ->(declaration_type) { where(declaration_type: declaration_type) }
+  scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider:) }
+  scope :for_declaration, ->(declaration_type) { where(declaration_type:) }
   scope :for_profile, ->(profile) { where(participant_profile: profile) }
   scope :started, -> { for_declaration("started").order(declaration_date: "desc").unique_id }
   scope :retained_1, -> { for_declaration("retained-1").order(declaration_date: "desc").unique_id }
@@ -80,7 +80,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :unique_uplift,  -> { unique_id.uplift }
   scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
 
-  scope :for_course_identifier, ->(course_identifier) { where(course_identifier: course_identifier) }
+  scope :for_course_identifier, ->(course_identifier) { where(course_identifier:) }
   scope :unique_for_lead_provider_and_course_identifier, ->(lead_provider, course_identifier) { for_lead_provider(lead_provider).for_course_identifier(course_identifier).unique_id }
 
   scope :not_payable_for_lead_provider, ->(lead_provider) { submitted_for_lead_provider(lead_provider).or(eligible_for_lead_provider(lead_provider)) }
@@ -138,11 +138,11 @@ class ParticipantDeclaration < ApplicationRecord
     self.class.joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
       .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
-      .where.not(user_id: user_id, id: id)
+      .where.not(user_id:, id:)
       .where.not(state: self.class.states[:voided])
       .where(
-        declaration_type: declaration_type,
-        course_identifier: course_identifier,
+        declaration_type:,
+        course_identifier:,
         superseded_by_id: nil,
       )
   end
@@ -150,7 +150,7 @@ class ParticipantDeclaration < ApplicationRecord
 private
 
   def build_initial_declaration_state
-    declaration_states.build(state: state)
+    declaration_states.build(state:)
   end
 end
 

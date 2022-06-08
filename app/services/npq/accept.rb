@@ -63,7 +63,7 @@ module NPQ
 
       @participant_profile ||= ParticipantProfile::NPQ.create!(
         id: npq_application.id,
-        schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort: cohort),
+        schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort:),
         npq_course: npq_application.npq_course,
         teacher_profile:,
         school_urn: npq_application.school_urn,

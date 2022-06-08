@@ -73,7 +73,7 @@ RSpec.describe NPQApplication, type: :model do
         create(
           :npq_application,
           eligible_for_funding: true,
-          npq_course: npq_course,
+          npq_course:,
         )
       end
 
@@ -98,7 +98,7 @@ RSpec.describe NPQApplication, type: :model do
         create(
           :npq_application,
           eligible_for_funding: true,
-          npq_course: npq_course,
+          npq_course:,
         )
       end
 
@@ -123,7 +123,7 @@ RSpec.describe NPQApplication, type: :model do
         create(
           :npq_application,
           eligible_for_funding: true,
-          npq_course: npq_course,
+          npq_course:,
         )
       end
 
@@ -182,7 +182,7 @@ RSpec.describe NPQApplication, type: :model do
     context "when there is a previously accepted application" do
       let(:npq_course) { create(:npq_leadship_course) }
 
-      subject { create(:npq_application, eligible_for_funding: true, npq_course: npq_course) }
+      subject { create(:npq_application, eligible_for_funding: true, npq_course:) }
 
       before do
         create(:npq_leadership_schedule, :with_npq_milestones)

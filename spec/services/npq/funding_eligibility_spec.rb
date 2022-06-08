@@ -50,7 +50,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
           :npq_application,
           eligible_for_funding: true,
           teacher_reference_number_verified: true,
-          npq_course: npq_course,
+          npq_course:,
         )
       end
 
@@ -60,7 +60,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         NPQ::Accept.new(npq_application: application).call
       end
 
-      subject { described_class.new(trn: trn, npq_course_identifier: "npq-early-headship-coaching-offer") }
+      subject { described_class.new(trn:, npq_course_identifier: "npq-early-headship-coaching-offer") }
 
       it "returns truthy" do
         expect(subject.call[:previously_funded]).to be_truthy

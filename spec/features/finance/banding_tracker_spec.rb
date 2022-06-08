@@ -14,14 +14,14 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
       end
     end
   end
-  let(:statement)             { create :ecf_statement, :output_fee, cpd_lead_provider: cpd_lead_provider }
+  let(:statement)             { create :ecf_statement, :output_fee, cpd_lead_provider: }
   let(:next_cohort)           { create(:cohort, :next) }
-  let(:next_cohort_statement) { create :ecf_statement, :output_fee, cpd_lead_provider: cpd_lead_provider, cohort: next_cohort }
+  let(:next_cohort_statement) { create :ecf_statement, :output_fee, cpd_lead_provider:, cohort: next_cohort }
 
   def generate_declarations(state:)
     declarations = []
 
-    with_options(cpd_lead_provider: cpd_lead_provider, state: state) do
+    with_options(cpd_lead_provider:, state:) do
       declarations << create_list(:ect_participant_declaration, 17, declaration_type: "started")
       declarations << create_list(:ect_participant_declaration, 5,  declaration_type: "retained-1")
       declarations << create_list(:ect_participant_declaration, 4,  declaration_type: "retained-2")
@@ -32,7 +32,7 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
 
     declarations.flatten.each do |declaration|
       Finance::StatementLineItem.create!(
-        statement: statement,
+        statement:,
         participant_declaration: declaration,
         state: declaration.state,
       )
@@ -47,7 +47,7 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
     declaration = create(
       :ect_participant_declaration, :paid,
       declaration_type: "started",
-      cpd_lead_provider: cpd_lead_provider
+      cpd_lead_provider:
     )
 
     Finance::StatementLineItem.create!(
@@ -59,7 +59,7 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
     declaration = create(
       :ect_participant_declaration, :payable,
       declaration_type: "started",
-      cpd_lead_provider: cpd_lead_provider
+      cpd_lead_provider:
     )
 
     Finance::StatementLineItem.create!(
