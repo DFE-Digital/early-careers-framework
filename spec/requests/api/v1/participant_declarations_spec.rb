@@ -68,7 +68,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
           declaration = ParticipantDeclaration::ECF.find(JSON.parse(response.body).dig("data", "id"))
           expect(declaration.participant_profile.schedule).to eq(next_schedule)
-          expect(declaration.statement.cohort).to eq(next_cohort)
+          expect(declaration.statements.first.cohort).to eq(next_cohort)
         end
       end
 

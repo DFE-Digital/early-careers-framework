@@ -127,3 +127,11 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  ineligible_for_funding_reason:
+    description: "Indicates why this NPQ participant is not eligible for DfE funding"
+    type: string
+    nullable: true
+    example: "establishment-ineligible"
+    enum:
+      - "establishment-ineligible"
+      - "previously-funded"

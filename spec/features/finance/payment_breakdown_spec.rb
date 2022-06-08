@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type: :feature, js: true do
   include FinanceHelper
+  include ActionView::Helpers::NumberHelper
 
   let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
@@ -146,12 +147,10 @@ private
           evidence_held: "other",
         },
       )
+
       started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
       started_declaration.make_eligible!
       started_declaration.make_payable!
-      started_declaration.update!(
-        statement: nov_statement,
-      )
     end
   end
 
@@ -175,9 +174,9 @@ private
       declaration.make_eligible!
       declaration.make_payable!
       declaration.make_voided!
-      declaration.update!(
-        statement: nov_statement,
-      )
+
+      declaration.statement_line_items.first.update!(statement: nov_statement, state: declaration.state)
+
       declaration
     end
   end
@@ -201,9 +200,6 @@ private
       started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
       started_declaration.make_eligible!
       started_declaration.make_payable!
-      started_declaration.update!(
-        statement: nov_statement,
-      )
     end
   end
 
@@ -226,9 +222,6 @@ private
       retained_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
       retained_declaration.make_eligible!
       retained_declaration.make_payable!
-      retained_declaration.update!(
-        statement: jan_statement,
-      )
     end
   end
 
@@ -250,9 +243,6 @@ private
       )
       retained_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
       retained_declaration.make_eligible!
-      retained_declaration.update!(
-        statement: jan_statement,
-      )
     end
   end
 
@@ -275,7 +265,6 @@ private
       declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
       declaration.update!(
         state: "ineligible",
-        statement: jan_statement,
       )
       declaration
     end
@@ -340,7 +329,7 @@ private
       expect(page).to have_content(number_to_pounds(total_payment_with_vat_breakdown))
 
       expect(page).to have_content("Output payment")
-      expect(page).to have_content(output_payment_total)
+      expect(page).to have_content(number_with_delimiter(output_payment_total))
 
       expect(page).to have_content("Service fee")
       expect(page).to have_content(number_to_pounds(service_fee_total))
@@ -351,21 +340,17 @@ private
   end
 
   def then_i_should_see_the_correct_output_fees
-    all(".finance-panel")[0] do
-      expect(page).to have_content("Output payments")
-      expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:per_participant]))
-      expect(page).to have_content(@jan_starts[:output_payments][0][:participants])
-      expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:subtotal]))
-    end
+    expect(page).to have_content("Output payments")
+    expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:per_participant]))
+    expect(page).to have_content(@jan_starts[:output_payments][0][:participants])
+    expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:subtotal]))
   end
 
   def then_i_should_see_the_correct_uplift_fee
-    all(".finance-panel")[1] do
-      expect(page).to have_content("Uplift fee")
-      expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:per_participant]))
-      expect(page).to have_content(@jan_starts[:other_fees][:uplift][:participants])
-      expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:subtotal]))
-    end
+    expect(page).to have_content("Uplift fee")
+    expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:per_participant]))
+    expect(page).to have_content(@jan_starts[:other_fees][:uplift][:participants])
+    expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:subtotal]))
   end
 
   def number_of_declarations

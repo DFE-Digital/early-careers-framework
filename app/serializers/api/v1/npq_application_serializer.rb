@@ -9,8 +9,6 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       attributes :course_identifier,
-                 :created_at,
-                 :eligible_for_funding,
                  :email,
                  :email_validated,
                  :employer_name,
@@ -18,6 +16,7 @@ module Api
                  :full_name,
                  :funding_choice,
                  :headteacher_status,
+                 :ineligible_for_funding_reason,
                  :participant_id,
                  :private_childcare_provider_urn,
                  :teacher_reference_number,
@@ -25,7 +24,6 @@ module Api
                  :school_urn,
                  :school_ukprn,
                  :status,
-                 :updated_at,
                  :works_in_school
 
       attribute(:participant_id) do |object|
@@ -59,6 +57,12 @@ module Api
       end
 
       attribute(:status, &:lead_provider_approval_status)
+
+      attribute :cohort do |object|
+        object.cohort.start_year.to_s
+      end
+
+      attribute(:eligible_for_funding, &:eligible_for_dfe_funding)
     end
   end
 end

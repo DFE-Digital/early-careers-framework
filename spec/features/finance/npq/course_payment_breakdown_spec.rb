@@ -57,7 +57,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def create_accepted_application(user, npq_course, npq_lead_provider)
     Identity::Create.call(user: user, origin: :npq)
     npq_application = NPQ::BuildApplication.call(
-      npq_application_params: attributes_for(:npq_application),
+      npq_application_params: attributes_for(:npq_application, cohort: 2021),
       npq_course_id: npq_course.id,
       npq_lead_provider_id: npq_lead_provider.id,
       user_id: user.id,
@@ -123,10 +123,15 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
 
     ParticipantDeclaration::NPQ
       .where(state: %w[ineligible voided], cpd_lead_provider: cpd_lead_provider)
-      .update_all(statement_id: statement.id) # voided payable
+      .each do |declaration|
+        Finance::StatementLineItem.create(statement: statement, participant_declaration: declaration, state: declaration.state)
+      end
+
     ParticipantDeclaration::NPQ
       .where(state: %w[eligible payable], cpd_lead_provider: cpd_lead_provider)
-      .update_all(statement_id: statement.id)
+      .each do |declaration|
+        Finance::StatementLineItem.create(statement: statement, participant_declaration: declaration, state: declaration.state)
+      end
   end
 
   def then_i_should_see_correct_statement_summary
@@ -238,7 +243,12 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def participants_per_declaration_type
-    statement.participant_declarations.for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier).paid_payable_or_eligible.group(:declaration_type).count
+    statement
+      .participant_declarations
+      .for_course_identifier(npq_leading_behaviour_culture_contract.course_identifier)
+      .paid_payable_or_eligible
+      .group(:declaration_type)
+      .count
   end
 
   def total_participants_for(milestone)
@@ -288,6 +298,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def statement_declarations_per_contract(contract)
     statement
       .participant_declarations
+      .where(state: %w[eligible payable paid])
       .for_course_identifier(contract.course_identifier)
       .unique_id
       .count
@@ -298,7 +309,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def statement_declarations
-    statement.participant_declarations
+    statement.billable_participant_declarations
   end
 
   def total_retained
@@ -314,12 +325,13 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def voided_declarations
-    statement.voided_participant_declarations.unique_id
+    statement.participant_declarations.voided.unique_id
   end
 
   def total_declarations(contract)
     statement
       .participant_declarations
+      .where(state: %w[eligible payable paid])
       .for_course_identifier(contract.course_identifier)
       .unique_id
       .count

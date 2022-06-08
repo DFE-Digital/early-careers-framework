@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_23_120336) do
+ActiveRecord::Schema.define(version: 2022_05_30_141418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -584,6 +584,8 @@ ActiveRecord::Schema.define(version: 2022_05_23_120336) do
     t.uuid "participant_profile_id"
     t.uuid "superseded_by_id"
     t.uuid "statement_id"
+    t.boolean "sparsity_uplift"
+    t.boolean "pupil_premium_uplift"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
     t.index ["superseded_by_id"], name: "superseded_by_index"
@@ -643,8 +645,8 @@ ActiveRecord::Schema.define(version: 2022_05_23_120336) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "start_term", default: "autumn_2021", null: false
     t.string "notes"
+    t.string "start_term", default: "autumn_2021", null: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"

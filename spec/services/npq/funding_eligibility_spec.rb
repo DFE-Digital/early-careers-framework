@@ -42,6 +42,31 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       end
     end
 
+    context "when previously funded ASO and applying for EHCO" do
+      let(:trn) { application.teacher_reference_number }
+      let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+      let(:application) do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          teacher_reference_number_verified: true,
+          npq_course: npq_course,
+        )
+      end
+
+      let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+      before do
+        NPQ::Accept.new(npq_application: application).call
+      end
+
+      subject { described_class.new(trn: trn, npq_course_identifier: "npq-early-headship-coaching-offer") }
+
+      it "returns truthy" do
+        expect(subject.call[:previously_funded]).to be_truthy
+      end
+    end
+
     context "when previously funded with multiple teacher profiles" do
       let(:trn) { application.teacher_reference_number }
       let(:application) do

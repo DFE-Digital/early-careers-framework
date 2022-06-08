@@ -5,15 +5,13 @@ module Steps
     include RSpec::Matchers
 
     def given_lead_providers_contracted_to_deliver_ecf(lead_provider_name)
-      next_ideal_time Time.zone.local(2022, 2, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 2, 1, 9, 0, 0)
       travel_to(@timestamp) do
         lead_provider = create(:lead_provider, name: lead_provider_name)
         cpd_lead_provider = create(:cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name)
         create :call_off_contract, lead_provider: lead_provider
 
         delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
-        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
-        delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2022")
         create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
 
         user = create(:user, full_name: lead_provider_name)
@@ -26,7 +24,7 @@ module Steps
     end
 
     def and_sit_at_pupil_premium_school_reported_programme(sit_name, programme)
-      next_ideal_time Time.zone.local(2022, 4, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
       travel_to(@timestamp) do
         school = create(:school, :pupil_premium_uplift, name: "#{sit_name}'s School")
         user = create(:user, full_name: sit_name)
@@ -36,30 +34,28 @@ module Steps
         sign_in_as user
         Pages::SchoolReportProgrammeWizard.loaded
                                           .complete(programme)
+        sign_out
 
         if programme == "CIP"
           school_cohort = school.school_cohorts.where(cohort: Cohort.find_by_start_year(2021)).first
-          Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
-                                                      programme_choice: school_cohort.induction_programme_choice
+          Induction::SetCohortInductionProgramme.call school_cohort: school_cohort, programme_choice: school_cohort.induction_programme_choice
         end
-        sign_out
 
         travel_to 1.minute.from_now
       end
     end
 
     def and_lead_provider_reported_partnership(lead_provider_name, sit_name)
-      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner 2022")
-
+      delivery_partner = DeliveryPartner.find_by(name: "#{lead_provider_name}'s Delivery Partner 2021")
       school = find_school_for_sit(sit_name)
 
-      next_ideal_time Time.zone.local(2022, 5, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 5, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name lead_provider_name
 
         Pages::LeadProviderDashboard.loaded
                                     .confirm_schools
-                                    .complete delivery_partner.name, [school.urn]
+                                    .complete(delivery_partner.name, [school.urn])
         sign_out
 
         travel_to 1.minute.from_now
@@ -67,7 +63,7 @@ module Steps
     end
 
     def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
-      next_ideal_time Time.zone.local(2022, 6, 1, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name sit_name
 
@@ -77,7 +73,7 @@ module Steps
                                            .choose_to_add_an_ect_or_mentor
 
         if participant_type == "ECT"
-          wizard.add_ect participant_name, participant_email, Date.new(2022, 9, 1)
+          wizard.add_ect participant_name, participant_email, Date.new(2021, 9, 1)
         else
           wizard.add_mentor participant_name, participant_email
         end
@@ -88,7 +84,7 @@ module Steps
     end
 
     def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      next_ideal_time Time.zone.local(2022, 9, 2, 9, 0, 0)
+      next_ideal_time Time.zone.local(2021, 9, 2, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name participant_name
 
@@ -96,11 +92,11 @@ module Steps
         when "ECT"
           Pages::PrivacyPolicyPage.loaded
                                   .continue_for_ect
-                                  .complete participant_name, participant_dob, participant_trn
+                                  .complete(participant_name, participant_dob, participant_trn)
         when "Mentor"
           Pages::PrivacyPolicyPage.loaded
                                   .continue_for_mentor
-                                  .complete participant_name, participant_dob, participant_trn
+                                  .complete(participant_name, participant_dob, participant_trn)
         else
           raise "Participant_type not recognised"
         end
@@ -111,7 +107,7 @@ module Steps
     end
 
     def and_lead_provider_has_made_training_declaration(lead_provider_name, participant_type, participant_name, declaration_type)
-      participant_profile = find_participant_profile participant_name
+      participant_profile = find_participant_profile(participant_name)
 
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
       milestone = participant_profile.schedule.milestones
@@ -121,7 +117,7 @@ module Steps
       next_ideal_time milestone.milestone_date - 2.days
       travel_to(@timestamp) do
         event_date = milestone.milestone_date - 4.days
-        declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.new tokens[lead_provider_name]
+        declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.load(tokens[lead_provider_name])
         declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, event_date
 
         declarations_endpoint.has_declaration_type? declaration_type.to_s
@@ -135,12 +131,11 @@ module Steps
 
     def and_lead_provider_withdraws_participant(lead_provider_name, participant_name, participant_type)
       participant_profile = find_participant_profile participant_name
-
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(@timestamp) do
-        withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.new tokens[lead_provider_name]
+        withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.load(tokens[lead_provider_name])
         withdraw_endpoint.post_withdraw_notice participant_profile.user.id, course_identifier, "moved-school"
 
         withdraw_endpoint.responded_with_full_name? participant_name
@@ -154,12 +149,11 @@ module Steps
 
     def and_lead_provider_defers_participant(lead_provider_name, participant_name, participant_email, participant_type)
       participant_profile = find_participant_profile participant_name
-
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
       travel_to(@timestamp) do
-        defer_endpoint = APIs::ParticipantDeferEndpoint.new tokens[lead_provider_name]
+        defer_endpoint = APIs::ParticipantDeferEndpoint.load(tokens[lead_provider_name])
         defer_endpoint.post_defer_notice participant_profile.user.id, course_identifier, "career-break"
 
         defer_endpoint.responded_with_full_name? participant_name
@@ -214,7 +208,6 @@ module Steps
     def when_developers_transfer_the_active_participant(sit_name, participant_name)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
-
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
@@ -240,7 +233,6 @@ module Steps
     def when_developers_transfer_the_withdrawn_participant(sit_name, participant_name)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
-
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
@@ -270,7 +262,6 @@ module Steps
     def when_developers_transfer_the_deferred_participant(sit_name, participant_name)
       school = find_school_for_sit sit_name
       school_cohort = school.school_cohorts.first
-
       participant_profile = find_participant_profile participant_name
 
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
@@ -308,12 +299,22 @@ module Steps
       end
     end
 
-    def then_sit_cannot_see_participant_in_school_portal(sit_name)
+    def self.then_sit_cannot_see_context(scenario)
+      "cannot see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+    end
+
+    def then_sit_cannot_see_participant_in_school_portal(sit_name, _scenario = {})
       given_i_sign_in_as_the_user_with_the_full_name sit_name
-
       then_i_confirm_has_no_participants_on_the_school_dashboard_page
-
       sign_out
+    end
+
+    def self.then_sit_can_see_context(scenario, is_training: true)
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the Email address of \"#{scenario.participant_email}\"\n"
+      str += "          and with the Training status of \"Eligible to start\"\n"
+      str += "          and that they are#{is_training ? '' : ' not'} being trained\n"
+      str
     end
 
     def then_sit_can_see_participant_in_school_portal(sit_name, scenario)
@@ -329,12 +330,250 @@ module Steps
         raise "Participant Type \"#{scenario.participant_type}\" not recognised"
       end
 
-      then_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
-      then_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
-      then_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
-      then_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
+      and_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
 
       sign_out
+    end
+
+    def then_sit_can_see_not_training_in_school_portal(sit_name, scenario)
+      given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+      when_i_view_participant_details_from_the_school_dashboard_page
+      and_i_view_not_training_on_the_school_participants_dashboard_page "the Participant"
+
+      and_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
+
+      sign_out
+    end
+
+    def self.then_lead_provider_cannot_see_context(scenario)
+      "cannot see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+    end
+
+    def then_lead_provider_cannot_see_participant_in_api(lead_provider_name, _scenario)
+      then_ecf_participants_api_does_not_have_participant_details lead_provider_name,
+                                                                  "the Participant"
+
+      then_participant_declarations_api_does_not_have_declarations lead_provider_name,
+                                                                   "the Participant"
+    end
+
+    def self.then_lead_provider_can_see_context(scenario, declarations, participant_status = "active", see_prior_school: false)
+      school_name = see_prior_school ? "Original SIT's School" : "New SIT's School"
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the participant email as \"#{scenario.participant_email}\"\n"
+      str += "          and with the participant trn as \"#{scenario.participant_trn}\"\n"
+      str += "          and with the participant status of \"#{participant_status}\"\n"
+      str += "          and with the participants school as \"#{school_name}\"\n"
+      str += "          and with the participants declarations #{declarations}\n"
+      str
+    end
+
+    def then_lead_provider_can_see_participant_in_api(lead_provider_name, scenario, declarations, participant_status = "active", see_prior_school: false)
+      then_ecf_participants_api_has_participant_details lead_provider_name,
+                                                        "the Participant",
+                                                        scenario.participant_email,
+                                                        scenario.participant_trn,
+                                                        scenario.participant_type,
+                                                        see_prior_school ? "Original SIT's School" : "New SIT's School",
+                                                        participant_status,
+                                                        "active"
+
+      then_participant_declarations_api_has_declarations lead_provider_name,
+                                                         "the Participant",
+                                                         declarations
+    end
+
+    def self.then_lead_provider_can_see_obfuscated_context(scenario, declarations, participant_status = "active", see_prior_school: false)
+      school_name = see_prior_school ? "Original SIT's School" : "New SIT's School"
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the participant email is obfuscated\n"
+      str += "          and with the participant trn as \"#{scenario.participant_trn}\"\n"
+      str += "          and with the participant status of \"#{participant_status}\"\n"
+      str += "          and with the participants school as \"#{school_name}\"\n"
+      str += "          and with the participants declarations #{declarations}\n"
+      str
+    end
+
+    def then_lead_provider_can_see_obfuscated_participant_in_api(lead_provider_name, scenario, declarations, participant_status = "active", see_prior_school: false)
+      then_ecf_participants_api_has_participant_details lead_provider_name,
+                                                        "the Participant",
+                                                        nil,
+                                                        scenario.participant_trn,
+                                                        scenario.participant_type,
+                                                        see_prior_school ? "Original SIT's School" : "New SIT's School",
+                                                        participant_status,
+                                                        "active"
+
+      then_participant_declarations_api_has_declarations lead_provider_name,
+                                                         "the Participant",
+                                                         declarations
+    end
+
+    def then_ecf_participants_api_does_not_have_participant_details(lead_provider_name, participant_name)
+      user = User.find_by(full_name: participant_name)
+
+      declarations_endpoint = APIs::ECFParticipantsEndpoint.load tokens[lead_provider_name]
+      expect { declarations_endpoint.get_participant(user.id) }.to raise_error(Capybara::ElementNotFound)
+    end
+
+    def then_ecf_participants_api_has_participant_details(lead_provider_name, participant_name, participant_email, participant_trn, participant_type, school_name, participant_status, training_status)
+      user = User.find_by(full_name: participant_name)
+      school = School.find_by(name: school_name)
+
+      endpoint = APIs::ECFParticipantsEndpoint.load(tokens[lead_provider_name])
+      endpoint.get_participant user.id
+
+      endpoint.has_full_name? participant_name
+      endpoint.has_email_address? participant_email
+      endpoint.has_trn? participant_trn
+      endpoint.has_school_urn? school.urn
+      endpoint.has_participant_type? participant_type.to_s.downcase
+
+      endpoint.has_status? participant_status
+      endpoint.has_training_status? training_status
+    end
+
+    def then_participant_declarations_api_has_declarations(lead_provider_name, participant_name, declarations = [])
+      user = User.find_by(full_name: participant_name)
+
+      endpoint = APIs::GetParticipantDeclarationsEndpoint.load(tokens[lead_provider_name])
+      endpoint.get_training_declarations user.id
+
+      expect(endpoint).to have_declarations(declarations)
+    end
+
+    def then_participant_declarations_api_does_not_have_declarations(lead_provider_name, participant_name)
+      user = User.find_by(full_name: participant_name)
+
+      endpoint = APIs::GetParticipantDeclarationsEndpoint.load tokens[lead_provider_name]
+      endpoint.get_training_declarations user.id
+
+      endpoint.has_declarations? []
+    end
+
+    def self.then_finance_user_context(scenario)
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the school as \"New SIT's school\"\n"
+      str += "          and with the lead provider as \"#{scenario.new_lead_provider_name}\"\n"
+      str += "          and with the participant status as \"active\"\n"
+      str += "          and with the training status as \"active\"\n"
+      str += "          and with the declarations of \"#{scenario.see_new_declarations}\"\n"
+      if scenario.original_programme == "FIP"
+        str += "          and that Original Lead Provider has been allocated #{scenario.original_started_declarations} started and #{scenario.original_retained_declarations} retained declarations\n"
+      end
+      if scenario.new_programme == "FIP" && scenario.transfer != :same_provider
+        str += "          and that New Lead Provider has been allocated #{scenario.new_started_declarations} started and #{scenario.new_retained_declarations} retained declarations\n"
+      end
+      str += "          and that Other Lead Providers have been allocated 0 started and 0 retained declarations\n"
+      str
+    end
+
+    def then_the_finance_portal_shows_the_current_participant_record(participant_name, participant_type, sit_name, lead_provider_name, participant_status, training_status, declarations = [])
+      participant_user = find_user participant_name
+      school = find_school_for_sit sit_name
+
+      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+
+      and_i_am_on_the_finance_portal
+      and_i_view_participant_drilldown_from_the_finance_portal
+      when_i_find_from_the_finance_participant_drilldown_search participant_name
+
+      drilldown = Pages::FinanceParticipantDrilldown.loaded
+
+      drilldown.has_participant? participant_user.id
+      drilldown.has_school_urn? school.urn
+      drilldown.has_lead_provider? lead_provider_name
+      drilldown.has_status? participant_status
+      drilldown.has_training_status? training_status
+
+      declarations.each do |declaration_type|
+        drilldown.has_declaration? declaration_type, course_identifier, "payable"
+      end
+    end
+
+    def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, statement_name, total_ects, total_mentors, started, retained, completed, voided, uplift: true)
+      when_i_am_on_the_finance_portal
+      and_i_view_payment_breakdown_from_the_finance_portal
+      and_i_complete_from_the_finance_payment_breakdown_report_wizard lead_provider_name
+      and_i_select_statment_from_the_finance_payment_breakdown_report statement_name
+
+      report = Pages::FinancePaymentBreakdownReport.loaded
+
+      report.has_started_declarations_total? started
+      report.has_retained_declarations_total? retained
+      report.has_completed_declarations_total? completed
+      report.has_voided_declarations_total? voided
+
+      report.has_started_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: started
+      report.has_retained_1_declaration_payment_table? num_ects: total_ects, num_mentors: total_mentors, num_declarations: retained
+      report.has_other_fees_table? num_ects: uplift ? total_ects : 0, num_mentors: uplift ? total_mentors : 0
+    end
+
+    def self.then_admin_user_context(scenario)
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the school as \"New SIT's school\"\n"
+      str += "          and with the validation status as \"Eligible to start\"\n"
+      str += "          and with the lead provider as \"#{scenario.new_lead_provider_name}\""
+      str
+    end
+
+    def then_admin_user_can_see_participant(scenario)
+      given_i_sign_in_as_an_admin_user
+
+      and_i_am_on_the_admin_support_portal
+      and_i_view_participant_list_from_the_admin_support_portal
+      and_i_view_participant_from_the_admin_support_participant_list "the Participant"
+
+      then_the_admin_portal_shows_the_current_participant_record "the Participant",
+                                                                 "New SIT",
+                                                                 scenario.new_lead_provider_name,
+                                                                 "Eligible to start"
+
+      sign_out
+    end
+
+    def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, lead_provider_name, validation_status)
+      school = find_school_for_sit sit_name
+
+      participant_detail = Pages::AdminSupportParticipantDetail.loaded
+
+      # primary heading needs checking participant_name
+      participant_detail.has_primary_heading? participant_name
+
+      participant_detail.has_full_name? participant_name
+      participant_detail.has_school? school.name
+      participant_detail.has_validation_status? validation_status
+      participant_detail.has_lead_provider? lead_provider_name
+    end
+
+    def self.then_support_service_context(scenario)
+      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
+      str += "          with the email address as \"#{scenario.participant_email}\"\n"
+      str += "          and with the induction programme as \"#{scenario.new_programme == 'CIP' ? 'core_induction_programme' : 'full_induction_programme'}\"\n"
+      str
+    end
+
+    def then_ecf_users_endpoint_shows_the_current_record(scenario)
+      participant_user = find_user "the Participant"
+
+      participant_type = scenario.participant_type == "ECT" ? "early_career_teacher" : "mentor"
+      induction_programme_identifier = scenario.new_programme == "CIP" ? "core_induction_programme" : "full_induction_programme"
+
+      user_endpoint = APIs::ECFUsersEndpoint.load
+      user_endpoint.get_user participant_user.id
+
+      expect(user_endpoint).to have_full_name "the Participant"
+      expect(user_endpoint).to have_email scenario.participant_email
+      expect(user_endpoint).to have_user_type participant_type
+      expect(user_endpoint).to have_core_induction_programme "none"
+      expect(user_endpoint).to have_induction_programme_choice induction_programme_identifier
     end
 
   private
@@ -388,6 +627,25 @@ module Steps
       raise "Could not find Lead Provider for #{lead_provider}" if lead_provider.nil?
 
       lead_provider
+    end
+
+    # helper whilst debugging scenarios with --fail-fast
+
+    def full_stop(html: false)
+      links = page.all("main a").map { |link| "  -  #{link.text} href: #{link['href']}" }
+
+      puts "==="
+      puts page.current_url
+      puts "---"
+      if html
+        puts page.html
+      else
+        puts page.find("main").text
+      end
+      puts "---\nLinks:"
+      puts links
+      puts "==="
+      raise
     end
   end
 end

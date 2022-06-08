@@ -55,7 +55,39 @@ class NPQApplication < ApplicationRecord
     end
   end
 
+  # this builds upon #eligible_for_funding
+  # eligible_for_funding is solely based on what NPQ app knows
+  # eg school, course etc
+  # here we need to account for previous enrollments too
+  def eligible_for_dfe_funding
+    if previously_funded?
+      false
+    else
+      eligible_for_funding
+    end
+  end
+
+  def ineligible_for_funding_reason
+    if previously_funded?
+      return "previously-funded"
+    end
+
+    unless eligible_for_funding
+      "establishment-ineligible"
+    end
+  end
+
 private
+
+  def previously_funded?
+    accepted_applications = participant_identity
+      .npq_applications
+      .where(npq_course: npq_course.rebranded_alternative_courses)
+      .where(eligible_for_funding: true)
+      .accepted
+
+    (accepted_applications - [self]).any?
+  end
 
   def push_enrollment_to_big_query
     if (saved_changes.keys & %w[id lead_provider_approval_status]).present?

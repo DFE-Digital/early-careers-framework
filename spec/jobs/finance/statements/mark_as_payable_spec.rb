@@ -17,9 +17,9 @@ RSpec.describe Finance::Statements::MarkAsPayable do
 
   before do
     travel_to Date.new(2021, 12, 31) do
-      eligible_dec = create(:ect_participant_declaration, :eligible, statement: statement)
-      ineligible_dec = create(:ect_participant_declaration, :ineligible, statement: statement)
-      voided_dec = create(:ect_participant_declaration, :voided, statement: statement)
+      eligible_dec = create(:ect_participant_declaration, :eligible)
+      ineligible_dec = create(:ect_participant_declaration, :ineligible)
+      voided_dec = create(:ect_participant_declaration, :voided)
 
       Finance::StatementLineItem.create!(statement: statement, participant_declaration: eligible_dec, state: "eligible")
       Finance::StatementLineItem.create!(statement: statement, participant_declaration: ineligible_dec, state: "ineligible")

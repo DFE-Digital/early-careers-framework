@@ -11,6 +11,7 @@ module Admin
       @query = params[:query]
 
       @pagy, @schools = pagy(policy_scope(School)
+                               .distinct
                                .includes(:induction_coordinators, :local_authority)
                                .ransack(induction_coordinators_email_or_urn_or_name_cont: @query)
                                .result
