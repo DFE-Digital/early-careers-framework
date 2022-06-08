@@ -14,7 +14,7 @@
   <tbody class="govuk-table__body">
     <% @users.each do |user| %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= user.full_name %></td>
+        <td class="govuk-table__cell"><%= govuk_link_to user.full_name, edit_admin_delivery_partners_user_path(user) %></td>
         <td class="govuk-table__cell"><%= user.email %></td>
         <td class="govuk-table__cell"><%= user.delivery_partner_profile.delivery_partner.name %></td>
       </tr>
