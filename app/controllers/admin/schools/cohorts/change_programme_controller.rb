@@ -19,7 +19,7 @@ module Admin
         end
 
         def update
-          Induction::ChangeCohortInductionProgramme.call(school_cohort: school_cohort,
+          Induction::ChangeCohortInductionProgramme.call(school_cohort:,
                                                          programme_choice: @induction_choice_form.programme_choice)
 
           set_success_message heading: "Induction programme has been changed"

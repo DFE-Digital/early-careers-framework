@@ -4,7 +4,7 @@ RSpec.describe Admin::Schools::Cohorts::OtherInfo, type: :view_component do
   let(:cohort) { instance_double Cohort, start_year: rand(2020..2030) }
   let(:school_cohort) { instance_double(SchoolCohort, induction_programme_choice: Faker::Lorem.words.join("_")) if rand < 0.5 }
 
-  component { described_class.new cohort: cohort, school_cohort: school_cohort }
+  component { described_class.new cohort:, school_cohort: }
 
   before do
     url_options[:school_id] = 1

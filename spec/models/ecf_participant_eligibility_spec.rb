@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe ECFParticipantEligibility, type: :model do
   let(:participant_profile) { create(:ect_participant_profile) }
-  subject(:eligibility) { described_class.new(participant_profile: participant_profile, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
+  subject(:eligibility) { described_class.new(participant_profile:, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
 
   it { is_expected.to belong_to(:participant_profile) }
   it {
@@ -114,7 +114,7 @@ RSpec.describe ECFParticipantEligibility, type: :model do
 
     context "when QTS status is false and the participant is a mentor" do
       let(:participant_profile) { create(:mentor_participant_profile) }
-      subject(:eligibility) { described_class.new(participant_profile: participant_profile, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
+      subject(:eligibility) { described_class.new(participant_profile:, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
 
       it "sets the status to eligible" do
         eligibility.qts = false

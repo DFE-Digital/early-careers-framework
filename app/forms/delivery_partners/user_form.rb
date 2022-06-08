@@ -26,7 +26,7 @@ module DeliveryPartners
   private
 
     def email_not_taken
-      if Identity.find_user_by(email: email)
+      if Identity.find_user_by(email:)
         errors.add(:email, :unique, message: I18n.t("errors.email.taken"))
       end
     end

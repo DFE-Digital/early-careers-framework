@@ -103,7 +103,7 @@ class ParticipantProfile < ApplicationRecord
 
   def update_schedule!(schedule)
     # TODO: Do we need to store when this happens outside of papertrail?
-    update!(schedule: schedule)
+    update!(schedule:)
   end
 
   def sit_mentor?

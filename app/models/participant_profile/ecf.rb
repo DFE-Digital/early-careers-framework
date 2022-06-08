@@ -65,7 +65,7 @@ class ParticipantProfile < ApplicationRecord
     def relevant_induction_record(lead_provider:)
       induction_records
         .joins(induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
-        .where(induction_programme: { partnerships: { lead_provider: lead_provider } })
+        .where(induction_programme: { partnerships: { lead_provider: } })
         .where(induction_programme: { school_cohorts: { cohort: Cohort.current } })
         .order(start_date: :desc)
         .first
@@ -80,7 +80,7 @@ class ParticipantProfile < ApplicationRecord
     def sync_status_with_induction_record
       induction_record = induction_records.latest
       induction_record&.update!(induction_status: status) if saved_change_to_status?
-      induction_record&.update!(mentor_profile: mentor_profile) if saved_change_to_mentor_profile_id?
+      induction_record&.update!(mentor_profile:) if saved_change_to_mentor_profile_id?
     end
   end
 end

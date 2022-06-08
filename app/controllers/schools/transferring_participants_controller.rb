@@ -128,45 +128,45 @@ module Schools
       if was_withdrawn_participant
         current_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_transfer_in_notification(
-            induction_record: induction_record,
+            induction_record:,
             lead_provider_profile: user.lead_provider_profile,
           ).deliver_later
         end
       elsif matching_lead_provider_and_delivery_partner?
         current_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_existing_school_transfer_notification(
-            induction_record: induction_record,
+            induction_record:,
             lead_provider_profile: user.lead_provider_profile,
           ).deliver_later
         end
       elsif @transferring_participant_form.switch_to_schools_programme?
         current_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_transfer_in_notification(
-            induction_record: induction_record,
+            induction_record:,
             lead_provider_profile: user.lead_provider_profile,
           ).deliver_later
         end
         target_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_transfer_out_notification(
-            induction_record: induction_record,
+            induction_record:,
             lead_provider_profile: user.lead_provider_profile,
           ).deliver_later
         end
       else
         target_lead_provider_users.each do |user|
           ParticipantTransferMailer.provider_new_school_transfer_notification(
-            induction_record: induction_record,
+            induction_record:,
             lead_provider_profile: user.lead_provider_profile,
           ).deliver_later
         end
       end
 
-      ParticipantTransferMailer.participant_transfer_in_notification(induction_record: induction_record).deliver_later
+      ParticipantTransferMailer.participant_transfer_in_notification(induction_record:).deliver_later
     end
 
     def transfer_fip_participant_to_schools_programme
       Induction::TransferToSchoolsProgramme.call(
-        participant_profile: participant_profile,
+        participant_profile:,
         induction_programme: @school_cohort.default_induction_programme,
         start_date: @transferring_participant_form.start_date,
         email: @transferring_participant_form.email,
@@ -177,7 +177,7 @@ module Schools
     def transfer_fip_participant_and_continue_existing_programme
       Induction::TransferAndContinueExistingFip.call(
         school_cohort: @school_cohort,
-        participant_profile: participant_profile,
+        participant_profile:,
         email: @transferring_participant_form.email,
         start_date: @transferring_participant_form.start_date,
         end_date: @transferring_participant_form.start_date,

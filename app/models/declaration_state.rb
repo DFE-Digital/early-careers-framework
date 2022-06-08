@@ -19,7 +19,7 @@ class DeclarationState < ApplicationRecord
   states.each_key do |key|
     bang_method = "#{key}!"
     define_singleton_method(bang_method) do |participant_declaration, **args|
-      create!(state: key, participant_declaration: participant_declaration, **args)
+      create!(state: key, participant_declaration:, **args)
       participant_declaration.send(bang_method)
     end
   end

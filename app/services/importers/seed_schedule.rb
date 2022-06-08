@@ -22,7 +22,7 @@ class Importers::SeedSchedule
 
       schedule = klass.find_or_initialize_by(
         schedule_identifier: row["schedule-identifier"],
-        cohort: cohort,
+        cohort:,
       )
 
       schedule.update!(
@@ -40,7 +40,7 @@ class Importers::SeedSchedule
       schedule.schedule_milestones.create!(
         declaration_type: row["milestone-declaration-type"],
         name: row["milestone-name"],
-        milestone: milestone,
+        milestone:,
       )
     end
   end

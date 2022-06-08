@@ -6,24 +6,24 @@ RSpec.describe SetParticipantCategories do
   describe "#run" do
     subject(:service) { described_class }
 
-    let!(:eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:ineligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let!(:contacted_for_info_mentor) { create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let!(:ero_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:details_being_checked_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
-    let!(:secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
-    let!(:withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
-    let!(:transferring_in_participant) { create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:transferring_out_participant) { create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let!(:induction_programme) { create(:induction_programme, school_cohort: school_cohort) }
+    let!(:eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:ineligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort:) }
+    let!(:contacted_for_info_mentor) { create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort:) }
+    let!(:ero_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:details_being_checked_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort:) }
+    let!(:secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort:) }
+    let!(:withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort:) }
+    let!(:transferring_in_participant) { create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:transferring_out_participant) { create(:ecf_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let!(:induction_programme) { create(:induction_programme, school_cohort:) }
 
     before do
       [primary_mentor, secondary_mentor].each do |profile|
@@ -193,7 +193,7 @@ RSpec.describe SetParticipantCategories do
         before do
           FeatureFlag.activate(:change_of_circumstances)
           ParticipantProfile::ECF.all.each do |participant_profile|
-            Induction::Enrol.call(induction_programme: induction_programme, participant_profile: participant_profile)
+            Induction::Enrol.call(induction_programme:, participant_profile:)
           end
 
           transferring_in_participant.induction_records.first.update!(start_date: 2.weeks.from_now)

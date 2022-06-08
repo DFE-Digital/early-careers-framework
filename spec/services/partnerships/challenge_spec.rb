@@ -4,10 +4,10 @@ RSpec.describe Partnerships::Challenge do
   describe "#call" do
     let(:school) { create :school }
     let(:cohort) { create :cohort, :current }
-    let!(:school_cohort) { create :school_cohort, school: school, cohort: cohort }
+    let!(:school_cohort) { create :school_cohort, school:, cohort: }
     let(:lead_provider) { create :lead_provider }
-    let!(:lead_provider_profiles) { create_list(:lead_provider_profile, rand(2..3), lead_provider: lead_provider) }
-    let(:partnership) { create :partnership, school: school, lead_provider: lead_provider, cohort: cohort }
+    let!(:lead_provider_profiles) { create_list(:lead_provider_profile, rand(2..3), lead_provider:) }
+    let(:partnership) { create :partnership, school:, lead_provider:, cohort: }
     let(:reason) { Partnership.challenge_reasons.values.sample }
 
     subject { described_class.new(partnership, reason) }
@@ -32,7 +32,7 @@ RSpec.describe Partnerships::Challenge do
         have_enqueued_mail(LeadProviderMailer, :partnership_challenged_email)
           .with(
             user: lp_profile.user,
-            partnership: partnership,
+            partnership:,
           )
       end
       notify_all_lead_providers = notify_all_lead_providers.inject do |expectations, expectation|

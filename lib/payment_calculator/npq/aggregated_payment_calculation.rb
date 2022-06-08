@@ -12,7 +12,7 @@ module PaymentCalculator
       def call
         cpd_lead_provider.npq_contracts.map do |contract|
           PaymentCalculator::NPQ::PaymentCalculation
-            .call(contract: contract, course_identifier: contract.course_identifier)
+            .call(contract:, course_identifier: contract.course_identifier)
         end
       end
 

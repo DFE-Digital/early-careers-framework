@@ -11,7 +11,7 @@ module Api
       class << self
         def active_participant_attribute(attr, &blk)
           attribute attr do |user, params|
-            unless NPQ::IsUserWithdrawn.new(user: user, cpd_lead_provider: params[:cpd_lead_provider]).call
+            unless NPQ::IsUserWithdrawn.new(user:, cpd_lead_provider: params[:cpd_lead_provider]).call
               blk.call(user)
             end
           end

@@ -4,7 +4,7 @@ RSpec.describe Admin::Participants::Table, :with_default_schedules, type: :view_
   let!(:participant_profiles) { create_list :ecf_participant_profile, rand(11..15) }
   let(:page) { rand 1..2 }
 
-  component { described_class.new profiles: ParticipantProfile.all.order(:id), page: page }
+  component { described_class.new profiles: ParticipantProfile.all.order(:id), page: }
   request_path "/admin/participants"
 
   stub_component Admin::Participants::TableRow
@@ -13,7 +13,7 @@ RSpec.describe Admin::Participants::Table, :with_default_schedules, type: :view_
     expected_profiles = participant_profiles.sort_by(&:id).each_slice(10).to_a[page - 1]
 
     expected_profiles.each do |profile|
-      expect(rendered).to have_rendered(Admin::Participants::TableRow).with(profile: profile)
+      expect(rendered).to have_rendered(Admin::Participants::TableRow).with(profile:)
     end
 
     (participant_profiles - expected_profiles).each do |other_page_profiles|

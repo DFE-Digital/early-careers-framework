@@ -9,7 +9,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
   include_context "service record declaration params"
 
   let(:user) { ect_profile.user }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
@@ -169,8 +169,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
   path "/api/v2/participant-declarations/{id}" do
     let(:id) do
       create(:ect_participant_declaration,
-             user: user,
-             cpd_lead_provider: cpd_lead_provider).id
+             user:,
+             cpd_lead_provider:).id
     end
 
     get "Get single participant declaration" do
@@ -225,7 +225,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
 
       response 200, "Successful" do
         let(:id) do
-          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider: cpd_lead_provider, course_identifier: "ecf-induction", participant_profile: ect_profile)
+          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider:, course_identifier: "ecf-induction", participant_profile: ect_profile)
           declaration.id
         end
 

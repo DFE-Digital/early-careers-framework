@@ -8,7 +8,7 @@ module Tasks
 
     class << self
       def call(contract:, total_participants:, uplift_participants:, total_ects: 0, total_mentors: 0)
-        new(contract: contract).call(total_participants: total_participants, uplift_participants: uplift_participants, total_ects: total_ects, total_mentors: total_mentors)
+        new(contract:).call(total_participants:, uplift_participants:, total_ects:, total_mentors:)
       end
     end
 
@@ -45,11 +45,11 @@ module Tasks
     end
 
     def output_payment_per_participant(band)
-      output_calculator.send(:output_payment_per_participant_for_event, { band: band, event_type: :started })
+      output_calculator.send(:output_payment_per_participant_for_event, { band:, event_type: :started })
     end
 
     def output_payment_total(band)
-      output_calculator.send(:output_payment_for_event, { band: band, event_type: :started, total_participants: total_participants })
+      output_calculator.send(:output_payment_for_event, { band:, event_type: :started, total_participants: })
     end
 
     # Output helper methods
@@ -161,7 +161,7 @@ module Tasks
             "Uplift fee",
             uplift_participants,
             as_financial { uplift_calculator.uplift_payment_per_participant },
-            as_financial { uplift_calculator.uplift_payment_for_event(uplift_participants: uplift_participants, event_type: :started) },
+            as_financial { uplift_calculator.uplift_payment_for_event(uplift_participants:, event_type: :started) },
           ],
         ]
         t.style = { alignment: :left }
@@ -214,7 +214,7 @@ module Tasks
     end
 
     def other_fees_values
-      [uplift_participants, uplift_calculator.uplift_payment_per_participant, uplift_calculator.uplift_payment_for_event(uplift_participants: uplift_participants, event_type: :started)]
+      [uplift_participants, uplift_calculator.uplift_payment_per_participant, uplift_calculator.uplift_payment_for_event(uplift_participants:, event_type: :started)]
     end
   end
 end

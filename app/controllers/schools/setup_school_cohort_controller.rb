@@ -125,7 +125,7 @@ module Schools
     end
 
     def active_partnership?
-      @school.active_partnerships.find_by(cohort: cohort, relationship: false).present?
+      @school.active_partnerships.find_by(cohort:, relationship: false).present?
     end
 
     def load_form
@@ -165,14 +165,14 @@ module Schools
     end
 
     def set_cohort_induction_programme!(programme_choice, opt_out_of_updates: false)
-      Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
-                                                  programme_choice: programme_choice,
-                                                  opt_out_of_updates: opt_out_of_updates,
+      Induction::SetCohortInductionProgramme.call(school_cohort:,
+                                                  programme_choice:,
+                                                  opt_out_of_updates:,
                                                   delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?)
     end
 
     def school_cohort
-      @school_cohort ||= school.school_cohorts.find_or_initialize_by(cohort: cohort)
+      @school_cohort ||= school.school_cohorts.find_or_initialize_by(cohort:)
     end
 
     def cohort

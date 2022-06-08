@@ -58,7 +58,7 @@ module Finance
       def count_for_declaration_type(declaration_type)
         aggregator
           .participants_for_declaration_type_in_band(
-            declaration_type: declaration_type, band: band,
+            declaration_type:, band:,
           )
       end
     end

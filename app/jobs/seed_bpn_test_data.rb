@@ -20,14 +20,14 @@ class SeedBPNTestData < ApplicationJob
         school: { active_partnerships: :lead_provider },
         cohort: { schedules: :milestones },
       ).where(
-        school: { partnerships: { lead_provider: lead_provider } },
+        school: { partnerships: { lead_provider: } },
         cohort: { schedules: september_standard_schedule },
       ).distinct(:school)
       january_standard_school_cohorts = SchoolCohort.joins(
         school: { active_partnerships: :lead_provider },
         cohort: { schedules: :milestones },
       ).where(
-        school: { partnerships: { lead_provider: lead_provider } },
+        school: { partnerships: { lead_provider: } },
         cohort: { schedules: january_standard_schedule },
       ).distinct(:school)
 

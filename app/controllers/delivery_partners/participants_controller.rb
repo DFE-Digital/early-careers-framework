@@ -20,7 +20,7 @@ module DeliveryPartners
         },
       )
 
-      @filter = ParticipantsFilter.new(collection: collection, params: params.permit(:query, :role, :academic_year, :status))
+      @filter = ParticipantsFilter.new(collection:, params: params.permit(:query, :role, :academic_year, :status))
 
       @pagy, @participant_profiles = pagy(
         @filter.scope.order(updated_at: :desc),

@@ -12,7 +12,7 @@ RSpec.describe Admin::Participants::TableRow, type: :view_component do
 
   context "when profile is associated with the school" do
     let(:school) { create :school }
-    let(:participant_profile) { create :ect_participant_profile, school: school }
+    let(:participant_profile) { create :ect_participant_profile, school: }
 
     it { is_expected.to have_content school.name }
     it { is_expected.to have_content school.urn }

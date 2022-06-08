@@ -4,7 +4,7 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
   let!(:school_cohort) { create :school_cohort, :fip }
   let!(:partnership) { create :partnership, school: school_cohort.school, cohort: school_cohort.cohort }
   let!(:ecf_participant_eligibility) { create :ecf_participant_eligibility, :eligible }
-  let(:participant_profile) { create :ect_participant_profile, ecf_participant_eligibility: ecf_participant_eligibility, school_cohort: school_cohort }
+  let(:participant_profile) { create :ect_participant_profile, ecf_participant_eligibility:, school_cohort: }
 
   component { described_class.new profile: participant_profile }
 
@@ -12,7 +12,7 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
     let(:programme) { create(:induction_programme, :fip) }
 
     before do
-      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
+      Induction::Enrol.call(participant_profile:, induction_programme: programme)
     end
 
     context "participant is eligible" do
@@ -46,7 +46,7 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
     before do
       school_cohort.core_induction_programme!
       school_cohort.update!(core_induction_programme: create(:core_induction_programme))
-      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
+      Induction::Enrol.call(participant_profile:, induction_programme: programme)
     end
 
     context "participant is eligible" do

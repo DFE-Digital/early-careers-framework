@@ -52,7 +52,7 @@ RSpec.feature "FIP to FIP with same provider - Onboard a deferred participant",
       cohort
     end
     let!(:schedule) do
-      schedule = create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort: cohort)
+      schedule = create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort:)
       create :milestone,
              schedule: schedule,
              name: "Output 1 - Participant Start",

@@ -6,7 +6,7 @@ RSpec.shared_examples "a participant declaration without evidence held service" 
   context "when including evidence_held" do
     it "ignores the extra parameter" do
       params = given_params.merge(evidence_held: "self-study-material-completed")
-      expect { described_class.call(params: params) }.to change { ParticipantDeclaration.count }.by(1)
+      expect { described_class.call(params:) }.to change { ParticipantDeclaration.count }.by(1)
       expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
     end
   end

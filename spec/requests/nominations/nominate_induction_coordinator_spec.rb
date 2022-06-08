@@ -94,7 +94,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         put "/nominations/full-name", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: "",
-          token: token,
+          token:,
         } }
 
         expect(response).to redirect_to("/nominations/email")
@@ -104,7 +104,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         put "/nominations/full-name", params: { nominate_induction_tutor_form: {
           full_name: "",
           email: "",
-          token: token,
+          token:,
         } }
 
         expect(response).to render_template("nominations/nominate_induction_coordinator/full_name")
@@ -117,7 +117,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         get "/nominations/email", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: "",
-          token: token,
+          token:,
         } }
 
         expect(response).to render_template("nominations/nominate_induction_coordinator/email")
@@ -128,8 +128,8 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       it "redirects to the check template when a valid email is inputted" do
         put "/nominations/email", params: { nominate_induction_tutor_form: {
           full_name: name,
-          email: email,
-          token: token,
+          email:,
+          token:,
         } }
 
         expect(response).to redirect_to("/nominations/check-details")
@@ -139,7 +139,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         put "/nominations/email", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: "",
-          token: token,
+          token:,
         } }
 
         expect(response).to render_template("nominations/nominate_induction_coordinator/email")
@@ -150,7 +150,7 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         put "/nominations/email", params: { nominate_induction_tutor_form: {
           full_name: name,
           email: "invalid@email",
-          token: token,
+          token:,
         } }
 
         expect(response).to render_template("nominations/nominate_induction_coordinator/email")
@@ -158,14 +158,14 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       end
 
       context "when an induction coordinator already exists with the provided email" do
-        let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email: email) }
+        let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email:) }
 
         it "redirects to the name-different page when the form name does not match our records" do
           expect {
             put "/nominations/email", params: { nominate_induction_tutor_form: {
               full_name: "Different Name",
-              email: email,
-              token: token,
+              email:,
+              token:,
             } }
           }.not_to(change { User.count })
 
@@ -176,14 +176,14 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       end
 
       context "when an ECT user already exists with the provided email" do
-        let!(:existing_user) { create(:ect_participant_profile, user: create(:user, email: email)).user }
+        let!(:existing_user) { create(:ect_participant_profile, user: create(:user, email:)).user }
 
         it "redirects to the email-used page" do
           expect {
             put "/nominations/email", params: { nominate_induction_tutor_form: {
               full_name: name,
-              email: email,
-              token: token,
+              email:,
+              token:,
             } }
           }.not_to(change { User.count })
 
@@ -196,8 +196,8 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       it "renders the check template" do
         get "/nominations/check-details", params: { nominate_induction_tutor_form: {
           full_name: name,
-          email: email,
-          token: token,
+          email:,
+          token:,
         } }
         expect(response).to render_template("nominations/nominate_induction_coordinator/check")
       end
@@ -208,15 +208,15 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         expect {
           post "/nominations/check-details", params: { nominate_induction_tutor_form: {
             full_name: name,
-            email: email,
-            token: token,
+            email:,
+            token:,
           } }
         }
           .to change { User.count }
                 .by(1)
                 .and change { InductionCoordinatorProfile.count }.by(1)
 
-        created_user = User.find_by(email: email)
+        created_user = User.find_by(email:)
         expect(created_user).not_to be_nil
         expect(created_user.full_name).to eql name
         expect(created_user.induction_coordinator_profile.schools).to contain_exactly(school)
@@ -224,14 +224,14 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
       end
 
       context "when an induction coordinator already exists with the provided email" do
-        let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email: email) }
+        let!(:existing_induction_coordinator) { create(:user, :induction_coordinator, email:) }
 
         it "adds the schools to their list of schools" do
           expect {
             post "/nominations/check-details", params: { nominate_induction_tutor_form: {
               full_name: existing_induction_coordinator.full_name,
-              email: email,
-              token: token,
+              email:,
+              token:,
             } }
           }.not_to(change { User.count })
 

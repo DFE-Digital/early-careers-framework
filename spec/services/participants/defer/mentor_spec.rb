@@ -9,18 +9,18 @@ RSpec.describe Participants::Defer::Mentor do
   let(:user) { profile.user }
   let(:school) { profile.school_cohort.school }
   let(:cohort) { profile.school_cohort.cohort }
-  let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+  let(:induction_programme) { create(:induction_programme, partnership:) }
 
   let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+    Induction::Enrol.call(participant_profile: profile, induction_programme:)
   end
 
   let!(:partnership) do
     create(
       :partnership,
-      school: school,
-      lead_provider: lead_provider,
-      cohort: cohort,
+      school:,
+      lead_provider:,
+      cohort:,
     )
   end
 
@@ -29,7 +29,7 @@ RSpec.describe Participants::Defer::Mentor do
       params: {
         participant_id: user.id,
         course_identifier: "ecf-mentor",
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
         reason: "bereavement",
       },
     )
@@ -54,7 +54,7 @@ RSpec.describe Participants::Defer::Mentor do
           params: {
             participant_id: user.id,
             course_identifier: "ecf-mentor",
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             reason: "bereavement",
           },
         ).call # must be different instance from subject
@@ -84,7 +84,7 @@ RSpec.describe Participants::Defer::Mentor do
           params: {
             participant_id: user.id,
             course_identifier: "ecf-mentor",
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
           },
         )
       end
@@ -100,7 +100,7 @@ RSpec.describe Participants::Defer::Mentor do
           params: {
             participant_id: user.id,
             course_identifier: "ecf-mentor",
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             reason: "foo",
           },
         )

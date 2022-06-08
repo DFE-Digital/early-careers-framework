@@ -9,14 +9,14 @@ module PaymentCalculator
 
       class << self
         def call(contract:, aggregations:)
-          new(contract: contract).call(aggregations)
+          new(contract:).call(aggregations)
         end
       end
 
       def call(aggregations)
         {
           name: lead_provider.name,
-          recruitment_target: recruitment_target,
+          recruitment_target:,
           participants: aggregations[CURRENT_PARTICIPANTS],
           total_participants_paid: aggregations[ELIGIBLE_AND_PAYABLE],
           total_participants_not_paid: aggregations[NOT_PAID],

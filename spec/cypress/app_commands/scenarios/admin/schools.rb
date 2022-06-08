@@ -2,7 +2,7 @@
 
 school = FactoryBot.create(:school, name: "Include this school", urn: 123_456)
 local_authority = FactoryBot.create(:local_authority)
-SchoolLocalAuthority.create!(school: school, local_authority: local_authority, start_year: 2021)
+SchoolLocalAuthority.create!(school:, local_authority:, start_year: 2021)
 coordinator = FactoryBot.create(:user, :induction_coordinator, full_name: "Sarah Smith", email: "sarah.smith@example.com")
 coordinator.induction_coordinator_profile.schools.first.destroy!
 coordinator.induction_coordinator_profile.schools = [school]

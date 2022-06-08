@@ -6,7 +6,7 @@ RSpec.describe Identity do
   describe ".find_user_by" do
     context "when searching by email" do
       let(:user) { create(:user, email: "fred@example.com") }
-      let!(:identity) { create(:participant_identity, user: user, email: "charlie@example.com") }
+      let!(:identity) { create(:participant_identity, user:, email: "charlie@example.com") }
 
       context "when a matching identity record exists" do
         it "returns the associated user record" do
@@ -33,7 +33,7 @@ RSpec.describe Identity do
     context "when searching by id" do
       let(:user) { create(:user) }
       let(:external_id) { SecureRandom.uuid }
-      let!(:identity) { create(:participant_identity, user: user, external_identifier: external_id) }
+      let!(:identity) { create(:participant_identity, user:, external_identifier: external_id) }
 
       context "when a matching identity record exists" do
         it "returns the associated user record" do

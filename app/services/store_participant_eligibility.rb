@@ -2,7 +2,7 @@
 
 class StoreParticipantEligibility < BaseService
   def call
-    @participant_eligibility = ECFParticipantEligibility.find_or_initialize_by(participant_profile: participant_profile)
+    @participant_eligibility = ECFParticipantEligibility.find_or_initialize_by(participant_profile:)
 
     grab_current_eligibility_state
 
@@ -35,7 +35,7 @@ private
   end
 
   def eligibility_triggers!
-    RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile.call(participant_profile: participant_profile)
+    RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile.call(participant_profile:)
   end
 
   def grab_current_eligibility_state
@@ -77,8 +77,8 @@ private
   def send_now_eligible_email
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
       IneligibleParticipantMailer.ect_now_eligible_previous_induction_email(
-        induction_tutor: induction_tutor,
-        participant_profile: participant_profile,
+        induction_tutor:,
+        participant_profile:,
       ).deliver_later
     end
   end
@@ -89,15 +89,15 @@ private
 
       IneligibleParticipantMailer.send(
         ineligible_notification_email_for_induction_coordinator,
-        **{ induction_tutor_email: induction_tutor.email, participant_profile: participant_profile },
+        **{ induction_tutor_email: induction_tutor.email, participant_profile: },
       ).deliver_later
     end
 
     if @participant_eligibility.reason.to_sym == :exempt_from_induction
       if participant_profile.participant_declarations.any? && @previous_status == "eligible"
-        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile: participant_profile).deliver_later
+        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile:).deliver_later
       elsif @previous_status != "eligible"
-        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile: participant_profile).deliver_later
+        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile:).deliver_later
       end
     end
   end
@@ -139,7 +139,7 @@ private
   def send_manual_check_notification_email
     if @participant_eligibility.reason.to_sym == :no_induction
       participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
-        IneligibleParticipantMailer.ect_no_induction_email(induction_tutor_email: induction_tutor.email, participant_profile: participant_profile).deliver_later
+        IneligibleParticipantMailer.ect_no_induction_email(induction_tutor_email: induction_tutor.email, participant_profile:).deliver_later
       end
     end
   end
@@ -153,7 +153,7 @@ private
 
     @participant_eligibility.determine_status
     @participant_eligibility.save!
-    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile: participant_profile)
+    Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile:)
   end
 
   def default_eligibility_flags

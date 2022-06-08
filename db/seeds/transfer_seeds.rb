@@ -16,12 +16,12 @@ User.find_or_create_by!(full_name: "Induction Tutor for School 5", email: "cpd-t
 school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school: fip_school, induction_programme_choice: "full_induction_programme")
 lead_provider = LeadProvider.find_by(name: "Ambition Institute")
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
-partnership = Partnership.find_by!(cohort: Cohort.current, delivery_partner: delivery_partner, school: fip_school)
-partnership.update!(lead_provider: lead_provider)
+partnership = Partnership.find_by!(cohort: Cohort.current, delivery_partner:, school: fip_school)
+partnership.update!(lead_provider:)
 
 induction_programme = InductionProgramme.find_or_create_by!(
-  school_cohort: school_cohort,
-  partnership: partnership,
+  school_cohort:,
+  partnership:,
   training_programme: "full_induction_programme",
 )
 school_cohort.update!(default_induction_programme: induction_programme)
@@ -30,8 +30,8 @@ old_school = School.find_by(urn: "000103")
 old_school_cohort = old_school.school_cohorts.find_by(cohort: Cohort.current)
 
 # lead_provider = LeadProvider.find_by(name: "Ambition Institute")
-old_partnership = Partnership.find_by!(cohort: Cohort.current, school: old_school, lead_provider: lead_provider)
-old_partnership.update!(delivery_partner: delivery_partner)
+old_partnership = Partnership.find_by!(cohort: Cohort.current, school: old_school, lead_provider:)
+old_partnership.update!(delivery_partner:)
 
 old_school_induction_programme = InductionProgramme.find_or_create_by!(
   school_cohort: old_school_cohort,
@@ -89,7 +89,7 @@ old_school_cohort = old_school.school_cohorts.find_by(cohort: Cohort.current)
 diffferent_delivery_partner = DeliveryPartner.find_or_create_by!(name: "Different Delivery Partner")
 
 lead_provider = LeadProvider.find_by(name: "Ambition Institute")
-old_partnership = Partnership.find_by!(cohort: Cohort.current, school: old_school, lead_provider: lead_provider)
+old_partnership = Partnership.find_by!(cohort: Cohort.current, school: old_school, lead_provider:)
 old_partnership.update!(delivery_partner: diffferent_delivery_partner)
 
 fip_ect_different_dp = User.find_by!(email: "fip-ect2@example.com")

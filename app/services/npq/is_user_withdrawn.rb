@@ -18,7 +18,7 @@ module NPQ
     def active_npq_profiles
       scope = user.npq_profiles
       scope = scope.joins(npq_application: { npq_lead_provider: [:cpd_lead_provider] })
-      scope = scope.where(npq_applications: { npq_lead_providers: { cpd_lead_provider: cpd_lead_provider } })
+      scope = scope.where(npq_applications: { npq_lead_providers: { cpd_lead_provider: } })
       scope = scope.where.not(training_status: "withdrawn")
       scope.where.not(status: "withdrawn")
     end

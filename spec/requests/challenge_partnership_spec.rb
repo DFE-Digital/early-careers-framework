@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Challenging a partnership", type: :request do
-  let(:partnership_notification_email) { create :partnership_notification_email, partnership: partnership }
+  let(:partnership_notification_email) { create :partnership_notification_email, partnership: }
   let(:partnership) { create :partnership, :in_challenge_window }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership.school]) }
 
@@ -20,7 +20,7 @@ RSpec.describe "Challenging a partnership", type: :request do
 
     context "when the link has expired" do
       let!(:partnership) { create(:partnership) }
-      let!(:partnership_notification_email) { create(:partnership_notification_email, partnership: partnership) }
+      let!(:partnership_notification_email) { create(:partnership_notification_email, partnership:) }
 
       it "redirects to link-expired" do
         travel 4.weeks

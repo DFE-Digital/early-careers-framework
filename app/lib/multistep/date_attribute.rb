@@ -11,7 +11,7 @@ module Multistep
     end
 
     module ClassMethods
-      def attribute(name, *)
+      def attribute(name, *args, **kwargs)
         super_result = super
 
         return super_result unless attribute_types[name.to_s].type == :date

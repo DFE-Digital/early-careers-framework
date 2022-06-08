@@ -10,24 +10,24 @@ RSpec.describe Induction::CreateRelationship do
 
     it "adds a new Partnership record" do
       expect {
-        service.call(school_cohort: school_cohort,
-                     lead_provider: lead_provider,
-                     delivery_partner: delivery_partner)
+        service.call(school_cohort:,
+                     lead_provider:,
+                     delivery_partner:)
       }.to change { school_cohort.school.partnerships.count }.by 1
     end
 
     it "sets the relationship flag on the Partnership" do
-      service.call(school_cohort: school_cohort,
-                   lead_provider: lead_provider,
-                   delivery_partner: delivery_partner)
+      service.call(school_cohort:,
+                   lead_provider:,
+                   delivery_partner:)
 
       expect(school_cohort.school.partnerships.last).to be_relationship
     end
 
     it "the Partnership doesn't have a challenge window" do
-      service.call(school_cohort: school_cohort,
-                   lead_provider: lead_provider,
-                   delivery_partner: delivery_partner)
+      service.call(school_cohort:,
+                   lead_provider:,
+                   delivery_partner:)
 
       expect(school_cohort.school.partnerships.last).not_to be_in_challenge_window
     end

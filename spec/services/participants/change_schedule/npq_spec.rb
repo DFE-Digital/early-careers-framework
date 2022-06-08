@@ -14,7 +14,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
           schedule_identifier: nil,
           participant_id: user.id,
           course_identifier: profile.npq_course.identifier,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         })
       end
 
@@ -49,7 +49,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
           schedule_identifier: schedule.schedule_identifier,
           participant_id: user.id,
           course_identifier: profile.npq_course.identifier,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         })
       end
 
@@ -69,7 +69,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
           schedule_identifier: schedule.schedule_identifier,
           participant_id: user.id,
           course_identifier: profile.npq_course.identifier,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         })
       end
 
@@ -94,12 +94,12 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
         create(:npq_ehco_schedule, schedule_identifier: "soft-schedule")
       end
     end
-    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule: schedule) }
+    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule:) }
     let(:user) { profile.user }
     let(:profile) { create(:npq_participant_profile) }
     let!(:declaration) do
       create(:npq_participant_declaration,
-             user: user,
+             user:,
              participant_profile: profile,
              course_identifier: profile.npq_course.identifier)
     end
@@ -109,7 +109,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
         schedule_identifier: schedule.schedule_identifier,
         participant_id: user.id,
         course_identifier: profile.npq_course.identifier,
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
         cohort: schedule.cohort.start_year,
       })
     end

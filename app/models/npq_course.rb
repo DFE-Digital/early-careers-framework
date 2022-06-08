@@ -10,13 +10,13 @@ class NPQCourse < ApplicationRecord
   def self.schedule_for(npq_course:, cohort: Cohort.find_by!(start_year: 2021))
     case npq_course.identifier
     when *Finance::Schedule::NPQLeadership::IDENTIFIERS
-      Finance::Schedule::NPQLeadership.find_by!(cohort: cohort)
+      Finance::Schedule::NPQLeadership.find_by!(cohort:)
     when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
-      Finance::Schedule::NPQSpecialist.find_by!(cohort: cohort)
+      Finance::Schedule::NPQSpecialist.find_by!(cohort:)
     when *Finance::Schedule::NPQSupport::IDENTIFIERS
-      Finance::Schedule::NPQSupport.find_by!(cohort: cohort)
+      Finance::Schedule::NPQSupport.find_by!(cohort:)
     when *Finance::Schedule::NPQEhco::IDENTIFIERS
-      Finance::Schedule::NPQEhco.find_by!(cohort: cohort)
+      Finance::Schedule::NPQEhco.find_by!(cohort:)
     else
       raise ArgumentError, "Invalid course identifier"
     end

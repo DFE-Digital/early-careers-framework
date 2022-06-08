@@ -31,8 +31,8 @@ private
     cohort = create(:cohort, start_year: 2021)
     chosen_cip = create(:core_induction_programme, name: "Chosen CIP")
     @school_cohort = create(:school_cohort,
-                            school: school,
-                            cohort: cohort,
+                            school:,
+                            cohort:,
                             induction_programme_choice: "core_induction_programme",
                             core_induction_programme: chosen_cip)
   end

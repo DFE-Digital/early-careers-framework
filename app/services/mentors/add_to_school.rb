@@ -3,7 +3,7 @@
 module Mentors
   class AddToSchool < BaseService
     def call
-      SchoolMentor.find_or_create_by!(participant_profile: mentor_profile, school: school) do |record|
+      SchoolMentor.find_or_create_by!(participant_profile: mentor_profile, school:) do |record|
         record.preferred_identity = preferred_identity
       end
     end

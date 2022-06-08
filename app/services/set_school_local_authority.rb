@@ -5,9 +5,9 @@ class SetSchoolLocalAuthority < BaseService
     if school.local_authority&.code != la_code
       ActiveRecord::Base.transaction do
         school.latest_school_authority&.update!(end_year: start_year)
-        SchoolLocalAuthority.create!(school: school,
+        SchoolLocalAuthority.create!(school:,
                                      local_authority: LocalAuthority.find_by(code: la_code),
-                                     start_year: start_year)
+                                     start_year:)
       end
     end
   end

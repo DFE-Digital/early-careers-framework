@@ -40,7 +40,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         subject: "You need to set up your ECT training programme",
-        school_name: school_name,
+        school_name:,
         sign_in: new_user_session_url(**campaign_tracking),
         step_by_step: step_by_step_url(**campaign_tracking),
       },
@@ -57,7 +57,7 @@ class SchoolMailer < ApplicationMailer
       personalisation: {
         school_name: school.name,
         nomination_link: nomination_url,
-        expiry_date: expiry_date,
+        expiry_date:,
       },
     ).tag(:request_to_nominate_sit).associate_with(school)
   end
@@ -91,8 +91,8 @@ class SchoolMailer < ApplicationMailer
         lead_provider_name: partnership.lead_provider.name,
         delivery_partner_name: partnership.delivery_partner.name,
         school_name: partnership.school.name,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
+        nominate_url:,
+        challenge_url:,
         challenge_deadline: partnership.challenge_deadline.strftime("%d/%m/%Y"),
         subject: "FAO: NQT coordinator. Training provider confirmed.",
       },
@@ -115,10 +115,10 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school.name,
-        lead_provider_name: lead_provider_name,
-        delivery_partner_name: delivery_partner_name,
-        nominate_url: nominate_url,
-        challenge_url: challenge_url,
+        lead_provider_name:,
+        delivery_partner_name:,
+        nominate_url:,
+        challenge_url:,
       },
     ).tag(:partnered_school_invite_sit).associate_with(school)
   end
@@ -136,8 +136,8 @@ class SchoolMailer < ApplicationMailer
         lead_provider_name: partnership.lead_provider.name,
         delivery_partner_name: partnership.delivery_partner.name,
         school_name: partnership.school.name,
-        sign_in_url: sign_in_url,
-        challenge_url: challenge_url,
+        sign_in_url:,
+        challenge_url:,
         challenge_deadline: partnership.challenge_deadline,
         step_by_step: step_by_step_url,
         subject: "Training provider confirmed: add your ECTs and mentors",
@@ -166,9 +166,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: name,
-        school_name: school_name,
-        start_url: start_url,
+        name:,
+        school_name:,
+        start_url:,
       },
     )
   end
@@ -180,8 +180,8 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
-        nomination_url: nomination_url,
+        school_name:,
+        nomination_url:,
       },
     )
   end
@@ -193,8 +193,8 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
-        nomination_url: nomination_url,
+        school_name:,
+        nomination_url:,
       },
     )
   end
@@ -206,7 +206,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name:,
         nomination_link: nomination_url,
       },
     )
@@ -219,7 +219,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name: school_name,
+        school_name:,
         nomination_link: nomination_url,
       },
     )
@@ -245,9 +245,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: name,
-        school_name: school_name,
-        sign_in_url: sign_in_url,
+        name:,
+        school_name:,
+        sign_in_url:,
       },
     )
   end
@@ -259,9 +259,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: name,
-        school_name: school_name,
-        sign_in_url: sign_in_url,
+        name:,
+        school_name:,
+        sign_in_url:,
       },
     )
   end
@@ -286,9 +286,9 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: name,
-        school_name: school_name,
-        sign_in_url: sign_in_url,
+        name:,
+        school_name:,
+        sign_in_url:,
         step_by_step: step_by_step_url,
       },
     )
@@ -301,8 +301,8 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: name,
-        sign_in_url: sign_in_url,
+        name:,
+        sign_in_url:,
       },
     )
   end
@@ -317,7 +317,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         name: induction_coordinator.user.full_name,
-        school_name: school_name,
+        school_name:,
         sign_in: new_user_session_url(**campaign_tracking),
       },
     ).tag(:fifth_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
@@ -331,8 +331,8 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         subject: "2020 to 2021 NQTs cohort: support materials confirmation",
-        school_name: school_name,
-        teacher_name_list: teacher_name_list,
+        school_name:,
+        teacher_name_list:,
       },
     )
   end
@@ -344,7 +344,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        start_url: start_url,
+        start_url:,
       },
     )
   end
@@ -356,7 +356,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        start_url: start_url,
+        start_url:,
       },
     ).tag(:year2020_invite).associate_with(school, as: :school)
   end
@@ -369,7 +369,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         sign_in: sign_in_url,
-        school_name: school_name,
+        school_name:,
       },
     ).tag(:unpartnered_cip_add_participants).associate_with(induction_coordinator, as: :induction_coordinator)
   end
@@ -394,7 +394,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         sign_in: sign_in_url,
-        school_name: school_name,
+        school_name:,
       },
     ).tag(:sit_new_ambition_participants_added).associate_with(induction_coordinator_profile, as: :induction_coordinator)
   end
@@ -407,7 +407,7 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         name: induction_coordinator_profile.user.full_name,
-        participant_name_list: participant_name_list,
+        participant_name_list:,
         participant_start: participant_start_url,
         sign_in: sign_in_url,
       },
@@ -418,7 +418,7 @@ class SchoolMailer < ApplicationMailer
     nomination_email = NominationEmail.create_nomination_email(
       sent_at: Time.zone.now,
       sent_to: school.contact_email,
-      school: school,
+      school:,
     )
 
     template_mail(
@@ -427,7 +427,7 @@ class SchoolMailer < ApplicationMailer
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        season: season,
+        season:,
         school_name: school.name,
         nomination_link: nomination_email.nomination_url,
       },

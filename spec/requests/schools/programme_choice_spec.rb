@@ -7,7 +7,7 @@ RSpec.describe "Schools::ProgrammeChoice", type: :request do
   let(:school) { user.induction_coordinator_profile.schools.first }
   let(:cohort) { create(:cohort, start_year: 2021) }
   let(:school_cohort) do
-    create(:school_cohort, cohort: cohort, school: school, induction_programme_choice: "full_induction_programme")
+    create(:school_cohort, cohort:, school:, induction_programme_choice: "full_induction_programme")
   end
 
   before do

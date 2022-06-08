@@ -7,7 +7,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   include_context "lead provider profiles and courses"
   let(:parsed_response) { JSON.parse(response.body) }
 
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:milestone_start_date) { ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
   describe "POST /api/v1/participant-declarations" do
@@ -28,7 +28,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       {
         data: {
           type: "participant-declaration",
-          attributes: attributes,
+          attributes:,
         },
       }.to_json
     end
@@ -39,21 +39,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
-        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
       end
 
       context "when posting for the new cohort" do
         let(:school)              { create(:school) }
         let(:next_cohort)         { create(:cohort, :next) }
-        let(:next_school_cohort)  { create(:school_cohort, school: school, cohort: next_cohort) }
-        let(:next_schedule)       { create(:schedule, name: "ECF September 2022", cohort: next_cohort).tap { |schedule| create(:milestone, schedule: schedule, start_date: Date.new(2022, 9, 1), declaration_type: "started", milestone_date: Date.new(2022, 11, 30)) } }
-        let(:next_partnership)    { create(:partnership, school: school, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort, delivery_partner: delivery_partner) }
+        let(:next_school_cohort)  { create(:school_cohort, school:, cohort: next_cohort) }
+        let(:next_schedule)       { create(:schedule, name: "ECF September 2022", cohort: next_cohort).tap { |schedule| create(:milestone, schedule:, start_date: Date.new(2022, 9, 1), declaration_type: "started", milestone_date: Date.new(2022, 11, 30)) } }
+        let(:next_partnership)    { create(:partnership, school:, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort, delivery_partner:) }
         let(:induction_programme) { create(:induction_programme, :fip, partnership: next_partnership) }
         let(:ect_profile)         { create(:ect_participant_profile, :ecf_participant_eligibility, schedule: next_schedule) }
 
         before do
-          Induction::Enrol.call(participant_profile: ect_profile, induction_programme: induction_programme)
-          create(:ecf_statement, cohort: next_cohort, output_fee: true, deadline_date: next_schedule.milestones.first.milestone_date, cpd_lead_provider: cpd_lead_provider)
+          Induction::Enrol.call(participant_profile: ect_profile, induction_programme:)
+          create(:ecf_statement, cohort: next_cohort, output_fee: true, deadline_date: next_schedule.milestones.first.milestone_date, cpd_lead_provider:)
         end
 
         it "create declaration record and declaration attempt and return id when successful" do
@@ -74,7 +74,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
       it "create declaration record and declaration attempt and return id when successful" do
         params = build_params(valid_params)
-        expect { post "/api/v1/participant-declarations", params: params }.to change(ParticipantDeclaration, :count).by(1).and change(ParticipantDeclarationAttempt, :count).by(1)
+        expect { post "/api/v1/participant-declarations", params: }.to change(ParticipantDeclaration, :count).by(1).and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
@@ -94,9 +94,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclaration, :count).by(1)
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response.status).to eq 200
@@ -114,7 +114,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
-        expect { post "/api/v1/participant-declarations", params: params }
+        expect { post "/api/v1/participant-declarations", params: }
             .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
             .to change(ParticipantDeclarationAttempt, :count).by(1)
@@ -187,7 +187,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             induction_record.leaving!(milestone_start_date + 1)
             Induction::Enrol.call(participant_profile: ect_profile, induction_programme: new_programme, start_date: milestone_start_date)
             put url, params: build_params(params)
-            ParticipantProfileState.create!(participant_profile: ect_profile, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: cpd_lead_provider)
+            ParticipantProfileState.create!(participant_profile: ect_profile, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider:)
           end
 
           it "is possible for new lead provider to post a declaration" do
@@ -280,9 +280,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when the participant transfers to a new school with the same lead provider" do
-        let(:partnership) { create(:partnership, school: school, lead_provider: ecf_lead_provider, delivery_partner: delivery_partner, cohort: ect_profile.cohort) }
+        let(:partnership) { create(:partnership, school:, lead_provider: ecf_lead_provider, delivery_partner:, cohort: ect_profile.cohort) }
         let(:school) { create(:school, name: "Transferred-to School") }
-        let(:programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
+        let(:programme) { create(:induction_programme, :fip, school_cohort:) }
         let(:url) { "/api/v1/participants/ecf/#{ect_profile.user.id}/withdraw" }
         let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
 
@@ -291,7 +291,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             induction_record.leaving!(milestone_start_date + 1)
             Induction::Enrol.call(participant_profile: ect_profile, induction_programme: programme, start_date: milestone_start_date)
             put url, params: build_params(params)
-            ParticipantProfileState.create!(participant_profile: ect_profile, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: cpd_lead_provider)
+            ParticipantProfileState.create!(participant_profile: ect_profile, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider:)
           end
 
           it "is possible for the same lead provider to post a declaration" do
@@ -393,13 +393,13 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   end
 
   describe "JSON Index Api" do
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
 
     let!(:participant_declaration) do
       create(:participant_declaration,
              user: ect_profile.user,
-             cpd_lead_provider: cpd_lead_provider,
+             cpd_lead_provider:,
              participant_profile: ect_profile,
              course_identifier: "ecf-induction")
     end
@@ -482,7 +482,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         let!(:second_participant_declaration) do
           create(:participant_declaration,
                  user: second_ect_profile.user,
-                 cpd_lead_provider: cpd_lead_provider,
+                 cpd_lead_provider:,
                  course_identifier: "ecf-induction",
                  participant_profile: second_ect_profile)
         end
@@ -527,21 +527,21 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
   describe "CSV Index API" do
     let(:parsed_response) { CSV.parse(response.body, headers: true) }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
 
     let!(:participant_declaration_one) do
       create(:ect_participant_declaration,
              participant_profile: ect_profile,
              user: ect_profile.user,
-             cpd_lead_provider: cpd_lead_provider)
+             cpd_lead_provider:)
     end
 
     let!(:participant_declaration_two) do
       create(:ect_participant_declaration,
              participant_profile: ect_profile,
              user: ect_profile.user,
-             cpd_lead_provider: cpd_lead_provider)
+             cpd_lead_provider:)
     end
 
     before do
@@ -589,7 +589,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when declaration is submitted" do
-      let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider: cpd_lead_provider) }
+      let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:) }
 
       it "can be voided" do
         expect {
@@ -604,7 +604,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     context "when declaration is payable" do
-      let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider: cpd_lead_provider) }
+      let(:declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider:) }
 
       it "can be voided" do
         expect {
@@ -625,7 +625,7 @@ private
     {
       "data" =>
           [
-            single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
+            single_json_declaration(declaration:, profile:, course_identifier:, state:),
           ],
     }
   end
@@ -633,7 +633,7 @@ private
   def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          single_json_declaration(declaration: declaration, profile: profile, course_identifier: course_identifier, state: state),
+          single_json_declaration(declaration:, profile:, course_identifier:, state:),
     }
   end
 

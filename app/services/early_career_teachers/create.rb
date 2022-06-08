@@ -8,26 +8,26 @@ module EarlyCareerTeachers
       profile = nil
       ActiveRecord::Base.transaction do
         # Retain the original name if the user already exists
-        user = User.find_or_create_by!(email: email) do |ect|
+        user = User.find_or_create_by!(email:) do |ect|
           ect.full_name = full_name
         end
-        user.update!(full_name: full_name) unless user.participant_profiles&.active_record&.any? || user.npq_registered?
+        user.update!(full_name:) unless user.participant_profiles&.active_record&.any? || user.npq_registered?
 
-        teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |teacher|
+        teacher_profile = TeacherProfile.find_or_create_by!(user:) do |teacher|
           teacher.school = school_cohort.school
         end
 
         profile = if year_2020
                     ParticipantProfile::ECT.create!({
-                      teacher_profile: teacher_profile,
+                      teacher_profile:,
                       schedule: Finance::Schedule::ECF.default_for(cohort: Cohort.find_by_start_year("2021")),
-                      participant_identity: Identity::Create.call(user: user),
+                      participant_identity: Identity::Create.call(user:),
                     }.merge(ect_attributes))
                   else
                     ParticipantProfile::ECT.create!({
-                      teacher_profile: teacher_profile,
+                      teacher_profile:,
                       schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-                      participant_identity: Identity::Create.call(user: user),
+                      participant_identity: Identity::Create.call(user:),
                     }.merge(ect_attributes))
                   end
 
@@ -35,8 +35,8 @@ module EarlyCareerTeachers
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
                                 induction_programme: school_cohort.default_induction_programme,
-                                mentor_profile: mentor_profile,
-                                start_date: start_date)
+                                mentor_profile:,
+                                start_date:)
         end
       end
 
@@ -66,9 +66,9 @@ module EarlyCareerTeachers
 
     def ect_attributes
       {
-        start_term: start_term,
+        start_term:,
         school_cohort_id: school_cohort.id,
-        mentor_profile_id: mentor_profile_id,
+        mentor_profile_id:,
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),
       }

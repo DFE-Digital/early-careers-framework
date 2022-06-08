@@ -30,7 +30,7 @@ RSpec.describe ParticipantDetailsReminderJob do
           described_class.perform_now(profile_id: participant_profile.id)
         }.to have_enqueued_mail(ParticipantMailer, :add_details_reminder)
           .with(
-            participant_profile: participant_profile,
+            participant_profile:,
           )
       end
 
@@ -69,7 +69,7 @@ RSpec.describe ParticipantDetailsReminderJob do
       let(:participant_profile) { create :ecf_participant_profile }
 
       before do
-        create(:ecf_participant_validation_data, participant_profile: participant_profile)
+        create(:ecf_participant_validation_data, participant_profile:)
       end
 
       it "does not enqueue reminder email" do

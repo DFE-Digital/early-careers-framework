@@ -2,10 +2,10 @@
 
 RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :view_component do
   let(:school) { create(:school, slug: "test-school") }
-  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, school: school, core_induction_programme: programme }
+  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, school:, core_induction_programme: programme }
   let(:programme) { FactoryBot.create :core_induction_programme }
 
-  component { described_class.new school_cohort: school_cohort }
+  component { described_class.new school_cohort: }
 
   it "has the correct content" do
     with_request_url "/schools/test-school" do

@@ -11,7 +11,7 @@ module Participants
 
     class << self
       def call(params:)
-        new(params: params).call
+        new(params:).call
       end
     end
 

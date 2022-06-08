@@ -9,7 +9,7 @@ RSpec.describe Finance::StatementLineItem do
   describe "validations" do
     let!(:existing_line_item) do
       described_class.create!(
-        statement: statement,
+        statement:,
         participant_declaration: declaration,
         state: declaration.state,
       )
@@ -18,7 +18,7 @@ RSpec.describe Finance::StatementLineItem do
     it "cannot be billed to multiple statements" do
       expect {
         described_class.create(
-          statement: statement,
+          statement:,
           participant_declaration: declaration,
           state: declaration.state,
         )

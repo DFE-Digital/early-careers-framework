@@ -21,7 +21,7 @@ module Identity
     end
 
     def find_or_create_identity
-      @identity = ParticipantIdentity.find_or_create_by!(email: email) do |identity|
+      @identity = ParticipantIdentity.find_or_create_by!(email:) do |identity|
         identity.user = user
         identity.external_identifier = external_id
         identity.email = email

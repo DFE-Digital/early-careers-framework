@@ -8,7 +8,7 @@ module JsonSchema
   class Validation
     class << self
       def call(schema:, body:, version: "1.0", schema_reader: ::JsonSchema::VersionedSchemaReader, schema_validator: ::JsonSchema::ValidatorAdapter)
-        new(schema_reader: schema_reader, schema_validator: schema_validator, version: version).call(schema: schema, body: body)
+        new(schema_reader:, schema_validator:, version:).call(schema:, body:)
       end
     end
 

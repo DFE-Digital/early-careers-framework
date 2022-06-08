@@ -5,15 +5,15 @@ require "rails_helper"
 RSpec.describe StoreValidationResult do
   subject(:result) do
     described_class.call(
-      participant_profile: participant_profile,
-      validation_data: validation_data,
-      dqt_response: dqt_response,
+      participant_profile:,
+      validation_data:,
+      dqt_response:,
     )
   end
 
   let(:trn_on_profile) { "11111" }
   let(:teacher_profile) { create(:teacher_profile, trn: trn_on_profile) }
-  let(:participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
+  let(:participant_profile) { create(:ect_participant_profile, teacher_profile:) }
 
   let(:validation_data) do
     {
@@ -80,7 +80,7 @@ RSpec.describe StoreValidationResult do
         result
 
         expect(StoreParticipantEligibility).to have_received(:call).with(
-          participant_profile: participant_profile,
+          participant_profile:,
           eligibility_options: {
             qts: dqt_response[:qts],
             active_flags: dqt_response[:active_alert],
@@ -108,7 +108,7 @@ RSpec.describe StoreValidationResult do
         result
 
         expect(StoreParticipantEligibility).to have_received(:call).with(
-          participant_profile: participant_profile,
+          participant_profile:,
           eligibility_options: {
             qts: dqt_response[:qts],
             active_flags: dqt_response[:active_alert],
@@ -137,7 +137,7 @@ RSpec.describe StoreValidationResult do
         result
 
         expect(StoreParticipantEligibility).to have_received(:call).with(
-          participant_profile: participant_profile,
+          participant_profile:,
           eligibility_options: {
             qts: dqt_response[:qts],
             active_flags: dqt_response[:active_alert],

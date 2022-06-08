@@ -11,7 +11,7 @@ class ManuallyUpdateParticipantEligibility < BaseService
   end
 
   def call
-    StoreParticipantEligibility.call(participant_profile: participant_profile,
+    StoreParticipantEligibility.call(participant_profile:,
                                      eligibility_options: make_eligibility_options)
   end
 
@@ -20,8 +20,8 @@ private
   def make_eligibility_options
     {
       manually_validated: true,
-      status: status,
-      reason: reason,
+      status:,
+      reason:,
     }.merge(eligibility_flag_changes || {})
   end
 end

@@ -35,7 +35,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   context "when the participant is doing FIP" do
     let(:school_cohort) { create(:school_cohort, :fip) }
     context "when the participant is an ECT" do
-      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
@@ -103,7 +103,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
     end
 
     context "when the participant is a mentor" do
-      let(:profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:mentor_participant_profile, school_cohort:) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
@@ -151,7 +151,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
       end
 
       context "when the participant is a duplicate profile" do
-        let(:profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort: school_cohort) }
+        let(:profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
         let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
 
         before do
@@ -196,7 +196,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
   context "when the participant is doing CIP" do
     let(:school_cohort) { create(:school_cohort, :cip) }
     context "when the participant is an ECT" do
-      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
@@ -255,7 +255,7 @@ RSpec.describe Schools::Participants::Status, type: :view_component, with_featur
     end
 
     context "when the participant is a mentor" do
-      let(:profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:mentor_participant_profile, school_cohort:) }
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do

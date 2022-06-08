@@ -24,17 +24,17 @@ module Schools
 
     def attributes
       {
-        full_name: full_name,
-        trn: trn,
-        date_of_birth: date_of_birth,
-        start_date: start_date,
-        email: email,
-        mentor_id: mentor_id,
-        schools_current_programme_choice: schools_current_programme_choice,
-        teachers_current_programme_choice: teachers_current_programme_choice,
-        same_programme: same_programme,
-        steps: steps,
-        current_step: current_step,
+        full_name:,
+        trn:,
+        date_of_birth:,
+        start_date:,
+        email:,
+        mentor_id:,
+        schools_current_programme_choice:,
+        teachers_current_programme_choice:,
+        same_programme:,
+        steps:,
+        current_step:,
       }
     end
 

@@ -15,7 +15,7 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
         name = Faker::Name.name
         EarlyCareerTeachers::Create.call(
           full_name: name,
-          email: Faker::Internet.email(name: name),
+          email: Faker::Internet.email(name:),
           school_cohort: random_school_cohort,
           mentor_profile_id: nil,
           year_2020: false,
@@ -26,8 +26,8 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
     if npq_lead_provider.present?
       10.times do
         name = Faker::Name.name
-        user = User.create!(full_name: name, email: Faker::Internet.email(name: name))
-        identity = Identity::Create.call(user: user, origin: :npq)
+        user = User.create!(full_name: name, email: Faker::Internet.email(name:))
+        identity = Identity::Create.call(user:, origin: :npq)
         NPQApplication.create!(
           active_alert: "",
           date_of_birth: Date.new(1990, 1, 1),
@@ -39,7 +39,7 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
           teacher_reference_number: TRNGenerator.next,
           teacher_reference_number_verified: true,
           npq_course: NPQCourse.all.sample,
-          npq_lead_provider: npq_lead_provider,
+          npq_lead_provider:,
           participant_identity: identity,
         )
       end

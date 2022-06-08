@@ -19,7 +19,7 @@ module RecordDeclarations
     private
 
       def initialize(params:)
-        super(params: params)
+        super(params:)
         self.evidence_held = params[:evidence_held]
       end
 
@@ -28,7 +28,7 @@ module RecordDeclarations
       end
 
       def declaration_parameters
-        super.merge(evidence_held: evidence_held)
+        super.merge(evidence_held:)
       end
     end
   end

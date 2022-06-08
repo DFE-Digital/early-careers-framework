@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe NominationRequestForm, type: :model do
   let(:local_authority) { create(:local_authority) }
-  let(:school) { create(:school, school_local_authorities: [SchoolLocalAuthority.new(local_authority: local_authority, start_year: 2019)]) }
+  let(:school) { create(:school, school_local_authorities: [SchoolLocalAuthority.new(local_authority:, start_year: 2019)]) }
   subject(:nomination_request_form) { described_class.new(school_id: school.id, local_authority_id: local_authority.id) }
 
   describe "validations" do
@@ -43,7 +43,7 @@ RSpec.describe NominationRequestForm, type: :model do
 
     context "when the school has been emailed in the last 24 hours" do
       before do
-        create(:nomination_email, school: school)
+        create(:nomination_email, school:)
       end
 
       it "does not call run on InviteSchools" do

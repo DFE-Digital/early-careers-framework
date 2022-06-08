@@ -12,12 +12,12 @@ RSpec.shared_examples "school has chosen a challengable programme" do |induction
   end
 
   context "with fip partnership within challenge window" do
-    let!(:partnership) { create :partnership, :in_challenge_window, :pending, school: school, cohort: cohort }
+    let!(:partnership) { create :partnership, :in_challenge_window, :pending, school:, cohort: }
 
     it { is_expected.to render }
 
     context "and the partnership has been challenged" do
-      let!(:partnership) { create :partnership, :challenged, :pending, school: school, cohort: cohort }
+      let!(:partnership) { create :partnership, :challenged, :pending, school:, cohort: }
 
       it { is_expected.not_to render }
     end
@@ -25,7 +25,7 @@ RSpec.shared_examples "school has chosen a challengable programme" do |induction
 end
 
 RSpec.describe SchoolRecruitedTransitionComponent, type: :component do
-  subject(:component) { described_class.new school_cohort: school_cohort }
+  subject(:component) { described_class.new school_cohort: }
 
   let(:school_cohort) { create :school_cohort, induction_programme_choice: induction_choice }
 

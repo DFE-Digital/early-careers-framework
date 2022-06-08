@@ -44,18 +44,18 @@ module Finance
       event_types.each do |event_type|
         band_mapping.each do |letter, number|
           define_method "#{event_type}_band_#{letter}_count" do
-            hash = orchestrator.call(event_type: event_type)[:output_payments].find { |h| h[:band] == number } || { participants: 0 }
+            hash = orchestrator.call(event_type:)[:output_payments].find { |h| h[:band] == number } || { participants: 0 }
             hash[:participants]
           end
 
           define_method "#{event_type}_band_#{letter}_fee_per_declaration" do
-            hash = orchestrator.call(event_type: event_type)[:output_payments].find { |h| h[:band] == number } || { per_participant: 0 }
+            hash = orchestrator.call(event_type:)[:output_payments].find { |h| h[:band] == number } || { per_participant: 0 }
             hash[:per_participant]
           end
         end
 
         define_method "total_for_#{event_type}" do
-          orchestrator.call(event_type: event_type)[:output_payments].sum { |hash| hash[:subtotal] }
+          orchestrator.call(event_type:)[:output_payments].sum { |hash| hash[:subtotal] }
         end
       end
 
@@ -70,7 +70,7 @@ module Finance
           retained_3
           retained_4
         ].sum do |event_type|
-          orchestrator.call(event_type: event_type)[:output_payments].sum { |hash| hash[:participants] }
+          orchestrator.call(event_type:)[:output_payments].sum { |hash| hash[:participants] }
         end
       end
 
@@ -105,12 +105,12 @@ module Finance
       end
 
       def service_fee
-        PaymentCalculator::ECF::ServiceFees.new(contract: contract).call.sum { |hash| hash[:monthly] }
+        PaymentCalculator::ECF::ServiceFees.new(contract:).call.sum { |hash| hash[:monthly] }
       end
 
       def output_fee
         event_types.map { |event_type|
-          orchestrator.call(event_type: event_type)[:output_payments].sum { |hash| hash[:subtotal] }
+          orchestrator.call(event_type:)[:output_payments].sum { |hash| hash[:subtotal] }
         }.sum
       end
 
@@ -126,7 +126,7 @@ module Finance
 
       def aggregator
         @aggregator ||= ParticipantAggregator.new(
-          statement: statement,
+          statement:,
           recorder: aggregator_scope,
         )
       end
@@ -138,9 +138,9 @@ module Finance
 
       def orchestrator
         @orchestrator ||= Finance::ECF::CalculationOrchestrator.new(
-          aggregator: aggregator,
-          contract: contract,
-          statement: statement,
+          aggregator:,
+          contract:,
+          statement:,
         )
       end
 

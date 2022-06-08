@@ -12,7 +12,7 @@ RSpec.shared_examples "JSON Participant Resume endpoint" do |serialiser_type|
   end
 
   it "returns an error when the participant is already active" do
-    2.times { put url, params: params }
+    2.times { put url, params: }
 
     expect(response).not_to be_successful
   end

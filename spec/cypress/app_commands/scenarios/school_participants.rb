@@ -4,13 +4,13 @@ cohort = Cohort.find_or_create_by!(start_year: 2021, registration_start_date: Da
 school = FactoryBot.create(:school, name: "Hogwarts Academy", slug: "111111-hogwarts-academy")
 another_school = FactoryBot.create(:school, name: "Some High School", slug: "12344-some-high-school")
 
-school_cohort = FactoryBot.create(:school_cohort, cohort: cohort, school: school, induction_programme_choice: "full_induction_programme")
-another_school_cohort = FactoryBot.create(:school_cohort, cohort: cohort, school: another_school, induction_programme_choice: "full_induction_programme")
+school_cohort = FactoryBot.create(:school_cohort, cohort:, school:, induction_programme_choice: "full_induction_programme")
+another_school_cohort = FactoryBot.create(:school_cohort, cohort:, school: another_school, induction_programme_choice: "full_induction_programme")
 
 FactoryBot.create(
   :partnership,
-  school: school,
-  cohort: cohort,
+  school:,
+  cohort:,
   created_at: 2.days.ago,
   challenge_deadline: 6.days.from_now,
 )
@@ -25,7 +25,7 @@ mentor_profile = FactoryBot.create(
     full_name: "Abdul Mentor",
     id: "51223b41-a562-4d94-b50c-0ce59a8bb34d",
   ),
-  school_cohort: school_cohort,
+  school_cohort:,
 )
 
 FactoryBot.create(
@@ -36,13 +36,13 @@ FactoryBot.create(
 
 FactoryBot.create(
   :ecf_participant_profile,
-  school_cohort: school_cohort,
-  mentor_profile: mentor_profile,
+  school_cohort:,
+  mentor_profile:,
   user: FactoryBot.create(:user, full_name: "Joe Bloggs", email: "joe-bloggs@example.com"),
 )
 
 FactoryBot.create(
   :ect_participant_profile,
-  school_cohort: school_cohort,
+  school_cohort:,
   user: FactoryBot.create(:user, full_name: "Dan Smith", email: "dan-smith@example.com"),
 )

@@ -37,7 +37,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when participant identity email used" do
-      let!(:participant_identity) { create(:participant_identity, user: user, email: "id2@example.com") }
+      let!(:participant_identity) { create(:participant_identity, user:, email: "id2@example.com") }
 
       it "sends login email to participant identity email" do
         expect(UserMailer).to receive(:sign_in_email).with(
@@ -73,20 +73,20 @@ RSpec.describe "Users::Sessions", type: :request do
     context "when email doesn't match any user" do
       let(:email) { Faker::Internet.email }
       it "renders the login_email_sent template to prevent exposing information about user accounts" do
-        post "/users/sign_in", params: { user: { email: email } }
+        post "/users/sign_in", params: { user: { email: } }
         expect(response).to render_template(:login_email_sent)
       end
 
       it "does not send a log in email" do
         expect(UserMailer).not_to receive(:sign_in_email)
-        post "/users/sign_in", params: { user: { email: email } }
+        post "/users/sign_in", params: { user: { email: } }
       end
     end
 
     context "when a blank email is inputted" do
       email = ""
       it "renders the new template" do
-        post "/users/sign_in", params: { user: { email: email } }
+        post "/users/sign_in", params: { user: { email: } }
         expect(response).to render_template(:new)
       end
     end
@@ -95,7 +95,7 @@ RSpec.describe "Users::Sessions", type: :request do
       emails = %w[invalid@email,com email invalid@email @email.com]
       emails.each do |email|
         it "renders the new template" do
-          post "/users/sign_in", params: { user: { email: email } }
+          post "/users/sign_in", params: { user: { email: } }
           expect(response).to render_template(:new)
         end
       end
@@ -230,8 +230,8 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when user is an induction coordinator and a non-validated mentor" do
       let(:user) { create(:user, :induction_coordinator) }
-      let(:teacher_profile) { create :teacher_profile, user: user }
-      let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: teacher_profile }
+      let(:teacher_profile) { create :teacher_profile, user: }
+      let!(:participant_profile) { create :mentor_participant_profile, teacher_profile: }
       let!(:cohort) { participant_profile.cohort }
 
       it "redirects to correct dashboard" do

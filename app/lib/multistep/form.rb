@@ -20,7 +20,7 @@ module Multistep
 
     class_methods do
       def step(step_name, multiple: false, update: false, &block)
-        builder = Builder.new(step_name: step_name, form_class: self, multiple: multiple, update: update)
+        builder = Builder.new(step_name:, form_class: self, multiple:, update:)
         builder.instance_exec(&block) if block
 
         steps[step_name] = builder.to_step
@@ -72,7 +72,7 @@ module Multistep
   private
 
     def record_completed_step(step)
-      if completed_steps.include?(step) && !self.class.steps[step].multiple?
+      if completed_steps&.include?(step) && !self.class.steps[step].multiple?
         self.completed_steps = completed_steps[0..(completed_steps.index(step))]
       else
         completed_steps << step

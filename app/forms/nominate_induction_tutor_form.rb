@@ -14,9 +14,9 @@ class NominateInductionTutorForm
 
   def attributes
     {
-      full_name: full_name,
-      email: email,
-      token: token,
+      full_name:,
+      email:,
+      token:,
     }
   end
 
@@ -24,12 +24,12 @@ class NominateInductionTutorForm
     if school_id
       School.find school_id
     else
-      NominationEmail.find_by(token: token).school
+      NominationEmail.find_by(token:).school
     end
   end
 
   def email_already_taken?
-    ParticipantProfile.active_record.ects.joins(:user).where(user: { email: email }).any?
+    ParticipantProfile.active_record.ects.joins(:user).where(user: { email: }).any?
   end
 
   def name_different?
@@ -38,7 +38,7 @@ class NominateInductionTutorForm
 
   def existing_name
     user_scope = user_id.present? ? User.induction_coordinators.where.not(id: user_id) : User.induction_coordinators
-    existing_user = user_scope.find_by(email: email)
+    existing_user = user_scope.find_by(email:)
     return if existing_user.blank?
 
     existing_user.full_name

@@ -36,7 +36,7 @@ RSpec.describe "School leaders adding 2020 participants", :with_default_schedule
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Year 2020 check your answers page with two teachers")
 
-    click_on "Change personal details", { match: :first }
+    click_on "Change personal details", match: :first
     then_i_should_be_on edit_teacher_schools_year_2020_path(school_id: school.slug, index: 1)
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Year 2020 edit teacher")
@@ -47,7 +47,7 @@ RSpec.describe "School leaders adding 2020 participants", :with_default_schedule
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Year 2020 check your answers page with two teachers edited")
 
-    click_on "Delete", { match: :first }
+    click_on "Delete", match: :first
     then_i_should_be_on remove_teacher_schools_year_2020_path(school_id: school.slug, index: 1)
     and_the_page_should_be_accessible
     and_percy_should_be_sent_a_snapshot_named("Year 2020 remove teacher")

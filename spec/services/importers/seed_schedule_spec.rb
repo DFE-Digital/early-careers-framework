@@ -9,7 +9,7 @@ RSpec.describe Importers::SeedSchedule do
       let(:path_to_csv) { csv.path }
 
       subject do
-        described_class.new(path_to_csv: path_to_csv, klass: Finance::Schedule::ECF)
+        described_class.new(path_to_csv:, klass: Finance::Schedule::ECF)
       end
 
       let!(:schedule) { create(:schedule, name: "foo extra", schedule_identifier: "foo") }

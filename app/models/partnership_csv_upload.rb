@@ -19,7 +19,7 @@ class PartnershipCsvUpload < ApplicationRecord
     invalid_urns = invalid_schools.map { |error| error[:urn] }
     valid_urns = urns - invalid_urns
     # We need to preserve order uploaded
-    valid_schools = valid_urns.map { |urn| School.find_by(urn: urn).presence || School.find_by(urn: urn.sub!(/^0+/, "")) }
+    valid_schools = valid_urns.map { |urn| School.find_by(urn:).presence || School.find_by(urn: urn.sub!(/^0+/, "")) }
     Sentry.capture_message("Found nil schools in `valid_schools`") if valid_schools.any?(&:nil?)
     valid_schools.compact
   end
@@ -48,19 +48,19 @@ private
     errors = []
 
     urns.each_with_index do |urn, index|
-      school = School.includes(:partnerships).find_by(urn: urn)
+      school = School.includes(:partnerships).find_by(urn:)
       school = School.find_by(urn: urn.sub(/^0+/, "")) if school.blank?
 
       if school.blank?
-        errors << { urn: urn, message: "URN is not valid", school_name: "", row_number: index + 1 }
+        errors << { urn:, message: "URN is not valid", school_name: "", row_number: index + 1 }
       elsif school.cip_only?
-        errors << { urn: urn, message: "School not eligible for funding", school_name: school.name, row_number: index + 1 }
+        errors << { urn:, message: "School not eligible for funding", school_name: school.name, row_number: index + 1 }
       elsif !school.eligible?
-        errors << { urn: urn, message: "School not eligible for inductions", school_name: school.name, row_number: index + 1 }
+        errors << { urn:, message: "School not eligible for inductions", school_name: school.name, row_number: index + 1 }
       elsif school.lead_provider(cohort.start_year) == lead_provider
-        errors << { urn: urn, message: "Your school - already confirmed", school_name: school.name, row_number: index + 1 }
+        errors << { urn:, message: "Your school - already confirmed", school_name: school.name, row_number: index + 1 }
       elsif school.lead_provider(cohort.start_year).present?
-        errors << { urn: urn, message: "Recruited by other provider", school_name: school.name, row_number: index + 1 }
+        errors << { urn:, message: "Recruited by other provider", school_name: school.name, row_number: index + 1 }
       end
     end
 

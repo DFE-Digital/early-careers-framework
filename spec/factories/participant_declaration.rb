@@ -65,7 +65,7 @@ FactoryBot.define do
     after(:create) do |participant_declaration, _|
       create(:declaration_state,
              participant_declaration.state,
-             participant_declaration: participant_declaration)
+             participant_declaration:)
     end
   end
 end

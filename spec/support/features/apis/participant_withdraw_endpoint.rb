@@ -37,7 +37,7 @@ module APIs
       url = "/api/v1/participants/#{@current_id}/withdraw"
       attributes = {
         reason: reason_code,
-        course_identifier: course_identifier,
+        course_identifier:,
       }
       params = build_params attributes
       headers = {
@@ -58,7 +58,7 @@ module APIs
       {
         data: {
           type: "participant-withdraw",
-          attributes: attributes,
+          attributes:,
         },
       }.to_json
     end

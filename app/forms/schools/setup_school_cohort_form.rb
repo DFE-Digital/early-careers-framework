@@ -22,10 +22,10 @@ module Schools
 
     def attributes
       {
-        expect_any_ects_choice: expect_any_ects_choice,
-        how_will_you_run_training_choice: how_will_you_run_training_choice,
-        change_provider_choice: change_provider_choice,
-        what_changes_choice: what_changes_choice,
+        expect_any_ects_choice:,
+        how_will_you_run_training_choice:,
+        change_provider_choice:,
+        what_changes_choice:,
       }
     end
 

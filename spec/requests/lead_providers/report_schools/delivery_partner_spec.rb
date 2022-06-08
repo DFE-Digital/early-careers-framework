@@ -27,7 +27,7 @@ RSpec.describe "Lead Provider school reporting: choosing delivery partner", type
     before do
       post(
         "/lead-providers/report-schools/delivery-partner",
-        params: { lead_providers_report_schools_form: { delivery_partner_id: delivery_partner_id } },
+        params: { lead_providers_report_schools_form: { delivery_partner_id: } },
       )
     end
 

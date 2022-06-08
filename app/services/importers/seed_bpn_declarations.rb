@@ -7,7 +7,7 @@ module Importers
     include ActiveSupport::Testing::TimeHelpers
 
     def create_participant(ecf_factory_class, user, school_cohort)
-      ecf_factory_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort)
+      ecf_factory_class.call(email: user.email, full_name: user.full_name, school_cohort:)
     end
 
     def change_participant_schedule(participant_profile, schedule, lead_provider)
@@ -61,7 +61,7 @@ module Importers
     end
 
     def make_declaration_eligible(participant_profile)
-      RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile.call(participant_profile: participant_profile)
+      RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile.call(participant_profile:)
       participant_profile
     end
 

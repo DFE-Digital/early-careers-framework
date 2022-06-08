@@ -35,7 +35,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     context "when a school has chosen a programme" do
       before do
-        SchoolCohort.create!(school: school, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+        SchoolCohort.create!(school:, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
       end
 
       it "returns the school dashboard path (show)" do

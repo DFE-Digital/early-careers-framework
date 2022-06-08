@@ -26,7 +26,7 @@ class InviteEcts
     School.includes(:induction_coordinators).eligible.reject { |s| s.chosen_programme?(cohort) }.each do |school|
       next if school.induction_coordinators.any? || Email.associated_with(school).tagged_with(:school_preterm_reminder).any?
 
-      SchoolMailer.school_preterm_reminder(school: school, season: season).deliver_later
+      SchoolMailer.school_preterm_reminder(school:, season:).deliver_later
     end
   end
 end

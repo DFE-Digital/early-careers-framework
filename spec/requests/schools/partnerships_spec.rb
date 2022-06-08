@@ -28,21 +28,21 @@ RSpec.describe "Schools::Partnerships", type: :request do
       let(:delivery_partners) { create_list(:delivery_partner, 5) }
       let!(:partnership) do
         create(:partnership,
-               cohort: cohort,
-               lead_provider: lead_provider,
-               school: school,
+               cohort:,
+               lead_provider:,
+               school:,
                delivery_partner: delivery_partner1)
       end
 
       before do
         create(:partnership,
-               cohort: cohort,
-               lead_provider: lead_provider,
+               cohort:,
+               lead_provider:,
                school: another_school,
                delivery_partner: delivery_partner2)
 
         delivery_partners.each do |partner|
-          ProviderRelationship.create!(cohort: cohort, lead_provider: lead_provider, delivery_partner: partner)
+          ProviderRelationship.create!(cohort:, lead_provider:, delivery_partner: partner)
         end
       end
 
@@ -57,9 +57,9 @@ RSpec.describe "Schools::Partnerships", type: :request do
       context "when the partnership is still within its challenge window" do
         let!(:partnership) do
           create(:partnership, :in_challenge_window,
-                 cohort: cohort,
-                 lead_provider: lead_provider,
-                 school: school,
+                 cohort:,
+                 lead_provider:,
+                 school:,
                  delivery_partner: delivery_partner1)
         end
 
@@ -76,7 +76,7 @@ RSpec.describe "Schools::Partnerships", type: :request do
           PartnershipNotificationEmail.create!(
             token: "abc123",
             sent_to: user.email,
-            partnership: partnership,
+            partnership:,
             email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
           )
         end

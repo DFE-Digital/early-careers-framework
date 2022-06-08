@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe School, type: :model do
   subject(:school) { create(:school) }
   let(:cohort) { create(:cohort) }
-  let(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+  let(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
   describe "School" do
     it "can be created" do
@@ -246,10 +246,10 @@ RSpec.describe School, type: :model do
     it "returns every line of the address" do
       school = FactoryBot.create(
         :school,
-        address_line1: address_line1,
-        address_line2: address_line2,
-        address_line3: address_line3,
-        postcode: postcode,
+        address_line1:,
+        address_line2:,
+        address_line3:,
+        postcode:,
       )
 
       expected_address = [address_line1, address_line2, address_line3, postcode].compact_blank.join("\n")
@@ -259,8 +259,8 @@ RSpec.describe School, type: :model do
     it "skips blank lines of the address" do
       school = FactoryBot.create(
         :school,
-        address_line1: address_line1,
-        postcode: postcode,
+        address_line1:,
+        postcode:,
       )
 
       expected_address = [address_line1, postcode].join("\n")
@@ -373,11 +373,11 @@ RSpec.describe School, type: :model do
     let(:not_this_cohort_school) { create(:school) }
 
     before do
-      create(:lead_provider_profile, lead_provider: lead_provider)
+      create(:lead_provider_profile, lead_provider:)
       schools.each do |school|
-        create(:partnership, school: school, lead_provider: lead_provider, cohort: cohort)
+        create(:partnership, school:, lead_provider:, cohort:)
       end
-      create(:partnership, school: not_this_cohort_school, lead_provider: lead_provider,
+      create(:partnership, school: not_this_cohort_school, lead_provider:,
                            cohort: create(:cohort, start_year: Time.zone.now.year + 1))
     end
 
@@ -389,7 +389,7 @@ RSpec.describe School, type: :model do
   describe "#contact_email" do
     let(:primary_contact_email) { Faker::Internet.email }
     let(:secondary_contact_email) { Faker::Internet.email }
-    let(:school) { create(:school, primary_contact_email: primary_contact_email, secondary_contact_email: secondary_contact_email) }
+    let(:school) { create(:school, primary_contact_email:, secondary_contact_email:) }
 
     context "when no induction coordinator has been nominated" do
       it "returns the primary contact email" do
@@ -397,7 +397,7 @@ RSpec.describe School, type: :model do
       end
 
       context "when there is no primary contact email" do
-        let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email: secondary_contact_email) }
+        let(:school) { create(:school, primary_contact_email: nil, secondary_contact_email:) }
 
         it "returns the secondary contact email" do
           expect(school.contact_email).to eql secondary_contact_email
@@ -419,8 +419,8 @@ RSpec.describe School, type: :model do
     let(:cohort_2021) { create(:cohort, start_year: 2021) }
     let(:delivery_1) { create(:delivery_partner, name: "Ace Education") }
     let(:delivery_2) { create(:delivery_partner, name: "Super Learn") }
-    let!(:partnership_2020) { create(:partnership, school: school, delivery_partner: delivery_1, cohort: cohort_2020) }
-    let!(:partnership_2021) { create(:partnership, school: school, delivery_partner: delivery_2, cohort: cohort_2021) }
+    let!(:partnership_2020) { create(:partnership, school:, delivery_partner: delivery_1, cohort: cohort_2020) }
+    let!(:partnership_2021) { create(:partnership, school:, delivery_partner: delivery_2, cohort: cohort_2021) }
 
     it "returns the delivery partner for the given cohort year" do
       expect(school.delivery_partner_for(2021)).to eq delivery_2
@@ -433,14 +433,14 @@ RSpec.describe School, type: :model do
     end
 
     context "when the partnership has been challenged" do
-      let!(:partnership_2021) { create(:partnership, :challenged, school: school, cohort: cohort_2021) }
+      let!(:partnership_2021) { create(:partnership, :challenged, school:, cohort: cohort_2021) }
 
       it "returns nil" do
         expect(school.delivery_partner_for(2021)).to be_nil
       end
 
       it "returns the unchallenged delivery partner" do
-        create(:partnership, school: school, cohort: cohort_2021, delivery_partner: delivery_1)
+        create(:partnership, school:, cohort: cohort_2021, delivery_partner: delivery_1)
         expect(school.delivery_partner_for(2021)).to eql delivery_1
       end
     end
@@ -506,9 +506,9 @@ RSpec.describe School, type: :model do
 
   describe "scope :not_opted_out" do
     let!(:cohort) { create(:cohort, :current) }
-    let!(:opted_out_school) { create(:school_cohort, opt_out_of_updates: true, induction_programme_choice: "design_our_own", cohort: cohort).school }
+    let!(:opted_out_school) { create(:school_cohort, opt_out_of_updates: true, induction_programme_choice: "design_our_own", cohort:).school }
     let!(:school_without_cohort) { create(:school) }
-    let!(:cip_school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort: cohort).school }
+    let!(:cip_school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort:).school }
 
     it "returns only schools who have not opted out" do
       expect(School.not_opted_out).to include(school_without_cohort, cip_school)
@@ -537,8 +537,8 @@ RSpec.describe School, type: :model do
     end
 
     it "returns true when the school has a challenged and unchallenged partnership" do
-      create(:partnership, school: school, cohort: cohort)
-      create(:partnership, :challenged, school: school, cohort: cohort)
+      create(:partnership, school:, cohort:)
+      create(:partnership, :challenged, school:, cohort:)
 
       expect(school.partnered?(cohort)).to be true
     end
@@ -546,21 +546,21 @@ RSpec.describe School, type: :model do
 
   describe "#participants_for" do
     it "includes active participants" do
-      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
-      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort:)
+      mentor_profile = create(:mentor_participant_profile, school_cohort:)
 
       expect(school.participants_for(cohort)).to include(ect_profile.user, mentor_profile.user)
     end
 
     it "does not include participants with withdrawn records" do
-      ect = create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
-      mentor = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
+      ect = create(:ect_participant_profile, :withdrawn_record, school_cohort:).user
+      mentor = create(:mentor_participant_profile, :withdrawn_record, school_cohort:).user
 
       expect(school.participants_for(cohort)).not_to include(ect, mentor)
     end
 
     it "does not include participants from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
+      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school:)
       ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
       mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
@@ -568,7 +568,7 @@ RSpec.describe School, type: :model do
     end
 
     it "does not include participants from other schools" do
-      another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
+      another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
       ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
       mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
@@ -578,33 +578,33 @@ RSpec.describe School, type: :model do
 
   describe "#early_career_teacher_profiles_for" do
     it "includes active ECTs" do
-      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort:)
 
       expect(school.early_career_teacher_profiles_for(cohort)).to include ect_profile
     end
 
     it "does not include ECTs with withdrawn records" do
-      ect_profile = create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, :withdrawn_record, school_cohort:)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
+      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school:)
       ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include ECTs from other schools" do
-      another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
+      another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
       ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
     end
 
     it "does not include mentors" do
-      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort:)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include mentor_profile
     end
@@ -612,33 +612,33 @@ RSpec.describe School, type: :model do
 
   describe "#mentor_profiles_for" do
     it "includes active mentors" do
-      mentor_profile = create(:mentor_participant_profile, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, school_cohort:)
 
       expect(school.mentor_profiles_for(cohort)).to include mentor_profile
     end
 
     it "does not include mentors with withdrawn records" do
-      mentor_profile = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort)
+      mentor_profile = create(:mentor_participant_profile, :withdrawn_record, school_cohort:)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school: school)
+      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school:)
       mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include mentors from other schools" do
-      another_school_cohort = create(:school_cohort, school: create(:school), cohort: cohort)
+      another_school_cohort = create(:school_cohort, school: create(:school), cohort:)
       mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile
     end
 
     it "does not include ECTs" do
-      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort:)
 
       expect(school.mentor_profiles_for(cohort)).not_to include ect_profile
     end

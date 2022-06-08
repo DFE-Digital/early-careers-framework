@@ -17,13 +17,13 @@ module PaymentCalculator
                  aggregations: empty_aggregations,
                  event_type: :started)
           new(
-            contract: contract,
+            contract:,
             headings_calculator: breakdown_summary_compiler,
-            service_fee_calculator: service_fee_calculator,
-            output_payment_calculator: output_payment_calculator,
-            uplift_payment_calculator: uplift_payment_calculator,
-          ).call(aggregations: aggregations,
-                 event_type: event_type)
+            service_fee_calculator:,
+            output_payment_calculator:,
+            uplift_payment_calculator:,
+          ).call(aggregations:,
+                 event_type:)
         end
 
       private
@@ -35,15 +35,15 @@ module PaymentCalculator
 
       def call(aggregations:, event_type: :started)
         {
-          breakdown_summary: headings_calculator.call(contract: contract, event_type: event_type, aggregations: aggregations),
-          service_fees: service_fee_calculator.call({ contract: contract }),
+          breakdown_summary: headings_calculator.call(contract:, event_type:, aggregations:),
+          service_fees: service_fee_calculator.call({ contract: }),
           output_payments: output_payment_calculator.call(
-            { contract: contract },
-            event_type: event_type,
+            { contract: },
+            event_type:,
             total_participants: aggregations[:all],
             total_previous_participants: aggregations[:previous_participants],
           ),
-          other_fees: uplift_payment_calculator.call({ contract: contract }, event_type: event_type, uplift_participants: aggregations[:uplift]),
+          other_fees: uplift_payment_calculator.call({ contract: }, event_type:, uplift_participants: aggregations[:uplift]),
         }
       end
 

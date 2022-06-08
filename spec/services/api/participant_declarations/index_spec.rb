@@ -13,7 +13,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         create(
           :induction_programme,
           :fip,
-          partnership: partnership,
+          partnership:,
         )
       end
 
@@ -24,7 +24,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         create(
           :ect_participant_declaration,
           cpd_lead_provider: old_cpd_lead_provider,
-          user: user,
+          user:,
           participant_profile: profile,
         )
       end
@@ -33,7 +33,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         create(
           :ect_participant_declaration,
           cpd_lead_provider: old_cpd_lead_provider,
-          user: user,
+          user:,
           participant_profile: profile,
           state: "voided",
         )
@@ -43,7 +43,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         create(
           :ect_participant_declaration,
           cpd_lead_provider: new_cpd_lead_provider,
-          user: user,
+          user:,
           participant_profile: profile,
           state: "voided",
         )
@@ -53,7 +53,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         create(
           :ect_participant_declaration,
           cpd_lead_provider: old_cpd_lead_provider,
-          user: user,
+          user:,
           participant_profile: profile,
           state: "ineligible",
         )
@@ -63,7 +63,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
         create(
           :ect_participant_declaration,
           cpd_lead_provider: new_cpd_lead_provider,
-          user: user,
+          user:,
           participant_profile: profile,
           state: "ineligible",
         )
@@ -72,7 +72,7 @@ RSpec.describe Api::ParticipantDeclarations::Index do
       subject { described_class.new(cpd_lead_provider: new_cpd_lead_provider) }
 
       before do
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:)
       end
 
       it "returns old providers declarations" do

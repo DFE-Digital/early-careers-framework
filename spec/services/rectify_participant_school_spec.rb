@@ -11,7 +11,7 @@ RSpec.describe RectifyParticipantSchool do
 
   describe ".call" do
     before do
-      service.call(participant_profile: participant_profile, school: new_school, transfer_pupil_premium_and_sparsity: transfer_uplift)
+      service.call(participant_profile:, school: new_school, transfer_pupil_premium_and_sparsity: transfer_uplift)
       participant_profile.reload
     end
 

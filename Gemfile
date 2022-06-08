@@ -105,12 +105,16 @@ gem "google-cloud-bigquery"
 gem "sidekiq"
 gem "sidekiq-cron"
 
+gem "net-imap", require: false
+gem "net-pop", require: false
+gem "net-smtp", require: false
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: %i[mri mingw x64_mingw]
 
   # GOV.UK interpretation of rubocop for linting Ruby
-  gem "rubocop-govuk", ">= 4.3"
+  gem "rubocop-govuk", ">= 4.5"
 
   gem "scss_lint-govuk"
 

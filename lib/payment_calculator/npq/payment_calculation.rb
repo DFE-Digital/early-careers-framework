@@ -15,21 +15,21 @@ module PaymentCalculator
                  service_fee_calculator: ServiceFees,
                  output_payment_calculator: OutputPayment)
           new(
-            contract: contract,
-            course_identifier: course_identifier,
-            breakdown_summary_calculator: breakdown_summary_calculator,
-            service_fee_calculator: service_fee_calculator,
-            output_payment_calculator: output_payment_calculator,
-          ).call(aggregations: aggregations)
+            contract:,
+            course_identifier:,
+            breakdown_summary_calculator:,
+            service_fee_calculator:,
+            output_payment_calculator:,
+          ).call(aggregations:)
         end
       end
 
       def call(aggregations:)
         {
-          breakdown_summary: breakdown_summary_calculator.call(contract: contract, aggregations: aggregations),
-          service_fees: service_fee_calculator.call(contract: contract),
+          breakdown_summary: breakdown_summary_calculator.call(contract:, aggregations:),
+          service_fees: service_fee_calculator.call(contract:),
           output_payments: output_payment_calculator
-            .call(contract: contract, total_participants: aggregations[:eligible_or_payable]),
+            .call(contract:, total_participants: aggregations[:eligible_or_payable]),
         }
       end
 

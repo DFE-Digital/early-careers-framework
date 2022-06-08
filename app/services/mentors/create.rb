@@ -11,19 +11,19 @@ module Mentors
         # the scenario I am working on is enabling a NPQ user to be added as a mentor
         # Not matching on full_name means this works more smoothly for the end user
         # and they don't get "email already in use" errors if they spell the name differently
-        user = User.find_or_create_by!(email: email) do |mentor|
+        user = User.find_or_create_by!(email:) do |mentor|
           mentor.full_name = full_name
         end
-        user.update!(full_name: full_name) unless user.teacher_profile&.participant_profiles&.active_record&.any?
+        user.update!(full_name:) unless user.teacher_profile&.participant_profiles&.active_record&.any?
 
-        teacher_profile = TeacherProfile.find_or_create_by!(user: user) do |profile|
+        teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
           profile.school = school_cohort.school
         end
 
         mentor_profile = ParticipantProfile::Mentor.create!({
-          teacher_profile: teacher_profile,
+          teacher_profile:,
           schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-          participant_identity: Identity::Create.call(user: user),
+          participant_identity: Identity::Create.call(user:),
         }.merge(mentor_attributes))
 
         ParticipantProfileState.create!(participant_profile: mentor_profile)
@@ -31,10 +31,10 @@ module Mentors
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: mentor_profile,
                                 induction_programme: school_cohort.default_induction_programme,
-                                start_date: start_date)
+                                start_date:)
         end
 
-        Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile: mentor_profile)
+        Mentors::AddToSchool.call(school: school_cohort.school, mentor_profile:)
       end
 
       unless sit_validation
@@ -61,7 +61,7 @@ module Mentors
 
     def mentor_attributes
       {
-        start_term: start_term,
+        start_term:,
         school_cohort_id: school_cohort.id,
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),

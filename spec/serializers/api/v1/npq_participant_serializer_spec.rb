@@ -45,7 +45,7 @@ module Api
           let(:npq_application) { profile.npq_application }
           let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
 
-          subject { described_class.new(participant, params: { cpd_lead_provider: cpd_lead_provider }) }
+          subject { described_class.new(participant, params: { cpd_lead_provider: }) }
 
           it "nullifies email" do
             expect(subject.serializable_hash.dig(:data, :attributes, :email)).to be_nil

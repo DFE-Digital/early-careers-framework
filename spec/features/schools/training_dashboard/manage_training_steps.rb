@@ -39,7 +39,7 @@ module ManageTrainingSteps
   end
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
-    @school_cohort = create :school_cohort, induction_programme_choice: induction_programme_choice, school: create(:school, name: "Test School")
+    @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -55,7 +55,7 @@ module ManageTrainingSteps
     create :induction_coordinator_profile, user: user, schools: [first_school, second_school]
 
     third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
-    create :school_cohort, :cip, school: third_school, cohort: cohort
+    create :school_cohort, :cip, school: third_school, cohort:
   end
 
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
@@ -108,29 +108,29 @@ module ManageTrainingSteps
 
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_mentor
     user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
     user = create(:user, full_name: "Eligible With-mentor")
-    teacher_profile = create(:teacher_profile, user: user)
-    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @eligible_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect_without_mentor
     user = create(:user, full_name: "Eligible Without-mentor")
-    teacher_profile = create(:teacher_profile, user: user)
-    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @eligible_ect_without_mentor, induction_programme: @induction_programme)
   end
 
@@ -197,8 +197,8 @@ module ManageTrainingSteps
 
   def and_i_have_added_a_transferring_in_participant
     user = create(:user, full_name: "Transferring in participant")
-    teacher_profile = create(:teacher_profile, user: user)
-    @transferring_in_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @transferring_in_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     @induction_record = Induction::Enrol.call(participant_profile: @transferring_in_participant,
                                               induction_programme: @induction_programme,
                                               start_date: 2.months.from_now)
@@ -210,8 +210,8 @@ module ManageTrainingSteps
     @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two)
 
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two)
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
   end

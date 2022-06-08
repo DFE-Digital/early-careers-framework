@@ -11,7 +11,7 @@ RSpec.describe PartnershipReminderJob do
 
     before do
       allow(PartnershipNotificationService).to receive(:new).and_return notification_service
-      subject.perform(partnership: partnership, report_id: report_id)
+      subject.perform(partnership:, report_id:)
     end
 
     it "send partnership reminders" do

@@ -47,7 +47,7 @@ private
 
     {
       headers: @headers,
-      body: body,
+      body:,
     }
   end
 

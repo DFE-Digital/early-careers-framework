@@ -121,7 +121,7 @@ RSpec.describe FullDQT::Client do
     it "returns teacher record" do
       stub_api_request
 
-      record = subject.get_record(trn: trn, birthdate: birthdate)
+      record = subject.get_record(trn:, birthdate:)
 
       expect(record["trn"]).to eql(trn)
     end
@@ -129,7 +129,7 @@ RSpec.describe FullDQT::Client do
     it "maps dates to native date objects" do
       stub_api_request
 
-      record = subject.get_record(trn: trn, birthdate: birthdate)
+      record = subject.get_record(trn:, birthdate:)
 
       expect(record["dob"]).to be_an_instance_of(Date)
       expect(record["qualified_teacher_status"]["qts_date"]).to be_an_instance_of(ActiveSupport::TimeWithZone)
@@ -145,7 +145,7 @@ RSpec.describe FullDQT::Client do
       it "returns nil" do
         stub_api_404_request
 
-        record = subject.get_record(trn: trn, birthdate: birthdate)
+        record = subject.get_record(trn:, birthdate:)
 
         expect(record).to be_nil
       end
@@ -155,7 +155,7 @@ RSpec.describe FullDQT::Client do
       it "returns correct record" do
         stub_api_different_record_request
 
-        record = subject.get_record(trn: incorrect_trn, birthdate: birthdate, nino: nino)
+        record = subject.get_record(trn: incorrect_trn, birthdate:, nino:)
 
         expect(record["trn"]).to eql(trn)
       end

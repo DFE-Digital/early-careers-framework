@@ -20,7 +20,7 @@ RSpec.describe "participant validation api endpoint", type: :request do
 
     let(:service_response) do
       {
-        trn: trn,
+        trn:,
         qts: "1999-12-13",
         active_alert: false,
       }
@@ -31,40 +31,40 @@ RSpec.describe "participant validation api endpoint", type: :request do
         default_headers[:Authorization] = bearer_token
 
         allow(ParticipantValidationService).to receive(:validate).with(
-          trn: trn,
-          full_name: full_name,
-          date_of_birth: date_of_birth,
-          nino: nino,
+          trn:,
+          full_name:,
+          date_of_birth:,
+          nino:,
           config: { check_first_name_only: true },
         ).and_return(service_response)
       end
 
       it "returns correct jsonapi content type header" do
         post "/api/v2/participant-validation", params: {
-          trn: trn,
-          full_name: full_name,
-          date_of_birth: date_of_birth,
-          nino: nino,
+          trn:,
+          full_name:,
+          date_of_birth:,
+          nino:,
         }
         expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
       end
 
       it "returns correct type" do
         post "/api/v2/participant-validation", params: {
-          trn: trn,
-          full_name: full_name,
-          date_of_birth: date_of_birth,
-          nino: nino,
+          trn:,
+          full_name:,
+          date_of_birth:,
+          nino:,
         }
         expect(parsed_response["data"]).to have_type("participant_validation")
       end
 
       it "has correct attributes" do
         post "/api/v2/participant-validation", params: {
-          trn: trn,
-          full_name: full_name,
-          date_of_birth: date_of_birth,
-          nino: nino,
+          trn:,
+          full_name:,
+          date_of_birth:,
+          nino:,
         }
 
         expect(parsed_response["data"]["id"]).to eql(service_response[:trn])
@@ -76,10 +76,10 @@ RSpec.describe "participant validation api endpoint", type: :request do
 
         it "returns a 404", exceptions_app: true do
           post "/api/v2/participant-validation", params: {
-            trn: trn,
-            full_name: full_name,
-            date_of_birth: date_of_birth,
-            nino: nino,
+            trn:,
+            full_name:,
+            date_of_birth:,
+            nino:,
           }
 
           expect(response).to be_not_found
@@ -91,10 +91,10 @@ RSpec.describe "participant validation api endpoint", type: :request do
       it "returns 401" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
         post "/api/v2/participant-validation", params: {
-          trn: trn,
-          full_name: full_name,
-          date_of_birth: date_of_birth,
-          nino: nino,
+          trn:,
+          full_name:,
+          date_of_birth:,
+          nino:,
         }
         expect(response.status).to eq 401
       end
@@ -106,10 +106,10 @@ RSpec.describe "participant validation api endpoint", type: :request do
       it "returns 403" do
         default_headers[:Authorization] = "Bearer #{other_token}"
         post "/api/v2/participant-validation", params: {
-          trn: trn,
-          full_name: full_name,
-          date_of_birth: date_of_birth,
-          nino: nino,
+          trn:,
+          full_name:,
+          date_of_birth:,
+          nino:,
         }
         expect(response.status).to eq 403
       end

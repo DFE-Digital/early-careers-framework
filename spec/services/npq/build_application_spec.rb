@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe NPQ::BuildApplication do
   let!(:user)                   { create(:user) }
   let(:npq_lead_provider)       { create(:npq_lead_provider) }
-  let(:npq_contract)            { create(:npq_contract, npq_lead_provider: npq_lead_provider, npq_course: npq_course) }
+  let(:npq_contract)            { create(:npq_contract, npq_lead_provider:, npq_course:) }
   let(:npq_course)              { create(:npq_course) }
-  let(:npq_application_attributes) { build(:npq_application, npq_course: npq_course, npq_lead_provider: npq_lead_provider) }
+  let(:npq_application_attributes) { build(:npq_application, npq_course:, npq_lead_provider:) }
   let(:nino)                       { SecureRandom.hex }
   let(:npq_application_params) do
     {
@@ -16,7 +16,7 @@ RSpec.describe NPQ::BuildApplication do
       eligible_for_funding: true,
       funding_choice: npq_application_attributes[:funding_choice],
       headteacher_status: npq_application_attributes[:headteacher_status],
-      nino: nino,
+      nino:,
       works_in_school: npq_application_attributes[:works_in_school],
       school_urn: npq_application_attributes[:school_urn],
       school_ukprn: npq_application_attributes[:school_ukprn],
@@ -30,7 +30,7 @@ RSpec.describe NPQ::BuildApplication do
   describe "call" do
     let(:npq_application) do
       service.call(
-        npq_application_params: npq_application_params,
+        npq_application_params:,
         npq_course_id: npq_course.id,
         npq_lead_provider_id: npq_lead_provider.id,
         user_id: user.id,
@@ -55,7 +55,7 @@ RSpec.describe NPQ::BuildApplication do
     end
 
     context "when the user already has an identity record" do
-      let!(:identity) { Identity::Create.call(user: user) }
+      let!(:identity) { Identity::Create.call(user:) }
 
       it "sets the participant identity reference" do
         expect(npq_application.participant_identity.user).to eq user

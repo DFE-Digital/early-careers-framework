@@ -8,7 +8,7 @@ class Importers::SeedStatements
       ecf_statements.each do |statement_data|
         statement = Finance::Statement::ECF.find_or_create_by!(
           name: statement_data.name,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           cohort: Cohort.find_by(start_year: 2021),
           contract_version: statement_data.contract_version,
         )
@@ -28,15 +28,15 @@ class Importers::SeedStatements
       npq_statements.each do |statement_data|
         statement = Finance::Statement::NPQ.find_or_create_by!(
           name: statement_data.name,
-          cpd_lead_provider: cpd_lead_provider,
-          cohort: cohort,
+          cpd_lead_provider:,
+          cohort:,
           contract_version: statement_data.contract_version,
         )
 
         statement.update!(
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
-          cohort: cohort,
+          cohort:,
           output_fee: statement_data.output_fee,
           type: class_for(statement_data, namespace: Finance::Statement::NPQ),
         )

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ALL_TRNS = (1111..9_999_999).freeze unless defined?(ALL_TRNS)
+ALL_TRNS = (1111..9_999_999) unless defined?(ALL_TRNS)
 
 class TRNGenerator
   class << self

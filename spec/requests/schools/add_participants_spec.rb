@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Schools::AddParticipant", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
-  let!(:school_cohort) { create(:school_cohort, :fip, school: school, cohort: cohort) }
+  let!(:school_cohort) { create(:school_cohort, :fip, school:, cohort:) }
   let(:school) { user.induction_coordinator_profile.schools.sample }
   let(:cohort) { create(:cohort, :current) }
 
@@ -102,13 +102,13 @@ RSpec.describe "Schools::AddParticipant", type: :request do
 
     context "when form has been set up in the session" do
       let(:email) { Faker::Internet.email }
-      let!(:other_user) { create :user, email: email }
+      let!(:other_user) { create :user, email: }
 
       before do
         set_session(:schools_add_participant_form,
                     type: :ect,
                     full_name: Faker::Name.name,
-                    email: email,
+                    email:,
                     date_of_birth: Date.new(1990, 1, 1),
                     mentor_id: "later",
                     school_cohort_id: school_cohort.id,
@@ -123,13 +123,13 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   describe "PUT /schools/cohort/:cohort_id/participants/add/transfer" do
     context "when form has been set up in the session" do
       let(:email) { Faker::Internet.email }
-      let!(:other_user) { create :user, email: email }
+      let!(:other_user) { create :user, email: }
       context "when participant is a transfer" do
         before do
           set_session(:schools_add_participant_form,
                       type: :ect,
                       full_name: Faker::Name.name,
-                      email: email,
+                      email:,
                       date_of_birth: Date.new(1990, 1, 1),
                       mentor_id: "later",
                       school_cohort_id: school_cohort.id,
@@ -146,7 +146,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
           set_session(:schools_add_participant_form,
                       type: :ect,
                       full_name: Faker::Name.name,
-                      email: email,
+                      email:,
                       date_of_birth: Date.new(1990, 1, 1),
                       mentor_id: "later",
                       school_cohort_id: school_cohort.id,

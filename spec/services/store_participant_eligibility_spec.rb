@@ -6,11 +6,11 @@ RSpec.describe StoreParticipantEligibility do
   describe ".call" do
     subject(:service) { described_class }
     let(:school) { create(:school) }
-    let(:school_cohort) { create(:school_cohort, :fip, school: school) }
-    let(:ect_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
-    let(:mentor_teacher_profile) { create(:teacher_profile, school: school, trn: nil) }
-    let(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort, teacher_profile: ect_teacher_profile) }
-    let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort, teacher_profile: mentor_teacher_profile) }
+    let(:school_cohort) { create(:school_cohort, :fip, school:) }
+    let(:ect_teacher_profile) { create(:teacher_profile, school:, trn: nil) }
+    let(:mentor_teacher_profile) { create(:teacher_profile, school:, trn: nil) }
+    let(:ect_profile) { create(:ect_participant_profile, school_cohort:, teacher_profile: ect_teacher_profile) }
+    let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:, teacher_profile: mentor_teacher_profile) }
     let!(:induction_tutor) { create(:user, :induction_coordinator, schools: [school]) }
 
     let(:eligibility_options) do
@@ -25,14 +25,14 @@ RSpec.describe StoreParticipantEligibility do
 
     it "creates an eligibility record for the participant" do
       expect {
-        service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+        service.call(participant_profile: ect_profile, eligibility_options:)
       }.to change { ECFParticipantEligibility.count }.by(1)
 
       expect(ect_profile.ecf_participant_eligibility).to be_present
     end
 
     it "sets the status and reason" do
-      service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+      service.call(participant_profile: ect_profile, eligibility_options:)
 
       expect(ect_profile.ecf_participant_eligibility).to be_eligible_status
       expect(ect_profile.ecf_participant_eligibility).to be_none_reason
@@ -41,7 +41,7 @@ RSpec.describe StoreParticipantEligibility do
     it "updates any submitted declarations" do
       declaration = create(:ect_participant_declaration, user: ect_profile.user, participant_profile: ect_profile, course_identifier: "ecf-induction")
       expect(declaration).to be_submitted
-      expect { service.call(participant_profile: ect_profile, eligibility_options: eligibility_options) }.to change { DeclarationState.count }.by(1)
+      expect { service.call(participant_profile: ect_profile, eligibility_options:) }.to change { DeclarationState.count }.by(1)
       declaration.reload
       expect(declaration).to be_eligible
     end
@@ -50,7 +50,7 @@ RSpec.describe StoreParticipantEligibility do
       let!(:manual_check_record) { create(:ecf_participant_eligibility, :manual_check, participant_profile: ect_profile) }
 
       it "updates the existing eligibility record" do
-        service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+        service.call(participant_profile: ect_profile, eligibility_options:)
 
         expect(manual_check_record.reload).to be_eligible_status
         expect(manual_check_record).to be_none_reason
@@ -61,7 +61,7 @@ RSpec.describe StoreParticipantEligibility do
       it "sends the ect_no_induction_email when reason is no_induction and there is no participant eligibility" do
         eligibility_options[:no_induction] = true
         expect {
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          service.call(participant_profile: ect_profile, eligibility_options:)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
             induction_tutor_email: induction_tutor.email,
@@ -73,7 +73,7 @@ RSpec.describe StoreParticipantEligibility do
         create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
         eligibility_options[:no_induction] = true
         expect {
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          service.call(participant_profile: ect_profile, eligibility_options:)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
             induction_tutor_email: induction_tutor.email,
@@ -85,7 +85,7 @@ RSpec.describe StoreParticipantEligibility do
         create(:ecf_participant_eligibility, :ineligible, participant_profile: ect_profile)
         eligibility_options[:no_induction] = true
         expect {
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          service.call(participant_profile: ect_profile, eligibility_options:)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
             induction_tutor_email: induction_tutor.email,
@@ -97,7 +97,7 @@ RSpec.describe StoreParticipantEligibility do
         create(:ecf_participant_eligibility, :manual_check, participant_profile: ect_profile)
         eligibility_options[:no_induction] = true
         expect {
-          service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+          service.call(participant_profile: ect_profile, eligibility_options:)
         }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
       end
     end
@@ -107,7 +107,7 @@ RSpec.describe StoreParticipantEligibility do
         it "does not send email notifications" do
           eligibility_options[:previous_induction] = true
           expect {
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            service.call(participant_profile: ect_profile, eligibility_options:)
           }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
         end
       end
@@ -117,7 +117,7 @@ RSpec.describe StoreParticipantEligibility do
           it "sends the ect_previous_induction_email when reason is previous_induction" do
             eligibility_options[:previous_induction] = true
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -129,7 +129,7 @@ RSpec.describe StoreParticipantEligibility do
             create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
             eligibility_options[:previous_induction] = true
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email_previously_eligible)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -143,7 +143,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :no_qts
             eligibility_options[:manually_validated] = true
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_qts_email)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -157,7 +157,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :active_flags
             eligibility_options[:manually_validated] = true
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_active_flags_email)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -172,7 +172,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :exempt_from_induction
 
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -196,7 +196,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :exempt_from_induction
 
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -218,7 +218,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :exempt_from_induction
 
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.to not_have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
               .and not_have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
           end
@@ -228,7 +228,7 @@ RSpec.describe StoreParticipantEligibility do
           it "does not send the mentor_previous_participation_email when reason is previous_participation" do
             eligibility_options[:previous_participation] = true
             expect {
-              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: mentor_profile, eligibility_options:)
             }.to_not have_enqueued_mail(IneligibleParticipantMailer)
           end
 
@@ -238,7 +238,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :no_qts
             eligibility_options[:manually_validated] = true
             expect {
-              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: mentor_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_no_qts_email)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -252,7 +252,7 @@ RSpec.describe StoreParticipantEligibility do
             eligibility_options[:reason] = :active_flags
             eligibility_options[:manually_validated] = true
             expect {
-              service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: mentor_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_active_flags_email)
               .with(
                 induction_tutor_email: induction_tutor.email,
@@ -262,14 +262,14 @@ RSpec.describe StoreParticipantEligibility do
         end
 
         context "when the school is doing CIP" do
-          let(:school_cohort) { create(:school_cohort, :cip, school: school) }
+          let(:school_cohort) { create(:school_cohort, :cip, school:) }
 
           context "when participant is an ECT" do
             it "does not send the ect_previous_induction_email when reason is previous_induction" do
               eligibility_options[:previous_induction] = true
 
               expect {
-                service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+                service.call(participant_profile: ect_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
 
@@ -279,7 +279,7 @@ RSpec.describe StoreParticipantEligibility do
               eligibility_options[:reason] = :no_qts
               eligibility_options[:manually_validated] = true
               expect {
-                service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+                service.call(participant_profile: ect_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
 
@@ -289,7 +289,7 @@ RSpec.describe StoreParticipantEligibility do
               eligibility_options[:reason] = :active_flags
               eligibility_options[:manually_validated] = true
               expect {
-                service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+                service.call(participant_profile: ect_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
           end
@@ -298,7 +298,7 @@ RSpec.describe StoreParticipantEligibility do
             it "does not send the mentor_previous_participation_email when reason is previous_participation" do
               eligibility_options[:previous_participation] = true
               expect {
-                service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+                service.call(participant_profile: mentor_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
 
@@ -308,7 +308,7 @@ RSpec.describe StoreParticipantEligibility do
               eligibility_options[:reason] = :no_qts
               eligibility_options[:manually_validated] = true
               expect {
-                service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+                service.call(participant_profile: mentor_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
 
@@ -318,7 +318,7 @@ RSpec.describe StoreParticipantEligibility do
               eligibility_options[:reason] = :active_flags
               eligibility_options[:manually_validated] = true
               expect {
-                service.call(participant_profile: mentor_profile, eligibility_options: eligibility_options)
+                service.call(participant_profile: mentor_profile, eligibility_options:)
               }.to_not have_enqueued_mail(IneligibleParticipantMailer)
             end
           end
@@ -330,7 +330,7 @@ RSpec.describe StoreParticipantEligibility do
       context "when no record existed previously" do
         it "does not send an email" do
           expect {
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            service.call(participant_profile: ect_profile, eligibility_options:)
           }.not_to have_enqueued_mail
         end
       end
@@ -340,7 +340,7 @@ RSpec.describe StoreParticipantEligibility do
 
         it "does not send an email" do
           expect {
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            service.call(participant_profile: ect_profile, eligibility_options:)
           }.not_to have_enqueued_mail
         end
       end
@@ -350,7 +350,7 @@ RSpec.describe StoreParticipantEligibility do
 
         it "does not send an email" do
           expect {
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            service.call(participant_profile: ect_profile, eligibility_options:)
           }.not_to have_enqueued_mail
         end
       end
@@ -360,16 +360,16 @@ RSpec.describe StoreParticipantEligibility do
 
         it "sends an ect now eligible email" do
           expect {
-            service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+            service.call(participant_profile: ect_profile, eligibility_options:)
           }.to have_enqueued_mail(IneligibleParticipantMailer)
         end
 
         context "when the school is doing CIP" do
-          let(:school_cohort) { create(:school_cohort, :cip, school: school) }
+          let(:school_cohort) { create(:school_cohort, :cip, school:) }
 
           it "does not send an email" do
             expect {
-              service.call(participant_profile: ect_profile, eligibility_options: eligibility_options)
+              service.call(participant_profile: ect_profile, eligibility_options:)
             }.not_to have_enqueued_mail
           end
         end

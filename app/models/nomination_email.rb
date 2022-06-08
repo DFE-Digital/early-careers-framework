@@ -8,11 +8,11 @@ class NominationEmail < ApplicationRecord
 
   def self.create_nomination_email(sent_at:, sent_to:, school:, partnership_notification_email: nil)
     NominationEmail.create!(
-      sent_at: sent_at,
-      sent_to: sent_to,
-      school: school,
+      sent_at:,
+      sent_to:,
+      school:,
       token: generate_token,
-      partnership_notification_email: partnership_notification_email,
+      partnership_notification_email:,
     )
   end
 
@@ -26,7 +26,7 @@ class NominationEmail < ApplicationRecord
 
   def nomination_url(utm_source: :nominate_tutor)
     Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(
-      token: token,
+      token:,
       host: Rails.application.config.domain,
       **UTMService.email(utm_source, utm_source),
     )

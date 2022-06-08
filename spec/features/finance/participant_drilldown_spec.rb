@@ -97,7 +97,7 @@ RSpec.feature "Finance users participant drilldown", type: :feature do
   end
 
   def when_i_fill_in(selector, with:)
-    page.fill_in selector, with: with
+    page.fill_in selector, with:
   end
 
   def and_an_ect_user_with_profile_and_declarations

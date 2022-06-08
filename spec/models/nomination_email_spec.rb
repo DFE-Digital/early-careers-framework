@@ -16,9 +16,9 @@ RSpec.describe NominationEmail, type: :model do
     it "creates a record with a token" do
       expect {
         NominationEmail.create_nomination_email(
-          sent_at: sent_at,
+          sent_at:,
           sent_to: email,
-          school: school,
+          school:,
         )
       }.to change { NominationEmail.count }.by 1
 

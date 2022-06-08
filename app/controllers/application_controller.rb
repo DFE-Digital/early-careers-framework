@@ -41,7 +41,7 @@ private
   end
 
   def set_success_message(title: "Success", heading: "", content: "")
-    flash[:success] = { title: title, heading: heading, content: content }
+    flash[:success] = { title:, heading:, content: }
   end
 
 protected

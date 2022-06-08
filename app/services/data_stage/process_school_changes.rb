@@ -74,7 +74,7 @@ module DataStage
         successor_link = change.school.school_links.find_by(link_type: "Successor")
         if successor_link.present?
           successor = find_or_create_successor!(successor_link.link_urn)
-          move_assets_from!(school: change.school.counterpart, successor: successor)
+          move_assets_from!(school: change.school.counterpart, successor:)
           change.school.counterpart.school_links.successor.simple.create!(link_urn: successor.urn)
           successor.school_links.predecessor.simple.create!(link_urn: change.school.urn)
           change.school.create_or_sync_counterpart!
@@ -84,7 +84,7 @@ module DataStage
     end
 
     def find_or_create_successor!(urn)
-      school = DataStage::School.find_by!(urn: urn)
+      school = DataStage::School.find_by!(urn:)
       school.create_or_sync_counterpart!
       school.counterpart
     end
@@ -92,9 +92,9 @@ module DataStage
     def move_assets_from!(school:, successor:)
       raise ActiveRecord::Rollback if successor.school_cohorts.any?
 
-      Partnership.active.where(school: school).each { |partnership| partnership.update!(school: successor) }
+      Partnership.active.where(school:).each { |partnership| partnership.update!(school: successor) }
 
-      SchoolCohort.where(school: school).each do |school_cohort|
+      SchoolCohort.where(school:).each do |school_cohort|
         school_cohort.update!(school: successor)
         school_cohort.ecf_participant_profiles.each do |profile|
           RectifyParticipantSchool.call(participant_profile: profile,
@@ -103,7 +103,7 @@ module DataStage
         end
       end
 
-      InductionCoordinatorProfilesSchool.where(school: school).each { |link_record| link_record.update!(school: successor) }
+      InductionCoordinatorProfilesSchool.where(school:).each { |link_record| link_record.update!(school: successor) }
     end
   end
 end

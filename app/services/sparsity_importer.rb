@@ -12,7 +12,7 @@ class SparsityImporter
   end
 
   def run
-    DistrictSparsity.where(start_year: start_year).destroy_all
+    DistrictSparsity.where(start_year:).destroy_all
 
     latest_sparse_districts.each do |lad_code|
       update_lad_sparsity(lad_code)

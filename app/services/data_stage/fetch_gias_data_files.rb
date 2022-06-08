@@ -7,8 +7,8 @@ module DataStage
   class FetchGiasDataFiles < ::BaseService
     def call
       files = {
-        school_data_file: school_data_file,
-        school_links_file: school_links_file,
+        school_data_file:,
+        school_links_file:,
       }
 
       if block_given?

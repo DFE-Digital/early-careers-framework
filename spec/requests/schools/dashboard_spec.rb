@@ -42,7 +42,7 @@ RSpec.describe "Schools::Dashboard", type: :request do
 
     context "when the programme has been chosen" do
       before do
-        create(:school_cohort, cohort: cohort, school: user.induction_coordinator_profile.schools[0])
+        create(:school_cohort, cohort:, school: user.induction_coordinator_profile.schools[0])
       end
 
       it "should render the dashboard" do

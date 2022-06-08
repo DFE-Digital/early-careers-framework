@@ -35,7 +35,7 @@ module DataStage
             school_attrs = filtered_attributes(row)
             urn = school_attrs.fetch(:urn)
 
-            school = DataStage::School.find_by(urn: urn)
+            school = DataStage::School.find_by(urn:)
 
             if school.present?
               update_and_sync_changes!(school, school_attrs)

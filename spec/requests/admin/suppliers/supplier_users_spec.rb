@@ -173,8 +173,8 @@ private
   def when_i_enter_user_details(full_name, email)
     get "/admin/suppliers/users/new/user-details"
     post "/admin/suppliers/users/new/user-details", params: { supplier_user_form: {
-      full_name: full_name,
-      email: email,
+      full_name:,
+      email:,
     } }
   end
 

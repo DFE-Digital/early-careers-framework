@@ -14,7 +14,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: user.email,
         full_name: user.full_name,
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
      .and not_change { User.count }
@@ -25,7 +25,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: user.email,
         full_name: user.full_name,
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     }.to change { school.school_mentors.count }.by(1)
   end
@@ -35,7 +35,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: npq_participant.email,
         full_name: npq_participant.full_name,
-        school_cohort: school_cohort,
+        school_cohort:,
         mentor_id: "random discardable",
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
@@ -48,7 +48,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: user.email,
         full_name: user.full_name,
-        school_cohort: school_cohort,
+        school_cohort:,
         mentor_id: "random discardable",
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
@@ -59,7 +59,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: Faker::Internet.email,
         full_name: Faker::Name.name,
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     }.to change { ParticipantProfile::Mentor.count }.by(1)
      .and change { User.count }.by(1)
@@ -71,21 +71,21 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: user.email,
         full_name: Faker::Name.name,
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     }.to change { user.reload.full_name }
   end
 
   context "when default induction programme is set on the school cohort" do
     it "creates an induction record" do
-      induction_programme = create(:induction_programme, :fip, school_cohort: school_cohort)
+      induction_programme = create(:induction_programme, :fip, school_cohort:)
       school_cohort.update!(default_induction_programme: induction_programme)
 
       expect {
         described_class.call(
           email: user.email,
           full_name: user.full_name,
-          school_cohort: school_cohort,
+          school_cohort:,
         )
       }.to change { InductionRecord.count }.by(1)
     end
@@ -97,7 +97,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
         described_class.call(
           email: user.email,
           full_name: user.full_name,
-          school_cohort: school_cohort,
+          school_cohort:,
         )
       }.not_to change { InductionRecord.count }
     end
@@ -108,7 +108,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: user.email,
         full_name: Faker::Name.name,
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     }.to have_enqueued_mail(ParticipantMailer, :participant_added)
   end
@@ -119,7 +119,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
     profile = described_class.call(
       email: user.email,
       full_name: Faker::Name.name,
-      school_cohort: school_cohort,
+      school_cohort:,
     )
 
     expect(ParticipantDetailsReminderJob).to have_received(:schedule).with(profile)
@@ -131,7 +131,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
         described_class.call(
           email: user.email,
           full_name: Faker::Name.name,
-          school_cohort: school_cohort,
+          school_cohort:,
           sit_validation: true,
         )
       }.to_not have_enqueued_mail(ParticipantMailer, :participant_added)
@@ -144,7 +144,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
         described_class.call(
           email: user.email,
           full_name: Faker::Name.name,
-          school_cohort: school_cohort,
+          school_cohort:,
           sit_validation: false,
         )
       }.to have_enqueued_mail(ParticipantMailer, :participant_added)
@@ -153,7 +153,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
 
   context "when the user has an active participant profile" do
     before do
-      create(:ecf_participant_profile, teacher_profile: create(:teacher_profile, user: user))
+      create(:ecf_participant_profile, teacher_profile: create(:teacher_profile, user:))
     end
 
     it "does not update the users name" do
@@ -161,35 +161,35 @@ RSpec.describe Mentors::Create, :with_default_schedules do
         described_class.call(
           email: user.email,
           full_name: Faker::Name.name,
-          school_cohort: school_cohort,
+          school_cohort:,
         )
       }.not_to change { user.reload.full_name }
     end
   end
 
   it "has no uplift if the school has not uplift set" do
-    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort)
+    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort:)
     expect(mentor_profile.pupil_premium_uplift).to be(false)
     expect(mentor_profile.sparsity_uplift).to be(false)
   end
 
   it "has only pupil_premium_uplift set when the school has only pupil_premium_uplift set" do
     school_cohort.update!(school: pupil_premium_school)
-    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort)
+    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort:)
     expect(mentor_profile.pupil_premium_uplift).to be(true)
     expect(mentor_profile.sparsity_uplift).to be(false)
   end
 
   it "has only sparsity_uplift set when the school has only sparsity_uplift set" do
     school_cohort.update!(school: sparsity_school)
-    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort)
+    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort:)
     expect(mentor_profile.pupil_premium_uplift).to be(false)
     expect(mentor_profile.sparsity_uplift).to be(true)
   end
 
   it "has both sparsity_uplift and pupil_premium_uplift set when the school has both pupil_premium_uplift and sparsity_uplift set" do
     school_cohort.update!(school: uplift_school)
-    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort: school_cohort)
+    mentor_profile = described_class.call(email: user.email, full_name: user.full_name, school_cohort:)
     expect(mentor_profile.pupil_premium_uplift).to be(true)
     expect(mentor_profile.sparsity_uplift).to be(true)
   end
@@ -199,7 +199,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
       described_class.call(
         email: user.email,
         full_name: user.full_name,
-        school_cohort: school_cohort,
+        school_cohort:,
       )
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
   end

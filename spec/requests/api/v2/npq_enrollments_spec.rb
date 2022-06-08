@@ -4,10 +4,10 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe "NPQ Enrollments API", type: :request do
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
 
   before { default_headers[:Authorization] = bearer_token }
 
@@ -40,8 +40,8 @@ RSpec.describe "NPQ Enrollments API", type: :request do
       end
 
       context "when there is data" do
-        let!(:npq_application) { create(:npq_application, npq_lead_provider: npq_lead_provider) }
-        let!(:npq_profile) { create(:npq_participant_profile, npq_application: npq_application) }
+        let!(:npq_application) { create(:npq_application, npq_lead_provider:) }
+        let!(:npq_profile) { create(:npq_participant_profile, npq_application:) }
 
         it "returns headers" do
           get "/api/v2/npq-enrollments.csv"

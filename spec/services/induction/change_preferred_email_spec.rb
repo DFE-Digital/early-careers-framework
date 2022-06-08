@@ -3,23 +3,23 @@
 RSpec.describe Induction::ChangePreferredEmail do
   describe "#call" do
     let(:school_cohort) { create :school_cohort }
-    let(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
-    let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-    let!(:induction_record) { Induction::Enrol.call(induction_programme: induction_programme, participant_profile: participant_profile, start_date: 6.months.ago) }
+    let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+    let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+    let!(:induction_record) { Induction::Enrol.call(induction_programme:, participant_profile:, start_date: 6.months.ago) }
     let!(:new_email) { "example.id2@example.com" }
 
     subject(:service) { described_class }
 
     it "adds a new induction record for the participant" do
       expect {
-        service.call(induction_record: induction_record,
+        service.call(induction_record:,
                      preferred_email: new_email)
       }.to change { induction_programme.induction_records.count }.by 1
     end
 
     describe "induction records" do
       before do
-        service.call(induction_record: induction_record,
+        service.call(induction_record:,
                      preferred_email: new_email)
       end
 

@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Admin::Administrators::Administrators", type: :request do
   let(:name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
-  let(:new_user) { User.find_by(email: email) }
+  let(:new_user) { User.find_by(email:) }
   let(:admin_user) { create(:user, :admin) }
   let(:admin_user_two) { create(:user, :admin, full_name: "Emma Dow", email: "emma-dow@example.com") }
   let(:admin_profile_two) { admin_user_two.admin_profile }
@@ -116,7 +116,7 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
   describe "PATCH /admin/administrators/:id" do
     it "updates the user and redirects to administrators page" do
       patch "/admin/administrators/#{admin.id}", params: {
-        user: { email: email },
+        user: { email: },
       }
 
       expect(admin.reload.email).to eq email
@@ -179,14 +179,14 @@ private
   def given_i_have_previously_submitted_values(name, email)
     post "/admin/administrators/new/confirm", params: { user: {
       full_name: name,
-      email: email,
+      email:,
     } }
   end
 
   def create_new_user
     post "/admin/administrators", params: { user: {
       full_name: name,
-      email: email,
+      email:,
     } }
   end
 

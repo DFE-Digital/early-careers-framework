@@ -6,8 +6,8 @@ RSpec.describe RecordParticipantDeclaration do
   context "when sending event for an npq course" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-    let(:npq_application) { create(:npq_application, npq_lead_provider: npq_lead_provider) }
-    let(:profile) { create(:npq_participant_profile, npq_application: npq_application) }
+    let(:npq_application) { create(:npq_application, npq_lead_provider:) }
+    let(:profile) { create(:npq_participant_profile, npq_application:) }
     let(:user) { profile.user }
     let(:npq_course) { profile.npq_course }
     let(:declaration_date) { profile.schedule.milestones.where(declaration_type: "started").first.start_date + 3.days }
@@ -18,12 +18,12 @@ RSpec.describe RecordParticipantDeclaration do
         declaration_date: declaration_date.rfc3339,
         declaration_type: "started",
         course_identifier: npq_course.identifier,
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
       }
     end
 
     before do
-      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
     end
 
     it "creates a participant declaration" do
@@ -63,18 +63,18 @@ RSpec.describe RecordParticipantDeclaration do
     let(:school) { profile.school_cohort.school }
     let(:cohort) { profile.school_cohort.cohort }
 
-    let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+    let(:induction_programme) { create(:induction_programme, partnership:) }
 
     let!(:induction_record) do
-      Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+      Induction::Enrol.call(participant_profile: profile, induction_programme:)
     end
 
     let!(:partnership) do
       create(
         :partnership,
-        school: school,
-        lead_provider: lead_provider,
-        cohort: cohort,
+        school:,
+        lead_provider:,
+        cohort:,
       )
     end
 
@@ -86,7 +86,7 @@ RSpec.describe RecordParticipantDeclaration do
         declaration_date: declaration_date.rfc3339,
         declaration_type: "started",
         course_identifier: "ecf-induction",
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
       }
     end
 
@@ -105,9 +105,9 @@ RSpec.describe RecordParticipantDeclaration do
     context "when a voided payable declaration exists" do
       before do
         profile.participant_declarations.create!(
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           course_identifier: "ecf-induction",
-          user: user,
+          user:,
           declaration_date: profile.schedule.milestones.where(declaration_type: "started").first.start_date + 3.days,
           declaration_type: "started",
           state: "voided",
@@ -146,7 +146,7 @@ RSpec.describe RecordParticipantDeclaration do
           declaration_date: declaration_date.rfc3339,
           declaration_type: "started",
           course_identifier: "ecf-mentor",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         }
       end
 
@@ -166,7 +166,7 @@ RSpec.describe RecordParticipantDeclaration do
           declaration_date: declaration_date.rfc3339,
           declaration_type: "started",
           course_identifier: "ecf-mentor",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         }
       end
 
@@ -183,7 +183,7 @@ RSpec.describe RecordParticipantDeclaration do
             declaration_date: declaration_date.rfc3339,
             declaration_type: "started",
             course_identifier: "ecf-induction",
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
           }
         end
 
@@ -202,7 +202,7 @@ RSpec.describe RecordParticipantDeclaration do
           declaration_date: declaration_date.rfc3339,
           declaration_type: "started",
           course_identifier: "ecf-induction",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         }
       end
 

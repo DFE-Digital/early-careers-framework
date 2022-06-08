@@ -25,14 +25,14 @@ module Seeds
           school_urn: "000001",
           school_ukprn: "000001",
           teacher_reference_number_verified: true,
-          works_in_school: works_in_school,
-          employer_name: employer_name,
-          employment_role: employment_role,
-          works_in_nursery: works_in_nursery,
-          works_in_childcare: works_in_childcare,
-          kind_of_nursery: kind_of_nursery,
-          private_childcare_provider_urn: private_childcare_provider_urn,
-          funding_eligiblity_status_code: funding_eligiblity_status_code,
+          works_in_school:,
+          employer_name:,
+          employment_role:,
+          works_in_nursery:,
+          works_in_childcare:,
+          kind_of_nursery:,
+          private_childcare_provider_urn:,
+          funding_eligiblity_status_code:,
         },
         npq_course_id: NPQCourse.all.sample.id,
         npq_lead_provider_id: npq_lead_provider.id,
@@ -100,7 +100,7 @@ module Seeds
     end
 
     def user
-      @user ||= User.find_or_create_by!(email: email) do |u|
+      @user ||= User.find_or_create_by!(email:) do |u|
         u.full_name = "NPQ User"
       end
     end

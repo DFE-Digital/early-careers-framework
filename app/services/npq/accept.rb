@@ -4,7 +4,7 @@ module NPQ
   class Accept
     class << self
       def call(npq_application:)
-        new(npq_application: npq_application).call
+        new(npq_application:).call
       end
     end
 
@@ -43,7 +43,7 @@ module NPQ
     def has_other_accepted_applications_with_same_course?
       NPQApplication.joins(:participant_identity)
         .where(participant_identity: { user_id: user.id })
-        .where(npq_course: npq_course)
+        .where(npq_course:)
         .where(lead_provider_approval_status: "accepted")
         .where.not(id: npq_application.id)
         .exists?
@@ -53,8 +53,8 @@ module NPQ
       @other_applications_in_same_cohort ||= NPQApplication
         .joins(:participant_identity)
         .where(participant_identity: { user_id: user.id })
-        .where(npq_course: npq_course)
-        .where(cohort: cohort)
+        .where(npq_course:)
+        .where(cohort:)
         .where.not(id: npq_application.id)
     end
 
@@ -63,9 +63,9 @@ module NPQ
 
       @participant_profile ||= ParticipantProfile::NPQ.create!(
         id: npq_application.id,
-        schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort: cohort),
+        schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort:),
         npq_course: npq_application.npq_course,
-        teacher_profile: teacher_profile,
+        teacher_profile:,
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
         participant_identity: npq_application.participant_identity,
@@ -75,7 +75,7 @@ module NPQ
     end
 
     def find_or_create_initial_profile_state
-      ParticipantProfileState.find_or_create_by(participant_profile: participant_profile)
+      ParticipantProfileState.find_or_create_by(participant_profile:)
     end
 
     def teacher_profile

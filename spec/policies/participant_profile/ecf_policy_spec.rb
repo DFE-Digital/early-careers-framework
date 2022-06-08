@@ -18,7 +18,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     context "after the participant has provided validation data" do
       before do
-        create(:ecf_participant_validation_data, participant_profile: participant_profile)
+        create(:ecf_participant_validation_data, participant_profile:)
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
@@ -32,8 +32,8 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     context "when the participant is found to be ineligible" do
       before do
-        create(:ecf_participant_validation_data, participant_profile: participant_profile)
-        create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile)
+        create(:ecf_participant_validation_data, participant_profile:)
+        create(:ecf_participant_eligibility, :ineligible, participant_profile:)
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
@@ -48,7 +48,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "with a declaration" do
       before do
         declaration_type = participant_profile.ect? ? :ect_participant_declaration : :mentor_participant_declaration
-        create(declaration_type, participant_profile: participant_profile, user: participant_profile.user)
+        create(declaration_type, participant_profile:, user: participant_profile.user)
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
@@ -63,7 +63,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "with only voided declarations" do
       before do
         declaration_type = participant_profile.ect? ? :ect_participant_declaration : :mentor_participant_declaration
-        create(declaration_type, :voided, participant_profile: participant_profile, user: participant_profile.user)
+        create(declaration_type, :voided, participant_profile:, user: participant_profile.user)
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
@@ -101,7 +101,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     context "after the participant has provided validation data" do
       before do
-        create(:ecf_participant_validation_data, participant_profile: participant_profile)
+        create(:ecf_participant_validation_data, participant_profile:)
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
@@ -115,8 +115,8 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
 
     context "when the participant is found to be ineligible" do
       before do
-        create(:ecf_participant_validation_data, participant_profile: participant_profile)
-        create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile)
+        create(:ecf_participant_validation_data, participant_profile:)
+        create(:ecf_participant_eligibility, :ineligible, participant_profile:)
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
@@ -131,7 +131,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "with a declaration" do
       before do
         declaration_type = participant_profile.ect? ? :ect_participant_declaration : :mentor_participant_declaration
-        create(declaration_type, participant_profile: participant_profile, user: participant_profile.user)
+        create(declaration_type, participant_profile:, user: participant_profile.user)
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
@@ -146,7 +146,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     context "with only voided declarations" do
       before do
         declaration_type = participant_profile.ect? ? :ect_participant_declaration : :mentor_participant_declaration
-        create(declaration_type, :voided, participant_profile: participant_profile, user: participant_profile.user)
+        create(declaration_type, :voided, participant_profile:, user: participant_profile.user)
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
