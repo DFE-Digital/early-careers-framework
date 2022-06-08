@@ -9,7 +9,7 @@ module ManageTrainingSteps
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
-    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
@@ -17,14 +17,16 @@ module ManageTrainingSteps
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @induction_programme.update!(partnership: @partnership)
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 1.week.from_now, challenged_at: 1.day.ago, challenge_reason: "mistake")
+    @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 1.week.from_now, challenged_at: 1.day.ago, challenge_reason: "mistake")
+    @induction_programme.update!(partnership: @partnership)
   end
 
   def given_there_is_a_school_that_has_chosen_cip_for_2021

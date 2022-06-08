@@ -24,24 +24,28 @@ module ChooseProgrammeSteps
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @induction_programme.update!(partnership: @partnership)
+    @lead_provider_user = create(:user)
+    @lead_provider.users << @lead_provider_user
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_but_partnership_was_challenged
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, :challenged, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @partnership = create(:partnership, :challenged, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @induction_programme.update!(partnership: @partnership)
+    @lead_provider_user = create(:user)
+    @lead_provider.users << @lead_provider_user
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
     @cohort = @cohort_2022 = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
-    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
-    @lead_provider_user = create(:user)
-    @school_cohort.default_induction_programme.partnership.lead_provider.users << @lead_provider_user
   end
 
   # Then steps

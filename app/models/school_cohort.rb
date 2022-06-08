@@ -59,11 +59,11 @@ class SchoolCohort < ApplicationRecord
   end
 
   def lead_provider
-    default_induction_programme&.lead_provider || school.lead_provider(cohort.start_year)
+    school.lead_provider(cohort.start_year)
   end
 
   def delivery_partner
-    default_induction_programme&.delivery_partner || school.delivery_partner_for(cohort.start_year)
+    school.delivery_partner_for(cohort.start_year)
   end
 
   def school_chose_cip?
