@@ -1,4 +1,4 @@
-<% title = "We cannot find #{add_participant_form.full_name.titleize}" %>
+<% title = "We cannot find #{add_participant_form.full_name&.titleize}" %>
 
 <% content_for :title, title %>
 
@@ -6,17 +6,17 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <span class="govuk-caption-xl"><%= @school.name %></span>
-        <h1 class="govuk-heading-xl">We cannot find <%= add_participant_form.full_name.titleize %>’s record</h1>
+        <h1 class="govuk-heading-xl">We cannot find <%= add_participant_form.full_name&.titleize %>’s record</h1>
 
         <p class="govuk-body">Check the information you’ve entered is correct.</p>
-        <p class="govuk-body">We need to find <%= add_participant_form.full_name.titleize %> in the Teaching Regulation Agency records to make sure they’re eligible for this funded programme.</p>
+        <p class="govuk-body">We need to find <%= add_participant_form.full_name&.titleize %> in the Teaching Regulation Agency records to make sure they’re eligible for this funded programme.</p>
 
         <%= govuk_summary_list do |summary_list| %>
             <% summary_list.row do |row| %>
                 <% row.key { "Name" } %>
-                <% row.value { add_participant_form.full_name.titleize } %>
+                <% row.value { add_participant_form.full_name&.titleize } %>
                 <% row.action(text: "Change",
                     visually_hidden_text: "name",
                     href: url_for( { step: :name } )) %>
@@ -40,7 +40,7 @@
         <% end %>
 
         <h3 class="govuk-heading-s">If this information is correct.</h3>
-        <p class="govuk-body">You can still continue to register <%= add_participant_form.full_name.titleize %>. We'll contact them to check their information.</p>
+        <p class="govuk-body">You can still continue to register <%= add_participant_form.full_name&.titleize %>. We'll contact them to check their information.</p>
 
         <%= govuk_button_link_to "Confirm and continue", step_schools_add_participants_path(step: :email)  %>
 

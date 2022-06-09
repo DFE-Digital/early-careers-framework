@@ -1,4 +1,4 @@
-<% title = "Do you know #{add_participant_form.full_name.titleize }’s teacher reference number (TRN)?" %>
+<% title = "Do you know #{add_participant_form.full_name&.titleize }’s teacher reference number (TRN)?" %>
 
 <% content_for :title, title %>
 
@@ -15,7 +15,7 @@
             inline: true,
             legend: { text: title, tag: 'h1', size: 'xl' } do %>
             <p class="govuk-body">We need this to confirm they’re eligible for this programme. Adding it now will help us do this more quickly.</p>
-            <p class="govuk-body">If you do not know it, we’ll ask <%= add_participant_form.full_name.titleize %> to tell us instead.</p>
+            <p class="govuk-body">If you do not know it, we’ll ask <%= add_participant_form.full_name&.titleize %> to tell us instead.</p>
 
             <%= f.govuk_radio_button :do_you_know_teachers_trn, :true, label: { text: "Yes" } %>
             <%= f.govuk_radio_button :do_you_know_teachers_trn, :false, label: { text: "No" } %>
