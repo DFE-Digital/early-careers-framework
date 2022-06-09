@@ -97,7 +97,7 @@
       <% end %>
     </dl>
 
-    <% if @induction_record.training_status_active? %>
+    <% unless @induction_record.leaving_induction_status? && @induction_record.school_transfer %>
       <h3 class="govuk-heading-m">No longer training?</h3>
       <p class="govuk-body">Tell us <%= govuk_link_to "#{@profile.user.full_name} is transferring to another school", schools_transfer_out_participant_check_transfer_path(transfer_out_participant_id: @profile.id) %> </p>
     <% end %>
