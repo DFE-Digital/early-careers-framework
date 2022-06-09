@@ -1,18 +1,27 @@
-<% content_for :title, "transfer added" %>
-<% participant_name = @profile.user.full_name.titleize %>
+<% title = "#{@profile.user.full_name&.titleize}’s leaving date has been submitted" %>
+
+<% content_for :title, title %>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <%= govuk_panel title_text: "#{participant_name}'s leaving date has been submitted", text: nil, classes: "govuk-!-margin-bottom-7" %>
+        <%= govuk_panel title_text: title, text: nil, classes: "govuk-!-margin-bottom-7" %>
 
         <h2 class="govuk-heading-m">What happens next</h2>
-        <p class="govuk-body">We’ll tell <%= participant_name %> that you’ve reported their transfer. They’ll appear in the ’moving schools’
+        <p class="govuk-body">We’ll tell <%= @profile.user.full_name&.titleize %> that you’ve reported their transfer. They’ll appear in the ’moving schools’
         section of your dashboard until their leaving date.</p>
 
-        <p class="govuk-body">You need to let their training provider know that they’re transferring to another school.</p>
         <p class="govuk-body">They should continue with their current training programme until their leaving date.
         Their new school will arrange how they’ll continue their training after that.</p>
+
+        <h2 class="govuk-heading-m">Remember to:</h2>
+
+        <ol class="govuk-list govuk-list--number">
+          <li>Report this transfer to your appropriate body. They need to complete some checks and update <%= @profile.user.full_name&.titleize %>’s record with the Teaching Regulation Agency (TRA).</li>
+          <li>If you work with a training provider, let them know that this person is transferring to another school.</li>
+        </ol>
+
+        <p class="govuk-body">The person mentoring this ECT can continue their training, even if they do not have another ECT assigned to them yet.</p>
 
         <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
 
