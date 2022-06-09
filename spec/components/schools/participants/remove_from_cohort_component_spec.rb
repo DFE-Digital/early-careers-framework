@@ -4,7 +4,6 @@ RSpec.describe Schools::Participants::RemoveFromCohortComponent, type: :view_com
   let(:school_cohort) { create(:school_cohort, :fip) }
   let(:induction_programme) { create(:induction_programme, :fip, school_cohort:, partnership: nil) }
   let(:profile) { create :ecf_participant_profile, school_cohort: }
-  # component { described_class.new(profile:) }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [school_cohort.school]) }
   let(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme:) }
   component { described_class.new(current_user: induction_coordinator, induction_record:) }
