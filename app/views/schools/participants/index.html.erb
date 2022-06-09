@@ -41,17 +41,17 @@
         <% end %>
       <% end %>
 
-      <% if @withdrawn.any? || @ineligible.any? || @transferred.any? %>
-        <% component.tab(label: 'Not training') do %>
-          <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible, transferred: @transferred } %>
-        <% end %>
-      <% end %>
-
       <% if FeatureFlag.active?(:change_of_circumstances) %>
         <% if @transferring_in.any? || @transferring_out.any? %>
           <% component.tab(label: 'Moving school') do %>
             <%= render partial: 'moving_school', locals: { transferring_in: @transferring_in, transferring_out: @transferring_out } %>
           <% end %>
+        <% end %>
+      <% end %>
+
+      <% if @withdrawn.any? || @ineligible.any? || @transferred.any? %>
+        <% component.tab(label: 'Not training') do %>
+          <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible, transferred: @transferred } %>
         <% end %>
       <% end %>
     <% end %>
