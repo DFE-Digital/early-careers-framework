@@ -7,14 +7,14 @@ module DeliveryPartners
 
       delegate :user,
                :teacher_profile,
-               :school,
                :cohort,
                to: :participant_profile
 
-      delegate :full_name, :email, :user_description,
+      delegate :full_name, :user_description,
                to: :user
 
       delegate :training_status,
+               :school,
                to: :induction_record,
                allow_nil: true
 
@@ -37,6 +37,10 @@ module DeliveryPartners
 
       def lead_provider_name
         induction_record&.induction_programme&.partnership&.lead_provider&.name
+      end
+
+      def email
+        induction_record&.preferred_identity&.email || user.email
       end
 
     private
