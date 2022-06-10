@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
-  let!(:school_cohort) { create :school_cohort, :fip }
-  let!(:partnership) { create :partnership, school: school_cohort.school, cohort: school_cohort.cohort }
-  let!(:ecf_participant_eligibility) { create :ecf_participant_eligibility, :eligible }
-  let(:participant_profile) { create :ect_participant_profile, ecf_participant_eligibility:, school_cohort: }
+RSpec.describe Schools::Participants::StatusTableRow, :with_default_schedules, type: :view_component do
+  let(:participant_profile) { create :ect, :eligible_for_funding }
+  let(:school_cohort)       { participant_profile.school_cohort }
 
   component { described_class.new profile: participant_profile }
 

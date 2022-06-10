@@ -2,27 +2,23 @@
 
 require "rails_helper"
 
-RSpec.describe VoidParticipantDeclaration do
-  let(:start_date) { profile.schedule.milestones.first.start_date }
-  let(:declaration_date) { start_date + 2.days }
-  let(:profile) { create(:ect_participant_profile) }
-  let(:school) { profile.school_cohort.school }
-  let(:user) { profile.user }
-  let(:cpd_lead_provider) { profile.school_cohort.school.partnerships[0].lead_provider.cpd_lead_provider }
+RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
+  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+  let(:another_cpd_lead_provider) { create(:cpd_lead_provider) }
 
   before do
-    create(:partnership, school:)
+    create(
+      :ecf_statement,
+      cpd_lead_provider:,
+      output_fee: true,
+      deadline_date: 3.months.from_now,
+    )
   end
 
   describe "#call" do
     let(:participant_declaration) do
-      create(
-        :ect_participant_declaration,
-        user:,
-        cpd_lead_provider:,
-        declaration_date:,
-        participant_profile: profile,
-      )
+      create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:)
     end
 
     subject do
@@ -46,11 +42,9 @@ RSpec.describe VoidParticipantDeclaration do
       let(:participant_declaration) do
         create(
           :ect_participant_declaration,
-          user:,
+          :payable,
           cpd_lead_provider:,
-          declaration_date:,
-          participant_profile: profile,
-          state: "payable",
+          participant_profile:,
         )
       end
 
@@ -65,11 +59,9 @@ RSpec.describe VoidParticipantDeclaration do
       let(:participant_declaration) do
         create(
           :ect_participant_declaration,
-          user:,
+          :paid,
+          participant_profile:,
           cpd_lead_provider:,
-          declaration_date:,
-          participant_profile: profile,
-          state: "paid",
         )
       end
 
@@ -101,28 +93,13 @@ RSpec.describe VoidParticipantDeclaration do
       let(:participant_declaration) do
         create(
           :ect_participant_declaration,
-          user:,
+          :payable,
           cpd_lead_provider:,
-          declaration_date:,
-          participant_profile: profile,
-          state: "payable",
-        )
-      end
-
-      let!(:statement) do
-        create(
-          :ecf_statement,
-          cpd_lead_provider:,
-          output_fee: true,
-          deadline_date: 3.months.from_now,
+          participant_profile:,
         )
       end
 
       let(:line_item) { participant_declaration.statement_line_items.first }
-
-      before do
-        Finance::DeclarationStatementAttacher.new(participant_declaration:).call
-      end
 
       it "update line item state to voided" do
         subject.call

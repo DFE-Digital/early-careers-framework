@@ -123,7 +123,7 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
       end
     end
 
-    context "when a NPQ registrant already exists with that email address" do
+    context "when a NPQ registrant already exists with that email address", :with_default_schedules do
       let(:npq_profile) { create(:npq_participant_profile) }
       let!(:existing_user) { npq_profile.user }
 

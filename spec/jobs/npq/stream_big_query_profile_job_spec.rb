@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::StreamBigQueryProfileJob do
-  let(:profile) { create(:npq_participant_profile).reload }
+RSpec.describe NPQ::StreamBigQueryProfileJob, :with_default_schedules do
+  let(:profile) { create(:npq_participant_profile) }
 
   describe "#perform" do
     let(:bigquery) { double("bigquery") }
-    let(:dataset) { double("dataset") }
-    let(:table) { double("table", insert: nil) }
+    let(:dataset)  { double("dataset") }
+    let(:table)    { double("table", insert: nil) }
 
     before do
       allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery)

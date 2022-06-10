@@ -88,9 +88,8 @@ RSpec.describe User, type: :model do
         end
       end
 
-      context "when the user is a participant" do
-        let(:teacher_profile) { create(:teacher_profile, user:) }
-        let!(:mentor_profile) { create(:mentor_participant_profile, teacher_profile:) }
+      context "when the user is a participant", :with_default_schedules do
+        let!(:mentor_profile) { create(:mentor, user:) }
 
         context "when an original participant identity exists" do
           before do

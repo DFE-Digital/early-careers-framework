@@ -1,26 +1,22 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::TransferAndContinueExistingFip do
+RSpec.describe Induction::TransferAndContinueExistingFip, :with_default_schedules do
   describe "#call" do
-    let(:school_1) { create(:school, name: "Transferring From School") }
-    let(:school_2) { create(:school, name: "Transferring To School") }
-    let(:school_cohort_1) { create(:school_cohort, :fip, school: school_1) }
-    let(:school_cohort_2) { create(:school_cohort, :fip, school: school_2) }
-    let(:partnership_1) { create(:partnership, cohort: school_cohort_1.cohort, school: school_1) }
-    let(:partnership_2) { create(:partnership, cohort: school_cohort_2.cohort, school: school_2) }
-    let!(:induction_programme_1) { create(:induction_programme, :fip, partnership: partnership_1, school_cohort: school_cohort_1) }
-    let!(:induction_programme_2) { create(:induction_programme, :fip, partnership: partnership_2, school_cohort: school_cohort_2) }
-    let(:teacher_profile) { create(:teacher_profile) }
-    let(:participant_profile) { create(:ect_participant_profile, teacher_profile:, school_cohort: school_cohort_1) }
-    let(:mentor_profile_1) { create(:mentor_participant_profile, school_cohort: school_cohort_1) }
-    let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort_2) }
-    let(:start_date) { 1.week.from_now }
-    let(:end_date) { 1.week.ago }
-    let(:new_email_address) { "hank.shanklin@new-school.example.com" }
+    let(:lead_provider)   { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+    let(:school_1)        { create(:school, name: "Transferring From School") }
+    let(:school_2)        { create(:school, name: "Transferring To School") }
+    let(:school_cohort_1) { create(:school_cohort, :fip, :with_induction_programme, school: school_1, lead_provider:) }
+    let(:school_cohort_2) { create(:school_cohort, :fip, :with_induction_programme, school: school_2, lead_provider:) }
+    let(:participant_profile)  { create(:ect,    school_cohort: school_cohort_1, lead_provider:) }
+    let!(:mentor_profile_1)    { create(:mentor, school_cohort: school_cohort_1, lead_provider:) }
+    let!(:mentor_profile_2)    { create(:mentor, school_cohort: school_cohort_2, lead_provider:) }
+    let(:start_date)           { 1.week.from_now }
+    let(:end_date)             { 1.week.ago }
+    let(:new_email_address)    { "hank.shanklin@new-school.example.com" }
 
     let(:new_induction_programme) { school_cohort_2.induction_programmes.order(:created_at).last }
-    let(:new_partnership) { school_2.partnerships.order(:created_at).last }
-    let(:new_induction_record) { participant_profile.induction_records.latest }
+    let(:new_partnership)         { school_2.partnerships.order(:created_at).last }
+    let(:new_induction_record)    { participant_profile.induction_records.latest }
 
     subject(:service) { described_class }
 
@@ -33,11 +29,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
                    mentor_profile: mentor_profile_2)
     end
 
-    before do
-      @original_induction = Induction::Enrol.call(participant_profile:,
-                                                  induction_programme: induction_programme_1,
-                                                  mentor_profile: mentor_profile_1)
-    end
+    let!(:original_induction) { participant_profile.reload.induction_records.order(created_at: :asc).first }
 
     it "creates a new identity with the given email" do
       expect { service_call }.to change { participant_profile.user.participant_identities.count }.by 1
@@ -56,17 +48,15 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
     end
 
     context "record details" do
-      before do
-        service_call
-      end
+      before { service_call }
 
       it "adds the new relationship to the new induction programme" do
         expect(new_induction_programme.partnership).to eq new_partnership
       end
 
       it "updates the previous induction record to leaving status" do
-        expect(@original_induction.reload).to be_leaving_induction_status
-        expect(@original_induction.end_date).to be_within(1.second).of end_date
+        expect(original_induction.reload).to be_leaving_induction_status
+        expect(original_induction.end_date).to be_within(1.second).of end_date
       end
 
       it "enrols the participant in the new programme" do
@@ -85,21 +75,16 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
     end
 
     context "without optional params" do
-      let(:service_call) do
-        service.call(school_cohort: school_cohort_2,
-                     participant_profile:)
-      end
+      let(:service_call) { service.call(school_cohort: school_cohort_2, participant_profile:) }
 
-      before do
-        service_call
-      end
+      before { service_call }
 
       it "uses the existing participant identity" do
         expect(new_induction_record.preferred_identity).to eq participant_profile.participant_identity
       end
 
       it "sets the end date on the previous induction as the current time" do
-        expect(@original_induction.reload.end_date).to be_within(1.second).of Time.zone.now
+        expect(original_induction.reload.end_date).to be_within(1.second).of Time.zone.now
       end
     end
   end

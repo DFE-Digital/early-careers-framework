@@ -8,7 +8,7 @@ module RecordDeclarations
           ApplicationRecord.transaction do
             participant_profile.participant_declarations.submitted.each do |participant_declaration|
               participant_declaration.make_eligible!
-              Finance::DeclarationStatementAttacher.new(participant_declaration:).call
+              Finance::DeclarationStatementAttacher.new(participant_declaration).call
             end
           end
         end

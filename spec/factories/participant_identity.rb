@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :participant_identity do
-    user
+    user { create :user }
     email { user.email }
     external_identifier { user.id }
     origin { "ecf" }

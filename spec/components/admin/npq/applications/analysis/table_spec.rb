@@ -1,47 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::NPQ::Applications::Analysis::Table, type: :view_component do
-  let!(:cohort) { create :cohort }
-  let!(:schedule) { create :npq_leadership_schedule, cohort: }
-  let(:npq_course) { create :npq_course, identifier: "npq-senior-leadership" }
-  let(:npq_lead_provider) { create :npq_lead_provider }
+RSpec.describe Admin::NPQ::Applications::Analysis::Table, :with_default_schedules, type: :view_component do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
 
-  let(:rejected_application_with_payment) do
-    npq_application = create(:npq_application, :rejected,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    participant_profile = create(:npq_participant_profile, npq_application:)
-
-    create(:npq_participant_declaration,
-           declaration_type: "started",
-           user: npq_application.user,
-           participant_profile:,
-           course_identifier: npq_course.identifier,
-           state: "paid")
-
-    npq_application
-  end
-  let(:rejected_application_with_payable) do
-    npq_application = create(:npq_application, :rejected,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    participant_profile = create(:npq_participant_profile, npq_application:)
-
-    create(:npq_participant_declaration,
-           declaration_type: "started",
-           user: npq_application.user,
-           participant_profile:,
-           course_identifier: npq_course.identifier,
-           state: "payable")
-
-    npq_application
-  end
+  let(:rejected_application_with_payment) { create(:npq_application, :accepted, eligible_for_funding: true, npq_lead_provider:) }
+  let(:rejected_application_with_payable) { create(:npq_application, :accepted, eligible_for_funding: true, npq_lead_provider:) }
 
   let(:applications) { [rejected_application_with_payment, rejected_application_with_payable] }
+
+  before do
+    create(:npq_statement, :next_output_fee, cpd_lead_provider:)
+    create(:npq_participant_declaration, :paid, participant_profile: rejected_application_with_payment.profile, cpd_lead_provider:)
+    create(:npq_participant_declaration, :payable, participant_profile: rejected_application_with_payable.profile, cpd_lead_provider:)
+    rejected_application_with_payment.update_column(:lead_provider_approval_status, :rejected)
+    rejected_application_with_payable.update_column(:lead_provider_approval_status, :rejected)
+  end
 
   component { described_class.new applications: }
   request_path "/admin/npq/applications/analysis"

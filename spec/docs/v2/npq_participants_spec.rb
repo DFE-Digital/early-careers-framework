@@ -196,14 +196,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
           }
         end
 
-        before do
-          participant_profile = npq_application.profile
-          user = npq_application.user
-          course_identifier = npq_application.npq_course.identifier
-
-          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
-        end
-
         schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
         run_test!
       end

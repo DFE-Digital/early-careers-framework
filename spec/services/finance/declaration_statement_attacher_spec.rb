@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
 
-RSpec.describe Finance::DeclarationStatementAttacher do
-  let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:) }
-  let(:statement) { create(:ecf_statement, output_fee: true, deadline_date: 2.months.from_now) }
-  let(:cpd_lead_provider) { statement.cpd_lead_provider }
+  let(:declaration) do
+    create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
+  end
 
-  subject { described_class.new(participant_declaration: declaration) }
+  let!(:statement) do
+    create(:ecf_statement, output_fee: true, deadline_date: 2.months.from_now, cpd_lead_provider:)
+  end
+
+  subject { described_class.new(declaration) }
 
   describe "#call" do
     it "creates line item" do

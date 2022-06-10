@@ -10,10 +10,10 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
       NPQApplications::EligibilityImport.create!(filename:, user: create(:user, :admin))
     end
 
-    let(:npq_application_to_mark_funded) { create(:npq_application) }
+    let(:npq_application_to_mark_funded) { create(:npq_application, funding_choice: NPQApplication.funding_choices[:ineligible_establishment_type]) }
     let(:npq_application_to_mark_unfunded) { create(:npq_application, :funded) }
-    let(:npq_application_to_mark_other) { create(:npq_application) }
-    let(:npq_application_to_mark_invalid_status_code) { create(:npq_application) }
+    let(:npq_application_to_mark_other) { create(:npq_application, funding_choice: NPQApplication.funding_choices[:ineligible_establishment_type]) }
+    let(:npq_application_to_mark_invalid_status_code) { create(:npq_application, funding_choice: NPQApplication.funding_choices[:ineligible_establishment_type]) }
 
     let(:fake_ecf_id) { SecureRandom.uuid }
 

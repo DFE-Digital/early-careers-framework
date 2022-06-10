@@ -2,27 +2,11 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::Defer::Mentor do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:profile) { create(:mentor_participant_profile) }
-  let(:user) { profile.user }
-  let(:school) { profile.school_cohort.school }
-  let(:cohort) { profile.school_cohort.cohort }
-  let(:induction_programme) { create(:induction_programme, partnership:) }
-
-  let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: profile, induction_programme:)
-  end
-
-  let!(:partnership) do
-    create(
-      :partnership,
-      school:,
-      lead_provider:,
-      cohort:,
-    )
-  end
+RSpec.describe Participants::Defer::Mentor, :with_default_schedules do
+  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider)       { cpd_lead_provider.lead_provider }
+  let!(:profile)            { create(:mentor, lead_provider:) }
+  let(:user)                { profile.user }
 
   subject do
     described_class.new(
@@ -45,7 +29,7 @@ RSpec.describe Participants::Defer::Mentor do
     end
 
     it "updates induction_record training_status" do
-      expect { subject.call }.to change { induction_record.reload.training_status }.from("active").to("deferred")
+      expect { subject.call }.to change { profile.current_induction_record.reload.training_status }.from("active").to("deferred")
     end
 
     context "when already deferred" do

@@ -5,16 +5,13 @@ module Finance
   # Work out which statement it should belong to
   # Attach the declaration to said statement
   class DeclarationStatementAttacher
-    attr_reader :participant_declaration
-
-    def initialize(participant_declaration:)
-      @participant_declaration = participant_declaration
+    def initialize(participant_declaration)
+      self.participant_declaration = participant_declaration
     end
 
     def call
       ApplicationRecord.transaction do
-        StatementLineItem.create!(
-          statement:,
+        statement.statement_line_items.create_or_find_by(
           participant_declaration:,
           state: participant_declaration.state,
         )
@@ -22,6 +19,8 @@ module Finance
     end
 
   private
+
+    attr_accessor :participant_declaration
 
     def cohort
       participant_declaration.participant_profile.schedule.cohort

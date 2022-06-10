@@ -35,7 +35,7 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :edit_start_term?, :update_start_term?
 
   def withdraw_record?
-    return false if record.participant_declarations.where.not(state: :voided).any?
+    return false if record.participant_declarations.not_voided.any?
     return false unless user.induction_coordinator? || admin?
     return false if record.completed_validation_wizard? && !record.ecf_participant_eligibility&.ineligible_status?
 

@@ -3,6 +3,8 @@
 class ParticipantProfile < ApplicationRecord
   class ECF < ParticipantProfile
     self.ignored_columns = %i[school_id]
+    VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
+    COURSE_IDENTIFIERS = %w[ecf-mentor ecf-induction].freeze
 
     belongs_to :school_cohort
     belongs_to :core_induction_programme, optional: true

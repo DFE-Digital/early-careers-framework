@@ -2,19 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::StatementLineItem do
-  let(:statement) { create(:ecf_statement) }
-  let(:declaration) { create(:ect_participant_declaration, :eligible) }
+RSpec.describe Finance::StatementLineItem, :with_default_schedules do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let!(:statement)        { create(:ecf_statement, :next_output_fee, cpd_lead_provider:) }
 
   describe "validations" do
-    context "when already billied to a statement" do
-      let!(:existing_line_item) do
-        described_class.create!(
-          statement:,
-          participant_declaration: declaration,
-          state: declaration.state,
-        )
-      end
+    context "when already billed to a statement" do
+      let!(:declaration) { create(:ect_participant_declaration, :eligible, cpd_lead_provider:) }
 
       it "cannot be billed to multiple statements" do
         expect {
@@ -28,15 +22,7 @@ RSpec.describe Finance::StatementLineItem do
     end
 
     context "when already refunded to a statement" do
-      let(:declaration) { create(:ect_participant_declaration, :awaiting_clawback) }
-
-      let!(:existing_line_item) do
-        described_class.create!(
-          statement:,
-          participant_declaration: declaration,
-          state: declaration.state,
-        )
-      end
+      let!(:declaration) { create(:ect_participant_declaration, :awaiting_clawback, cpd_lead_provider:) }
 
       it "cannot be refunded to multiple statements" do
         expect {

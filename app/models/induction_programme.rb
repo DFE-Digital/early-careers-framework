@@ -22,7 +22,8 @@ class InductionProgramme < ApplicationRecord
   has_many :transferred_induction_records, -> { transferred }, class_name: "InductionRecord"
   has_many :participant_profiles, through: :active_induction_records
   has_many :current_participant_profiles, through: :current_induction_records, source: :participant_profile
-
+  has_one :lead_provider, through: :partnership
+  has_one :cpd_lead_provider, through: :lead_provider
   delegate :school, to: :school_cohort
   delegate :lead_provider, to: :partnership, allow_nil: true
   delegate :lead_provider_name, to: :partnership, allow_nil: true

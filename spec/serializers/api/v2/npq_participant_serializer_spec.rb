@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V2
     RSpec.describe NPQParticipantSerializer do
-      describe "serialization" do
+      describe "serialization", :with_default_schedules do
         let(:participant) { create(:user) }
 
         it "includes updated_at" do
@@ -31,12 +31,7 @@ module Api
           end
 
           context "when there are multiple providers involved" do
-            let(:second_profile) do
-              create(
-                :npq_participant_profile,
-                teacher_profile: user.teacher_profile,
-              )
-            end
+            let(:second_profile) { create(:npq_participant_profile, user:) }
 
             before do
               profile

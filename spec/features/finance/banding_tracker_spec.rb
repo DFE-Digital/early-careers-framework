@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Banding tracker", type: :feature, js: true do
+RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: true do
   let!(:cpd_lead_provider) do
     create(:cpd_lead_provider, :with_lead_provider, name: "Lead provider name").tap do |cpd_lead_provider|
       create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, revised_target: 65).tap do |call_off_contract|
@@ -14,59 +14,63 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
       end
     end
   end
-  let(:statement)             { create :ecf_statement, :output_fee, cpd_lead_provider: }
-  let(:next_cohort)           { create(:cohort, :next) }
-  let(:next_cohort_statement) { create :ecf_statement, :output_fee, cpd_lead_provider:, cohort: next_cohort }
+  let(:schedule)           { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september") }
+  let(:next_cohort)        { create(:cohort, :next) }
+  let(:next_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort) }
+  let(:next_cohort_ect)    { create(:ect, school_cohort: next_school_cohort, lead_provider: cpd_lead_provider.lead_provider) }
+
+  def create_output_statement_for(milestone)
+    create(:statement, :output_fee, cpd_lead_provider:, deadline_date: milestone.milestone_date)
+  end
 
   def generate_declarations(state:)
     declarations = []
 
-    with_options(cpd_lead_provider:, state:) do
-      declarations << create_list(:ect_participant_declaration, 17, declaration_type: "started")
-      declarations << create_list(:ect_participant_declaration, 5,  declaration_type: "retained-1")
-      declarations << create_list(:ect_participant_declaration, 4,  declaration_type: "retained-2")
-      declarations << create_list(:ect_participant_declaration, 3,  declaration_type: "retained-3")
-      declarations << create_list(:ect_participant_declaration, 1,  declaration_type: "retained-4")
-      declarations << create_list(:ect_participant_declaration, 0,  declaration_type: "completed")
+    milestone = schedule.milestones.find_by(declaration_type: "started")
+    travel_to(milestone.milestone_date) do
+      declarations << create_list(:ect_participant_declaration, 17, state, declaration_type: "started", cpd_lead_provider:)
     end
 
-    declarations.flatten.each do |declaration|
-      Finance::StatementLineItem.create!(
-        statement:,
-        participant_declaration: declaration,
-        state: declaration.state,
-      )
+    milestone = schedule.milestones.find_by(declaration_type: "retained-1")
+    travel_to milestone.milestone_date do
+      declarations << create_list(:ect_participant_declaration, 5, state, declaration_type: "retained-1", cpd_lead_provider:)
+    end
+
+    travel_to schedule.milestones.find_by(declaration_type: "retained-2").milestone_date do
+      declarations << create_list(:ect_participant_declaration, 4, state, declaration_type: "retained-2", cpd_lead_provider:)
+    end
+
+    travel_to schedule.milestones.find_by(declaration_type: "retained-3").milestone_date do
+      declarations << create_list(:ect_participant_declaration, 3, state, declaration_type: "retained-3", cpd_lead_provider:)
+    end
+
+    travel_to schedule.milestones.find_by(declaration_type: "retained-4").milestone_date do
+      declarations << create_list(:ect_participant_declaration, 1,  state, declaration_type: "retained-4", cpd_lead_provider:)
+    end
+
+    travel_to schedule.milestones.find_by(declaration_type: "completed").milestone_date do
+      declarations << create_list(:ect_participant_declaration, 0,  state, declaration_type: "completed", cpd_lead_provider:)
     end
   end
 
   before do
-    create(:ecf_schedule)
+    allow(FeatureFlag).to receive(:active?).with(:multiple_cohorts).and_return(true)
+
     generate_declarations(state: :payable)
     generate_declarations(state: :paid)
 
-    declaration = create(
-      :ect_participant_declaration, :paid,
-      declaration_type: "started",
-      cpd_lead_provider:
-    )
+    create(:milestone,
+           declaration_type: "started",
+           milestone_date: Date.new(2022, 12, 22),
+           schedule: create(:schedule, schedule_identifier: "ecf-standard-september", name: "ECF September Standard", type: "Finance::Schedule::ECF", cohort: next_cohort))
 
-    Finance::StatementLineItem.create!(
-      statement: next_cohort_statement,
-      participant_declaration: declaration,
-      state: declaration.state,
-    )
-
-    declaration = create(
-      :ect_participant_declaration, :payable,
-      declaration_type: "started",
-      cpd_lead_provider:
-    )
-
-    Finance::StatementLineItem.create!(
-      statement: next_cohort_statement,
-      participant_declaration: declaration,
-      state: declaration.state,
-    )
+    travel_to next_cohort_ect.schedule.milestones.find_by(declaration_type: "started").milestone_date do
+      create(
+        :ect_participant_declaration,
+        participant_profile: next_cohort_ect,
+        cpd_lead_provider:,
+      )
+    end
   end
 
   it "displays the distribution of declaration by band, retention type and declaration state" do

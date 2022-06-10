@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe EarlyCareerTeachers::Create do
+RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
   let!(:user) { create :user }
   let(:school_cohort) { create :school_cohort }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }

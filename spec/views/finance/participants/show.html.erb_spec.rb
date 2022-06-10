@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe "finance/participants/show.html.erb" do
-  let(:profile) { create(:ect_participant_profile) }
-  let(:user) { profile.user }
+RSpec.describe "finance/participants/show.html.erb", :with_default_schedules do
+  let(:profile) { create(:ect) }
+  let(:user)    { profile.user }
 
   it "shows name for the identity" do
     assign :user, user
@@ -15,10 +15,9 @@ RSpec.describe "finance/participants/show.html.erb" do
   end
 
   context "with ECF profile" do
-    let(:profile) { create(:ect_participant_profile) }
-    let(:user) { profile.user }
-    let(:induction_programme) { create(:induction_programme, :fip) }
-    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme:) }
+    let(:user)              { profile.user }
+    let(:profile)           { create(:ect) }
+    let!(:induction_record) { profile.current_induction_records.first }
 
     it "renders schedule identifier and cohort" do
       assign :user, user
@@ -47,7 +46,9 @@ RSpec.describe "finance/participants/show.html.erb" do
     end
 
     context "when there are declarations" do
-      let!(:declaration) { create(:ect_participant_declaration, user:, participant_profile: profile) }
+      let!(:declaration) do
+        create(:ect_participant_declaration, participant_profile: profile, cpd_lead_provider: induction_record.cpd_lead_provider)
+      end
 
       it "renders declarations" do
         assign :user, user
@@ -61,7 +62,7 @@ RSpec.describe "finance/participants/show.html.erb" do
 
   context "with NPQ profile" do
     let(:profile) { create(:npq_participant_profile) }
-    let(:user) { profile.user }
+    let(:user)    { profile.user }
 
     it "renders needed information" do
       assign :user, user

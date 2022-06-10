@@ -6,7 +6,6 @@ class ValidationBetaService
                              .where(induction_programme_choice: %i[full_induction_programme core_induction_programme not_yet_known])
                              .where(opt_out_of_updates: false)
                              .where.not(id: ParticipantProfile::ECF.select(:school_cohort_id))
-
     School.where(id: empty_school_cohorts.select(:school_id)).includes(:induction_coordinators).find_each do |school|
       school.induction_coordinator_profiles.each do |sit|
         next if sit.reminder_email_sent_at.present?

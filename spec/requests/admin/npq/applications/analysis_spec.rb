@@ -2,84 +2,25 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::NPQ::Applications::Analysis", type: :request do
-  let!(:admin_user) { create :user, :admin }
-
-  let!(:cohort) { create :cohort }
-  let!(:schedule) { create :npq_leadership_schedule, cohort: }
-  let(:npq_course) { create :npq_course, identifier: "npq-senior-leadership" }
-  let(:npq_lead_provider) { create :npq_lead_provider }
-
-  let!(:accepted_application) do
-    npq_application = create(:npq_application, :accepted,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    npq_application
-  end
-  let!(:accepted_application_with_payment) do
-    npq_application = create(:npq_application, :accepted,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    create(:npq_participant_declaration,
-           declaration_type: "started",
-           user: npq_application.user,
-           participant_profile: npq_application.profile,
-           course_identifier: npq_course.identifier,
-           state: "paid")
-
-    npq_application
-  end
-
-  let!(:rejected_application) do
-    npq_application = create(:npq_application, :rejected,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    create(:npq_participant_profile)
-
-    npq_application
-  end
-  let!(:rejected_application_with_payment) do
-    npq_application = create(:npq_application, :rejected,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    participant_profile = create(:npq_participant_profile, npq_application:)
-
-    create(:npq_participant_declaration,
-           declaration_type: "started",
-           user: npq_application.user,
-           participant_profile:,
-           course_identifier: npq_course.identifier,
-           state: "paid")
-
-    npq_application
-  end
-  let!(:rejected_application_with_payable) do
-    npq_application = create(:npq_application, :rejected,
-                             npq_lead_provider:,
-                             npq_course:,
-                             cohort:)
-
-    participant_profile = create(:npq_participant_profile, npq_application:)
-
-    create(:npq_participant_declaration,
-           declaration_type: "started",
-           user: npq_application.user,
-           participant_profile:,
-           course_identifier: npq_course.identifier,
-           state: "payable")
-
-    npq_application
-  end
+RSpec.describe "Admin::NPQ::Applications::Analysis", :with_default_schedules, type: :request do
+  let!(:admin_user)                        { create :user, :admin }
+  let(:cpd_lead_provider)                  { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider)                  { cpd_lead_provider.npq_lead_provider }
+  let!(:accepted_application)              { create(:npq_application, :accepted, npq_lead_provider:) }
+  let!(:accepted_application_with_payment) { create(:npq_application, :eligible_for_funding, :accepted, npq_lead_provider:) }
+  let!(:rejected_application)              { create(:npq_application, npq_lead_provider:) }
+  let!(:rejected_application_with_payment) { create(:npq_application, :accepted, :eligible_for_funding, npq_lead_provider:) }
+  let!(:rejected_application_with_payable) { create(:npq_application, :accepted, :eligible_for_funding, npq_lead_provider:) }
 
   before do
+    create(:npq_participant_declaration, :paid,    participant_profile: accepted_application_with_payment.profile)
+    create(:npq_participant_declaration, :paid,    participant_profile: rejected_application_with_payment.profile)
+    create(:npq_participant_declaration, :payable, participant_profile: rejected_application_with_payable.profile)
+
+    rejected_application.update_column(:lead_provider_approval_status, :rejected)
+    rejected_application_with_payment.update_column(:lead_provider_approval_status, :rejected)
+    rejected_application_with_payable.update_column(:lead_provider_approval_status, :rejected)
+
     sign_in admin_user
   end
 

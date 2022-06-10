@@ -2,41 +2,35 @@
 
 require "rails_helper"
 
-RSpec.describe Statements::MarkAsPaid do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
-  let(:payable_declaration) { create(:npq_participant_declaration, :payable) }
-  let(:voided_declaration) { create(:npq_participant_declaration, :voided) }
-  let(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :awaiting_clawback) }
-  let(:statement) { create :npq_payable_statement, cpd_lead_provider: }
-
-  before do
-    Finance::StatementLineItem.create!(
-      statement:,
-      participant_declaration: payable_declaration,
-      state: payable_declaration.state,
-    )
-
-    Finance::StatementLineItem.create!(
-      statement:,
-      participant_declaration: voided_declaration,
-      state: voided_declaration.state,
-    )
-
-    Finance::StatementLineItem.create!(
-      statement:,
-      participant_declaration: awaiting_clawback_declaration,
-      state: awaiting_clawback_declaration.state,
-    )
-  end
+RSpec.describe Statements::MarkAsPaid, :with_default_schedules do
+  let(:cpd_lead_provider)             { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:cohort)                        { Cohort.current }
+  let(:eligible_statement)            { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: 3.months.ago) }
+  let(:statement)                     { create(:npq_statement, cpd_lead_provider:, cohort:, deadline_date: 2.months.ago) }
+  let(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :eligible, cpd_lead_provider:) }
 
   subject { described_class.new(statement) }
 
+  before do
+    travel_to eligible_statement.deadline_date - 1.day do
+      awaiting_clawback_declaration
+    end
+    Statements::MarkAsPayable.new(eligible_statement).call
+    Statements::MarkAsPaid.new(eligible_statement).call
+
+    travel_to statement.deadline_date - 1.day do
+      create(:npq_participant_declaration, :eligible, cpd_lead_provider:)
+      VoidParticipantDeclaration.new(cpd_lead_provider:, id: create(:npq_participant_declaration, :eligible, cpd_lead_provider:).id).call
+      Finance::ClawbackDeclaration.new(awaiting_clawback_declaration.reload).call
+    end
+    Statements::MarkAsPayable.new(statement).call
+    statement.reload
+  end
+
   describe "#call" do
     it "transitions the statement itself" do
-      expect {
-        subject.call
-      }.to change { Finance::Statement::NPQ::Payable.count }.by(-1)
-      .and change { Finance::Statement::NPQ::Paid.count }.by(1)
+      expect { subject.call }
+        .to change(statement, :type).from("Finance::Statement::NPQ::Payable").to("Finance::Statement::NPQ::Paid")
     end
 
     describe "declarations" do
@@ -49,7 +43,7 @@ RSpec.describe Statements::MarkAsPaid do
       end
 
       it "transitions the awaiting_clawback to clawed_back" do
-        expect(statement.participant_declarations.awaiting_clawback.count).to eql(1)
+        expect(statement.participant_declarations.awaiting_clawback.count).to eq(1)
 
         expect {
           subject.call

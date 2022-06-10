@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ChangeTrainingStatusForm, type: :model do
+RSpec.describe Finance::ChangeTrainingStatusForm, :with_default_schedules, type: :model do
   subject(:form) { described_class.new(params) }
 
   describe "NPQ" do
@@ -42,24 +42,12 @@ RSpec.describe Finance::ChangeTrainingStatusForm, type: :model do
   end
 
   describe "ECF" do
-    let(:school_cohort) { participant_profile.school_cohort }
-    let!(:partnership) do
-      create(
-        :partnership,
-        school: school_cohort.school,
-        cohort: school_cohort.cohort,
-        challenged_at: nil,
-        challenge_reason: nil,
-        pending: false,
-      )
-    end
-    let(:induction_programme) { create(:induction_programme, partnership:, school_cohort:) }
-    let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
-    let(:params) { { participant_profile:, training_status: "deferred", reason: "bereavement" } }
+    let(:cpd_lead_provider)        { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:params)                   { { participant_profile:, training_status: "deferred", reason: "bereavement" } }
 
     describe "EarlyCareerTeacher" do
-      let!(:participant_declaration) { create(:ect_participant_declaration, participant_profile:, user: participant_profile.user) }
-      let(:participant_profile) { create(:ect_participant_profile, training_status: "active") }
+      let!(:participant_declaration) { create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:) }
+      let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
 
       it { is_expected.to validate_presence_of(:training_status) }
       it { is_expected.to validate_inclusion_of(:reason).in_array(Participants::Defer::ECF.reasons) }
@@ -96,8 +84,8 @@ RSpec.describe Finance::ChangeTrainingStatusForm, type: :model do
     end
 
     describe "Mentor" do
-      let!(:participant_declaration) { create(:mentor_participant_declaration, participant_profile:, user: participant_profile.user) }
-      let(:participant_profile) { create(:mentor_participant_profile, training_status: "active") }
+      let!(:participant_declaration) { create(:mentor_participant_declaration, participant_profile:, cpd_lead_provider:) }
+      let(:participant_profile)      { create(:mentor, lead_provider: cpd_lead_provider.lead_provider ) }
 
       it { is_expected.to validate_presence_of(:training_status) }
       it { is_expected.to validate_inclusion_of(:reason).in_array(Participants::Defer::ECF.reasons) }

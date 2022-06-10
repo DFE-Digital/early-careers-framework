@@ -17,11 +17,11 @@ RSpec.describe Partnership, type: :model do
     it { is_expected.to have_many(:partnership_notification_emails) }
   end
 
-  it "updates the updated_at on participant profiles and users" do
+  it "updates the updated_at on participant profiles and users", :with_default_schedules do
     freeze_time
     school_cohort = create(:school_cohort)
     partnership = create(:partnership, school: school_cohort.school)
-    profile = create(:ect_participant_profile, school_cohort:, updated_at: 2.weeks.ago)
+    profile = create(:ect, school_cohort:, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 

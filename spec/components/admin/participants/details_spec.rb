@@ -4,12 +4,8 @@ RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :vie
   component { described_class.new profile: }
 
   context "for unvalidated npq profile" do
-    let(:npq_application) { create(:npq_application, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+    let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_application.profile }
-
-    before do
-      NPQ::Accept.new(npq_application:).call
-    end
 
     it "renders all the required information" do
       expect(rendered).to have_contents(
@@ -25,12 +21,8 @@ RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :vie
   end
 
   context "for validated npq profile" do
-    let(:npq_application) { create(:npq_application, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+    let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_application.profile }
-
-    before do
-      NPQ::Accept.new(npq_application:).call
-    end
 
     before do
       allow(profile).to receive(%i[approved? rejected?].sample).and_return true

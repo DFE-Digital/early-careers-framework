@@ -2,14 +2,12 @@
 
 require "swagger_helper"
 
-require_relative "../../shared/context/lead_provider_profiles_and_courses"
-
-describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
-  include_context "lead provider profiles and courses"
-
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-  let(:bearer_token) { "Bearer #{token}" }
-  let(:Authorization) { bearer_token }
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_spec.json" do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token)      { "Bearer #{token}" }
+  let(:Authorization)     { bearer_token }
+  let(:mentor_profile)    { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
 
   path "/api/v2/participants/ecf" do
     get "Retrieve multiple participants, replaces <code>/api/v2/participants</code>" do
@@ -142,9 +140,8 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                   "#/components/schemas/ECFParticipantResumeRequest",
                   "#/components/schemas/ECFParticipantResumeResponse",
                   "ECF Participant" do
-    let(:participant) { deferred_mentor_profile }
-    let!(:mentor_induction_record_deferred) { create(:induction_record, induction_programme:, participant_profile: deferred_mentor_profile, training_status: "deferred") }
-    let(:attributes) { { course_identifier: "ecf-mentor" } }
+    let(:participant) { create(:mentor, :deferred, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:attributes)  { { course_identifier: "ecf-mentor" } }
   end
 
   path "/api/v2/participants/ecf/{id}/withdraw" do
@@ -179,7 +176,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                 }
 
       response "200", "The ECF participant being withdrawn" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { mentor_profile.user_id }
         let(:attributes) do
           {
             reason: "left-teaching-profession",
@@ -206,8 +203,7 @@ describe "API", type: :request, swagger_doc: "v2/api_spec.json" do
                   "/api/v2/participants/ecf/{id}/change-schedule",
                   "#/components/schemas/ECFParticipantChangeScheduleRequest",
                   "#/components/schemas/ECFParticipantResponse",
-                  "ECF Participant",
-                  :with_default_schedules do
+                  "ECF Participant" do
     let(:participant) { mentor_profile }
     let(:attributes) do
       {

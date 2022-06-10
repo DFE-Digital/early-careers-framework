@@ -3,63 +3,33 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Participants API", type: :request do
+RSpec.describe "Participants API", :with_default_schedules, type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
-  let(:lead_provider) { create(:lead_provider) }
-  let(:cohort) { create(:cohort, :current) }
-  let(:partnership) { create(:partnership, lead_provider:, cohort:) }
-  let(:induction_programme) { create(:induction_programme, partnership:) }
-  let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:, induction_programme_choice: "full_induction_programme") }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-  let(:bearer_token) { "Bearer #{token}" }
-  let!(:mentor_profile) do
-    travel_to 5.days.ago do
-      create(:mentor_participant_profile, school_cohort:)
-        .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
-    end
-  end
-
-  let!(:withdrawn_profile) do
-    travel_to 4.days.ago do
-      create(:ect_participant_profile, :withdrawn_record, school_cohort:)
-    end
-  end
-
-  let(:ects) do
-    [
-      create(:ect_participant_profile, mentor_profile:, school_cohort:),
-      create(:ect_participant_profile, mentor_profile:, school_cohort:).tap do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
-          induction_record.update!(training_status: "withdrawn")
-        end
-      end,
-    ]
-  end
-
-  let!(:withdrawn_ect_profile_record) do
-    create(:ect_participant_profile, :withdrawn_record, school_cohort:).tap do |profile|
-      Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
-        induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn")
-      end
+  let(:lead_provider)     { create(:lead_provider) }
+  let(:cohort)            { Cohort.current }
+  let(:school_cohort)     { create(:school_cohort, :fip, :with_induction_programme, cohort:, induction_programme_choice: "full_induction_programme", lead_provider: cpd_lead_provider.lead_provider) }
+  let(:partnership)       { school_cohort.default_induction_programme.partnership }
+  let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token)      { "Bearer #{token}" }
+  let!(:mentor_profile)   do
+    travel_to 2.days.ago do
+      create(:mentor, school_cohort:, lead_provider: cpd_lead_provider.lead_provider)
     end
   end
 
   before :each do
-    ects.each do |profile|
-      Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
-        ir.update_column(:mentor_profile_id, mentor_profile.id)
-      end
-    end
-
+    create_list :ect, 2, mentor_profile_id: mentor_profile.id, school_cohort: school_cohort, lead_provider: cpd_lead_provider.lead_provider
+    ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
+    create(:ect,
+           :withdrawn_record,
+           user: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record.user,
+           school_cohort:)
     default_headers[:Authorization] = bearer_token
   end
 
+  let!(:withdrawn_ect_profile_record) { create(:ect, :eligible_for_funding, :withdrawn_record, school_cohort:, lead_provider: cpd_lead_provider.lead_provider) }
   let(:user) { create(:user) }
-
-  let(:early_career_teacher_profile) do
-    create(:ect_participant_profile, school_cohort:, user:)
-      .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
-  end
+  let(:early_career_teacher_profile) { create(:ect, :eligible_for_funding, school_cohort:, user:, lead_provider: cpd_lead_provider.lead_provider) }
 
   describe "GET /api/v2/participants/ecf" do
     context "when authorized" do
@@ -77,27 +47,29 @@ RSpec.describe "Participants API", type: :request do
 
         it "returns all users" do
           get "/api/v2/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "only returns users for the current cohort" do
           cohort_2020 = create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
-          create(:ect_participant_profile, school_cohort: school_cohort_2020)
+          create(:ecf_schedule, cohort: cohort_2020)
+          create(:ect, school_cohort: school_cohort_2020)
 
           get "/api/v2/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
           cohort_2020 = create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
-          create(:ect_participant_profile, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
+          create(:ecf_schedule, cohort: cohort_2020)
+          create(:ect, school_cohort: school_cohort_2020, user: mentor_profile.user)
 
           get "/api/v2/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
 
           parsed_response["data"].each do |user|
             next unless user["id"] == mentor_profile.user.id
@@ -148,8 +120,8 @@ RSpec.describe "Participants API", type: :request do
           ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
           expect(mentors).to eql(1)
-          expect(ects).to eql(3)
-          expect(withdrawn).to eql(1)
+          expect(ects).to eql(4)
+          expect(withdrawn).to eql(2)
         end
 
         it "returns the right number of users per page" do
@@ -180,13 +152,13 @@ RSpec.describe "Participants API", type: :request do
           it "returns users changed since the updated_since parameter" do
             get "/api/v2/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }
 
-            expect(parsed_response["data"].size).to eq(3)
+            expect(parsed_response["data"].size).to eq(4)
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
             User.order(created_at: :asc).first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v2/participants/ecf", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eql(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do
@@ -194,7 +166,7 @@ RSpec.describe "Participants API", type: :request do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
               get "/api/v2/participants/ecf", params: { filter: { updated_since: since } }
 
-              expect(parsed_response["data"].size).to eq(3)
+              expect(parsed_response["data"].size).to eq(4)
             end
           end
 
@@ -254,7 +226,7 @@ RSpec.describe "Participants API", type: :request do
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "returns the correct headers" do
@@ -288,14 +260,20 @@ RSpec.describe "Participants API", type: :request do
           expect(mentor_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
-          expect(mentor_row["teacher_reference_number"]).to eql mentor.teacher_profile.trn
-          expect(mentor_row["teacher_reference_number_validated"]).to eql "false"
+          expect(mentor_row["teacher_reference_number"]).to be_empty
+          expect(mentor_row["teacher_reference_number_validated"]).to be_empty
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to eql "false"
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = ParticipantProfile::ECT.active_record.first.user
+          ect = InductionRecord
+                  .active_induction_status
+                  .joins(:participant_profile)
+                  .where(participant_profile: { type: "ParticipantProfile::ECT" })
+                  .first
+                  .participant_profile
+                  .user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
@@ -304,8 +282,8 @@ RSpec.describe "Participants API", type: :request do
           expect(ect_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
-          expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
-          expect(ect_row["teacher_reference_number_validated"]).to eql "false"
+          expect(ect_row["teacher_reference_number"]).to be_empty
+          expect(ect_row["teacher_reference_number_validated"]).to be_empty
           expect(mentor_row["eligible_for_funding"]).to be_empty
           expect(mentor_row["pupil_premium_uplift"]).to eql "false"
           expect(mentor_row["sparsity_uplift"]).to eql "false"
@@ -320,8 +298,8 @@ RSpec.describe "Participants API", type: :request do
           expect(withdrawn_record_row["participant_type"]).to eql(withdrawn_ect_profile_record.participant_type.to_s)
           expect(withdrawn_record_row["cohort"]).to eql(withdrawn_ect_profile_record.cohort.start_year.to_s)
           expect(withdrawn_record_row["teacher_reference_number"]).to eql(withdrawn_ect_profile_record.teacher_profile.trn)
-          expect(withdrawn_record_row["teacher_reference_number_validated"]).to be_present
-          expect(withdrawn_record_row["eligible_for_funding"]).to be_empty
+          expect(withdrawn_record_row["teacher_reference_number_validated"]).to eq("true")
+          expect(withdrawn_record_row["eligible_for_funding"]).to eq("true")
           expect(withdrawn_record_row["pupil_premium_uplift"]).to eql(withdrawn_ect_profile_record.pupil_premium_uplift.to_s)
           expect(withdrawn_record_row["sparsity_uplift"]).to eql(withdrawn_ect_profile_record.sparsity_uplift.to_s)
           expect(withdrawn_record_row["training_status"]).to eql(withdrawn_ect_profile_record.induction_records.first.training_status)
@@ -329,13 +307,13 @@ RSpec.describe "Participants API", type: :request do
 
         it "ignores pagination parameters" do
           get "/api/v2/participants/ecf.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "respects the updated_since parameter" do
           get "/api/v2/participants/ecf.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
 
-          expect(parsed_response.length).to eq(3)
+          expect(parsed_response.length).to eq(4)
         end
       end
 
@@ -345,7 +323,6 @@ RSpec.describe "Participants API", type: :request do
         it_behaves_like "a participant withdraw action endpoint" do
           let(:url) { "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
-          let(:induction_programme) { create(:induction_programme, partnership:) }
 
           it "changes the training status of a participant to withdrawn" do
             put url, params: params
@@ -361,7 +338,6 @@ RSpec.describe "Participants API", type: :request do
         let(:withdrawal_url)    { "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
-        let(:induction_programme) { create(:induction_programme, partnership:) }
 
         before do
           put "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/defer",
@@ -428,8 +404,8 @@ RSpec.describe "Participants API", type: :request do
               "cohort" => early_career_teacher_profile&.cohort&.start_year&.to_s,
               "status" => early_career_teacher_profile.induction_records[0].induction_status,
               "teacher_reference_number" => early_career_teacher_profile.teacher_profile.trn,
-              "teacher_reference_number_validated" => false,
-              "eligible_for_funding" => nil,
+              "teacher_reference_number_validated" => true,
+              "eligible_for_funding" => true,
               "pupil_premium_uplift" => early_career_teacher_profile.pupil_premium_uplift,
               "sparsity_uplift" => early_career_teacher_profile.sparsity_uplift,
               "training_status" => early_career_teacher_profile.training_status,

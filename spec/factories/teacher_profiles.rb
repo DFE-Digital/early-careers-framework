@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :teacher_profile do
-    user
+    user { create :user }
 
     trn { sprintf("%07i", Random.random_number(9_999_999)) }
   end

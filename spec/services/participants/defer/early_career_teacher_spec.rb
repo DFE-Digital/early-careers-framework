@@ -2,32 +2,14 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::Defer::EarlyCareerTeacher do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:profile) { create(:ect_participant_profile) }
-  let(:user) { profile.user }
-  let(:school) { profile.school_cohort.school }
-  let(:cohort) { profile.school_cohort.cohort }
-  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-
-  let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: profile, induction_programme:)
-  end
-
-  let!(:partnership) do
-    create(
-      :partnership,
-      school:,
-      lead_provider:,
-      cohort:,
-    )
-  end
+RSpec.describe Participants::Defer::EarlyCareerTeacher, :with_default_schedules do
+  let(:cpd_lead_provider)    { create(:cpd_lead_provider, :with_lead_provider) }
+  let!(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
 
   subject do
     described_class.new(
       params: {
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
         reason: "bereavement",
@@ -37,7 +19,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
 
   describe "#call" do
     it "updates profile training_status to deferred" do
-      expect { subject.call }.to change { profile.reload.training_status }.from("active").to("deferred")
+      expect { subject.call }.to change { participant_profile.reload.training_status }.from("active").to("deferred")
     end
 
     it "creates a ParticipantProfileState" do
@@ -45,14 +27,14 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
     end
 
     it "updates induction_record training_status" do
-      expect { subject.call }.to change { induction_record.reload.training_status }.from("active").to("deferred")
+      expect { subject.call }.to change { participant_profile.reload.current_induction_record.training_status }.from("active").to("deferred")
     end
 
     context "when already deferred" do
       before do
         described_class.new(
           params: {
-            participant_id: user.id,
+            participant_id: participant_profile.user_id,
             course_identifier: "ecf-induction",
             cpd_lead_provider:,
             reason: "bereavement",
@@ -67,7 +49,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
 
     context "when status is withdrawn" do
       before do
-        ParticipantProfileState.create!(participant_profile: profile, state: "withdrawn", cpd_lead_provider:)
+        ParticipantProfileState.create!(participant_profile: parrticipant_profile, state: "withdrawn", cpd_lead_provider:)
         profile.update!(status: "withdrawn")
       end
 
@@ -82,7 +64,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
       subject do
         described_class.new(
           params: {
-            participant_id: user.id,
+            participant_id: participant_profile.user_id,
             course_identifier: "ecf-induction",
             cpd_lead_provider:,
           },
@@ -90,7 +72,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
       end
 
       it "returns an error and does not update training_status" do
-        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { profile.reload.training_status }
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { participant_profile.reload.training_status }
       end
     end
 
@@ -98,7 +80,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
       subject do
         described_class.new(
           params: {
-            participant_id: user.id,
+            participant_id: participant_profile.user_id,
             course_identifier: "ecf-induction",
             cpd_lead_provider:,
             reason: "foo",
@@ -107,7 +89,7 @@ RSpec.describe Participants::Defer::EarlyCareerTeacher do
       end
 
       it "returns an error and does not update training_status" do
-        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { profile.reload.training_status }
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { participant_profile.reload.training_status }
       end
     end
   end

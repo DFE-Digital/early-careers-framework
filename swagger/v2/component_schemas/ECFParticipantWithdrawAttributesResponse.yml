@@ -52,10 +52,14 @@ properties:
     description: "The Teacher Reference Number (TRN) for this NPQ participant"
     type: string
     example: "1234567"
+    required: false
+    nullable: true
   teacher_reference_number_validated:
     description: "Indicates whether the Teacher Reference Number (TRN) has been validated"
     type: boolean
     example: true
+    required: false
+    nullable: true
   eligible_for_funding:
     description: "Indicates whether this participant is eligible to receive DfE funded induction"
     type: boolean

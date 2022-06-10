@@ -2,13 +2,18 @@
 
 FactoryBot.define do
   factory :participant_profile do
-    teacher_profile
-    profile_duplicity { :single }
+    transient do
+      profile_traits { [] }
+    end
 
     factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
-      school_cohort
+      profile_duplicity { :single }
+      school_cohort { association :school_cohort }
       teacher_profile { association :teacher_profile, school: school_cohort.school }
       schedule { Finance::Schedule::ECF.default || create(:ecf_schedule) }
+      after :build do |participant_profile|
+        participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
+      end
 
       factory :ect_participant_profile, class: "ParticipantProfile::ECT"
       factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
@@ -23,19 +28,15 @@ FactoryBot.define do
     end
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
-      after :build do |participant_profile|
-        npq_application = participant_profile.npq_application || create(:npq_application, participant_identity: participant_profile.participant_identity, school_urn: rand(100_000..999_999))
-        schedule = if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(npq_application.npq_course.identifier)
-                     Finance::Schedule::NPQLeadership.default || create(:npq_leadership_schedule)
-                   elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(npq_application.npq_course.identifier)
-                     Finance::Schedule::NPQSpecialist.default || create(:npq_specialist_schedule)
-                   else
-                     NPQCourse.schedule_for(npq_course: npq_application.npq_course)
-                   end
+      transient do
+        user              { create(:user) }
+        npq_lead_provider { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
+        trn               { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
+      end
+      npq_application { create(:npq_application, *profile_traits, :accepted, user:, npq_lead_provider:) }
 
-        participant_profile.npq_application ||= npq_application
-        participant_profile.schedule = schedule
-        participant_profile.npq_course = npq_application.npq_course
+      initialize_with do
+        npq_application.profile
       end
 
       trait :with_participant_profile_state do
@@ -60,6 +61,25 @@ FactoryBot.define do
 
     trait :withdrawn_record do
       status { :withdrawn }
+    end
+
+    trait :withdrawn do
+      transient do
+        reason { "other" }
+      end
+
+      after(:create) do |participant_profile, evaluator|
+        if participant_profile.is_a?(ParticipantProfile::NPQ)
+          Participants::Withdraw::NPQ.new(
+            params: {
+              participant_id: participant_profile.teacher_profile.user_id,
+              course_identifier: participant_profile.npq_course.identifier,
+              cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
+              reason: evaluator.reason,
+            },
+          ).call
+        end
+      end
     end
 
     trait :email_sent do
@@ -87,10 +107,6 @@ FactoryBot.define do
           profile.ecf_participant_eligibility.save!
         end
       end
-    end
-
-    after :build do |participant_profile|
-      participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
     end
   end
 end

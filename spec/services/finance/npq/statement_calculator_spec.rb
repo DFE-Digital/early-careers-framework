@@ -2,15 +2,16 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::StatementCalculator do
-  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
+  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
+  let!(:npq_course)         { create(:npq_leadship_course, identifier: "npq-leading-teaching") }
+  let(:statement)           { create(:npq_statement, cpd_lead_provider:) }
+  let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
+  let(:milestone)           { participant_profile.schedule.milestones.find_by!(declaration_type:) }
+  let(:declaration_type)    { "started" }
 
-  let!(:npq_course) { create(:npq_leadship_course, identifier: "npq-leading-teaching") }
-
-  let!(:contract) { create(:npq_contract, npq_lead_provider:) }
-
-  let(:statement) { create(:npq_statement, cpd_lead_provider:) }
+  before { create(:npq_contract, npq_lead_provider:) }
 
   subject { described_class.new(statement:) }
 
@@ -18,79 +19,64 @@ RSpec.describe Finance::NPQ::StatementCalculator do
     let(:default_total) { BigDecimal("0.1212631578947368421052631578947368421064e4") }
 
     context "when there is a positive reconcile_amount" do
-      before do
-        statement.update!(reconcile_amount: 1234)
-      end
+      before { statement.update!(reconcile_amount: 1234) }
 
       it "increases total" do
-        expect(subject.total_payment).to eql(default_total + 1234)
+        expect(subject.total_payment).to eq(default_total + 1234)
       end
     end
 
     context "when there is a negative reconcile_amount" do
-      before do
-        statement.update!(reconcile_amount: -1234)
-      end
+      before { statement.update!(reconcile_amount: -1234) }
 
       it "descreases the total" do
-        expect(subject.total_payment).to eql(default_total - 1234)
+        expect(subject.total_payment).to eq(default_total - 1234)
       end
     end
   end
 
   describe "#total_starts" do
     context "when there are no declarations" do
-      it do
-        expect(subject.total_starts).to be_zero
-      end
+      it { expect(subject.total_starts).to be_zero }
     end
 
     context "when there are declarations" do
-      before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "eligible",
-          course_identifier: npq_course.identifier
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      let!(:participant_declaration) do
+        travel_to statement.deadline_date do
+          create(:npq_participant_declaration, :eligible, cpd_lead_provider:, participant_profile:)
         end
       end
 
-      it "counts them" do
-        expect(subject.total_starts).to eql(1)
+      context "with a billable declaration" do
+        it "counts them" do
+          expect(subject.total_starts).to eq(1)
+        end
       end
     end
 
     context "when there are clawbacks" do
-      before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "awaiting_clawback",
-          course_identifier: npq_course.identifier
-        )
+      let!(:participant_declaration) do
+        travel_to(1.month.ago) { create(:npq_participant_declaration, :paid, cpd_lead_provider:) }
+      end
+      let(:paid_statement)     { Finance::Statement::NPQ::Paid.find_by!(cpd_lead_provider:) }
+      let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, cpd_lead_provider:) }
 
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      before do
+        travel_to statement.deadline_date do
+          Finance::ClawbackDeclaration.new(participant_declaration).call
         end
       end
 
       it "does not count them" do
+        expect(statement.reload.statement_line_items.awaiting_clawback).to exist
         expect(subject.total_starts).to be_zero
       end
     end
   end
 
   describe "#total_completed" do
+    let(:declaration_type) { "completed" }
+
     context "when there are no declarations" do
       it do
         expect(subject.total_completed).to be_zero
@@ -98,47 +84,34 @@ RSpec.describe Finance::NPQ::StatementCalculator do
     end
 
     context "when there are declarations" do
-      before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "eligible",
-          course_identifier: npq_course.identifier,
-          declaration_type: "completed"
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      let!(:participant_declaration) do
+        travel_to milestone.start_date do
+          create(:npq_participant_declaration, :eligible, declaration_type:, cpd_lead_provider:, participant_profile:)
         end
       end
+      let(:statement) { participant_declaration.statement_line_items.eligible.first.statement }
 
       it "counts them" do
-        expect(subject.total_completed).to eql(1)
+        expect(subject.total_completed).to eq(1)
       end
     end
 
     context "when there are clawbacks" do
+      let!(:participant_declaration) do
+        travel_to milestone.start_date do
+          create(:npq_participant_declaration, :paid, declaration_type:, cpd_lead_provider:, participant_profile:)
+        end
+      end
+      let(:previous_statement) { participant_declaration.statements.first }
+      let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
       before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "awaiting_clawback",
-          course_identifier: npq_course.identifier,
-          declaration_type: "completed"
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+        travel_to statement.deadline_date do
+          Finance::ClawbackDeclaration.new(participant_declaration).call
         end
       end
 
       it "does not count them" do
+        expect(statement.statement_line_items.awaiting_clawback).to exist
         expect(subject.total_completed).to be_zero
       end
     end
@@ -153,12 +126,14 @@ RSpec.describe Finance::NPQ::StatementCalculator do
       end
 
       it "affects the amount to reconcile by" do
-        expect(subject.overall_vat).to eql((default_total + 1234) * 0.2)
+        expect(subject.overall_vat).to eq((default_total + 1234) * 0.2)
       end
     end
   end
 
   describe "#total_retained" do
+    let(:declaration_type) { "retained-1" }
+
     context "when there are no declarations" do
       it do
         expect(subject.total_retained).to be_zero
@@ -166,43 +141,29 @@ RSpec.describe Finance::NPQ::StatementCalculator do
     end
 
     context "when there are declarations" do
-      before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "eligible",
-          course_identifier: npq_course.identifier,
-          declaration_type: "retained-1"
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      let!(:participant_declaration) do
+        travel_to milestone.start_date do
+          create(:npq_participant_declaration, :eligible, course_identifier: npq_course.identifier, declaration_type: "retained-1", participant_profile:, cpd_lead_provider:)
         end
       end
+      let(:statement) { participant_declaration.statement_line_items.eligible.first.statement }
 
       it "counts them" do
-        expect(subject.total_retained).to eql(1)
+        expect(subject.total_retained).to eq(1)
       end
     end
 
     context "when there are clawbacks" do
+      let!(:participant_declaration) do
+        travel_to milestone.start_date do
+          create(:npq_participant_declaration, :paid, declaration_type: "retained-1", cpd_lead_provider:, participant_profile:)
+        end
+      end
+      let(:previous_statement) { participant_declaration.statements.first }
+      let!(:statement)         { create(:npq_statement, :next_output_fee, deadline_date: previous_statement.deadline_date + 1.month, cpd_lead_provider:) }
       before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "awaiting_clawback",
-          course_identifier: npq_course.identifier,
-          declaration_type: "retained-1"
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+        travel_to statement.deadline_date do
+          Finance::ClawbackDeclaration.new(participant_declaration).call
         end
       end
 
@@ -214,30 +175,19 @@ RSpec.describe Finance::NPQ::StatementCalculator do
 
   describe "#total_voided" do
     context "when there are no declarations" do
-      it do
-        expect(subject.total_voided).to be_zero
-      end
+      it { expect(subject.total_voided).to be_zero }
     end
 
     context "when there are declarations" do
-      before do
-        declarations = create_list(
-          :npq_participant_declaration, 1,
-          state: "voided",
-          course_identifier: npq_course.identifier
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      let!(:participant_declaration) do
+        travel_to milestone.start_date do
+          create(:npq_participant_declaration, :voided, participant_profile:, cpd_lead_provider:)
         end
       end
+      let(:statement) { participant_declaration.statement_line_items.voided.first.statement }
 
       it "counts them" do
-        expect(subject.total_voided).to eql(1)
+        expect(subject.total_voided).to eq(1)
       end
     end
   end

@@ -19,7 +19,7 @@ module NominateInductionTutorSteps
 
   def given_an_email_is_being_used_by_an_existing_ect
     given_a_valid_nomination_email_has_been_created
-    @ect = create(:ect_participant_profile, user: create(:user, full_name: "John Doe", email: "johndo2@example.com"))
+    @ect = create(:ect, user: create(:user, full_name: "John Doe", email: "johndo2@example.com"))
   end
 
   def and_the_nomination_email_link_has_expired

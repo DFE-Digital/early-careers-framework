@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantDeclaration::NPQ, type: :model do
+RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :model do
   context "when declarations for a particular course are made" do
     before do
       create_list(:npq_participant_declaration, 20)

@@ -2,9 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::Statements::MarkAsPayable do
-  include_context "with default schedules"
-
+RSpec.describe Finance::Statements::MarkAsPayable, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let!(:statement) do
     create(
@@ -17,13 +15,9 @@ RSpec.describe Finance::Statements::MarkAsPayable do
 
   before do
     travel_to Date.new(2021, 12, 31) do
-      eligible_dec = create(:ect_participant_declaration, :eligible)
-      ineligible_dec = create(:ect_participant_declaration, :ineligible)
-      voided_dec = create(:ect_participant_declaration, :voided)
-
-      Finance::StatementLineItem.create!(statement:, participant_declaration: eligible_dec, state: "eligible")
-      Finance::StatementLineItem.create!(statement:, participant_declaration: ineligible_dec, state: "ineligible")
-      Finance::StatementLineItem.create!(statement:, participant_declaration: voided_dec, state: "voided")
+      create(:ect_participant_declaration, :eligible,   cpd_lead_provider:)
+      create(:ect_participant_declaration, :ineligible, cpd_lead_provider:)
+      create(:ect_participant_declaration, :voided,     cpd_lead_provider:)
     end
   end
 

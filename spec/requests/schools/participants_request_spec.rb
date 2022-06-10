@@ -1,36 +1,33 @@
 # frozen_string_literal: true
 
-RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_flags: { eligibility_notifications: "active" } do
-  let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
-  let(:school) { school_cohort.school }
-  let(:cohort) { create(:cohort, :current) }
+RSpec.describe "Schools::Participants", :with_default_schedules, type: :request, js: true, with_feature_flags: { eligibility_notifications: "active" } do
+  let(:user)              { create(:user, :induction_coordinator, school_ids: [school.id]) }
+  let!(:lead_provider)    { create(:cpd_lead_provider, :with_lead_provider, name: "Lead Provider").lead_provider }
 
-  let!(:school_cohort) { create(:school_cohort, cohort:, induction_programme_choice: "full_induction_programme") }
-  let!(:another_cohort) { create(:school_cohort) }
-  let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
-  let!(:mentor_user) { mentor_profile.user }
-  let!(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort:) }
-  let!(:mentor_user_2) { mentor_profile_2.user }
-  let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort:) }
-  let!(:ect_user) { ect_profile.user }
-  let!(:withdrawn_ect_profile) { create(:ect_participant_profile, :withdrawn_record, school_cohort:) }
-  let!(:withdrawn_ect) { withdrawn_ect_profile.user }
-  let!(:unrelated_mentor_profile) { create(:mentor_participant_profile, school_cohort: another_cohort) }
-  let!(:unrelated_mentor) { unrelated_mentor_profile.user }
-  let!(:unrelated_ect) { create(:ect_participant_profile, school_cohort: another_cohort).user }
+  let(:school)            { school_cohort.school }
+  let(:cohort)            { Cohort.current }
+
+  let!(:school_cohort)    { create(:school_cohort, :fip, :with_induction_programme, cohort:, lead_provider:) }
+  let!(:another_cohort)   { create(:school_cohort) }
+
+  let(:mentor_profile)    { create(:mentor, school_cohort:, lead_provider:) }
+  let!(:mentor_user)      { mentor_profile.user }
+
+  let!(:mentor_profile_2) { create(:mentor, school_cohort:, lead_provider:) }
+  let!(:mentor_user_2)    { mentor_profile_2.user }
+
+  let(:ect_profile)       { create(:ect, mentor_profile_id: mentor_profile.id, school_cohort:, lead_provider:) }
+  let!(:ect_user)         { ect_profile.user }
+  let!(:withdrawn_ect)    { create(:ect, :withdrawn_record, school_cohort:, lead_provider:).user }
+
+  let!(:unrelated_mentor_profile) { create(:mentor, school_cohort: another_cohort, lead_provider:) }
+  let!(:unrelated_mentor)         { unrelated_mentor_profile.user }
+
+  let!(:unrelated_ect)    { create(:ect, school_cohort: another_cohort, lead_provider:).user }
   let!(:delivery_partner) { create(:delivery_partner, name: "Delivery Partner") }
-  let!(:lead_provider) { create(:lead_provider, name: "Lead Provider", cohorts: [cohort]) }
-  let!(:partnership) { create(:partnership, school:, lead_provider:, delivery_partner:, cohort:) }
+  let(:deliver_partner)   { school.deliver_partner_for(cohort.start_year) }
 
   before do
-    Induction::SetCohortInductionProgramme.call(school_cohort:,
-                                                programme_choice: "full_induction_programme")
-    programme = school_cohort.default_induction_programme
-    [mentor_profile, ect_profile, mentor_profile_2].each do |profile|
-      Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
-    end
-
-    ect_profile.current_induction_record.update!(mentor_profile:)
     sign_in user
   end
 
@@ -101,13 +98,6 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
       context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
         context "when there are mentors in the pool" do
-          let!(:school_mentors) { [mentor_profile, mentor_profile_2, unrelated_mentor_profile] }
-          before do
-            school_mentors.each do |profile|
-              Mentors::AddToSchool.call(school:, mentor_profile: profile)
-            end
-          end
-
           it "mentors_added is true" do
             get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
             expect(assigns(:mentors_added)).to be true
@@ -115,6 +105,13 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
         end
 
         context "when there are no mentors in the pool" do
+          let!(:school_mentors) { [mentor_profile, mentor_profile_2, unrelated_mentor_profile] }
+          before do
+            school_mentors.each do |mentor|
+              Mentors::RemoveFromSchool.call(mentor_profile: mentor, school:)
+            end
+          end
+
           it "mentors_added is false" do
             get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
             expect(assigns(:mentors_added)).to be false
@@ -150,7 +147,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     end
 
     it "shows error when a blank form is submitted" do
-      ect_profile = create(:ect_participant_profile, school_cohort:)
+      ect_profile = create(:ect, school_cohort:)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor"
       expect(response).to render_template("schools/participants/edit_mentor")
       expect(response.body).to include "Choose a mentor"
@@ -445,6 +442,10 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     end
 
     context "when participant has not yet received request for details email" do
+      before do
+        ect_profile.update!(request_for_details_sent_at: nil)
+      end
+
       it "does not queue 'participant deleted' email" do
         expect {
           delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"

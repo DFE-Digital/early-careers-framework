@@ -10,11 +10,11 @@ module Api
       include ApiFilter
 
       def create
-        params = HashWithIndifferentAccess.new({ cpd_lead_provider: }).merge(permitted_params["attributes"] || {})
+        service = RecordDeclaration.new({ cpd_lead_provider: }.merge(permitted_params["attributes"] || {}))
 
         log_schema_validation_results
 
-        render json: RecordParticipantDeclaration.call(params)
+        render_from_service(service, ParticipantDeclarationSerializer)
       end
 
       def index
@@ -70,7 +70,9 @@ module Api
       end
 
       def permitted_params
-        params.require(:data).permit(:type, attributes: {})
+        params
+          .require(:data)
+          .permit(:type, attributes: %i[course_identifier declaration_date declaration_type participant_id evidence_held])
       rescue ActionController::ParameterMissing => e
         if e.param == :data
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)

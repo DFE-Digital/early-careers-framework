@@ -6,23 +6,17 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   include FinanceHelper
   include ActionView::Helpers::NumberHelper
 
-  let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
-  let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
-  let!(:statement)        { create(:ecf_statement, cpd_lead_provider:) }
-  let!(:contract)         { create(:call_off_contract, lead_provider:, version: "0.0.1") }
-  let(:school)            { create(:school) }
-  let(:cohort)            { contract.cohort }
-  let!(:school_cohort)    { create(:school_cohort, school:, cohort:) }
-  let!(:partnership)      { create(:partnership, school: school_cohort.school, lead_provider:, cohort:) }
-  let(:induction_programme) { create(:induction_programme, partnership:) }
-  let(:nov_statement)     { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider:) }
-  let(:jan_statement)     { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider:) }
-  let(:voided_declarations) do
-    participant_profiles = create_list(:ect_participant_profile, 2, school_cohort:, cohort: contract.cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_voided_declarations_nov(participant) }
-  end
+  let!(:lead_provider)         { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
+  let(:cpd_lead_provider)      { lead_provider.cpd_lead_provider }
+  let(:ecf_september_schedule) { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september") }
+  let!(:statement)             { create(:ecf_statement, cpd_lead_provider:) }
+  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1") }
+  let(:cohort)                 { contract.cohort }
+  let(:school)                 { create(:school) }
+  let!(:school_cohort)         { create(:school_cohort, :fip, :with_induction_programme, school:, cohort:) }
+  let(:nov_statement)          { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider:) }
+  let(:jan_statement)          { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider:) }
+  let(:voided_declarations) { create_list(:ect_participant_declaration, 2, cpd_lead_provider:) }
   let(:participant_aggregator_nov) do
     Finance::ECF::ParticipantAggregator.new(
       statement: nov_statement,
@@ -89,24 +83,21 @@ private
   end
 
   def multiple_start_declarations_are_submitted_nov_statement
-    participant_profiles = create_list(:ect_participant_profile, 4, school_cohort:, cohort: contract.cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_start_declarations_nov(participant) }
+    create_list(:ect_participant_declaration, 4, cpd_lead_provider:)
   end
 
   def multiple_retained_declarations_are_submitted_nov_statement
-    participant_profiles = create_list(:ect_participant_profile, 4, school_cohort:, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_retained_declarations_nov(participant) }
+    # milestone = ecf_september_schedule.milestones.find_by!(declaration_type: "retained-1")
+    create_list(:ect_participant_declaration,
+                4,
+                :eligible,
+                declaration_type: "retained-1",
+                # declaration_date: milestone.start_date,
+                cpd_lead_provider:)
   end
 
   def multiple_ineligible_declarations_are_submitted_jan_statement
-    participant_profiles = create_list(:ect_participant_profile, 3, school_cohort:, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_ineligible_declarations_jan(participant) }
+    create_list(:ect_participant_declaration, 3, :ineligible, cpd_lead_provider:)
   end
 
   def multiple_retained_declarations_are_submitted_jan_statement
@@ -132,52 +123,40 @@ private
   end
 
   def create_start_declarations_nov(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.first.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-          evidence_held: "other",
-        },
+      s = RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-induction",
+        declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "started",
+        evidence_held: "other",
       )
 
-      started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      started_declaration.make_eligible!
-      started_declaration.make_payable!
+      s.call
+        .tap(&:make_eligible!)
+        .tap(&:make_payable!)
     end
   end
 
   def create_voided_declarations_nov(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.first.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-          evidence_held: "other",
-        },
-      )
-      declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      declaration.make_eligible!
-      declaration.make_payable!
-      declaration.make_voided!
-
-      declaration.statement_line_items.first.update!(statement: nov_statement, state: declaration.state)
-
-      declaration
+      RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-induction",
+        declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "started",
+        evidence_held: "other",
+      ).call
+        .tap(&:make_eligible!)
+        .tap(&:make_payable!)
+        .tap(&:make_voided!)
+        .tap do |declaration|
+        declaration.statement_line_items.first.update!(statement: nov_statement, state: declaration.state)
+      end
     end
   end
 
@@ -186,20 +165,16 @@ private
 
     timestamp = participant.schedule.milestones.second.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Retained::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.second.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "retained-1",
-          evidence_held: "other",
-        },
-      )
-      started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      started_declaration.make_eligible!
-      started_declaration.make_payable!
+      RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-induction",
+        declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "retained-1",
+        evidence_held: "other",
+      ).call
+        .tap(&:make_eligible!)
+        .tap(&:make_payable!)
     end
   end
 
@@ -208,20 +183,16 @@ private
 
     timestamp = participant.schedule.milestones.second.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Retained::Mentor.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-mentor",
-          declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.second.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "retained-1",
-          evidence_held: "other",
-        },
-      )
-      retained_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      retained_declaration.make_eligible!
-      retained_declaration.make_payable!
+      RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-mentor",
+        declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "retained-1",
+        evidence_held: "other",
+      ).call
+        .tap(&:make_eligible!)
+        .tap(&:make_payable!)
     end
   end
 
@@ -230,43 +201,15 @@ private
 
     timestamp = participant.schedule.milestones.second.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Retained::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.second.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "retained-1",
-          evidence_held: "other",
-        },
-      )
-      retained_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      retained_declaration.make_eligible!
-    end
-  end
-
-  def create_ineligible_declarations_jan(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.first.start_date + 1.day
-    travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.first.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-          evidence_held: "other",
-        },
-      )
-      declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      declaration.update!(
-        state: "ineligible",
-      )
-      declaration
+      RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-induction",
+        declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "retained-1",
+        evidence_held: "other",
+      ).call
+        .tap(&:make_eligible!)
     end
   end
 

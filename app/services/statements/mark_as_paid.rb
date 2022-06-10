@@ -8,12 +8,9 @@ module Statements
 
     def call
       Finance::Statement.transaction do
-        statement.paid!
-
-        statement
-          .participant_declarations
-          .payable
-          .each(&:make_paid!)
+        participant_declarations.find_each do |participant_declaration|
+          declaration_mark_as_paid_service.call(participant_declaration)
+        end
 
         statement
           .participant_declarations
@@ -22,18 +19,23 @@ module Statements
 
         statement
           .statement_line_items
-          .payable
-          .each(&:paid!)
-
-        statement
-          .statement_line_items
           .awaiting_clawback
           .each(&:clawed_back!)
+
+        statement.paid!
       end
     end
 
   private
 
     attr_accessor :statement
+
+    def participant_declarations
+      statement.participant_declarations.payable
+    end
+
+    def declaration_mark_as_paid_service
+      @declaration_mark_as_paid_service ||= ParticipantDeclarations::MarkAsPaid.new(statement)
+    end
   end
 end

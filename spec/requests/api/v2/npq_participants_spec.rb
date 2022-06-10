@@ -73,19 +73,15 @@ RSpec.describe "NPQ Participants API", type: :request do
 
         context "filtering" do
           before do
-            current_time = Time.zone.now
-            travel_to 10.days.ago
-            list = create_list(:npq_application, 3, npq_lead_provider:, school_urn: "123456", npq_course:)
-
-            list.each do |npq_application|
-              NPQ::Accept.new(npq_application:).call
+            travel_to 10.days.ago do
+              create_list(:npq_application, 3, :accepted, npq_lead_provider:, school_urn: "123456", npq_course:)
             end
-            travel_to current_time
           end
 
           it "returns content updated after specified timestamp" do
             get "/api/v2/participants/npq", params: { filter: { updated_since: 2.days.ago.iso8601 } }
-            expect(parsed_response["data"].size).to eql(3)
+
+            expect(parsed_response["data"].size).to eq(3)
           end
 
           context "with invalid filter of a string" do
@@ -114,13 +110,6 @@ RSpec.describe "NPQ Participants API", type: :request do
 
         context "when there is a started declaration" do
           it_behaves_like "a participant withdraw action endpoint" do
-            before do
-              participant_profile = npq_application.profile
-              user = npq_application.user
-
-              create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
-            end
-
             it "changes the training status of a participant to withdrawn" do
               put url, params: params
 
@@ -147,13 +136,6 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:withdrawal_url)    { "/api/v2/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
-
-        before do
-          participant_profile = npq_application.profile
-          user = npq_application.user
-
-          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
-        end
       end
 
       it_behaves_like "JSON Participant Resume endpoint", "npq-participant" do
@@ -164,11 +146,6 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
 
         before do
-          participant_profile = npq_application.profile
-          user = npq_application.user
-
-          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
-
           put "/api/v2/participants/npq/#{npq_application.user.id}/defer",
               params: { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } }
         end

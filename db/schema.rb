@@ -926,8 +926,8 @@ ActiveRecord::Schema.define(version: 2022_08_23_091458) do
     t.text "state", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_declaration_id"], name: "index_statement_line_items_on_participant_declaration_id"
-    t.index ["statement_id"], name: "index_statement_line_items_on_statement_id"
+    t.index ["participant_declaration_id", "statement_id", "state"], name: "unique_declaration_statement_state", unique: true
+    t.index ["statement_id", "participant_declaration_id", "state"], name: "unique_statement_declaration_state", unique: true
   end
 
   create_table "statements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

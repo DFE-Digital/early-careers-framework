@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe InductionRecord, type: :model do
-  subject(:induction_record) { create(:induction_record) }
+RSpec.describe InductionRecord, :with_default_schedules, type: :model do
+  subject(:induction_record) { create(:ect).current_induction_record }
 
   describe "changes" do
     before do

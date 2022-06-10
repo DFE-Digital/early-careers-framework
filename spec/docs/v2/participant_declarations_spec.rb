@@ -1,21 +1,15 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
-require_relative "../../shared/context/service_record_declaration_params"
-require_relative "../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_spec.json" do
-  include_context "lead provider profiles and courses"
-  include_context "service record declaration params"
-
-  let(:user) { ect_profile.user }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-  let(:bearer_token) { "Bearer #{token}" }
-  let(:Authorization) { bearer_token }
-
-  before do
-    travel_to ect_profile.schedule.milestones.first.start_date + 2.days
-  end
+RSpec.describe "Participant Declarations", :with_default_schedules, type: :request, swagger_doc: "v2/api_spec.json" do
+  let(:participant_profile) { create(:ect) }
+  let(:declaration_date)    { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
+  let(:user)                { participant_profile.user }
+  let(:cpd_lead_provider)   { participant_profile.current_induction_records.first.cpd_lead_provider }
+  let(:token)               { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token)        { "Bearer #{token}" }
+  let(:Authorization)       { bearer_token }
 
   path "/api/v2/participant-declarations" do
     post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
@@ -41,8 +35,8 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
       response 200, "Successful" do
         let(:attributes) do
           {
-            participant_id: ect_profile.user.id,
-            declaration_date: ect_declaration_date.rfc3339,
+            participant_id: participant_profile.user.id,
+            declaration_date: declaration_date.rfc3339,
             declaration_type: "started",
             course_identifier: "ecf-induction",
           }
@@ -168,9 +162,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
 
   path "/api/v2/participant-declarations/{id}" do
     let(:id) do
-      create(:ect_participant_declaration,
-             user:,
-             cpd_lead_provider:).id
+      create(:ect_participant_declaration, cpd_lead_provider:).id
     end
 
     get "Get single participant declaration" do
@@ -225,7 +217,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v2/api_
 
       response 200, "Successful" do
         let(:id) do
-          declaration = create(:participant_declaration, user: ect_profile.user, cpd_lead_provider:, course_identifier: "ecf-induction", participant_profile: ect_profile)
+          declaration = create(:ect_participant_declaration, cpd_lead_provider:)
           declaration.id
         end
 

@@ -4,60 +4,63 @@ require "rails_helper"
 
 module Api
   module V1
-    RSpec.describe ParticipantFromInductionRecordSerializer do
-      let(:lead_provider)        { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
-      let(:partnership)          { create(:partnership, lead_provider:) }
-      let(:induction_programme)  { create(:induction_programme, partnership:) }
-      let(:participant_identity) { nil }
-      let(:induction_record)     { create(:induction_record, induction_programme:, preferred_identity: participant_identity) }
+    RSpec.describe ParticipantFromInductionRecordSerializer, :with_default_schedules do
+      let(:ect) { create(:ect) }
+      let(:induction_record) { ect.induction_records.first }
 
       subject { described_class.new(induction_record) }
 
       describe "#status" do
         context "when active" do
           it "returns active" do
-            expect(subject.serializable_hash[:data][:attributes][:status]).to eql("active")
+            expect(subject.serializable_hash[:data][:attributes][:status]).to eq("active")
           end
         end
 
-        context "when completed" do
-          let(:induction_record) { create(:induction_record, induction_status: "completed") }
+        context "when the status has changed" do
+          context "when completed" do
+            before { induction_record.completed_induction_status! }
 
-          it "returns active" do
-            expect(subject.serializable_hash[:data][:attributes][:status]).to eql("active")
+            it "returns active" do
+              expect(subject.serializable_hash[:data][:attributes][:status]).to eq("active")
+            end
           end
-        end
 
-        context "when leaving" do
-          let(:induction_record) { create(:induction_record, induction_status: "leaving") }
+          context "when leaving" do
+            let(:induction_record) { ect.reload.current_induction_record }
+            before { induction_record.leaving! }
 
-          it "returns active" do
-            expect(subject.serializable_hash[:data][:attributes][:status]).to eql("active")
+            it "returns active" do
+              expect(subject.serializable_hash[:data][:attributes][:status]).to eq("active")
+            end
           end
-        end
 
-        context "when withdrawn" do
-          let(:induction_record) { create(:induction_record, induction_status: "withdrawn") }
+          context "when withdrawn" do
+            before { induction_record.withdrawing! }
 
-          it "returns withdrawn" do
-            expect(subject.serializable_hash[:data][:attributes][:status]).to eql("withdrawn")
+            it "returns withdrawn" do
+              expect(subject.serializable_hash[:data][:attributes][:status]).to eq("withdrawn")
+            end
           end
-        end
 
-        context "when changed" do
-          let(:induction_record) { create(:induction_record, induction_status: "changed") }
+          context "when changed" do
+            before { induction_record.changing! }
 
-          it "returns withdrawn" do
-            expect(subject.serializable_hash[:data][:attributes][:status]).to eql("withdrawn")
+            it "returns withdrawn" do
+              expect(subject.serializable_hash[:data][:attributes][:status]).to eq("withdrawn")
+            end
           end
         end
       end
 
       describe "#email" do
-        let(:participant_identity) { create(:participant_identity, email: "second_email@example.com") }
+        subject { described_class.new(ect.reload.current_induction_record) }
+        before do
+          Induction::ChangePreferredEmail.call(induction_record:, preferred_email: "second_email@example.com")
+        end
 
         it "returns preferred identity email" do
-          expect(subject.serializable_hash[:data][:attributes][:email]).to eql(participant_identity.email)
+          expect(subject.serializable_hash[:data][:attributes][:email]).to eql("second_email@example.com")
         end
       end
 

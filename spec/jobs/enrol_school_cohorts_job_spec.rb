@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe EnrolSchoolCohortsJob do
+RSpec.describe EnrolSchoolCohortsJob, :with_default_schedules do
   describe "#perform" do
     let(:school_cohort) { create(:school_cohort, :fip) }
-    let!(:ect) { create(:ect_participant_profile, school_cohort:) }
+    let!(:ect) { create(:ect, school_cohort:) }
     let(:job_run) { described_class.new.perform }
 
     context "when there is no induction programme" do

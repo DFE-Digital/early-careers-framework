@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe StoreValidationResult do
+RSpec.describe StoreValidationResult, :with_default_schedules do
   subject(:result) do
     described_class.call(
       participant_profile:,
@@ -10,11 +10,9 @@ RSpec.describe StoreValidationResult do
       dqt_response:,
     )
   end
-
-  let(:trn_on_profile) { "11111" }
-  let(:teacher_profile) { create(:teacher_profile, trn: trn_on_profile) }
-  let(:participant_profile) { create(:ect_participant_profile, teacher_profile:) }
-
+  let(:trn_on_profile)      { "11111" }
+  let(:participant_profile) { create(:ect).tap { |pp| pp.teacher_profile.update!(trn: trn_on_profile) } }
+  let!(:teacher_profile)    { participant_profile.teacher_profile }
   let(:validation_data) do
     {
       trn: "1234567",
@@ -75,6 +73,9 @@ RSpec.describe StoreValidationResult do
 
     context "when trn returned by dqt matches the trn on the profile" do
       let(:trn_on_profile) { dqt_response[:trn] }
+      before do
+        participant_profile.teacher_profile.update!(trn: trn_on_profile)
+      end
 
       it "stores participant eligibility without different_trn flag" do
         result

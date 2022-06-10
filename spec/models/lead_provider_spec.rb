@@ -39,29 +39,30 @@ RSpec.describe LeadProvider, type: :model do
       end
     end
 
-    describe "participant_profiles" do
-      let(:partnership) { create(:partnership) }
+    describe "participant_profiles", :with_default_schedules do
       let(:school) { partnership.school }
-      let(:lead_provider) { partnership.lead_provider }
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+      let(:lead_provider) { cpd_lead_provider.lead_provider }
+      let(:partnership) { create(:partnership, lead_provider:) }
       let(:school_cohort) { create(:school_cohort, school:) }
 
       it "should include active participants" do
-        participant_profile = create(:ect_participant_profile, school_cohort:)
+        participant_profile = create(:ect, school_cohort:, lead_provider:)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should include participants whose records have been withdrawn" do
-        participant_profile = create(:ect_participant_profile, :withdrawn_record, school_cohort:)
+        participant_profile = create(:ect, :withdrawn_record, school_cohort:, lead_provider:)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should include mentors" do
-        participant_profile = create(:mentor_participant_profile, school_cohort:)
+        participant_profile = create(:mentor, school_cohort:, lead_provider:)
         expect(lead_provider.ecf_participant_profiles).to include participant_profile
       end
 
       it "should not include NPQ participants" do
-        participant_profile = create(:npq_participant_profile, school:)
+        participant_profile = create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider)
         expect(lead_provider.ecf_participant_profiles).not_to include participant_profile
       end
     end
@@ -82,7 +83,7 @@ RSpec.describe LeadProvider, type: :model do
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
 
-      it "should not include NPQ participants" do
+      it "should not include NPQ participants", :with_default_schedules do
         participant_profile = create(:npq_participant_profile, school:)
         expect(lead_provider.active_ecf_participant_profiles).not_to include participant_profile
       end
