@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class ParticipantStatusTagComponent < BaseComponent
-  def initialize(profile:)
+  def initialize(profile:, induction_record: nil)
     @profile = profile
+    @induction_record = induction_record
   end
 
   def call
@@ -15,10 +16,10 @@ class ParticipantStatusTagComponent < BaseComponent
 
 private
 
-  attr_reader :profile
+  attr_reader :profile, :induction_record
 
   def tag_attributes
-    return { text: "Withdrawn by provider", colour: "red" } if profile.training_status_withdrawn?
+    return { text: "Withdrawn by provider", colour: "red" } if training_status_withdrawn?
     return { text: "Eligible to start", colour: "green" } if eligible? && profile.single_profile?
     return { text: "Eligible: Mentor at main school", colour: "green" } if eligible? && profile.primary_profile?
     return { text: "Eligible: Mentor at additional school", colour: "green" } if ineligible? && mentor_with_duplicate_profile?
@@ -33,6 +34,10 @@ private
     return { text: "Check email address", colour: "grey" } if latest_email&.failed?
 
     { text: "Contacting for information", colour: "grey" }
+  end
+
+  def training_status_withdrawn?
+    (induction_record || profile).training_status_withdrawn?
   end
 
   def latest_email
@@ -62,7 +67,7 @@ private
   end
 
   def on_fip?
-    profile&.school_cohort&.full_induction_programme?
+    induction_record&.enrolled_in_fip? || profile&.school_cohort&.full_induction_programme?
   end
 
   def nqt_plus_one?
@@ -70,7 +75,6 @@ private
   end
 
   def participant_has_no_qts?
-    participant_eligibility = ECFParticipantEligibility.find_by(participant_profile: profile)
-    participant_eligibility&.no_qts_reason?
+    profile.ecf_participant_eligibility&.no_qts_reason?
   end
 end
