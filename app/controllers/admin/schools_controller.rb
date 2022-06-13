@@ -27,7 +27,7 @@ module Admin
   private
 
     def load_school
-      @school = School.eligible_or_cip_only.friendly.find(params[:id])
+      @school = policy_scope(School).friendly.find(params[:id])
     end
 
     def set_2020_link
