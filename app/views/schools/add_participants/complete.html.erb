@@ -5,10 +5,6 @@
 
         <% if participant_profile.user == current_user %>
             <%= govuk_panel title_text: "You’ve been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-7" %>
-            <h2 class="govuk-heading-m">What happens next</h2>
-
-            <p class="govuk-body">We’ll send you an email that explains what information we need from you.</p>
-
         <% elsif exempt_from_induction?(participant_profile) %>
             <%= render partial: 'schools/add_participants/eligibility_confirmation/exempt_from_induction', locals: { profile: participant_profile } %>
         <% else %>
