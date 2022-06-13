@@ -21,8 +21,11 @@
           <li>If you work with a training provider, let them know that this person is transferring to another school.</li>
         </ol>
 
-        <p class="govuk-body">The person mentoring this ECT can continue their training, even if they do not have another ECT assigned to them yet.</p>
-
+        <% if @profile.ect? %>
+          <p class="govuk-body">The person mentoring this ECT can continue their training, even if they do not have another ECT assigned to them yet.</p>
+        <% else %>
+          <p class="govuk-body">You need to assign a new mentor for any ECTs they’ve been working with.</p>
+        <% end %>
         <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
 
     </div>
