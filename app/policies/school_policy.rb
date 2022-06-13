@@ -17,7 +17,6 @@ class SchoolPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope if Rails.env.sandbox? && user.admin?
       return scope.eligible_or_cip_only if user.admin?
 
       scope.none
