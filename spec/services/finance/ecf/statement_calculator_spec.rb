@@ -207,7 +207,7 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       before do
         declaration = create(
-        :ect_participant_declaration, :without_uplift,
+          :ect_participant_declaration, :without_uplift,
           cpd_lead_provider:,
           state: "eligible",
           participant_profile: profile
