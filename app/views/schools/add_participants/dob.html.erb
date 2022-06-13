@@ -1,4 +1,4 @@
-<% title = "What’s #{add_participant_form.full_name.titleize }’s date of birth?" %>
+<% title = "What’s #{display_name(add_participant_form)} date of birth?" %>
 
 <% content_for :title, title %>
 
@@ -6,9 +6,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <span class="govuk-caption-xl"><%= @school.name %></span>
-        
+
         <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
         <%= f.govuk_error_summary %>
             <%= f.govuk_date_field :date_of_birth,

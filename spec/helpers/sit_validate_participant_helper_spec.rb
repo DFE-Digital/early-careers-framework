@@ -6,6 +6,9 @@ RSpec.describe SitValidateParticipantHelper, type: :helper do
   let(:school_cohort) { create(:school_cohort) }
   let!(:ect_profile) { create(:ect_participant_profile, :ecf_participant_eligibility) }
   let!(:mentor_profile) { create(:mentor_participant_profile, :secondary_profile, :ecf_participant_eligibility) }
+  let(:user) { create(:user) }
+  let(:induction_coordinator_profile) { create(:induction_coordinator_profile, user:) }
+  let(:form) { Schools::AddParticipantForm.new(current_user_id: user.id) }
 
   describe "#ineligible?" do
     it "returns true when ineligible" do
@@ -58,6 +61,18 @@ RSpec.describe SitValidateParticipantHelper, type: :helper do
     it "returns true exempt from induction" do
       ect_profile.ecf_participant_eligibility.no_qts_reason!
       expect(helper.participant_has_no_qts?(ect_profile)).to be true
+    end
+  end
+
+  describe "#display_name" do
+    it "returns your" do
+      form.assign_attributes(type: :self)
+      expect(helper.display_name(form)).to eql("your")
+    end
+
+    it "returns the name of the participant who's being added" do
+      form.assign_attributes(type: :mentor, full_name: ect_profile.user.full_name)
+      expect(helper.display_name(form)).to eql("#{ect_profile.user.full_name.titleize}’s")
     end
   end
 end
