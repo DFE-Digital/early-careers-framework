@@ -467,6 +467,10 @@ module ManageTrainingSteps
     click_on("Sign up")
   end
 
+  def when_i_sign_back_in
+    sign_in_as @induction_coordinator_profile.user
+  end
+
   def when_i_click_on_change_name
     click_on("Change name", visible: false)
   end
@@ -527,8 +531,19 @@ module ManageTrainingSteps
     fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?", with: @participant_data[:trn]
   end
 
+  def when_i_add_my_trn
+    fill_in "What’s your teacher reference number (TRN)?", with: @sit_data[:trn]
+  end
+
   def when_i_add_a_date_of_birth
     date = @participant_data[:date_of_birth]
+    fill_in "Day", with: date.day
+    fill_in "Month", with: date.month
+    fill_in "Year", with: date.year
+  end
+
+  def when_i_add_my_date_of_birth
+    date = @sit_data[:date_of_birth]
     fill_in "Day", with: date.day
     fill_in "Month", with: date.month
     fill_in "Year", with: date.year
@@ -710,6 +725,15 @@ module ManageTrainingSteps
   def then_i_am_taken_to_add_teachers_trn_page
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?")
     expect(page).to have_text("This unique ID:")
+  end
+
+  def then_i_am_taken_to_add_your_trn_page
+    expect(page).to have_selector("h1", text: "What’s your teacher reference number (TRN)?")
+    expect(page).to have_text("This unique ID:")
+  end
+
+  def then_i_am_taken_to_add_your_dob_page
+    expect(page).to have_selector("h1", text: "What’s your date of birth?")
   end
 
   def then_i_am_taken_to_add_date_of_birth_page
@@ -963,6 +987,10 @@ module ManageTrainingSteps
     expect(page).to have_css(".govuk-tabs__tab", text: "#{cohort} to #{cohort + 1}")
   end
 
+  def then_i_should_be_asked_to_validate
+    expect(page).to have_selector("h1", text: "Have you been given a teacher reference number (TRN)?")
+  end
+
   def then_i_see_the_cohort_tabs
     then_i_see_the_tab_for_the_cohort(2021)
     then_i_see_the_tab_for_the_cohort(2022)
@@ -984,6 +1012,25 @@ module ManageTrainingSteps
       start_term: "summer_2022",
       start_date: Date.new(2022, 9, 1),
     }
+  end
+
+  def set_sit_data
+    @sit_data = {
+      full_name: "Carl Coordinator",
+      trn: "7654321",
+      date_of_birth: Date.new(1981, 1, 22),
+    }
+  end
+
+  def set_sit_dqt_validation_result
+    response = {
+      trn: @sit_data[:trn],
+      full_name: @sit_data[:full_name],
+      nino: nil,
+      dob: @sit_data[:date_of_birth],
+      config: {},
+    }
+    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
   end
 
   def set_updated_participant_data
