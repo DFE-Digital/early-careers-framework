@@ -49,7 +49,9 @@ class ParticipantDeclaration < ApplicationRecord
   scope :retained, -> { where(declaration_type: %w[retained-1 retained-2 retained-3 retained-4]).order(declaration_date: "desc").unique_id }
   scope :completed, -> { for_declaration("completed").order(declaration_date: "desc").unique_id }
 
-  scope :uplift, -> { where(participant_profile_id: ParticipantProfile.uplift.select(:id)) }
+  scope :sparsity, -> { where(sparsity_uplift: true) }
+  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
+  scope :uplift, -> { sparsity.or(pupil_premium) }
 
   scope :ect, -> { where(participant_profile_id: ParticipantProfile::ECT.select(:id)) }
   scope :mentor, -> { where(participant_profile_id: ParticipantProfile::Mentor.select(:id)) }

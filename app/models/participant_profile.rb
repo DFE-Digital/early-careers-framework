@@ -41,10 +41,6 @@ class ParticipantProfile < ApplicationRecord
 
   scope :npqs, -> { where(type: NPQ.name) }
 
-  scope :sparsity, -> { where(sparsity_uplift: true) }
-  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
-  scope :uplift, -> { sparsity.or(pupil_premium) }
-
   attr_reader :participant_type
 
   class_attribute :validation_steps
