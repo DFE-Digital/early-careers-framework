@@ -15,7 +15,7 @@ module Admin
 
     private
 
-      attr_reader :profile, :induction_record
+      attr_reader :profile
 
       def induction_record
         return unless @profile.ect? || @profile.mentor?
