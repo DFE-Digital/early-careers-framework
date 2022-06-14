@@ -7,7 +7,6 @@ module Admin
 
       def initialize(profile:)
         @profile = profile
-        @induction_record = get_induction_record
       end
 
       def school_urn
@@ -18,10 +17,10 @@ module Admin
 
       attr_reader :profile, :induction_record
 
-      def get_induction_record
+      def induction_record
         return unless @profile.ect? || @profile.mentor?
 
-        @profile.current_induction_record || @profile.induction_records.latest
+        @induction_record ||= @profile.current_induction_record || @profile.induction_records.latest
       end
 
       def school
