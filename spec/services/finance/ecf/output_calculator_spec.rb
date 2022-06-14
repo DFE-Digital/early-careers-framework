@@ -333,6 +333,69 @@ RSpec.describe Finance::ECF::OutputCalculator do
       end
     end
 
+    context "when a user makes multiple declarations of the same type" do
+      let(:user) { create(:user, :early_career_teacher) }
+
+      before do
+        declarations = create_list(
+          :ect_participant_declaration, 3,
+          user:,
+          state: :eligible
+        )
+
+        declarations.each do |dec|
+          Finance::StatementLineItem.create!(
+            statement: first_statement,
+            participant_declaration: dec,
+            state: dec.state,
+          )
+        end
+      end
+
+      it "is only counted once" do
+        expected = [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+            previous_started_count: 0,
+            started_count: 1,
+            started_additions: 1,
+            started_subtractions: 0,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :c,
+            min: 5,
+            max: 6,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :d,
+            min: 7,
+            max: 8,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+        ]
+
+        expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(expected)
+      end
+    end
+
     context "next statement is present" do
       before do
         declarations = create_list(
