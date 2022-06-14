@@ -12,7 +12,7 @@ module Schools
 
     def attributes
       {
-        end_date: end_date,
+        end_date:,
       }
     end
 
