@@ -11,11 +11,16 @@
 
       <div class="app-application__panel__summary">
         <div class="govuk-!-margin-right-4">
-          <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(@calculator.summary_overall_total) %></h4>
+          <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(@calculator.total_with_vat) %></h4>
 
           <p class="govuk-body-s govuk-!-margin-bottom-2">
             <%= t("finance.output_payment.label") %>
-            <span><%= number_to_pounds(@calculator.total_output_payment_subtotal) %></span>
+            <span><%= number_to_pounds(@calculator.total_output_payment) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Clawback deductions
+            <span><%= number_to_pounds(-@calculator.total_clawbacks) %></span>
           </p>
 
           <p class="govuk-body-s govuk-!-margin-bottom-2">
@@ -25,7 +30,7 @@
 
           <p class="govuk-body-s govuk-!-margin-bottom-2">
             <%= t("finance.vat") %>
-            <span><%= number_to_pounds(@calculator.overall_vat) %></span>
+            <span><%= number_to_pounds(@calculator.vat) %></span>
           </p>
         </div>
 

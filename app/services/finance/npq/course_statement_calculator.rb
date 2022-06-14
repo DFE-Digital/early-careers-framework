@@ -13,25 +13,42 @@ module Finance
       delegate :recruitment_target, to: :contract
       delegate :npq_lead_provider, to: :cpd_lead_provider
 
-      def total_declarations
+      def billable_declarations_count
         statement
-          .participant_declarations
-          .where(state: %w[eligible payable paid]) # needs to be on join table
-          .for_course_identifier(course.identifier)
-          .unique_id
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { course_identifier: course.identifier })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
           .count
+      end
+
+      def refundable_declarations_count
+        statement
+          .refundable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { course_identifier: course.identifier })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+          .count
+      end
+
+      def clawback_payment
+        @clawback_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
+          contract:,
+          total_participants: refundable_declarations_count,
+        )[:subtotal]
       end
 
       def output_payment_subtotal
         output_payment[:subtotal]
       end
 
-      def not_eligible_declarations
+      def not_eligible_declarations_count
         statement
-          .participant_declarations
-          .where(state: %w[ineligible voided]) # needs to be on join table
-          .for_course_identifier(course.identifier)
-          .unique_id
+          .statement_line_items
+          .where(statement_line_items: { state: %w[ineligible voided] })
+          .joins(:participant_declaration)
+          .where(participant_declarations: { course_identifier: course.identifier })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
           .count
       end
 
@@ -39,14 +56,14 @@ module Finance
         NPQCourse.schedule_for(npq_course: course).milestones
       end
 
-      def total_participants_for(milestone)
-        participants_per_declaration_type.fetch(milestone.declaration_type, 0)
+      def declaration_count_for_milestone(milestone)
+        declaration_count_by_type.fetch(milestone.declaration_type, 0)
       end
 
       def output_payment
         @output_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
           contract:,
-          total_participants: total_declarations,
+          total_participants: billable_declarations_count,
         )
       end
 
@@ -67,20 +84,21 @@ module Finance
       end
 
       def course_total
-        monthly_service_fees + output_payment_subtotal
+        monthly_service_fees + output_payment_subtotal - clawback_payment
       end
 
     private
 
       def course
-        contract.npq_course
+        @course ||= contract.npq_course
       end
 
-      def participants_per_declaration_type
-        @participants_per_declaration_type ||= statement
-          .participant_declarations
-          .where(state: %w[eligible payable paid]) # needs to be on join table
-          .for_course_identifier(course.identifier)
+      def declaration_count_by_type
+        @declaration_count_by_type ||= statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { course_identifier: course.identifier })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
           .group(:declaration_type)
           .count
       end

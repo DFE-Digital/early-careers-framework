@@ -6,12 +6,12 @@
       <span class="govuk-body-s">
         <%= milestone.declaration_type.titleize %>
         <br>
-        <%= calculator.total_participants_for(milestone) %>
+        <%= calculator.declaration_count_for_milestone(milestone) %>
       </span>
     <% end %>
 
-    <span class="govuk-body-s"><%= t("finance.total_declarations") %><br><%= calculator.total_declarations %></span>
-    <span class="govuk-body-s"><%= t("finance.total_not_eligible_for_funding") %><br><%= calculator.not_eligible_declarations %></span>
+    <span class="govuk-body-s"><%= t("finance.total_declarations") %><br><%= calculator.billable_declarations_count %></span>
+    <span class="govuk-body-s"><%= t("finance.total_not_eligible_for_funding") %><br><%= calculator.not_eligible_declarations_count %></span>
   </header>
 
   <span class="govuk-label--s govuk-visually-hidden">Payment details</span>
@@ -29,7 +29,7 @@
     <tbody class="govuk-table__body">
       <tr class="gov-table__row">
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= t("finance.output_payment.label") %></td>
-        <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.total_declarations %></td>
+        <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.billable_declarations_count %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.output_payment_per_participant %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.output_payment_subtotal %></td>
       </tr>
@@ -40,6 +40,15 @@
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.service_fees_per_participant %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.monthly_service_fees %></td>
       </tr>
+
+      <% if calculator.refundable_declarations_count.positive? %>
+        <tr class="gov-table__row">
+          <td scope="row" class="govuk-table__cell govuk-body-s">Clawbacks</td>
+          <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.refundable_declarations_count %></td>
+          <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -calculator.output_payment_per_participant %></td>
+          <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -calculator.clawback_payment %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 
