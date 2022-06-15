@@ -8,7 +8,8 @@ class DeliveryPartnerProfile < ApplicationRecord
 
   def self.create_delivery_partner_user(full_name, email, delivery_partner)
     ActiveRecord::Base.transaction do
-      user = User.create!(full_name:, email:)
+      user = User.where(email:).first
+      user ||= User.create!(full_name:, email:)
       dpp = DeliveryPartnerProfile.create!(user:, delivery_partner:)
       DeliveryPartnerProfileMailer.welcome(delivery_partner_profile: dpp).deliver_now
     end

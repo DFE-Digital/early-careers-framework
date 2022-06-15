@@ -20,6 +20,7 @@ module Participants
             quality-of-programme-accessibility
             quality-of-programme-other
             programme-not-appropriate-for-role-and-cpd-needs
+            started-in-error
             other
           ].freeze
         end
