@@ -83,7 +83,7 @@ class InductionRecord < ApplicationRecord
   end
 
   def transferring_out?
-    leaving_induction_status? && end_date.present? && end_date > Time.zone.now
+    leaving_induction_status? && end_date.present? && end_date > Time.zone.now && school_transfer
   end
 
   def transferred?
