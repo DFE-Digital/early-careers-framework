@@ -19,7 +19,6 @@ RSpec.describe Schools::Participants::CocStatusTable, type: :view_component do
         expect(rendered).to have_css("th", text: "Name")
         expect(rendered).to have_css("th", text: "Lead provider")
         expect(rendered).to have_css("th", text: "Delivery partner")
-        expect(rendered).to have_css("th", text: "Induction start")
       end
     end
 
@@ -44,7 +43,6 @@ RSpec.describe Schools::Participants::CocStatusTable, type: :view_component do
         expect(rendered).to have_rendered(Schools::Participants::CocStatusTableRow).with(induction_record:)
         expect(rendered).to have_css("th", text: "Name")
         expect(rendered).to have_css("th", text: "Materials supplier")
-        expect(rendered).to have_css("th", text: "Induction start")
       end
     end
   end

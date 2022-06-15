@@ -33,7 +33,7 @@ module Schools
         elsif transferring_in?
           induction_record.start_date.to_date.to_s(:govuk)
         else
-          induction_record.participant_profile.start_term.humanize
+          ""
         end
       end
 

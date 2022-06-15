@@ -27,7 +27,7 @@ module Schools
       end
 
       def date_column_value
-        profile.start_term.humanize
+
       end
 
     private
