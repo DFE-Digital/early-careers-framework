@@ -40,8 +40,4 @@ module SitValidateParticipantHelper
   def participant_has_no_qts?(profile)
     profile.ecf_participant_eligibility&.no_qts_reason?
   end
-
-  def display_name(form)
-    form.type == :self ? "your" : "#{form.full_name&.titleize}’s"
-  end
 end

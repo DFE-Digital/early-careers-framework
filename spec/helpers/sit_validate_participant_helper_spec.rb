@@ -63,16 +63,4 @@ RSpec.describe SitValidateParticipantHelper, type: :helper do
       expect(helper.participant_has_no_qts?(ect_profile)).to be true
     end
   end
-
-  describe "#display_name" do
-    it "returns your" do
-      form.assign_attributes(type: :self)
-      expect(helper.display_name(form)).to eql("your")
-    end
-
-    it "returns the name of the participant who's being added" do
-      form.assign_attributes(type: :mentor, full_name: ect_profile.user.full_name)
-      expect(helper.display_name(form)).to eql("#{ect_profile.user.full_name.titleize}’s")
-    end
-  end
 end

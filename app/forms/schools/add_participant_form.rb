@@ -325,6 +325,10 @@ module Schools
       )
     end
 
+    def display_name
+      type == :self ? "your" : "#{full_name&.titleize}’s"
+    end
+
     def send_added_and_validated_email(profile)
       ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
     end
