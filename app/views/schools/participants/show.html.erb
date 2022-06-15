@@ -4,9 +4,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <span class="govuk-caption-xl"><%= @school.name %></span>
-        <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>        
+        <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>
 
         <dl class="govuk-summary-list govuk-!-margin-bottom-7">
       <div class="govuk-summary-list__row">
@@ -42,21 +42,6 @@
             <% end %>
           </dd>
         <% end %>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Start term
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= @profile.start_term.humanize %>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <% if @profile.policy_class.new(current_user, @profile).edit_start_term? %>
-            <%= govuk_link_to schools_participant_edit_start_term_path(participant_id: @profile) do %>
-              Change <span class="govuk-visually-hidden">start term</span>
-            <% end %>
-          <% end %>
-        </dd>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -111,7 +96,7 @@
         </div>
       <% end %>
     </dl>
-  
+
 
 <% unless @profile.training_status_withdrawn? %>
   <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile, current_user: current_user) %></p>

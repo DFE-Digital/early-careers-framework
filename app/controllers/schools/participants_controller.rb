@@ -66,30 +66,6 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def email_used; end
 
-  def edit_start_term
-    @cohort = @profile.current_induction_record.school_cohort.cohort
-    @start_term_form = build_start_term_form
-    @start_term_form.start_term = @profile.start_term
-  end
-
-  def update_start_term
-    @start_term_form = build_start_term_form
-    unless @start_term_form.valid?
-      render "schools/participants/edit_start_term" and return
-    end
-
-    if @profile.update(start_term: @start_term_form.start_term)
-      if @profile.ect?
-        set_success_message(heading: "The ECT's start term has been updated")
-      else
-        set_success_message(heading: "The mentor's start term has been updated")
-      end
-      redirect_to schools_participant_path(id: @profile)
-    else
-      render "schools/participants/edit_start_term"
-    end
-  end
-
   def edit_mentor; end
 
   def update_mentor
@@ -159,15 +135,5 @@ private
 
   def email_used?(email)
     User.where(email:).where.not(id: @profile.user.id).any? || ParticipantIdentity.where(email:).where.not(user_id: @profile.user.id).any?
-  end
-
-  def start_term_form_params
-    params.require(:participant_start_term_form).permit(:start_term)
-  rescue ActionController::ParameterMissing
-    nil
-  end
-
-  def build_start_term_form
-    ParticipantStartTermForm.new(start_term_form_params)
   end
 end
