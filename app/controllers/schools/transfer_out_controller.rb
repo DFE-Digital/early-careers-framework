@@ -9,7 +9,9 @@ module Schools
 
     skip_after_action :verify_authorized
 
-    def check_transfer; end
+    def check_transfer
+      reset_form_data
+    end
 
     def teacher_end_date
       store_form_redirect_to_next_step(:check_answers)
@@ -19,7 +21,6 @@ module Schools
       @induction_record.leaving_induction_status!
       @induction_record.update!(end_date: @transfer_out_form.end_date, school_transfer: true)
 
-      reset_form_data
       store_form_redirect_to_next_step(:complete)
     end
 
