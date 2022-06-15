@@ -26,9 +26,7 @@ module Schools
         profile.school_cohort.school_chose_cip?
       end
 
-      def date_column_value
-
-      end
+      def date_column_value; end
 
     private
 
