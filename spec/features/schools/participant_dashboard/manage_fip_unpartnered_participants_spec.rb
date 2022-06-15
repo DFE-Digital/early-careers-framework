@@ -22,7 +22,6 @@ RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_fla
       when_i_navigate_to_participants_dashboard
       click_on "Not training"
       then_i_can_view_ineligible_participants
-      and_the_start_induction_date_is "Remove"
 
       when_i_click_on_the_participants_name "Ineligible With-mentor"
       then_i_am_taken_to_view_details_page
