@@ -30,11 +30,11 @@ class ParticipantTransferMailer < ApplicationMailer
   # there are minor copy changes between the templates.
   #
   # Reference: 1, 2
-  def participant_transfer_out_notification(induction_record:, current_school:)
+  def participant_transfer_out_notification(induction_record:)
     participant_profile = induction_record.participant_profile
     preferred_identity_email = induction_record.preferred_identity.email
 
-    template_id = if participant_profile.ect?
+    template_id = if induction_record.participant_profile.ect?
                     TRANSFER_OUT_FOR_ECT_TEMPLATE
                   else
                     TRANSFER_OUT_FOR_MENTOR_TEMPLATE
@@ -47,7 +47,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         transferring_ppt_name: participant_profile.user.full_name,
-        current_school: current_school.name,
+        current_school_name: induction_record.school.name,
       },
     ).tag(:participant_transfer_out_notification).associate_with(participant_profile, as: :participant_profile)
   end

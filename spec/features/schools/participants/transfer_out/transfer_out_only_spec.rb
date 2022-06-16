@@ -6,6 +6,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
   context "Transfer out an ECT" do
     before do
       set_participant_data
+      allow_participant_transfer_mailers
       given_a_school_have_chosen_fip_for_2021
       and_i_am_signed_in_as_an_induction_coordinator
       and_select_the_most_recent_cohort
@@ -37,6 +38,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
 
       click_on "Confirm and continue"
       then_i_should_be_on_the_complete_page
+      and_the_participant_should_be_notified_that_theyre_transferred_out
 
       click_on "View your ECTs and mentors"
       then_i_am_taken_to_your_ect_and_mentors_page
@@ -52,7 +54,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
       @ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_one)
       @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one)
       @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
-      Induction::Enrol.call(participant_profile: @ect, induction_programme: @induction_programme_one)
+      @induction_record = Induction::Enrol.call(participant_profile: @ect, induction_programme: @induction_programme_one)
     end
 
     # when
@@ -146,6 +148,17 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
 
     def and_select_the_most_recent_cohort
       click_on Cohort.active_registration_cohort.description
+    end
+
+    def and_the_participant_should_be_notified_that_theyre_transferred_out
+      expect(ParticipantTransferMailer).to have_received(:participant_transfer_out_notification)
+                                             .with(hash_including(
+                                                     induction_record: @induction_record,
+                                                   ))
+    end
+
+    def allow_participant_transfer_mailers
+      allow(ParticipantTransferMailer).to receive(:participant_transfer_out_notification).and_call_original
     end
 
     def set_participant_data

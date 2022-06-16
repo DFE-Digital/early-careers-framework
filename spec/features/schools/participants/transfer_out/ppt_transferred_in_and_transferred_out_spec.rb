@@ -6,13 +6,14 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
   context "Transfer out an ECT that has already been transferred in" do
     before do
       set_participant_data
+      allow_participant_transfer_mailers
       given_two_schools_have_chosen_fip_for_2021
       and_a_participant_has_been_transferred_in_to_another_school
       and_i_am_signed_in_as_an_induction_coordinator
       and_select_the_most_recent_cohort
     end
 
-    scenario "Induction tutor only sees the transfer once they done it themselves" do
+    scenario "Induction tutor only sees the transfer once they’ve done it themselves" do
       when_i_click_to_view_ects_and_mentors
       then_i_am_taken_to_your_ect_and_mentors_page
       then_i_should_still_see_the_participant_in_my_active_participants
@@ -34,6 +35,7 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
 
       click_on "Confirm and continue"
       then_i_should_be_on_the_complete_page
+      and_the_participant_should_be_notified_that_theyre_transferred_out
 
       click_on "View your ECTs and mentors"
       then_i_am_taken_to_your_ect_and_mentors_page
@@ -59,7 +61,7 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
       @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_1)
       @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_2)
       @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
-      Induction::Enrol.call(participant_profile: @ect, induction_programme: @induction_programme_one)
+      @induction_record = Induction::Enrol.call(participant_profile: @ect, induction_programme: @induction_programme_one)
     end
 
     def and_a_participant_has_been_transferred_in_to_another_school
@@ -172,6 +174,15 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
 
     def and_they_should_not_be_under_their_previous_heading
       expect(page).not_to have_selector("h2", text: "Contacted for information")
+    end
+
+    def and_the_participant_should_be_notified_that_theyre_transferred_out
+      expect(ParticipantTransferMailer).to have_received(:participant_transfer_out_notification)
+                                             .with(hash_including(induction_record: @induction_record))
+    end
+
+    def allow_participant_transfer_mailers
+      allow(ParticipantTransferMailer).to receive(:participant_transfer_out_notification).and_call_original
     end
 
     def set_participant_data
