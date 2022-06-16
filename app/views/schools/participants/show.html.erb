@@ -116,8 +116,8 @@
   
 
 <% unless @induction_record.training_status_withdrawn? %>
-  <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(profile: @profile, current_user: current_user) %></p>
+  <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(induction_record: @induction_record, current_user: current_user) %></p>
 <% end %>
 
-</div>
+    </div>
 </div>
