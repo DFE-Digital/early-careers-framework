@@ -12,7 +12,7 @@ module Schools
     attribute :existing_participant_profile
 
     step :yourself do
-      next_step :confirm
+      next_step :trn
     end
 
     step :name do
@@ -22,7 +22,9 @@ module Schools
       before_complete { check_records if check_for_dqt_record? }
 
       next_step do
-        if existing_participant_profile.present?
+        if type == :self
+          :trn
+        elsif existing_participant_profile.present?
           :transfer
         elsif dqt_record.present?
           :email
@@ -57,7 +59,9 @@ module Schools
                 length: { within: 5..7 }
       before_complete { check_records if check_for_dqt_record? }
       next_step do
-        if existing_participant_profile.present?
+        if type == :self
+          :dob
+        elsif existing_participant_profile.present?
           :transfer
         elsif dqt_record.present?
           :email
@@ -81,7 +85,9 @@ module Schools
       before_complete { check_records if check_for_dqt_record? }
 
       next_step do
-        if existing_participant_profile.present?
+        if type == :self
+          :confirm
+        elsif existing_participant_profile.present?
           :transfer
         elsif dqt_record.present?
           :email
@@ -317,6 +323,10 @@ module Schools
           full_name:,
         },
       )
+    end
+
+    def display_name
+      type == :self ? "your" : "#{full_name&.titleize}’s"
     end
 
     def send_added_and_validated_email(profile)
