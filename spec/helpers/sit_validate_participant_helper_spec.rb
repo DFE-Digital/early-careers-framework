@@ -6,6 +6,9 @@ RSpec.describe SitValidateParticipantHelper, type: :helper do
   let(:school_cohort) { create(:school_cohort) }
   let!(:ect_profile) { create(:ect_participant_profile, :ecf_participant_eligibility) }
   let!(:mentor_profile) { create(:mentor_participant_profile, :secondary_profile, :ecf_participant_eligibility) }
+  let(:user) { create(:user) }
+  let(:induction_coordinator_profile) { create(:induction_coordinator_profile, user:) }
+  let(:form) { Schools::AddParticipantForm.new(current_user_id: user.id) }
 
   describe "#ineligible?" do
     it "returns true when ineligible" do
