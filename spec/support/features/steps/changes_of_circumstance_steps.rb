@@ -294,7 +294,7 @@ module Steps
         ParticipantDeclaration.eligible.each do |participant_declaration|
           participant_declaration.make_payable!
           statement = Finance::Statement::ECF.find_by!(name: statement_name, cpd_lead_provider: participant_declaration.cpd_lead_provider)
-          participant_declaration.update! statement:
+          participant_declaration.billable_statement_line_items.update state: "payable"
         end
       end
     end
