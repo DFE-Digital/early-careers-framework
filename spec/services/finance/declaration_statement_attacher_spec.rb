@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rails_helper"
+
 RSpec.describe Finance::DeclarationStatementAttacher do
   let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:) }
   let(:statement) { create(:ecf_statement, output_fee: true, deadline_date: 2.months.from_now) }

@@ -64,6 +64,14 @@ FactoryBot.define do
       state { "voided" }
     end
 
+    trait :awaiting_clawback do
+      state { "awaiting_clawback" }
+    end
+
+    trait :clawed_back do
+      state { "clawed_back" }
+    end
+
     transient do
       uplift { [] }
     end
