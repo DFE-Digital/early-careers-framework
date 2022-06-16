@@ -38,6 +38,7 @@ module Schools
 
       redirect_to check_transfer_schools_transferring_participant_path and return if selected_transfer_journey? && in_current_active_cohort?
       redirect_to what_we_need_schools_transferring_participant_path(cohort_id: school_cohort.cohort.start_year) and return if selected_transfer_journey?
+
       redirect_to action: :what_we_need
     end
 
