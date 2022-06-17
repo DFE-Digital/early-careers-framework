@@ -59,7 +59,7 @@ module Multistep
       helper_method :back_link_path, :current_step
       after_action :remove_form, only: :complete
 
-      before_action :ensure_form_present, except: %i[start who participant_type]
+      before_action :ensure_form_present
     end
 
     attr_reader :result
