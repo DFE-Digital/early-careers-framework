@@ -14,9 +14,19 @@ module Statements
           .each(&:make_paid!)
 
         statement
+          .participant_declarations
+          .awaiting_clawback
+          .each(&:make_clawed_back!)
+
+        statement
           .statement_line_items
           .payable
           .each(&:paid!)
+
+        statement
+          .statement_line_items
+          .awaiting_clawback
+          .each(&:clawed_back!)
       end
     end
 
