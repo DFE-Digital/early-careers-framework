@@ -6,13 +6,13 @@ module Multistep
 
     class_methods do
       def form(value = nil, as: nil, except: nil) # rubocop:disable Naming/MethodParameterName
-        before_action :ensure_form_present, except: Array(except).prepend(:start)
         if value
           @form = value
           if as
             alias_method as, :form
             helper_method as
           end
+          before_action :ensure_form_present, except: Array(except).prepend(:start)
         else
           @form
         end
