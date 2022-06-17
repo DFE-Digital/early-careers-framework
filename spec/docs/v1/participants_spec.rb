@@ -30,7 +30,8 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                   "#/components/schemas/ECFParticipantResumeRequest",
                   "#/components/schemas/ECFParticipantResponse",
                   "ECF Participant" do
-    let(:participant) { mentor_profile }
+    let(:participant) { deferred_mentor_profile }
+    let!(:mentor_induction_record_deferred) { create(:induction_record, induction_programme:, participant_profile: deferred_mentor_profile, training_status: "deferred") }
     let(:attributes) { { course_identifier: "ecf-mentor" } }
   end
 

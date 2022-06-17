@@ -269,7 +269,7 @@ RSpec.describe "Participants API", type: :request do
             )
           end
 
-          it "does not return the partipant" do
+          it "does not return the participant" do
             get "/api/v1/participants/ecf"
 
             expect(parsed_response["data"].size).to be_zero
