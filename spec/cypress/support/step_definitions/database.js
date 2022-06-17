@@ -77,7 +77,7 @@ Given("I am logged in as existing user with {}", (argsStr) => {
   cy.appEval(
     `User.find_by(${argsStrRails}).update(
       login_token: "abcdefghij",
-      login_token_valid_until: 60.minutes.from_now)`
+      login_token_valid_until: 12.hours.from_now)`
   );
   cy.visit(`/users/confirm_sign_in?login_token=abcdefghij`);
 

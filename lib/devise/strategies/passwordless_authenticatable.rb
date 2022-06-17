@@ -22,7 +22,7 @@ module Devise
 
           user = Identity.find_user_by(email:)
 
-          token_expiry = 60.minutes.from_now
+          token_expiry = 12.hours.from_now
           result = user&.update(
             login_token: SecureRandom.hex(10),
             login_token_valid_until: token_expiry,
