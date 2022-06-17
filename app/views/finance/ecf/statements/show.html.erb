@@ -161,9 +161,16 @@
           <% table.body do |body| %>
             <% body.row do |row| %>
               <% row.cell(text: "Uplift fee") %>
-              <% row.cell(text: @calculator.uplift_count) %>
+              <% row.cell(text: @calculator.uplift_additions_count) %>
               <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration)) %>
-              <% row.cell(text: number_to_pounds(@calculator.total_for_uplift), numeric: true) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_additions_count * @calculator.uplift_fee_per_declaration), numeric: true) %>
+            <% end %>
+
+            <% body.row do |row| %>
+              <% row.cell(text: "Uplift clawbacks") %>
+              <% row.cell(text: @calculator.uplift_deductions_count) %>
+              <% row.cell(text: number_to_pounds(-@calculator.uplift_fee_per_declaration)) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_deductions_count * -@calculator.uplift_fee_per_declaration), numeric: true) %>
             <% end %>
 
             <% @calculator.send(:output_calculator).banding_breakdown.each do |hash| %>

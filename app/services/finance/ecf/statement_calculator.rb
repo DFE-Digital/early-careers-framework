@@ -107,6 +107,14 @@ module Finance
         output_calculator.uplift_breakdown[:count]
       end
 
+      def uplift_additions_count
+        output_calculator.uplift_breakdown[:additions]
+      end
+
+      def uplift_deductions_count
+        output_calculator.uplift_breakdown[:subtractions]
+      end
+
       def uplift_fee_per_declaration
         statement.contract.uplift_amount
       end

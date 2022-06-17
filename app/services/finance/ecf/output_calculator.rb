@@ -29,7 +29,7 @@ module Finance
       end
 
       def uplift_breakdown
-        {
+        @uplift_breakdown ||= {
           previous_count: previous_fill_level_for_uplift,
           count: current_billable_count_for_uplift - current_refundable_count_for_uplift,
           additions: current_billable_count_for_uplift,
