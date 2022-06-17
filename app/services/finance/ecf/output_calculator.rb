@@ -12,14 +12,14 @@ module Finance
       def banding_breakdown
         return @banding_breakdown if @banding_breakdown
 
-        array = declaration_types.each.map do |declaration_type|
+        bandings = declaration_types.each.map do |declaration_type|
           current_banding_for_declaration_type(declaration_type)
         end
 
-        result = array[0]
+        result = bandings[0]
 
         band_letters.each do |letter|
-          array[1..].each do |banding|
+          bandings[1..].each do |banding|
             new_chunk = banding.find { |e| e[:band] == letter }
             result.find { |e| e[:band] == letter }.merge!(new_chunk)
           end
