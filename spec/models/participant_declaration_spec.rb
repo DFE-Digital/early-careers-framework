@@ -436,4 +436,25 @@ RSpec.describe ParticipantDeclaration, type: :model do
       end
     end
   end
+
+  describe "#voidable?" do
+    [
+      { state: "submitted", voidable: true },
+      { state: "eligible", voidable: true },
+      { state: "payable", voidable: true },
+      { state: "paid", voidable: false },
+      { state: "voided", voidable: false },
+      { state: "ineligible", voidable: true },
+      { state: "awaiting_clawback", voidable: false },
+      { state: "clawed_back", voidable: false },
+    ].each do |hash|
+      context "when declaration is #{hash[:state]}" do
+        subject { described_class.new(state: hash[:state]) }
+
+        it "#{hash[:voidable] ? 'can' : 'cannot'} be voided" do
+          expect(subject.voidable?).to eql(hash[:voidable])
+        end
+      end
+    end
+  end
 end
