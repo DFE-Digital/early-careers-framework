@@ -6,8 +6,9 @@ module Schools
 
     skip_after_action :verify_authorized
     before_action :set_school_cohort
+    before_action :ensure_form_present, except: %i[start who participant_type]
 
-    form AddParticipantForm, as: :add_participant_form, except: %i[who participant_type]
+    form AddParticipantForm, as: :add_participant_form
     result as: :participant_profile
 
     def start
