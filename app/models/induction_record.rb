@@ -26,7 +26,7 @@ class InductionRecord < ApplicationRecord
 
   validates :start_date, presence: true
 
-  validate :resume
+  validate :cannot_resume_from_withdrawn
 
   enum induction_status: {
     active: "active",
@@ -92,7 +92,7 @@ class InductionRecord < ApplicationRecord
     leaving_induction_status? && end_date.present? && end_date < Time.zone.now
   end
 
-  def resume
+  def cannot_resume_from_withdrawn
     errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "active")
     errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "deferred")
   end
