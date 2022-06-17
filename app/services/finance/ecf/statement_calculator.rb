@@ -34,11 +34,11 @@ module Finance
       end
 
       def bands
-        statement.contract.bands.order(max: :asc)
+        @bands ||= statement.contract.bands.order(max: :asc)
       end
 
       def band_letters
-        bands.zip(:a..:z).map { |e| e[1] }
+        (:a..:z).take(bands.size)
       end
 
       def vat
