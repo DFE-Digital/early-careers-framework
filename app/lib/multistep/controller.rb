@@ -5,13 +5,14 @@ module Multistep
     extend ActiveSupport::Concern
 
     class_methods do
-      def form(value = nil, as: nil) # rubocop:disable Naming/MethodParameterName
+      def form(value = nil, as: nil, except: nil) # rubocop:disable Naming/MethodParameterName
         if value
           @form = value
           if as
             alias_method as, :form
             helper_method as
           end
+          before_action :ensure_form_present, except: Array(except).prepend(:start)
         else
           @form
         end
@@ -58,8 +59,6 @@ module Multistep
     included do
       helper_method :back_link_path, :current_step
       after_action :remove_form, only: :complete
-
-      before_action :ensure_form_present, except: %i[start]
     end
 
     attr_reader :result
