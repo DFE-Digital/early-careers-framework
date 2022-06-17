@@ -15,6 +15,10 @@ class Finance::Statement::ECF < Finance::Statement
     update!(type: "Finance::Statement::ECF::Payable")
   end
 
+  def paid!
+    update!(type: "Finance::Statement::ECF::Paid")
+  end
+
   def calculator
     @calculator ||= Finance::ECF::StatementCalculator.new(statement: self)
   end

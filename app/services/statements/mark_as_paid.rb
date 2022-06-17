@@ -8,6 +8,8 @@ module Statements
 
     def call
       Finance::Statement.transaction do
+        statement.paid!
+
         statement
           .participant_declarations
           .payable

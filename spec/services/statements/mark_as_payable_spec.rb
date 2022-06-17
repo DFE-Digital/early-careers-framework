@@ -33,6 +33,13 @@ RSpec.describe Statements::MarkAsPayable do
   subject { described_class.new(statement:) }
 
   describe "#call" do
+    it "transitions the statement itself" do
+      expect {
+        subject.call
+        statement.reload
+      }.to change { statement.type }.from("Finance::Statement::NPQ").to("Finance::Statement::NPQ::Payable")
+    end
+
     it "transitions declarations" do
       expect {
         subject.call

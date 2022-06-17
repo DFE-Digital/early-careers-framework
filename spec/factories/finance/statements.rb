@@ -10,6 +10,10 @@ FactoryBot.define do
 
     factory :npq_statement, class: "Finance::Statement::NPQ" do
       association :cpd_lead_provider, :with_npq_lead_provider
+
+      trait :payable do
+        type { "Finance::Statement::NPQ::Payable" }
+      end
     end
 
     factory :ecf_statement, class: "Finance::Statement::ECF" do

@@ -10,6 +10,8 @@ module Statements
 
     def call
       Finance::Statement.transaction do
+        statement.payable!
+
         statement
           .participant_declarations
           .eligible
