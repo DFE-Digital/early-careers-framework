@@ -3,10 +3,10 @@
 RSpec.shared_examples "a participant withdraw action endpoint" do
   let(:parsed_response) { JSON.parse(response.body) }
 
-  it "does not return an error when the participant is already withdrawn" do
+  it "returns an error when the participant is already withdrawn" do
     2.times { put url, params: }
 
-    expect(response).to be_successful
+    expect(response).not_to be_successful
   end
 
   context "with an invalid request" do

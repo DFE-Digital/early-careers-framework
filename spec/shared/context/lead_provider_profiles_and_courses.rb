@@ -12,6 +12,8 @@ RSpec.shared_context "lead provider profiles and courses" do
   let(:ecf_lead_provider) { cpd_lead_provider.lead_provider }
   let!(:ect_profile) { create(:ect_participant_profile, schedule: default_schedule) }
   let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: ect_profile.school_cohort, schedule: default_schedule) }
+  let!(:deferred_mentor_profile) { create(:mentor_participant_profile, school_cohort: ect_profile.school_cohort, schedule: default_schedule) }
+
   let(:induction_coordinator_profile) { create(:induction_coordinator_profile) }
   let(:delivery_partner) { create(:delivery_partner) }
   let!(:school_cohort) { create(:school_cohort, school: ect_profile.school, cohort: ect_profile.cohort) }

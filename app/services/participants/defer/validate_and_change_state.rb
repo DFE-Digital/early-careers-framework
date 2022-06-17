@@ -10,6 +10,8 @@ module Participants
         attr_accessor :reason
 
         validates :reason, inclusion: { in: reasons }
+        validate :not_already_withdrawn
+        validate :not_already_deferred
       end
 
       def perform_action!
@@ -21,6 +23,22 @@ module Participants
         end
 
         user_profile
+      end
+
+      def not_already_withdrawn
+        if user_profile.ecf?
+          errors.add(:induction_record, I18n.t(:invalid_withdrawal)) if relevant_induction_record&.training_status_withdrawn?
+        elsif user_profile&.training_status_withdrawn?
+          errors.add(:participant_profile, I18n.t(:invalid_withdrawal))
+        end
+      end
+
+      def not_already_deferred
+        if user_profile.ecf?
+          errors.add(:induction_record, I18n.t(:invalid_deferral)) if relevant_induction_record&.training_status_deferred?
+        elsif user_profile&.training_status_deferred?
+          errors.add(:participant_profile, I18n.t(:invalid_deferral))
+        end
       end
     end
   end

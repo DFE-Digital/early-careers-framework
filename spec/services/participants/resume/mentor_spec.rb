@@ -60,8 +60,8 @@ RSpec.describe Participants::Resume::Mentor do
         ).call # must be different instance from subject
       end
 
-      it "creates a ParticipantProfileState" do
-        expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
+      it "raises an error and does not create a ParticipantProfileState" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { ParticipantProfileState.count }
       end
     end
 

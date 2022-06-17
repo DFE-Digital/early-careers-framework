@@ -110,4 +110,34 @@ RSpec.describe InductionRecord, type: :model do
       end
     end
   end
+
+  describe "withdrawal" do
+    let(:participant_profile) { create :ect_participant_profile }
+    let(:lead_provider) { create(:lead_provider) }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, partnership:) }
+    let(:induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
+
+    let(:update_training_status_to_active) do
+      induction_record.update!(training_status: "active")
+    end
+
+    let(:update_training_status_to_deferred) do
+      induction_record.update!(training_status: "deferred")
+    end
+
+    before do
+      induction_record.update!(training_status: "withdrawn")
+    end
+
+    it "returns an error if the training_status change is from withdrawn to active" do
+      expect { update_training_status_to_active }
+        .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
+    end
+
+    it "returns an error if the training_status change is from withdrawn to deferred" do
+      expect { update_training_status_to_deferred }
+        .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
+    end
+  end
 end
