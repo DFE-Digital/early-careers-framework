@@ -27,6 +27,7 @@ module Api
             expect(result[:data][:attributes][:npq_enrollments][0][:eligible_for_funding]).to eql(profile.npq_application.eligible_for_funding)
             expect(result[:data][:attributes][:npq_enrollments][0][:training_status]).to eql(profile.training_status)
             expect(result[:data][:attributes][:npq_enrollments][0][:school_urn]).to eql(profile.school_urn)
+            expect(result[:data][:attributes][:npq_enrollments][0][:targeted_delivery_funding_eligibility]).to eql(profile.npq_application.targeted_delivery_funding_eligibility)
           end
 
           context "when there are multiple providers involved" do
