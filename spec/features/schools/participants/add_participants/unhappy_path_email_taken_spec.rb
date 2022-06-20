@@ -26,6 +26,9 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
     when_i_select_to_add_a "A new ECT"
     when_i_click_on_continue
+    then_i_am_taken_to_the_what_we_need_from_you_page
+
+    when_i_click_on_continue
     then_i_am_taken_to_add_ect_name_page
 
     when_i_add_ect_or_mentor_name
@@ -61,6 +64,9 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     then_i_should_be_on_the_who_to_add_page
 
     when_i_select_to_add_a "A new mentor"
+    when_i_click_on_continue
+    then_i_am_taken_to_the_what_we_need_from_you_page
+
     when_i_click_on_continue
     then_i_am_taken_to_add_mentor_name_page
 

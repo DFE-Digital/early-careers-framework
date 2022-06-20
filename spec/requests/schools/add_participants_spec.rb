@@ -41,7 +41,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" } do
     context "when transfer in the active_registration_cohort" do
       before do
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/chosen-who-to-add", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/participant-type", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
       end
 
       it "redirects to the check transfers page" do
@@ -52,7 +52,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     context "when transferring in the previous cohort" do
       before do
         create(:cohort, :next)
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/chosen-who-to-add", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/participant-type", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
       end
 
       it "redirects to the what we need schools transferring page" do
