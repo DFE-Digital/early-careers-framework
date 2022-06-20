@@ -95,6 +95,7 @@ COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
 COPY --from=middleman /public/ /app/public/
 
 RUN echo "cd /app && /usr/local/bin/bundle exec rails c" > /root/.ash_history
+RUN echo "IRB.conf[:USE_AUTOCOMPLETE] = false" > /root/.irbrc
 
 WORKDIR /app
 
