@@ -46,7 +46,7 @@ module UserHelper
   def sign_in_as(user)
     token = "test-user-token-#{Time.zone.now.to_f}"
     user.update! login_token: token,
-                 login_token_valid_until: 1.hour.from_now
+                 login_token_valid_until: 12.hours.from_now
 
     visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"
