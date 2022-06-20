@@ -80,6 +80,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :unique_ects,    -> { unique_id.ect }
   scope :unique_mentors, -> { unique_id.mentor }
   scope :unique_uplift,  -> { unique_id.uplift }
+  scope :billable_unique_uplift, -> { unique_id.uplift.where(state: %w[eligible payable paid]) }
   scope :unique_npqs_for_lead_provider, ->(lead_provider) { unique_for_lead_provider(lead_provider).npq }
 
   scope :for_course_identifier, ->(course_identifier) { where(course_identifier:) }

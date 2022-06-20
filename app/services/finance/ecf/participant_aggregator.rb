@@ -7,37 +7,37 @@ module Finance
         {
           started: {
             all: :unique_id,
-            uplift: :unique_uplift,
+            uplift: :billable_unique_uplift,
             ects: :unique_ects,
             mentors: :unique_mentors,
           },
           retained_1: {
             all: :unique_id,
-            uplift: :unique_uplift,
+            uplift: :billable_unique_uplift,
             ects: :unique_ects,
             mentors: :unique_mentors,
           },
           retained_2: {
             all: :unique_id,
-            uplift: :unique_uplift,
+            uplift: :billable_unique_uplift,
             ects: :unique_ects,
             mentors: :unique_mentors,
           },
           retained_3: {
             all: :unique_id,
-            uplift: :unique_uplift,
+            uplift: :billable_unique_uplift,
             ects: :unique_ects,
             mentors: :unique_mentors,
           },
           retained_4: {
             all: :unique_id,
-            uplift: :unique_uplift,
+            uplift: :billable_unique_uplift,
             ects: :unique_ects,
             mentors: :unique_mentors,
           },
           completed: {
             all: :unique_id,
-            uplift: :unique_uplift,
+            uplift: :billable_unique_uplift,
             ects: :unique_ects,
             mentors: :unique_mentors,
           },
