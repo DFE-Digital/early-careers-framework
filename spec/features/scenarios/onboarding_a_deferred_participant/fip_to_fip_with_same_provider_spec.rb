@@ -118,7 +118,7 @@ RSpec.feature "FIP to FIP with same provider - Onboard a deferred participant",
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable scenario.statement_name
+          and_eligible_training_declarations_are_made_payable
         end
 
         include_examples "FIP to FIP with same provider",

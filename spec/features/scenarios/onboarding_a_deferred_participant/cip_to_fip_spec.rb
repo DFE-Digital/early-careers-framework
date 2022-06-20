@@ -109,7 +109,7 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
                                                             declaration_type
           end
 
-          and_eligible_training_declarations_are_made_payable scenario.statement_name
+          and_eligible_training_declarations_are_made_payable
         end
 
         include_examples "CIP to FIP", scenario
