@@ -62,7 +62,7 @@ private
   end
 
   def check_fip_induction_and_different_school!
-    raise ArgumentError "Participant is not enrolled in a FIP" unless latest_induction_record.enrolled_in_fip?
-    raise ArgumentError "Participant is already enrolled at this school" if latest_induction_record.school == school_cohort.school
+    raise ArgumentError, "Participant is not enrolled in a FIP" unless latest_induction_record.enrolled_in_fip?
+    raise ArgumentError, "Participant is already enrolled at this school" if latest_induction_record.school == school_cohort.school
   end
 end
