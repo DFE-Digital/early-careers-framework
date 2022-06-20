@@ -265,7 +265,7 @@ GEM
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
     jwt (2.3.0)
-    kramdown (2.3.2)
+    kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
@@ -299,7 +299,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.15.0)
+    minitest (5.16.0)
     msgpack (1.4.5)
     multi_json (1.15.0)
     multipart-post (2.1.1)
@@ -541,7 +541,7 @@ GEM
       site_prism-all_there (>= 0.3.1, < 1.0)
     site_prism-all_there (0.3.2)
     socksify (1.7.1)
-    solargraph (0.44.3)
+    solargraph (0.45.0)
       backport (~> 1.2)
       benchmark
       bundler (>= 1.17.2)
@@ -568,7 +568,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     stackprof (0.2.19)
-    strong_migrations (1.0.0)
+    strong_migrations (1.2.0)
       activerecord (>= 5.2)
     strscan (3.0.1)
     terminal-table (3.0.2)
@@ -619,9 +619,9 @@ GEM
       activerecord (>= 5.2)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.27)
+    yard (0.9.28)
       webrick (~> 1.7.0)
-    zeitwerk (2.5.4)
+    zeitwerk (2.6.0)
 
 PLATFORMS
   ruby
@@ -701,7 +701,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0)
   stackprof
-  strong_migrations (~> 1.0)
+  strong_migrations (~> 1.2)
   terminal-table
   timecop
   tzinfo-data
