@@ -2,11 +2,11 @@
 
 class CreateFinanceUser < BaseService
   def self.call(full_name, email)
-    user = User.new(full_name: full_name, email: email)
+    user = User.new(full_name:, email:)
 
     ActiveRecord::Base.transaction do
       user.save!
-      FinanceProfile.create!(user: user)
+      FinanceProfile.create!(user:)
     end
   end
 end

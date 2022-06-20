@@ -36,7 +36,7 @@ private
 
   def store_eligibility_data!(dqt_data)
     StoreParticipantEligibility.call(
-      participant_profile: participant_profile,
+      participant_profile:,
       eligibility_options: {
         qts: dqt_data[:qts],
         active_flags: dqt_data[:active_alert],
@@ -57,12 +57,12 @@ private
     if different_trn?(trn)
       Rails.logger.warn("Different TRN already set for user [#{participant_profile.user.email}]")
     else
-      participant_profile.teacher_profile.update!(trn: trn)
+      participant_profile.teacher_profile.update!(trn:)
     end
   end
 
   def store_validation_data!
-    record = ECFParticipantValidationData.find_or_initialize_by(participant_profile: participant_profile)
+    record = ECFParticipantValidationData.find_or_initialize_by(participant_profile:)
     record.assign_attributes(
       trn: validation_data[:trn],
       full_name: validation_data[:full_name],

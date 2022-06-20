@@ -57,8 +57,8 @@ RSpec.describe Partnerships::Report do
   end
 
   context "when a FIP induction_programme exists" do
-    let(:school_cohort) { create(:school_cohort, :fip, school: school, cohort: cohort) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership: nil, school_cohort: school_cohort) }
+    let(:school_cohort) { create(:school_cohort, :fip, school:, cohort:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership: nil, school_cohort:) }
 
     before do
       school_cohort.update!(default_induction_programme: induction_programme)
@@ -71,7 +71,7 @@ RSpec.describe Partnerships::Report do
     context "when the induction_programme already has a partnership" do
       # this partnership will presumably be challenged
       let(:old_partnership) { create(:partnership, :challenged) }
-      let(:induction_programme) { create(:induction_programme, :fip, partnership: old_partnership, school_cohort: school_cohort) }
+      let(:induction_programme) { create(:induction_programme, :fip, partnership: old_partnership, school_cohort:) }
 
       before do
         school_cohort.update!(default_induction_programme: induction_programme)
@@ -84,8 +84,8 @@ RSpec.describe Partnerships::Report do
   end
 
   context "when a non-FIP induction_programme exists" do
-    let(:school_cohort) { create(:school_cohort, :cip, school: school, cohort: cohort) }
-    let(:induction_programme) { create(:induction_programme, :cip, partnership: nil, school_cohort: school_cohort) }
+    let(:school_cohort) { create(:school_cohort, :cip, school:, cohort:) }
+    let(:induction_programme) { create(:induction_programme, :cip, partnership: nil, school_cohort:) }
 
     before do
       school_cohort.update!(default_induction_programme: induction_programme)
@@ -98,7 +98,7 @@ RSpec.describe Partnerships::Report do
 
   context "with previous, challenged partnership between school and provider for the same cohort" do
     let!(:partnership) do
-      create :partnership, :challenged, lead_provider: lead_provider, school: school, cohort: cohort
+      create :partnership, :challenged, lead_provider:, school:, cohort:
     end
 
     it "does not create new partnership" do
@@ -135,7 +135,7 @@ RSpec.describe Partnerships::Report do
 
   context "when given school already has a matching school cohort record" do
     before do
-      create :school_cohort, school: school, cohort: cohort
+      create :school_cohort, school:, cohort:
     end
 
     it "does not create a school cohort" do
@@ -146,8 +146,8 @@ RSpec.describe Partnerships::Report do
   context "when the school has already signed up for CIP" do
     before do
       create(:school_cohort,
-             school: school,
-             cohort: cohort,
+             school:,
+             cohort:,
              induction_programme_choice: "core_induction_programme")
     end
 
@@ -166,8 +166,8 @@ RSpec.describe Partnerships::Report do
   context "when the school has said they have no ECTs" do
     before do
       create(:school_cohort,
-             school: school,
-             cohort: cohort,
+             school:,
+             cohort:,
              induction_programme_choice: "no_early_career_teachers")
     end
 
@@ -186,8 +186,8 @@ RSpec.describe Partnerships::Report do
   context "when the school has said they will design their own programme" do
     before do
       create(:school_cohort,
-             school: school,
-             cohort: cohort,
+             school:,
+             cohort:,
              induction_programme_choice: "design_our_own")
     end
 

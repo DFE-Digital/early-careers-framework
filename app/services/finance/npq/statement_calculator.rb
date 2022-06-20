@@ -65,7 +65,7 @@ module Finance
       def output_payments
         contracts.map do |contract|
           PaymentCalculator::NPQ::OutputPayment.call(
-            contract: contract,
+            contract:,
             total_participants: statement_declarations_per_contract(contract),
           )
         end
@@ -76,7 +76,7 @@ module Finance
       end
 
       def service_fees
-        contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract: contract) }.compact
+        contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract:) }.compact
       end
 
       def contracts

@@ -15,9 +15,9 @@ module Admin
 
         def cohort_info
           case school_cohort&.induction_programme_choice
-          when "core_induction_programme" then CipInfo.new(school_cohort: school_cohort)
-          when "full_induction_programme" then FipInfo.new(school_cohort: school_cohort)
-          else OtherInfo.new(school_cohort: school_cohort, cohort: cohort)
+          when "core_induction_programme" then CipInfo.new(school_cohort:)
+          when "full_induction_programme" then FipInfo.new(school_cohort:)
+          else OtherInfo.new(school_cohort:, cohort:)
           end
         end
       end

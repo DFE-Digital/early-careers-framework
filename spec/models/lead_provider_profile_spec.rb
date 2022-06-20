@@ -17,7 +17,7 @@ RSpec.describe LeadProviderProfile, type: :model do
     let(:email) { Faker::Internet.email }
     let(:lead_provider) { create(:lead_provider) }
     let(:start_url) { "www.example.com" }
-    let(:created_user) { User.find_by(email: email) }
+    let(:created_user) { User.find_by(email:) }
 
     it "creates a lead provider user" do
       expect {
@@ -37,7 +37,7 @@ RSpec.describe LeadProviderProfile, type: :model do
       LeadProviderProfile.create_lead_provider_user(name, email, lead_provider, start_url)
 
       expect(LeadProviderMailer).to have_received(:welcome_email)
-                                .with(user: created_user, lead_provider_name: lead_provider.name, start_url: start_url)
+                                .with(user: created_user, lead_provider_name: lead_provider.name, start_url:)
     end
   end
 end

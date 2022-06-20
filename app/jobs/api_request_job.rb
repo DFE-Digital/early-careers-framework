@@ -16,15 +16,15 @@ class ApiRequestJob
 
     ApiRequest.create!(
       request_path: request_data[:path],
-      request_headers: request_headers,
+      request_headers:,
       request_body: request_body(request_data),
       request_method: request_data[:method],
-      response_headers: response_headers,
+      response_headers:,
       response_body: response_hash(response_body, status_code),
-      status_code: status_code,
+      status_code:,
       user_description: token&.owner_description,
-      cpd_lead_provider: cpd_lead_provider,
-      created_at: created_at,
+      cpd_lead_provider:,
+      created_at:,
     )
   end
 

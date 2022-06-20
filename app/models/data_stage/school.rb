@@ -48,12 +48,12 @@ module DataStage
     def handle_local_authority_changes!
       if counterpart.local_authority&.code != la_code
         SetSchoolLocalAuthority.call(school: counterpart,
-                                     la_code: la_code)
+                                     la_code:)
       end
 
       if counterpart.administrative_district_code != counterpart.local_authority_district&.code
         SetSchoolLocalAuthorityDistrict.call(school: counterpart,
-                                             administrative_district_code: administrative_district_code)
+                                             administrative_district_code:)
       end
     end
   end

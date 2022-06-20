@@ -30,9 +30,9 @@ RSpec.describe AdminHelper, type: :helper do
     let(:induction_programme) { create(:induction_programme) }
 
     before do
-      first_record = Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+      first_record = Induction::Enrol.call(participant_profile: profile, induction_programme:)
       first_record.withdrawing!
-      Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme, preferred_email: "login2@example.com")
+      Induction::Enrol.call(participant_profile: profile, induction_programme:, preferred_email: "login2@example.com")
     end
 
     describe "#all_emails_associated_with_a_user" do

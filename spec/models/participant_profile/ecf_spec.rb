@@ -23,7 +23,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
 
   describe "after_update" do
     let(:induction_programme) { create(:induction_programme, :fip, school_cohort: profile.school_cohort) }
-    let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, induction_status: "active") }
+    let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile: profile, induction_status: "active") }
 
     context "when the status changes" do
       it "updates the status on the active induction record" do
@@ -61,7 +61,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when an induction record exists but it is not at active status" do
-      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, induction_status: "completed") }
+      let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile: profile, induction_status: "completed") }
 
       it "returns nil" do
         expect(profile.current_induction_record).to be_nil
@@ -69,7 +69,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when an active induction record exists with an end_date in the past" do
-      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, induction_status: "active", end_date: 2.days.ago) }
+      let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile: profile, induction_status: "active", end_date: 2.days.ago) }
 
       it "returns nil" do
         expect(profile.current_induction_record).to be_nil
@@ -77,7 +77,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when an active induction record exists with an end_date in the future" do
-      let!(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, induction_status: "active", end_date: 2.days.from_now) }
+      let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile: profile, induction_status: "active", end_date: 2.days.from_now) }
 
       it "returns the induction record" do
         expect(profile.current_induction_record).to eq induction_record
@@ -85,14 +85,14 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when an active induction record exists with a start_date in the future" do
-      let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme, start_date: 2.days.from_now) }
+      let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme:, start_date: 2.days.from_now) }
 
       it "returns the induction record" do
         expect(profile.current_induction_record).to eq induction_record
       end
 
       context "when this is a school transfer" do
-        let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme, start_date: 2.days.from_now, school_transfer: true) }
+        let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme:, start_date: 2.days.from_now, school_transfer: true) }
 
         it "returns nil" do
           expect(profile.current_induction_record).to be_nil

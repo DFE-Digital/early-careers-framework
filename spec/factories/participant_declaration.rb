@@ -27,15 +27,21 @@ FactoryBot.define do
     end
 
     trait :sparsity_uplift do
-      uplift { :sparsity_uplift }
+      sparsity_uplift { true }
+    end
+
+    trait :without_uplift do
+      sparsity_uplift { false }
+      pupil_premium_uplift { false }
     end
 
     trait :pupil_premium_uplift do
-      uplift { :pupil_premium_uplift }
+      pupil_premium_uplift { true }
     end
 
     trait :uplift_flags do
-      uplift { :uplift_flags }
+      sparsity_uplift { true }
+      pupil_premium_uplift { true }
     end
 
     trait :submitted do
@@ -65,7 +71,7 @@ FactoryBot.define do
     after(:create) do |participant_declaration, _|
       create(:declaration_state,
              participant_declaration.state,
-             participant_declaration: participant_declaration)
+             participant_declaration:)
     end
   end
 end

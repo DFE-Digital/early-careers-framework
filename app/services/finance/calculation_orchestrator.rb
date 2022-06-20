@@ -10,9 +10,9 @@ module Finance
 
     def call(event_type:)
       calculator.call(
-        contract: contract,
-        event_type: event_type,
-        aggregations: aggregator.call(event_type: event_type),
+        contract:,
+        event_type:,
+        aggregations: aggregator.call(event_type:),
       )
     end
 
@@ -31,7 +31,7 @@ module Finance
     end
 
     def default_aggregator
-      self.class.default_aggregator.new(statement: statement)
+      self.class.default_aggregator.new(statement:)
     end
   end
 end

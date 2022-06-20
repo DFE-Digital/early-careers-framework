@@ -4,7 +4,7 @@ module Mail
   class DeliveryRecorder
     def self.setup!(enabled:)
       Mail::Message.include(MessageExtension)
-      ActionMailer::Base.register_observer(new(enabled: enabled))
+      ActionMailer::Base.register_observer(new(enabled:))
     end
 
     def initialize(enabled:)

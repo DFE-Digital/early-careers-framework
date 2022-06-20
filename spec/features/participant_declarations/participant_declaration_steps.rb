@@ -5,18 +5,18 @@ module ParticipantDeclarationSteps
 
   def given_an_early_career_teacher_has_been_entered_onto_the_dfe_service
     cohort = Cohort.current
-    school_cohort = create(:school_cohort, cohort: cohort)
-    @ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
+    school_cohort = create(:school_cohort, cohort:)
+    @ect_profile = create(:ect_participant_profile, school_cohort:)
     delivery_partner = create(:delivery_partner)
     partnership = create(
       :partnership,
       school: @ect_profile.school,
       lead_provider: @cpd_lead_provider.lead_provider,
-      cohort: cohort,
-      delivery_partner: delivery_partner,
+      cohort:,
+      delivery_partner:,
     )
-    induction_programme = create(:induction_programme, partnership: partnership)
-    Induction::Enrol.call(participant_profile: @ect_profile, induction_programme: induction_programme)
+    induction_programme = create(:induction_programme, partnership:)
+    Induction::Enrol.call(participant_profile: @ect_profile, induction_programme:)
     @ect_id = @ect_profile.user.id
     @declaration_date = @ect_profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @ect_profile.schedule.milestones.first.start_date + 2.days
@@ -24,12 +24,12 @@ module ParticipantDeclarationSteps
 
   def given_an_ecf_mentor_has_been_entered_onto_the_dfe_service
     cohort = Cohort.current
-    school_cohort = create(:school_cohort, cohort: cohort)
-    partnership = create(:partnership, lead_provider: @lead_provider, cohort: cohort, school: school_cohort.school)
+    school_cohort = create(:school_cohort, cohort:)
+    partnership = create(:partnership, lead_provider: @lead_provider, cohort:, school: school_cohort.school)
     @mentor_profile = create(:mentor_participant_profile, school: partnership.school, cohort: partnership.cohort)
     @mentor_id = @mentor_profile.user.id
-    induction_programme = create(:induction_programme, partnership: partnership)
-    Induction::Enrol.call(participant_profile: @mentor_profile, induction_programme: induction_programme)
+    induction_programme = create(:induction_programme, partnership:)
+    Induction::Enrol.call(participant_profile: @mentor_profile, induction_programme:)
 
     @declaration_date = @mentor_profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @mentor_profile.schedule.milestones.first.start_date + 2.days
@@ -40,7 +40,7 @@ module ParticipantDeclarationSteps
     create(:npq_leadership_schedule)
     npq_lead_provider = create(:npq_lead_provider, cpd_lead_provider: @cpd_lead_provider)
     npq_course = create(:npq_course, identifier: "npq-senior-leadership")
-    @npq_application = create(:npq_application, npq_lead_provider: npq_lead_provider, npq_course: npq_course, cohort: cohort)
+    @npq_application = create(:npq_application, npq_lead_provider:, npq_course:, cohort:)
     @npq_id = @npq_application.user.id
 
     NPQ::Accept.new(npq_application: @npq_application).call
@@ -127,7 +127,7 @@ module ParticipantDeclarationSteps
       school: @ect_profile.school,
       lead_provider: @new_cpd_lead_provider.lead_provider,
       cohort: partnership.cohort,
-      delivery_partner: delivery_partner,
+      delivery_partner:,
     )
 
     new_induction_programme = create(:induction_programme, partnership: new_partnership)
@@ -188,7 +188,7 @@ module ParticipantDeclarationSteps
     }
     travel_to @submission_date + 1.day do
       @session.put("/api/v1/participants/#{@participant_id}/withdraw",
-                   params: params,
+                   params:,
                    headers: { "Authorization": "Bearer #{@token}" })
     end
   end
@@ -203,7 +203,7 @@ module ParticipantDeclarationSteps
 
   def submit_request(params)
     @response_http_code = @session.post("/api/v1/participant-declarations",
-                                        params: params,
+                                        params:,
                                         headers: { "Authorization": "Bearer #{@token}" })
     @response = JSON.parse(@session.response.body)
   end

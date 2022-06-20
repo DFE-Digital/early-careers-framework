@@ -5,10 +5,10 @@ require "rails_helper"
 RSpec.describe "Participant validations", with_feature_flags: { eligibility_notifications: "active" }, type: :request do
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:new_cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort) }
-  let!(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+  let!(:school_cohort) { create(:school_cohort, cohort:) }
+  let!(:ect_profile) { create(:ect_participant_profile, school_cohort:) }
   let!(:ect_user) { ect_profile.user }
-  let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+  let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
   let!(:mentor_user) { mentor_profile.user }
 
   describe "starting the journey" do

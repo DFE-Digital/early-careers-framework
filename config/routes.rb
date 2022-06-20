@@ -15,7 +15,14 @@ Rails.application.routes.draw do
     get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
 
-  get "/pages/:page", to: "pages#show", as: :page
+  scope :pages, controller: "pages" do
+    get "/:page", action: :show, as: :page
+
+    get "/ect-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-early-career-teachers-ects-ecf-based-training")
+    get "/mentor-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-mentors-how-to-support-ecf-based-training")
+    get "/school-leader-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training")
+  end
+
   get "/induction-tutor-materials/:provider/:year", to: "pages#induction_tutor_materials", as: :induction_tutor_materials
   get "check" => "application#check"
   get "healthcheck" => "healthcheck#check"
@@ -292,7 +299,11 @@ Rails.application.routes.draw do
     end
 
     namespace :delivery_partners, path: "delivery-partners" do
-      resources :users, only: %i[index new create]
+      resources :users, only: %i[index new create edit update destroy] do
+        member do
+          get "delete", action: :delete
+        end
+      end
     end
 
     scope :administrators, module: "administrators" do

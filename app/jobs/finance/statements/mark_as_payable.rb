@@ -14,7 +14,7 @@ module Finance
               .find_each do |declaration|
               declaration.make_payable!
 
-              line_item = StatementLineItem.find_by(statement: statement, participant_declaration: declaration)
+              line_item = StatementLineItem.find_by(statement:, participant_declaration: declaration)
 
               line_item.update!(state: "payable") if line_item
             end

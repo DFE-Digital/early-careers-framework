@@ -3,13 +3,13 @@
 require "rails_helper"
 RSpec.describe NPQCourse do
   describe "::schedule_for", :with_default_schedules do
-    let(:npq_course) { build(:npq_course, identifier: identifier) }
+    let(:npq_course) { build(:npq_course, identifier:) }
 
     context "when a course is one of NPQCourse::LEADERSHIP_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
 
       it "returns the default NPQ leadership schedule" do
-        expect(described_class.schedule_for(npq_course: npq_course))
+        expect(described_class.schedule_for(npq_course:))
           .to eq(Finance::Schedule::NPQLeadership.default)
       end
 
@@ -18,7 +18,7 @@ RSpec.describe NPQCourse do
         let!(:schedule_2022) { create(:npq_leadership_schedule, cohort: cohort_2022) }
 
         it "uses 2022 schedule" do
-          expect(described_class.schedule_for(npq_course: npq_course, cohort: cohort_2022)).to eql(schedule_2022)
+          expect(described_class.schedule_for(npq_course:, cohort: cohort_2022)).to eql(schedule_2022)
         end
       end
     end
@@ -27,7 +27,7 @@ RSpec.describe NPQCourse do
       let(:identifier) { Finance::Schedule::NPQSpecialist::IDENTIFIERS.sample }
 
       it "returns the default NPQ specialist schedule" do
-        expect(described_class.schedule_for(npq_course: npq_course)).to eq(Finance::Schedule::NPQSpecialist.default)
+        expect(described_class.schedule_for(npq_course:)).to eq(Finance::Schedule::NPQSpecialist.default)
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe NPQCourse do
       let(:identifier) { "npq-additional-support-offer" }
 
       it "returns the default NPQ support schedule" do
-        expect(described_class.schedule_for(npq_course: npq_course)).to eq(Finance::Schedule::NPQSupport.default)
+        expect(described_class.schedule_for(npq_course:)).to eq(Finance::Schedule::NPQSupport.default)
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe NPQCourse do
       let(:identifier) { "unknown-course-identifier" }
 
       it {
-        expect { described_class.schedule_for(npq_course: npq_course) }
+        expect { described_class.schedule_for(npq_course:) }
           .to raise_error(ArgumentError, "Invalid course identifier")
       }
     end

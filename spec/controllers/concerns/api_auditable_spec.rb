@@ -44,10 +44,10 @@ describe "ApiAuditable", type: :controller do
     it "preserves params for post requests" do
       params = { test_key: :test_value }
 
-      post("base_action", params: params)
+      post("base_action", params:)
       baseline_post = response.body
 
-      post("audited_action", params: params)
+      post("audited_action", params:)
       audited_post = response.body
 
       expect(baseline_post).to eq(audited_post)

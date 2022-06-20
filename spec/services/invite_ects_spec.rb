@@ -7,7 +7,7 @@ RSpec.describe InviteEcts do
   let!(:cohort) { create(:cohort, :next) }
 
   let!(:school) { create(:school) }
-  let!(:school_cohort) { create(:school_cohort, school: school) }
+  let!(:school_cohort) { create(:school_cohort, school:) }
 
   let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
 
@@ -28,7 +28,7 @@ RSpec.describe InviteEcts do
   describe "#preterm_reminder" do
     it "sends the nomination email" do
       expect(ParticipantMailer).to receive(:preterm_reminder).with(
-        hash_including(induction_coordinator_profile: induction_coordinator_profile),
+        hash_including(induction_coordinator_profile:),
       ).and_call_original
 
       invite_ects.preterm_reminder
@@ -59,7 +59,7 @@ RSpec.describe InviteEcts do
     end
 
     context "where the school has already chosen a programme" do
-      before { create :school_cohort, school: school, cohort: cohort }
+      before { create :school_cohort, school:, cohort: }
 
       it "does not send the email again" do
         expect(ParticipantMailer).to receive(:preterm_reminder).never

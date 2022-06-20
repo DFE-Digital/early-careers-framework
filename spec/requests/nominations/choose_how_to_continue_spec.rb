@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.shared_examples "redirects to start nomination" do |how_to_continue|
   let(:form_params) do
-    { nominate_how_to_continue_form: { how_to_continue: how_to_continue, token: token } }
+    { nominate_how_to_continue_form: { how_to_continue:, token: } }
   end
 
   it "redirects to the start of the nominate journey" do
@@ -14,7 +14,7 @@ RSpec.shared_examples "redirects to start nomination" do |how_to_continue|
 
   context "when a school cohort already exists" do
     before do
-      create(:school_cohort, school: school, cohort: cohort, opt_out_of_updates: true)
+      create(:school_cohort, school:, cohort:, opt_out_of_updates: true)
     end
 
     it "resets the opt out choice" do
@@ -105,7 +105,7 @@ RSpec.describe "Choosing how to continue with nominations", type: :request do
 
     context "recording the opened_at for the nomaination email" do
       let(:form_params) do
-        { nominate_how_to_continue_form: { how_to_continue: "no", token: token } }
+        { nominate_how_to_continue_form: { how_to_continue: "no", token: } }
       end
 
       context "when making a choice for the first time" do
@@ -132,7 +132,7 @@ RSpec.describe "Choosing how to continue with nominations", type: :request do
 
     context "when the user selects no ECTs this year" do
       let(:form_params) do
-        { nominate_how_to_continue_form: { how_to_continue: "no", token: token } }
+        { nominate_how_to_continue_form: { how_to_continue: "no", token: } }
       end
 
       it "records the opt out choice" do

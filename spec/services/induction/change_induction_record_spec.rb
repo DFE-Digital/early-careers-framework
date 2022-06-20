@@ -3,11 +3,11 @@
 RSpec.describe Induction::ChangeInductionRecord do
   describe "#call" do
     let(:school_cohort) { create :school_cohort }
-    let(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
-    let(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-    let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
-    let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort) }
-    let!(:induction_record) { Induction::Enrol.call(induction_programme: induction_programme, participant_profile: ect_profile, start_date: 6.months.ago, mentor_profile: mentor_profile) }
+    let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+    let(:ect_profile) { create(:ect_participant_profile, school_cohort:) }
+    let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
+    let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort:) }
+    let!(:induction_record) { Induction::Enrol.call(induction_programme:, participant_profile: ect_profile, start_date: 6.months.ago, mentor_profile:) }
     let(:preferred_identity) { Identity::Create.call(user: ect_profile.user, email: "newemail@example.com") }
     let(:action_date) { 1.week.from_now }
 
@@ -15,14 +15,14 @@ RSpec.describe Induction::ChangeInductionRecord do
 
     it "adds a new induction record to the new programme for the participant" do
       expect {
-        service.call(induction_record: induction_record,
+        service.call(induction_record:,
                      changes: { mentor_profile: mentor_profile_2 })
       }.to change { ect_profile.induction_records.count }.by 1
     end
 
     it "creates a copy of the induction record with the specified changes" do
       induction_record.leaving!(action_date)
-      service.call(induction_record: induction_record, changes: { preferred_identity: preferred_identity })
+      service.call(induction_record:, changes: { preferred_identity: })
       current_record = ect_profile.current_induction_record
       expect(induction_record).to be_changed_induction_status
       expect(current_record).to be_leaving_induction_status
@@ -36,14 +36,14 @@ RSpec.describe Induction::ChangeInductionRecord do
     end
 
     it "marks the previous induction record as changing" do
-      service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+      service.call(induction_record:, changes: { mentor_profile: mentor_profile_2 })
       expect(induction_record).to be_changed_induction_status
     end
 
     context "when the induction record is leaving" do
       before do
         induction_record.leaving!(action_date)
-        service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+        service.call(induction_record:, changes: { mentor_profile: mentor_profile_2 })
       end
 
       it "preserves the induction_status on the new record" do
@@ -58,7 +58,7 @@ RSpec.describe Induction::ChangeInductionRecord do
     context "when the induction record start date is in the future" do
       before do
         induction_record.update!(start_date: 1.month.from_now)
-        service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+        service.call(induction_record:, changes: { mentor_profile: mentor_profile_2 })
       end
 
       it "preserves the start_date" do
@@ -70,7 +70,7 @@ RSpec.describe Induction::ChangeInductionRecord do
       context "when the start_date is in the past" do
         before do
           induction_record.update!(school_transfer: true)
-          service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+          service.call(induction_record:, changes: { mentor_profile: mentor_profile_2 })
         end
 
         it "clears the school_transfer flag" do
@@ -81,7 +81,7 @@ RSpec.describe Induction::ChangeInductionRecord do
       context "when the start_date is in the future" do
         before do
           induction_record.update!(school_transfer: true, start_date: 1.month.from_now)
-          service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+          service.call(induction_record:, changes: { mentor_profile: mentor_profile_2 })
         end
 
         it "preserves the school_transfer flag" do
@@ -93,7 +93,7 @@ RSpec.describe Induction::ChangeInductionRecord do
     context "when the induction record is withdrawn" do
       before do
         induction_record.training_status_withdrawn!
-        service.call(induction_record: induction_record, changes: { mentor_profile: mentor_profile_2 })
+        service.call(induction_record:, changes: { mentor_profile: mentor_profile_2 })
       end
 
       it "preserves the training_status on the new record" do

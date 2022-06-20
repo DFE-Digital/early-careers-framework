@@ -5,7 +5,7 @@ module PaymentCalculator
     class BreakdownSummary
       class << self
         def call(contract:, aggregations:, event_type: :started)
-          new(contract: contract).call(aggregations: aggregations, event_type: event_type)
+          new(contract:).call(aggregations:, event_type:)
         end
       end
 
@@ -13,8 +13,8 @@ module PaymentCalculator
         {
           name: lead_provider.name,
           declaration: event_type,
-          recruitment_target: recruitment_target,
-          revised_target: revised_target,
+          recruitment_target:,
+          revised_target:,
           ects: aggregations[:ects],
           mentors: aggregations[:mentors],
           participants: aggregations[:all],

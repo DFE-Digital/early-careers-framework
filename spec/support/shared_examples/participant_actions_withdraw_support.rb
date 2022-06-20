@@ -4,7 +4,7 @@ RSpec.shared_examples "a participant withdraw action endpoint" do
   let(:parsed_response) { JSON.parse(response.body) }
 
   it "returns an error when the participant is already withdrawn" do
-    2.times { put url, params: params }
+    2.times { put url, params: }
 
     expect(response).not_to be_successful
   end

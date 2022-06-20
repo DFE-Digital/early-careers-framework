@@ -10,7 +10,7 @@ module Admin
         def new
           school = School.friendly.find params[:school_id]
           cohort = ::Cohort.find_by(start_year: params[:id])
-          partnership = Partnership.find_by(school: school, cohort: cohort)
+          partnership = Partnership.find_by(school:, cohort:)
           authorize partnership, :update?
           @challenge_partnership_form = ChallengePartnershipForm.new(
             school_name: school.name,

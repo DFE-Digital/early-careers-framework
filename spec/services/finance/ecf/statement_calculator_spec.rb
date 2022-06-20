@@ -4,10 +4,10 @@ RSpec.describe Finance::ECF::StatementCalculator do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
 
-  let!(:statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 1.week.ago) }
-  let!(:contract) { create(:call_off_contract, :with_minimal_bands, lead_provider: lead_provider) }
+  let!(:statement) { create(:ecf_statement, cpd_lead_provider:, deadline_date: 1.week.ago) }
+  let!(:contract) { create(:call_off_contract, :with_minimal_bands, lead_provider:) }
 
-  subject { described_class.new(statement: statement) }
+  subject { described_class.new(statement:) }
 
   describe "#started_band_a_count" do
     context "when there are no declarations" do
@@ -48,13 +48,13 @@ RSpec.describe Finance::ECF::StatementCalculator do
       before do
         declarations = create_list(
           :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible"
         )
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -70,13 +70,13 @@ RSpec.describe Finance::ECF::StatementCalculator do
       before do
         declarations = create_list(
           :ect_participant_declaration, 3,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible"
         )
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -89,12 +89,12 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when there is a previous statement partially filling the band" do
-      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 5.weeks.ago) }
+      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider:, deadline_date: 5.weeks.ago) }
 
       before do
         declarations = create_list(
           :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible"
         )
 
@@ -117,13 +117,13 @@ RSpec.describe Finance::ECF::StatementCalculator do
         before do
           declarations = create_list(
             :ect_participant_declaration, 1,
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             state: "eligible"
           )
 
           declarations.each do |declaration|
             Finance::StatementLineItem.create!(
-              statement: statement,
+              statement:,
               participant_declaration: declaration,
               state: declaration.state,
             )
@@ -139,13 +139,13 @@ RSpec.describe Finance::ECF::StatementCalculator do
         before do
           declarations = create_list(
             :ect_participant_declaration, 2,
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
             state: "eligible"
           )
 
           declarations.each do |declaration|
             Finance::StatementLineItem.create!(
-              statement: statement,
+              statement:,
               participant_declaration: declaration,
               state: declaration.state,
             )
@@ -159,12 +159,12 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when there is a previous statement totally filling the band" do
-      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider: cpd_lead_provider, deadline_date: 5.weeks.ago) }
+      let!(:previous_statement) { create(:ecf_statement, cpd_lead_provider:, deadline_date: 5.weeks.ago) }
 
       before do
         declarations = create_list(
           :ect_participant_declaration, 2,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible"
         )
 
@@ -178,13 +178,13 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
         declarations = create_list(
           :ect_participant_declaration, 1,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           state: "eligible"
         )
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -207,14 +207,14 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
       before do
         declaration = create(
-          :ect_participant_declaration,
-          cpd_lead_provider: cpd_lead_provider,
+          :ect_participant_declaration, :without_uplift,
+          cpd_lead_provider:,
           state: "eligible",
-          participant_profile: profile,
+          participant_profile: profile
         )
 
         Finance::StatementLineItem.create!(
-          statement: statement,
+          statement:,
           participant_declaration: declaration,
           state: declaration.state,
         )
@@ -226,19 +226,19 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when uplift is applicable" do
-      let(:profile) { create(:ect_participant_profile, :uplift_flags) }
+      let(:profile) { create(:ect_participant_profile) }
       let(:declaration) do
         create(
-          :ect_participant_declaration,
-          cpd_lead_provider: cpd_lead_provider,
+          :ect_participant_declaration, :pupil_premium_uplift,
+          cpd_lead_provider:,
           state: "eligible",
-          participant_profile: profile,
+          participant_profile: profile
         )
       end
 
       before do
         Finance::StatementLineItem.create!(
-          statement: statement,
+          statement:,
           participant_declaration: declaration,
           state: declaration.state,
         )

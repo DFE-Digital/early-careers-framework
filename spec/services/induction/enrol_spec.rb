@@ -3,19 +3,19 @@
 RSpec.describe Induction::Enrol do
   describe "#call" do
     let(:school_cohort) { create :school_cohort }
-    let!(:induction_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
+    let!(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
     let(:teacher_profile) { create(:teacher_profile) }
-    let(:participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: school_cohort) }
+    let(:participant_profile) { create(:ect_participant_profile, teacher_profile:, school_cohort:) }
 
     subject(:service) { described_class }
 
     it "creates an induction record for the given programme" do
-      expect { service.call(participant_profile: participant_profile, induction_programme: induction_programme) }.to change { induction_programme.induction_records.count }.by 1
+      expect { service.call(participant_profile:, induction_programme:) }.to change { induction_programme.induction_records.count }.by 1
     end
 
     context "without optional params" do
       let(:induction_record) do
-        service.call(participant_profile: participant_profile, induction_programme: induction_programme)
+        service.call(participant_profile:, induction_programme:)
       end
 
       it "sets the start_date to the schedule start_date" do
@@ -31,9 +31,9 @@ RSpec.describe Induction::Enrol do
       let(:mentor_profile) { create(:mentor_participant_profile) }
 
       let(:induction_record) do
-        service.call(participant_profile: participant_profile,
-                     induction_programme: induction_programme,
-                     mentor_profile: mentor_profile)
+        service.call(participant_profile:,
+                     induction_programme:,
+                     mentor_profile:)
       end
 
       it "sets the mentor for the participant" do
@@ -44,9 +44,9 @@ RSpec.describe Induction::Enrol do
     context "when a start_date is provided" do
       let(:start_date) { 1.week.from_now }
       let(:induction_record) do
-        service.call(participant_profile: participant_profile,
-                     induction_programme: induction_programme,
-                     start_date: start_date)
+        service.call(participant_profile:,
+                     induction_programme:,
+                     start_date:)
       end
 
       it "sets the start_date" do
@@ -58,9 +58,9 @@ RSpec.describe Induction::Enrol do
       let(:preferred_email) { "newemail@example.com" }
 
       let(:induction_record) do
-        service.call(participant_profile: participant_profile,
-                     induction_programme: induction_programme,
-                     preferred_email: preferred_email)
+        service.call(participant_profile:,
+                     induction_programme:,
+                     preferred_email:)
       end
 
       it "adds a new identity to the user" do

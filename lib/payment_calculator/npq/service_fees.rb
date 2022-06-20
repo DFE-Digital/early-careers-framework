@@ -5,7 +5,7 @@ module PaymentCalculator
     class ServiceFees
       class << self
         def call(contract:)
-          new(contract: contract).call
+          new(contract:).call
         end
       end
 

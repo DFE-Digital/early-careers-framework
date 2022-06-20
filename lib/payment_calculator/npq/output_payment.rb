@@ -5,7 +5,7 @@ module PaymentCalculator
     class OutputPayment
       class << self
         def call(contract:, total_participants:)
-          new(contract: contract).call(total_participants: total_participants)
+          new(contract:).call(total_participants:)
         end
       end
 

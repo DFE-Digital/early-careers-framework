@@ -10,7 +10,7 @@ module DQT
       end
 
       def dqt_record
-        @dqt_record ||= DQTRecord.new(client: client)
+        @dqt_record ||= DQTRecord.new(client:)
       end
 
     private

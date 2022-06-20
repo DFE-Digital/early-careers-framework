@@ -10,11 +10,11 @@ class Induction::TransferToSchoolsProgramme < BaseService
         latest_induction_record.leaving!(end_date)
       end
 
-      Induction::Enrol.call(participant_profile: participant_profile,
-                            induction_programme: induction_programme,
-                            start_date: start_date,
+      Induction::Enrol.call(participant_profile:,
+                            induction_programme:,
+                            start_date:,
                             preferred_email: email,
-                            mentor_profile: mentor_profile,
+                            mentor_profile:,
                             school_transfer: true)
     end
   end

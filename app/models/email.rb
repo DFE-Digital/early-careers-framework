@@ -8,7 +8,7 @@ class Email < ApplicationRecord
 
   has_many :associations, dependent: :destroy
 
-  scope :associated_with, ->(object) { where(id: Association.where(object: object).select(:email_id)) }
+  scope :associated_with, ->(object) { where(id: Association.where(object:).select(:email_id)) }
   scope :tagged_with, ->(*tags) { tags.inject(self) { |scope, tag| scope.where("? = ANY (tags)", tag) } }
 
   FAILED_STATUSES = %w[permanent-failure temporary-failure technical-failure].freeze
@@ -17,7 +17,7 @@ class Email < ApplicationRecord
     objects.each do |object|
       Association.create!(
         email: self,
-        object: object,
+        object:,
         name: (as || object.model_name.singular),
       )
     end

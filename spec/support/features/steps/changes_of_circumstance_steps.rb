@@ -8,7 +8,7 @@ module Steps
       next_ideal_time Time.zone.local(2021, 2, 1, 9, 0, 0)
       travel_to(@timestamp) do
         lead_provider = create(:lead_provider, name: lead_provider_name)
-        cpd_lead_provider = create(:cpd_lead_provider, lead_provider: lead_provider, name: lead_provider_name)
+        cpd_lead_provider = create(:cpd_lead_provider, lead_provider:, name: lead_provider_name)
         create :call_off_contract, lead_provider: lead_provider
 
         delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
@@ -17,7 +17,7 @@ module Steps
         user = create(:user, full_name: lead_provider_name)
         create :lead_provider_profile, user: user, lead_provider: lead_provider
 
-        tokens[lead_provider_name] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, lead_provider: lead_provider, private_api_access: true)
+        tokens[lead_provider_name] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:, lead_provider:, private_api_access: true)
 
         travel_to 1.minute.from_now
       end
@@ -38,7 +38,7 @@ module Steps
 
         if programme == "CIP"
           school_cohort = school.school_cohorts.where(cohort: Cohort.find_by_start_year(2021)).first
-          Induction::SetCohortInductionProgramme.call school_cohort: school_cohort, programme_choice: school_cohort.induction_programme_choice
+          Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort.induction_programme_choice
         end
 
         travel_to 1.minute.from_now
@@ -583,7 +583,7 @@ module Steps
     end
 
     def find_user(full_name)
-      user = User.find_by(full_name: full_name)
+      user = User.find_by(full_name:)
       raise "Could not find User for #{full_name}" if user.nil?
 
       user

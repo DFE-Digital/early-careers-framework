@@ -7,8 +7,8 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
   let(:school) { create(:school) }
   let(:cip) { create(:core_induction_programme, name: "CIP Programme") }
   let(:cohort_2020) { create(:cohort, start_year: 2020) }
-  let(:school_cohort) { create(:school_cohort, :cip, cohort: cohort_2020, school: school, core_induction_programme: cip) }
-  let!(:participants) { create_list(:ect_participant_profile, 5, school_cohort: school_cohort) }
+  let(:school_cohort) { create(:school_cohort, :cip, cohort: cohort_2020, school:, core_induction_programme: cip) }
+  let!(:participants) { create_list(:ect_participant_profile, 5, school_cohort:) }
   let(:other_cohort) { create(:cohort) }
   let(:other_school_cohort) { create(:school_cohort, :cip, cohort: other_cohort, school: school_cohort.school, core_induction_programme: cip) }
   let!(:other_participants) { create_list(:ect_participant_profile, 5, school_cohort: other_school_cohort) }
@@ -50,14 +50,14 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
     it "creates a new NQT+1 participant" do
       expect(EarlyCareerTeachers::Create).to receive(:call).with({
         full_name: name,
-        email: email,
-        school_cohort: school_cohort,
+        email:,
+        school_cohort:,
         mentor_profile_id: nil,
         year_2020: true,
       })
 
       post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-        user: { full_name: name, email: email },
+        user: { full_name: name, email: },
       }
     end
 
@@ -70,7 +70,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
         expect(EarlyCareerTeachers::Create).not_to receive(:call)
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: name, email: email },
+          user: { full_name: name, email: },
         }
 
         expect(response).to render_template("admin/schools/cohort2020/new")
@@ -86,17 +86,17 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
       it "adds an NQT+1 profile to the user" do
         expect(EarlyCareerTeachers::Create).to receive(:call).with({
           full_name: name,
-          email: email,
-          school_cohort: school_cohort,
+          email:,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         }).and_call_original
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: name, email: email },
+          user: { full_name: name, email: },
         }
 
-        expect(User.find_by(email: email).participant_profiles.count).to eql 2
+        expect(User.find_by(email:).participant_profiles.count).to eql 2
       end
 
       it "changes the name on the user" do
@@ -104,17 +104,17 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
 
         expect(EarlyCareerTeachers::Create).to receive(:call).with({
           full_name: other_name,
-          email: email,
-          school_cohort: school_cohort,
+          email:,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         }).and_call_original
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: other_name, email: email },
+          user: { full_name: other_name, email: },
         }
 
-        expect(User.find_by(email: email).full_name).to eql other_name
+        expect(User.find_by(email:).full_name).to eql other_name
       end
     end
 
@@ -126,17 +126,17 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
       it "adds an NQT+1 profile to the user" do
         expect(EarlyCareerTeachers::Create).to receive(:call).with({
           full_name: name,
-          email: email,
-          school_cohort: school_cohort,
+          email:,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         }).and_call_original
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: name, email: email },
+          user: { full_name: name, email: },
         }
 
-        expect(User.find_by(email: email).participant_profiles.count).to eql 2
+        expect(User.find_by(email:).participant_profiles.count).to eql 2
       end
 
       it "does not change the name on the user" do
@@ -145,17 +145,17 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
 
         expect(EarlyCareerTeachers::Create).to receive(:call).with({
           full_name: other_name,
-          email: email,
-          school_cohort: school_cohort,
+          email:,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         }).and_call_original
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: other_name, email: email },
+          user: { full_name: other_name, email: },
         }
 
-        expect(User.find_by(email: email).full_name).to eql original_name
+        expect(User.find_by(email:).full_name).to eql original_name
       end
     end
 
@@ -167,17 +167,17 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
       it "adds an NQT+1 profile to the user" do
         expect(EarlyCareerTeachers::Create).to receive(:call).with({
           full_name: name,
-          email: email,
-          school_cohort: school_cohort,
+          email:,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         }).and_call_original
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: name, email: email },
+          user: { full_name: name, email: },
         }
 
-        expect(User.find_by(email: email).participant_profiles.count).to eql 2
+        expect(User.find_by(email:).participant_profiles.count).to eql 2
       end
 
       it "does not change the name on the user" do
@@ -186,17 +186,17 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
 
         expect(EarlyCareerTeachers::Create).to receive(:call).with({
           full_name: other_name,
-          email: email,
-          school_cohort: school_cohort,
+          email:,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         }).and_call_original
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: other_name, email: email },
+          user: { full_name: other_name, email: },
         }
 
-        expect(User.find_by(email: email).full_name).to eql original_name
+        expect(User.find_by(email:).full_name).to eql original_name
       end
     end
 
@@ -209,7 +209,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
         expect(EarlyCareerTeachers::Create).not_to receive(:call)
 
         post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: name, email: email },
+          user: { full_name: name, email: },
         }
 
         expect(response).to render_template("admin/schools/cohort2020/new")

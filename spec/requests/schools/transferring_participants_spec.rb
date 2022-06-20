@@ -7,16 +7,16 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
   let(:school) { user.induction_coordinator_profile.schools.sample }
   let(:old_school) { create(:school) }
   let(:cohort) { create(:cohort, :current) }
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort, school: school, induction_programme_choice: "full_induction_programme") }
-  let(:old_school_cohort) { create(:school_cohort, cohort: cohort, school: old_school, induction_programme_choice: "full_induction_programme") }
+  let!(:school_cohort) { create(:school_cohort, cohort:, school:, induction_programme_choice: "full_induction_programme") }
+  let(:old_school_cohort) { create(:school_cohort, cohort:, school: old_school, induction_programme_choice: "full_induction_programme") }
   let!(:delivery_partner) { create(:delivery_partner, name: "Amazing delivery partner") }
   let!(:lead_provider) { create(:lead_provider, name: "Big Provider Ltd") }
-  let(:ect) { create(:ect_participant_profile, school_cohort: school_cohort, user: create(:user, full_name: "Darryn Binder")) }
+  let(:ect) { create(:ect_participant_profile, school_cohort:, user: create(:user, full_name: "Darryn Binder")) }
   let!(:ecf_participant_validation_data) { create(:ecf_participant_validation_data, full_name: ect.user.full_name, trn: "1001000", date_of_birth: Date.new(1990, 10, 24), participant_profile: ect) }
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort, school: school) }
-  let!(:partnership) { create(:partnership, school: school, cohort: cohort, delivery_partner: delivery_partner, lead_provider: lead_provider) }
-  let!(:old_partnership) { create(:partnership, school: old_school, cohort: cohort, delivery_partner: delivery_partner, lead_provider: lead_provider) }
-  let(:induction_programme_one) { create(:induction_programme, :fip, school_cohort: school_cohort, partnership: partnership) }
+  let!(:school_cohort) { create(:school_cohort, cohort:, school:) }
+  let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
+  let!(:old_partnership) { create(:partnership, school: old_school, cohort:, delivery_partner:, lead_provider:) }
+  let(:induction_programme_one) { create(:induction_programme, :fip, school_cohort:, partnership:) }
   let(:induction_programme_two) { create(:induction_programme, :fip, school_cohort: old_school_cohort, partnership: old_partnership) }
   let!(:induction_record) { Induction::Enrol.call(participant_profile: ect, induction_programme: induction_programme_two) }
   # let!(:current_induction_programme) { create(:induction_programme, :fip, school_cohort: old_school_cohort) }
@@ -189,7 +189,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/email" do
     it "redirects to the choose mentor template" do
-      mentor = create(:mentor_participant_profile, school_cohort: school_cohort)
+      mentor = create(:mentor_participant_profile, school_cohort:)
       Induction::Enrol.call(participant_profile: mentor, induction_programme: induction_programme_one)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/email",
           params: { schools_transferring_participant_form: {
@@ -205,7 +205,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/choose-mentor" do
     it "renders the choose-mentor template" do
-      mentor = create(:mentor_participant_profile, school_cohort: school_cohort)
+      mentor = create(:mentor_participant_profile, school_cohort:)
       Induction::Enrol.call(participant_profile: mentor, induction_programme: induction_programme_one)
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/choose-mentor",
           params: { schools_transferring_participant_form: {

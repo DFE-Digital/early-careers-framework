@@ -6,11 +6,11 @@ class AdminProfile < ApplicationRecord
   belongs_to :user
 
   def self.create_admin(full_name, email, sign_in_url)
-    user = User.new(full_name: full_name, email: email)
+    user = User.new(full_name:, email:)
 
     ActiveRecord::Base.transaction do
       user.save!
-      AdminProfile.create!(user: user)
+      AdminProfile.create!(user:)
       AdminMailer.account_created_email(user, sign_in_url).deliver_now
     end
   end

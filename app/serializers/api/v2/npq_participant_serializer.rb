@@ -11,7 +11,7 @@ module Api
       class << self
         def active_participant_attribute(attr, &blk)
           attribute attr do |user, params|
-            unless NPQ::IsUserWithdrawn.new(user: user, cpd_lead_provider: params[:cpd_lead_provider]).call
+            unless NPQ::IsUserWithdrawn.new(user:, cpd_lead_provider: params[:cpd_lead_provider]).call
               blk.call(user)
             end
           end
@@ -51,6 +51,7 @@ module Api
             eligible_for_funding: profile.npq_application.eligible_for_funding,
             training_status: profile.training_status,
             school_urn: profile.school_urn,
+            targeted_delivery_funding_eligibility: profile.npq_application.targeted_delivery_funding_eligibility,
           }
         end
       end

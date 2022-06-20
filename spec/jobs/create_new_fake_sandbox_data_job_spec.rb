@@ -6,14 +6,14 @@ RSpec.describe "CreateNewFakeSandboxDataJob", :with_default_schedules do
   describe "#perform" do
     let!(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let!(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Education Development Trust") }
-    let!(:ecf_lead_provider) { create(:lead_provider, cpd_lead_provider: cpd_lead_provider, name: "Education Development Trust") }
-    let!(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider: cpd_lead_provider, name: "Education Development Trust") }
+    let!(:ecf_lead_provider) { create(:lead_provider, cpd_lead_provider:, name: "Education Development Trust") }
+    let!(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider:, name: "Education Development Trust") }
     let!(:cohort) { Cohort.current }
     let!(:school) { create(:school) }
-    let!(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+    let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
     before do
-      create(:partnership, lead_provider: ecf_lead_provider, cohort: cohort, school: school)
+      create(:partnership, lead_provider: ecf_lead_provider, cohort:, school:)
     end
 
     it "should create 10 new ECTs" do

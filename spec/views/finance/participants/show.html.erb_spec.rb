@@ -18,7 +18,7 @@ RSpec.describe "finance/participants/show.html.erb" do
     let(:profile) { create(:ect_participant_profile) }
     let(:user) { profile.user }
     let(:induction_programme) { create(:induction_programme, :fip) }
-    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme:) }
 
     it "renders schedule identifier and cohort" do
       assign :user, user
@@ -47,7 +47,7 @@ RSpec.describe "finance/participants/show.html.erb" do
     end
 
     context "when there are declarations" do
-      let!(:declaration) { create(:ect_participant_declaration, user: user, participant_profile: profile) }
+      let!(:declaration) { create(:ect_participant_declaration, user:, participant_profile: profile) }
 
       it "renders declarations" do
         assign :user, user

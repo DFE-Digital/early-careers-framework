@@ -10,8 +10,8 @@ class Induction::CreateRelationship < BaseService
   def call
     Partnership.find_or_create_by!(school: school_cohort.school,
                                    cohort: school_cohort.cohort,
-                                   lead_provider: lead_provider,
-                                   delivery_partner: delivery_partner) do |partnership|
+                                   lead_provider:,
+                                   delivery_partner:) do |partnership|
       partnership.relationship = true
       partnership.challenge_deadline = Time.zone.now
     end

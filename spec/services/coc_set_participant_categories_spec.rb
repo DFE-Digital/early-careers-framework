@@ -8,48 +8,48 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
 
     let(:school) { create(:school) }
     let(:school_cohort) { create(:school_cohort, :cip) }
-    let(:cip_programme) { create(:induction_programme, :cip, school_cohort: school_cohort) }
-    let(:fip_programme) { create(:induction_programme, :fip, school_cohort: school_cohort) }
+    let(:cip_programme) { create(:induction_programme, :cip, school_cohort:) }
+    let(:fip_programme) { create(:induction_programme, :fip, school_cohort:) }
     # FIP
-    let(:fip_eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_ineligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let(:fip_contacted_for_info_mentor) { create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let(:fip_ero_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_details_being_checked_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
-    let(:fip_secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
-    let(:fip_withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
-    let(:fip_transferring_in_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:fip_mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let(:fip_eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_ineligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort:) }
+    let(:fip_contacted_for_info_mentor) { create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort:) }
+    let(:fip_ero_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_details_being_checked_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort:) }
+    let(:fip_secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort:) }
+    let(:fip_withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort:) }
+    let(:fip_transferring_in_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     # CIP
-    let(:cip_eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_ineligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let(:cip_contacted_for_info_mentor) { create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort: school_cohort) }
-    let(:cip_ero_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_details_being_checked_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort: school_cohort) }
-    let(:cip_secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort: school_cohort) }
-    let(:cip_withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort: school_cohort) }
-    let(:cip_transferring_in_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
-    let(:cip_mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort: school_cohort) }
+    let(:cip_eligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_eligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_ineligible_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_ineligible_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_contacted_for_info_ect) { create(:ect_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort:) }
+    let(:cip_contacted_for_info_mentor) { create(:mentor_participant_profile, :email_sent, request_for_details_sent_at: 5.days.ago, school_cohort:) }
+    let(:cip_ero_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_ero_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_details_being_checked_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_details_being_checked_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_primary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :primary_profile, school_cohort:) }
+    let(:cip_secondary_mentor) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, :secondary_profile, school_cohort:) }
+    let(:cip_withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort:) }
+    let(:cip_transferring_in_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_mentor_no_qts) { create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
 
     let(:fip_participants) do
       [

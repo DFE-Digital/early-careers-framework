@@ -12,19 +12,19 @@ module PaymentCalculator
           {
             band: i,
             participants: band.number_of_participants_in_this_band(total_participants, total_previous_participants),
-            per_participant: output_payment_per_participant_for_event(event_type: event_type, band: band),
+            per_participant: output_payment_per_participant_for_event(event_type:, band:),
             subtotal: output_payment_for_event(
-              total_participants: total_participants,
-              total_previous_participants: total_previous_participants,
-              event_type: event_type,
-              band: band,
+              total_participants:,
+              total_previous_participants:,
+              event_type:,
+              band:,
             ),
           }
         end
       end
 
       def output_payment_for_event(event_type:, total_participants:, total_previous_participants:, band:)
-        band.number_of_participants_in_this_band(total_participants, total_previous_participants) * output_payment_per_participant_for_event(event_type: event_type, band: band)
+        band.number_of_participants_in_this_band(total_participants, total_previous_participants) * output_payment_per_participant_for_event(event_type:, band:)
       end
 
       def output_payment_per_participant_for_event(event_type:, band:)

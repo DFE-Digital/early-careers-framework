@@ -9,10 +9,10 @@ class Induction::ChangeCohortInductionProgramme < BaseService
         raise ArgumentError, "Cannot change induction programme for a partnered school"
       end
 
-      Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
-                                                  programme_choice: programme_choice,
+      Induction::SetCohortInductionProgramme.call(school_cohort:,
+                                                  programme_choice:,
                                                   opt_out_of_updates: programme_choice == "no_early_career_teachers",
-                                                  core_induction_programme: core_induction_programme)
+                                                  core_induction_programme:)
 
       new_programme = school_cohort.default_induction_programme
 

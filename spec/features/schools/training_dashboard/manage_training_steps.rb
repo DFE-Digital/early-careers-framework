@@ -9,7 +9,7 @@ module ManageTrainingSteps
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
-    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
@@ -17,14 +17,16 @@ module ManageTrainingSteps
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @induction_programme.update!(partnership: @partnership)
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered_but_challenged
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
     @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-    create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 1.week.from_now, challenged_at: 1.day.ago, challenge_reason: "mistake")
+    @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 1.week.from_now, challenged_at: 1.day.ago, challenge_reason: "mistake")
+    @induction_programme.update!(partnership: @partnership)
   end
 
   def given_there_is_a_school_that_has_chosen_cip_for_2021
@@ -37,7 +39,7 @@ module ManageTrainingSteps
   end
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
-    @school_cohort = create :school_cohort, induction_programme_choice: induction_programme_choice, school: create(:school, name: "Test School")
+    @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -53,7 +55,7 @@ module ManageTrainingSteps
     create :induction_coordinator_profile, user: user, schools: [first_school, second_school]
 
     third_school = FactoryBot.create(:school, name: "Test School 3", slug: "111113-test-school-3", urn: "111113")
-    create :school_cohort, :cip, school: third_school, cohort: cohort
+    create :school_cohort, :cip, school: third_school, cohort:
   end
 
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
@@ -106,29 +108,29 @@ module ManageTrainingSteps
 
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_a_mentor
     user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
     user = create(:user, full_name: "Eligible With-mentor")
-    teacher_profile = create(:teacher_profile, user: user)
-    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @eligible_ect_with_mentor, induction_programme: @induction_programme)
   end
 
   def and_i_have_added_an_eligible_ect_without_mentor
     user = create(:user, full_name: "Eligible Without-mentor")
-    teacher_profile = create(:teacher_profile, user: user)
-    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @eligible_ect_without_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @eligible_ect_without_mentor, induction_programme: @induction_programme)
   end
 
@@ -195,8 +197,8 @@ module ManageTrainingSteps
 
   def and_i_have_added_a_transferring_in_participant
     user = create(:user, full_name: "Transferring in participant")
-    teacher_profile = create(:teacher_profile, user: user)
-    @transferring_in_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @transferring_in_participant = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     @induction_record = Induction::Enrol.call(participant_profile: @transferring_in_participant,
                                               induction_programme: @induction_programme,
                                               start_date: 2.months.from_now)
@@ -208,8 +210,8 @@ module ManageTrainingSteps
     @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two)
 
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    @participant_profile_ect = create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: @school_cohort)
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two)
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
   end
@@ -465,6 +467,10 @@ module ManageTrainingSteps
     click_on("Sign up")
   end
 
+  def when_i_sign_back_in
+    sign_in_as @induction_coordinator_profile.user
+  end
+
   def when_i_click_on_change_name
     click_on("Change name", visible: false)
   end
@@ -525,8 +531,19 @@ module ManageTrainingSteps
     fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?", with: @participant_data[:trn]
   end
 
+  def when_i_add_my_trn
+    fill_in "What’s your teacher reference number (TRN)?", with: @sit_data[:trn]
+  end
+
   def when_i_add_a_date_of_birth
     date = @participant_data[:date_of_birth]
+    fill_in "Day", with: date.day
+    fill_in "Month", with: date.month
+    fill_in "Year", with: date.year
+  end
+
+  def when_i_add_my_date_of_birth
+    date = @sit_data[:date_of_birth]
     fill_in "Day", with: date.day
     fill_in "Month", with: date.month
     fill_in "Year", with: date.year
@@ -708,6 +725,15 @@ module ManageTrainingSteps
   def then_i_am_taken_to_add_teachers_trn_page
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?")
     expect(page).to have_text("This unique ID:")
+  end
+
+  def then_i_am_taken_to_add_your_trn_page
+    expect(page).to have_selector("h1", text: "What’s your teacher reference number (TRN)?")
+    expect(page).to have_text("This unique ID:")
+  end
+
+  def then_i_am_taken_to_add_your_dob_page
+    expect(page).to have_selector("h1", text: "What’s your date of birth?")
   end
 
   def then_i_am_taken_to_add_date_of_birth_page
@@ -961,6 +987,10 @@ module ManageTrainingSteps
     expect(page).to have_css(".govuk-tabs__tab", text: "#{cohort} to #{cohort + 1}")
   end
 
+  def then_i_should_be_asked_to_validate
+    expect(page).to have_selector("h1", text: "Have you been given a teacher reference number (TRN)?")
+  end
+
   def then_i_see_the_cohort_tabs
     then_i_see_the_tab_for_the_cohort(2021)
     then_i_see_the_tab_for_the_cohort(2022)
@@ -982,6 +1012,25 @@ module ManageTrainingSteps
       start_term: "summer_2022",
       start_date: Date.new(2022, 9, 1),
     }
+  end
+
+  def set_sit_data
+    @sit_data = {
+      full_name: "Carl Coordinator",
+      trn: "7654321",
+      date_of_birth: Date.new(1981, 1, 22),
+    }
+  end
+
+  def set_sit_dqt_validation_result
+    response = {
+      trn: @sit_data[:trn],
+      full_name: @sit_data[:full_name],
+      nino: nil,
+      dob: @sit_data[:date_of_birth],
+      config: {},
+    }
+    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
   end
 
   def set_updated_participant_data

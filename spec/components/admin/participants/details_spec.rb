@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :view_component do
-  component { described_class.new profile: profile }
+  component { described_class.new profile: }
 
   context "for unvalidated npq profile" do
     let(:npq_application) { create(:npq_application, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_application.profile }
 
     before do
-      NPQ::Accept.new(npq_application: npq_application).call
+      NPQ::Accept.new(npq_application:).call
     end
 
     it "renders all the required information" do
@@ -29,7 +29,7 @@ RSpec.describe Admin::Participants::Details, :with_default_schedules, type: :vie
     let(:profile) { npq_application.profile }
 
     before do
-      NPQ::Accept.new(npq_application: npq_application).call
+      NPQ::Accept.new(npq_application:).call
     end
 
     before do

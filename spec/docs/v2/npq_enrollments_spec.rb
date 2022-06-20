@@ -3,12 +3,12 @@
 require "swagger_helper"
 
 RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_spec.json" do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
 
-  let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider: npq_lead_provider) }
+  let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
   path "/api/v2/npq-enrollments.csv" do
     get "Retrieve multiple NPQ enrollments" do

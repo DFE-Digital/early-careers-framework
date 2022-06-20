@@ -27,6 +27,7 @@ module Api
             expect(result[:data][:attributes][:npq_enrollments][0][:eligible_for_funding]).to eql(profile.npq_application.eligible_for_funding)
             expect(result[:data][:attributes][:npq_enrollments][0][:training_status]).to eql(profile.training_status)
             expect(result[:data][:attributes][:npq_enrollments][0][:school_urn]).to eql(profile.school_urn)
+            expect(result[:data][:attributes][:npq_enrollments][0][:targeted_delivery_funding_eligibility]).to eql(profile.npq_application.targeted_delivery_funding_eligibility)
           end
 
           context "when there are multiple providers involved" do
@@ -58,7 +59,7 @@ module Api
           let(:npq_application) { profile.npq_application }
           let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
 
-          subject { described_class.new(participant, params: { cpd_lead_provider: cpd_lead_provider }) }
+          subject { described_class.new(participant, params: { cpd_lead_provider: }) }
 
           it "nullifies email" do
             expect(subject.serializable_hash.dig(:data, :attributes, :email)).to be_nil

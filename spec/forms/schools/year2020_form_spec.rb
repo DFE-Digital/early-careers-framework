@@ -16,8 +16,8 @@ RSpec.describe Schools::Year2020Form, type: :model do
     it { is_expected.to validate_presence_of(:email).on(:create_teacher).with_message("Enter an email address for your teacher") }
 
     it "validates that the email address is not already in use by an ECT" do
-      create(:ect_participant_profile, user: create(:user, email: email))
-      form = Schools::Year2020Form.new(full_name: name, email: email)
+      create(:ect_participant_profile, user: create(:user, email:))
+      form = Schools::Year2020Form.new(full_name: name, email:)
       expect(form).not_to be_valid(:create_teacher)
       expect(form.errors[:email].first).to eq("This email address is already in use")
       expect(form.email_already_taken?).to be_truthy
@@ -30,7 +30,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
       add_new_participant(subject)
 
       subject.save!
-      school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
+      school_cohort = SchoolCohort.find_by(school:, cohort:)
 
       expect(school_cohort).not_to be_nil
       expect(school_cohort.ecf_participants.count).to eq(1)
@@ -45,7 +45,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
       test_participants.each { |participant| add_new_participant(subject, name: participant.full_name, email: participant.email) }
 
       subject.save!
-      school_cohort = SchoolCohort.find_by(school: school, cohort: cohort)
+      school_cohort = SchoolCohort.find_by(school:, cohort:)
       expect(school_cohort).not_to be_nil
       expect(school_cohort.ecf_participants.count).to eq(3)
 
@@ -53,7 +53,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
         expect(EarlyCareerTeachers::Create).to have_received(:call).with(
           full_name: participant.full_name,
           email: participant.email,
-          school_cohort: school_cohort,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         )

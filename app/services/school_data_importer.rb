@@ -24,11 +24,11 @@ class SchoolDataImporter
         SchoolHandler.new(
           school: schools[row.fetch("URN")] || School.new(urn: row.fetch("URN")),
           data: row,
-          logger: logger,
-          start_year: start_year,
-          la_cache: la_cache,
-          lad_cache: lad_cache,
-          update_section_41: update_section_41,
+          logger:,
+          start_year:,
+          la_cache:,
+          lad_cache:,
+          update_section_41:,
         ).call
       end
     end
@@ -110,7 +110,7 @@ private
 
       code = data.fetch("LA (code)")
       @la_cache.fetch(code) do
-        local_authority = LocalAuthority.find_or_initialize_by(code: code)
+        local_authority = LocalAuthority.find_or_initialize_by(code:)
         new_name = data.fetch("LA (name)")
 
         if local_authority.name != new_name
@@ -131,7 +131,7 @@ private
       code = data.fetch("DistrictAdministrative (code)")
 
       @lad_cache.fetch(code) do
-        local_authority_district = LocalAuthorityDistrict.find_or_initialize_by(code: code)
+        local_authority_district = LocalAuthorityDistrict.find_or_initialize_by(code:)
         new_name = data.fetch("DistrictAdministrative (name)")
 
         if local_authority_district.name != new_name
@@ -148,17 +148,17 @@ private
 
     def link_school_to_local_authority
       SchoolLocalAuthority.create!(
-        school: school,
-        local_authority: local_authority,
-        start_year: start_year,
+        school:,
+        local_authority:,
+        start_year:,
       )
     end
 
     def link_school_to_local_district_authority
       SchoolLocalAuthorityDistrict.create!(
-        school: school,
+        school:,
         local_authority_district: local_district_authority,
-        start_year: start_year,
+        start_year:,
       )
     end
   end

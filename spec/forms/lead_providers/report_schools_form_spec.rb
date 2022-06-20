@@ -15,10 +15,10 @@ RSpec.describe LeadProviders::ReportSchoolsForm, type: :model do
 
     subject do
       described_class.new(
-        school_ids: school_ids,
-        cohort_id: cohort_id,
-        lead_provider_id: lead_provider_id,
-        delivery_partner_id: delivery_partner_id,
+        school_ids:,
+        cohort_id:,
+        lead_provider_id:,
+        delivery_partner_id:,
       )
     end
 
@@ -31,10 +31,10 @@ RSpec.describe LeadProviders::ReportSchoolsForm, type: :model do
 
       school_ids.each do |school_id|
         expect(Partnerships::Report).to have_received(:call).with(
-          school_id: school_id,
-          cohort_id: cohort_id,
-          lead_provider_id: lead_provider_id,
-          delivery_partner_id: delivery_partner_id,
+          school_id:,
+          cohort_id:,
+          lead_provider_id:,
+          delivery_partner_id:,
         )
       end
     end

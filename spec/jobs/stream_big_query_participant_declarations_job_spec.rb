@@ -12,7 +12,7 @@ RSpec.describe StreamBigQueryParticipantDeclarationsJob do
   let(:valid_updated_at) { 1.hour.ago }
   let!(:streamable_declaration) do
     create(:participant_declaration,
-           cpd_lead_provider: cpd_lead_provider,
+           cpd_lead_provider:,
            participant_profile: ect_profile,
            course_identifier: "ecf-induction",
            declaration_date: Time.zone.parse("10/10/2021"),

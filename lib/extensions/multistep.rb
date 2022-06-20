@@ -11,7 +11,7 @@ module Multistep
 
       step_constraint = Regexp.union(step_names)
 
-      scope(as: route_key, controller: controller, path: path, constraints: { step: step_constraint }) do
+      scope(as: route_key, controller:, path:, constraints: { step: step_constraint }) do
         instance_exec(&block) if block
 
         get ":step", action: :show, as: :step

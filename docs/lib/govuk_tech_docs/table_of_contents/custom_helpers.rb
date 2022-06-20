@@ -21,7 +21,7 @@ module GovukTechDocs
         end
 
         tree = GovukTechDocs::TableOfContents::HeadingTreeBuilder.new(headings).tree
-        GovukTechDocs::TableOfContents::HeadingTreeRenderer.new(tree, max_level: max_level).html
+        GovukTechDocs::TableOfContents::HeadingTreeRenderer.new(tree, max_level:).html
       end
 
       def render_page_tree(resources, current_page, config, current_page_html)

@@ -12,7 +12,7 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
 
   describe "GET /lead-providers/partnerships/:id" do
     context "when the current user belongs to the partnership's lead provider organisation" do
-      let(:partnership) { create :partnership, cohort: cohort, lead_provider: user.lead_provider }
+      let(:partnership) { create :partnership, cohort:, lead_provider: user.lead_provider }
 
       it "should show the partnership page" do
         get lead_providers_partnership_path(partnership)
@@ -23,7 +23,7 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
     end
 
     context "when the current user does not belong to the partnership's lead provider organisation" do
-      let(:partnership) { create :partnership, cohort: cohort }
+      let(:partnership) { create :partnership, cohort: }
 
       it "should show the partnership page" do
         expect { get lead_providers_partnership_path(partnership) }
@@ -38,8 +38,8 @@ RSpec.describe "Lead provider partnerships spec", type: :request do
     let(:school) { create :school, name: "Active School" }
     let(:delivery_partner) { create :delivery_partner, name: "Active Delivery Partner" }
 
-    let!(:partnership) { create :partnership, cohort: cohort, lead_provider: user.lead_provider, school: school, delivery_partner: delivery_partner }
-    let!(:inactive_partnership) { create :partnership, :challenged, cohort: cohort, lead_provider: user.lead_provider }
+    let!(:partnership) { create :partnership, cohort:, lead_provider: user.lead_provider, school:, delivery_partner: }
+    let!(:inactive_partnership) { create :partnership, :challenged, cohort:, lead_provider: user.lead_provider }
 
     before do
       get "/lead-providers/partnerships/active.csv"

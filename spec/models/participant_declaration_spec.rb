@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantDeclaration, type: :model do
   let(:user) { create(:user) }
-  subject { described_class.new(user: user) }
+  subject { described_class.new(user:) }
 
   describe "associations" do
     it { is_expected.to belong_to(:cpd_lead_provider) }
@@ -209,20 +209,20 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
     let(:cohort)            { Cohort.find_by(start_year: "2021") }
     let(:school)            { create(:school) }
-    let(:school_cohort)     { create(:school_cohort, school: school, cohort: cohort) }
+    let(:school_cohort)     { create(:school_cohort, school:, cohort:) }
 
     let(:participant_profile) do
       EarlyCareerTeachers::Create.new(
         full_name: user.full_name,
         email: user.email,
-        school_cohort: school_cohort,
+        school_cohort:,
         mentor_profile_id: nil,
         year_2020: false,
       ).call.tap do |pp|
         StoreValidationResult.new(
           participant_profile: pp,
-          validation_data: validation_data,
-          dqt_response: dqt_response,
+          validation_data:,
+          dqt_response:,
           deduplicate: false,
         ).call
       end
@@ -235,14 +235,14 @@ RSpec.describe ParticipantDeclaration, type: :model do
         EarlyCareerTeachers::Create.new(
           full_name: primary_user.full_name,
           email: primary_user.email,
-          school_cohort: school_cohort,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: false,
         ).call.tap do |pp|
           StoreValidationResult.new(
             participant_profile: pp,
-            validation_data: validation_data,
-            dqt_response: dqt_response,
+            validation_data:,
+            dqt_response:,
             deduplicate: false,
           ).call
         end
@@ -252,14 +252,14 @@ RSpec.describe ParticipantDeclaration, type: :model do
         Mentors::Create.new(
           full_name: primary_user.full_name,
           email: primary_user.email,
-          school_cohort: school_cohort,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: false,
         ).call.tap do |pp|
           StoreValidationResult.new(
             participant_profile: pp,
-            validation_data: validation_data,
-            dqt_response: dqt_response,
+            validation_data:,
+            dqt_response:,
             deduplicate: false,
           ).call
         end
@@ -269,25 +269,25 @@ RSpec.describe ParticipantDeclaration, type: :model do
       let(:declaration_date)  { (Finance::Schedule::ECF.default.milestones.first.milestone_date - 1.day).rfc3339 }
       let(:declaration_type)  { "started" }
 
-      let(:induction_programme) { create(:induction_programme, partnership: partnership) }
+      let(:induction_programme) { create(:induction_programme, partnership:) }
 
       before do
-        Induction::Enrol.call(participant_profile: participant_profile, induction_programme: induction_programme)
-        Induction::Enrol.call(participant_profile: primary_participant_profile, induction_programme: induction_programme)
-        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+        Induction::Enrol.call(participant_profile:, induction_programme:)
+        Induction::Enrol.call(participant_profile: primary_participant_profile, induction_programme:)
+        create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
       end
 
-      let!(:partnership) { create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort, school: school) }
+      let!(:partnership) { create(:partnership, lead_provider: cpd_lead_provider.lead_provider, cohort:, school:) }
 
       context "when declarations have been made for a teacher profile with the same trn" do
         subject(:record_started_declaration) do
           RecordDeclarations::Started::EarlyCareerTeacher.call(
             params: {
               participant_id: participant_profile.user_id,
-              course_identifier: course_identifier,
-              cpd_lead_provider: cpd_lead_provider,
-              declaration_date: declaration_date,
-              declaration_type: declaration_type,
+              course_identifier:,
+              cpd_lead_provider:,
+              declaration_date:,
+              declaration_type:,
             },
           )
         end
@@ -299,9 +299,9 @@ RSpec.describe ParticipantDeclaration, type: :model do
                 params: {
                   participant_id: primary_participant_profile.user_id,
                   course_identifier: "ecf-induction",
-                  cpd_lead_provider: cpd_lead_provider,
-                  declaration_date: declaration_date,
-                  declaration_type: declaration_type,
+                  cpd_lead_provider:,
+                  declaration_date:,
+                  declaration_type:,
                 },
               )
               participant_profile.reload
@@ -330,29 +330,29 @@ RSpec.describe ParticipantDeclaration, type: :model do
                 EarlyCareerTeachers::Create.new(
                   full_name: another_duplicate_user.full_name,
                   email: another_duplicate_user.email,
-                  school_cohort: school_cohort,
+                  school_cohort:,
                   mentor_profile_id: nil,
                   year_2020: false,
                 ).call.tap do |pp|
                   StoreValidationResult.new(
                     participant_profile: pp,
-                    validation_data: validation_data,
-                    dqt_response: dqt_response,
+                    validation_data:,
+                    dqt_response:,
                     deduplicate: false,
                   ).call
                 end
               end
 
               before do
-                Induction::Enrol.call(participant_profile: another_duplicate_participant_profile, induction_programme: induction_programme)
-                create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+                Induction::Enrol.call(participant_profile: another_duplicate_participant_profile, induction_programme:)
+                create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
                 RecordDeclarations::Started::EarlyCareerTeacher.call(
                   params: {
                     participant_id: another_duplicate_participant_profile.user_id,
-                    course_identifier: course_identifier,
-                    cpd_lead_provider: cpd_lead_provider,
-                    declaration_date: declaration_date,
-                    declaration_type: declaration_type,
+                    course_identifier:,
+                    cpd_lead_provider:,
+                    declaration_date:,
+                    declaration_type:,
                   },
                 )
               end
@@ -379,16 +379,16 @@ RSpec.describe ParticipantDeclaration, type: :model do
 
           context "when declarations have been made for a different course" do
             before do
-              Induction::Enrol.call(participant_profile: mentor_participant_profile, induction_programme: induction_programme)
+              Induction::Enrol.call(participant_profile: mentor_participant_profile, induction_programme:)
               create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now)
 
               RecordDeclarations::Started::Mentor.call(
                 params: {
                   participant_id: mentor_participant_profile.user_id,
                   course_identifier: "ecf-mentor",
-                  cpd_lead_provider: cpd_lead_provider,
-                  declaration_date: declaration_date,
-                  declaration_type: declaration_type,
+                  cpd_lead_provider:,
+                  declaration_date:,
+                  declaration_type:,
                 },
               )
               participant_profile.reload
@@ -398,7 +398,7 @@ RSpec.describe ParticipantDeclaration, type: :model do
             it "does not return those declarations" do
               record_started_declaration
 
-              expect(ParticipantDeclaration.where(cpd_lead_provider: cpd_lead_provider).count).to eq(2)
+              expect(ParticipantDeclaration.where(cpd_lead_provider:).count).to eq(2)
               expect(
                 participant_profile
                   .participant_declarations
@@ -415,10 +415,10 @@ RSpec.describe ParticipantDeclaration, type: :model do
           RecordDeclarations::Started::EarlyCareerTeacher.call(
             params: {
               participant_id: participant_profile.user_id,
-              course_identifier: course_identifier,
-              cpd_lead_provider: cpd_lead_provider,
-              declaration_date: declaration_date,
-              declaration_type: declaration_type,
+              course_identifier:,
+              cpd_lead_provider:,
+              declaration_date:,
+              declaration_type:,
             },
           )
         end

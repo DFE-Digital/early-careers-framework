@@ -2,7 +2,7 @@
 
 module UserHelper
   def given_i_sign_in_as_the_user_with_the_full_name(full_name)
-    user = User.find_by(full_name: full_name)
+    user = User.find_by(full_name:)
     sign_in_as user
   end
   alias_method :and_i_sign_in_as_the_user_with_the_full_name, :given_i_sign_in_as_the_user_with_the_full_name

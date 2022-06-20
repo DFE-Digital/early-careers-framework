@@ -61,7 +61,7 @@ end
 all_provider_names = (LeadProvider.pluck(:name) + NPQLeadProvider.pluck(:name)).uniq
 
 all_provider_names.each do |name|
-  CpdLeadProvider.find_or_create_by!(name: name)
+  CpdLeadProvider.find_or_create_by!(name:)
 end
 
 LeadProvider.all.each do |lp|

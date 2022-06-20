@@ -15,8 +15,8 @@ module Finance
 
         def calculator
           @calculator ||= CourseStatementCalculator.new(
-            statement: statement,
-            contract: contract,
+            statement:,
+            contract:,
           )
         end
       end

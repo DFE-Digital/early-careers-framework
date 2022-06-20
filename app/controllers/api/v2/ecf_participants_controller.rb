@@ -14,11 +14,11 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            participant_hash = ParticipantSerializer.new(paginate(participants), { params: { mentor_ids: mentor_ids } }).serializable_hash
+            participant_hash = ParticipantSerializer.new(paginate(participants), { params: { mentor_ids: } }).serializable_hash
             render json: participant_hash.to_json
           end
           format.csv do
-            participant_hash = ParticipantSerializer.new(participants, { params: { mentor_ids: mentor_ids } }).serializable_hash
+            participant_hash = ParticipantSerializer.new(participants, { params: { mentor_ids: } }).serializable_hash
             render body: to_csv(participant_hash)
           end
         end

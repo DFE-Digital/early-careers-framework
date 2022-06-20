@@ -23,7 +23,7 @@ private
 
   def validate_single_billable_relationship
     if Finance::StatementLineItem
-      .where(participant_declaration: participant_declaration)
+      .where(participant_declaration:)
       .billable
       .exists?
       errors.add(:participant_declaration, "is already asscociated to another statement as a billable")

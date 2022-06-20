@@ -14,7 +14,7 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
 
   before do
     travel_to cutoff_start_datetime + 2.days
-    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider: cpd_lead_provider)
+    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
   end
 
   it_behaves_like "a participant declaration without evidence held service" do

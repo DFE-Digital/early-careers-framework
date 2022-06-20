@@ -12,9 +12,19 @@ RSpec.describe Admin::Participants::TableRow, type: :view_component do
 
   context "when profile is associated with the school" do
     let(:school) { create :school }
-    let(:participant_profile) { create :ect_participant_profile, school: school }
+    let(:participant_profile) { create :ect_participant_profile, school: }
 
     it { is_expected.to have_content school.name }
     it { is_expected.to have_content school.urn }
+
+    context "when the profile has induction records" do
+      let(:school_cohort) { create(:school_cohort, :fip) }
+      let(:school_2) { school_cohort.school }
+      let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+      let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
+
+      it { is_expected.to have_content school_2.name }
+      it { is_expected.to have_content school_2.urn }
+    end
   end
 end

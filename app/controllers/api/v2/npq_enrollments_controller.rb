@@ -21,7 +21,7 @@ module Api
         @npq_profiles ||= ParticipantProfile::NPQ
           .joins(:npq_application)
           .includes(:user, :npq_course, :npq_application, schedule: [:cohort])
-          .where(npq_application: { npq_lead_provider: npq_lead_provider })
+          .where(npq_application: { npq_lead_provider: })
           .order(updated_at: :asc)
 
         @npq_profiles = @npq_profiles.where("participant_profiles.updated_at > ?", updated_since) if updated_since.present?

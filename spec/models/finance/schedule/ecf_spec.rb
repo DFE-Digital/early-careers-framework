@@ -23,8 +23,8 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
       let(:cohort) { Cohort.find_by(start_year: 2021) }
 
       it "returns ECF September standard 2021 schedule" do
-        expect(ecf_schedule.default_for(cohort: cohort).name).to eql "ECF Standard September"
-        expect(ecf_schedule.default_for(cohort: cohort).cohort.start_year).to eql(2021)
+        expect(ecf_schedule.default_for(cohort:).name).to eql "ECF Standard September"
+        expect(ecf_schedule.default_for(cohort:).cohort.start_year).to eql(2021)
       end
     end
   end

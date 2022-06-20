@@ -8,16 +8,16 @@ RSpec.describe "Participants API", type: :request do
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { create(:cohort, :current) }
 
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider, private_api_access: true) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:, private_api_access: true) }
   let(:bearer_token) { "Bearer #{token}" }
 
   before :each do
     default_headers[:Authorization] = bearer_token
   end
 
-  let(:partnership) { create(:partnership, lead_provider: lead_provider) }
-  let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-  let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile, mentor_profile: mentor_profile) }
+  let(:partnership) { create(:partnership, lead_provider:) }
+  let(:induction_programme) { create(:induction_programme, partnership:) }
+  let(:induction_record) { create(:induction_record, induction_programme:, participant_profile: profile, mentor_profile:) }
 
   let(:profile) { create(:ect_participant_profile) }
   let(:user) { profile.user }
@@ -75,7 +75,7 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "when there is no mentor" do
-          let(:induction_record) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile) }
+          let(:induction_record) { create(:induction_record, induction_programme:, participant_profile: profile) }
 
           it "returns correct data" do
             get "/api/v1/participants/ecf"
@@ -102,7 +102,7 @@ RSpec.describe "Participants API", type: :request do
           let(:induction_record) do
             create(
               :induction_record,
-              induction_programme: induction_programme,
+              induction_programme:,
               participant_profile: profile,
               induction_status: "withdrawn",
             )
@@ -119,7 +119,7 @@ RSpec.describe "Participants API", type: :request do
           let(:induction_record) do
             create(
               :induction_record,
-              induction_programme: induction_programme,
+              induction_programme:,
               participant_profile: profile,
               induction_status: "changed",
             )
@@ -136,7 +136,7 @@ RSpec.describe "Participants API", type: :request do
           let(:profile) do
             create(
               :ect_participant_profile,
-              mentor_profile: mentor_profile,
+              mentor_profile:,
               training_status: "deferred", # something different as should use InductionRecord#training_status
             )
           end
@@ -144,7 +144,7 @@ RSpec.describe "Participants API", type: :request do
           let(:induction_record) do
             create(
               :induction_record,
-              induction_programme: induction_programme,
+              induction_programme:,
               participant_profile: profile,
               training_status: "withdrawn",
             )
@@ -153,7 +153,7 @@ RSpec.describe "Participants API", type: :request do
           let!(:induction_record2) do
             create(
               :induction_record,
-              induction_programme: induction_programme,
+              induction_programme:,
               participant_profile: profile,
               start_date: 1.week.ago,
               training_status: "active",
@@ -169,8 +169,8 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "multiple profiles" do
-          let!(:induction_record2) { create(:induction_record, induction_programme: induction_programme, participant_profile: profile2) }
-          let(:profile2) { create(:ect_participant_profile, teacher_profile: teacher_profile) }
+          let!(:induction_record2) { create(:induction_record, induction_programme:, participant_profile: profile2) }
+          let(:profile2) { create(:ect_participant_profile, teacher_profile:) }
 
           it "returns one" do
             get "/api/v1/participants/ecf"
@@ -183,7 +183,7 @@ RSpec.describe "Participants API", type: :request do
           let(:induction_record) do
             create(
               :induction_record,
-              induction_programme: induction_programme,
+              induction_programme:,
               participant_profile: profile,
               training_status: "withdrawn",
             )
@@ -232,14 +232,14 @@ RSpec.describe "Participants API", type: :request do
           let(:induction_record) do
             create(
               :induction_record,
-              induction_programme: induction_programme,
+              induction_programme:,
               participant_profile: profile,
               training_status: "withdrawn",
               start_date: 1.year.ago,
             )
           end
 
-          let(:partnership2) { create(:partnership, lead_provider: lead_provider) }
+          let(:partnership2) { create(:partnership, lead_provider:) }
           let(:induction_programme2) { create(:induction_programme, partnership: partnership2) }
 
           let!(:induction_record2) do
@@ -263,7 +263,7 @@ RSpec.describe "Participants API", type: :request do
           let(:partnership) do
             create(
               :partnership,
-              lead_provider: lead_provider,
+              lead_provider:,
               challenged_at: 10.days.ago,
               challenge_reason: Partnership.challenge_reasons[:not_confirmed],
             )

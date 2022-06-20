@@ -37,14 +37,14 @@ module Admin
     attr_reader :school, :cohort
 
     def school_cohort
-      @school_cohort ||= SchoolCohort.find_by(school: school, cohort: cohort)
+      @school_cohort ||= SchoolCohort.find_by(school:, cohort:)
     end
 
     def perform_induction_change(new_provision)
       if school_cohort
         school_cohort.update!(induction_programme_choice: new_provision)
       else
-        SchoolCohort.create!(school: school, cohort: cohort, induction_programme_choice: new_provision)
+        SchoolCohort.create!(school:, cohort:, induction_programme_choice: new_provision)
       end
     end
 

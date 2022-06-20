@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe LeadProviders::Partnerships::ChallengedBanner, type: :view_component do
-  let(:component) { described_class.new(partnership: partnership) }
+  let(:component) { described_class.new(partnership:) }
 
   let(:partnership) { create :partnership, :challenged }
 

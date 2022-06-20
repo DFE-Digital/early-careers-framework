@@ -5,31 +5,31 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let(:school) { school_cohort.school }
   let(:cohort) { create(:cohort, :current) }
 
-  let!(:school_cohort) { create(:school_cohort, cohort: cohort, induction_programme_choice: "full_induction_programme") }
+  let!(:school_cohort) { create(:school_cohort, cohort:, induction_programme_choice: "full_induction_programme") }
   let!(:another_cohort) { create(:school_cohort) }
-  let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+  let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
   let!(:mentor_user) { mentor_profile.user }
-  let!(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+  let!(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort:) }
   let!(:mentor_user_2) { mentor_profile_2.user }
-  let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort: school_cohort) }
+  let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort:) }
   let!(:ect_user) { ect_profile.user }
-  let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort: school_cohort).user }
+  let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort:).user }
   let!(:unrelated_mentor_profile) { create(:mentor_participant_profile, school_cohort: another_cohort) }
   let!(:unrelated_mentor) { unrelated_mentor_profile.user }
   let!(:unrelated_ect) { create(:ect_participant_profile, school_cohort: another_cohort).user }
   let!(:delivery_partner) { create(:delivery_partner, name: "Delivery Partner") }
   let!(:lead_provider) { create(:lead_provider, name: "Lead Provider", cohorts: [cohort]) }
-  let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort) }
+  let!(:partnership) { create(:partnership, school:, lead_provider:, delivery_partner:, cohort:) }
 
   before do
-    Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+    Induction::SetCohortInductionProgramme.call(school_cohort:,
                                                 programme_choice: "full_induction_programme")
     programme = school_cohort.default_induction_programme
     [mentor_profile, ect_profile, mentor_profile_2].each do |profile|
       Induction::Enrol.call(participant_profile: profile, induction_programme: programme)
     end
 
-    ect_profile.current_induction_record.update!(mentor_profile: mentor_profile)
+    ect_profile.current_induction_record.update!(mentor_profile:)
     sign_in user
   end
 
@@ -103,7 +103,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
           let!(:school_mentors) { [mentor_profile, mentor_profile_2, unrelated_mentor_profile] }
           before do
             school_mentors.each do |profile|
-              Mentors::AddToSchool.call(school: school, mentor_profile: profile)
+              Mentors::AddToSchool.call(school:, mentor_profile: profile)
             end
           end
 
@@ -149,7 +149,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     end
 
     it "shows error when a blank form is submitted" do
-      ect_profile = create(:ect_participant_profile, school_cohort: school_cohort)
+      ect_profile = create(:ect_participant_profile, school_cohort:)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor"
       expect(response).to render_template("schools/participants/edit_mentor")
       expect(response.body).to include "Choose a mentor"
@@ -158,7 +158,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
     it "updates analytics" do
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params: params
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params:
       }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: ect_profile)
     end
   end

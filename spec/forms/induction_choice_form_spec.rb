@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe InductionChoiceForm, type: :model do
   let(:school) { build :school }
-  let(:school_cohort) { build :school_cohort, school: school }
-  subject(:form) { described_class.new(school_cohort: school_cohort) }
+  let(:school_cohort) { build :school_cohort, school: }
+  subject(:form) { described_class.new(school_cohort:) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:programme_choice).with_message("Select how you want to run your induction") }
@@ -13,7 +13,7 @@ RSpec.describe InductionChoiceForm, type: :model do
 
   describe "#programme_choices" do
     context "when the school has not yet made the choice" do
-      let(:school_cohort) { build :school_cohort, school: school, induction_programme_choice: nil }
+      let(:school_cohort) { build :school_cohort, school:, induction_programme_choice: nil }
 
       context "the school is eligible for the full induction programme" do
         it "provides options for the all programme choices except school_funded_fip" do
@@ -34,7 +34,7 @@ RSpec.describe InductionChoiceForm, type: :model do
 
     context "when the school has already made the choice for given cohort" do
       let(:previous_choice) { SchoolCohort.induction_programme_choices.except("not_yet_known", "school_funded_fip").keys.sample }
-      let(:school_cohort) { build :school_cohort, school: school, induction_programme_choice: previous_choice }
+      let(:school_cohort) { build :school_cohort, school:, induction_programme_choice: previous_choice }
 
       it "does not show previous selection as an option" do
         options = SchoolCohort.induction_programme_choices.except("not_yet_known", "school_funded_fip", previous_choice).keys

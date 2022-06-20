@@ -4,7 +4,7 @@ class ParticipantValidationService
   attr_reader :trn, :nino, :full_name, :date_of_birth, :config
 
   def self.validate(trn:, full_name:, date_of_birth:, nino: nil, config: {})
-    new(trn: trn, full_name: full_name, date_of_birth: date_of_birth, nino: nino, config: config).validate
+    new(trn:, full_name:, date_of_birth:, nino:, config:).validate
   end
 
   def initialize(trn:, full_name:, date_of_birth:, nino: nil, config: {})
@@ -16,7 +16,7 @@ class ParticipantValidationService
   end
 
   def validate
-    validated_record = matching_record(trn: trn, nino: nino, full_name: full_name, dob: date_of_birth)
+    validated_record = matching_record(trn:, nino:, full_name:, dob: date_of_birth)
 
     return if validated_record.nil?
 
@@ -50,7 +50,7 @@ private
   end
 
   def dqt_record(trn, nino)
-    full_dqt_client.get_record(trn: trn, birthdate: date_of_birth, nino: nino)
+    full_dqt_client.get_record(trn:, birthdate: date_of_birth, nino:)
   end
 
   def full_dqt_client
@@ -88,7 +88,7 @@ private
     # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
     # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
     if trn_matches && trn != "1"
-      matching_record(trn: "1", nino: nino, full_name: full_name, dob: dob)
+      matching_record(trn: "1", nino:, full_name:, dob:)
     end
   end
 end

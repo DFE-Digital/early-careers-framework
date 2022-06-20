@@ -35,15 +35,15 @@ RSpec.describe "Reporting participants with a known TRN",
   end
 
   let!(:school) { create :school, name: "Fip School" }
-  let!(:school_cohort) { create :school_cohort, school: school, cohort: Cohort.next, induction_programme_choice: "full_induction_programme" }
+  let!(:school_cohort) { create :school_cohort, school:, cohort: Cohort.next, induction_programme_choice: "full_induction_programme" }
   let!(:induction_programme) do
-    induction_programme = create(:induction_programme, :fip, school_cohort: school_cohort)
+    induction_programme = create(:induction_programme, :fip, school_cohort:)
     school_cohort.update! default_induction_programme: induction_programme
     induction_programme
   end
   let!(:partnership) do
     create :partnership,
-           school: school,
+           school:,
            lead_provider: create(:lead_provider, name: "Big Provider Ltd"),
            delivery_partner: create(:delivery_partner, name: "Amazing Delivery Team"),
            cohort: Cohort.next,
@@ -52,9 +52,9 @@ RSpec.describe "Reporting participants with a known TRN",
   let(:mentor_full_name) { "Billy Mentor" }
   let!(:mentor) do
     user = create(:user, full_name: "Billy Mentor", email: "billy-mentor@example.com")
-    teacher_profile = create(:teacher_profile, user: user)
-    participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile: teacher_profile, school_cohort: school_cohort)
-    Induction::Enrol.call(participant_profile: participant_profile_mentor, induction_programme: induction_programme)
+    teacher_profile = create(:teacher_profile, user:)
+    participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort:)
+    Induction::Enrol.call(participant_profile: participant_profile_mentor, induction_programme:)
     participant_profile_mentor
   end
   let!(:induction_coordinator) do

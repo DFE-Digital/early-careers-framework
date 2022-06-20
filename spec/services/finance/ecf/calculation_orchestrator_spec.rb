@@ -99,10 +99,10 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
   let(:normal_outcome) do
     {
-      breakdown_summary: breakdown_summary,
-      service_fees: service_fees,
-      output_payments: output_payments,
-      other_fees: other_fees,
+      breakdown_summary:,
+      service_fees:,
+      output_payments:,
+      other_fees:,
     }
   end
 
@@ -143,7 +143,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -156,7 +156,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -202,7 +202,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -215,7 +215,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -247,7 +247,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -274,7 +274,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -295,7 +295,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -308,7 +308,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -335,7 +335,7 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
         declarations.each do |declaration|
           Finance::StatementLineItem.create!(
-            statement: statement,
+            statement:,
             participant_declaration: declaration,
             state: declaration.state,
           )
@@ -355,13 +355,13 @@ RSpec.describe Finance::ECF::CalculationOrchestrator do
 
 private
 
-  def run_calculation(aggregator: Finance::ECF::ParticipantAggregator.new(statement: statement))
+  def run_calculation(aggregator: Finance::ECF::ParticipantAggregator.new(statement:))
     set_precision(
       described_class.new(
         calculator: PaymentCalculator::ECF::PaymentCalculation,
-        aggregator: aggregator,
+        aggregator:,
         contract: call_off_contract,
-        statement: statement,
+        statement:,
       ).call(event_type: :started),
       2,
     )

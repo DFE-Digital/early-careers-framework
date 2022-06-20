@@ -13,9 +13,9 @@ class GenerateStartedDeclarations
             RecordParticipantDeclaration.call(
               participant_id: ecf_participant.id,
               declaration_type: "started",
-              course_identifier: course_identifier,
+              course_identifier:,
               declaration_date: Time.zone.now.rfc3339,
-              cpd_lead_provider: cpd_lead_provider,
+              cpd_lead_provider:,
             )
           rescue StandardError
             nil

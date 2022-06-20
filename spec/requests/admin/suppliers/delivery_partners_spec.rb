@@ -115,8 +115,8 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
 
       new_delivery_partner = DeliveryPartner.order(:created_at).last
       expect(new_delivery_partner.provider_relationships.count).to eq(2)
-      expect(new_delivery_partner.provider_relationships.where(lead_provider: lead_provider, cohort: cohort).count).to eq(1)
-      expect(new_delivery_partner.provider_relationships.where(lead_provider: lead_provider, cohort: cohort_2).count).to eq(1)
+      expect(new_delivery_partner.provider_relationships.where(lead_provider:, cohort:).count).to eq(1)
+      expect(new_delivery_partner.provider_relationships.where(lead_provider:, cohort: cohort_2).count).to eq(1)
     end
 
     it "displays an error when no cohorts are selected for a lead provider" do
@@ -204,8 +204,8 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
     it "updates provider relationships" do
       old_cohort = create(:cohort)
       old_lead_provider = create(:lead_provider, cohorts: [old_cohort])
-      ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: old_lead_provider, cohort: old_cohort)
-      ProviderRelationship.create!(delivery_partner: delivery_partner, lead_provider: lead_provider, cohort: old_cohort)
+      ProviderRelationship.create!(delivery_partner:, lead_provider: old_lead_provider, cohort: old_cohort)
+      ProviderRelationship.create!(delivery_partner:, lead_provider:, cohort: old_cohort)
 
       patch "/admin/suppliers/delivery-partners/#{delivery_partner.id}", params: { delivery_partner_form: {
         name: delivery_partner.name,
@@ -220,9 +220,9 @@ RSpec.describe "Admin::Suppliers::DeliveryPartners", type: :request do
       delivery_partner.reload
       expect(delivery_partner.provider_relationships.find_by(lead_provider: old_lead_provider)).to be_nil
       expect(delivery_partner.provider_relationships.with_discarded.find_by(lead_provider: old_lead_provider)).not_to be_nil
-      expect(delivery_partner.provider_relationships.find_by(lead_provider: lead_provider, cohort: old_cohort)).to be_nil
-      expect(delivery_partner.provider_relationships.with_discarded.find_by(lead_provider: lead_provider, cohort: old_cohort)).not_to be_nil
-      expect(delivery_partner.provider_relationships.find_by(lead_provider: lead_provider, cohort: cohort)).not_to be_nil
+      expect(delivery_partner.provider_relationships.find_by(lead_provider:, cohort: old_cohort)).to be_nil
+      expect(delivery_partner.provider_relationships.with_discarded.find_by(lead_provider:, cohort: old_cohort)).not_to be_nil
+      expect(delivery_partner.provider_relationships.find_by(lead_provider:, cohort:)).not_to be_nil
     end
   end
 

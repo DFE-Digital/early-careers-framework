@@ -75,7 +75,7 @@ module Admin
     end
 
     def school_using_this_email(email)
-      Identity.find_user_by(email: email).schools.first
+      Identity.find_user_by(email:).schools.first
     end
 
     def render_email_used_page(email:, action_path:)

@@ -100,7 +100,7 @@ RSpec.describe "Lead Provider school reporting", type: :request do
     end
 
     context "when reporting previously challenged partnership" do
-      let(:partnership) { create :partnership, :challenged, lead_provider: lead_provider, cohort: cohort }
+      let(:partnership) { create :partnership, :challenged, lead_provider:, cohort: }
       let(:schools) { [partnership.school] }
 
       it "does not create a new partnership record" do

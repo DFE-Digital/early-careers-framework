@@ -7,12 +7,12 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
     let(:validation_result) do
       lambda do |trn, no_induction|
         {
-          trn: trn,
+          trn:,
           qts: true,
           active_alert: false,
           previous_participation: false,
           previous_induction: false,
-          no_induction: no_induction,
+          no_induction:,
         }
       end
     end
@@ -89,11 +89,11 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
     let(:validation_result) do
       lambda do |trn, previous_induction|
         {
-          trn: trn,
+          trn:,
           qts: true,
           active_alert: false,
           previous_participation: false,
-          previous_induction: previous_induction,
+          previous_induction:,
           no_induction: false,
         }
       end
@@ -223,7 +223,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
     let(:validation_result) do
       lambda do |trn, qts_status|
         {
-          trn: trn,
+          trn:,
           qts: qts_status,
           active_alert: false,
           previous_participation: false,

@@ -6,9 +6,9 @@ class SetSchoolLocalAuthorityDistrict < BaseService
       ActiveRecord::Base.transaction do
         school.latest_school_authority_district&.update!(end_year: start_year)
 
-        SchoolLocalAuthorityDistrict.create!(school: school,
+        SchoolLocalAuthorityDistrict.create!(school:,
                                              local_authority_district: LocalAuthorityDistrict.find_by(code: administrative_district_code),
-                                             start_year: start_year)
+                                             start_year:)
       end
     end
   end

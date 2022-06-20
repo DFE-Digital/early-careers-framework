@@ -158,7 +158,7 @@ private
   end
 
   def email_used?(email)
-    User.where(email: email).where.not(id: @profile.user.id).any? || ParticipantIdentity.where(email: email).where.not(user_id: @profile.user.id).any?
+    User.where(email:).where.not(id: @profile.user.id).any? || ParticipantIdentity.where(email:).where.not(user_id: @profile.user.id).any?
   end
 
   def start_term_form_params

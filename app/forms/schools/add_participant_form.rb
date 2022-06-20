@@ -12,7 +12,7 @@ module Schools
     attribute :existing_participant_profile
 
     step :yourself do
-      next_step :confirm
+      next_step :trn
     end
 
     step :name do
@@ -22,7 +22,9 @@ module Schools
       before_complete { check_records if check_for_dqt_record? }
 
       next_step do
-        if existing_participant_profile.present?
+        if type == :self
+          :trn
+        elsif existing_participant_profile.present?
           :transfer
         elsif dqt_record.present?
           :email
@@ -57,7 +59,9 @@ module Schools
                 length: { within: 5..7 }
       before_complete { check_records if check_for_dqt_record? }
       next_step do
-        if existing_participant_profile.present?
+        if type == :self
+          :dob
+        elsif existing_participant_profile.present?
           :transfer
         elsif dqt_record.present?
           :email
@@ -81,7 +85,9 @@ module Schools
       before_complete { check_records if check_for_dqt_record? }
 
       next_step do
-        if existing_participant_profile.present?
+        if type == :self
+          :confirm
+        elsif existing_participant_profile.present?
           :transfer
         elsif dqt_record.present?
           :email
@@ -224,9 +230,9 @@ module Schools
 
     def validate_dqt_record
       self.dqt_record = ParticipantValidationService.validate(
-        full_name: full_name,
-        trn: trn,
-        date_of_birth: date_of_birth,
+        full_name:,
+        trn:,
+        date_of_birth:,
         config: {
           check_first_name_only: true,
         },
@@ -244,7 +250,7 @@ module Schools
     end
 
     def email_already_taken?
-      ParticipantIdentity.find_by(email: email)
+      ParticipantIdentity.find_by(email:)
         &.user
         &.teacher_profile
         &.participant_profiles
@@ -290,11 +296,11 @@ module Schools
       profile = nil
       ActiveRecord::Base.transaction do
         profile = creators[participant_type].call(
-          full_name: full_name,
-          email: email,
-          school_cohort: school_cohort,
+          full_name:,
+          email:,
+          school_cohort:,
           mentor_profile_id: mentor&.mentor_profile&.id,
-          start_date: start_date,
+          start_date:,
           sit_validation: dqt_record.present? ? true : false,
         )
         store_validation_result!(profile) if dqt_record.present?
@@ -311,12 +317,16 @@ module Schools
       ::Participants::ParticipantValidationForm.call(
         profile,
         data: {
-          trn: trn,
+          trn:,
           nino: nil,
-          date_of_birth: date_of_birth,
-          full_name: full_name,
+          date_of_birth:,
+          full_name:,
         },
       )
+    end
+
+    def display_name
+      type == :self ? "your" : "#{full_name&.titleize}’s"
     end
 
     def send_added_and_validated_email(profile)

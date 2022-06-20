@@ -9,28 +9,28 @@ RSpec.describe ParticipantMentorForm, type: :model do
     subject { described_class.new(school_id: school.id, cohort_id: school_cohort.cohort_id) }
 
     it "does not include mentors with withdrawn records" do
-      withdrawn_mentor_record = create(:mentor_participant_profile, :withdrawn_record, school_cohort: school_cohort).user
+      withdrawn_mentor_record = create(:mentor_participant_profile, :withdrawn_record, school_cohort:).user
 
       expect(subject.available_mentors).not_to include(withdrawn_mentor_record)
     end
 
     it "includes active mentors" do
-      active_mentor_record = create(:mentor_participant_profile, school_cohort: school_cohort).user
+      active_mentor_record = create(:mentor_participant_profile, school_cohort:).user
 
       expect(subject.available_mentors).to include(active_mentor_record)
     end
 
     context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
       let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
-      let(:school_cohort_2) { create(:school_cohort, school: school, cohort: cohort_2022) }
+      let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
 
       context "when there are mentors in the school mentor pool" do
-        let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+        let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
         let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort_2) }
 
         before do
-          Mentors::AddToSchool.call(school: school, mentor_profile: mentor_profile)
-          Mentors::AddToSchool.call(school: school, mentor_profile: mentor_profile_2)
+          Mentors::AddToSchool.call(school:, mentor_profile:)
+          Mentors::AddToSchool.call(school:, mentor_profile: mentor_profile_2)
         end
 
         it "includes to mentors in the pool" do

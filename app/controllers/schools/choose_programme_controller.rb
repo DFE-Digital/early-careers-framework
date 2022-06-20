@@ -30,7 +30,7 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   end
 
   def success
-    render locals: { school_cohort: school_cohort }
+    render locals: { school_cohort: }
   end
 
 private
@@ -44,12 +44,12 @@ private
   def load_programme_form
     session_params = session[:induction_choice_form] || {}
     @induction_choice_form = InductionChoiceForm.new(
-      session_params.merge(programme_choice_form_params).merge(school_cohort: school_cohort),
+      session_params.merge(programme_choice_form_params).merge(school_cohort:),
     )
   end
 
   def save_school_choice!
-    Induction::SetCohortInductionProgramme.call(school_cohort: school_cohort,
+    Induction::SetCohortInductionProgramme.call(school_cohort:,
                                                 programme_choice: @induction_choice_form.programme_choice,
                                                 opt_out_of_updates: @induction_choice_form.opt_out_choice_selected?)
   end
@@ -69,6 +69,6 @@ private
   end
 
   def school_cohort
-    @school_cohort ||= school.school_cohorts.find_or_initialize_by(cohort: cohort)
+    @school_cohort ||= school.school_cohorts.find_or_initialize_by(cohort:)
   end
 end

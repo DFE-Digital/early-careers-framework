@@ -6,7 +6,7 @@ class Schools::PartnershipsController < Schools::BaseController
 
   def index
     @school = active_school
-    @partnership = @school.partnerships.active.find_by(cohort: cohort)
+    @partnership = @school.partnerships.active.find_by(cohort:)
 
     if @partnership&.in_challenge_window?
       @report_mistake_link = challenge_partnership_path(partnership: @partnership)

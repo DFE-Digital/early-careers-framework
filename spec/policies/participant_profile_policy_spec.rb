@@ -35,7 +35,7 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
 
     context "for an induction coordinator" do
       let(:schools) { create_list :school, rand(2..3) }
-      let(:user) { create(:induction_coordinator_profile, schools: schools).user }
+      let(:user) { create(:induction_coordinator_profile, schools:).user }
       let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :ect_participant_profile, school_cohort: create(:school_cohort, school: schools.sample) } }
       let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :mentor_participant_profile, school_cohort: create(:school_cohort, school: schools.sample) } }
       let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :npq_participant_profile, school: schools.sample } }

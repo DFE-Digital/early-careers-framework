@@ -11,7 +11,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
     let!(:induction_programme_1) { create(:induction_programme, :fip, partnership: partnership_1, school_cohort: school_cohort_1) }
     let!(:induction_programme_2) { create(:induction_programme, :fip, partnership: partnership_2, school_cohort: school_cohort_2) }
     let(:teacher_profile) { create(:teacher_profile) }
-    let(:participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile, school_cohort: school_cohort_1) }
+    let(:participant_profile) { create(:ect_participant_profile, teacher_profile:, school_cohort: school_cohort_1) }
     let(:mentor_profile_1) { create(:mentor_participant_profile, school_cohort: school_cohort_1) }
     let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort: school_cohort_2) }
     let(:start_date) { 1.week.from_now }
@@ -26,15 +26,15 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
 
     let(:service_call) do
       service.call(school_cohort: school_cohort_2,
-                   participant_profile: participant_profile,
+                   participant_profile:,
                    email: new_email_address,
-                   start_date: start_date,
-                   end_date: end_date,
+                   start_date:,
+                   end_date:,
                    mentor_profile: mentor_profile_2)
     end
 
     before do
-      @original_induction = Induction::Enrol.call(participant_profile: participant_profile,
+      @original_induction = Induction::Enrol.call(participant_profile:,
                                                   induction_programme: induction_programme_1,
                                                   mentor_profile: mentor_profile_1)
     end
@@ -87,7 +87,7 @@ RSpec.describe Induction::TransferAndContinueExistingFip do
     context "without optional params" do
       let(:service_call) do
         service.call(school_cohort: school_cohort_2,
-                     participant_profile: participant_profile)
+                     participant_profile:)
       end
 
       before do

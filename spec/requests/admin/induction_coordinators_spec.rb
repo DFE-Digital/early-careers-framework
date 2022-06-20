@@ -36,7 +36,7 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
 
     it "updates the user and redirects to users page" do
       patch "/admin/induction-coordinators/#{induction_coordinator.id}", params: {
-        user: { email: email },
+        user: { email: },
       }
 
       expect(induction_coordinator.reload.email).to eq email
@@ -60,7 +60,7 @@ RSpec.describe "Admin::InductionCoodinators", type: :request do
 
       before do
         patch "/admin/induction-coordinators/#{induction_coordinator.id}", params: {
-          user: { email: email },
+          user: { email: },
         }
       end
 

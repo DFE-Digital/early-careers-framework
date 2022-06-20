@@ -7,7 +7,7 @@ RSpec.describe ProviderRelationship, type: :model do
   let(:delivery_partner) { create(:delivery_partner) }
   let(:cohort) { create(:cohort) }
   let!(:provider_relationship) do
-    ProviderRelationship.create(lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: cohort)
+    ProviderRelationship.create(lead_provider:, delivery_partner:, cohort:)
   end
 
   it "can be created" do

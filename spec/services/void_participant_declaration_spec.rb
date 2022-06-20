@@ -12,22 +12,22 @@ RSpec.describe VoidParticipantDeclaration do
   let(:another_cpd_lead_provider) { create(:cpd_lead_provider) }
 
   before do
-    create(:partnership, school: school)
+    create(:partnership, school:)
   end
 
   describe "#call" do
     let(:declaration) do
       create(
         :ect_participant_declaration,
-        user: user,
-        cpd_lead_provider: cpd_lead_provider,
-        declaration_date: declaration_date,
+        user:,
+        cpd_lead_provider:,
+        declaration_date:,
         participant_profile: profile,
       )
     end
 
     subject do
-      described_class.new(cpd_lead_provider: cpd_lead_provider, id: declaration.id)
+      described_class.new(cpd_lead_provider:, id: declaration.id)
     end
 
     it "voids a participant declaration" do
@@ -53,9 +53,9 @@ RSpec.describe VoidParticipantDeclaration do
       let(:declaration) do
         create(
           :ect_participant_declaration,
-          user: user,
-          cpd_lead_provider: cpd_lead_provider,
-          declaration_date: declaration_date,
+          user:,
+          cpd_lead_provider:,
+          declaration_date:,
           participant_profile: profile,
           state: "payable",
         )
@@ -71,9 +71,9 @@ RSpec.describe VoidParticipantDeclaration do
       let(:declaration) do
         create(
           :ect_participant_declaration,
-          user: user,
-          cpd_lead_provider: cpd_lead_provider,
-          declaration_date: declaration_date,
+          user:,
+          cpd_lead_provider:,
+          declaration_date:,
           participant_profile: profile,
           state: "paid",
         )
@@ -90,9 +90,9 @@ RSpec.describe VoidParticipantDeclaration do
       let(:declaration) do
         create(
           :ect_participant_declaration,
-          user: user,
-          cpd_lead_provider: cpd_lead_provider,
-          declaration_date: declaration_date,
+          user:,
+          cpd_lead_provider:,
+          declaration_date:,
           participant_profile: profile,
           state: "payable",
         )
@@ -101,7 +101,7 @@ RSpec.describe VoidParticipantDeclaration do
       let!(:statement) do
         create(
           :ecf_statement,
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           output_fee: true,
           deadline_date: 3.months.from_now,
         )

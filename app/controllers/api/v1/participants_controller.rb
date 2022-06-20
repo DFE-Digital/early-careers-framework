@@ -11,7 +11,7 @@ module Api
     private
 
       def serialized_response(profile)
-        relevant_induction_record = profile.relevant_induction_record(lead_provider: lead_provider)
+        relevant_induction_record = profile.relevant_induction_record(lead_provider:)
 
         ParticipantFromInductionRecordSerializer
           .new(relevant_induction_record)

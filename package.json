@@ -2,7 +2,7 @@
   "name": "early-careers-framework",
   "private": true,
   "engines": {
-    "node": "16.14.x",
+    "node": "16.15.x",
     "yarn": "^1.22.0"
   },
   "dependencies": {
@@ -49,7 +49,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-no-only-tests": "^2.6.0",
     "prettier": "^2.6.2",
-    "webpack-dev-server": "^4.7.4"
+    "webpack-dev-server": "^4.9.2"
   },
   "babel": {
     "presets": [

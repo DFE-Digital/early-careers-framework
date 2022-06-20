@@ -35,8 +35,8 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     let(:school_cohort) { create(:school_cohort) }
 
     context "when the primary profile is eligible" do
-      let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
 
       before do
         participant_profile.reload
@@ -46,8 +46,8 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
     end
 
     context "when the secondary profile is ineligible because it is a duplicate" do
-      let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
       before do
         participant_profile.reload
@@ -60,16 +60,16 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
   context "full induction programme participant" do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start") }
     end
 
     context "was a participant in early roll out" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:participant_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_participation: true, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_participation: true, participant_profile:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start: ERO") }
     end
@@ -78,41 +78,50 @@ RSpec.describe ParticipantStatusTagComponent, type: :view_component do
   context "core induction programme participant" do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--orange", exact_text: "DfE checking eligibility") }
     end
 
     context "has a previous induction reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_induction: true, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_induction: true, participant_profile:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: NQT+1") }
     end
 
     context "has no QTS reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, qts: false, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, qts: false, participant_profile:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: No QTS") }
     end
 
     context "has an ineligible status" do
       let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile: participant_profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible") }
     end
 
     context "has a withdrawn status" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) {  create(:ect_participant_profile, training_status: "withdrawn", school_cohort: school_cohort, user: create(:user, email: "ray.clemence@example.com")) }
+      let(:school_cohort) { create(:school_cohort, :fip) }
+      let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:, user: create(:user, email: "ray.clemence@example.com")) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
+      let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+      let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
 
       it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Withdrawn by provider") }
+
+      context "when an active induction record is available" do
+        component { described_class.new(profile: participant_profile, induction_record:) }
+
+        it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start") }
+      end
     end
   end
 end

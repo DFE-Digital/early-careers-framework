@@ -16,7 +16,7 @@ RSpec.describe SchoolCohort, type: :model do
   it "updates the updated_at on participant profiles and users when meaningfully updated" do
     freeze_time
     school_cohort = create(:school_cohort)
-    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort:, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
@@ -29,7 +29,7 @@ RSpec.describe SchoolCohort, type: :model do
   it "does not update the updated_at on participant profiles and users when not changed" do
     freeze_time
     school_cohort = create(:school_cohort)
-    profile = create(:ect_participant_profile, school_cohort: school_cohort, updated_at: 2.weeks.ago)
+    profile = create(:ect_participant_profile, school_cohort:, updated_at: 2.weeks.ago)
     user = profile.user
     user.update!(updated_at: 2.weeks.ago)
 
@@ -45,7 +45,7 @@ RSpec.describe SchoolCohort, type: :model do
     expect {
       school_cohort.save!
     }.to have_enqueued_job(Analytics::UpsertECFSchoolCohortJob).with(
-      school_cohort: school_cohort,
+      school_cohort:,
     )
   end
 
@@ -63,7 +63,7 @@ RSpec.describe SchoolCohort, type: :model do
   describe ".for_year" do
     let(:school) { create(:school) }
     let(:cohort) { create(:cohort, start_year: 2020) }
-    subject(:school_cohort) { create(:school_cohort, school: school, cohort: cohort) }
+    subject(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
     before do
       school_cohort
@@ -103,14 +103,29 @@ RSpec.describe SchoolCohort, type: :model do
       before do
         Partnership.create!(
           cohort: school_cohort.cohort,
-          lead_provider: lead_provider,
+          lead_provider:,
           school: school_cohort.school,
-          delivery_partner: delivery_partner,
+          delivery_partner:,
         )
       end
 
       it "returns the lead provider" do
         expect(school_cohort.lead_provider).to eq(lead_provider)
+      end
+    end
+
+    context "when FIP is chosen and there are relationship partnerships" do
+      let(:lead_provider) { create(:lead_provider, name: "Super Smashing Great Provider") }
+      let(:delivery_partner) { create(:delivery_partner, name: "Wunderbar Partner") }
+
+      before do
+        Induction::CreateRelationship.call(school_cohort:,
+                                           lead_provider:,
+                                           delivery_partner:)
+      end
+
+      it "does not return the relationship provider" do
+        expect(school_cohort.lead_provider).to be_nil
       end
     end
 
@@ -138,14 +153,29 @@ RSpec.describe SchoolCohort, type: :model do
       before do
         Partnership.create!(
           cohort: school_cohort.cohort,
-          lead_provider: lead_provider,
+          lead_provider:,
           school: school_cohort.school,
-          delivery_partner: delivery_partner,
+          delivery_partner:,
         )
       end
 
       it "returns the delivery partner" do
         expect(school_cohort.delivery_partner).to eq(delivery_partner)
+      end
+    end
+
+    context "when FIP is chosen and there are relationship partnerships" do
+      let(:lead_provider) { create(:lead_provider, name: "Super Smashing Great Provider") }
+      let(:delivery_partner) { create(:delivery_partner, name: "Wunderbar Partner") }
+
+      before do
+        Induction::CreateRelationship.call(school_cohort:,
+                                           lead_provider:,
+                                           delivery_partner:)
+      end
+
+      it "does not return the relationship delivery partner" do
+        expect(school_cohort.delivery_partner).to be_nil
       end
     end
 

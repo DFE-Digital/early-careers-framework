@@ -5,11 +5,11 @@ class Induction::ChangeProgramme < BaseService
     ActiveRecord::Base.transaction do
       current_induction_record.changing!(end_date)
 
-      Induction::Enrol.call(participant_profile: participant_profile,
+      Induction::Enrol.call(participant_profile:,
                             induction_programme: new_induction_programme,
-                            start_date: start_date,
-                            preferred_email: preferred_email,
-                            mentor_profile: mentor_profile)
+                            start_date:,
+                            preferred_email:,
+                            mentor_profile:)
     end
   end
 

@@ -46,8 +46,8 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeTrainingMaterials", type: :reques
 
     it "calls Induction::ChangeCoreInductionProgramme with the correct arguments" do
       expect(Induction::ChangeCoreInductionProgramme).to receive(:call).with(
-        school_cohort: school_cohort,
-        core_induction_programme: core_induction_programme,
+        school_cohort:,
+        core_induction_programme:,
       )
 
       put "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/change-training-materials", params: {

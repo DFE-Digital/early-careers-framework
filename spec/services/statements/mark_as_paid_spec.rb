@@ -6,17 +6,17 @@ RSpec.describe Statements::MarkAsPaid do
   let(:cpd_lead_provider) { create(:cpd_lead_provider) }
   let(:payable_declaration) { create(:npq_participant_declaration, :payable) }
   let(:voided_declaration) { create(:npq_participant_declaration, :voided) }
-  let(:statement) { create :npq_statement, cpd_lead_provider: cpd_lead_provider }
+  let(:statement) { create :npq_statement, cpd_lead_provider: }
 
   before do
     Finance::StatementLineItem.create!(
-      statement: statement,
+      statement:,
       participant_declaration: payable_declaration,
       state: payable_declaration.state,
     )
 
     Finance::StatementLineItem.create!(
-      statement: statement,
+      statement:,
       participant_declaration: voided_declaration,
       state: voided_declaration.state,
     )

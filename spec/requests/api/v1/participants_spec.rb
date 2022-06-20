@@ -5,28 +5,28 @@ require "csv"
 
 RSpec.describe "Participants API", :with_default_schedules, type: :request do
   describe "GET /api/v1/participants" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider: lead_provider) }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
     let(:lead_provider) { create(:lead_provider) }
     let!(:cohort) { Cohort.find_by(start_year: 2021) }
-    let(:partnership) { create(:partnership, lead_provider: lead_provider, cohort: cohort) }
-    let(:induction_programme) { create(:induction_programme, partnership: partnership) }
-    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort: cohort, induction_programme_choice: "full_induction_programme") }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+    let(:partnership) { create(:partnership, lead_provider:, cohort:) }
+    let(:induction_programme) { create(:induction_programme, partnership:) }
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:, induction_programme_choice: "full_induction_programme") }
+    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
 
     before :each do
       mentor_profile = create(
         :mentor_participant_profile,
-        school_cohort: school_cohort,
+        school_cohort:,
       ).tap do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:)
       end
 
       profiles = create_list :ect_participant_profile, 2, school_cohort: school_cohort
 
       profiles.each do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme).tap do |ir|
-          ir.update!(mentor_profile: mentor_profile)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
+          ir.update!(mentor_profile:)
         end
       end
 
@@ -36,9 +36,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         :ect_participant_profile,
         :withdrawn_record,
         teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
-        school_cohort: school_cohort,
+        school_cohort:,
       ).tap do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme).tap do |induction_record|
+        Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
           induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn")
         end
       end
@@ -48,9 +48,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
       create(
         :ect_participant_profile,
         :withdrawn_record,
-        school_cohort: school_cohort,
+        school_cohort:,
       ).tap do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme).tap do |induction_record|
+        Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
           induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn")
         end
       end
@@ -61,10 +61,10 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     let(:early_career_teacher_profile) do
       create(
         :ect_participant_profile,
-        school_cohort: school_cohort,
-        user: user,
+        school_cohort:,
+        user:,
       ).tap do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+        Induction::Enrol.call(participant_profile: profile, induction_programme:)
       end
     end
 
@@ -341,9 +341,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     end
 
     context "when using LeadProviderApiToken with only NPQ access" do
-      let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider: npq_lead_provider, lead_provider: nil) }
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:, lead_provider: nil) }
       let(:npq_lead_provider) { create(:npq_lead_provider) }
-      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider) }
+      let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
 
       it "returns 403" do
         default_headers[:Authorization] = bearer_token

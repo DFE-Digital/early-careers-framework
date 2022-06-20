@@ -7,14 +7,14 @@ module DeliveryPartners
 
       delegate :user,
                :teacher_profile,
-               :school,
                :cohort,
                to: :participant_profile
 
-      delegate :full_name, :email, :user_description,
+      delegate :full_name, :user_description,
                to: :user
 
       delegate :training_status,
+               :school,
                to: :induction_record,
                allow_nil: true
 
@@ -39,6 +39,10 @@ module DeliveryPartners
         induction_record&.induction_programme&.partnership&.lead_provider&.name
       end
 
+      def email
+        induction_record&.preferred_identity&.email || user.email
+      end
+
     private
 
       attr_reader :participant_profile, :delivery_partner
@@ -47,7 +51,7 @@ module DeliveryPartners
         @induction_record ||= participant_profile.induction_records.includes(induction_programme: [:partnership]).where(
           induction_programme: {
             partnerships: {
-              delivery_partner: delivery_partner,
+              delivery_partner:,
               challenged_at: nil,
               challenge_reason: nil,
               pending: false,
@@ -58,7 +62,7 @@ module DeliveryPartners
 
       def status_name
         @status_name ||= DeliveryPartners::ParticipantProfileStatus.new(
-          participant_profile: participant_profile,
+          participant_profile:,
         ).status_name
       end
     end

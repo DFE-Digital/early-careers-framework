@@ -37,7 +37,7 @@ module Admin
         EarlyCareerTeachers::Create.call(
           full_name: @user.full_name,
           email: @user.email,
-          school_cohort: school_cohort,
+          school_cohort:,
           mentor_profile_id: nil,
           year_2020: true,
         )
@@ -53,7 +53,7 @@ module Admin
       end
 
       def school_cohort
-        SchoolCohort.find_by(school: school, cohort: Cohort.find_by(start_year: 2020))
+        SchoolCohort.find_by(school:, cohort: Cohort.find_by(start_year: 2020))
       end
     end
   end

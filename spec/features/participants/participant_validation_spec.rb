@@ -24,20 +24,20 @@ RSpec.feature "Participant validation journey",
 
   let!(:ect) do
     user = create(:user, full_name: ect_full_name)
-    teacher_profile = create(:teacher_profile, user: user)
+    teacher_profile = create(:teacher_profile, user:)
 
     create :ect_participant_profile,
-           teacher_profile: teacher_profile,
-           school_cohort: school_cohort
+           teacher_profile:,
+           school_cohort:
   end
 
   let!(:mentor) do
     user = create(:user, full_name: mentor_full_name)
-    teacher_profile = create(:teacher_profile, user: user)
+    teacher_profile = create(:teacher_profile, user:)
 
     create :mentor_participant_profile,
-           teacher_profile: teacher_profile,
-           school_cohort: school_cohort
+           teacher_profile:,
+           school_cohort:
   end
 
   before do

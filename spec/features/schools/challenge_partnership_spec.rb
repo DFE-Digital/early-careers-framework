@@ -170,7 +170,7 @@ private
 
     if induction_programme == "CIP"
       school_cohort = school.school_cohorts.first
-      Induction::SetCohortInductionProgramme.call school_cohort: school_cohort,
+      Induction::SetCohortInductionProgramme.call school_cohort:,
                                                   programme_choice: school_cohort.induction_programme_choice
     end
 

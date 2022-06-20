@@ -4,7 +4,7 @@ module JsonSchema
   class VersionEventFileName
     class << self
       def call(schema_root: "etc/schema", schema_path: "participant_declarations", schema_file: "request_schema.json", version: "0.3", event: :create)
-        new(schema_path: schema_path, schema_root: schema_root, schema_file: schema_file).call(version: version, event: event)
+        new(schema_path:, schema_root:, schema_file:).call(version:, event:)
       end
     end
 

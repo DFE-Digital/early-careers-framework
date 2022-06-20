@@ -57,7 +57,7 @@ class School < ApplicationRecord
   }
 
   scope :partnered_with_lead_provider, lambda { |lead_provider_id, year|
-    where(id: Partnership.unchallenged.where(lead_provider_id: lead_provider_id).in_year(year).select(:school_id))
+    where(id: Partnership.unchallenged.where(lead_provider_id:).in_year(year).select(:school_id))
   }
 
   scope :unpartnered, lambda { |year|
@@ -91,27 +91,27 @@ class School < ApplicationRecord
   }
 
   def partnered?(cohort)
-    partnerships.unchallenged.where(cohort: cohort).any?
+    partnerships.unchallenged.where(cohort:).any?
   end
 
   def lead_provider(year)
-    partnerships.unchallenged.joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
+    partnerships.unchallenged.where(relationship: false).joins(%i[lead_provider cohort]).find_by(cohorts: { start_year: year })&.lead_provider
   end
 
   def delivery_partner_for(year)
-    partnerships.unchallenged.joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
+    partnerships.unchallenged.where(relationship: false).joins(%i[delivery_partner cohort]).find_by(cohorts: { start_year: year })&.delivery_partner
   end
 
   def participants_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.active_ecf_participants || []
+    school_cohorts.find_by(cohort:)&.active_ecf_participants || []
   end
 
   def early_career_teacher_profiles_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.ects&.active_record || []
+    school_cohorts.find_by(cohort:)&.ecf_participant_profiles&.ects&.active_record || []
   end
 
   def mentor_profiles_for(cohort)
-    school_cohorts.find_by(cohort: cohort)&.ecf_participant_profiles&.mentors&.active_record || []
+    school_cohorts.find_by(cohort:)&.ecf_participant_profiles&.mentors&.active_record || []
   end
 
   def mentors
@@ -127,7 +127,7 @@ class School < ApplicationRecord
   end
 
   def chosen_programme?(cohort)
-    school_cohorts.exists?(cohort: cohort)
+    school_cohorts.exists?(cohort:)
   end
 
   def eligible?
@@ -143,7 +143,7 @@ class School < ApplicationRecord
   end
 
   def pupil_premium_uplift?(start_year)
-    pupil_premiums.find_by(start_year: start_year)&.uplift? || false
+    pupil_premiums.find_by(start_year:)&.uplift? || false
   end
 
   def sparsity_uplift?(year = nil)

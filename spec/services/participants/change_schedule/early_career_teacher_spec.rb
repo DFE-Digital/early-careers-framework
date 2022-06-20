@@ -8,10 +8,10 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
       let(:lead_provider) { cpd_lead_provider.lead_provider }
       let(:user) { profile.user }
-      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort:) }
       let(:school_cohort) { create(:school_cohort) }
       let(:school) { school_cohort.school }
-      let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, cohort: school_cohort.cohort) }
+      let!(:partnership) { create(:partnership, school:, lead_provider:, cohort: school_cohort.cohort) }
       let(:schedule) { create(:ecf_schedule) }
 
       subject do
@@ -19,7 +19,7 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
           schedule_identifier: nil,
           participant_id: user.id,
           course_identifier: "ecf-induction",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         })
       end
 
@@ -36,10 +36,10 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
       let(:lead_provider) { cpd_lead_provider.lead_provider }
       let(:user) { profile.user }
-      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort:) }
       let(:school_cohort) { create(:school_cohort) }
       let(:school) { school_cohort.school }
-      let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, cohort: school_cohort.cohort) }
+      let!(:partnership) { create(:partnership, school:, lead_provider:, cohort: school_cohort.cohort) }
       let(:original_schedule) { profile.schedule }
       let(:schedule) { create(:ecf_schedule, schedule_identifier: "new-schedule") }
       let!(:induction_record) do
@@ -47,15 +47,15 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
           :induction_record,
           participant_profile: profile,
           schedule: original_schedule,
-          induction_programme: induction_programme,
+          induction_programme:,
         )
       end
       let(:induction_programme) do
         create(
           :induction_programme,
           :fip,
-          school_cohort: school_cohort,
-          partnership: partnership,
+          school_cohort:,
+          partnership:,
         )
       end
 
@@ -64,7 +64,7 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
           schedule_identifier: schedule.schedule_identifier,
           participant_id: user.id,
           course_identifier: "ecf-induction",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         })
       end
 
@@ -85,10 +85,10 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
       let(:lead_provider) { cpd_lead_provider.lead_provider }
       let(:user) { profile.user }
-      let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+      let(:profile) { create(:ect_participant_profile, school_cohort:) }
       let(:school_cohort) { create(:school_cohort) }
       let(:school) { school_cohort.school }
-      let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, cohort: school_cohort.cohort) }
+      let!(:partnership) { create(:partnership, school:, lead_provider:, cohort: school_cohort.cohort) }
       let(:schedule) { create(:ecf_mentor_schedule) }
 
       subject do
@@ -96,7 +96,7 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
           schedule_identifier: schedule.schedule_identifier,
           participant_id: user.id,
           course_identifier: "ecf-induction",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
         })
       end
 
@@ -110,21 +110,21 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider) { cpd_lead_provider.lead_provider }
     let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile, school_cohort: school_cohort) }
+    let(:profile) { create(:ect_participant_profile, school_cohort:) }
     let(:school_cohort) { create(:school_cohort) }
     let(:cohort) { school_cohort.cohort }
     let(:school) { school_cohort.school }
-    let!(:partnership) { create(:partnership, school: school, lead_provider: lead_provider, cohort: school_cohort.cohort) }
+    let!(:partnership) { create(:partnership, school:, lead_provider:, cohort: school_cohort.cohort) }
     let(:schedule) { create(:ecf_mentor_schedule) }
 
     let(:schedule) do
-      create(:schedule, cohort: cohort, schedule_identifier: "soft-schedule", name: "soft-schdule")
+      create(:schedule, cohort:, schedule_identifier: "soft-schedule", name: "soft-schdule")
     end
 
-    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule: schedule) }
+    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule:) }
     let!(:declaration) do
       create(:participant_declaration,
-             user: user,
+             user:,
              participant_profile: profile,
              course_identifier: "ecf-induction")
     end
@@ -133,18 +133,18 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
       create(
         :induction_programme,
         :fip,
-        school_cohort: school_cohort,
-        partnership: partnership,
+        school_cohort:,
+        partnership:,
       )
     end
-    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme) }
+    let!(:induction_record) { Induction::Enrol.call(participant_profile: profile, induction_programme:) }
 
     subject do
       described_class.new(params: {
         schedule_identifier: schedule.schedule_identifier,
         participant_id: user.id,
         course_identifier: "ecf-induction",
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
         cohort: schedule.cohort.start_year,
       })
     end

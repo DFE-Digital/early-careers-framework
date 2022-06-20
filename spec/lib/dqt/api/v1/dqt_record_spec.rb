@@ -21,10 +21,10 @@ module DQT
             }
           end
 
-          let(:expected_dqt_record) { build_dqt_record(trn: trn, nino: nino) }
+          let(:expected_dqt_record) { build_dqt_record(trn:, nino:) }
 
           let!(:show_endpoint) do
-            stub_dqt_api(expected_dqt_record: expected_dqt_record)
+            stub_dqt_api(expected_dqt_record:)
           end
 
           it "makes correct request" do
@@ -39,7 +39,7 @@ module DQT
 
           context "when qtsAwardDate is nil" do
             let(:expected_dqt_record) do
-              r = build_dqt_record(trn: trn, nino: nino)
+              r = build_dqt_record(trn:, nino:)
               r[:qts_date] = nil
               r
             end
@@ -72,7 +72,7 @@ module DQT
               },
             ),
           ).to_return(
-            body: dqt_body(expected_dqt_record: expected_dqt_record),
+            body: dqt_body(expected_dqt_record:),
           )
         end
 

@@ -8,7 +8,7 @@ FactoryBot.define do
 
     after(:create) do |email, evaluator|
       Array.wrap(evaluator.associated_with).each do |object, as: nil|
-        email.create_association_with(object, as: as)
+        email.create_association_with(object, as:)
       end
     end
   end

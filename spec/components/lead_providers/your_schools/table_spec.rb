@@ -7,7 +7,7 @@ RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
   let(:partnerships) { Array.new(rand(21..30)) { |i| double "Partnership #{i}" } }
   let(:page) { rand(1..2) }
 
-  component { described_class.new partnerships: partnerships, page: page }
+  component { described_class.new partnerships:, page: }
   request_path "/lead-providers/your-schools"
 
   stub_component LeadProviders::YourSchools::TableRow
@@ -16,7 +16,7 @@ RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
     expected_partnerships = partnerships.each_slice(items).to_a[page - 1]
 
     expected_partnerships.each do |partnership|
-      expect(rendered).to have_rendered(LeadProviders::YourSchools::TableRow).with(partnership: partnership)
+      expect(rendered).to have_rendered(LeadProviders::YourSchools::TableRow).with(partnership:)
     end
 
     (partnerships - expected_partnerships).each do |other_page_partnership|

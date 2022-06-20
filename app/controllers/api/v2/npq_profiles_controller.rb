@@ -42,10 +42,10 @@ module Api
 
       def build_npq_application
         NPQ::BuildApplication.call(
-          npq_application_params: npq_application_params,
-          npq_course_id: npq_course_id,
-          npq_lead_provider_id: npq_lead_provider_id,
-          user_id: user_id,
+          npq_application_params:,
+          npq_course_id:,
+          npq_lead_provider_id:,
+          user_id:,
         )
       end
 

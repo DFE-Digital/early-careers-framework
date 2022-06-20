@@ -41,10 +41,6 @@ class ParticipantProfile < ApplicationRecord
 
   scope :npqs, -> { where(type: NPQ.name) }
 
-  scope :sparsity, -> { where(sparsity_uplift: true) }
-  scope :pupil_premium, -> { where(pupil_premium_uplift: true) }
-  scope :uplift, -> { sparsity.or(pupil_premium) }
-
   attr_reader :participant_type
 
   class_attribute :validation_steps
@@ -103,7 +99,7 @@ class ParticipantProfile < ApplicationRecord
 
   def update_schedule!(schedule)
     # TODO: Do we need to store when this happens outside of papertrail?
-    update!(schedule: schedule)
+    update!(schedule:)
   end
 
   def sit_mentor?

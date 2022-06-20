@@ -41,8 +41,8 @@ private
   def programme_attrs
     attrs = {
       training_programme: programme_choice,
-      school_cohort: school_cohort,
-      delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed,
+      school_cohort:,
+      delivery_partner_to_be_confirmed:,
     }
 
     case programme_choice

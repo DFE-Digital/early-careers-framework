@@ -45,7 +45,7 @@ module Finance
 
       def output_payment
         @output_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
-          contract: contract,
+          contract:,
           total_participants: total_declarations,
         )
       end
@@ -63,7 +63,7 @@ module Finance
       end
 
       def service_fees
-        @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract: contract)
+        @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract:)
       end
 
       def course_total

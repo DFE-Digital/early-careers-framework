@@ -30,7 +30,7 @@ private
 
   def temp_file_from_response(response)
     body = response.body.force_encoding(encoding)
-    file = Tempfile.new(encoding: encoding)
+    file = Tempfile.new(encoding:)
     file.write(body)
     file.close
     file

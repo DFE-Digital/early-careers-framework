@@ -2,23 +2,23 @@
 
 RSpec.describe Mentors::AddToSchool do
   let(:cohort) { create(:cohort, start_year: 2021) }
-  let(:school_cohort) { create(:school_cohort, cohort: cohort) }
+  let(:school_cohort) { create(:school_cohort, cohort:) }
   let(:school) { school_cohort.school }
-  let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort) }
+  let!(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
 
   it "creates a school mentor record" do
     expect {
       described_class.call(
-        mentor_profile: mentor_profile,
-        school: school,
+        mentor_profile:,
+        school:,
       )
     }.to change { SchoolMentor.count }.by(1)
   end
 
   it "adds the mentor to the school's mentor pool" do
     described_class.call(
-      mentor_profile: mentor_profile,
-      school: school,
+      mentor_profile:,
+      school:,
     )
 
     expect(school.mentor_profiles).to include mentor_profile
@@ -30,8 +30,8 @@ RSpec.describe Mentors::AddToSchool do
     it "adds an identity record" do
       expect {
         described_class.call(
-          mentor_profile: mentor_profile,
-          school: school,
+          mentor_profile:,
+          school:,
           preferred_email: email,
         )
       }.to change { ParticipantIdentity.count }.by(1)
@@ -39,8 +39,8 @@ RSpec.describe Mentors::AddToSchool do
 
     it "sets the preferred identity on the school mentor" do
       described_class.call(
-        mentor_profile: mentor_profile,
-        school: school,
+        mentor_profile:,
+        school:,
         preferred_email: email,
       )
       expect(school.school_mentors.first.preferred_identity.email).to eq email

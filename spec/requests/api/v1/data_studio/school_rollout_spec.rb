@@ -69,7 +69,7 @@ RSpec.describe "School rollout data endpoint", type: :request do
 
     context "using public token from different scope" do
       let(:lead_provider) { create(:lead_provider) }
-      let(:other_token) { LeadProviderApiToken.create_with_random_token!(lead_provider: lead_provider) }
+      let(:other_token) { LeadProviderApiToken.create_with_random_token!(lead_provider:) }
 
       it "returns 403 for public bearer token" do
         default_headers[:Authorization] = "Bearer #{other_token}"

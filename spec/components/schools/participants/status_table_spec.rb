@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Schools::Participants::StatusTable, type: :view_component do
-  let!(:participant_profile) { create(:ecf_participant_profile, :ecf_participant_eligibility, school_cohort: school_cohort) }
+  let!(:participant_profile) { create(:ecf_participant_profile, :ecf_participant_eligibility, school_cohort:) }
   let(:cip) { create(:core_induction_programme) }
   let!(:school_cohort) { create :school_cohort, :fip }
   let!(:partnership) { create :partnership, school: school_cohort.school, cohort: school_cohort.cohort }
@@ -14,7 +14,7 @@ RSpec.describe Schools::Participants::StatusTable, type: :view_component do
     let(:programme) { create(:induction_programme, :fip) }
 
     before do
-      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
+      Induction::Enrol.call(participant_profile:, induction_programme: programme)
     end
 
     context "eligible" do
@@ -44,7 +44,7 @@ RSpec.describe Schools::Participants::StatusTable, type: :view_component do
     before do
       participant_profile.school_cohort.update!(induction_programme_choice: "core_induction_programme",
                                                 core_induction_programme: cip)
-      Induction::Enrol.call(participant_profile: participant_profile, induction_programme: programme)
+      Induction::Enrol.call(participant_profile:, induction_programme: programme)
     end
 
     context "eligible" do

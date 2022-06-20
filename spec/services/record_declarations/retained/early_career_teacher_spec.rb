@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
-  let(:profile) { create(:ect_participant_profile, schedule: schedule) }
+  let(:profile) { create(:ect_participant_profile, schedule:) }
   let(:user) { profile.user }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
@@ -11,12 +11,12 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
   let(:declaration_type) { "retained-1" }
   let(:schedule) { create(:ecf_schedule) }
   let(:cohort) { Cohort.current || create(:cohort, start_year: 2021) }
-  let(:school_cohort) { create(:school_cohort, cohort: cohort, school: profile.school) }
-  let(:partnership) { create(:partnership, school: profile.school, lead_provider: lead_provider, cohort: cohort) }
-  let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership, school_cohort: school_cohort) }
+  let(:school_cohort) { create(:school_cohort, cohort:, school: profile.school) }
+  let(:partnership) { create(:partnership, school: profile.school, lead_provider:, cohort:) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
 
   before do
-    Induction::Enrol.call(participant_profile: profile, induction_programme: induction_programme)
+    Induction::Enrol.call(participant_profile: profile, induction_programme:)
   end
 
   context "happy path" do
@@ -25,9 +25,9 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
         params: {
           participant_id: user.id,
           course_identifier: "ecf-induction",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           declaration_date: declaration_date.rfc3339,
-          declaration_type: declaration_type,
+          declaration_type:,
           evidence_held: "other",
         },
       )
@@ -53,9 +53,9 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
         params: {
           participant_id: user.id,
           course_identifier: "ecf-mentor",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           declaration_date: declaration_date.rfc3339,
-          declaration_type: declaration_type,
+          declaration_type:,
           evidence_held: "other",
         },
       )
@@ -69,17 +69,17 @@ RSpec.describe RecordDeclarations::Retained::EarlyCareerTeacher do
   context "when user is in 2020 cohort" do
     let(:cohort_2020) { create(:cohort, start_year: 2020) }
     let(:school_cohort_2020) { create(:school_cohort, cohort: cohort_2020, school: profile.school) }
-    let(:partnership) { create(:partnership, school: profile.school, lead_provider: lead_provider, cohort: cohort_2020) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership, school_cohort: school_cohort_2020) }
+    let(:partnership) { create(:partnership, school: profile.school, lead_provider:, cohort: cohort_2020) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort: school_cohort_2020) }
 
     subject do
       described_class.new(
         params: {
           participant_id: user.id,
           course_identifier: "ecf-induction",
-          cpd_lead_provider: cpd_lead_provider,
+          cpd_lead_provider:,
           declaration_date: declaration_date.rfc3339,
-          declaration_type: declaration_type,
+          declaration_type:,
           evidence_held: "other",
         },
       )

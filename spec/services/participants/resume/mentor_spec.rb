@@ -9,20 +9,20 @@ RSpec.describe Participants::Resume::Mentor do
   let(:user) { profile.user }
   let(:school) { profile.school_cohort.school }
   let(:cohort) { profile.school_cohort.cohort }
-  let(:induction_programme) { create(:induction_programme, :fip, partnership: partnership) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
 
   let!(:induction_record) do
     Induction::Enrol
-      .call(participant_profile: profile, induction_programme: induction_programme)
+      .call(participant_profile: profile, induction_programme:)
       .tap { |ir| ir.update!(training_status: "deferred") }
   end
 
   let!(:partnership) do
     create(
       :partnership,
-      school: school,
-      lead_provider: lead_provider,
-      cohort: cohort,
+      school:,
+      lead_provider:,
+      cohort:,
     )
   end
 
@@ -31,7 +31,7 @@ RSpec.describe Participants::Resume::Mentor do
       params: {
         participant_id: user.id,
         course_identifier: "ecf-mentor",
-        cpd_lead_provider: cpd_lead_provider,
+        cpd_lead_provider:,
       },
     )
   end
@@ -55,7 +55,7 @@ RSpec.describe Participants::Resume::Mentor do
           params: {
             participant_id: user.id,
             course_identifier: "ecf-mentor",
-            cpd_lead_provider: cpd_lead_provider,
+            cpd_lead_provider:,
           },
         ).call # must be different instance from subject
       end
