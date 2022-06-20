@@ -31,7 +31,7 @@ module EarlyCareerTeachers
                     }.merge(ect_attributes))
                   end
 
-        ParticipantProfileState.create!(participant_profile: profile)
+        ParticipantProfileState.create!(participant_profile: profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: profile,
                                 induction_programme: school_cohort.default_induction_programme,
