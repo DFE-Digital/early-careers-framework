@@ -34,6 +34,10 @@
           <p class="govuk-body-s govuk-!-margin-bottom-2">
             VAT <span><%= number_to_pounds(@calculator.vat) %></span>
           </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Reconcilation <span><%= number_to_pounds(@calculator.statement.reconcile_amount) %></span>
+          </p>
         </div>
       </div>
 

@@ -99,7 +99,7 @@ module Finance
       end
 
       def total(with_vat: false)
-        sum = service_fee + output_fee + adjustments_total
+        sum = service_fee + output_fee + adjustments_total + statement.reconcile_amount
         sum += vat if with_vat
         sum
       end
