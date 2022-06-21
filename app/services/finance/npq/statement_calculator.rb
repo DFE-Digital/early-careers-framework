@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "payment_calculator/npq/service_fees"
+require "payment_calculator/npq/output_payment"
+
 module Finance
   module NPQ
     class StatementCalculator
@@ -10,7 +13,7 @@ module Finance
       end
 
       def summary_overall_total
-        total_overview_payment + overall_vat
+        total_payment + overall_vat
       end
 
       def total_output_payment_subtotal
@@ -22,11 +25,11 @@ module Finance
       end
 
       def overall_vat
-        total_payment * (npq_lead_provider.vat_chargeable ? 0.2 : 0.0)
+        total_payment * vat_rate
       end
 
       def total_payment
-        total_service_fees + total_output_payment_subtotal
+        total_service_fees + total_output_payment_subtotal + statement.reconcile_amount
       end
 
       def total_starts
@@ -46,6 +49,10 @@ module Finance
       end
 
     private
+
+      def vat_rate
+        npq_lead_provider.vat_chargeable ? 0.2 : 0.0
+      end
 
       def voided_declarations
         statement.participant_declarations.voided.unique_id
@@ -69,10 +76,6 @@ module Finance
             total_participants: statement_declarations_per_contract(contract),
           )
         end
-      end
-
-      def total_overview_payment
-        total_service_fees + total_output_payment_subtotal
       end
 
       def service_fees
