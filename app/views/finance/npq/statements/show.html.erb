@@ -27,11 +27,6 @@
             <%= t("finance.vat") %>
             <span><%= number_to_pounds(@calculator.overall_vat) %></span>
           </p>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            Reconcilation
-            <span><%= number_to_pounds(@calculator.statement.reconcile_amount) %></span>
-          </p>
         </div>
 
         <ul class="first govuk-list govuk-!-margin-bottom-0">
