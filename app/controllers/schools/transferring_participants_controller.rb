@@ -3,9 +3,10 @@
 module Schools
   class TransferringParticipantsController < ::Schools::BaseController
     before_action :load_joining_participant_form, except: %i[what_we_need]
-    before_action :latest_induction_record, only: %i[email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
     before_action :set_current_steps, except: %i[what_we_need]
     before_action :set_school_cohort
+    before_action :latest_induction_record, only: %i[teacher_start_date email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
+    before_action :already_enrolled_at_school?, only: %i[teacher_start_date email choose_mentor teachers_current_programme schools_current_programme check_answers]
     before_action :validate_request_or_render, except: %i[what_we_need]
 
     skip_after_action :verify_authorized
@@ -287,6 +288,10 @@ module Schools
       @transferring_participant_form.full_name.present? &&
         @transferring_participant_form.trn.present? &&
         @transferring_participant_form.date_of_birth.present?
+    end
+
+    def already_enrolled_at_school?
+      render :already_enrolled_at_school and return if @latest_induction_record.school == @school_cohort.school
     end
 
     def participant_profile
