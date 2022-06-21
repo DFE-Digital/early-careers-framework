@@ -51,6 +51,7 @@ module Api
             eligible_for_funding: profile.npq_application.eligible_for_funding,
             training_status: profile.training_status,
             school_urn: profile.school_urn,
+            targeted_delivery_funding_eligibility: profile.npq_application.targeted_delivery_funding_eligibility,
           }
         end
       end

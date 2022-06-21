@@ -73,12 +73,14 @@ module Pages
     def choose_to_add_a_new_ect
       choose "A new ECT"
       click_on "Continue"
+      click_on "Continue"
 
       self
     end
 
     def choose_to_add_a_new_mentor
       choose "A new mentor"
+      click_on "Continue"
       click_on "Continue"
 
       self

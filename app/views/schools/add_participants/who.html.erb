@@ -7,7 +7,7 @@
 
         <span class="govuk-caption-xl"><%= @school.name %></span>
 
-        <%= form_with model: @who_to_add_form, url: chosen_who_to_add_schools_add_participants_path, method: :put do |f| %>
+        <%= form_with model: @who_to_add_form, url: participant_type_schools_add_participants_path, method: :put do |f| %>
             <%= f.govuk_error_summary %>
             <%= f.govuk_radio_buttons_fieldset :type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
                 <% if @school_cohort.school_chose_fip? %>

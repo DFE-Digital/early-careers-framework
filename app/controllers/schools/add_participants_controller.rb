@@ -6,6 +6,7 @@ module Schools
 
     skip_after_action :verify_authorized
     before_action :set_school_cohort
+    before_action :ensure_form_present, except: %i[start who participant_type]
 
     form AddParticipantForm, as: :add_participant_form
     result as: :participant_profile
@@ -30,9 +31,8 @@ module Schools
       @who_to_add_form = build_participant_type_form
     end
 
-    def chosen_who_to_add
+    def participant_type
       @who_to_add_form = build_participant_type_form
-
       unless @who_to_add_form.valid?
         render "schools/add_participants/who" and return
       end
@@ -42,8 +42,11 @@ module Schools
 
       add_participant_form.assign_attributes(type: @who_to_add_form.type)
       store_form_in_session
-      redirect_to action: :show, step: :name
+
+      redirect_to action: :what_we_need
     end
+
+    def what_we_need; end
 
     def transfer
       if form.complete_step(:transfer, form_params)

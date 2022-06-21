@@ -996,6 +996,10 @@ module ManageTrainingSteps
     expect(page).to have_text("Does your school expect any new ECTs in the 2022 to 2023 academic year?")
   end
 
+  def then_i_am_taken_to_the_what_we_need_from_you_page
+    expect(page).to have_content("What we need from you")
+  end
+
   # Set_steps
 
   def set_participant_data
