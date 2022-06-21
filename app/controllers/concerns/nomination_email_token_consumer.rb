@@ -16,7 +16,7 @@ private
   end
 
   def token
-    @token ||= params[:token]
+    @token ||= (params[:token] || @nominate_induction_tutor_form&.token)
   end
 
   def nomination_email
