@@ -377,10 +377,6 @@ module ManageTrainingSteps
     click_on("View your early career teacher and mentor details")
   end
 
-  def and_the_start_induction_date_is(term_and_year)
-    expect(page).to have_text(term_and_year)
-  end
-
   def and_they_have_an_end_date
     expect(page).to have_text(@induction_record.end_date.to_date.to_s(:govuk))
   end
