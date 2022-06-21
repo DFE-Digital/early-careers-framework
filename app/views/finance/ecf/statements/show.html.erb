@@ -104,10 +104,11 @@
         <% table.head do |head| %>
           <% head.row do |row| %>
             <% row.cell(header: true, text: "Outputs") %>
-            <% row.cell(header: true, text: "Band A", numeric: true) %>
-            <% row.cell(header: true, text: "Band B", numeric: true) %>
-            <% row.cell(header: true, text: "Band C", numeric: true) %>
-            <% row.cell(header: true, text: "Band D", numeric: true) %>
+
+            <% @calculator.band_letters.each do |letter| %>
+              <% row.cell(header: true, text: "Band #{letter.upcase}", numeric: true) %>
+            <% end %>
+
             <% row.cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
 
