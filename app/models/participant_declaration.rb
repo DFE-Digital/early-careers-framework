@@ -31,6 +31,8 @@ class ParticipantDeclaration < ApplicationRecord
     paid: "paid",
     voided: "voided",
     ineligible: "ineligible",
+    awaiting_clawback: "awaiting_clawback",
+    clawed_back: "clawed_back",
   }
 
   alias_attribute :current_state, :state
