@@ -9,6 +9,40 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
   subject { described_class.new(statement:) }
 
+  describe "#total" do
+    let(:default_total) { BigDecimal("-0.5132793103448275862068965517241379310345e4") }
+
+    context "when there is a positive reconcile_amount" do
+      before do
+        statement.update!(reconcile_amount: 1234)
+      end
+
+      it "increases total" do
+        expect(subject.total(with_vat: false)).to eql(default_total + 1234)
+      end
+    end
+
+    context "when there is a negative reconcile_amount" do
+      before do
+        statement.update!(reconcile_amount: -1234)
+      end
+
+      it "descreases the total" do
+        expect(subject.total(with_vat: false)).to eql(default_total - 1234)
+      end
+    end
+
+    context "when VAT is applicable" do
+      before do
+        statement.update!(reconcile_amount: 1234)
+      end
+
+      it "affects the amount to reconcile by" do
+        expect(subject.total(with_vat: true)).to eql((default_total + 1234) * 1.2)
+      end
+    end
+  end
+
   describe "#started_band_a_count" do
     context "when there are no declarations" do
       it "returns zero" do

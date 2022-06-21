@@ -54,7 +54,7 @@ module Api
                   sparsity_uplift: mentor_profile.sparsity_uplift,
                   training_status: mentor_profile.training_status,
                   schedule_identifier: mentor_profile.schedule.schedule_identifier,
-                  updated_at: mentor_profile.reload.updated_at.rfc3339,
+                  updated_at: mentor_profile.user.updated_at.rfc3339,
                 },
               },
             }.to_json
@@ -82,7 +82,7 @@ module Api
                   sparsity_uplift: ect_profile.sparsity_uplift,
                   training_status: ect_profile.training_status,
                   schedule_identifier: ect_profile.schedule.schedule_identifier,
-                  updated_at: ect_profile.reload.updated_at.rfc3339,
+                  updated_at: ect_profile.user.updated_at.rfc3339,
                 },
               },
             }.to_json
