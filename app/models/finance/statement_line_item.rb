@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Finance::StatementLineItem < ApplicationRecord
+  BILLABLE_STATES = %w[eligible payable paid].freeze
+  REFUNDABLE_STATES = %w[awaiting_clawback clawed_back].freeze
+
   self.table_name = "statement_line_items"
 
   belongs_to :statement
@@ -13,16 +16,27 @@ class Finance::StatementLineItem < ApplicationRecord
     paid: "paid",
     voided: "voided",
     ineligible: "ineligible",
+    awaiting_clawback: "awaiting_clawback",
+    clawed_back: "clawed_back",
   }
 
-  scope :billable, -> { where(state: %w[eligible payable paid]) }
+  scope :billable, -> { where(state: BILLABLE_STATES) }
+  scope :refundable, -> { where(state: REFUNDABLE_STATES) }
 
   validate :validate_single_billable_relationship, on: [:create]
+
+  def billable?
+    BILLABLE_STATES.include?(state)
+  end
+
+  def refundable?
+    REFUNDABLE_STATES.include?(state)
+  end
 
 private
 
   def validate_single_billable_relationship
-    if Finance::StatementLineItem
+    if billable? && Finance::StatementLineItem
       .where(participant_declaration:)
       .billable
       .exists?

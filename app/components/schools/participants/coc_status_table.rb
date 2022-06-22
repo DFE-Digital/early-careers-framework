@@ -39,7 +39,7 @@ module Schools
         elsif transferred_participants?
           "Transferred"
         else
-          "Induction start"
+          ""
         end
       end
 
