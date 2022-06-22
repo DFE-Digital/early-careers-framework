@@ -30,11 +30,11 @@ class ParticipantTransferMailer < ApplicationMailer
   # there are minor copy changes between the templates.
   #
   # Reference: 1, 2
-  def participant_transfer_out_notification(induction_record:, current_school:)
+  def participant_transfer_out_notification(induction_record:)
     participant_profile = induction_record.participant_profile
     preferred_identity_email = induction_record.preferred_identity.email
 
-    template_id = if participant_profile.ect?
+    template_id = if induction_record.participant_profile.ect?
                     TRANSFER_OUT_FOR_ECT_TEMPLATE
                   else
                     TRANSFER_OUT_FOR_MENTOR_TEMPLATE
@@ -47,7 +47,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         transferring_ppt_name: participant_profile.user.full_name,
-        current_school: current_school.name,
+        current_school_name: induction_record.school.name,
       },
     ).tag(:participant_transfer_out_notification).associate_with(participant_profile, as: :participant_profile)
   end
@@ -55,7 +55,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # This mailer switches on ECT and mentor-specific templates, though the inputs are the same,
   # there are minor copy changes between the templates.
   #
-  # Reference: 5, 6
+  # Reference: 3, 4
   def participant_transfer_in_notification(induction_record:)
     participant_profile = induction_record.participant_profile
     preferred_identity_email = induction_record.preferred_identity.email
@@ -81,7 +81,7 @@ class ParticipantTransferMailer < ApplicationMailer
 
   # Sent to the *outgoing* lead provider, when it changes.
   #
-  # Reference: 3
+  # Reference: 5
   def provider_transfer_out_notification(induction_record:, lead_provider_profile:)
     template_mail(
       TRANSFER_OUT_FOR_PROVIDER_TEMPLATE,
@@ -97,7 +97,7 @@ class ParticipantTransferMailer < ApplicationMailer
 
   # Sent to the *incoming* lead provider, when it has changed.
   #
-  # Reference: 4
+  # Reference: 6
   def provider_transfer_in_notification(induction_record:, lead_provider_profile:)
     template_mail(
       TRANSFER_IN_FOR_PROVIDER_TEMPLATE,
@@ -114,7 +114,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to the lead provider when a participant changes school, but remains with their
   # current lead provider.
   #
-  # Reference: 9
+  # Reference: 7
   def provider_new_school_transfer_notification(induction_record:, lead_provider_profile:)
     template_mail(
       NEW_SCHOOL_TRANSFER_FOR_PROVIDER,
@@ -130,7 +130,7 @@ class ParticipantTransferMailer < ApplicationMailer
 
   # Sent to when the LP is already the *outgoing* and *incoming* lead provider at both schools.
   #
-  # Reference: 10
+  # Reference: 8
   def provider_existing_school_transfer_notification(induction_record:, lead_provider_profile:)
     template_mail(
       EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER,
@@ -150,7 +150,7 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to a School Induction Coordinator when an ECT or mentor *has* transferred to a new school. This is
   # to be sent *after* the transfer has happened.
   #
-  # Reference: 7 + 8
+  # Reference: 9, 10
   def induction_coordinator_participant_transfer_out_notification(induction_record:, induction_coordinator_profile:)
     participant_profile = induction_record.participant_profile
 
