@@ -476,8 +476,6 @@ Rails.application.routes.draw do
             get :edit_email, path: "edit-email"
             put :update_email, path: "update-email"
             get :email_used, path: "email-used"
-            get :edit_start_term, path: "edit-start-term"
-            put :update_start_term, path: "update-start-term"
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
 

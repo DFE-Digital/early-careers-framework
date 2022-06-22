@@ -18,7 +18,6 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :view_component d
           expect(rendered).to have_link induction_record.user.full_name, href: "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants/#{participant_profile.id}"
           expect(rendered).to have_content induction_record.induction_programme.lead_provider.name
           expect(rendered).to have_content induction_record.induction_programme.delivery_partner.name
-          expect(rendered).to have_content induction_record.participant_profile.start_term.humanize
         end
       end
     end
@@ -50,7 +49,6 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :view_component d
         with_request_url "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants" do
           expect(rendered).to have_link induction_record.user.full_name, href: "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants/#{participant_profile.id}"
           expect(rendered).to have_content induction_record.induction_programme.core_induction_programme.name
-          expect(rendered).to have_content induction_record.participant_profile.start_term.humanize
         end
       end
     end

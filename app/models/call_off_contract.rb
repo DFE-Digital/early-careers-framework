@@ -3,15 +3,15 @@
 class CallOffContract < ApplicationRecord
   belongs_to :lead_provider
   belongs_to :cohort
-  delegate :total_contract_value, to: :bands
-  has_many :participant_bands do
-    def total_contract_value
-      map(&:contract_value).reduce(&:+)
-    end
+
+  has_many :participant_bands
+
+  def total_contract_value
+    participant_bands.map(&:contract_value).sum
   end
 
   def uplift_cap
-    total_contract_value * 0.05
+    (total_contract_value * 0.05).ceil(-2)
   end
 
   def band_a

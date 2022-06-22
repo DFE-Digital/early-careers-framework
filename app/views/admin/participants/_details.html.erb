@@ -45,11 +45,6 @@
       <td class="govuk-table__cell"></td>
     </tr>
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Start term</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.participant_profile.start_term.humanize %></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Notes</th>
        <td class="govuk-table__cell"><%= latest_induction_record.participant_profile.notes? ? simple_format(latest_induction_record.participant_profile.notes, class: "govuk-body") : "No notes" %></td>
 

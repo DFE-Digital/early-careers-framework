@@ -20,6 +20,15 @@ class Finance::Statement < ApplicationRecord
            through: :billable_statement_line_items,
            source: :participant_declaration
 
+  has_many :refundable_statement_line_items,
+           -> { where(state: %w[awaiting_clawback clawed_back]) },
+           class_name: "Finance::StatementLineItem"
+
+  has_many :refundable_participant_declarations,
+           class_name: "ParticipantDeclaration",
+           through: :refundable_statement_line_items,
+           source: :participant_declaration
+
   scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
   scope :closed,                    -> { where("payment_date < ?", Date.current) }
   scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
@@ -62,6 +71,13 @@ class Finance::Statement < ApplicationRecord
 
   def to_param
     name.downcase.gsub(" ", "-")
+  end
+
+  def previous_statements
+    self.class
+      .where(cohort:)
+      .where(cpd_lead_provider:)
+      .where("payment_date < ?", payment_date)
   end
 end
 

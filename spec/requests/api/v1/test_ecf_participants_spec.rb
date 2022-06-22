@@ -71,7 +71,8 @@ RSpec.describe "Participants API", type: :request do
           expect(parsed_response["data"][0]["attributes"]["sparsity_uplift"]).to eql(profile.sparsity_uplift)
           expect(parsed_response["data"][0]["attributes"]["training_status"]).to eql(profile.training_status)
           expect(parsed_response["data"][0]["attributes"]["schedule_identifier"]).to eql(induction_record.schedule.schedule_identifier)
-          expect(parsed_response["data"][0]["attributes"]["updated_at"]).to eql(user.reload.updated_at.rfc3339)
+          expect(parsed_response["data"][0]["attributes"]["updated_at"]).to match(/^[1-9]\d{3}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)
+          expect(Time.zone.parse(parsed_response["data"][0]["attributes"]["updated_at"])).to be_within(10.seconds).of(user.updated_at)
         end
 
         context "when there is no mentor" do
