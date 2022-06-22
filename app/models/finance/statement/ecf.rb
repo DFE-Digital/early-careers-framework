@@ -18,6 +18,13 @@ class Finance::Statement::ECF < Finance::Statement
   def calculator
     @calculator ||= Finance::ECF::StatementCalculator.new(statement: self)
   end
+
+  def previous_statements
+    Finance::Statement::ECF
+      .where(cohort:)
+      .where(cpd_lead_provider:)
+      .where("payment_date < ?", payment_date)
+  end
 end
 
 require "finance/statement/ecf/payable"
