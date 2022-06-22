@@ -4,7 +4,6 @@ require "rails_helper"
 
 RSpec.describe CallOffContract, type: :model do
   let(:call_off_contract) { create(:call_off_contract) }
-  let(:total_contract_value) { call_off_contract.recruitment_target * call_off_contract.band_a.per_participant }
 
   describe "associations" do
     it { is_expected.to belong_to(:cohort) }
@@ -15,11 +14,18 @@ RSpec.describe CallOffContract, type: :model do
     end
 
     it "is expected to have a total contract value" do
-      expect(call_off_contract.total_contract_value).to eq(total_contract_value) # recruitment_target * per_participant
+      expect(call_off_contract.total_contract_value).to eql(5_880_000)
     end
+  end
 
-    it "is expected to have an uplift cap of 5% of the total contract value" do
-      expect(call_off_contract.uplift_cap).to eq(total_contract_value * 0.05)
+  describe "#uplift_cap" do
+    # the following makes the maths much easier
+    # as there is no longer half uplifts
+    # especially when dealing with clawbacks
+    it "is rounded up to nearest uplift_amount" do
+      allow(call_off_contract).to receive(:total_contract_value).and_return(3_000)
+
+      expect(call_off_contract.uplift_cap).to eq(200)
     end
   end
 end

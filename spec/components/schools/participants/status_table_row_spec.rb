@@ -21,7 +21,6 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
           expect(rendered).to have_link participant_profile.user.full_name, href: "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants/#{participant_profile.id}"
           expect(rendered).to have_content participant_profile.school_cohort.lead_provider.name
           expect(rendered).to have_content participant_profile.school_cohort.delivery_partner.name
-          expect(rendered).to have_content participant_profile.start_term.humanize
         end
       end
     end
@@ -54,7 +53,6 @@ RSpec.describe Schools::Participants::StatusTableRow, type: :view_component do
         with_request_url "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants" do
           expect(rendered).to have_link participant_profile.user.full_name, href: "/schools/#{school_cohort.school.slug}/cohorts/#{school_cohort.cohort.start_year}/participants/#{participant_profile.id}"
           expect(rendered).to have_content school_cohort.core_induction_programme.name
-          expect(rendered).to have_content participant_profile.start_term.humanize
         end
       end
     end
