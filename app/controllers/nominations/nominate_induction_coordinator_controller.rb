@@ -3,8 +3,8 @@
 class Nominations::NominateInductionCoordinatorController < ApplicationController
   include NominationEmailTokenConsumer
 
-  before_action :check_token_status, only: :start_nomination
   before_action :load_nominate_induction_tutor_form, only: %i[full_name check_name email check_email check create]
+  before_action :check_token_status, only: %i[start_nomination full_name email check]
 
   def start_nomination
     unless params[:continue]

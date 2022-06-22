@@ -28,7 +28,7 @@ module Schools
 
       # Add transferring_out? || transferred? back in once transfer out journey has been done.
       def date_column_value
-        if transferred?
+        if transferred? || transferring_out?
           induction_record.end_date.to_date.to_s(:govuk)
         elsif transferring_in?
           induction_record.start_date.to_date.to_s(:govuk)

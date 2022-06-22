@@ -6,6 +6,13 @@ class Finance::Statement::NPQ < Finance::Statement
   def payable!
     update!(type: "Finance::Statement::NPQ::Payable")
   end
+
+  def previous_statements
+    Finance::Statement::NPQ
+      .where(cohort:)
+      .where(cpd_lead_provider:)
+      .where("payment_date < ?", payment_date)
+  end
 end
 
 require "finance/statement/npq/payable"
