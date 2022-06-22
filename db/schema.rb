@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_20_111057) do
+ActiveRecord::Schema.define(version: 2022_06_22_152325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -97,6 +97,14 @@ ActiveRecord::Schema.define(version: 2022_06_20_111057) do
     t.index ["cpd_lead_provider_id"], name: "index_api_tokens_on_cpd_lead_provider_id"
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+  end
+
+  create_table "appropriate_bodies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "body_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
   end
 
   create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -645,8 +653,8 @@ ActiveRecord::Schema.define(version: 2022_06_20_111057) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "notes"
     t.string "start_term", default: "autumn_2021", null: false
+    t.string "notes"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -939,7 +947,8 @@ ActiveRecord::Schema.define(version: 2022_06_20_111057) do
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "item_type", null: false
+    t.string "item_type"
+    t.string "{:null=>false}"
     t.string "event", null: false
     t.string "whodunnit"
     t.json "object"

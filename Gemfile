@@ -159,6 +159,8 @@ group :development do
   gem "memory_profiler"
   gem "rack-mini-profiler"
   gem "stackprof"
+
+  gem "nokogiri"
 end
 
 group :test do
