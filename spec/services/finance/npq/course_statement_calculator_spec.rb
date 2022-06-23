@@ -139,6 +139,65 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
     end
   end
 
+  describe "#refundable_declarations_by_type_count" do
+    before do
+      declarations = create_list(
+        :npq_participant_declaration, 1,
+        state: "awaiting_clawback",
+        course_identifier: npq_course.identifier,
+        declaration_type: "started"
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement:,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+
+      declarations = create_list(
+        :npq_participant_declaration, 2,
+        state: "awaiting_clawback",
+        course_identifier: npq_course.identifier,
+        declaration_type: "retained-1"
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement:,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+
+      declarations = create_list(
+        :npq_participant_declaration, 3,
+        state: "awaiting_clawback",
+        course_identifier: npq_course.identifier,
+        declaration_type: "completed"
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement:,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+    end
+
+    it "returns counts of refunds by type" do
+      expected = {
+        "started" => 1,
+        "retained-1" => 2,
+        "completed" => 3,
+      }
+
+      expect(subject.refundable_declarations_by_type_count).to eql(expected)
+    end
+  end
+
   describe "#not_eligible_declarations" do
     context "when there are ineligible or voided declarations" do
       before do

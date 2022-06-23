@@ -31,6 +31,16 @@ module Finance
           .count
       end
 
+      def refundable_declarations_by_type_count
+        statement
+          .refundable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { course_identifier: course.identifier })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+          .group(:declaration_type)
+          .count
+      end
+
       def clawback_payment
         @clawback_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
           contract:,
