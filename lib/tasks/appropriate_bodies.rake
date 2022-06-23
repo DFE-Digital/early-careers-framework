@@ -5,7 +5,11 @@ namespace :appropriate_bodies do
   desc "Update appropriate bodies"
   task update_csv: :environment do
     source_url = "https://www.gov.uk/government/publications/statutory-teacher-induction-appropriate-bodies/find-an-appropriate-body"
-    allowed_types = %w[local_authority teaching_school_hub]
+    types_map = {
+      "local authority" => "local_authority",
+      "teaching school hub" => "teaching_school_hub",
+      "other" => "national",
+    }
 
     csv_path = Rails.root.join("data/appropriate_bodies.csv")
 
@@ -15,8 +19,8 @@ namespace :appropriate_bodies do
 
       doc = Nokogiri::HTML5(URI.parse(source_url).open)
       doc.css("table th[scope='row']").each do |row|
-        type = row.parent.css("td").first.text.downcase.gsub(" ", "_")
-        if allowed_types.include? type
+        source_type = row.parent.css("td").first.text.downcase
+        if type = types_map[source_type]
           name = row.text
           csv << [name, type]
         end
