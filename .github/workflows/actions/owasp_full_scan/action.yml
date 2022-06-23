@@ -1,0 +1,62 @@
+name: OWasp full scan
+
+inputs:
+  target:
+    description: The domain name to run the scan against
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Notify Slack of Start
+      if: inputs.environment == "Production" || inputs.environment == "Staging"
+      uses: rtCamp/action-slack-notify@v2.2.0
+      env:
+        SLACK_CHANNEL: cpd-dev-alerts
+        SLACK_USERNAME: Zap2Docker
+        SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+        SLACK_TITLE: OWASP Full scan starting!
+        SLACK_MESSAGE: Beginning OWasp full scan against https://${{ env.TARGET }}
+        MSG_MINIMAL: true
+        SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
+
+    - name: ZAP FULL Scan
+      uses: zaproxy/action-full-scan@v0.3.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        docker_name: owasp/zap2docker-stable
+        target: https://${{ env.TARGET }}/sandbox
+        rules_file_name: .zap/rules.tsv
+        cmd_options: -a
+        allow_issue_writing: true
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: zap_scan
+        path: ~/full_scan_report
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: full_scan_report
+        path: ~/full_scan_report
+
+    - uses: geekyeggo/delete-artifact@v1
+      with:
+        name: zap_scan
+
+    - name: Notify Slack of Completion
+      if: inputs.environment == "Production" || inputs.environment == "Staging"
+      uses: rtCamp/action-slack-notify@v2.2.0
+      env:
+        SLACK_CHANNEL: cpd-dev-alerts
+        SLACK_USERNAME: Zap2Docker
+        SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+        SLACK_TITLE: OWASP Full scan completed!
+        SLACK_MESSAGE: OWasp scan completed against https://${{ env.TARGET }}
+        SLACK_COLOR: ${{ job.status }}
+        MSG_MINIMAL: actions url
+        SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
