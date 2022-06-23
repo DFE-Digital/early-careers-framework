@@ -1,0 +1,92 @@
+name: Test security
+description: Run ZapScan security tests
+
+inputs:
+  url:
+    description: The URL of the deployed environment.
+    required: true
+
+  notifySlackUsers:
+    default: "False"
+    description: Whether to notify developers via slack channel
+
+runs:
+  using: composite
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Notify Slack of Start
+      if: inputs.notifySlackUsers == 'True'
+      uses: rtCamp/action-slack-notify@v2.3.0
+      env:
+        SLACK_CHANNEL: cpd-dev-alerts
+        SLACK_USERNAME: Zap2Docker
+        SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+        SLACK_TITLE: OWASP Full scan starting!
+        SLACK_MESSAGE: Beginning OWasp full scan against ${{ inputs.url }}
+        MSG_MINIMAL: true
+        SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
+
+    - name: ZAP FULL Scan
+      uses: zaproxy/action-full-scan@v0.9.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        docker_name: owasp/zap2docker-stable
+        target: ${{ inputs.url }}/sandbox
+        rules_file_name: .zap/rules.tsv
+        cmd_options: -a
+        allow_issue_writing: true
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: zap_scan
+        path: ~/full_scan_report
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: full_scan_report
+        path: ~/full_scan_report
+
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: zap_scan
+
+    - name: ZAP API Scan
+      uses: zaproxy/action-api-scan@v0.7.0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        docker_name: owasp/zap2docker-stable
+        target: ${{ inputs.url }}/lead-providers/api-docs/v3/api_spec.yml
+        format: openapi
+        rules_file_name: .zap/rules.tsv
+        cmd_options: -a -O ${{ inputs.url }}
+        allow_issue_writing: true
+
+    - uses: actions/download-artifact@v4
+      with:
+        name: zap_scan
+        path: ~/api_scan_report
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: api_scan_report
+        path: ~/api_scan_report
+
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: zap_scan
+
+    - name: Notify Slack of Completion
+      if: inputs.notifySlackUsers == 'True'
+      uses: rtCamp/action-slack-notify@v2.3.0
+      env:
+        SLACK_CHANNEL: cpd-dev-alerts
+        SLACK_USERNAME: Zap2Docker
+        SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
+        SLACK_TITLE: OWASP Full scan completed!
+        SLACK_MESSAGE: OWasp scan completed against ${{ inputs.url }}
+        SLACK_COLOR: ${{ job.status }}
+        MSG_MINIMAL: actions url
+        SLACK_WEBHOOK: ${{ secrets.ALERTMANAGER_SLACK_URL }}
