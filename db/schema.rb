@@ -947,8 +947,7 @@ ActiveRecord::Schema.define(version: 2022_06_22_152325) do
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "item_type"
-    t.string "{:null=>false}"
+    t.string "item_type", null: false
     t.string "event", null: false
     t.string "whodunnit"
     t.json "object"
