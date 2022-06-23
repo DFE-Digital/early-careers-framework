@@ -41,7 +41,7 @@
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Validation status</th>
-      <td class="govuk-table__cell"><%= render ParticipantStatusTagComponent.new(profile: latest_induction_record.participant_profile) %></td>
+      <td class="govuk-table__cell"><%= render ParticipantStatusTagComponent.new(profile: latest_induction_record.participant_profile, induction_record: latest_induction_record) %></td>
       <td class="govuk-table__cell"></td>
     </tr>
     <tr class="govuk-table__row">
