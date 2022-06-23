@@ -17,7 +17,7 @@ module Finance
       return if invalid?
 
       ApplicationRecord.transaction do
-        participant_declaration.update!(state: "awaiting_clawback")
+        DeclarationState.awaiting_clawback!(participant_declaration)
 
         DeclarationStatementAttacher.new(participant_declaration:).call
       end

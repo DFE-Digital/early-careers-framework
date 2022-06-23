@@ -20,6 +20,14 @@ RSpec.describe Finance::ClawbackDeclaration do
       expect { subject.call }.to change { Finance::StatementLineItem.where(state: "awaiting_clawback", participant_declaration:, statement: next_statement).count }.by(1)
     end
 
+    it "create a correct declaration state record" do
+      participant_declaration
+
+      expect {
+        subject.call
+      }.to change { DeclarationState.where(participant_declaration:, state: "awaiting_clawback").count }.by(1)
+    end
+
     context "when declaration already clawed back" do
       before do
         subject.call
