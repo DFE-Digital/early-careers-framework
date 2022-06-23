@@ -15,7 +15,7 @@ runs:
       uses: actions/checkout@v2
 
     - name: ZAP FULL Scan
-      uses: zaproxy/action-full-scan@v0.3.0
+      uses: zaproxy/action-full-scan@v0.4.0
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
         docker_name: owasp/zap2docker-stable
