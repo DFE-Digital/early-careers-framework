@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateAppropriateBodies < ActiveRecord::Migration[6.1]
   def change
     create_table :appropriate_bodies do |t|

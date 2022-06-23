@@ -1,6 +1,7 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-# TODO: appropriate body spec
+require "rails_helper"
+
 RSpec.describe AppropriateBody, type: :model do
   it "is valid with name and body type" do
     expect(create(:ab_local_authority)).to be_valid

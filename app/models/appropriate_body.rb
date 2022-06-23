@@ -7,4 +7,7 @@ class AppropriateBody < ApplicationRecord
   }
 
   validates :name, presence: true, uniqueness: { scope: :body_type }
+
+  scope :local_authorities, -> { where(body_type: :local_authority) }
+  scope :teaching_school_hubs, -> { where(body_type: :teaching_school_hub) }
 end

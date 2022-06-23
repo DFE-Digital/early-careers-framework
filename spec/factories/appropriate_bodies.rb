@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :appropriate_body do
     factory :ab_local_authority do
