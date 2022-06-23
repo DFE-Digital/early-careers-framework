@@ -19,7 +19,7 @@ runs:
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
         docker_name: owasp/zap2docker-stable
-        target: https://${{ env.TARGET }}/sandbox
+        target: https://${{ inputs.TARGET }}/sandbox
         rules_file_name: .zap/rules.tsv
         cmd_options: -a
         allow_issue_writing: true

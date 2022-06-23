@@ -19,10 +19,10 @@ runs:
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
         docker_name: owasp/zap2docker-stable
-        target: https://${{ env.TARGET }}/lead-providers/api-docs/v1/api_spec.yml
+        target: https://${{ inputs.TARGET }}/lead-providers/api-docs/v1/api_spec.yml
         format: openapi
         rules_file_name: .zap/rules.tsv
-        cmd_options: -a -O ${{ env.TARGET }}
+        cmd_options: -a -O ${{ inputs.TARGET }}
         allow_issue_writing: true
 
     - uses: actions/download-artifact@v2
