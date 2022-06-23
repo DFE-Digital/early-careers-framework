@@ -20,7 +20,8 @@ namespace :appropriate_bodies do
       doc = Nokogiri::HTML5(URI.parse(source_url).open)
       doc.css("table th[scope='row']").each do |row|
         source_type = row.parent.css("td").first.text.downcase
-        if type = types_map[source_type]
+        type = types_map[source_type]
+        if type
           name = row.text
           csv << [name, type]
         end
