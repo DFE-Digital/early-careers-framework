@@ -16,6 +16,7 @@ class SchoolCohort < ApplicationRecord
   belongs_to :school
   belongs_to :core_induction_programme, optional: true
   belongs_to :default_induction_programme, class_name: "InductionProgramme", optional: true
+  belongs_to :appropriate_body, optional: true
 
   has_many :ecf_participant_profiles, class_name: "ParticipantProfile"
   has_many :ecf_participants, through: :ecf_participant_profiles, source: :user
