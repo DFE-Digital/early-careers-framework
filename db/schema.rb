@@ -654,7 +654,6 @@ ActiveRecord::Schema.define(version: 2022_06_22_152325) do
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
     t.string "start_term", default: "autumn_2021", null: false
-    t.string "notes"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
