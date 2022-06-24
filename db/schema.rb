@@ -800,6 +800,7 @@ ActiveRecord::Schema.define(version: 2022_06_23_150616) do
     t.boolean "opt_out_of_updates", default: false, null: false
     t.uuid "default_induction_programme_id"
     t.uuid "appropriate_body_id"
+    t.boolean "appropriate_body_unknown", default: false, null: false
     t.index ["appropriate_body_id"], name: "index_school_cohorts_on_appropriate_body_id"
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"

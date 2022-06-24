@@ -1,0 +1,27 @@
+<% title = "Which type of appropriate body have you appointed?" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: "TODO") %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <%= form_for @setup_school_cohort_form, url: { action: :appropriate_body_type }, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+        :appropriate_body_type,
+        @setup_school_cohort_form.appropriate_body_type_choices,
+        :id, :name,
+        legend: { hidden: true }) do %>
+
+        <%# TODO: add AB unknown link %>
+
+        <p class="govuk-body">If your school works with more than one, first tell us about the appropriate body appointed for the majority of your ECTs. You can add the others later.</p>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

@@ -78,6 +78,14 @@ module Schools
 
     def complete; end
 
+    def appropriate_body_type
+      store_form_redirect_to_next_step :appropriate_body
+    end
+
+    def appropriate_body
+
+    end
+
     def save_programme
       save_school_choice!
 
@@ -140,7 +148,9 @@ module Schools
             .permit(:expect_any_ects_choice,
                     :how_will_you_run_training_choice,
                     :change_provider_choice,
-                    :what_changes_choice)
+                    :what_changes_choice,
+                    :appropriate_body_type,
+                    :appropriate_body)
     end
 
     def validate_request_or_render

@@ -271,6 +271,10 @@ en:
               blank: "Choose how you will run training for new starters"
             what_changes_choice:
               blank: "Choose what change you plan to make"
+            appropriate_body_type:
+              blank: "Choose an appropriate body type"
+            appropriate_body:
+              blank: "Choose an appropriate body"
 
   page_titles:
     lead_providers:
