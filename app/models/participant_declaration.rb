@@ -142,11 +142,13 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def duplicate_declarations
-    self.class.joins(participant_profile: :teacher_profile)
+    self
+      .class
+      .joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
       .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
       .where.not(user_id:, id:)
-      .where.not(state: self.class.states[:voided])
+      .where(state: %w[submitted eligible payable paid])
       .where(
         declaration_type:,
         course_identifier:,

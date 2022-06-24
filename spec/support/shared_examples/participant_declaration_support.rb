@@ -15,18 +15,22 @@ RSpec.shared_examples "a participant declaration service" do
     expect { described_class.call(params: given_params) }.to change { ParticipantDeclaration.count }.by(1)
   end
 
-  it "does create exact duplicates" do
+  it "does not create exact duplicates" do
     expect {
       described_class.call(params: given_params)
+    }.to change { ParticipantDeclaration.count }.by(1)
+
+    expect {
       described_class.call(params: given_params)
-    }.to change { ParticipantDeclaration.count }.by(2)
+    }.to raise_error(ActionController::ParameterMissing)
+     .and(not_change { ParticipantDeclaration.count })
   end
 
   it "does not create close duplicates and throws an error" do
     expect {
       described_class.call(params: given_params)
       described_class.call(params: params_with_different_date)
-    }.to raise_error(ActiveRecord::RecordNotUnique)
+    }.to raise_error(ActionController::ParameterMissing)
   end
 
   context "when user is not a participant" do
