@@ -7,7 +7,7 @@ RSpec.describe Statements::MarkAsPaid do
   let(:payable_declaration) { create(:npq_participant_declaration, :payable) }
   let(:voided_declaration) { create(:npq_participant_declaration, :voided) }
   let(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :awaiting_clawback) }
-  let(:statement) { create :npq_statement, :payable, cpd_lead_provider: }
+  let(:statement) { create :npq_payable_statement, cpd_lead_provider: }
 
   before do
     Finance::StatementLineItem.create!(
@@ -35,8 +35,8 @@ RSpec.describe Statements::MarkAsPaid do
     it "transitions the statement itself" do
       expect {
         subject.call
-        statement.reload
-      }.to change { statement.type }.from("Finance::Statement::NPQ::Payable").to("Finance::Statement::NPQ::Paid")
+      }.to change { Finance::Statement::NPQ::Payable.count }.by(-1)
+      .and change { Finance::Statement::NPQ::Paid.count }.by(1)
     end
 
     describe "declarations" do
