@@ -105,9 +105,8 @@ class ParticipantDeclaration < ApplicationRecord
 
   before_create :build_initial_declaration_state
 
-  # TODO: Voiding paid should trigger clawbacks, but currently OOS
   def voidable?
-    !voided? && !paid?
+    %w[submitted eligible payable ineligible].include?(state)
   end
 
   def make_submitted!
