@@ -22,11 +22,12 @@ RSpec.describe Statements::MarkAsPayable do
       ineligible_declaration,
       voided_declaration,
     ].each do |participant_declaration|
-      Finance::StatementLineItem.create!(
-        statement:,
-        participant_declaration:,
-        state: participant_declaration.state,
-      )
+      participant_declaration
+        .statement_line_items
+        .create!(
+          statement:,
+          state: participant_declaration.state,
+        )
     end
   end
 
