@@ -24,6 +24,7 @@ class Finance::StatementLineItem < ApplicationRecord
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }
 
   validate :validate_single_billable_relationship, on: [:create]
+  validate :validate_single_refundable_relationship, on: [:create]
 
   def billable?
     BILLABLE_STATES.include?(state)
@@ -41,6 +42,15 @@ private
       .billable
       .exists?
       errors.add(:participant_declaration, "is already asscociated to another statement as a billable")
+    end
+  end
+
+  def validate_single_refundable_relationship
+    if refundable? && Finance::StatementLineItem
+      .where(participant_declaration:)
+      .refundable
+      .exists?
+      errors.add(:participant_declaration, "is already asscociated to another statement as a refundable")
     end
   end
 end
