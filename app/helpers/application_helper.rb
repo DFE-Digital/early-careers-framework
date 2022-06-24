@@ -99,14 +99,6 @@ private
   end
 
   def school_dashboard_with_tab_path(school)
-    current_cohort = Cohort.current
-    registration_cohort = Cohort.active_registration_cohort
-    default_cohort = if current_cohort != registration_cohort && school.school_cohorts.where(cohort: registration_cohort).exists?
-                       current_cohort
-                     else
-                       registration_cohort
-                     end
-
-    schools_dashboard_path(school_id: school.slug, anchor: TabLabelDecorator.new(default_cohort.description).parameterize)
+    schools_dashboard_path(school_id: school.slug, anchor: TabLabelDecorator.new(Cohort.active_registration_cohort.description).parameterize)
   end
 end
