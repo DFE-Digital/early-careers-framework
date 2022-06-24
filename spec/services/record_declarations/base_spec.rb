@@ -198,19 +198,37 @@ RSpec.describe RecordDeclarations::Base do
         )
       end
 
-      it "does add another declaration" do
-        expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
-      end
-
-      it "marks any further declarations as ineligible" do
-        subject.call
-
-        new_declaration = ParticipantDeclaration.order(created_at: :asc).last
-        expect(new_declaration.state).to eql("ineligible")
+      it "does not add another declaration" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, "param is missing or the value is empty: [\"There already exists a declaration that will be or has been paid for this event\"]")
+          .and not_change { ParticipantDeclaration.count }
       end
 
       it "does not change the state of the original declaration" do
-        expect { subject.call }.not_to change { existing_declaration.reload.state }
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, "param is missing or the value is empty: [\"There already exists a declaration that will be or has been paid for this event\"]")
+          .and not_change { existing_declaration.reload.state }
+      end
+    end
+
+    context "when an existing declation is in a refundable state" do
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: ect_participant_profile) }
+
+      let!(:existing_declaration) do
+        create(
+          :ect_participant_declaration,
+          :awaiting_clawback,
+          cpd_lead_provider:,
+          user:,
+          participant_profile: ect_participant_profile,
+          declaration_date:,
+        )
+      end
+
+      it "does add another declaration with correct eligibility" do
+        expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+
+        declaration = ParticipantDeclaration.order(created_at: :asc).last
+
+        expect(declaration).to be_eligible
       end
     end
   end

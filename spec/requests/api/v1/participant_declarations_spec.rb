@@ -89,21 +89,19 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
       end
 
-      it "does create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
+      it "does not create duplicate declarations with the same declaration date" do
         params = build_params(valid_params)
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
         expect { post "/api/v1/participant-declarations", params: }
-            .to change(ParticipantDeclaration, :count).by(1)
-        expect { post "/api/v1/participant-declarations", params: }
-            .to change(ParticipantDeclarationAttempt, :count).by(1)
+            .not_to change(ParticipantDeclaration, :count)
 
-        expect(response.status).to eq 200
+        expect(response.status).to eq 422
         expect(parsed_response["id"]).to eq(original_id)
       end
 
-      it "does create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do
+      it "does not create duplicate declarations with different declaration date" do
         params = build_params(valid_params)
 
         new_valid_params = valid_params
@@ -114,12 +112,10 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v1/participant-declarations", params: params
         original_id = parsed_response["id"]
 
-        expect { post "/api/v1/participant-declarations", params: }
-            .to change(ParticipantDeclaration, :count).by(1)
         expect { post "/api/v1/participant-declarations", params: params_with_different_declaration_date }
-            .to change(ParticipantDeclarationAttempt, :count).by(1)
+            .not_to change(ParticipantDeclaration, :count)
 
-        expect(response.status).to eq 400
+        expect(response.status).to eq 422
         expect(parsed_response["id"]).to eq(original_id)
       end
 
@@ -236,8 +232,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
             new_updated_params = valid_params.merge({ declaration_date: (milestone_start_date + 2).rfc3339 })
             post "/api/v1/participant-declarations", params: build_params(new_updated_params)
 
-            expect(response.status).to eq 400
-            expect(response.body).to include("Declaration with given participant ID already exists")
+            expect(response.status).to eq 422
+            expect(response.body).to include("There already exists a declaration that will be or has been paid for this event")
           end
         end
 

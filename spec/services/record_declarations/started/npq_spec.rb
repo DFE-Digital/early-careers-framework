@@ -32,20 +32,31 @@ RSpec.describe RecordDeclarations::Started::NPQ do
     expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
   end
 
-  it "creates exact duplicates" do
+  it "does not creates exact duplicates" do
     expect {
-      2.times do
-        described_class.new(
-          params: {
-            participant_id: user.id,
-            course_identifier: npq_course.identifier,
-            cpd_lead_provider:,
-            declaration_date: (profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days).rfc3339,
-            declaration_type: "started",
-          },
-        ).call
-      end
-    }.to change { ParticipantDeclaration.count }.by(2)
+      described_class.new(
+        params: {
+          participant_id: user.id,
+          course_identifier: npq_course.identifier,
+          cpd_lead_provider:,
+          declaration_date: (profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days).rfc3339,
+          declaration_type: "started",
+        },
+      ).call
+    }.to change { ParticipantDeclaration.count }.by(1)
+
+    expect {
+      described_class.new(
+        params: {
+          participant_id: user.id,
+          course_identifier: npq_course.identifier,
+          cpd_lead_provider:,
+          declaration_date: (profile.schedule.milestones.where(declaration_type: "started").first.start_date + 10.days).rfc3339,
+          declaration_type: "started",
+        },
+      ).call
+    }.to raise_error(ActionController::ParameterMissing)
+     .and not_change { ParticipantDeclaration.count }
   end
 
   it "does not create close duplicates and throws an error" do
@@ -61,7 +72,7 @@ RSpec.describe RecordDeclarations::Started::NPQ do
           declaration_type: "started",
         },
       ).call
-    }.to raise_error(ActiveRecord::RecordNotUnique)
+    }.to raise_error(ActionController::ParameterMissing)
   end
 
   context "when lead providers don't match" do
