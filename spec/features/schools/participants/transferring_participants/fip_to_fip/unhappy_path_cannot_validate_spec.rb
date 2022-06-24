@@ -11,6 +11,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
         and_there_is_an_ect_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
+        and_i_have_selected_my_cohort_tab
         when_i_click_to_view_ects_and_mentors
         then_i_am_taken_to_your_ect_and_mentors_page
       end
@@ -166,6 +167,10 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       def and_it_should_list_the_schools_mentors
         expect(page).to have_text(@mentor.user.full_name)
+      end
+
+      def and_i_have_selected_my_cohort_tab
+        click_on @cohort.description
       end
 
       def set_dqt_validation_result
