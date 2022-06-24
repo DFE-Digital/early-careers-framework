@@ -224,17 +224,12 @@ jobs:
           check_for_duplicate_msg: true
           duplicate_msg_pattern: Smoke tests passed against the review app*
 
-  owasp-scans:
+  owasp-full-scan:
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
     needs: [deploy]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
       - name: setup-inputs
         run: |
           echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
@@ -244,6 +239,16 @@ jobs:
         with:
           target: "ecf-${{ env.ENVIRONMENT }}.london.cloudapps.digital"
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  owasp-api-scan:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-20.04
+    needs: [deploy]
+
+    steps:
+      - name: setup-inputs
+        run: |
+          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
 
       - name: Run OWasp API vulnerability scan
         uses: ./.github/workflows/actions/owasp_api_scan
