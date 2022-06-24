@@ -41,6 +41,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       it "returns the school dashboard path (show)" do
         expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
       end
+
+      context "when a new registration cohort is active", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.now + 3.years do
+        let(:future_cohort) { create(:cohort, start_year: Time.zone.now.year, registration_start_date: Time.zone.now - 1.day) }
+
+        before do
+          SchoolCohort.create!(school:, cohort: future_cohort, induction_programme_choice: "full_induction_programme")
+        end
+
+        it "returns the school dashboard path with the active registration tab selected" do
+          expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}##{TabLabelDecorator.new(future_cohort.description).parameterize}")
+        end
+      end
     end
 
     context "when the induction coordinator has more than one school" do
