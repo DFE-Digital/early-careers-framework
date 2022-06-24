@@ -129,6 +129,10 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.paid!(self) if payable?
   end
 
+  def make_clawed_back!
+    DeclarationState.clawed_back!(self) if awaiting_clawback?
+  end
+
   def make_ineligible!(reason: nil)
     DeclarationState.ineligible!(self, state_reason: reason) if submitted?
   end

@@ -5,20 +5,8 @@ module Finance
     class MarkAsPayable < ApplicationJob
       def perform
         Finance::Statement.where(deadline_date: 1.day.ago.to_date).find_each do |statement|
-          Finance::Statement.transaction do
-            statement.payable!
-
-            statement
-              .participant_declarations
-              .billable
-              .find_each do |declaration|
-              declaration.make_payable!
-
-              line_item = StatementLineItem.find_by(statement:, participant_declaration: declaration)
-
-              line_item.update!(state: "payable") if line_item
-            end
-          end
+          service = ::Statements::MarkAsPayable.new(statement:)
+          service.call
         end
       end
     end

@@ -13,6 +13,10 @@ class Finance::Statement::NPQ < Finance::Statement
       .where(cpd_lead_provider:)
       .where("payment_date < ?", payment_date)
   end
+
+  def paid!
+    update!(type: "Finance::Statement::NPQ::Paid")
+  end
 end
 
 require "finance/statement/npq/payable"
