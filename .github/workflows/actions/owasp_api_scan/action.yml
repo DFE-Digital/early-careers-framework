@@ -12,25 +12,27 @@ runs:
 
   steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: ZAP API Scan
       uses: zaproxy/action-api-scan@v0.1.1
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
-        docker_name: owasp/zap2docker-stable
         target: https://${{ inputs.TARGET }}/lead-providers/api-docs/v1/api_spec.yml
         format: openapi
         rules_file_name: .zap/rules.tsv
+        docker_name: owasp/zap2docker-stable
         cmd_options: -a -O ${{ inputs.TARGET }}
+        issue_title: "ZAP Full Scan Report"
+        fail_action: false
         allow_issue_writing: true
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: zap_scan
         path: ~/api_scan_report
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: api_scan_report
         path: ~/api_scan_report

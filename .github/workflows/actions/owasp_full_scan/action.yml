@@ -12,24 +12,26 @@ runs:
 
   steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: ZAP FULL Scan
       uses: zaproxy/action-full-scan@v0.4.0
       with:
         token: ${{ inputs.GITHUB_TOKEN }}
-        docker_name: owasp/zap2docker-stable
         target: https://${{ inputs.TARGET }}/sandbox
         rules_file_name: .zap/rules.tsv
+        docker_name: owasp/zap2docker-stable
         cmd_options: -a
+        issue_title: "ZAP Full Scan Report"
+        fail_action: false
         allow_issue_writing: true
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: zap_scan
         path: ~/full_scan_report
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: full_scan_report
         path: ~/full_scan_report
