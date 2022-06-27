@@ -1,7 +1,8 @@
 <% title = "Which type of appropriate body have you appointed?" %>
+<% back_url = url_for(action: @setup_school_cohort_form.appropriate_body_from_action) %>
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: "TODO") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: back_url) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

@@ -41,7 +41,7 @@
             </p>
         <% end %>
 
-        <%= form_for @setup_school_cohort_form, url: { action: :appropriate_body_type }, method: :put do |f| %>
+        <%= form_for @setup_school_cohort_form, url: { action: :programme_confirmation }, method: :put do |f| %>
             <%= f.govuk_submit "Confirm" %>
         <% end %>
 

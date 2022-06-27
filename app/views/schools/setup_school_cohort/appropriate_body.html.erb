@@ -1,21 +1,31 @@
 <% body_type = @setup_school_cohort_form.attributes[:appropriate_body_type] %>
+<% appropriate_bodies = @setup_school_cohort_form.appropriate_body_choices(body_type) %>
 
 <% title = "Which **local authority** have you appointed? #{body_type}" %>
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: "TODO") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: url_for(action: :appropriate_body_type)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
-    <%= form_for @setup_school_cohort_form, url: { action: :appropriate_body_type }, method: :put do |f| %>
+    <%= form_for @setup_school_cohort_form, url: { action: :appropriate_body }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
-      <%= f.govuk_collection_select(:appropriate_body,
-                                    @setup_school_cohort_form.appropriate_body_choices(body_type),
-                                    :id,
-                                    :name) %>
+
+      <% if body_type == :national %>
+        <%= f.govuk_collection_radio_buttons(:appropriate_body,
+                                             appropriate_bodies,
+                                             :id,
+                                             :name) %>
+      <% else %>
+        <% # TODO: add autocomplete %>
+        <%= f.govuk_collection_select(:appropriate_body,
+                                      appropriate_bodies,
+                                      :id,
+                                      :name) %>
+      <% end %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

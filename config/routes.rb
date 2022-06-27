@@ -422,6 +422,7 @@ Rails.application.routes.draw do
             put "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
 
             get "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
+            put "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
 
             get "training-confirmation", to: "setup_school_cohort#training_confirmation"
 

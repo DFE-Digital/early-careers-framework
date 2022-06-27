@@ -6,13 +6,7 @@ class Induction::SetCohortInductionProgramme < BaseService
       school_cohort.induction_programme_choice = programme_choice
       school_cohort.opt_out_of_updates = opt_out_of_updates
 
-      if appropriate_body_type == "unknown"
-        school_cohort.appropriate_body_unknown = true
-        school_cohort.appropriate_body = nil
-      else
-        school_cohort.appropriate_body_unknown = false
-        school_cohort.appropriate_body_id = appropriate_body
-      end
+      set_appropriate_body
       # need to save this first if it hasn't been persisted
       school_cohort.save! unless school_cohort.persisted?
 
@@ -30,6 +24,16 @@ class Induction::SetCohortInductionProgramme < BaseService
   end
 
 private
+
+  def set_appropriate_body
+    if appropriate_body_type == "unknown"
+      school_cohort.appropriate_body_unknown = true
+      school_cohort.appropriate_body = nil
+    else
+      school_cohort.appropriate_body_unknown = false
+      school_cohort.appropriate_body_id = appropriate_body
+    end
+  end
 
   attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed,
     :appropriate_body_type, :appropriate_body
