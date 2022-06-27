@@ -4039,7 +4039,9 @@
               "payable",
               "paid",
               "voided",
-              "ineligible"
+              "ineligible",
+              "awaiting-clawback",
+              "clawed-back"
             ],
             "example": "submitted"
           },
