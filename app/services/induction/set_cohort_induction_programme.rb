@@ -5,6 +5,14 @@ class Induction::SetCohortInductionProgramme < BaseService
     ActiveRecord::Base.transaction do
       school_cohort.induction_programme_choice = programme_choice
       school_cohort.opt_out_of_updates = opt_out_of_updates
+
+      if appropriate_body_type == "unknown"
+        school_cohort.appropriate_body_unknown = true
+        school_cohort.appropriate_body = nil
+      else
+        school_cohort.appropriate_body_unknown = false
+        school_cohort.appropriate_body_id = appropriate_body
+      end
       # need to save this first if it hasn't been persisted
       school_cohort.save! unless school_cohort.persisted?
 
@@ -23,12 +31,15 @@ class Induction::SetCohortInductionProgramme < BaseService
 
 private
 
-  attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed
+  attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed,
+    :appropriate_body_type, :appropriate_body
 
   def initialize(school_cohort:, programme_choice:,
                  opt_out_of_updates: false,
                  core_induction_programme: nil,
-                 delivery_partner_to_be_confirmed: false)
+                 delivery_partner_to_be_confirmed: false,
+                 appropriate_body_type:,
+                 appropriate_body:)
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
     @school_cohort = school_cohort
@@ -36,6 +47,8 @@ private
     @opt_out_of_updates = opt_out_of_updates
     @core_induction_programme = core_induction_programme
     @delivery_partner_to_be_confirmed = delivery_partner_to_be_confirmed
+    @appropriate_body_type = appropriate_body_type
+    @appropriate_body = appropriate_body
   end
 
   def programme_attrs

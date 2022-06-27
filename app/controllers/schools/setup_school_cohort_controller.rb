@@ -79,7 +79,11 @@ module Schools
     def complete; end
 
     def appropriate_body_type
-      store_form_redirect_to_next_step :appropriate_body
+      if @setup_school_cohort_form.appropriate_body_type == "unknown"
+        save_programme
+      else
+        store_form_redirect_to_next_step :appropriate_body
+      end
     end
 
     def appropriate_body
@@ -178,7 +182,9 @@ module Schools
       Induction::SetCohortInductionProgramme.call(school_cohort:,
                                                   programme_choice:,
                                                   opt_out_of_updates:,
-                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?)
+                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
+                                                  appropriate_body_type: @setup_school_cohort_form.attributes[:appropriate_body_type],
+                                                  appropriate_body: @setup_school_cohort_form.attributes[:appropriate_body])
     end
 
     def school_cohort
