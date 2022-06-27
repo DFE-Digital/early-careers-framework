@@ -14,7 +14,7 @@ module Schools
     validates :change_provider_choice, presence: true, on: :change_provider
     validates :what_changes_choice, presence: true, on: :what_changes
     validates :appropriate_body_type, presence: true, on: :appropriate_body_type,
-                                      inclusion: { in: %w[local_authority national_organisation teaching_school_hub unknown] }
+                                      inclusion: { in: %w[local_authority national teaching_school_hub unknown] }
     validates :appropriate_body, presence: true, on: :appropriate_body
 
     PROGRAMME_CHOICES_MAP = {
@@ -67,10 +67,14 @@ module Schools
     def appropriate_body_type_choices
       [
         OpenStruct.new(id: "local_authority", name: "Local authority"),
-        OpenStruct.new(id: "national_organisation", name: "National organisation"),
+        OpenStruct.new(id: "national", name: "National organisation"),
         OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub"),
         OpenStruct.new(id: "unknown", name: "I do not know the appropriate body yet"),
       ]
+    end
+
+    def appropriate_body_choices(body_type)
+      AppropriateBody.where(body_type:).order(:name)
     end
 
   private
