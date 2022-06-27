@@ -68,6 +68,8 @@ properties:
       - paid
       - voided
       - ineligible
+      - awaiting-clawback
+      - clawed-back
     example: submitted
   updated_at:
     description: "The date the declaration was last updated"

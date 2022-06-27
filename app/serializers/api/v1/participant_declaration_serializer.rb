@@ -31,7 +31,9 @@ module Api
 
       attribute(:participant_id, &:user_id)
 
-      attribute :state, &:current_state
+      attribute :state do |declaration|
+        declaration.current_state.dasherize
+      end
     end
   end
 end
