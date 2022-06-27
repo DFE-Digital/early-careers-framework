@@ -69,12 +69,12 @@ module Api
           )
 
         if updated_since.present?
-          scope = scope
+          scope
             .where(users: { updated_at: updated_since.. })
-            .order("users.updated_at, users.id")
+            .order("induction_records.updated_at, users.id")
+        else
+          scope.order("induction_records.created_at")
         end
-
-        scope.order("users.created_at")
       end
 
       # inner most query
