@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  self.ignored_columns = %w[statement_type]
+  self.ignored_columns = %w[statement_type statement_id]
 
   belongs_to :cpd_lead_provider
   belongs_to :user
