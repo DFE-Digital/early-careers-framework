@@ -36,14 +36,14 @@ private
   end
 
   attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed,
-    :appropriate_body_type, :appropriate_body
+              :appropriate_body_type, :appropriate_body
 
   def initialize(school_cohort:, programme_choice:,
+                 appropriate_body_type:,
+                 appropriate_body:,
                  opt_out_of_updates: false,
                  core_induction_programme: nil,
-                 delivery_partner_to_be_confirmed: false,
-                 appropriate_body_type:,
-                 appropriate_body:)
+                 delivery_partner_to_be_confirmed: false)
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
     @school_cohort = school_cohort
