@@ -67,6 +67,6 @@ private
   def set_appropriate_body
     Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
                                                    appropriate_body_type:,
-                                                   appropriate_body_id:appropriate_body)
+                                                   appropriate_body_id: appropriate_body)
   end
 end
