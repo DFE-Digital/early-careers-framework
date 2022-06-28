@@ -121,6 +121,10 @@ module ChooseProgrammeSteps
       )
   end
 
+  def then_i_am_taken_to_the_appropriate_body_type_page
+    expect(page).to have_content("Which type of appropriate body have you appointed?")
+  end
+
   # And steps
 
   def and_i_am_signed_in_as_an_induction_coordinator
@@ -285,5 +289,9 @@ module ChooseProgrammeSteps
   def then_i_see_black_lp_and_dp_names
     expect(page).to have_summary_row("Training provider", "")
     expect(page).to have_summary_row("Delivery partner", "")
+  end
+
+  def when_i_choose_appropriate_body_unknown
+    choose "I do not know the appropriate body yet"
   end
 end
