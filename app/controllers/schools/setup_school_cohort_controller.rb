@@ -14,7 +14,7 @@ module Schools
     skip_after_action :verify_policy_scoped
 
     def expect_any_ects
-       if no_ects_expected
+      if no_ects_expected
         store_form_redirect_to_next_step :no_expected_ects
       elsif ects_expected
         if @school.partnerships.active.find_by(cohort: previous_school_cohort.cohort) && previous_school_cohort&.full_induction_programme?

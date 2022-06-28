@@ -288,6 +288,14 @@ en:
       content:
         partnership_guide: "Guide for providers to manage their schools on the ECF service"
 
+  setup_school_cohort:
+    appropriate_body_type:
+      title:
+        local_authority: Which local authority have you appointed?
+        national: Which national organisation have you appointed?
+        teaching_school_hub: Which teaching school hub have you appointed?
+
+
   manage_your_training:
     induction_programmes:
       full_induction_programme: "Use a training provider funded by the DfE"
