@@ -28,7 +28,12 @@ RSpec.describe Schools::SetupSchoolCohortForm, type: :model do
       choices = { expect_any_ects_choice: "yes",
                   how_will_you_run_training_choice: "core_induction_programme",
                   change_provider_choice: "yes",
-                  what_changes_choice: "change_lead_provider" }
+                  what_changes_choice: "change_lead_provider",
+                  appropriate_body_type: nil,
+                  appropriate_body: nil,
+                  appropriate_body_from_action: nil,
+                  appropriate_body_to_action: nil,
+                  on_save: nil}
       expect(described_class.new(choices).attributes).to eq(choices)
     end
   end
