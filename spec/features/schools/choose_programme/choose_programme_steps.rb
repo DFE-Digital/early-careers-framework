@@ -111,7 +111,7 @@ module ChooseProgrammeSteps
     expect(page).to have_content("You’ve submitted your training information")
   end
 
-  def then_a_notification_email_is_sent_to_the_lead_provider
+  def and_a_notification_email_is_sent_to_the_lead_provider
     expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
       .with(
         "LeadProviderMailer",

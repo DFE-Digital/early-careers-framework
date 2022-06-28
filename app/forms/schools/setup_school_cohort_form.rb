@@ -8,7 +8,7 @@ module Schools
 
     attr_accessor :expect_any_ects_choice, :how_will_you_run_training_choice, :change_provider_choice,
                   :what_changes_choice, :appropriate_body_type, :appropriate_body, :appropriate_body_from_action,
-                  :appropriate_body_to_action
+                  :appropriate_body_to_action, :on_save
 
     validates :expect_any_ects_choice, presence: true, on: :expect_any_ects
     validates :how_will_you_run_training_choice, presence: true, on: :how_will_you_run_training
@@ -35,6 +35,7 @@ module Schools
         appropriate_body:,
         appropriate_body_from_action:,
         appropriate_body_to_action:,
+        on_save:,
       }
     end
 

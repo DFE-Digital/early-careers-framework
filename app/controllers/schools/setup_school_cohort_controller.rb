@@ -37,8 +37,7 @@ module Schools
     end
 
     def programme_confirmation
-      set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
-      start_appropriate_body_selection :programme_confirmation, :training_confirmation
+      start_appropriate_body_selection :programme_confirmation, :training_confirmation, :save_training_choice
     end
 
     def training_confirmation
@@ -50,13 +49,7 @@ module Schools
       when "yes"
         store_form_redirect_to_next_step :what_changes
       when "no"
-        # skip if there is already a programme selected for the school cohort
-        # TODO: MOVE THIS LOGIC TO THE END
-        use_the_same_training_programme! unless active_partnership?
-
-        # store_form_redirect_to_next_step :complete
-        # set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
-        start_appropriate_body_selection :change_provider, :complete
+        start_appropriate_body_selection :change_provider, :complete, :save_provider_change
       end
     end
 
@@ -65,15 +58,7 @@ module Schools
     end
 
     def what_changes_confirmation
-      # TODO: MOVE THIS LOGIC TO THE END
-      set_cohort_induction_programme!(@setup_school_cohort_form.programme_choice)
-
-      if previous_school_cohort.full_induction_programme?
-        send_fip_programme_changed_email!
-      end
-
-      # store_form_redirect_to_next_step :what_changes_submitted
-      start_appropriate_body_selection :what_changes_confirmation, :what_changes_submitted
+      start_appropriate_body_selection :what_changes_confirmation, :what_changes_submitted, :save_programme_change
     end
 
     def what_changes_submitted; end
@@ -86,8 +71,6 @@ module Schools
 
     def appropriate_body_type
       if @setup_school_cohort_form.appropriate_body_type == "unknown"
-        # TODO: MOVE LOGIC TO THE END
-        # set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
         end_appropriate_body_section
       else
         store_form_redirect_to_next_step :appropriate_body
@@ -95,12 +78,31 @@ module Schools
     end
 
     def appropriate_body
-      # TODO: MOVE LOGIC TO THE END
-      # set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
       end_appropriate_body_section
     end
 
   private
+
+    def save_programme_change
+      set_cohort_induction_programme!(@setup_school_cohort_form.programme_choice)
+
+      if previous_school_cohort.full_induction_programme?
+        send_fip_programme_changed_email!
+      end
+    end
+
+    def save_provider_change
+      # skip if there is already a programme selected for the school cohort
+      if active_partnership?
+        # save_appropriate_body
+      else
+        use_the_same_training_programme!
+      end
+    end
+
+    def save_training_choice
+      set_cohort_induction_programme!(@setup_school_cohort_form.how_will_you_run_training_choice)
+    end
 
     def send_fip_programme_changed_email!
       previous_partnership = previous_school_cohort.default_induction_programme.partnership
@@ -132,7 +134,6 @@ module Schools
       # with challenge date set to 31st Oct 2022
       #
       # TODO: we need a better way to set the challenge date
-      # TODO: MOVE LOGIC TO THE END
       previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
       previous_partnership_copy.cohort = cohort
       previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
@@ -188,8 +189,19 @@ module Schools
                                                   programme_choice:,
                                                   opt_out_of_updates:,
                                                   delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
-                                                  appropriate_body_type: @setup_school_cohort_form.attributes[:appropriate_body_type],
-                                                  appropriate_body: @setup_school_cohort_form.attributes[:appropriate_body])
+                                                  appropriate_body_type: @setup_school_cohort_form.appropriate_body_type,
+                                                  appropriate_body: @setup_school_cohort_form.appropriate_body)
+    end
+
+    def save_appropriate_body
+      if @setup_school_cohort_form.appropriate_body_type == "unknown"
+        school_cohort.appropriate_body_unknown = true
+        school_cohort.appropriate_body = nil
+      else
+        school_cohort.appropriate_body_unknown = false
+        school_cohort.appropriate_body_id = @setup_school_cohort_form.appropriate_body
+      end
+      school_cohort.save!
     end
 
     def school_cohort
@@ -213,16 +225,19 @@ module Schools
     end
 
     def delivery_partner_to_be_confirmed?
-      @setup_school_cohort_form.attributes[:what_changes_choice] == "change_delivery_partner"
+      @setup_school_cohort_form.what_changes_choice == "change_delivery_partner"
     end
 
-    def start_appropriate_body_selection(from_action, to_action)
+    def start_appropriate_body_selection(from_action, to_action, on_save)
       @setup_school_cohort_form.appropriate_body_from_action = from_action
       @setup_school_cohort_form.appropriate_body_to_action = to_action
+      @setup_school_cohort_form.on_save = on_save
       store_form_redirect_to_next_step :appropriate_body_type
     end
 
     def end_appropriate_body_section
+      on_save = method(@setup_school_cohort_form.on_save)
+      on_save.call
       redirect_to action: @setup_school_cohort_form.appropriate_body_to_action
     end
   end
