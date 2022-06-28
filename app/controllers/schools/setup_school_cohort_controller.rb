@@ -94,7 +94,7 @@ module Schools
     def save_provider_change
       # skip if there is already a programme selected for the school cohort
       if active_partnership?
-        # save_appropriate_body
+        save_appropriate_body
       else
         use_the_same_training_programme!
       end
