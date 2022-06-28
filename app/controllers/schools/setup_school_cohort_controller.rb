@@ -55,7 +55,7 @@ module Schools
         use_the_same_training_programme! unless active_partnership?
 
         # store_form_redirect_to_next_step :complete
-        set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
+        # set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
         start_appropriate_body_selection :change_provider, :complete
       end
     end
