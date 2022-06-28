@@ -43,7 +43,7 @@ module NPQ
     def has_other_accepted_applications_with_same_course?
       NPQApplication.joins(:participant_identity)
         .where(participant_identity: { user_id: user.id })
-        .where(npq_course:)
+        .where(npq_course: npq_course.rebranded_alternative_courses)
         .where(lead_provider_approval_status: "accepted")
         .where.not(id: npq_application.id)
         .exists?
