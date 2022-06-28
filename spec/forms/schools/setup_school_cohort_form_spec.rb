@@ -33,7 +33,7 @@ RSpec.describe Schools::SetupSchoolCohortForm, type: :model do
                   appropriate_body: nil,
                   appropriate_body_from_action: nil,
                   appropriate_body_to_action: nil,
-                  on_save: nil}
+                  on_save: nil }
       expect(described_class.new(choices).attributes).to eq(choices)
     end
   end
