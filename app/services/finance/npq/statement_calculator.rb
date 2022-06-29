@@ -12,36 +12,65 @@ module Finance
         @statement = statement
       end
 
-      def summary_overall_total
-        total_payment + overall_vat
+      def total_with_vat
+        total_payment + vat
       end
 
-      def total_output_payment_subtotal
-        output_payments.sum { |output_payment| output_payment[:subtotal] }
+      def total_output_payment
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).output_payment_subtotal
+        end
       end
 
       def total_service_fees
-        service_fees.sum { |service_fee| service_fee[:monthly] }
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).monthly_service_fees
+        end
+      end
+
+      def total_clawbacks
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).clawback_payment
+        end
       end
 
       def overall_vat
         total_payment * vat_rate
       end
 
+      def vat
+        total_payment * (npq_lead_provider.vat_chargeable ? 0.2 : 0.0)
+      end
+
       def total_payment
-        total_service_fees + total_output_payment_subtotal + statement.reconcile_amount
+        total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount
       end
 
       def total_starts
-        statement_declarations.started.count
+        statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: "started" })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+          .count
       end
 
       def total_retained
-        statement_declarations.retained.count
+        statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: %w[retained-1 retained-2 retained-3 retained-4] })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+          .count
       end
 
       def total_completed
-        statement_declarations.completed.count
+        statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: "completed" })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+          .count
       end
 
       def total_voided
@@ -82,6 +111,8 @@ module Finance
         contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract:) }.compact
       end
 
+      # WARNING: this does not scope to a cohort
+      # when cohorts are designed for scoping needs to be added here
       def contracts
         npq_lead_provider
           .npq_contracts

@@ -2,8 +2,9 @@
 
 RSpec.describe Finance::ECF::OutputCalculator do
   let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 6.months.ago) }
-  let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 3.months.ago) }
-  let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 0.months.ago) }
+  let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 4.months.ago) }
+  let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }
+  let(:fourth_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 0.months.ago) }
 
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
@@ -12,6 +13,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
   let(:first_statement_calc) { described_class.new(statement: first_statement) }
   let(:second_statement_calc) { described_class.new(statement: second_statement) }
   let(:third_statement_calc) { described_class.new(statement: third_statement) }
+  let(:fourth_statement_calc) { described_class.new(statement: fourth_statement) }
 
   let(:relevant_started_keys) do
     %i[
@@ -804,6 +806,117 @@ RSpec.describe Finance::ECF::OutputCalculator do
         expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(first_statement_expectation)
         expect(second_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(second_statement_expectation)
         expect(third_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(third_statement_expectation)
+      end
+    end
+
+    context "when there is a clawback followed by a declaration again" do
+      let(:user) { create(:user, :early_career_teacher) }
+      let(:participant_profile) { user.participant_profiles.first }
+
+      before do
+        setup_statement_one
+        setup_statement_two
+        setup_statement_three
+      end
+
+      def setup_statement_one
+        declarations = create_list(
+          :ect_participant_declaration, 1,
+          state: :paid,
+          user:,
+          participant_profile:
+        )
+
+        declarations.each do |dec|
+          Finance::StatementLineItem.create!(
+            statement: first_statement,
+            participant_declaration: dec,
+            state: dec.state,
+          )
+        end
+      end
+
+      def setup_statement_two
+        clawback_line_items = first_statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { state: "paid" })
+
+        clawback_line_items.each do |li|
+          li.participant_declaration.update!(state: "clawed_back")
+
+          Finance::StatementLineItem.create!(
+            statement: second_statement,
+            participant_declaration: li.participant_declaration,
+            state: "clawed_back",
+          )
+        end
+      end
+
+      def setup_statement_three
+        declarations = create_list(
+          :ect_participant_declaration, 1,
+          state: :payable,
+          user:,
+          participant_profile:
+        )
+
+        declarations.each do |dec|
+          Finance::StatementLineItem.create!(
+            statement: third_statement,
+            participant_declaration: dec,
+            state: dec.state,
+          )
+        end
+      end
+
+      # This is a test case for a BUG that currently exists for ECF statements
+      # If a provider declares then clawbacks
+      # Then the SAME provider decides to declare again for same events
+      # Those subsequent declarations are not counted therefore will not be paid
+      # This is due to dedupe logic that exists in the system
+      # Which was added to counter a user having multiple declarations
+      xit do
+        fourth_statement_expectation = [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+            previous_started_count: 1,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :c,
+            min: 5,
+            max: 6,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+          {
+            band: :d,
+            min: 7,
+            max: 8,
+            previous_started_count: 0,
+            started_count: 0,
+            started_additions: 0,
+            started_subtractions: 0,
+          },
+        ]
+
+        expect(fourth_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(fourth_statement_expectation)
       end
     end
 

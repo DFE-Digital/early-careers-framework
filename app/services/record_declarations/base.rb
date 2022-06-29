@@ -20,6 +20,7 @@ module RecordDeclarations
     validate :date_has_the_right_format
     validate :validate_schedule_present
     validate :validate_milestone_exists
+    validate :validates_billable_slot_available
 
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
@@ -38,8 +39,6 @@ module RecordDeclarations
       validate_provider!
       validate_milestone!
       validate_withdrawals!
-
-      raise ActiveRecord::RecordNotUnique, "Declaration with given participant ID already exists" if record_exists_with_different_declaration_date?
 
       ParticipantDeclaration.transaction do
         set_eligibility
@@ -95,16 +94,20 @@ module RecordDeclarations
       }
     end
 
-    def record_exists_with_different_declaration_date?
-      declaration = self.class.declaration_model
-                      .where.not(state: self.class.declaration_model.states[:voided])
-                      .find_by(
-                        user:,
-                        course_identifier:,
-                        declaration_type:,
-                      )
+    def validates_billable_slot_available
+      declaration = self
+        .class
+        .declaration_model
+        .where(state: %w[submitted eligible payable paid])
+        .find_by(
+          user:,
+          course_identifier:,
+          declaration_type:,
+        )
 
-      declaration.present? && declaration.declaration_date != Time.zone.parse(declaration_date)
+      if declaration.present?
+        errors.add(:base, I18n.t(:declaration_already_exists))
+      end
     end
 
     def date_has_the_right_format

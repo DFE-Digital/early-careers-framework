@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration < ApplicationRecord
-  self.ignored_columns = %w[statement_type]
+  self.ignored_columns = %w[statement_type statement_id]
 
   belongs_to :cpd_lead_provider
   belongs_to :user
@@ -105,9 +105,8 @@ class ParticipantDeclaration < ApplicationRecord
 
   before_create :build_initial_declaration_state
 
-  # TODO: Voiding paid should trigger clawbacks, but currently OOS
   def voidable?
-    !voided? && !paid?
+    %w[submitted eligible payable ineligible].include?(state)
   end
 
   def make_submitted!
@@ -130,6 +129,10 @@ class ParticipantDeclaration < ApplicationRecord
     DeclarationState.paid!(self) if payable?
   end
 
+  def make_clawed_back!
+    DeclarationState.clawed_back!(self) if awaiting_clawback?
+  end
+
   def make_ineligible!(reason: nil)
     DeclarationState.ineligible!(self, state_reason: reason) if submitted?
   end
@@ -139,11 +142,13 @@ class ParticipantDeclaration < ApplicationRecord
   end
 
   def duplicate_declarations
-    self.class.joins(participant_profile: :teacher_profile)
+    self
+      .class
+      .joins(participant_profile: :teacher_profile)
       .where(participant_profiles: { teacher_profiles: { trn: participant_profile.teacher_profile.trn } })
       .where.not(participant_profiles: { teacher_profiles: { trn: nil } })
       .where.not(user_id:, id:)
-      .where.not(state: self.class.states[:voided])
+      .where(state: %w[submitted eligible payable paid])
       .where(
         declaration_type:,
         course_identifier:,
