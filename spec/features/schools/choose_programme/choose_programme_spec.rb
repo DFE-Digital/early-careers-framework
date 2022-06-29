@@ -483,6 +483,5 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       then_i_am_taken_to_the_manage_your_training_page
       and_i_see_appropriate_body @teaching_school_hubs.first.name
     end
-
   end
 end
