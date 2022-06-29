@@ -385,7 +385,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_see_no_appropriate_body
     end
 
-    scenario "A school choose to appoint a local authority as appropriate body" do
+    scenario "A school chooses to appoint a local authority as appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_the_next_cohort_is_open_for_registrations
@@ -418,7 +418,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_see_appropriate_body @local_authorities.first.name
     end
 
-    scenario "A school choose to appoint a national organisation as appropriate body" do
+    scenario "A school chooses to appoint a national organisation as appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_the_next_cohort_is_open_for_registrations
@@ -451,7 +451,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_see_appropriate_body @national_organisations.first.name
     end
 
-    scenario "A school choose to appoint a teaching school hub as appropriate body" do
+    scenario "A school chooses to appoint a teaching school hub as appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
       and_the_next_cohort_is_open_for_registrations
