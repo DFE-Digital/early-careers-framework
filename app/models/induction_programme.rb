@@ -38,6 +38,6 @@ class InductionProgramme < ApplicationRecord
 private
 
   def touch_induction_records
-    current_induction_records.each(&:touch)
+    current_induction_records.touch_all
   end
 end
