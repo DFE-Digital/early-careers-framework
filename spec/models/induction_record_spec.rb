@@ -5,6 +5,17 @@ require "rails_helper"
 RSpec.describe InductionRecord, type: :model do
   subject(:induction_record) { create(:induction_record) }
 
+  describe "changes" do
+    before do
+      induction_record.participant_profile.update!(created_at: 2.weeks.ago, updated_at: 1.week.ago)
+    end
+
+    it "updates the updated_at on the participant_profile" do
+      induction_record.touch
+      expect(induction_record.participant_profile.updated_at).to be_within(1.second).of induction_record.updated_at
+    end
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:induction_programme) }
     it { is_expected.to belong_to(:participant_profile) }
