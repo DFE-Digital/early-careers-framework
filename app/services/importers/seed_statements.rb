@@ -10,7 +10,6 @@ class Importers::SeedStatements
           name: statement_data.name,
           cpd_lead_provider:,
           cohort: Cohort.find_by(start_year: 2021),
-          contract_version: statement_data.contract_version,
         )
         statement.update!(
           deadline_date: statement_data.deadline_date,
@@ -18,6 +17,7 @@ class Importers::SeedStatements
           cohort: Cohort.find_by(start_year: 2021),
           output_fee: statement_data.output_fee,
           type: class_for(statement_data, namespace: Finance::Statement::ECF),
+          contract_version: statement_data.contract_version,
         )
       end
     end
@@ -30,7 +30,6 @@ class Importers::SeedStatements
           name: statement_data.name,
           cpd_lead_provider:,
           cohort:,
-          contract_version: statement_data.contract_version,
         )
 
         statement.update!(
@@ -39,6 +38,7 @@ class Importers::SeedStatements
           cohort:,
           output_fee: statement_data.output_fee,
           type: class_for(statement_data, namespace: Finance::Statement::NPQ),
+          contract_version: statement_data.contract_version,
         )
       end
     end
