@@ -11,9 +11,9 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Lead Provider") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider:, name: "NPQ Lead Provider") }
 
-  let(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider:, npq_course: npq_course_leading_teaching) }
-  let(:npq_leading_behaviour_culture_contract) { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider:, npq_course: npq_course_leading_behaviour_culture) }
-  let(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider:, npq_course: npq_course_leading_teaching_development) }
+  let!(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider:, npq_course: npq_course_leading_teaching) }
+  let!(:npq_leading_behaviour_culture_contract) { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider:, npq_course: npq_course_leading_behaviour_culture) }
+  let!(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider:, npq_course: npq_course_leading_teaching_development) }
 
   let(:npq_course_leading_teaching) { create(:npq_course, identifier: "npq-leading-teaching", name: "Leading Teaching") }
   let(:npq_course_leading_behaviour_culture) { create(:npq_course, identifier: "npq-leading-behaviour-culture", name: "Leading Behaviour Culture") }
@@ -122,15 +122,13 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
 
     ParticipantDeclaration::NPQ
-      .where(state: %w[ineligible voided], cpd_lead_provider:)
+      .where(state: %w[ineligible voided eligible payable])
       .each do |declaration|
-        Finance::StatementLineItem.create(statement:, participant_declaration: declaration, state: declaration.state)
-      end
-
-    ParticipantDeclaration::NPQ
-      .where(state: %w[eligible payable], cpd_lead_provider:)
-      .each do |declaration|
-        Finance::StatementLineItem.create(statement:, participant_declaration: declaration, state: declaration.state)
+        Finance::StatementLineItem.create(
+          statement: declaration.cpd_lead_provider.npq_lead_provider.statements.first,
+          participant_declaration: declaration,
+          state: declaration.state,
+        )
       end
   end
 
@@ -171,8 +169,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
       expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_leading_behaviour_culture_contract))
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(160))
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(1440))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(162))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(1458))
     end
   end
 
@@ -215,15 +213,15 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     within first(".app-application__card") do
       expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Service fee")
       expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: npq_leading_behaviour_culture_contract.recruitment_target)
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(16.84))
-      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(1_212.63))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(17.05))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(1_227.79))
     end
   end
 
   def then_i_should_see_the_correct_total
     within first(".app-application__card") do
       expect(page).to have_content("Course total")
-      expect(page).to have_content(number_to_pounds(2_652.63))
+      expect(page).to have_content(number_to_pounds(1_458 + 1_227.79))
     end
   end
 
@@ -305,7 +303,11 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def total_starts
-    statement_declarations.started.count
+    statement
+      .billable_statement_line_items
+      .joins(:participant_declaration)
+      .where(participant_declarations: { declaration_type: "started" })
+      .count
   end
 
   def statement_declarations
@@ -313,11 +315,19 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def total_retained
-    statement_declarations.retained.count
+    statement
+      .billable_statement_line_items
+      .joins(:participant_declaration)
+      .where(participant_declarations: { declaration_type: %w[retained-1 retained-2] })
+      .count
   end
 
   def total_completed
-    statement_declarations.completed.count
+    statement
+      .billable_statement_line_items
+      .joins(:participant_declaration)
+      .where(participant_declarations: { declaration_type: "completed" })
+      .count
   end
 
   def total_voided
@@ -330,10 +340,9 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
 
   def total_declarations(contract)
     statement
-      .participant_declarations
-      .where(state: %w[eligible payable paid])
-      .for_course_identifier(contract.course_identifier)
-      .unique_id
+      .billable_statement_line_items
+      .joins(:participant_declaration)
+      .where(participant_declaration: { course_identifier: contract.course_identifier })
       .count
   end
 end
