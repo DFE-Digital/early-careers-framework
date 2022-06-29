@@ -27,13 +27,13 @@ class Induction::SetCohortInductionProgramme < BaseService
 private
 
   attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed,
-              :appropriate_body_type, :appropriate_body
+              :appropriate_body_appointed, :appropriate_body
 
   def initialize(school_cohort:, programme_choice:,
                  opt_out_of_updates: false,
                  core_induction_programme: nil,
                  delivery_partner_to_be_confirmed: false,
-                 appropriate_body_type: nil,
+                 appropriate_body_appointed: nil,
                  appropriate_body: nil)
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
@@ -42,7 +42,7 @@ private
     @opt_out_of_updates = opt_out_of_updates
     @core_induction_programme = core_induction_programme
     @delivery_partner_to_be_confirmed = delivery_partner_to_be_confirmed
-    @appropriate_body_type = appropriate_body_type
+    @appropriate_body_appointed = appropriate_body_appointed
     @appropriate_body = appropriate_body
   end
 
@@ -66,7 +66,7 @@ private
 
   def set_appropriate_body
     Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
-                                                   appropriate_body_type:,
-                                                   appropriate_body_id: appropriate_body)
+                                                   appropriate_body_id: appropriate_body,
+                                                   appropriate_body_appointed:)
   end
 end

@@ -3,6 +3,10 @@
 require "rails_helper"
 require_relative "./choose_programme_steps"
 
+def then_i_am_taken_to_the_appropriate_body_appointed_page
+  expect(page).to have_content("Have you appointed an appropriate body?")
+end
+
 RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false do
   include ChooseProgrammeSteps
 
@@ -51,9 +55,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_training_confirmation_page
 
     when_i_click_the_confirm_button
-    then_i_am_taken_to_the_appropriate_body_type_page
+    then_i_am_taken_to_the_appropriate_body_appointed_page
 
-    when_i_choose_appropriate_body_unknown
+    when_i_choose_no
     and_i_click_continue
     then_i_am_taken_to_the_training_submitted_page
 
@@ -82,9 +86,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_training_confirmation_page
 
     when_i_click_the_confirm_button
-    then_i_am_taken_to_the_appropriate_body_type_page
+    then_i_am_taken_to_the_appropriate_body_appointed_page
 
-    when_i_choose_appropriate_body_unknown
+    when_i_choose_no
     and_i_click_continue
     then_i_am_taken_to_the_training_submitted_page
 
@@ -111,9 +115,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_training_confirmation_page
 
     when_i_click_the_confirm_button
-    then_i_am_taken_to_the_appropriate_body_type_page
+    then_i_am_taken_to_the_appropriate_body_appointed_page
 
-    when_i_choose_appropriate_body_unknown
+    when_i_choose_no
     and_i_click_continue
     then_i_am_taken_to_the_training_submitted_page
 
@@ -151,18 +155,18 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
       and_i_choose_no
       and_i_click_continue
-      then_i_am_taken_to_the_appropriate_body_type_page
+      then_i_am_taken_to_the_appropriate_body_appointed_page
 
-      when_i_choose_appropriate_body_unknown
+      when_i_choose_no
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
       when_i_go_back_to_change_provider_page
       and_i_choose_no
       and_i_click_continue
-      then_i_am_taken_to_the_appropriate_body_type_page
+      then_i_am_taken_to_the_appropriate_body_appointed_page
 
-      when_i_choose_appropriate_body_unknown
+      when_i_choose_no
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
@@ -189,9 +193,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
       when_i_choose_no
       and_i_click_continue
-      then_i_am_taken_to_the_appropriate_body_type_page
+      then_i_am_taken_to_the_appropriate_body_appointed_page
 
-      when_i_choose_appropriate_body_unknown
+      when_i_choose_no
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
@@ -229,9 +233,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_lead_provider_confirmation_page
 
         when_i_click_the_confirm_button
-        then_i_am_taken_to_the_appropriate_body_type_page
+        then_i_am_taken_to_the_appropriate_body_appointed_page
 
-        when_i_choose_appropriate_body_unknown
+        when_i_choose_no
         and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
         and_i_see_the_lead_provider
@@ -267,9 +271,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_delivery_partner_confirmation_page
 
         when_i_click_the_confirm_button
-        then_i_am_taken_to_the_appropriate_body_type_page
+        then_i_am_taken_to_the_appropriate_body_appointed_page
 
-        when_i_choose_appropriate_body_unknown
+        when_i_choose_no
         and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
         and_i_see_the_delivery_partner
@@ -304,9 +308,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
 
         when_i_click_the_confirm_button
-        then_i_am_taken_to_the_appropriate_body_type_page
+        then_i_am_taken_to_the_appropriate_body_appointed_page
 
-        when_i_choose_appropriate_body_unknown
+        when_i_choose_no
         and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
         and_a_notification_email_is_sent_to_the_lead_provider
@@ -339,9 +343,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
 
         when_i_click_the_confirm_button
-        then_i_am_taken_to_the_appropriate_body_type_page
+        then_i_am_taken_to_the_appropriate_body_appointed_page
 
-        when_i_choose_appropriate_body_unknown
+        when_i_choose_no
         and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
         and_a_notification_email_is_sent_to_the_lead_provider
