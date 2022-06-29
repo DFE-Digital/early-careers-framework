@@ -50,15 +50,61 @@ module Api
       end
 
       describe "#updated_at" do
-        let(:induction_record) { create(:induction_record, updated_at: 1.day.ago) }
+        let(:induction_record) { create(:induction_record) }
         let(:user) { induction_record.participant_profile.user }
+        let(:profile) { induction_record.participant_profile }
+        let(:identity) { induction_record.participant_profile.participant_identity }
 
-        before do
-          user.update!(updated_at: 10.days.ago)
+        context "when induction record touched" do
+          before do
+            user.update!(updated_at: 10.days.ago)
+            profile.update!(updated_at: 10.days.ago)
+            induction_record.update!(updated_at: 1.day.ago)
+            identity.update!(updated_at: 10.days.ago)
+          end
+
+          it "considers updated_at of induction record" do
+            expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to be_within(2.hours).of(1.day.ago)
+          end
         end
 
-        it "considers updated_at of induction record" do
-          expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to be_within(2.days).of(1.day.ago)
+        context "when user touched" do
+          before do
+            user.update!(updated_at: 1.day.ago)
+            profile.update!(updated_at: 10.days.ago)
+            induction_record.update!(updated_at: 10.days.ago)
+            identity.update!(updated_at: 10.days.ago)
+          end
+
+          it "considers updated_at of user" do
+            expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to be_within(2.hours).of(1.day.ago)
+          end
+        end
+
+        context "when profile touched" do
+          before do
+            user.update!(updated_at: 10.days.ago)
+            profile.update!(updated_at: 1.day.ago)
+            induction_record.update!(updated_at: 10.days.ago)
+            identity.update!(updated_at: 10.days.ago)
+          end
+
+          it "considers updated_at of profile" do
+            expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to be_within(2.hours).of(1.day.ago)
+          end
+        end
+
+        context "when identity touched" do
+          before do
+            user.update!(updated_at: 10.days.ago)
+            profile.update!(updated_at: 10.days.ago)
+            induction_record.update!(updated_at: 10.days.ago)
+            identity.update!(updated_at: 1.day.ago)
+          end
+
+          it "considers updated_at of identity" do
+            expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to be_within(2.hours).of(1.day.ago)
+          end
         end
       end
     end

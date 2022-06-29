@@ -117,7 +117,9 @@ module Api
 
       attribute :updated_at do |induction_record|
         [
+          induction_record.participant_profile.updated_at,
           induction_record.participant_profile.user.updated_at,
+          induction_record.participant_profile.participant_identity.updated_at,
           induction_record.updated_at,
         ].max.rfc3339
       end
