@@ -17,7 +17,7 @@ RSpec.feature "Block participant declaration paid twice", type: :feature do
     then_the_declaration_made_is_valid
     and_schedule_change_is_submitted_for_this_participant
     and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
-    then_second_declaration_is_created
+    then_one_declaration_is_created
   end
 
   scenario "Declaration submitted for a changed lead provider" do
@@ -27,6 +27,6 @@ RSpec.feature "Block participant declaration paid twice", type: :feature do
     then_the_declaration_made_is_valid
     and_lead_provider_changed_for_the_participant
     and_the_lead_provider_submits_a_declaration_for_the_ect_using_their_id
-    then_second_declaration_is_created
+    then_one_declaration_is_created
   end
 end

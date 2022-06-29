@@ -135,9 +135,8 @@ module ParticipantDeclarationSteps
     Induction::Enrol.call(participant_profile: @ect_profile, induction_programme: new_induction_programme)
   end
 
-  def then_second_declaration_is_created
+  def then_one_declaration_is_created
     expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started", state: "submitted").count).to eq(1)
-    expect(ParticipantDeclaration.where(course_identifier: "ecf-induction", declaration_type: "started", state: "ineligible").count).to eq(1)
   end
 
   def then_second_declaration_is_not_created

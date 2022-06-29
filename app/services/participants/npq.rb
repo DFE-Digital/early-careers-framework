@@ -21,11 +21,12 @@ module Participants
       return unless participant_identity
 
       @user_profile ||= ParticipantProfile::NPQ
-        .includes(npq_application: :npq_course)
+        .includes(npq_application: [:npq_course, { npq_lead_provider: [:cpd_lead_provider] }])
         .where(participant_identity:)
         .npqs
         .active_record
         .where('npq_courses.identifier': course_identifier)
+        .where(npq_applications: { npq_lead_providers: { cpd_lead_provider: } })
         .first
     end
 

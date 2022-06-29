@@ -14,6 +14,8 @@ class DeclarationState < ApplicationRecord
     paid: "paid",
     voided: "voided",
     ineligible: "ineligible",
+    awaiting_clawback: "awaiting_clawback",
+    clawed_back: "clawed_back",
   }
 
   states.each_key do |key|

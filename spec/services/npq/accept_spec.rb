@@ -31,6 +31,36 @@ RSpec.describe NPQ::Accept do
       )
     end
 
+    context "when user applies for EHCO but has accepted ASO" do
+      let(:npq_course) { create(:npq_course, identifier: "npq-additional-support-offer") }
+      let(:npq_ehco) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
+
+      let(:other_npq_application) do
+        NPQApplication.create!(
+          teacher_reference_number: trn,
+          participant_identity: identity,
+          npq_course: npq_ehco,
+          npq_lead_provider:,
+          school_urn: "123456",
+          school_ukprn: "12345678",
+          cohort: cohort_2021,
+        )
+      end
+
+      before do
+        create(:npq_aso_schedule)
+        create(:npq_ehco_schedule)
+
+        described_class.call(npq_application:)
+      end
+
+      it "does not accept the EHCO application" do
+        expect {
+          described_class.call(npq_application: other_npq_application)
+        }.not_to change { other_npq_application.reload.lead_provider_approval_status }
+      end
+    end
+
     context "when user has applied for the same course with another provider" do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
