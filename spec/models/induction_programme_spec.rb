@@ -6,7 +6,7 @@ RSpec.describe InductionProgramme, type: :model do
   subject(:induction_programme) { create(:induction_programme, :cip) }
 
   describe "changes" do
-    let(:induction_records) { create_list(:induction_record, 3, induction_programme: induction_programme) }
+    let(:induction_records) { create_list(:induction_record, 3, induction_programme:) }
 
     before do
       induction_records.each do |induction_record|
