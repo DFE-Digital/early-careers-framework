@@ -29,6 +29,7 @@ RSpec.describe Schools::SetupSchoolCohortForm, type: :model do
                   how_will_you_run_training_choice: "core_induction_programme",
                   change_provider_choice: "yes",
                   what_changes_choice: "change_lead_provider",
+                  appropriate_body_appointed: nil,
                   appropriate_body_type: nil,
                   appropriate_body: nil,
                   appropriate_body_from_action: nil,
