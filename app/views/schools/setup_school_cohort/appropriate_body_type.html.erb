@@ -1,8 +1,7 @@
 <% title = "Which type of appropriate body have you appointed?" %>
-<% back_url = url_for(action: @setup_school_cohort_form.appropriate_body_from_action) %>
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: back_url) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: url_for(action: :appropriate_body_appointed)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -16,8 +15,6 @@
         @setup_school_cohort_form.appropriate_body_type_choices,
         :id, :name,
         legend: { hidden: true }) do %>
-
-        <%# TODO: add AB unknown link %>
 
         <p class="govuk-body">If your school works with more than one, first tell us about the appropriate body appointed for the majority of your ECTs. You can add the others later.</p>
       <% end %>

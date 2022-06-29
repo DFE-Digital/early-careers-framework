@@ -8,16 +8,16 @@ class Induction::SetSchoolCohortAppropriateBody < BaseService
 
 private
 
-  attr_reader :school_cohort, :appropriate_body_id, :appropriate_body_unknown, :appropriate_body_type
+  attr_reader :school_cohort, :appropriate_body_id, :appropriate_body_appointed
 
-  def initialize(school_cohort:, appropriate_body_id:, appropriate_body_type:)
+  def initialize(school_cohort:, appropriate_body_id:, appropriate_body_appointed:)
     @school_cohort = school_cohort
     @appropriate_body_id = appropriate_body_id
-    @appropriate_body_type = appropriate_body_type
+    @appropriate_body_appointed = appropriate_body_appointed
   end
 
   def set_appropriate_body
-    if appropriate_body_type == "unknown"
+    if !appropriate_body_appointed
       school_cohort.appropriate_body_unknown = true
       school_cohort.appropriate_body = nil
     else

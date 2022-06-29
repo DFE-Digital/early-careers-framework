@@ -439,6 +439,9 @@ Rails.application.routes.draw do
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
 
+            get "appropriate-body-appointed", to: "setup_school_cohort#appropriate_body_appointed"
+            put "appropriate-body-appointed", to: "setup_school_cohort#appropriate_body_appointed"
+
             get "appropriate-body-type", to: "setup_school_cohort#appropriate_body_type"
             put "appropriate-body-type", to: "setup_school_cohort#appropriate_body_type"
 

@@ -69,16 +69,20 @@ module Schools
 
     def complete; end
 
-    def appropriate_body_type
-      if @setup_school_cohort_form.appropriate_body_type == "unknown"
-        end_appropriate_body_section
+    def appropriate_body_appointed
+      if appropriate_body_appointed?
+        store_form_redirect_to_next_step :appropriate_body_type
       else
-        store_form_redirect_to_next_step :appropriate_body
+        end_appropriate_body_selection
       end
     end
 
+    def appropriate_body_type
+      store_form_redirect_to_next_step :appropriate_body
+    end
+
     def appropriate_body
-      end_appropriate_body_section
+      end_appropriate_body_selection
     end
 
   private
@@ -159,6 +163,7 @@ module Schools
                     :how_will_you_run_training_choice,
                     :change_provider_choice,
                     :what_changes_choice,
+                    :appropriate_body_appointed,
                     :appropriate_body_type,
                     :appropriate_body)
     end
@@ -189,19 +194,18 @@ module Schools
                                                   programme_choice:,
                                                   opt_out_of_updates:,
                                                   delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
-                                                  appropriate_body_type: @setup_school_cohort_form.appropriate_body_type,
+                                                  appropriate_body_appointed: appropriate_body_appointed?,
                                                   appropriate_body: @setup_school_cohort_form.appropriate_body)
     end
 
+    def appropriate_body_appointed?
+      @setup_school_cohort_form.appropriate_body_appointed == "yes"
+    end
+
     def save_appropriate_body
-      if @setup_school_cohort_form.appropriate_body_type == "unknown"
-        school_cohort.appropriate_body_unknown = true
-        school_cohort.appropriate_body = nil
-      else
-        school_cohort.appropriate_body_unknown = false
-        school_cohort.appropriate_body_id = @setup_school_cohort_form.appropriate_body
-      end
-      school_cohort.save!
+      Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
+                                                     appropriate_body_id: @setup_school_cohort_form.appropriate_body,
+                                                     appropriate_body_appointed: appropriate_body_appointed?)
     end
 
     def school_cohort
@@ -232,10 +236,10 @@ module Schools
       @setup_school_cohort_form.appropriate_body_from_action = from_action
       @setup_school_cohort_form.appropriate_body_to_action = to_action
       @setup_school_cohort_form.on_save = on_save
-      store_form_redirect_to_next_step :appropriate_body_type
+      store_form_redirect_to_next_step :appropriate_body_appointed
     end
 
-    def end_appropriate_body_section
+    def end_appropriate_body_selection
       on_save = method(@setup_school_cohort_form.on_save)
       on_save.call
       redirect_to action: @setup_school_cohort_form.appropriate_body_to_action
