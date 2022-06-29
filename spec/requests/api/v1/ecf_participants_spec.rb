@@ -162,8 +162,8 @@ RSpec.describe "Participants API", type: :request do
 
         it "returns users in a consistent order" do
           users = User.all
-          users.first.update!(created_at: 1.day.ago)
-          users.last.update!(created_at: 2.days.ago)
+          users.first.participant_profiles.first.induction_records.first.update!(created_at: 1.day.ago)
+          users.last.participant_profiles.first.induction_records.first.update!(created_at: 2.days.ago)
 
           get "/api/v1/participants/ecf"
           expect(parsed_response["data"][0]["id"]).to eq User.last.id
