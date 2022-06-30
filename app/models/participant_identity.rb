@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantIdentity < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, touch: true
   has_many :participant_profiles
   has_many :npq_applications
   has_many :induction_records, through: :participant_profiles

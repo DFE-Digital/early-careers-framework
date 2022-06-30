@@ -6,7 +6,7 @@ class InductionRecord < ApplicationRecord
   self.ignored_columns = %w[status]
 
   belongs_to :induction_programme
-  belongs_to :participant_profile, class_name: "ParticipantProfile::ECF"
+  belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
   belongs_to :schedule, class_name: "Finance::Schedule"
   belongs_to :mentor_profile, class_name: "ParticipantProfile::Mentor", optional: true
   has_one :mentor, through: :mentor_profile, source: :user

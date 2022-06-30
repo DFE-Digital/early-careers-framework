@@ -25,11 +25,19 @@ class InductionProgramme < ApplicationRecord
 
   delegate :school, to: :school_cohort
 
+  after_commit :touch_induction_records
+
   def lead_provider
     partnership&.lead_provider
   end
 
   def delivery_partner
     partnership&.delivery_partner
+  end
+
+private
+
+  def touch_induction_records
+    current_induction_records.touch_all
   end
 end
