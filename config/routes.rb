@@ -410,6 +410,8 @@ Rails.application.routes.draw do
           get "change-programme", as: :change_programme
           get "roles", as: :roles
 
+          get "add-appropriate-body-not-available", action: :add
+
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 

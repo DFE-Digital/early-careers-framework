@@ -75,7 +75,7 @@
     <% list.row do |row| %>
       <% row.key(text: "Appropriate body") %>
       <% row.value(text: "") %>
-      <% row.action(text: :none) %>
+      <% row.action(text: "Add", href: add_appropriate_body_not_available_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
     <% end %>
   <% end %>
 
