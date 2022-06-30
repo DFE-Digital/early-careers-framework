@@ -473,9 +473,9 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
       choose("Teaching school hub")
       and_i_click_continue
-      expect(page).to have_content("Which teaching school hub have you appointed?")
+      then_i_am_taken_to_the_teaching_school_hubs_selection_page
 
-      select @teaching_school_hubs.first.name
+      fill_in "schools-setup-school-cohort-form-appropriate-body-field", with: @teaching_school_hubs.first.name
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 

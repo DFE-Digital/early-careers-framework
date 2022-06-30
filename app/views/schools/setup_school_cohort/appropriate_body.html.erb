@@ -31,7 +31,9 @@
                                       appropriate_bodies,
                                       :id,
                                       :name,
-                                      label: { hidden: true }) %>
+                                      label: { hidden: true },
+                                      options: { include_blank: true },
+                                      class: "autocomplete") %>
       <% end %>
 
       <%= f.govuk_submit "Continue" %>

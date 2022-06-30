@@ -132,6 +132,10 @@ module ChooseProgrammeSteps
     expect(page).to have_summary_row("Delivery partner", "")
   end
 
+  def then_i_am_taken_to_the_teaching_school_hubs_selection_page
+    expect(page).to have_content("Which teaching school hub have you appointed?")
+  end
+
   # And steps
 
   def and_a_notification_email_is_sent_to_the_lead_provider
