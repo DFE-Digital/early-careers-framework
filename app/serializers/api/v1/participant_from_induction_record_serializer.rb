@@ -48,10 +48,8 @@ module Api
       end
 
       active_participant_attribute :email do |induction_record|
-        # NOTE: using this will retain the original email exposed to provider
-        induction_record.participant_profile.participant_identity.email
-        # NOTE: use this instead to use new (de-duped) email
-        # induction_record.participant_profile.user.email
+        induction_record.preferred_identity&.email ||
+          induction_record.participant_profile.user.email
       end
 
       attribute :full_name do |induction_record|
