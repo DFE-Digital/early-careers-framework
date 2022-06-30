@@ -409,7 +409,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_click_continue
       then_i_am_taken_to_the_local_authorities_selection_page
 
-      select @local_authorities.first.name
+      when_i_fill_appropriate_body_with @local_authorities.first.name
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
@@ -471,11 +471,11 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       and_i_click_continue
       then_i_am_taken_to_the_appropriate_body_type_page
 
-      choose("Teaching school hub")
+      when_i_choose_teaching_school_hub
       and_i_click_continue
       then_i_am_taken_to_the_teaching_school_hubs_selection_page
 
-      fill_in "schools-setup-school-cohort-form-appropriate-body-field", with: @teaching_school_hubs.first.name
+      when_i_fill_appropriate_body_with @teaching_school_hubs.first.name
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 

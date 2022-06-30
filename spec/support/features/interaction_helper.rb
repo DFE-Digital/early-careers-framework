@@ -45,4 +45,14 @@ module InteractionHelper
   end
 
   alias_method :and_i_sign_out, :when_i_sign_out
+
+  def when_i_fill_in_autocomplete(id, with:)
+    page.execute_script("document.getElementById('#{id}').value = '#{with}';")
+
+    within("ul##{id}__listbox") do
+      find("li.autocomplete__option", match: :first).select_option
+    end
+  end
+
+  alias_method :and_i_fill_in_autocomplete, :when_i_fill_in_autocomplete
 end

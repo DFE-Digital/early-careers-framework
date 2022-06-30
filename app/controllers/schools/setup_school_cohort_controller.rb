@@ -93,8 +93,6 @@ module Schools
       if previous_school_cohort.full_induction_programme?
         send_fip_programme_changed_email!
       end
-
-      reset_form_data
     end
 
     def save_provider_change
@@ -103,13 +101,11 @@ module Schools
         save_appropriate_body
       else
         use_the_same_training_programme!
-        reset_form_data
       end
     end
 
     def save_training_choice
       set_cohort_induction_programme!(@setup_school_cohort_form.how_will_you_run_training_choice)
-      reset_form_data
     end
 
     def send_fip_programme_changed_email!
