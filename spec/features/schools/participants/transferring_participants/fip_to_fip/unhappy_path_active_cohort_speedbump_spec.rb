@@ -6,7 +6,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
   context "Transferring a participant to a school" do
     context "School has not created a programme for the previous cohort" do
       before do
-        given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+        given_there_are_two_schools_that_have_chosen_fip_for_2022_and_partnered
         and_i_am_signed_in_as_an_induction_coordinator
         and_select_the_most_recent_cohort
         when_i_click_to_view_ects_and_mentors
@@ -27,7 +27,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       # given
 
-      def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+      def given_there_are_two_schools_that_have_chosen_fip_for_2022_and_partnered
         @school_one = create(:school, name: "Fip School 1")
         @school_one_2021_cohort = create(:school_cohort, school: @school_one, cohort: create(:cohort, start_year: 2021), induction_programme_choice: "no_early_career_teachers")
         @school_one_2022_cohort = create(:school_cohort, school: @school_one, cohort: create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
