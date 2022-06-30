@@ -379,6 +379,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       when_i_choose_no
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
 
       when_i_click_on_the_return_to_your_training_link
       then_i_am_taken_to_the_manage_your_training_page
@@ -412,6 +413,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       when_i_fill_appropriate_body_with @local_authorities.first.name
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
 
       when_i_click_on_the_return_to_your_training_link
       then_i_am_taken_to_the_manage_your_training_page
@@ -445,6 +447,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       choose @national_organisations.first.name
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
 
       when_i_click_on_the_return_to_your_training_link
       then_i_am_taken_to_the_manage_your_training_page
@@ -478,6 +481,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       when_i_fill_appropriate_body_with @teaching_school_hubs.first.name
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
 
       when_i_click_on_the_return_to_your_training_link
       then_i_am_taken_to_the_manage_your_training_page

@@ -80,7 +80,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_complete_page
-    expect(page).to have_content("You can now add ECTs and mentors when you’re ready")
+    expect(page).to have_content("You’ve submitted your training information")
   end
 
   def then_i_am_taken_to_what_changes_page
@@ -245,6 +245,14 @@ module ChooseProgrammeSteps
 
   def and_i_see_appropriate_body(name)
     expect(page).to have_summary_row("Appropriate body", name)
+  end
+
+  def and_i_see_the_tell_us_appropriate_body_copy
+    expect(page).to have_content("tell us which appropriate body you’ve appointed for your ECTs")
+  end
+
+  def and_i_dont_see_the_tell_us_appropriate_body_copy
+    expect(page).to_not have_content("tell us which appropriate body you’ve appointed for your ECTs")
   end
 
   # When steps

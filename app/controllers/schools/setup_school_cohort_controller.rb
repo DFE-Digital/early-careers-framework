@@ -140,10 +140,10 @@ module Schools
       # with challenge date set to 31st Oct 2022
       #
       # TODO: we need a better way to set the challenge date
-      # previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
-      # previous_partnership_copy.cohort = cohort
-      # previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
-      # previous_partnership_copy.save!
+      previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
+      previous_partnership_copy.cohort = cohort
+      previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
+      previous_partnership_copy.save!
 
       set_cohort_induction_programme!("full_induction_programme")
     end
@@ -192,12 +192,12 @@ module Schools
     end
 
     def set_cohort_induction_programme!(programme_choice, opt_out_of_updates: false)
-      # Induction::SetCohortInductionProgramme.call(school_cohort:,
-      #                                             programme_choice:,
-      #                                             opt_out_of_updates:,
-      #                                             delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
-      #                                             appropriate_body_appointed: appropriate_body_appointed?,
-      #                                             appropriate_body: @setup_school_cohort_form.appropriate_body)
+      Induction::SetCohortInductionProgramme.call(school_cohort:,
+                                                  programme_choice:,
+                                                  opt_out_of_updates:,
+                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
+                                                  appropriate_body_appointed: appropriate_body_appointed?,
+                                                  appropriate_body: @setup_school_cohort_form.appropriate_body)
     end
 
     def appropriate_body_appointed?
