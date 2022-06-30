@@ -176,7 +176,7 @@ RSpec.describe "Transferring participants", with_feature_flags: { change_of_circ
   end
 
   def then_i_should_be_on_the_already_enrolled_page
-    expect(page).to have_selector("h1", text: "already here")
+    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
   end
 
   def then_i_am_should_be_on_are_they_a_transfer_page
