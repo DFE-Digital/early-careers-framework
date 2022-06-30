@@ -1,19 +1,12 @@
 <h2 class="govuk-heading-m">What to do next</h2>
-<p class="govuk-body">You need to:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>compare and choose which DfE-accredited materials you want to use</li>
-  <li>use this service to tell us which materials you want to use</li>
-</ul>
-
-<h2 class="govuk-heading-m">You can now add ECTs and mentors when you’re ready</h2>
-<p class="govuk-body">You must tell us their:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>full name</li>
-  <li>email address</li>
-</ul>
-<p class="govuk-body">You can now choose to enter their teacher reference number (TRN) and date of birth too.</p>
-<p class="govuk-body">If you can tell us this extra information:</p>
-<ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
-  <li>ECTs and mentors will not be asked to provide this information themselves</li>
-  <li>we can confirm if they’re eligible for funding more quickly</li>
-</ul>
+<p>As soon as possible:</p>
+<ol class="govuk-list govuk-list--bullet govuk-list--spaced">
+  <li>
+    choose the DfE-accredited materials you want to use - you may need to create an account to access the materials
+  </li>
+  <% if !appropriate_body_appointed? %>
+    <li>tell us which appropriate body you’ve appointed for your ECTs</li>
+  <% end %>
+  <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
+  <li>use this service to tell us which mentor has been assigned to each ECT</li>
+</ol>

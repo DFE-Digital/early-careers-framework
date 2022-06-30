@@ -13,6 +13,8 @@ module Schools
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
 
+    helper_method :appropriate_body_appointed?
+
     def expect_any_ects
       if no_ects_expected
         store_form_redirect_to_next_step :no_expected_ects
@@ -138,10 +140,10 @@ module Schools
       # with challenge date set to 31st Oct 2022
       #
       # TODO: we need a better way to set the challenge date
-      previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
-      previous_partnership_copy.cohort = cohort
-      previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
-      previous_partnership_copy.save!
+      # previous_partnership_copy = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
+      # previous_partnership_copy.cohort = cohort
+      # previous_partnership_copy.challenge_deadline = Date.new(2022, 10, 31)
+      # previous_partnership_copy.save!
 
       set_cohort_induction_programme!("full_induction_programme")
     end
@@ -190,12 +192,12 @@ module Schools
     end
 
     def set_cohort_induction_programme!(programme_choice, opt_out_of_updates: false)
-      Induction::SetCohortInductionProgramme.call(school_cohort:,
-                                                  programme_choice:,
-                                                  opt_out_of_updates:,
-                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
-                                                  appropriate_body_appointed: appropriate_body_appointed?,
-                                                  appropriate_body: @setup_school_cohort_form.appropriate_body)
+      # Induction::SetCohortInductionProgramme.call(school_cohort:,
+      #                                             programme_choice:,
+      #                                             opt_out_of_updates:,
+      #                                             delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
+      #                                             appropriate_body_appointed: appropriate_body_appointed?,
+      #                                             appropriate_body: @setup_school_cohort_form.appropriate_body)
     end
 
     def appropriate_body_appointed?
@@ -242,7 +244,7 @@ module Schools
     def end_appropriate_body_selection
       on_save = method(@setup_school_cohort_form.on_save)
       on_save.call
-      redirect_to action: @setup_school_cohort_form.appropriate_body_to_action
+      store_form_redirect_to_next_step @setup_school_cohort_form.appropriate_body_to_action
     end
   end
 end
