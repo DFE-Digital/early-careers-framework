@@ -57,10 +57,12 @@ module Api
 
         context "when induction record touched" do
           before do
-            user.update!(updated_at: 10.days.ago)
-            profile.update!(updated_at: 10.days.ago)
-            induction_record.update!(updated_at: 1.day.ago)
-            identity.update!(updated_at: 10.days.ago)
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 10.days.ago)
+              profile.update!(updated_at: 10.days.ago)
+              induction_record.update!(updated_at: 1.day.ago)
+              identity.update!(updated_at: 10.days.ago)
+            end
           end
 
           it "considers updated_at of induction record" do
@@ -70,10 +72,12 @@ module Api
 
         context "when user touched" do
           before do
-            user.update!(updated_at: 1.day.ago)
-            profile.update!(updated_at: 10.days.ago)
-            induction_record.update!(updated_at: 10.days.ago)
-            identity.update!(updated_at: 10.days.ago)
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 1.day.ago)
+              profile.update!(updated_at: 10.days.ago)
+              induction_record.update!(updated_at: 10.days.ago)
+              identity.update!(updated_at: 10.days.ago)
+            end
           end
 
           it "considers updated_at of user" do
@@ -83,10 +87,12 @@ module Api
 
         context "when profile touched" do
           before do
-            user.update!(updated_at: 10.days.ago)
-            profile.update!(updated_at: 1.day.ago)
-            induction_record.update!(updated_at: 10.days.ago)
-            identity.update!(updated_at: 10.days.ago)
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 10.days.ago)
+              profile.update!(updated_at: 1.day.ago)
+              induction_record.update!(updated_at: 10.days.ago)
+              identity.update!(updated_at: 10.days.ago)
+            end
           end
 
           it "considers updated_at of profile" do
@@ -96,10 +102,12 @@ module Api
 
         context "when identity touched" do
           before do
-            user.update!(updated_at: 10.days.ago)
-            profile.update!(updated_at: 10.days.ago)
-            induction_record.update!(updated_at: 10.days.ago)
-            identity.update!(updated_at: 1.day.ago)
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 10.days.ago)
+              profile.update!(updated_at: 10.days.ago)
+              induction_record.update!(updated_at: 10.days.ago)
+              identity.update!(updated_at: 1.day.ago)
+            end
           end
 
           it "considers updated_at of identity" do
