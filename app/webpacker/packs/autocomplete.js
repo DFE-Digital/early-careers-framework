@@ -4,12 +4,10 @@
 
 import accessibleAutocomplete from "accessible-autocomplete";
 
-const selects = document.querySelectorAll(
-  "select.autocomplete"
-);
+const selects = document.querySelectorAll("select.autocomplete");
 
-selects.forEach(select => {
+selects.forEach((select) => {
   accessibleAutocomplete.enhanceSelectElement({
-    selectElement: select
+    selectElement: select,
   });
-})
+});
