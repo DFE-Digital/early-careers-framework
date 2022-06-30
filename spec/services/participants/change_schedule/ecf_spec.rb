@@ -24,25 +24,6 @@ RSpec.describe Participants::ChangeSchedule::ECF do
   end
 
   describe "validations" do
-    context "when participant is withdrawn" do
-      let(:user) { profile.user }
-      let(:profile) { create(:mentor_participant_profile, status: :withdrawn) }
-      let(:schedule) { create(:ecf_mentor_schedule) }
-
-      subject do
-        Participants::ChangeSchedule::Mentor.new(params: {
-          schedule_identifier: schedule.schedule_identifier,
-          participant_id: user.id,
-          course_identifier: "ecf-induction",
-          cpd_lead_provider: CpdLeadProvider.new,
-        })
-      end
-
-      it "should have an error" do
-        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /must be a valid Participant ID/)
-      end
-    end
-
     context "when null schedule_identifier given" do
       let(:user) { profile.user }
       let(:profile) { create(:ecf_participant_profile) }
@@ -141,6 +122,53 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       expect {
         subject.call
       }.to change { profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("soft-schedule")
+    end
+  end
+
+  describe "when one profile and 2 induction records, where profile#training_status is withdrawn" do
+    let(:user) { profile.user }
+    let(:profile) { create(:ect_participant_profile, status: "active", training_status: "withdrawn") }
+    let(:new_schedule) { create(:ecf_schedule, schedule_identifier: "new-schedule") }
+
+    let(:induction_programme_1) { create(:induction_programme, :fip)  }
+    let(:induction_programme_2) { create(:induction_programme, :fip)  }
+
+    let!(:induction_record_1) do
+      create(
+        :induction_record,
+        participant_profile: profile,
+        induction_programme: induction_programme_1,
+      )
+    end
+
+    let!(:induction_record_2) do
+      create(
+        :induction_record,
+        participant_profile: profile,
+        induction_programme: induction_programme_2,
+      )
+    end
+
+    let(:cpd_lead_provider_1) { induction_record_1.induction_programme.partnership.lead_provider.cpd_lead_provider }
+    let(:cpd_lead_provider_2) { induction_record_2.induction_programme.partnership.lead_provider.cpd_lead_provider }
+
+    before do
+      profile.participant_profile_states.create!(state: "withdrawn")
+    end
+
+    subject do
+      Participants::ChangeSchedule::EarlyCareerTeacher.new(params: {
+        schedule_identifier: new_schedule.schedule_identifier,
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider: cpd_lead_provider_2,
+      })
+    end
+
+    it "allows new provider to change schedule" do
+      expect {
+        subject.call
+      }.to change { induction_record_2.reload.schedule }.to(new_schedule)
     end
   end
 end
