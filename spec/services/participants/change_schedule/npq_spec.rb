@@ -120,4 +120,65 @@ RSpec.describe Participants::ChangeSchedule::NPQ do
       }.to change { profile.reload.schedule.schedule_identifier }.from(profile.schedule.schedule_identifier).to("soft-schedule")
     end
   end
+
+  describe "#call" do
+    context "when there a user has 2 profiles eith different providers" do
+      let(:user) { profile_1.user }
+      let(:teacher_profile) { profile_1.teacher_profile }
+
+      let!(:profile_1) { create(:npq_participant_profile) }
+      let!(:profile_2) { create(:npq_participant_profile, user:, teacher_profile:, npq_application: npq_application_2) }
+
+      let(:npq_course) { profile_1.npq_application.npq_course }
+      let(:npq_application_2) { create(:npq_application, participant_identity: profile_1.participant_identity, school_urn: rand(100_000..999_999), npq_course:) }
+
+      let(:cpd_lead_provider_1) { profile_1.npq_application.npq_lead_provider.cpd_lead_provider }
+      let(:cpd_lead_provider_2) { profile_2.npq_application.npq_lead_provider.cpd_lead_provider }
+
+      let(:new_schedule) do
+        case profile_1.npq_course.identifier
+        when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
+          create(:npq_specialist_schedule, schedule_identifier: "new-schedule")
+        when *Finance::Schedule::NPQLeadership::IDENTIFIERS
+          create(:npq_leadership_schedule, schedule_identifier: "new-schedule")
+        when *Finance::Schedule::NPQSupport::IDENTIFIERS
+          create(:npq_aso_schedule, schedule_identifier: "new-schedule")
+        when *Finance::Schedule::NPQEhco::IDENTIFIERS
+          create(:npq_ehco_schedule, schedule_identifier: "new-schedule")
+        end
+      end
+
+      context "as first provider" do
+        subject do
+          described_class.new(params: {
+            schedule_identifier: new_schedule.schedule_identifier,
+            participant_id: user.id,
+            course_identifier: profile_1.npq_course.identifier,
+            cpd_lead_provider: cpd_lead_provider_1,
+            cohort: new_schedule.cohort.start_year,
+          })
+        end
+
+        it "can change schedule" do
+          expect { subject.call }.to change { profile_1.reload.schedule }
+        end
+      end
+
+      context "as second provider" do
+        subject do
+          described_class.new(params: {
+            schedule_identifier: new_schedule.schedule_identifier,
+            participant_id: user.id,
+            course_identifier: profile_2.npq_course.identifier,
+            cpd_lead_provider: cpd_lead_provider_2,
+            cohort: new_schedule.cohort.start_year,
+          })
+        end
+
+        it "can change schedule" do
+          expect { subject.call }.to change { profile_2.reload.schedule }
+        end
+      end
+    end
+  end
 end

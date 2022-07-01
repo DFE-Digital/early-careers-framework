@@ -42,7 +42,17 @@ module Participants
       attr_reader :schedule_identifier, :cohort_year
 
       def user_profile
-        user&.npq_profiles&.active_record&.includes({ npq_application: [:npq_course] })&.where('npq_courses.identifier': course_identifier)&.first
+        user
+          .npq_profiles
+          .active_record
+          .includes({ npq_application: [:npq_course] })
+          .where('npq_courses.identifier': course_identifier)
+          .where({ npq_application: { npq_lead_provider: } })
+          .first
+      end
+
+      def npq_lead_provider
+        cpd_lead_provider.npq_lead_provider
       end
 
       def matches_lead_provider?
