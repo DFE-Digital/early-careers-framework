@@ -196,9 +196,8 @@ module Schools
       Induction::SetCohortInductionProgramme.call(school_cohort:,
                                                   programme_choice:,
                                                   opt_out_of_updates:,
-                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?,
-                                                  appropriate_body_appointed: appropriate_body_appointed?,
-                                                  appropriate_body: @setup_school_cohort_form.appropriate_body)
+                                                  delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?)
+      save_appropriate_body
     end
 
     def save_appropriate_body

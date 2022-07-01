@@ -9,8 +9,6 @@ class Induction::SetCohortInductionProgramme < BaseService
       # need to save this first if it hasn't been persisted
       school_cohort.save! unless school_cohort.persisted?
 
-      set_appropriate_body
-
       programme = nil
 
       if InductionProgramme.training_programmes.keys.include? programme_choice
@@ -26,15 +24,12 @@ class Induction::SetCohortInductionProgramme < BaseService
 
 private
 
-  attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed,
-              :appropriate_body_appointed, :appropriate_body
+  attr_reader :school_cohort, :programme_choice, :opt_out_of_updates, :core_induction_programme, :delivery_partner_to_be_confirmed
 
   def initialize(school_cohort:, programme_choice:,
                  opt_out_of_updates: false,
                  core_induction_programme: nil,
-                 delivery_partner_to_be_confirmed: false,
-                 appropriate_body_appointed: nil,
-                 appropriate_body: nil)
+                 delivery_partner_to_be_confirmed: false)
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
     @school_cohort = school_cohort
@@ -42,8 +37,6 @@ private
     @opt_out_of_updates = opt_out_of_updates
     @core_induction_programme = core_induction_programme
     @delivery_partner_to_be_confirmed = delivery_partner_to_be_confirmed
-    @appropriate_body_appointed = appropriate_body_appointed
-    @appropriate_body = appropriate_body
   end
 
   def programme_attrs
@@ -62,11 +55,5 @@ private
     end
 
     attrs
-  end
-
-  def set_appropriate_body
-    Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
-                                                   appropriate_body_id: appropriate_body,
-                                                   appropriate_body_appointed:)
   end
 end
