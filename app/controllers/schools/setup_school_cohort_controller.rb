@@ -201,7 +201,6 @@ module Schools
                                                   appropriate_body: @setup_school_cohort_form.appropriate_body)
     end
 
-
     def save_appropriate_body
       Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
                                                      appropriate_body_id: @setup_school_cohort_form.appropriate_body,
