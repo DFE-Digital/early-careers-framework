@@ -38,12 +38,12 @@ RSpec.describe StoreParticipantEligibility do
       expect(ect_profile.ecf_participant_eligibility).to be_none_reason
     end
 
-    it "updates any submitted declarations" do
-      declaration = create(:ect_participant_declaration, user: ect_profile.user, participant_profile: ect_profile, course_identifier: "ecf-induction")
-      expect(declaration).to be_submitted
-      expect { service.call(participant_profile: ect_profile, eligibility_options:) }.to change { DeclarationState.count }.by(1)
-      declaration.reload
-      expect(declaration).to be_eligible
+    it "calls service for eligibility triggers" do
+      allow(RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile).to receive(:call).with(participant_profile: ect_profile)
+
+      service.call(participant_profile: ect_profile, eligibility_options:)
+
+      expect(RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile).to have_received(:call)
     end
 
     context "when an eligibility record exists" do
