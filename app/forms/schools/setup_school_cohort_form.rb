@@ -86,6 +86,10 @@ module Schools
       AppropriateBody.where(body_type:)
     end
 
+    def appropriate_body_appointed?
+      appropriate_body_appointed == "yes"
+    end
+
   private
 
     def yes_no_choices

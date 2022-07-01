@@ -13,6 +13,7 @@ module Schools
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
 
+    delegate :appropriate_body_appointed?, to: :@setup_school_cohort_form
     helper_method :appropriate_body_appointed?
 
     def expect_any_ects
@@ -200,9 +201,6 @@ module Schools
                                                   appropriate_body: @setup_school_cohort_form.appropriate_body)
     end
 
-    def appropriate_body_appointed?
-      @setup_school_cohort_form.appropriate_body_appointed == "yes"
-    end
 
     def save_appropriate_body
       Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
