@@ -41,7 +41,7 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
           npq_course: NPQCourse.all.sample,
           npq_lead_provider:,
           participant_identity: identity,
-          cohort: random_school_cohort.cohort,
+          cohort: Cohort.active_registration_cohort,
         )
       end
     end
