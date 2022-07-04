@@ -41,6 +41,22 @@ module Finance
           .count
       end
 
+      def billable_declarations_count_for_declaration_type(declaration_type)
+        scope = statement
+          .billable_statement_line_items
+          .joins(:participant_declaration)
+          .where(participant_declarations: { course_identifier: course.identifier })
+          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+
+        scope = if declaration_type == "retained"
+                  scope.where("participant_declarations.declaration_type LIKE ?", "retained-%")
+                else
+                  scope.where(participant_declarations: { declaration_type: })
+                end
+
+        scope.count
+      end
+
       def clawback_payment
         @clawback_payment ||= PaymentCalculator::NPQ::OutputPayment.call(
           contract:,

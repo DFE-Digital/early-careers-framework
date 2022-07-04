@@ -47,30 +47,21 @@ module Finance
       end
 
       def total_starts
-        statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "started" })
-          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-          .count
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).billable_declarations_count_for_declaration_type("started")
+        end
       end
 
       def total_retained
-        statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: %w[retained-1 retained-2 retained-3 retained-4] })
-          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-          .count
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).billable_declarations_count_for_declaration_type("retained")
+        end
       end
 
       def total_completed
-        statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { declaration_type: "completed" })
-          .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-          .count
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).billable_declarations_count_for_declaration_type("completed")
+        end
       end
 
       def total_voided
