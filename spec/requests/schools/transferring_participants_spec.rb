@@ -154,7 +154,12 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
 
   describe "GET /schools/:school_id/cohorts/:cohort_id/participants/transferring-participant/teacher-start-date" do
     it "renders the teacher start date template" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/teacher-start-date", params: { schools_transferring_participant_form: { full_name: ect.user.full_name } }
+      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/teacher-start-date",
+          params: { schools_transferring_participant_form: {
+            full_name: ect.user.full_name,
+            trn: ecf_participant_validation_data.trn,
+            date_of_birth: ecf_participant_validation_data.date_of_birth,
+          } }
 
       expect(subject).to render_template "schools/transferring_participants/teacher_start_date"
     end
