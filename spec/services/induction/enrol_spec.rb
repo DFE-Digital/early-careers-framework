@@ -13,6 +13,10 @@ RSpec.describe Induction::Enrol do
       expect { service.call(participant_profile:, induction_programme:) }.to change { induction_programme.induction_records.count }.by 1
     end
 
+    it "creates a participant_profile_state" do
+      expect { subject.call(participant_profile:, induction_programme:) }.to change { ParticipantProfileState.count }.by(1)
+    end
+
     context "without optional params" do
       let(:induction_record) do
         service.call(participant_profile:, induction_programme:)

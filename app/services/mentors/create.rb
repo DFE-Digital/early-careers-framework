@@ -26,7 +26,7 @@ module Mentors
           participant_identity: Identity::Create.call(user:),
         }.merge(mentor_attributes))
 
-        ParticipantProfileState.create!(participant_profile: mentor_profile)
+        ParticipantProfileState.create!(participant_profile: mentor_profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
 
         if school_cohort.default_induction_programme.present?
           Induction::Enrol.call(participant_profile: mentor_profile,

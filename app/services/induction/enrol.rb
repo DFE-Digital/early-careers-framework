@@ -3,6 +3,8 @@
 class Induction::Enrol < BaseService
   def call
     ActiveRecord::Base.transaction do
+      record_active_profile_participant_state!
+
       participant_profile.induction_records.create!(
         induction_programme:,
         start_date:,
@@ -13,9 +15,6 @@ class Induction::Enrol < BaseService
         mentor_profile:,
         school_transfer:,
       )
-      # TODO: here would be a convenient place to reactivate a withdrawn / deferred profile
-      # However this needs some checking/work by the LP team
-      # reactivate_profile! unless participant_profile.active_training_status?
     end
   end
 
@@ -48,9 +47,9 @@ private
     participant_profile.schedule.milestones.first.start_date
   end
 
-  def reactivate_profile!
+  def record_active_profile_participant_state!
     ParticipantProfileState.create!(participant_profile:,
                                     state: ParticipantProfileState.states[:active],
-                                    cpd_lead_provider: induction_programme.lead_provider&.cpd_lead_provider)
+                                    cpd_lead_provider: induction_programme&.lead_provider&.cpd_lead_provider)
   end
 end
