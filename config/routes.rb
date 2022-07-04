@@ -319,6 +319,12 @@ Rails.application.routes.draw do
     end
 
     resources :induction_coordinators, only: %i[index edit update], path: "induction-coordinators"
+
+    namespace :npq do
+      resource :applications, only: [] do
+        resource :exports, only: %i[new create], controller: "applications/exports"
+      end
+    end
   end
 
   namespace :finance do

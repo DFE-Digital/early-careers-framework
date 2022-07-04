@@ -18,9 +18,9 @@ module UserHelper
   def given_i_sign_in_as_an_admin_user
     token = "test-admin-token-#{Time.zone.now.to_f}"
 
-    create :user,
-           :admin,
-           login_token: token
+    @logged_in_admin_user = create :user,
+                                   :admin,
+                                   login_token: token
 
     visit users_confirm_sign_in_path(login_token: token)
     click_button "Continue"

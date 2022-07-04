@@ -18,6 +18,8 @@ class User < ApplicationRecord
 
   has_one :delivery_partner_profile, dependent: :destroy
 
+  has_many :npq_application_exports
+
   # TODO: Legacy associations, to be removed
   has_many :participant_profiles, through: :teacher_profile
   has_one :early_career_teacher_profile, through: :teacher_profile
