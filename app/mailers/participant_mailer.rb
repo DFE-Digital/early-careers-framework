@@ -107,7 +107,7 @@ class ParticipantMailer < ApplicationMailer
         school_name:,
         sign_in: new_user_session_url,
       },
-    ).tag(:fip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
+    ).tag(:fip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
   def cip_register_participants_reminder(induction_coordinator_profile:, school_name:)
@@ -121,7 +121,7 @@ class ParticipantMailer < ApplicationMailer
         school_name:,
         sign_in: new_user_session_url,
       },
-    ).tag(:cip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
+    ).tag(:fip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
   def sit_contact_address_bounce(induction_coordinator_profile:, school_name:)
