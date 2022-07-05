@@ -96,20 +96,40 @@ RSpec.describe PartnershipCsvUpload, type: :model do
       )
     end
 
-    it "finds schools already in a partnership with a different lead provider" do
-      partnership = create(:partnership, cohort: current_cohort)
-      partnered_school = partnership.school
-      given_the_csv_contains_urns([partnered_school.urn])
+    context "school already recruited by other provider" do
+      it "errors when school is partnered in previous year and hasn't created the following year cohort" do
+        school_cohort = create(:school_cohort, cohort: current_cohort)
+        next_cohort = create(:cohort, :next)
+        create(:partnership, school: school_cohort.school)
 
-      expect(@subject.invalid_schools.length).to eql 1
-      expect(@subject.invalid_schools).to contain_exactly(
-        {
-          urn: partnered_school.urn,
-          row_number: 1,
-          school_name: partnered_school.name,
-          message: "Recruited by other provider",
-        },
-      )
+        given_the_csv_contains_urns([school_cohort.school.urn], next_cohort)
+
+        expect(@subject.invalid_schools.length).to eql 1
+        expect(@subject.invalid_schools).to contain_exactly(
+          {
+            urn: school_cohort.school.urn,
+            row_number: 1,
+            school_name: school_cohort.school.name,
+            message: "Recruited by other provider",
+          },
+        )
+      end
+
+      it "errors when school is with a lead provider" do
+        partnership = create(:partnership, cohort: current_cohort)
+        partnered_school = partnership.school
+        given_the_csv_contains_urns([partnered_school.urn])
+
+        expect(@subject.invalid_schools.length).to eql 1
+        expect(@subject.invalid_schools).to contain_exactly(
+          {
+            urn: partnered_school.urn,
+            row_number: 1,
+            school_name: partnered_school.name,
+            message: "Recruited by other provider",
+          },
+        )
+      end
     end
   end
 
@@ -153,11 +173,11 @@ RSpec.describe PartnershipCsvUpload, type: :model do
 
 private
 
-  def given_the_csv_contains_urns(urns)
+  def given_the_csv_contains_urns(urns, cohort = current_cohort)
     file = Tempfile.new
     file.write(urns.join("\n"))
     file.close
-    @subject = build(:partnership_csv_upload, cohort: current_cohort)
+    @subject = build(:partnership_csv_upload, cohort:)
     @subject.csv.attach(io: File.open(file), filename: "test.csv", content_type: "text/csv")
     @subject.save!
   ensure
