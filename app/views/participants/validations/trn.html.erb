@@ -19,9 +19,10 @@
           <li>may include the letters ‘RP’ or a slash ‘/’ symbol, for example ‘RP99/12345’</li>
           <li>may also be called a QTS, GTC, DfE, DfES or DCSF number</li>
         </ul>
+        <p class="govuk-body">You can usually find your TRN on your payslip, teachers’ pension documents or teacher training records.</p>
       <% end %>
 
-      <p class="govuk-body"><%= govuk_link_to "Cannot find your TRN?", { action: :no_trn }, class: 'govuk-link--no-visit-state'  %></p>
+      <p class="govuk-body"><%= govuk_link_to "I cannot find my TRN", { action: :no_trn }, class: 'govuk-link--no-visit-state'  %></p>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>
