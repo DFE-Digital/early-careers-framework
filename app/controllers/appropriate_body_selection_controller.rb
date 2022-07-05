@@ -30,7 +30,14 @@ class AppropriateBodySelectionController < ApplicationController
 
   def body_selection; end
 
-  def update_body; end
+  def update_body
+    if @form.valid? :body
+      store_form
+      # END
+    else
+      render :body_selection
+    end
+  end
 
 private
 
