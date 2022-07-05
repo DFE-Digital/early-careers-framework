@@ -68,7 +68,7 @@ module Pages
     end
 
     def choose_confirm_your_name
-      click_on "Continue to confirm your name"
+      click_on "Enter your name"
 
       self
     end
