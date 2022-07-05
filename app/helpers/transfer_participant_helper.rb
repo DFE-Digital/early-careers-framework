@@ -10,7 +10,4 @@ module TransferParticipantHelper
       contact_support_schools_transferring_participant_path
     end
   end
-
-private
-
 end
