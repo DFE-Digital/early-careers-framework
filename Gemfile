@@ -86,9 +86,6 @@ gem "openapi3_parser", "~> 0.9.2"
 
 gem "ransack"
 
-# Payment breakdown
-gem "terminal-table"
-
 gem "friendly_id", "~> 5.4", ">= 5.4.2"
 
 platform :mswin, :mingw, :x64_mingw do
