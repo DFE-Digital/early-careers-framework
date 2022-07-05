@@ -11,11 +11,9 @@
         <p class="govuk-body">We’ll tell <%= @profile.user.full_name&.titleize %> that you’ve reported their transfer. They’ll appear in the ’moving schools’
         section of your dashboard until their leaving date.</p>
 
-        <p class="govuk-body">They should continue with their current training programme until their leaving date.
-        Their new school will arrange how they’ll continue their training after that.</p>
+        <p class="govuk-body">They should continue with their current training programme until their leaving date. Their new school will arrange how they’ll continue their training after that.</p>
 
         <h2 class="govuk-heading-m">Remember to:</h2>
-
         <ol class="govuk-list govuk-list--number">
           <li>Report this transfer to your appropriate body. They need to complete some checks and update <%= @profile.user.full_name&.titleize %>’s record with the Teaching Regulation Agency (TRA).</li>
           <li>If you work with a training provider, let them know that this person is transferring to another school.</li>
@@ -26,7 +24,7 @@
         <% else %>
           <p class="govuk-body">You need to assign a new mentor for any ECTs they’ve been working with.</p>
         <% end %>
-        <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
+        <%= govuk_link_to "Return to your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
 
     </div>
 </div>
