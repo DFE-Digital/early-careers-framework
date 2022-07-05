@@ -55,7 +55,7 @@ module Pages
     end
 
     def choose_add_your_national_insurance_number
-      click_on "Add your National Insurance number"
+      click_on "Enter your National Insurance number"
 
       self
     end
