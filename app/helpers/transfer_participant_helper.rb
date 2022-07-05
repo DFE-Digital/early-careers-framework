@@ -13,7 +13,4 @@ module TransferParticipantHelper
 
 private
 
-  def doing_fip?(school_cohort)
-    school_cohort.induction_programmes.any?(&:full_induction_programme?)
-  end
 end
