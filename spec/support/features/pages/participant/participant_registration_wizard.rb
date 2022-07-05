@@ -81,7 +81,7 @@ module Pages
     end
 
     def add_full_name(full_name)
-      fill_in "What was your full name when you started your initial teacher training?", with: full_name
+      fill_in "What was your full name when you started your ITT?", with: full_name
       click_on "Continue"
 
       self
