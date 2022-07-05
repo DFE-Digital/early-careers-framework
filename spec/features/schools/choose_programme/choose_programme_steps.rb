@@ -80,7 +80,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_am_taken_to_the_complete_page
-    expect(page).to have_content("You can now add ECTs and mentors when you’re ready")
+    expect(page).to have_content("You’ve submitted your training information")
   end
 
   def then_i_am_taken_to_what_changes_page
@@ -111,17 +111,42 @@ module ChooseProgrammeSteps
     expect(page).to have_content("You’ve submitted your training information")
   end
 
-  def then_a_notification_email_is_sent_to_the_lead_provider
-    expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
-      .with(
-        "LeadProviderMailer",
-        "programme_changed_email",
-        "deliver_now",
-        a_hash_including(:args),
-      )
+  def then_i_am_taken_to_the_appropriate_body_appointed_page
+    expect(page).to have_content("Have you appointed an appropriate body?")
+  end
+
+  def then_i_am_taken_to_the_appropriate_body_type_page
+    expect(page).to have_content("Which type of appropriate body have you appointed?")
+  end
+
+  def then_i_am_taken_to_the_local_authorities_selection_page
+    expect(page).to have_content("Which local authority have you appointed?")
+  end
+
+  def then_i_am_taken_to_the_select_national_organisation_selection_page
+    expect(page).to have_content("Which national appropriate body have you appointed?")
+  end
+
+  def then_i_see_black_lp_and_dp_names
+    expect(page).to have_summary_row("Training provider", "")
+    expect(page).to have_summary_row("Delivery partner", "")
+  end
+
+  def then_i_am_taken_to_the_teaching_school_hubs_selection_page
+    expect(page).to have_content("Which teaching school hub have you appointed?")
   end
 
   # And steps
+
+  def and_a_notification_email_is_sent_to_the_lead_provider
+    expect(ActionMailer::MailDeliveryJob).to have_been_enqueued
+                                               .with(
+                                                 "LeadProviderMailer",
+                                                 "programme_changed_email",
+                                                 "deliver_now",
+                                                 a_hash_including(:args),
+                                               )
+  end
 
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school], user: create(:user, full_name: "Carl Coordinator"))
@@ -214,6 +239,22 @@ module ChooseProgrammeSteps
     when_i_choose_no
   end
 
+  def and_i_see_no_appropriate_body
+    expect(page).to have_summary_row("Appropriate body", "")
+  end
+
+  def and_i_see_appropriate_body(name)
+    expect(page).to have_summary_row("Appropriate body", name)
+  end
+
+  def and_i_see_the_tell_us_appropriate_body_copy
+    expect(page).to have_content("tell us which appropriate body you’ve appointed for your ECTs")
+  end
+
+  def and_i_dont_see_the_tell_us_appropriate_body_copy
+    expect(page).to_not have_content("tell us which appropriate body you’ve appointed for your ECTs")
+  end
+
   # When steps
 
   def when_i_start_programme_selection_for_next_cohort
@@ -282,8 +323,23 @@ module ChooseProgrammeSteps
     visit change_provider_schools_setup_school_cohort_path(@school, @cohort_2022)
   end
 
-  def then_i_see_black_lp_and_dp_names
-    expect(page).to have_summary_row("Training provider", "")
-    expect(page).to have_summary_row("Delivery partner", "")
+  def when_i_choose_appropriate_body_unknown
+    choose "I do not know the appropriate body yet"
+  end
+
+  def when_i_choose_local_authority
+    choose "Local authority"
+  end
+
+  def when_i_choose_national_organisation
+    choose("National organisation")
+  end
+
+  def when_i_fill_appropriate_body_with(value)
+    when_i_fill_in_autocomplete "schools-setup-school-cohort-form-appropriate-body-field", with: value
+  end
+
+  def when_i_choose_teaching_school_hub
+    choose "Teaching school hub"
   end
 end

@@ -51,6 +51,10 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_training_confirmation_page
 
     when_i_click_the_confirm_button
+    then_i_am_taken_to_the_appropriate_body_appointed_page
+
+    when_i_choose_no
+    and_i_click_continue
     then_i_am_taken_to_the_training_submitted_page
 
     when_i_click_on_the_return_to_your_training_link
@@ -78,6 +82,10 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_training_confirmation_page
 
     when_i_click_the_confirm_button
+    then_i_am_taken_to_the_appropriate_body_appointed_page
+
+    when_i_choose_no
+    and_i_click_continue
     then_i_am_taken_to_the_training_submitted_page
 
     when_i_click_on_the_return_to_your_training_link
@@ -103,6 +111,10 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_training_confirmation_page
 
     when_i_click_the_confirm_button
+    then_i_am_taken_to_the_appropriate_body_appointed_page
+
+    when_i_choose_no
+    and_i_click_continue
     then_i_am_taken_to_the_training_submitted_page
 
     when_i_click_on_the_return_to_your_training_link
@@ -139,10 +151,18 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
       and_i_choose_no
       and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
+
+      when_i_choose_no
+      and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
       when_i_go_back_to_change_provider_page
       and_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
+
+      when_i_choose_no
       and_i_click_continue
       then_i_am_taken_to_the_complete_page
 
@@ -166,6 +186,10 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       then_i_am_taken_to_the_change_provider_page
       and_i_see_the_lead_provider
       and_i_see_the_delivery_partner
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
 
       when_i_choose_no
       and_i_click_continue
@@ -205,10 +229,14 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_lead_provider_confirmation_page
 
         when_i_click_the_confirm_button
-        then_a_notification_email_is_sent_to_the_lead_provider
+        then_i_am_taken_to_the_appropriate_body_appointed_page
+
+        when_i_choose_no
+        and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
         and_i_see_the_lead_provider
         and_i_see_the_delivery_partner
+        and_a_notification_email_is_sent_to_the_lead_provider
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
@@ -239,9 +267,13 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_delivery_partner_confirmation_page
 
         when_i_click_the_confirm_button
-        then_a_notification_email_is_sent_to_the_lead_provider
+        then_i_am_taken_to_the_appropriate_body_appointed_page
+
+        when_i_choose_no
+        and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
         and_i_see_the_delivery_partner
+        and_a_notification_email_is_sent_to_the_lead_provider
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
@@ -272,8 +304,12 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_to_design_own_programme_confirmation_page
 
         when_i_click_the_confirm_button
-        then_a_notification_email_is_sent_to_the_lead_provider
+        then_i_am_taken_to_the_appropriate_body_appointed_page
+
+        when_i_choose_no
+        and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
+        and_a_notification_email_is_sent_to_the_lead_provider
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
@@ -303,13 +339,153 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
         then_i_am_taken_to_the_change_to_design_and_deliver_own_programme_confirmation_page
 
         when_i_click_the_confirm_button
-        then_a_notification_email_is_sent_to_the_lead_provider
+        then_i_am_taken_to_the_appropriate_body_appointed_page
+
+        when_i_choose_no
+        and_i_click_continue
         then_i_am_taken_to_the_training_change_submitted_page
+        and_a_notification_email_is_sent_to_the_lead_provider
 
         when_i_click_on_the_return_to_your_training_link
         then_i_am_taken_to_the_manage_your_training_page
         and_i_see_programme_to_design_and_deliver_own_programme
       end
+    end
+  end
+
+  context "Appropriate body" do
+    before do
+      @local_authorities = create_list(:appropriate_body_local_authority, 5)
+      @teaching_school_hubs = create_list(:appropriate_body_teaching_school_hub, 5)
+      @national_organisations = create_list(:appropriate_body_national_organisation, 2)
+    end
+
+    scenario "A school does not appoint an appropriate body" do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_cohort_for_next_academic_year_is_created
+      and_the_next_cohort_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+      when_i_start_programme_selection_for_next_cohort
+      then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+      when_i_choose_ects_expected
+      and_i_click_continue
+      then_i_am_taken_to_the_change_provider_page
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+      and_i_see_the_tell_us_appropriate_body_copy
+
+      when_i_click_on_the_return_to_your_training_link
+      then_i_am_taken_to_the_manage_your_training_page
+      and_i_see_no_appropriate_body
+    end
+
+    scenario "A school chooses to appoint a local authority as appropriate body" do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_cohort_for_next_academic_year_is_created
+      and_the_next_cohort_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+      when_i_start_programme_selection_for_next_cohort
+      then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+      when_i_choose_ects_expected
+      and_i_click_continue
+      then_i_am_taken_to_the_change_provider_page
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
+
+      when_i_choose_yes
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_type_page
+
+      when_i_choose_local_authority
+      and_i_click_continue
+      then_i_am_taken_to_the_local_authorities_selection_page
+
+      when_i_fill_appropriate_body_with @local_authorities.first.name
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
+
+      when_i_click_on_the_return_to_your_training_link
+      then_i_am_taken_to_the_manage_your_training_page
+      and_i_see_appropriate_body @local_authorities.first.name
+    end
+
+    scenario "A school chooses to appoint a national organisation as appropriate body" do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_cohort_for_next_academic_year_is_created
+      and_the_next_cohort_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+      when_i_start_programme_selection_for_next_cohort
+      then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+      when_i_choose_ects_expected
+      and_i_click_continue
+      then_i_am_taken_to_the_change_provider_page
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
+
+      when_i_choose_yes
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_type_page
+
+      when_i_choose_national_organisation
+      and_i_click_continue
+      then_i_am_taken_to_the_select_national_organisation_selection_page
+
+      choose @national_organisations.first.name
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
+
+      when_i_click_on_the_return_to_your_training_link
+      then_i_am_taken_to_the_manage_your_training_page
+      and_i_see_appropriate_body @national_organisations.first.name
+    end
+
+    scenario "A school chooses to appoint a teaching school hub as appropriate body" do
+      given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+      and_cohort_for_next_academic_year_is_created
+      and_the_next_cohort_is_open_for_registrations
+      and_i_am_signed_in_as_an_induction_coordinator
+      when_i_start_programme_selection_for_next_cohort
+      then_i_am_taken_to_ects_expected_in_next_academic_year_page
+
+      when_i_choose_ects_expected
+      and_i_click_continue
+      then_i_am_taken_to_the_change_provider_page
+
+      when_i_choose_no
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_appointed_page
+
+      when_i_choose_yes
+      and_i_click_continue
+      then_i_am_taken_to_the_appropriate_body_type_page
+
+      when_i_choose_teaching_school_hub
+      and_i_click_continue
+      then_i_am_taken_to_the_teaching_school_hubs_selection_page
+
+      when_i_fill_appropriate_body_with @teaching_school_hubs.first.name
+      and_i_click_continue
+      then_i_am_taken_to_the_complete_page
+      and_i_dont_see_the_tell_us_appropriate_body_copy
+
+      when_i_click_on_the_return_to_your_training_link
+      then_i_am_taken_to_the_manage_your_training_page
+      and_i_see_appropriate_body @teaching_school_hubs.first.name
     end
   end
 end

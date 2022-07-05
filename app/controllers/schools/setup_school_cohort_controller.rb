@@ -13,6 +13,9 @@ module Schools
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
 
+    delegate :appropriate_body_appointed?, to: :@setup_school_cohort_form
+    helper_method :appropriate_body_appointed?
+
     def expect_any_ects
       if no_ects_expected
         store_form_redirect_to_next_step :no_expected_ects
@@ -36,7 +39,9 @@ module Schools
       store_form_redirect_to_next_step :programme_confirmation
     end
 
-    def programme_confirmation; end
+    def programme_confirmation
+      start_appropriate_body_selection :programme_confirmation, :training_confirmation, :save_training_choice
+    end
 
     def training_confirmation
       reset_form_data
@@ -47,10 +52,7 @@ module Schools
       when "yes"
         store_form_redirect_to_next_step :what_changes
       when "no"
-        # skip if there is already a programme selected for the school cohort
-        use_the_same_training_programme! unless active_partnership?
-
-        store_form_redirect_to_next_step :complete
+        start_appropriate_body_selection :change_provider, :complete, :save_provider_change
       end
     end
 
@@ -59,15 +61,7 @@ module Schools
     end
 
     def what_changes_confirmation
-      programme_choice = @setup_school_cohort_form.programme_choice
-
-      set_cohort_induction_programme!(programme_choice)
-
-      if previous_school_cohort.full_induction_programme?
-        send_fip_programme_changed_email!
-      end
-
-      store_form_redirect_to_next_step :what_changes_submitted
+      start_appropriate_body_selection :what_changes_confirmation, :what_changes_submitted, :save_programme_change
     end
 
     def what_changes_submitted; end
@@ -78,13 +72,44 @@ module Schools
 
     def complete; end
 
-    def save_programme
-      save_school_choice!
+    def appropriate_body_appointed
+      if appropriate_body_appointed?
+        store_form_redirect_to_next_step :appropriate_body_type
+      else
+        end_appropriate_body_selection
+      end
+    end
 
-      redirect_to training_confirmation_schools_setup_school_cohort_path
+    def appropriate_body_type
+      store_form_redirect_to_next_step :appropriate_body
+    end
+
+    def appropriate_body
+      end_appropriate_body_selection
     end
 
   private
+
+    def save_programme_change
+      set_cohort_induction_programme!(@setup_school_cohort_form.programme_choice)
+
+      if previous_school_cohort.full_induction_programme?
+        send_fip_programme_changed_email!
+      end
+    end
+
+    def save_provider_change
+      # skip if there is already a programme selected for the school cohort
+      if active_partnership?
+        save_appropriate_body
+      else
+        use_the_same_training_programme!
+      end
+    end
+
+    def save_training_choice
+      set_cohort_induction_programme!(@setup_school_cohort_form.how_will_you_run_training_choice)
+    end
 
     def send_fip_programme_changed_email!
       previous_partnership = previous_school_cohort.default_induction_programme.partnership
@@ -140,7 +165,10 @@ module Schools
             .permit(:expect_any_ects_choice,
                     :how_will_you_run_training_choice,
                     :change_provider_choice,
-                    :what_changes_choice)
+                    :what_changes_choice,
+                    :appropriate_body_appointed,
+                    :appropriate_body_type,
+                    :appropriate_body)
     end
 
     def validate_request_or_render
@@ -169,6 +197,13 @@ module Schools
                                                   programme_choice:,
                                                   opt_out_of_updates:,
                                                   delivery_partner_to_be_confirmed: delivery_partner_to_be_confirmed?)
+      save_appropriate_body
+    end
+
+    def save_appropriate_body
+      Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
+                                                     appropriate_body_id: @setup_school_cohort_form.appropriate_body,
+                                                     appropriate_body_appointed: appropriate_body_appointed?)
     end
 
     def school_cohort
@@ -191,12 +226,21 @@ module Schools
       @delivery_partner_name ||= school.delivery_partner_for(previous_cohort.start_year)&.name
     end
 
-    def save_school_choice!
-      set_cohort_induction_programme!(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice])
+    def delivery_partner_to_be_confirmed?
+      @setup_school_cohort_form.what_changes_choice == "change_delivery_partner"
     end
 
-    def delivery_partner_to_be_confirmed?
-      @setup_school_cohort_form.attributes[:what_changes_choice] == "change_delivery_partner"
+    def start_appropriate_body_selection(from_action, to_action, on_save)
+      @setup_school_cohort_form.appropriate_body_from_action = from_action
+      @setup_school_cohort_form.appropriate_body_to_action = to_action
+      @setup_school_cohort_form.on_save = on_save
+      store_form_redirect_to_next_step :appropriate_body_appointed
+    end
+
+    def end_appropriate_body_selection
+      on_save = method(@setup_school_cohort_form.on_save)
+      on_save.call
+      store_form_redirect_to_next_step @setup_school_cohort_form.appropriate_body_to_action
     end
   end
 end

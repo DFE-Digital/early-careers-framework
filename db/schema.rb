@@ -99,6 +99,14 @@ ActiveRecord::Schema.define(version: 2022_06_27_093758) do
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end
 
+  create_table "appropriate_bodies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "body_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
+  end
+
   create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "version", default: "0.0.1", null: false
     t.jsonb "raw"
@@ -644,8 +652,8 @@ ActiveRecord::Schema.define(version: 2022_06_27_093758) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "notes"
     t.string "start_term", default: "autumn_2021", null: false
+    t.string "notes"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -790,6 +798,9 @@ ActiveRecord::Schema.define(version: 2022_06_27_093758) do
     t.uuid "core_induction_programme_id"
     t.boolean "opt_out_of_updates", default: false, null: false
     t.uuid "default_induction_programme_id"
+    t.uuid "appropriate_body_id"
+    t.boolean "appropriate_body_unknown", default: false, null: false
+    t.index ["appropriate_body_id"], name: "index_school_cohorts_on_appropriate_body_id"
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["default_induction_programme_id"], name: "index_school_cohorts_on_default_induction_programme_id"

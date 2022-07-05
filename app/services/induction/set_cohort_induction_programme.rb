@@ -5,6 +5,7 @@ class Induction::SetCohortInductionProgramme < BaseService
     ActiveRecord::Base.transaction do
       school_cohort.induction_programme_choice = programme_choice
       school_cohort.opt_out_of_updates = opt_out_of_updates
+
       # need to save this first if it hasn't been persisted
       school_cohort.save! unless school_cohort.persisted?
 

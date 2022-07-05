@@ -410,6 +410,8 @@ Rails.application.routes.draw do
           get "change-programme", as: :change_programme
           get "roles", as: :roles
 
+          get "add-appropriate-body-not-available", action: :add
+
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
@@ -422,6 +424,7 @@ Rails.application.routes.draw do
             put "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
 
             get "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
+            put "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
 
             get "training-confirmation", to: "setup_school_cohort#training_confirmation"
 
@@ -437,6 +440,15 @@ Rails.application.routes.draw do
             put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
+
+            get "appropriate-body-appointed", to: "setup_school_cohort#appropriate_body_appointed"
+            put "appropriate-body-appointed", to: "setup_school_cohort#appropriate_body_appointed"
+
+            get "appropriate-body-type", to: "setup_school_cohort#appropriate_body_type"
+            put "appropriate-body-type", to: "setup_school_cohort#appropriate_body_type"
+
+            get "appropriate-body", to: "setup_school_cohort#appropriate_body"
+            put "appropriate-body", to: "setup_school_cohort#appropriate_body"
 
             get "complete", to: "setup_school_cohort#complete"
           end

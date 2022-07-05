@@ -272,6 +272,10 @@ en:
               blank: "Choose how you will run training for new starters"
             what_changes_choice:
               blank: "Choose what change you plan to make"
+            appropriate_body_type:
+              blank: "Choose an appropriate body type"
+            appropriate_body:
+              blank: "Choose an appropriate body"
 
   page_titles:
     lead_providers:
@@ -284,6 +288,14 @@ en:
         help: "Get help"
       content:
         partnership_guide: "Guide for providers to manage their schools on the ECF service"
+
+  setup_school_cohort:
+    appropriate_body_type:
+      title:
+        local_authority: Which local authority have you appointed?
+        national: Which national appropriate body have you appointed?
+        teaching_school_hub: Which teaching school hub have you appointed?
+
 
   manage_your_training:
     induction_programmes:

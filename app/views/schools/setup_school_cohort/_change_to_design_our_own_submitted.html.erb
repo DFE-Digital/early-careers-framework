@@ -1,22 +1,23 @@
 <h2 class="govuk-heading-m">What to do next</h2>
-<p class="govuk-body">You need to:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>design a 2-year programme of support and training that covers every ‘learn that’ and ‘learn how to’ statement in
-    the
-    <%= govuk_link_to 'early career framework (ECF) (opens in new tab)', "https://www.gov.uk/government/publications/early-career-framework",
-    target: :_blank,
-    rel: "noopener noreferrer" %>
-  <li>contact your appropriate body to find out what evidence is needed to demonstrate that your programme:
-    <ul class="govuk-list govuk-list--bullet">
-      <li>is based on the ECF</li>
-      <li>meets the statutory requirements</li>
-    </ul>
-  </li>
-</ul>
-<p class="govuk-body">You do not need to add information about your ECTs and mentors to this service.</p>
-<p class="govuk-body govuk-!-margin-bottom-7">
-  <%= govuk_link_to 'See our statutory guidance (opens in new tab)', "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction",
-  target: :_blank,
-  rel: "noopener noreferrer" %>
-  for information about funding, time off timetable, and roles.
-</p>
+
+<% if !appropriate_body_appointed? %>
+  <p>You need to:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>design a 2-year programme of support and training that covers every 'learn that' and 'learn how to' statement in the <a href="https://www.gov.uk/government/publications/early-career-framework" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">early career framework (opens in new tab)</a></li>
+    <li>tell us which appropriate body you’ve appointed for your ECTs</li>
+  </ul>
+<% else %>
+  <p>You need to design a 2-year programme of support and training that covers every 'learn that' and 'learn how to' statement in the <a href="https://www.gov.uk/government/publications/early-career-framework" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">early career framework (opens in new tab)</a>.</p>
+<% end %>
+
+<p>You do not need to register your ECTs and mentors on this service.</p>
+
+<% if appropriate_body_appointed? %>
+  <p class="govuk-body">Contact your appropriate body to find out what evidence is needed to demonstrate that your programme:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>is based on the ECF</li>
+    <li>meets the statutory requirements</li>
+  </ul>
+<% end %>
+
+<p class="govuk-body"><a class="govuk-link" href="https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank"> See our guidance collection (opens in new tab)</a> for more information about induction, training and support for ECTs.</p>
