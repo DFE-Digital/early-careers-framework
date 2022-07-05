@@ -1,0 +1,40 @@
+<% appropriate_bodies = @form.body_choices %>
+
+<% title = t("setup_school_cohort.appropriate_body_type.title.#{@form.body_type}") %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: url_for(action: :body_type)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= school_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <div class="govuk-inset-text">
+      Remember to contact the appropriate body directly to appoint them for your ECTs, if you have not done so already.
+    </div>
+
+    <%= form_for @form, url: { action: :body_selection }, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <% if @form.body_type == "national" %>
+        <%= f.govuk_collection_radio_buttons(:body_id,
+                                             appropriate_bodies,
+                                             :id,
+                                             :name,
+                                             legend: { hidden: true },
+                                             ) %>
+      <% else %>
+        <%= f.govuk_collection_select(:body_id,
+                                      appropriate_bodies,
+                                      :id,
+                                      :name,
+                                      label: { hidden: true },
+                                      options: { include_blank: true },
+                                      class: "autocomplete") %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

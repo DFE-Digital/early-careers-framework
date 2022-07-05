@@ -54,6 +54,19 @@ Rails.application.routes.draw do
     end
   end
 
+  scope path: "/appropriate-body" do
+    get "/", to: "appropriate_body_selection#start"
+
+    get "appointed", to: "appropriate_body_selection#body_appointed"
+    put "appointed", to: "appropriate_body_selection#update_body_appointed"
+
+    get "type", to: "appropriate_body_selection#body_type"
+    put "type", to: "appropriate_body_selection#update_body_type"
+
+    get "selection", to: "appropriate_body_selection#body_selection"
+    put "selection", to: "appropriate_body_selection#update_body"
+  end
+
   namespace :api, defaults: { format: "json" } do
     resource :notify_callback, only: :create, path: "notify-callback"
 
