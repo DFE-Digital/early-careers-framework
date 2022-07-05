@@ -10,8 +10,8 @@ class ParticipantMailer < ApplicationMailer
     mentor_fip: "ba3d4caf-5ef8-4a14-9e79-b7719780da09",
     sit_mentor_cip: "7aa80a9c-e486-42e8-92c8-7f970459d37d",
     sit_mentor_fip: "0b7f850f-f26a-4e62-9fc5-17fbd8286e49",
-    fip_preterm_reminder: "12969797-c110-436d-b10b-7f7d08d4d9df",
-    cip_preterm_reminder: "623cb545-1bc4-4407-94a1-474e2a080e39",
+    fip_register_participants_reminder: "12969797-c110-436d-b10b-7f7d08d4d9df",
+    cip_register_participants_reminder: "623cb545-1bc4-4407-94a1-474e2a080e39",
     ect_fip_added_and_validated: "93fba542-f118-4855-9509-83583f251eab",
     mentor_fip_added_and_validated: "f71fa01a-ecc2-49e5-999b-48ff0070e13a",
     ect_cip_added_and_validated: "b0d58248-c49e-4ec6-bca2-2c4cf151c421",
@@ -96,9 +96,9 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:preterm_reminder_unconfirmed_for_2022).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def fip_preterm_reminder(induction_coordinator_profile:, school_name:)
+  def fip_register_participants_reminder(induction_coordinator_profile:, school_name:)
     template_mail(
-      PARTICIPANT_TEMPLATES[:fip_preterm_reminder],
+      PARTICIPANT_TEMPLATES[:fip_register_participants_reminder],
       to: induction_coordinator_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
@@ -110,9 +110,9 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:fip_preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def cip_preterm_reminder(induction_coordinator_profile:, school_name:)
+  def cip_register_participants_reminder(induction_coordinator_profile:, school_name:)
     template_mail(
-      PARTICIPANT_TEMPLATES[:cip_preterm_reminder],
+      PARTICIPANT_TEMPLATES[:cip_register_participants_reminder],
       to: induction_coordinator_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
