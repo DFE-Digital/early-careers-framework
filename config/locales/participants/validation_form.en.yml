@@ -27,10 +27,10 @@ en:
       extra_steps:
         nino:
           note: Tell us your National Insurance number to help us to find your details.
-          button: Add your National Insurance number
+          button: Enter your National Insurance number
         name_changed:
           note: Confirming the full name we have for you may help us find your details.
-          button: Continue to confirm your name
+          button: Enter your name
         manual_check:
           note: Our support team may contact you for more information to help us complete our checks.
           button: Continue
