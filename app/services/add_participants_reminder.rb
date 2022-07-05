@@ -15,8 +15,9 @@ class AddParticipantsReminder
 
     SchoolCohort.includes(school: :induction_coordinators)
                 .where(induction_programme_choice: :full_induction_programme, cohort:).each do |school_cohort|
+      next if school_cohort.ecf_participant_profiles.any?
+
       school_cohort.school.induction_coordinator_profiles.each do |sit|
-        next if school_cohort.ecf_participant_profiles.any?
         next if Email.associated_with(sit).tagged_with(:fip_register_participants_reminder).any?
 
         ParticipantMailer.fip_register_participants_reminder(induction_coordinator_profile: sit, school_name: school_cohort.school.name).deliver_later
@@ -29,8 +30,9 @@ class AddParticipantsReminder
 
     SchoolCohort.includes(school: :induction_coordinators)
                 .where(induction_programme_choice: :core_induction_programme, cohort:).each do |school_cohort|
+      next if school_cohort.ecf_participant_profiles.any?
+
       school_cohort.school.induction_coordinator_profiles.each do |sit|
-        next if school_cohort.ecf_participant_profiles.any?
         next if Email.associated_with(sit).tagged_with(:cip_register_participants_reminder).any?
 
         ParticipantMailer.cip_register_participants_reminder(induction_coordinator_profile: sit, school_name: school_cohort.school.name).deliver_later
