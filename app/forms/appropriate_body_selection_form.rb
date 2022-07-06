@@ -5,7 +5,7 @@ class AppropriateBodySelectionForm
   include ActiveRecord::AttributeAssignment
   include ActiveModel::Serialization
 
-  attr_accessor :body_appointed, :body_type, :body_id, :from_path, :to_path
+  attr_accessor :body_appointed, :body_type, :body_id
 
   validates :body_appointed, inclusion: { in: %w[yes no] }, on: :body_appointed
   validates :body_type, presence: true, on: :body_type,
@@ -17,8 +17,6 @@ class AppropriateBodySelectionForm
       body_appointed:,
       body_type:,
       body_id:,
-      from_path:,
-      to_path:,
     }
   end
 
@@ -37,7 +35,7 @@ class AppropriateBodySelectionForm
     ]
   end
 
-  def body_choices()
+  def body_choices
     AppropriateBody.where(body_type:)
   end
 

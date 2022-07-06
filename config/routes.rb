@@ -54,9 +54,7 @@ Rails.application.routes.draw do
     end
   end
 
-  scope path: "/appropriate-body" do
-    get "/", to: "appropriate_body_selection#start"
-
+  scope path: "/appropriate-body", as: "appropriate_body" do
     get "appointed", to: "appropriate_body_selection#body_appointed"
     put "appointed", to: "appropriate_body_selection#update_body_appointed"
 
@@ -440,8 +438,7 @@ Rails.application.routes.draw do
             put "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
 
             get "training-confirmation", to: "setup_school_cohort#training_confirmation"
-
-            post "save-programme", to: "setup_school_cohort#save_programme"
+            put "training-confirmation", to: "setup_school_cohort#training_confirmation"
 
             get "change-provider", to: "setup_school_cohort#change_provider"
             put "change-provider", to: "setup_school_cohort#change_provider"
@@ -454,14 +451,7 @@ Rails.application.routes.draw do
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
 
-            get "appropriate-body-appointed", to: "setup_school_cohort#appropriate_body_appointed"
-            put "appropriate-body-appointed", to: "setup_school_cohort#appropriate_body_appointed"
-
-            get "appropriate-body-type", to: "setup_school_cohort#appropriate_body_type"
-            put "appropriate-body-type", to: "setup_school_cohort#appropriate_body_type"
-
-            get "appropriate-body", to: "setup_school_cohort#appropriate_body"
-            put "appropriate-body", to: "setup_school_cohort#appropriate_body"
+            appropriate_body_selection_routes "setup_school_cohort"
 
             get "complete", to: "setup_school_cohort#complete"
           end

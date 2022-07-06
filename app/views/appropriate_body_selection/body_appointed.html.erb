@@ -1,17 +1,17 @@
 <% title = "Have you appointed an appropriate body?" %>
 <% content_for :title, title %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: @form.from_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: appropriate_body_from_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= school_name %></span>
+    <span class="govuk-caption-xl"><%= appropriate_body_school_name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
-    <%= form_for @form, url: { action: :update_body_appointed }, method: :put do |f| %>
+    <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body_appointed }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_collection_radio_buttons(
         :body_appointed,
-        @form.body_appointed_choices,
+        @appropriate_body_form.body_appointed_choices,
         :id, :name,
         inline: true,
         legend: { hidden: true }) do %>
