@@ -16,11 +16,11 @@ Rails.application.routes.draw do
   end
 
   scope :pages, controller: "pages" do
-    get "/:page", action: :show, as: :page
-
     get "/ect-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-early-career-teachers-ects-ecf-based-training")
     get "/mentor-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-mentors-how-to-support-ecf-based-training")
     get "/school-leader-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training")
+
+    get "/:page", action: :show, as: :page
   end
 
   get "/induction-tutor-materials/:provider/:year", to: "pages#induction_tutor_materials", as: :induction_tutor_materials
