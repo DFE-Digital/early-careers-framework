@@ -16,11 +16,11 @@ module AppropriateBodySelection
 
     def update_appropriate_body_appointed
       if @appropriate_body_form.valid? :body_appointed
-        store_form
+        store_appropriate_body_form
         if @appropriate_body_form.body_appointed?
           redirect_to action: :body_type
         else
-          # TODO: end
+          method(appropriate_body_submit_action).call
         end
       else
         render "/appropriate_body_selection/body_appointed"
@@ -33,7 +33,7 @@ module AppropriateBodySelection
 
     def update_appropriate_body_type
       if @appropriate_body_form.valid? :body_type
-        store_form
+        store_appropriate_body_form
         redirect_to action: :body_selection
       else
         render "/appropriate_body_selection/body_type"
@@ -46,7 +46,7 @@ module AppropriateBodySelection
 
     def update_appropriate_body
       if @appropriate_body_form.valid? :body
-        store_form
+        store_appropriate_body_form
         # TODO: end
       else
         render "/appropriate_body_selection/body_selection"
@@ -86,7 +86,7 @@ module AppropriateBodySelection
                     :body_id)
     end
 
-    def store_form
+    def store_appropriate_body_form
       session[:appropriate_body_selection_form] = @appropriate_body_form.serializable_hash
     end
 
@@ -96,6 +96,10 @@ module AppropriateBodySelection
 
     def appropriate_body_from_path
       session_data[:from_path]
+    end
+
+    def appropriate_body_submit_action
+      session_data[:submit_action]
     end
 
     def appropriate_body_school_name

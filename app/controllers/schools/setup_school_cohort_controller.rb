@@ -42,16 +42,13 @@ module Schools
     end
 
     def programme_confirmation
-      start_appropriate_body_selection from_path: url_for(action: :what_changes_confirmation),
-                                       submit_path: :training_confirmation,
+      start_appropriate_body_selection from_path: url_for(action: :programme_confirmation),
+                                       submit_action: :save_training_choice,
                                        school_name: @school.name
       # start_appropriate_body_selection :programme_confirmation, :training_confirmation, :save_training_choice
     end
 
     def training_confirmation
-      save_training_choice
-      reset_form_data
-      redirect_to action: :training_confirmation
     end
 
     def change_provider
@@ -60,7 +57,7 @@ module Schools
         store_form_redirect_to_next_step :what_changes
       when "no"
         start_appropriate_body_selection from_path: :programme_confirmation,
-                                         submit_path: :training_confirmation,
+                                         submit_action: :training_confirmation,
                                          school_name: @school.name
         # start_appropriate_body_selection :change_provider, :complete, :save_provider_change
       end
@@ -122,6 +119,7 @@ module Schools
 
     def save_training_choice
       set_cohort_induction_programme!(@setup_school_cohort_form.how_will_you_run_training_choice)
+      redirect_to action: :training_confirmation
     end
 
     def send_fip_programme_changed_email!
