@@ -26,7 +26,7 @@ module Finance
               clp.name                                               AS lead_provider_name,
                 na.school_urn                                        AS school_urn,
                 na.eligible_for_funding                              AS eligible_for_funding,
-                (SELECT name FROM schools WHERE urn = na.school_urn) AS school_name,
+                schools.name                                         AS school_name,
                 pd.user_id                                           AS participant_id,
                 tp.trn                                               AS participant_trn,
                 pp.id                                                AS application_id,
@@ -52,11 +52,12 @@ module Finance
                   GROUP BY participant_profile_id, state, reason
                 ) pps ON pps.participant_profile_id = pp.id
               ) pps ON pps.id = pp.id
-              JOIN teacher_profiles tp  ON tp.id  = pp.teacher_profile_id
-              JOIN npq_applications na  ON na.id  = pd.participant_profile_id
+              JOIN teacher_profiles tp  ON tp.id = pp.teacher_profile_id
+              JOIN npq_applications na  ON na.id = pd.participant_profile_id
+              LEFT OUTER JOIN schools   ON na.school_urn = schools.urn
               JOIN statement_line_items ON statement_line_items.participant_declaration_id = pd.id
               JOIN statements           ON statements.id = statement_line_items.statement_id
-              JOIN schedules sc         ON sc.id  = pp.schedule_id
+              JOIN schedules sc         ON sc.id = pp.schedule_id
               WHERE pd.type = 'ParticipantDeclaration::NPQ'
               ORDER BY clp.name ASC, school_name ASC, course_identifier ASC) TO STDOUT WITH CSV DELIMITER ',' HEADER;
       SQL
