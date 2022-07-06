@@ -18,7 +18,7 @@ module AppropriateBodySelection
       if @appropriate_body_form.valid? :body_appointed
         store_appropriate_body_form
         if @appropriate_body_form.body_appointed?
-          redirect_to action: :body_type
+          redirect_to action: :appropriate_body_type
         else
           method(appropriate_body_submit_action).call
         end
@@ -34,20 +34,20 @@ module AppropriateBodySelection
     def update_appropriate_body_type
       if @appropriate_body_form.valid? :body_type
         store_appropriate_body_form
-        redirect_to action: :body_selection
+        redirect_to action: :appropriate_body
       else
         render "/appropriate_body_selection/body_type"
       end
     end
 
-    def appropriate_body_selection
+    def appropriate_body
       render "/appropriate_body_selection/body_selection"
     end
 
     def update_appropriate_body
       if @appropriate_body_form.valid? :body
         store_appropriate_body_form
-        # TODO: end
+        method(appropriate_body_submit_action).call
       else
         render "/appropriate_body_selection/body_selection"
       end
