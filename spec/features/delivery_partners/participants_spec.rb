@@ -35,6 +35,12 @@ RSpec.feature "Delivery partner users participants", type: :feature do
     and_i_see_participant_details
   end
 
+  scenario "Download participants CSV" do
+    then_i_see("Participants")
+    when_i_click_on("Download (csv)")
+    and_i_see_participant_details_csv_export
+  end
+
   context "Search query" do
     scenario "None existing search term" do
       when_i_fill_in("query", with: "MADE UP XXX123")
@@ -143,5 +149,15 @@ RSpec.feature "Delivery partner users participants", type: :feature do
 
   def and_i_click_on(string)
     page.click_on(string)
+  end
+
+  def when_i_click_on(string)
+    page.click_on(string)
+  end
+
+  def and_i_see_participant_details_csv_export
+    data = CSV.parse(page.body).transpose
+    expect(data[0]).to eq(["full_name", participant_profile.user.full_name])
+    expect(data[1]).to eq(["email_address", participant_profile.user.email])
   end
 end
