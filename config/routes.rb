@@ -54,17 +54,6 @@ Rails.application.routes.draw do
     end
   end
 
-  scope path: "/appropriate-body", as: "appropriate_body" do
-    get "appointed", to: "appropriate_body_selection#body_appointed"
-    put "appointed", to: "appropriate_body_selection#update_body_appointed"
-
-    get "type", to: "appropriate_body_selection#body_type"
-    put "type", to: "appropriate_body_selection#update_body_type"
-
-    get "selection", to: "appropriate_body_selection#body_selection"
-    put "selection", to: "appropriate_body_selection#update_body"
-  end
-
   namespace :api, defaults: { format: "json" } do
     resource :notify_callback, only: :create, path: "notify-callback"
 
@@ -438,7 +427,6 @@ Rails.application.routes.draw do
             put "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
 
             get "training-confirmation", to: "setup_school_cohort#training_confirmation"
-            put "training-confirmation", to: "setup_school_cohort#training_confirmation"
 
             get "change-provider", to: "setup_school_cohort#change_provider"
             put "change-provider", to: "setup_school_cohort#change_provider"
