@@ -124,18 +124,19 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:cip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def sit_contact_address_bounce(induction_coordinator_profile:, school_name:)
+  def sit_contact_address_bounce(induction_coordinator_profile:, school:)
+    email_address = school.primary_contact_email || school.secondary_contact_email
+
     template_mail(
       PARTICIPANT_TEMPLATES[:sit_contact_address_bounce],
-      to: induction_coordinator_profile.user.email,
+      to: email_address,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        name: induction_coordinator_profile.user.full_name,
-        school_name:,
-        sign_in: new_user_session_url,
+        school_name: school.name,
+        induction_coordinator_profile_email: induction_coordinator_profile.user.email,
       },
-    ).tag(:sit_contact_address_bounce).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
+    ).tag(:sit_contact_address_bounce).associate_with(school, as: :school)
   end
 
   def sit_has_added_and_validated_participant(participant_profile:, school_name:)
