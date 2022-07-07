@@ -37,6 +37,7 @@ Naming/VariableNumber:
 Rails/Output:
   Exclude:
     - "app/services/importers/*"
+    - "app/services/finance/extract_report.rb"
 
 Lint/MissingSuper:
   Enabled: false
