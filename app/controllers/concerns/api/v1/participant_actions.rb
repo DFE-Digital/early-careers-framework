@@ -22,6 +22,14 @@ module Api
 
     private
 
+      def serialized_response(profile)
+        relevant_induction_record = profile.relevant_induction_record(lead_provider:)
+
+        ParticipantFromInductionRecordSerializer
+          .new(relevant_induction_record)
+          .serializable_hash.to_json
+      end
+
       def perform_action(service_namespace:)
         render json: serialized_response(participant_profile_for(service_namespace))
       end
