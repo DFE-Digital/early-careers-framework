@@ -18,10 +18,6 @@ class StoreParticipantEligibility < BaseService
       send_ineligible_notification_emails
     end
 
-    if changed_to_manual_check? && doing_fip?
-      send_manual_check_notification_email
-    end
-
     @participant_eligibility
   end
 
@@ -50,12 +46,6 @@ private
 
   def changed_to_eligible?
     @participant_eligibility.eligible_status? && @previous_status != "eligible"
-  end
-
-  # We need to check if the record is new because "manual_check" is the default value for newly
-  # created participant eligibilities
-  def changed_to_manual_check?
-    @participant_eligibility.manual_check_status? && ((@previous_status != "manual_check") || @new_eligibility_record)
   end
 
   def changed_from_ineligible?
