@@ -11,7 +11,16 @@ module Schools
     before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
     before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
     before_action :validate_request_or_render,
-                  except: %i[training_confirmation no_expected_ects appropriate_body_appointed appropriate_body_type appropriate_body]
+                  only: %i[expect_any_ects
+                           how_will_you_run_training
+                           programme_confirmation
+                           change_provider
+                           what_changes
+                           what_changes_confirmation
+                           what_changes_submitted
+                           change_fip_programme_choice
+                           are_you_sure
+                           complete]
 
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
