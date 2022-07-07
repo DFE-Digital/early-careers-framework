@@ -135,7 +135,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    cypress-on-rails (1.12.1)
+    cypress-on-rails (1.13.1)
       rack
     database_cleaner-active_record (2.0.1)
       activerecord (>= 5.a)
@@ -635,7 +635,7 @@ DEPENDENCIES
   byebug
   canonical-rails (~> 0.2.14)
   capybara (~> 3.37)
-  cypress-on-rails (~> 1.12)
+  cypress-on-rails (~> 1.13)
   database_cleaner-active_record
   devise (>= 4.8.0)
   discard (~> 1.2, >= 1.2.0)

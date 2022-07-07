@@ -121,7 +121,7 @@ group :development, :test do
   # Testing framework
   gem "rspec-rails", "~> 5.1"
 
-  gem "cypress-on-rails", "~> 1.12"
+  gem "cypress-on-rails", "~> 1.13"
   gem "database_cleaner-active_record"
 
   gem "dotenv-rails", "~> 2.7.6"
