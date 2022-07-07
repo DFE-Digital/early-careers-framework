@@ -57,51 +57,6 @@ RSpec.describe StoreParticipantEligibility do
       end
     end
 
-    context "when manual check status is determined" do
-      it "sends the ect_no_induction_email when reason is no_induction and there is no participant eligibility" do
-        eligibility_options[:no_induction] = true
-        expect {
-          service.call(participant_profile: ect_profile, eligibility_options:)
-        }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
-          .with(
-            induction_tutor_email: induction_tutor.email,
-            participant_profile: ect_profile,
-          )
-      end
-
-      it "sends notifications if the previous state was eligible" do
-        create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
-        eligibility_options[:no_induction] = true
-        expect {
-          service.call(participant_profile: ect_profile, eligibility_options:)
-        }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
-          .with(
-            induction_tutor_email: induction_tutor.email,
-            participant_profile: ect_profile,
-          )
-      end
-
-      it "sends notifications if the previous state was ineligible" do
-        create(:ecf_participant_eligibility, :ineligible, participant_profile: ect_profile)
-        eligibility_options[:no_induction] = true
-        expect {
-          service.call(participant_profile: ect_profile, eligibility_options:)
-        }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
-          .with(
-            induction_tutor_email: induction_tutor.email,
-            participant_profile: ect_profile,
-          )
-      end
-
-      it "doesn't send notifications if the previous state was manual check" do
-        create(:ecf_participant_eligibility, :manual_check, participant_profile: ect_profile)
-        eligibility_options[:no_induction] = true
-        expect {
-          service.call(participant_profile: ect_profile, eligibility_options:)
-        }.to_not have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
-      end
-    end
-
     context "when ineligible status is determined" do
       context "without eligibility_notifications feature enabled" do
         it "does not send email notifications" do
