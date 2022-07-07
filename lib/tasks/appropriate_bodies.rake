@@ -28,11 +28,4 @@ namespace :appropriate_bodies do
       end
     end
   end
-
-  desc "Import appropriate bodies CSV"
-  task import: :environment do
-    CSV.foreach(Rails.root.join("data/appropriate_bodies.csv"), "r", headers: true) do |row|
-      AppropriateBody.find_or_create_by!(name: row["name"], body_type: row["type"])
-    end
-  end
 end
