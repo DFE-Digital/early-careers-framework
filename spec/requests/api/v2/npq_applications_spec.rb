@@ -112,7 +112,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
             let!(:cohort_2022_npq_applications) { create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
 
             it "returns npq applications only for the 2022 cohort" do
-              get "/api/v1/npq-applications", params: { filter: { cohort: 2022 } }
+              get "/api/v2/npq-applications", params: { filter: { cohort: 2022 } }
               expect(parsed_response["data"].size).to eq(2)
             end
           end
@@ -157,6 +157,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               employment_role
               created_at
               updated_at
+              cohort
               ineligible_for_funding_reason
             ],
           )
@@ -186,6 +187,8 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["employment_role"]).to eql(application.employment_role)
           expect(row["created_at"]).to eql(application.created_at.rfc3339)
           expect(row["updated_at"]).to eql(application.updated_at.rfc3339)
+          expect(row["cohort"]).to eql(application.cohort.start_year.to_s)
+          expect(row["ineligible_for_funding_reason"]).to eql(application.ineligible_for_funding_reason)
         end
       end
     end
