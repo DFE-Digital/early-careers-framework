@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_27_093758) do
+ActiveRecord::Schema.define(version: 2022_07_07_091857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -654,6 +654,7 @@ ActiveRecord::Schema.define(version: 2022_06_27_093758) do
     t.uuid "participant_identity_id"
     t.string "start_term", default: "autumn_2021", null: false
     t.string "notes"
+    t.date "induction_start_date"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
