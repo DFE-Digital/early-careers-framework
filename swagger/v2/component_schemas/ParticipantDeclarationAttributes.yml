@@ -6,7 +6,6 @@ required:
   - declaration_date
   - course_identifier
   - eligible_for_payment
-  - voided
   - state
   - updated_at
 properties:
@@ -50,11 +49,6 @@ properties:
     example: ecf-induction
   eligible_for_payment:
     description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE"
-    type: boolean
-    nullable: false
-    example: true
-  voided:
-    description: "[Deprecated - use state instead] Indicates whether this declaration has been voided"
     type: boolean
     nullable: false
     example: true

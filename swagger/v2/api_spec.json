@@ -3987,7 +3987,6 @@
           "declaration_date",
           "course_identifier",
           "eligible_for_payment",
-          "voided",
           "state",
           "updated_at"
         ],
@@ -4042,12 +4041,6 @@
             "nullable": false,
             "example": true
           },
-          "voided": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
-            "type": "boolean",
-            "nullable": false,
-            "example": true
-          },
           "state": {
             "description": "Indicates the state of this payment declaration",
             "type": "string",
@@ -4079,7 +4072,6 @@
           "course_identifier",
           "eligible_for_payment",
           "declaration_date",
-          "voided",
           "updated_at"
         ],
         "properties": {
@@ -4138,12 +4130,6 @@
             "type": "boolean",
             "nullable": false,
             "example": true
-          },
-          "voided": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
-            "type": "boolean",
-            "nullable": false,
-            "example": false
           },
           "state": {
             "description": "Indicates the state of this payment declaration",
