@@ -2704,7 +2704,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,eligible,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,eligible,2021-05-31T02:22:32.000Z\n"
+        "example": "id,participant_id,declaration_type,course_identifier,declaration_date,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,2021-08-26T15:38:52Z,eligible,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,2021-08-26T15:38:52Z,eligible,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2726,8 +2726,7 @@
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
                   "declaration_date": "2021-05-31T02:21:32.000Z",
-                  "course_identifier": "ecf-mentor",
-                  "eligible_for_payment": false
+                  "course_identifier": "ecf-mentor"
                 }
               },
               {
@@ -2737,8 +2736,7 @@
                   "participant_id": "ab3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
                   "declaration_date": "2021-05-31T02:21:32.000Z",
-                  "course_identifier": "ecf-mentor",
-                  "eligible_for_payment": true
+                  "course_identifier": "ecf-mentor"
                 }
               }
             ]
@@ -3986,7 +3984,6 @@
           "declaration_type",
           "declaration_date",
           "course_identifier",
-          "eligible_for_payment",
           "state",
           "updated_at"
         ],
@@ -4035,12 +4032,6 @@
             ],
             "example": "ecf-induction"
           },
-          "eligible_for_payment": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
-            "type": "boolean",
-            "nullable": false,
-            "example": true
-          },
           "state": {
             "description": "Indicates the state of this payment declaration",
             "type": "string",
@@ -4070,7 +4061,6 @@
           "participant_id",
           "declaration_type",
           "course_identifier",
-          "eligible_for_payment",
           "declaration_date",
           "updated_at"
         ],
@@ -4124,12 +4114,6 @@
               "npq-early-headship-coaching-offer"
             ],
             "example": "ecf-induction"
-          },
-          "eligible_for_payment": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
-            "type": "boolean",
-            "nullable": false,
-            "example": true
           },
           "state": {
             "description": "Indicates the state of this payment declaration",

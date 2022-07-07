@@ -5,7 +5,6 @@ required:
   - participant_id
   - declaration_type
   - course_identifier
-  - eligible_for_payment
   - declaration_date
   - updated_at
 properties:
@@ -52,11 +51,6 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
     example: ecf-induction
-  eligible_for_payment:
-    description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE"
-    type: boolean
-    nullable: false
-    example: true
   state:
     description: "Indicates the state of this payment declaration"
     type: string

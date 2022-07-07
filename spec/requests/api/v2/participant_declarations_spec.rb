@@ -387,7 +387,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     it "returns the correct headers" do
       expect(parsed_response.headers).to match_array(
-        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment updated_at],
+        %w[id course_identifier declaration_date declaration_type participant_id state updated_at],
       )
     end
 
@@ -397,7 +397,6 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       expect(participant_declaration_one_row["course_identifier"]).to eql participant_declaration_one.course_identifier
       expect(participant_declaration_one_row["declaration_date"]).to eql participant_declaration_one.declaration_date.rfc3339
       expect(participant_declaration_one_row["declaration_type"]).to eql participant_declaration_one.declaration_type
-      expect(participant_declaration_one_row["eligible_for_payment"]).to eql (participant_declaration_one.eligible? || participant_declaration_one.payable?).to_s
       expect(participant_declaration_one_row["state"]).to eql participant_declaration_one.state.to_s
       expect(participant_declaration_one_row["participant_id"]).to eql participant_declaration_one.participant_profile.user.id
       expect(participant_declaration_one_row["updated_at"]).to eql participant_declaration_one.updated_at.rfc3339
@@ -474,7 +473,6 @@ private
         "declaration_date" => declaration.declaration_date.rfc3339,
         "course_identifier" => course_identifier,
         "state" => state,
-        "eligible_for_payment" => state == "eligible",
         "updated_at" => declaration.updated_at.rfc3339,
       },
     }
