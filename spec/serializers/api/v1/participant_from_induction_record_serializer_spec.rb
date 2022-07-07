@@ -49,6 +49,15 @@ module Api
         end
       end
 
+      describe "#email" do
+        let(:participant_identity) { create(:participant_identity, email: "second_email@example.com") }
+        let(:induction_record) { create(:induction_record, preferred_identity: participant_identity) }
+
+        it "returns preferred identity email" do
+          expect(subject.serializable_hash[:data][:attributes][:email]).to eql(participant_identity.email)
+        end
+      end
+
       describe "#updated_at" do
         let(:induction_record) { create(:induction_record) }
         let(:user) { induction_record.participant_profile.user }
