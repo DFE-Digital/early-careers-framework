@@ -46,6 +46,7 @@ module Api
           created_at
           updated_at
           ineligible_for_funding_reason
+          targeted_delivery_funding_eligibility
         ]
       end
 
@@ -72,6 +73,7 @@ module Api
           record.created_at.rfc3339,
           record.updated_at.rfc3339,
           record.ineligible_for_funding_reason,
+          record.targeted_delivery_funding_eligibility,
         ]
       end
     end
