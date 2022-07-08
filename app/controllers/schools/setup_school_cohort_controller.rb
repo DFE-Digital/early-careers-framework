@@ -171,10 +171,7 @@ module Schools
             .permit(:expect_any_ects_choice,
                     :how_will_you_run_training_choice,
                     :change_provider_choice,
-                    :what_changes_choice,
-                    :appropriate_body_appointed,
-                    :appropriate_body_type,
-                    :appropriate_body)
+                    :what_changes_choice)
     end
 
     def validate_request_or_render
