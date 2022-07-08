@@ -59,7 +59,7 @@ RSpec.describe "NPQ Participants API", type: :request do
               :full_name,
               :teacher_reference_number,
               :updated_at,
-              :npq_enrollments,
+              :npq_enrolments,
             ).exactly)
         end
 

@@ -240,12 +240,12 @@
         }
       }
     },
-    "/api/v2/npq-enrollments.csv": {
+    "/api/v2/npq-enrolments.csv": {
       "get": {
-        "summary": "Retrieve multiple NPQ enrollments",
-        "operationId": "npq_enrollments",
+        "summary": "Retrieve multiple NPQ enrolments",
+        "operationId": "npq_enrolments",
         "tags": [
-          "NPQ enrollments"
+          "NPQ enrolments"
         ],
         "security": [
           {
@@ -270,11 +270,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of NPQ enrollments",
+            "description": "A list of NPQ enrolments",
             "content": {
               "text/csv": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQEnrollmentsCsvResponse"
+                  "$ref": "#/components/schemas/MultipleNPQEnrolmentsCsvResponse"
                 }
               }
             }
@@ -2637,8 +2637,8 @@
           }
         }
       },
-      "MultipleNPQEnrollmentsCsvResponse": {
-        "description": "A list of NPQ enrollments in the Comma Separated Value (CSV) format",
+      "MultipleNPQEnrolmentsCsvResponse": {
+        "description": "A list of NPQ enrolments in the Comma Separated Value (CSV) format",
         "type": "string",
         "required": [
           "data"
@@ -2647,7 +2647,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NPQEnrollmentCsvRow"
+              "$ref": "#/components/schemas/NPQEnrolmentCsvRow"
             }
           }
         },
@@ -2674,7 +2674,7 @@
                   "email": "isabelle.macdonald2@some-school.example.com",
                   "teacher_reference_number": "1234567",
                   "updated_at": "2021-05-31T02:21:32.000Z",
-                  "npq_enrollments": [
+                  "npq_enrolments": [
                     {
                       "course_identifier": "npq-headship",
                       "schedule_identifier": "npq-leadership-autumn",
@@ -3087,8 +3087,8 @@
           }
         }
       },
-      "NPQEnrollment": {
-        "description": "The details of an NPQ Participant enrollment",
+      "NPQEnrolment": {
+        "description": "The details of an NPQ Participant enrolment",
         "type": "object",
         "required": [
           "course_identifier",
@@ -3137,7 +3137,7 @@
             "example": "2021"
           },
           "npq_application_id": {
-            "description": "The ID of the NPQ application that was accepted to create this enrollment",
+            "description": "The ID of the NPQ application that was accepted to create this enrolment",
             "type": "string",
             "format": "uuid",
             "example": "db3a7848-7308-4879-942a-c4a70ced400a"
@@ -3165,7 +3165,7 @@
           }
         }
       },
-      "NPQEnrollmentCsvRow": {
+      "NPQEnrolmentCsvRow": {
         "description": "The details of an NPQ application",
         "type": "object",
         "required": [
@@ -3203,7 +3203,7 @@
             ]
           },
           "schedule_identifier": {
-            "description": "The schedule currently applied to this enrollment",
+            "description": "The schedule currently applied to this enrolment",
             "type": "string",
             "example": "npq-specialist-autumn",
             "enum": [
@@ -3223,7 +3223,7 @@
             "example": "2021"
           },
           "npq_application_id": {
-            "description": "The unique identifier of this NPQ application that was accepted to create this enrollment",
+            "description": "The unique identifier of this NPQ application that was accepted to create this enrolment",
             "type": "string",
             "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
             "format": "uuid"
@@ -3284,7 +3284,7 @@
         "required": [
           "full_name",
           "email",
-          "npq_enrollments",
+          "npq_enrolments",
           "updated_at"
         ],
         "properties": {
@@ -3305,11 +3305,11 @@
             "example": "1234567",
             "nullable": true
           },
-          "npq_enrollments": {
-            "description": "Information about the course(s) the participant is enrolled in",
+          "npq_enrolments": {
+            "description": "Information about the course(s) the participant is enroled in",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NPQEnrollment"
+              "$ref": "#/components/schemas/NPQEnrolment"
             }
           },
           "updated_at": {

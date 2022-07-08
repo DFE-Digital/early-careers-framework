@@ -15,7 +15,7 @@ properties:
           email: "isabelle.macdonald2@some-school.example.com"
           teacher_reference_number: "1234567"
           updated_at: "2021-05-31T02:21:32.000Z"
-          npq_enrollments: [
+          npq_enrolments: [
             {
               course_identifier: "npq-headship",
               schedule_identifier: "npq-leadership-autumn",

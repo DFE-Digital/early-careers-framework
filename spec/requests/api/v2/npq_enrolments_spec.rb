@@ -3,7 +3,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "NPQ Enrollments API", type: :request do
+RSpec.describe "NPQ Enrolments API", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
@@ -24,11 +24,11 @@ RSpec.describe "NPQ Enrollments API", type: :request do
     ]
   end
 
-  describe "GET /api/v2/npq-enrollments.csv" do
+  describe "GET /api/v2/npq-enrolments.csv" do
     context "when authorized" do
       context "when there is no data" do
         it "returns csv headers and no rows" do
-          get "/api/v2/npq-enrollments.csv"
+          get "/api/v2/npq-enrolments.csv"
 
           expect(response.status).to eql(200)
 
@@ -44,13 +44,13 @@ RSpec.describe "NPQ Enrollments API", type: :request do
         let!(:npq_profile) { create(:npq_participant_profile, npq_application:) }
 
         it "returns headers" do
-          get "/api/v2/npq-enrollments.csv"
+          get "/api/v2/npq-enrolments.csv"
           rows = CSV.parse(response.body)
           expect(rows[0]).to eql(expected_headers)
         end
 
         it "returns correct data" do
-          get "/api/v2/npq-enrollments.csv"
+          get "/api/v2/npq-enrolments.csv"
           rows = CSV.parse(response.body, headers: true)
           expect(rows.size).to eql(1)
           expect(rows[0].to_h.symbolize_keys).to eql(
@@ -67,7 +67,7 @@ RSpec.describe "NPQ Enrollments API", type: :request do
 
         context "with updated_since filter" do
           it "filters out results" do
-            get "/api/v2/npq-enrollments.csv?filter[updated_since]=2030-11-13T11:21:55Z"
+            get "/api/v2/npq-enrolments.csv?filter[updated_since]=2030-11-13T11:21:55Z"
             rows = CSV.parse(response.body, headers: true)
             expect(rows.size).to eql(0)
           end
@@ -78,7 +78,7 @@ RSpec.describe "NPQ Enrollments API", type: :request do
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        get "/api/v2/npq-enrollments.csv"
+        get "/api/v2/npq-enrolments.csv"
         expect(response.status).to eql(401)
       end
     end

@@ -2,7 +2,7 @@
 
 module Api
   module V2
-    class NPQEnrollmentsCsvSerializer
+    class NPQEnrolmentsCsvSerializer
       attr_reader :scope
 
       def initialize(scope:)

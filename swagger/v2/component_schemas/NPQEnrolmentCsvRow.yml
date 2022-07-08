@@ -1,17 +1,24 @@
-description: "The details of an NPQ Participant enrollment"
+description: "The details of an NPQ application"
 type: object
 required:
+  - participant_id
   - course_identifier
   - schedule_identifier
   - cohort
   - npq_application_id
   - eligible_for_funding
   - training_status
+  - school_urn
 properties:
-  course_identifier:
-    description: "The course the participant is enrolled in"
+  participant_id:
+    description: "The unique identifier of this NPQ participant"
     type: string
-    example: "npq-senior-leadership"
+    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+    format: uuid
+  course_identifier:
+    description: "The NPQ course the participant is enrolled in"
+    type: string
+    example: npq-leading-teaching
     enum:
       - npq-leading-teaching
       - npq-leading-behaviour-culture
@@ -24,16 +31,16 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
   schedule_identifier:
-    description: "The schedule the participant is enrolled in"
+    description: "The schedule currently applied to this enrolment"
     type: string
-    example: "npq-leadership-autumn"
+    example: "npq-specialist-autumn"
     enum:
-      - npq-leadership-autumn
-      - npq-leadership-spring
       - npq-specialist-autumn
       - npq-specialist-spring
-      - npq-aso-november
+      - npq-leadership-autumn
+      - npq-leadership-spring
       - npq-aso-december
+      - npq-aso-november
       - npq-aso-march
       - npq-aso-june
   cohort:
@@ -41,24 +48,23 @@ properties:
     type: string
     example: "2021"
   npq_application_id:
-    description: "The ID of the NPQ application that was accepted to create this enrollment"
+    description: "The unique identifier of this NPQ application that was accepted to create this enrolment"
     type: string
+    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
     format: uuid
-    example: "db3a7848-7308-4879-942a-c4a70ced400a"
   eligible_for_funding:
     description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
-    type: boolean
+    type: "boolean"
     example: true
   training_status:
-    description: "The training status of the NPQ participant"
+    description: "The training status of the ECF participant"
     type: string
-    example: "active"
+    example: active
     enum:
       - active
       - deferred
       - withdrawn
   school_urn:
-    description: "The URN of the school when the application was made, if any"
-    nullable: true
+    description: "The Unique Reference Number (URN) of the school where this NPQ participant is teaching"
     type: string
-    example: "123456"
+    example: "106286"
