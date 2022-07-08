@@ -2788,11 +2788,6 @@
           "updated_at"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-            "format": "uuid"
-          },
           "participant_id": {
             "description": "The unique identifier of this NPQ participant",
             "type": "string",
