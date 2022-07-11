@@ -22,7 +22,7 @@ module DeliveryPartners
       end
 
       def status_name(participant_profile)
-        @status_name ||= DeliveryPartners::ParticipantProfileStatus.new(
+        DeliveryPartners::ParticipantProfileStatus.new(
           participant_profile:,
         ).status_name
       end
