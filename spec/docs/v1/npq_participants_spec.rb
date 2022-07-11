@@ -146,6 +146,14 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                   "$ref": "#/components/schemas/NPQParticipantWithdrawRequest",
                 }
 
+      before do
+        create(:npq_participant_declaration,
+               declaration_type: "started",
+               user: npq_application.user,
+               participant_profile: npq_application.user.participant_profiles.first,
+               course_identifier: npq_application.npq_course.identifier)
+      end
+
       response "200", "The NPQ participant being withdrawn" do
         let(:id) { npq_application.participant_identity.external_identifier }
         let(:attributes) do
