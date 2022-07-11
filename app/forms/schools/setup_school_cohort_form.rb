@@ -7,17 +7,12 @@ module Schools
     include ActiveModel::Serialization
 
     attr_accessor :expect_any_ects_choice, :how_will_you_run_training_choice, :change_provider_choice,
-                  :what_changes_choice, :appropriate_body_appointed, :appropriate_body_type, :appropriate_body,
-                  :appropriate_body_from_action, :appropriate_body_to_action, :on_save
+                  :what_changes_choice
 
     validates :expect_any_ects_choice, presence: true, on: :expect_any_ects
     validates :how_will_you_run_training_choice, presence: true, on: :how_will_you_run_training
     validates :change_provider_choice, presence: true, on: :change_provider
     validates :what_changes_choice, presence: true, on: :what_changes
-    validates :appropriate_body_appointed, presence: true, on: :appropriate_body_appointed
-    validates :appropriate_body_type, presence: true, on: :appropriate_body_type,
-                                      inclusion: { in: %w[local_authority national teaching_school_hub unknown] }
-    validates :appropriate_body, presence: true, on: :appropriate_body
 
     PROGRAMME_CHOICES_MAP = {
       "change_lead_provider" => "full_induction_programme",
@@ -32,12 +27,6 @@ module Schools
         how_will_you_run_training_choice:,
         change_provider_choice:,
         what_changes_choice:,
-        appropriate_body_appointed:,
-        appropriate_body_type:,
-        appropriate_body:,
-        appropriate_body_from_action:,
-        appropriate_body_to_action:,
-        on_save:,
       }
     end
 
@@ -68,26 +57,6 @@ module Schools
 
     def programme_choice
       PROGRAMME_CHOICES_MAP[what_changes_choice]
-    end
-
-    def appropriate_body_appointed_choices
-      yes_no_choices
-    end
-
-    def appropriate_body_type_choices
-      [
-        OpenStruct.new(id: "local_authority", name: "Local authority"),
-        OpenStruct.new(id: "national", name: "National organisation"),
-        OpenStruct.new(id: "teaching_school_hub", name: "Teaching school hub"),
-      ]
-    end
-
-    def appropriate_body_choices(body_type)
-      AppropriateBody.where(body_type:)
-    end
-
-    def appropriate_body_appointed?
-      appropriate_body_appointed == "yes"
     end
 
   private

@@ -1,32 +1,31 @@
-<% body_type = @setup_school_cohort_form.attributes[:appropriate_body_type] %>
-<% appropriate_bodies = @setup_school_cohort_form.appropriate_body_choices(body_type) %>
+<% appropriate_bodies = @appropriate_body_form.body_choices %>
 
-<% title = t("setup_school_cohort.appropriate_body_type.title.#{body_type}") %>
+<% title = t("setup_school_cohort.appropriate_body_type.title.#{@appropriate_body_form.body_type}") %>
 <% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: url_for(action: :appropriate_body_type)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <span class="govuk-caption-xl"><%= appropriate_body_school_name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
     <div class="govuk-inset-text">
       Remember to contact the appropriate body directly to appoint them for your ECTs, if you have not done so already.
     </div>
 
-    <%= form_for @setup_school_cohort_form, url: { action: :appropriate_body }, method: :put do |f| %>
+    <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
-      <% if body_type == "national" %>
-        <%= f.govuk_collection_radio_buttons(:appropriate_body,
+      <% if @appropriate_body_form.body_type == "national" %>
+        <%= f.govuk_collection_radio_buttons(:body_id,
                                              appropriate_bodies,
                                              :id,
                                              :name,
                                              legend: { hidden: true },
                                              ) %>
       <% else %>
-        <%= f.govuk_collection_select(:appropriate_body,
+        <%= f.govuk_collection_select(:body_id,
                                       appropriate_bodies,
                                       :id,
                                       :name,

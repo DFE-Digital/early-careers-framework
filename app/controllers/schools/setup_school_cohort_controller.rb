@@ -2,18 +2,29 @@
 
 module Schools
   class SetupSchoolCohortController < ::Schools::BaseController
+    include AppropriateBodySelection::Controller
+
     before_action :load_form
     before_action :school
     before_action :cohort
     before_action :previous_cohort, only: %i[what_changes what_changes_confirmation]
     before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
     before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
-    before_action :validate_request_or_render, except: %i[training_confirmation no_expected_ects]
+    before_action :validate_request_or_render,
+                  only: %i[expect_any_ects
+                           how_will_you_run_training
+                           programme_confirmation
+                           change_provider
+                           what_changes
+                           what_changes_confirmation
+                           what_changes_submitted
+                           change_fip_programme_choice
+                           are_you_sure
+                           complete]
 
     skip_after_action :verify_authorized
     skip_after_action :verify_policy_scoped
 
-    delegate :appropriate_body_appointed?, to: :@setup_school_cohort_form
     helper_method :appropriate_body_appointed?
 
     def expect_any_ects
@@ -40,19 +51,23 @@ module Schools
     end
 
     def programme_confirmation
-      start_appropriate_body_selection :programme_confirmation, :training_confirmation, :save_training_choice
+      store_form
+      start_appropriate_body_selection from_path: url_for(action: :programme_confirmation),
+                                       submit_action: :save_training_choice,
+                                       school_name: @school.name
     end
 
-    def training_confirmation
-      reset_form_data
-    end
+    def training_confirmation; end
 
     def change_provider
       case setup_school_cohort_form_params[:change_provider_choice]
       when "yes"
         store_form_redirect_to_next_step :what_changes
       when "no"
-        start_appropriate_body_selection :change_provider, :complete, :save_provider_change
+        store_form
+        start_appropriate_body_selection from_path: url_for(action: :programme_confirmation),
+                                         submit_action: :save_provider_change,
+                                         school_name: @school.name
       end
     end
 
@@ -61,7 +76,10 @@ module Schools
     end
 
     def what_changes_confirmation
-      start_appropriate_body_selection :what_changes_confirmation, :what_changes_submitted, :save_programme_change
+      store_form
+      start_appropriate_body_selection from_path: url_for(action: :what_changes_confirmation),
+                                       submit_action: :save_programme_change,
+                                       school_name: @school.name
     end
 
     def what_changes_submitted; end
@@ -72,22 +90,6 @@ module Schools
 
     def complete; end
 
-    def appropriate_body_appointed
-      if appropriate_body_appointed?
-        store_form_redirect_to_next_step :appropriate_body_type
-      else
-        end_appropriate_body_selection
-      end
-    end
-
-    def appropriate_body_type
-      store_form_redirect_to_next_step :appropriate_body
-    end
-
-    def appropriate_body
-      end_appropriate_body_selection
-    end
-
   private
 
     def save_programme_change
@@ -96,6 +98,8 @@ module Schools
       if previous_school_cohort.full_induction_programme?
         send_fip_programme_changed_email!
       end
+
+      redirect_to action: :what_changes_submitted
     end
 
     def save_provider_change
@@ -105,10 +109,12 @@ module Schools
       else
         use_the_same_training_programme!
       end
+      redirect_to action: :complete
     end
 
     def save_training_choice
       set_cohort_induction_programme!(@setup_school_cohort_form.how_will_you_run_training_choice)
+      redirect_to action: :training_confirmation
     end
 
     def send_fip_programme_changed_email!
@@ -165,18 +171,19 @@ module Schools
             .permit(:expect_any_ects_choice,
                     :how_will_you_run_training_choice,
                     :change_provider_choice,
-                    :what_changes_choice,
-                    :appropriate_body_appointed,
-                    :appropriate_body_type,
-                    :appropriate_body)
+                    :what_changes_choice)
     end
 
     def validate_request_or_render
       render unless (request.post? || request.put?) && step_valid?
     end
 
-    def store_form_redirect_to_next_step(step)
+    def store_form
       session[:setup_school_cohort_form] = @setup_school_cohort_form.serializable_hash
+    end
+
+    def store_form_redirect_to_next_step(step)
+      store_form
       redirect_to action: step
     end
 
@@ -202,8 +209,8 @@ module Schools
 
     def save_appropriate_body
       Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
-                                                     appropriate_body_id: @setup_school_cohort_form.appropriate_body,
-                                                     appropriate_body_appointed: appropriate_body_appointed?)
+                                                     appropriate_body_id: @appropriate_body_form.body_id,
+                                                     appropriate_body_appointed: @appropriate_body_form.body_appointed?)
     end
 
     def school_cohort
@@ -230,17 +237,14 @@ module Schools
       @setup_school_cohort_form.what_changes_choice == "change_delivery_partner"
     end
 
-    def start_appropriate_body_selection(from_action, to_action, on_save)
-      @setup_school_cohort_form.appropriate_body_from_action = from_action
-      @setup_school_cohort_form.appropriate_body_to_action = to_action
-      @setup_school_cohort_form.on_save = on_save
-      store_form_redirect_to_next_step :appropriate_body_appointed
-    end
-
     def end_appropriate_body_selection
       on_save = method(@setup_school_cohort_form.on_save)
       on_save.call
       store_form_redirect_to_next_step @setup_school_cohort_form.appropriate_body_to_action
+    end
+
+    def appropriate_body_appointed?
+      @appropriate_body_form.body_appointed?
     end
   end
 end
