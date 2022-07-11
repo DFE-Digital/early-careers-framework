@@ -3,6 +3,7 @@
 module Schools
   class AddParticipantsController < ::Schools::BaseController
     include Multistep::Controller
+    include AppropriateBodySelection::Controller
 
     skip_after_action :verify_authorized
     before_action :set_school_cohort
@@ -10,6 +11,19 @@ module Schools
 
     form AddParticipantForm, as: :add_participant_form
     result as: :participant_profile
+
+    def update
+      if form.complete_step(current_step, form_params)
+        store_form_in_session
+        # if current_step == :start_date && @form.needs_to_confirm_appropriate_body
+        #   start_appropriate_body_selection
+        # else
+          redirect_to_next_step
+        # end
+      else
+        render current_step
+      end
+    end
 
     def start
       reset_form
@@ -73,6 +87,10 @@ module Schools
 
   private
 
+    def redirect_to_next_step
+      redirect_to action: :show, step: step_param(form.next_step)
+    end
+
     def type_param
       params[:type]&.to_sym
     end
@@ -106,6 +124,17 @@ module Schools
 
     def in_current_active_cohort?
       school_cohort.cohort == Cohort.active_registration_cohort
+    end
+
+    def save_appropriate_body
+      redirect_to_next_step
+    end
+
+    def start_appropriate_body_selection
+      super from_path: url_for(action: :show, step: step_param(current_step)),
+            submit_action: :save_appropriate_body,
+            school_name: @school.name,
+            ask_appointed: false
     end
   end
 end

@@ -146,10 +146,30 @@ module Schools
       next_step do
         if mentor_options.any?
           :choose_mentor
+        elsif needs_to_confirm_appropriate_body
+          :confirm_appropriate_body
         else
           :confirm
         end
       end
+    end
+
+    step :confirm_appropriate_body do
+      attribute :appropriate_body_confirmed
+      attribute :appropriate_body_id
+
+      validates :appropriate_body_confirmed,
+                presence: true,
+                inclusion: { in: %w[true false] },
+                if: -> { needs_to_confirm_appropriate_body }
+
+      before_complete do
+        if appropriate_body_confirmed?
+          self.appropriate_body_id = school_cohort.appropriate_body.id
+        end
+      end
+
+      next_step :confirm
     end
 
     step :choose_mentor do
