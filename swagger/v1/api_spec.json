@@ -1554,22 +1554,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-change-schedule"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
           }
         },
         "example": {
@@ -1890,22 +1875,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-defer"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantDefer"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantDefer"
           }
         },
         "example": {
@@ -2132,22 +2102,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-resume"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantResume"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantResume"
           }
         },
         "example": {
@@ -2548,22 +2503,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-withdraw"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantWithdraw"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantWithdraw"
           }
         },
         "example": {
@@ -3398,22 +3338,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-change-schedule"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
           }
         },
         "example": {
@@ -3499,22 +3424,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-defer"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantDefer"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantDefer"
           }
         },
         "example": {
@@ -3597,22 +3507,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-resume"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantResume"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantResume"
           }
         },
         "example": {
@@ -3859,22 +3754,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-withdraw"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantWithdraw"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantWithdraw"
           }
         },
         "example": {
