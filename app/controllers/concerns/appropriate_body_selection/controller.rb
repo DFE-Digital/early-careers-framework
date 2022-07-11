@@ -7,7 +7,7 @@ module AppropriateBodySelection
     included do
       before_action :load_appropriate_body_form
 
-      helper_method :appropriate_body_from_path, :appropriate_body_school_name
+      helper_method :appropriate_body_from_path, :appropriate_body_school_name, :appropriate_body_type_back_link
     end
 
     def appropriate_body_appointed
@@ -90,20 +90,32 @@ module AppropriateBodySelection
       session[:appropriate_body_selection_form] = @appropriate_body_form.serializable_hash
     end
 
-    def session_data
+    def appropriate_body_session_data
       session[:appropriate_body_selection]
     end
 
     def appropriate_body_from_path
-      session_data[:from_path]
+      appropriate_body_session_data[:from_path]
     end
 
     def appropriate_body_submit_action
-      session_data[:submit_action]
+      appropriate_body_session_data[:submit_action]
+    end
+
+    def appropriate_body_ask_appointed
+      appropriate_body_session_data[:ask_appointed]
     end
 
     def appropriate_body_school_name
-      session_data[:school_name]
+      appropriate_body_session_data[:school_name]
+    end
+
+    def appropriate_body_type_back_link
+      if appropriate_body_ask_appointed
+        url_for({ action: :update_appropriate_body_type })
+      else
+        appropriate_body_from_path
+      end
     end
   end
 end

@@ -497,6 +497,8 @@ Rails.application.routes.draw do
                 put :participant_type, path: "participant-type", controller: :add_participants
                 get :what_we_need, path: "what-we-need", controller: :add_participants
                 put "transfer", as: nil
+
+                appropriate_body_selection_routes "add_participants"
               end
             end
           end
