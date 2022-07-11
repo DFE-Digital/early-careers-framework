@@ -2936,6 +2936,12 @@
             "type": "string",
             "nullable": false,
             "example": "2022"
+          },
+          "targeted_delivery_funding_eligibility": {
+            "description": "Whether or not this application is eligible for Targeted Delivery Funding uplift",
+            "nullable": false,
+            "type": "boolean",
+            "example": true
           }
         }
       },
@@ -3168,6 +3174,12 @@
             "nullable": true,
             "type": "string",
             "example": "123456"
+          },
+          "targeted_delivery_funding_eligibility": {
+            "description": "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift",
+            "nullable": false,
+            "type": "boolean",
+            "example": true
           }
         }
       },

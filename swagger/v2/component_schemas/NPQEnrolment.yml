@@ -62,3 +62,8 @@ properties:
     nullable: true
     type: string
     example: "123456"
+  targeted_delivery_funding_eligibility:
+    description: "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift"
+    nullable: false
+    type: boolean
+    example: true
