@@ -7,10 +7,16 @@ class AppropriateBodySelectionForm
 
   attr_accessor :body_appointed, :body_type, :body_id
 
-  validates :body_appointed, inclusion: { in: %w[yes no] }, on: :body_appointed
-  validates :body_type, presence: true, on: :body_type,
-                        inclusion: { in: %w[local_authority national teaching_school_hub unknown] }
-  validates :body_id, presence: true, on: :body
+  validates :body_appointed,
+            inclusion: { in: %w[yes no],
+                         message: "Please select whether you have appointed an appropriate body or not" },
+            on: :body_appointed
+  validates :body_type,
+            presence: { message: "Please select an appropriate body type" },
+            on: :body_type,
+            inclusion: { in: %w[local_authority national teaching_school_hub unknown],
+                         message: "Please select an appropriate body type" }
+  validates :body_id, presence: { message: "Please select an appropriate body" }, on: :body
 
   def attributes
     {
