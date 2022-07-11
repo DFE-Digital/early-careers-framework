@@ -131,3 +131,8 @@ properties:
     enum:
       - "establishment-ineligible"
       - "previously-funded"
+  cohort:
+    description: "The start year of the cohort this application belongs to"
+    type: string
+    nullable: false
+    example: "2022"
