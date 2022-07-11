@@ -146,10 +146,30 @@ module Schools
       next_step do
         if mentor_options.any?
           :choose_mentor
+        elsif needs_to_confirm_appropriate_body
+          :confirm_appropriate_body
         else
           :confirm
         end
       end
+    end
+
+    step :confirm_appropriate_body do
+      attribute :appropriate_body_confirmed
+      attribute :appropriate_body_id
+
+      validates :appropriate_body_confirmed,
+                presence: true,
+                inclusion: { in: %w[true false] },
+                if: -> { needs_to_confirm_appropriate_body }
+
+      before_complete do
+        if appropriate_body_confirmed?
+          self.appropriate_body_id = school_cohort.appropriate_body.id
+        end
+      end
+
+      next_step :confirm
     end
 
     step :choose_mentor do
@@ -339,6 +359,22 @@ module Schools
 
     def sit_adding_themselves?
       type == :self || current_user.induction_coordinator?
+    end
+
+    def needs_to_confirm_appropriate_body
+      type == :ect && school_cohort.appropriate_body.present?
+    end
+
+    def school_cohort_appropriate_body
+      school_cohort.appropriate_body
+    end
+
+    def appropriate_body_confirmed?
+      appropriate_body_confirmed == "true"
+    end
+
+    def appropriate_body_selected
+      AppropriateBody.find(appropriate_body_id)
     end
   end
 end
