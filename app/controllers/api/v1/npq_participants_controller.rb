@@ -17,10 +17,10 @@ module Api
           perform_action(service_namespace: ::Participants::Withdraw)
         else
           render json: {
-            error: {
+            error: [{
               title: "No started declaration found",
               detail: "An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance.",
-            },
+            }],
           }, status: :unprocessable_entity
         end
       end
