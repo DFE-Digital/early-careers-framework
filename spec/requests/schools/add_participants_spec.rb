@@ -7,6 +7,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
   let!(:school_cohort) { create(:school_cohort, :fip, school:, cohort:) }
   let(:school) { user.induction_coordinator_profile.schools.sample }
   let(:cohort) { create(:cohort, :current) }
+  let(:appropriate_body) { create(:appropriate_body_national_organisation) }
 
   subject { response }
 
@@ -61,7 +62,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     end
   end
 
-  Schools::AddParticipantForm.steps.keys.without(:email_taken).each do |step|
+  Schools::AddParticipantForm.steps.keys.without(:email_taken, :confirm_appropriate_body).each do |step|
     describe "GET /schools/:school_id/cohort/:cohort_id/participants/add/#{step.to_s.dasherize}" do
       context "when session has not been set up with the form" do
         before do
@@ -82,6 +83,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
             school_cohort_id: school_cohort.id,
             current_user_id: user.id,
             start_date: Date.new(2022, 5, 5),
+            appropriate_body_id: appropriate_body.id
           })
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
