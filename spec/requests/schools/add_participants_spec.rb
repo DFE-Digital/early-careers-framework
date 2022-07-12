@@ -83,7 +83,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
             school_cohort_id: school_cohort.id,
             current_user_id: user.id,
             start_date: Date.new(2022, 5, 5),
-            appropriate_body_id: appropriate_body.id
+            appropriate_body_id: appropriate_body.id,
           })
           get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/#{step.to_s.dasherize}"
         end
