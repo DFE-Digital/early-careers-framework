@@ -12,19 +12,6 @@ module Schools
     form AddParticipantForm, as: :add_participant_form
     result as: :participant_profile
 
-    def update
-      if form.complete_step(current_step, form_params)
-        store_form_in_session
-        # if current_step == :start_date && @form.needs_to_confirm_appropriate_body
-        #   start_appropriate_body_selection
-        # else
-          redirect_to_next_step
-        # end
-      else
-        render current_step
-      end
-    end
-
     def start
       reset_form
 
@@ -74,6 +61,10 @@ module Schools
       else
         render current_step
       end
+    end
+
+    def change_appropriate_body
+      start_appropriate_body_selection
     end
 
     abandon_journey_path do
@@ -131,7 +122,7 @@ module Schools
     end
 
     def start_appropriate_body_selection
-      super from_path: url_for(action: :show, step: step_param(current_step)),
+      super from_path: url_for(action: :show, step: "confirm-appropriate-body"),
             submit_action: :save_appropriate_body,
             school_name: @school.name,
             ask_appointed: false

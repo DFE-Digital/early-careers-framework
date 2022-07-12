@@ -126,24 +126,6 @@ module Schools
                 }
 
       next_step do
-        if type == :ect
-          :start_date
-        else
-          :confirm
-        end
-      end
-    end
-
-    step :start_date, update: true do
-      attribute :start_date, :date
-      validates :start_date,
-                presence: true,
-                inclusion: {
-                  in: ->(_) { (Date.current - 1.year)..(Date.current + 1.year) },
-                  message: :invalid,
-                }
-
-      next_step do
         if mentor_options.any?
           :choose_mentor
         elsif needs_to_confirm_appropriate_body

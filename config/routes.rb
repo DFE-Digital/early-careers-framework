@@ -499,6 +499,7 @@ Rails.application.routes.draw do
                 put "transfer", as: nil
 
                 appropriate_body_selection_routes "add_participants"
+                get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
               end
             end
           end
