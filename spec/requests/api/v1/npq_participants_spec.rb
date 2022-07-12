@@ -12,7 +12,7 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   describe "GET /api/v1/participants/npq", :with_default_schedules do
     let!(:npq_applications) do
-      create_list(:npq_application, 3, :accepted, npq_lead_provider:, school_urn: "123456")
+      create_list(:npq_application, 3, :accepted, :with_started_declaration, npq_lead_provider:, school_urn: "123456")
     end
 
     context "when authorized" do
@@ -106,17 +106,29 @@ RSpec.describe "NPQ Participants API", type: :request do
       end
 
       describe "JSON Participant Withdrawal" do
-        it_behaves_like "a participant withdraw action endpoint" do
-          let(:url) { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
-          let(:params) do
-            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
-          end
+        let(:url) { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
+        let(:params) do
+          { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
+        end
 
-          it "changes the training status of a participant to withdrawn" do
+        context "when there is a started declaration" do
+          it_behaves_like "a participant withdraw action endpoint" do
+            it "changes the training status of a participant to withdrawn" do
+              put url, params: params
+
+              expect(response).to be_successful
+              expect(npq_application.reload.profile.training_status).to eql("withdrawn")
+            end
+          end
+        end
+
+        context "when there are no started declarations" do
+          let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456") }
+
+          it "returns an error message" do
             put url, params: params
 
-            expect(response).to be_successful
-            expect(npq_application.reload.profile.training_status).to eql("withdrawn")
+            expect(response.status).to eq(422)
           end
         end
       end
