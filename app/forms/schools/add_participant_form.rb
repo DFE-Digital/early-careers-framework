@@ -11,6 +11,8 @@ module Schools
     attribute :dqt_record
     attribute :existing_participant_profile
 
+    delegate :appropriate_body, to: :school_cohort, prefix: true
+
     step :yourself do
       next_step :trn
     end
@@ -345,10 +347,6 @@ module Schools
 
     def needs_to_confirm_appropriate_body
       type == :ect && school_cohort.appropriate_body.present?
-    end
-
-    def school_cohort_appropriate_body
-      school_cohort.appropriate_body
     end
 
     def appropriate_body_confirmed?
