@@ -12,7 +12,7 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   describe "GET /api/v1/participants/npq", :with_default_schedules do
     let!(:npq_applications) do
-      create_list(:npq_application, 3, :accepted, npq_lead_provider:, school_urn: "123456")
+      create_list(:npq_application, 3, :accepted, :with_started_declaration, npq_lead_provider:, school_urn: "123456")
     end
 
     context "when authorized" do
@@ -112,14 +112,6 @@ RSpec.describe "NPQ Participants API", type: :request do
         end
 
         context "when there is a started declaration" do
-          before do
-            create(:npq_participant_declaration,
-                   declaration_type: "started",
-                   user: npq_application.user,
-                   participant_profile: npq_application.user.participant_profiles.first,
-                   course_identifier: npq_course.identifier)
-          end
-
           it_behaves_like "a participant withdraw action endpoint" do
             it "changes the training status of a participant to withdrawn" do
               put url, params: params
@@ -131,6 +123,8 @@ RSpec.describe "NPQ Participants API", type: :request do
         end
 
         context "when there are no started declarations" do
+          let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456") }
+
           it "returns an error message" do
             put url, params: params
 
