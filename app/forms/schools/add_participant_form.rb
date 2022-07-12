@@ -149,6 +149,7 @@ module Schools
 
       before_complete do
         if appropriate_body_confirmed?
+          self.appropriate_body_confirmed = true
           self.appropriate_body_id = school_cohort.appropriate_body.id
         end
       end

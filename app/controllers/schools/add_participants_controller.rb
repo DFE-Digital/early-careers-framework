@@ -118,6 +118,11 @@ module Schools
     end
 
     def save_appropriate_body
+      add_participant_form.assign_attributes({
+        appropriate_body_confirmed: false,
+        appropriate_body_id: @appropriate_body_form.body_id,
+      })
+      store_form_in_session
       redirect_to_next_step
     end
 
