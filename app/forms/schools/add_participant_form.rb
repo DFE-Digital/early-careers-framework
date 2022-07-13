@@ -302,6 +302,7 @@ module Schools
           mentor_profile_id: mentor&.mentor_profile&.id,
           start_date:,
           sit_validation: dqt_record.present? ? true : false,
+          appropriate_body_id:,
         )
         store_validation_result!(profile) if dqt_record.present?
       end
