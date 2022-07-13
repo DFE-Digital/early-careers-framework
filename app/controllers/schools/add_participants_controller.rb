@@ -64,6 +64,9 @@ module Schools
     end
 
     def change_appropriate_body
+      add_participant_form.appropriate_body_confirmed = false
+      add_participant_form.complete_step(:confirm_appropriate_body)
+      store_form_in_session
       start_appropriate_body_selection
     end
 
