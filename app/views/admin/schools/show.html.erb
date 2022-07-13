@@ -19,7 +19,7 @@
       <td class="govuk-table__cell">
         <% if @induction_coordinator %>
           <%= @induction_coordinator.full_name %><br>
-          <%= mail_to @induction_coordinator.email, @induction_coordinator.email  %>
+          <%= govuk_mail_to @induction_coordinator.email, @induction_coordinator.email  %>
         <% end %>
       </td>
       <td class="govuk-table__cell">

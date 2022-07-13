@@ -6,7 +6,7 @@ class InductionRecord < ApplicationRecord
   self.ignored_columns = %w[status]
 
   belongs_to :induction_programme
-  belongs_to :participant_profile, class_name: "ParticipantProfile::ECF"
+  belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
   belongs_to :schedule, class_name: "Finance::Schedule"
   belongs_to :mentor_profile, class_name: "ParticipantProfile::Mentor", optional: true
   belongs_to :appropriate_body, optional: true
@@ -26,6 +26,8 @@ class InductionRecord < ApplicationRecord
   belongs_to :preferred_identity, class_name: "ParticipantIdentity", optional: true
 
   validates :start_date, presence: true
+
+  validate :cannot_resume_from_withdrawn
 
   enum induction_status: {
     active: "active",
@@ -89,5 +91,10 @@ class InductionRecord < ApplicationRecord
 
   def transferred?
     leaving_induction_status? && end_date.present? && end_date < Time.zone.now
+  end
+
+  def cannot_resume_from_withdrawn
+    errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "active")
+    errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "deferred")
   end
 end

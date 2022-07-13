@@ -38,5 +38,15 @@ FactoryBot.define do
       kind_of_nursery { "private_nursery" }
       private_childcare_provider_urn { "EY#{rand(100_000..999_999)}" }
     end
+
+    trait :with_started_declaration do
+      after :create do |npq_application|
+        create(:npq_participant_declaration,
+               declaration_type: "started",
+               user: npq_application.user,
+               participant_profile: npq_application.user.participant_profiles.first,
+               course_identifier: npq_application.npq_course.identifier)
+      end
+    end
   end
 end

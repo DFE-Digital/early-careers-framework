@@ -3,23 +3,27 @@
 require "rails_helper"
 
 RSpec.describe RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile do
-  let!(:started) { create(:ect_participant_declaration) }
-  let!(:participant_profile) { started.participant_profile }
-  let!(:user) { started.user }
+  let!(:declaration) { create(:ect_participant_declaration) }
+  let!(:participant_profile) { declaration.participant_profile }
   let!(:eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
-  context "#call" do
-    it "starts with all declarations set to submitted" do
-      ParticipantDeclaration.all.each do |participant_declaration|
-        expect(participant_declaration).to be_submitted
-      end
+  context "::call" do
+    let(:mock_attacher) { instance_double(Finance::DeclarationStatementAttacher, call: nil) }
+
+    before do
+      allow(Finance::DeclarationStatementAttacher).to receive(:new).with(participant_declaration: declaration).and_return(mock_attacher)
     end
 
     it "marks any submitted declarations for the participant as eligible" do
-      StoreParticipantEligibility.call(participant_profile:)
-      ParticipantDeclaration.all.each do |participant_declaration|
-        expect(participant_declaration).to be_eligible
-      end
+      expect {
+        described_class.call(participant_profile:)
+      }.to change { declaration.reload.state }.from("submitted").to("eligible")
+    end
+
+    it "attaches the declaration to relevant statement" do
+      described_class.call(participant_profile:)
+
+      expect(mock_attacher).to have_received(:call)
     end
   end
 end

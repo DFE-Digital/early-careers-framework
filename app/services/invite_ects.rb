@@ -10,12 +10,12 @@ class InviteEcts
 
       school.induction_coordinator_profiles.each do |sit|
         # Already received this email
-        next if Email.associated_with(sit).tagged_with(:preterm_reminder).any?
+        next if Email.associated_with(sit).tagged_with(:preterm_reminder_unconfirmed_for_2022).any?
 
         # Already chosen a programme this cohort
         next if school.chosen_programme?(Cohort.next)
 
-        ParticipantMailer.preterm_reminder(induction_coordinator_profile: sit).deliver_later
+        ParticipantMailer.preterm_reminder_unconfirmed_for_2022(induction_coordinator_profile: sit).deliver_later
       end
     end
   end

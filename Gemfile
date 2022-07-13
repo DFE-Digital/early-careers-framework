@@ -41,7 +41,7 @@ gem "shakapacker", "~> 6.2"
 gem "discard", "~> 1.2", ">= 1.2.0"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", "~> 1.11", require: false
+gem "bootsnap", "~> 1.12", require: false
 
 # Manage multiple processes i.e. web server and webpack
 gem "foreman"
@@ -86,9 +86,6 @@ gem "openapi3_parser", "~> 0.9.2"
 
 gem "ransack"
 
-# Payment breakdown
-gem "terminal-table"
-
 gem "friendly_id", "~> 5.4", ">= 5.4.2"
 
 platform :mswin, :mingw, :x64_mingw do
@@ -100,6 +97,8 @@ gem "aws-sdk-s3", require: false
 
 gem "activerecord-session_store", "~> 2.0"
 
+gem "google-apis-drive_v3"
+gem "googleauth"
 gem "google-cloud-bigquery"
 
 gem "sidekiq"
@@ -124,7 +123,7 @@ group :development, :test do
   # Testing framework
   gem "rspec-rails", "~> 5.1"
 
-  gem "cypress-on-rails", "~> 1.12"
+  gem "cypress-on-rails", "~> 1.13"
   gem "database_cleaner-active_record"
 
   gem "dotenv-rails", "~> 2.7.6"

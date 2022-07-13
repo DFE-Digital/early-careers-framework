@@ -27,7 +27,7 @@ RSpec.describe InviteEcts do
 
   describe "#preterm_reminder" do
     it "sends the nomination email" do
-      expect(ParticipantMailer).to receive(:preterm_reminder).with(
+      expect(ParticipantMailer).to receive(:preterm_reminder_unconfirmed_for_2022).with(
         hash_including(induction_coordinator_profile:),
       ).and_call_original
 
@@ -36,11 +36,11 @@ RSpec.describe InviteEcts do
 
     context "with an induction profile that has already received the email" do
       before do
-        create(:email, associated_with: [induction_coordinator_profile], tags: %w[preterm_reminder])
+        create(:email, associated_with: [induction_coordinator_profile], tags: %w[preterm_reminder_unconfirmed_for_2022])
       end
 
       it "does not send the email again" do
-        expect(ParticipantMailer).to receive(:preterm_reminder).never
+        expect(ParticipantMailer).to receive(:preterm_reminder_unconfirmed_for_2022).never
 
         invite_ects.preterm_reminder
       end
@@ -52,7 +52,7 @@ RSpec.describe InviteEcts do
       end
 
       it "does not send the email again" do
-        expect(ParticipantMailer).to receive(:preterm_reminder).never
+        expect(ParticipantMailer).to receive(:preterm_reminder_unconfirmed_for_2022).never
 
         invite_ects.preterm_reminder
       end
@@ -62,7 +62,7 @@ RSpec.describe InviteEcts do
       before { create :school_cohort, school:, cohort: }
 
       it "does not send the email again" do
-        expect(ParticipantMailer).to receive(:preterm_reminder).never
+        expect(ParticipantMailer).to receive(:preterm_reminder_unconfirmed_for_2022).never
 
         invite_ects.preterm_reminder
       end

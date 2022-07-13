@@ -4,7 +4,7 @@ class ParticipantProfile < ApplicationRecord
   has_paper_trail
   belongs_to :teacher_profile, touch: true
 
-  belongs_to :schedule, class_name: "Finance::Schedule", touch: true
+  belongs_to :schedule, class_name: "Finance::Schedule"
 
   belongs_to :participant_identity
 
