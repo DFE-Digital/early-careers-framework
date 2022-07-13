@@ -171,6 +171,18 @@ en:
   activemodel:
     errors:
       models:
+        admin/application_exports_form:
+          attributes:
+            start_date:
+              blank: "Please enter a start date"
+              invalid: "Please enter a valid start date"
+              in_future: "Start date cannot be in the future"
+              before_relaunch_date: "Start date must be after 6th June 2022"
+            end_date:
+              blank: "Please enter an end date"
+              invalid: "Please enter a valid end date"
+              in_future: "End date cannot be in the future"
+              before_start_date: "End date must be after start date"
         nominate_induction_tutor_form:
           attributes:
             email:

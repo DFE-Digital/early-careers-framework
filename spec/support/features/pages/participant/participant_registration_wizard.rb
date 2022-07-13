@@ -55,7 +55,7 @@ module Pages
     end
 
     def choose_add_your_national_insurance_number
-      click_on "Add your National Insurance number"
+      click_on "Enter your National Insurance number"
 
       self
     end
@@ -68,7 +68,7 @@ module Pages
     end
 
     def choose_confirm_your_name
-      click_on "Continue to confirm your name"
+      click_on "Enter your name"
 
       self
     end
@@ -81,7 +81,7 @@ module Pages
     end
 
     def add_full_name(full_name)
-      fill_in "What was your full name when you started your initial teacher training?", with: full_name
+      fill_in "What was your full name when you started your ITT?", with: full_name
       click_on "Continue"
 
       self

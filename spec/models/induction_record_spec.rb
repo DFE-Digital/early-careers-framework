@@ -5,6 +5,17 @@ require "rails_helper"
 RSpec.describe InductionRecord, type: :model do
   subject(:induction_record) { create(:induction_record) }
 
+  describe "changes" do
+    before do
+      induction_record.participant_profile.update!(created_at: 2.weeks.ago, updated_at: 1.week.ago)
+    end
+
+    it "updates the updated_at on the participant_profile" do
+      induction_record.touch
+      expect(induction_record.participant_profile.updated_at).to be_within(1.second).of induction_record.updated_at
+    end
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:induction_programme) }
     it { is_expected.to belong_to(:participant_profile) }
@@ -97,6 +108,36 @@ RSpec.describe InductionRecord, type: :model do
         induction_record.leaving!(date_of_change)
         expect(induction_record.end_date).to be_within(1.second).of(date_of_change)
       end
+    end
+  end
+
+  describe "withdrawal" do
+    let(:participant_profile) { create :ect_participant_profile }
+    let(:lead_provider) { create(:lead_provider) }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, partnership:) }
+    let(:induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
+
+    let(:update_training_status_to_active) do
+      induction_record.update!(training_status: "active")
+    end
+
+    let(:update_training_status_to_deferred) do
+      induction_record.update!(training_status: "deferred")
+    end
+
+    before do
+      induction_record.update!(training_status: "withdrawn")
+    end
+
+    it "returns an error if the training_status change is from withdrawn to active" do
+      expect { update_training_status_to_active }
+        .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
+    end
+
+    it "returns an error if the training_status change is from withdrawn to deferred" do
+      expect { update_training_status_to_deferred }
+        .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
     end
   end
 end

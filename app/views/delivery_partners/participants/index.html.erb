@@ -1,5 +1,9 @@
 <h1 class="govuk-heading-xl">Participants</h1>
 
+<p class="govuk-body">
+  <%= govuk_link_to "Download (csv)", delivery_partners_participants_path(params.permit(:query, :role, :academic_year, :status).merge({format: :csv})) %>
+</p>
+
 <%= render SearchBox.new(
   query: params[:query],
   title: "Search",

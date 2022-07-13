@@ -28,5 +28,11 @@ RSpec.describe "CreateNewFakeSandboxDataJob", :with_default_schedules do
       expect(npq_lead_provider.reload.npq_applications.count).to eq(10)
       expect(npq_lead_provider.reload.npq_participants.count).to eq(0)
     end
+
+    it "should associate the NPQ applications to the active registration cohort" do
+      CreateNewFakeSandboxDataJob.new.perform
+
+      expect(npq_lead_provider.reload.npq_applications.last.cohort.start_year).to eq(Cohort.active_registration_cohort.start_year)
+    end
   end
 end

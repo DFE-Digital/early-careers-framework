@@ -486,6 +486,15 @@ ActiveRecord::Schema.define(version: 2022_07_13_094058) do
     t.index ["token"], name: "index_nomination_emails_on_token", unique: true
   end
 
+  create_table "npq_application_exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_npq_application_exports_on_user_id"
+  end
+
   create_table "npq_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "npq_lead_provider_id", null: false
     t.uuid "npq_course_id", null: false
@@ -589,7 +598,6 @@ ActiveRecord::Schema.define(version: 2022_07_13_094058) do
     t.string "evidence_held"
     t.string "type", default: "ParticipantDeclaration::ECF"
     t.uuid "cpd_lead_provider_id"
-    t.datetime "voided_at"
     t.string "state", default: "submitted", null: false
     t.uuid "participant_profile_id"
     t.uuid "superseded_by_id"
@@ -656,6 +664,7 @@ ActiveRecord::Schema.define(version: 2022_07_13_094058) do
     t.uuid "participant_identity_id"
     t.string "start_term", default: "autumn_2021", null: false
     t.string "notes"
+    t.date "induction_start_date"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -998,6 +1007,7 @@ ActiveRecord::Schema.define(version: 2022_07_13_094058) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "nomination_emails", "partnership_notification_emails"
   add_foreign_key "nomination_emails", "schools"
+  add_foreign_key "npq_application_exports", "users"
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
   add_foreign_key "npq_applications", "participant_identities"

@@ -41,7 +41,13 @@ class NPQApplication < ApplicationRecord
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 
+  delegate :start_year, to: :cohort, prefix: true
+
   delegate :user, to: :participant_identity
+  delegate :id, :full_name, :email, to: :user, prefix: true
+
+  delegate :id, :name, to: :npq_course, prefix: true
+  delegate :id, :name, to: :npq_lead_provider, prefix: true
 
   def validate_rejected_status_cannot_change
     if lead_provider_approval_status_changed?(from: "rejected")

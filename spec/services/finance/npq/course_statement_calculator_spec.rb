@@ -12,6 +12,35 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator do
 
   subject { described_class.new(statement:, contract:) }
 
+  describe "#billable_declarations_count_for_declaration_type" do
+    before do
+      declarations = []
+
+      6.times do
+        declarations << create(
+          :npq_participant_declaration,
+          state: "eligible",
+          course_identifier: npq_course.identifier,
+          declaration_type: %w[started retained-1 retained-2 completed].sample,
+        )
+      end
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement:,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+    end
+
+    it "can count different declaration types", :aggregate_failures do
+      expect(subject.billable_declarations_count_for_declaration_type("started")).to eql(ParticipantDeclaration::NPQ.where(declaration_type: "started").count)
+      expect(subject.billable_declarations_count_for_declaration_type("retained")).to eql(ParticipantDeclaration::NPQ.where(declaration_type: %w[retained-1 retained-2]).count)
+      expect(subject.billable_declarations_count_for_declaration_type("completed")).to eql(ParticipantDeclaration::NPQ.where(declaration_type: "completed").count)
+    end
+  end
+
   describe "#billable_declarations_count" do
     context "when there are zero declarations" do
       it do

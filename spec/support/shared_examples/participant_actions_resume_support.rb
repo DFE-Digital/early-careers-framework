@@ -17,7 +17,7 @@ RSpec.shared_examples "JSON Participant Resume endpoint" do |serialiser_type|
     expect(response).not_to be_successful
   end
 
-  it "returns an error when the participant is withdrawn" do
+  it "returns an error when the participant is already withdrawn" do
     put withdrawal_url, params: withdrawal_params
     put url, params: params
 
