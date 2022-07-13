@@ -356,6 +356,8 @@ module Schools
 
     def appropriate_body_selected
       AppropriateBody.find(appropriate_body_id)
+    rescue ActiveRecord::RecordNotFound
+      nil
     end
   end
 end
