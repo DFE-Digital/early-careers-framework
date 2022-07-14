@@ -1,20 +1,29 @@
 # frozen_string_literal: true
 
+# This class provides a mechnism to import genesis statements
+# It is not designed to keep statements in sync
+# For that should be done by hand
+
 class Importers::SeedStatements
   def call
     LeadProvider.includes(:cpd_lead_provider).each do |lead_provider|
       cpd_lead_provider = lead_provider.cpd_lead_provider
 
       ecf_statements.each do |statement_data|
-        statement = Finance::Statement::ECF.find_or_create_by!(
+        statement = Finance::Statement::ECF.find_by(
           name: statement_data.name,
           cpd_lead_provider:,
-          cohort: Cohort.find_by(start_year: 2021),
+          cohort:,
         )
-        statement.update!(
+
+        next if statement
+
+        Finance::Statement::ECF.create!(
+          name: statement_data.name,
+          cpd_lead_provider:,
+          cohort:,
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
-          cohort: Cohort.find_by(start_year: 2021),
           output_fee: statement_data.output_fee,
           type: class_for(statement_data, namespace: Finance::Statement::ECF),
           contract_version: statement_data.contract_version,
@@ -26,13 +35,17 @@ class Importers::SeedStatements
       cpd_lead_provider = npq_lead_provider.cpd_lead_provider
 
       npq_statements.each do |statement_data|
-        statement = Finance::Statement::NPQ.find_or_create_by!(
+        statement = Finance::Statement::NPQ.find_by(
           name: statement_data.name,
           cpd_lead_provider:,
           cohort:,
         )
 
-        statement.update!(
+        next if statement
+
+        Finance::Statement::NPQ.create!(
+          name: statement_data.name,
+          cpd_lead_provider:,
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
           cohort:,
@@ -96,7 +109,7 @@ private
     [
       { name: "January 2022",   deadline_date: Date.new(2021, 12, 25),  payment_date: Date.new(2022, 1, 25),  contract_version: "0.0.1", output_fee: true  },
       { name: "February 2022",  deadline_date: Date.new(2022, 1, 25),   payment_date: Date.new(2022, 2, 25),  contract_version: "0.0.1", output_fee: false },
-      { name: "March 2022",     deadline_date: Date.new(2022, 2, 25),   payment_date: Date.new(2022, 3, 25),  contract_version: "0.0.2", output_fee: true  },
+      { name: "March 2022",     deadline_date: Date.new(2022, 2, 25),   payment_date: Date.new(2022, 3, 25),  contract_version: "0.0.1", output_fee: true  },
       { name: "April 2022",     deadline_date: Date.new(2022, 3, 25),   payment_date: Date.new(2022, 4, 25),  contract_version: "0.0.1", output_fee: false },
       { name: "May 2022",       deadline_date: Date.new(2022, 4, 25),   payment_date: Date.new(2022, 5, 25),  contract_version: "0.0.1", output_fee: false },
       { name: "June 2022",      deadline_date: Date.new(2022, 5, 25),   payment_date: Date.new(2022, 6, 25),  contract_version: "0.0.1", output_fee: false },
