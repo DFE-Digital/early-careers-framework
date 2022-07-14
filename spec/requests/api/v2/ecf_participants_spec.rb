@@ -407,14 +407,62 @@ RSpec.describe "Participants API", type: :request do
     end
   end
 
-  it_behaves_like "JSON Participant Deferral endpoint", "participant" do
-    let(:url)               { "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/defer" }
-    let(:params)            { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }
-    let(:withdrawal_url)    { "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
-    let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
-    let(:induction_programme) { create(:induction_programme, partnership:) }
-    let!(:induction_record) do
-      Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme:)
+  describe "PUT /api/v2/participants/ecf/USER_ID/defer" do
+    let(:parsed_response) { JSON.parse(response.body) }
+    let(:url) { "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/defer" }
+    let(:params) do
+      {
+        data: {
+          attributes: {
+            course_identifier: "ecf-induction",
+            reason: "career-break",
+          },
+        },
+      }
+    end
+
+    it "returns training_status as deferred" do
+      put url, params: params
+
+      expect(response).to be_successful
+
+      expect(parsed_response.dig("data", "attributes", "training_status")).to eql("deferred")
+    end
+
+    context "when participant is already withdrawn" do
+      let(:withdrawal_url) { "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+      let(:withdrawal_params) do
+        {
+          data: {
+            attributes: {
+              course_identifier: "ecf-induction",
+              reason: "left-teaching-profession",
+            },
+          },
+        }
+      end
+
+      before do
+        put withdrawal_url, params: withdrawal_params
+      end
+
+      it "returns an error" do
+        put url, params: params
+
+        expect(response).not_to be_successful
+      end
+    end
+
+    context "when participant is already deferred" do
+      before do
+        put url, params:
+      end
+
+      it "returns an error" do
+        put url, params: params
+
+        expect(response).not_to be_successful
+      end
     end
   end
 end
