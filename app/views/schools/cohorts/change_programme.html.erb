@@ -1,43 +1,43 @@
-<% content_for :title, "Change training programme" %>
+<% content_for :title, "Change how you run your training programme" %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl">Change how you run your programme</h1>
+    <h1 class="govuk-heading-xl">Change how you run your training programme</h1>
 
     <% if @school_cohort.school_chose_fip? %>
-      <p class="govuk-body">Your school has chosen to use a training provider, funded by the DfE.</p>
-      <p class="govuk-body">Follow these steps to change how you run your programme.</p>
-      <ol class="govuk-list govuk-list--number">
-        <li>Contact your training provider, if you’ve signed up with one.</li>
-        <li>Email the DfE to let us know that you want to make a change: <%= render MailToSupportComponent.new %>.</li>
-      </ol>
+    
+      <p class="govuk-body">As you’re using a training provider to deliver your training, you must first contact your lead provider <%= school_cohort.lead_provider&.name %> to discuss any changes.</p>
+      <h2 class="govuk-heading-m">Help with making changes</h2>
+      <p class="govuk-body">Read our guidance and the step-by-step instructions for       
+      <%= govuk_link_to "making changes to an existing training programme (opens in new tab)", "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training#making-changes-to-an-existing-training-programme", target: "_blank", rel: "noopener noreferrer" %>.</p>    
+
     <% elsif @school_cohort.school_funded_fip? %>
-      <p class="govuk-body">Your school has chosen to use a training provider, funded by your school.</p>
-      <p class="govuk-body">Follow these steps to change how you run your programme.</p>
-      <ol class="govuk-list govuk-list--number">
-        <li>Contact your training provider, if you’ve signed up with one.</li>
-        <li>Email the DfE to let us know that you want to make a change: <%= render MailToSupportComponent.new %>
-      </ol>
-    <% elsif @school_cohort.cip? %>
+    
+      <p class="govuk-body">As you’re using a training provider to deliver your training, you must first contact your lead provider HERE to discuss any changes.</p>
+      <h2 class="govuk-heading-m">Help with making changes</h2>
+      <p class="govuk-body">Read our guidance and the step-by-step instructions for       
+      <%= govuk_link_to "making changes to an existing training programme (opens in new tab)", "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training#making-changes-to-an-existing-training-programme", target: "_blank", rel: "noopener noreferrer" %>.</p>    
+
+    <% elsif @school_cohort.cip? %>      
+
       <p class="govuk-body">Your school has chosen to deliver your own programme using DfE-accredited materials.</p>
       <p class="govuk-body">Email the DfE if you want to make a change: <%= render MailToSupportComponent.new %>.</p>
+
     <% elsif @school_cohort.design_our_own? %>
-      <p class="govuk-body">
-      Your school has chosen to design and deliver your own programme based on the Early Career Framework (ECF).
-      </p>
-      <p class="govuk-body">
-      <%= govuk_link_to "Check the other options available", schools_choose_programme_path %> for your school if this changes.
-      </p>
+      
+      <p class="govuk-body">Your school has chosen to design and deliver your own programme based on the Early Career Framework (ECF).</p>
+      <p class="govuk-body"><%= govuk_link_to "Check the other options available", schools_choose_programme_path %> for your school if this changes.</p>
+    
     <% elsif @school_cohort.no_early_career_teachers? %>
-      <p class="govuk-body">
-      Your school has told us you do not expect any early career teachers (ECTs) to join you in the <%= @cohort.display_name %> academic year.
-      </p>
-      <p class="govuk-body">
-      <%= govuk_link_to "Check the other options available", schools_choose_programme_path %> for your school if this changes.
-      </p>
+      
+      <p class="govuk-body">Your school has told us you do not expect any early career teachers (ECTs) to join you in the <%= @cohort.display_name %> academic year.</p>
+      <p class="govuk-body"><%= govuk_link_to "Check the other options available", schools_choose_programme_path %> for your school if this changes.</p>
+
     <% end %>
+
   </div>
 </div>
