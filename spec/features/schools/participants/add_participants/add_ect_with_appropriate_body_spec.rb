@@ -38,11 +38,73 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
   end
 
   scenario "Appropriate body is confirmed and appears on the participant detail page" do
-    sign_in_as user
+    sign_in
 
+    when_i_go_to_add_new_ect_page
+    and_i_fill_in_all_info
+    then_i_am_taken_to_the_confirm_appropriate_body_page
+
+    when_i_click_on_confirm
+    then_i_am_taken_to_the_confirmation_page
+    and_i_see_the_appropriate_body(appropriate_body)
+
+    when_i_check_the_ect_details
+    then_i_see_the_school_appropriate_body
+  end
+
+  scenario "Appropriate body for ECT is not confirmed and a different one is selected" do
+    ect_appropriate_body = create(:appropriate_body_national_organisation)
+
+    sign_in
+
+    when_i_go_to_add_new_ect_page
+    and_i_fill_in_all_info
+    then_i_am_taken_to_the_confirm_appropriate_body_page
+
+    when_i_choose_a_different_appropriate_body(ect_appropriate_body)
+    then_i_am_taken_to_the_confirmation_page
+    and_i_see_the_appropriate_body(ect_appropriate_body)
+
+    when_i_check_the_ect_details
+    and_i_see_the_appropriate_body(ect_appropriate_body)
+  end
+
+  scenario "Appropriate body is confirmed and then changed in the confirm page" do
+    ect_appropriate_body = create(:appropriate_body_national_organisation)
+
+    sign_in
+
+    when_i_go_to_add_new_ect_page
+    and_i_fill_in_all_info
+    then_i_am_taken_to_the_confirm_appropriate_body_page
+
+    when_i_click_on_confirm
+    then_i_am_taken_to_the_confirmation_page
+    and_i_see_the_school_appropriate_body
+
+    when_i_click_on_change_appropriate_body_link
+    and_i_choose_a_different_appropriate_body(ect_appropriate_body)
+
+    then_i_am_taken_to_the_confirmation_page
+    and_i_see_the_appropriate_body(ect_appropriate_body)
+
+    when_i_check_the_ect_details
+    and_i_see_the_appropriate_body(ect_appropriate_body)
+  end
+
+private
+
+  def sign_in
+    sign_in_as user
+  end
+
+  def when_i_go_to_add_new_ect_page
     click_on "Add your early career teacher and mentor details"
     click_on "Continue"
     click_on "Add a new ECT"
+  end
+
+  def and_i_fill_in_all_info
     fill_in "schools_add_participant_form[full_name]", with: "George ECT"
     click_on "Continue"
     choose "No"
@@ -53,16 +115,55 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     fill_in "schools_add_participant_form[start_date(2i)]", with: "1"
     fill_in "schools_add_participant_form[start_date(1i)]", with: Date.today.year + 1
     click_on "Continue"
+  end
 
+  def then_i_am_taken_to_the_confirm_appropriate_body_page
     expect(page).to have_content("Is this the appropriate body for George ECT’s induction?")
-    click_on "Confirm"
+  end
 
+  def then_i_am_taken_to_the_confirmation_page
     expect(page).to have_content("Check your answers")
-    expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
+  end
 
+  def and_i_see_the_school_appropriate_body
+    and_i_see_the_appropriate_body(appropriate_body)
+  end
+
+  alias_method :then_i_see_the_school_appropriate_body, :and_i_see_the_school_appropriate_body
+
+  def when_i_check_the_ect_details
     click_on "Confirm and add"
     click_on "View your ECTs and mentors"
     click_on "George ECT"
-    expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
+  end
+
+  def when_i_choose_a_different_appropriate_body(ect_appropriate_body)
+    click_on "They have a different appropriate body"
+
+    choose "National organisation"
+    click_on "Continue"
+
+    choose ect_appropriate_body.name
+    click_on "Continue"
+  end
+
+  def and_i_choose_a_different_appropriate_body(ect_appropriate_body)
+    choose "National organisation"
+    click_on "Continue"
+
+    choose ect_appropriate_body.name
+    click_on "Continue"
+  end
+
+  def and_i_see_the_appropriate_body(ect_appropriate_body)
+    expect(page).to have_summary_row("Appropriate body", ect_appropriate_body.name)
+  end
+
+  def when_i_click_on_confirm
+    click_on "Confirm"
+  end
+
+  def when_i_click_on_change_appropriate_body_link
+    when_i_click_on_summary_row_action("Appropriate body", "Change")
   end
 end
