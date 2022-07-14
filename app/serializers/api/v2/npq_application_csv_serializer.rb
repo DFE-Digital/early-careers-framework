@@ -45,7 +45,9 @@ module Api
           employment_role
           created_at
           updated_at
+          cohort
           ineligible_for_funding_reason
+          targeted_delivery_funding_eligibility
         ]
       end
 
@@ -71,7 +73,9 @@ module Api
           record.employment_role,
           record.created_at.rfc3339,
           record.updated_at.rfc3339,
+          record.cohort.start_year,
           record.ineligible_for_funding_reason,
+          record.targeted_delivery_funding_eligibility,
         ]
       end
     end

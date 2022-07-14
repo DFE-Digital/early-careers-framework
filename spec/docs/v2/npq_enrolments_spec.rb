@@ -10,10 +10,10 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
 
   let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
-  path "/api/v2/npq-enrollments.csv" do
-    get "Retrieve multiple NPQ enrollments" do
-      operationId :npq_enrollments
-      tags "NPQ enrollments"
+  path "/api/v2/npq-enrolments.csv" do
+    get "Retrieve multiple NPQ enrolments" do
+      operationId :npq_enrolments
+      tags "NPQ enrolments"
       security [bearerAuth: []]
 
       parameter name: :filter,
@@ -28,8 +28,8 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 description: "Refine NPQ participants to return.",
                 example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
-      response "200", "A list of NPQ enrollments" do
-        schema({ "$ref": "#/components/schemas/MultipleNPQEnrollmentsCsvResponse" }, content_type: "text/csv")
+      response "200", "A list of NPQ enrolments" do
+        schema({ "$ref": "#/components/schemas/MultipleNPQEnrolmentsCsvResponse" }, content_type: "text/csv")
 
         run_test!
       end

@@ -1,4 +1,4 @@
-description: "The details of an NPQ Participant enrollment"
+description: "The details of an NPQ Participant enrolment"
 type: object
 required:
   - course_identifier
@@ -41,7 +41,7 @@ properties:
     type: string
     example: "2021"
   npq_application_id:
-    description: "The ID of the NPQ application that was accepted to create this enrollment"
+    description: "The ID of the NPQ application that was accepted to create this enrolment"
     type: string
     format: uuid
     example: "db3a7848-7308-4879-942a-c4a70ced400a"
@@ -62,3 +62,8 @@ properties:
     nullable: true
     type: string
     example: "123456"
+  targeted_delivery_funding_eligibility:
+    description: "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift"
+    nullable: false
+    type: boolean
+    example: true

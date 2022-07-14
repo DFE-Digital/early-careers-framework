@@ -240,12 +240,12 @@
         }
       }
     },
-    "/api/v2/npq-enrollments.csv": {
+    "/api/v2/npq-enrolments.csv": {
       "get": {
-        "summary": "Retrieve multiple NPQ enrollments",
-        "operationId": "npq_enrollments",
+        "summary": "Retrieve multiple NPQ enrolments",
+        "operationId": "npq_enrolments",
         "tags": [
-          "NPQ enrollments"
+          "NPQ enrolments"
         ],
         "security": [
           {
@@ -270,11 +270,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of NPQ enrollments",
+            "description": "A list of NPQ enrolments",
             "content": {
               "text/csv": {
                 "schema": {
-                  "$ref": "#/components/schemas/MultipleNPQEnrollmentsCsvResponse"
+                  "$ref": "#/components/schemas/MultipleNPQEnrolmentsCsvResponse"
                 }
               }
             }
@@ -1143,202 +1143,6 @@
           }
         }
       }
-    },
-    "/api/v2/participants/{id}/defer": {
-      "put": {
-        "summary": "Notify that an ECF participant is taking a break from their course",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to defer",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being deferred",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v2/participants/{id}/resume": {
-      "put": {
-        "summary": "Notify that an ECF participant is resuming their course",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to resume",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being resumed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v2/participants/{id}/withdraw": {
-      "put": {
-        "summary": "Notify that an ECF participant has withdrawn from their course",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant to withdraw",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant being withdrawn",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v2/participants/{id}/change-schedule": {
-      "put": {
-        "summary": "Notify that an ECF participant is changing training schedule",
-        "operationId": "participant",
-        "tags": [
-          "ECF Participant"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-            "description": "The ID of the participant",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The ECF participant changing schedule",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantResponse"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -1606,22 +1410,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-change-schedule"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantChangeSchedule"
           }
         },
         "example": {
@@ -1940,22 +1729,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-defer"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantDefer"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantDefer"
           }
         },
         "example": {
@@ -2181,22 +1955,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-resume"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantResume"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantResume"
           }
         },
         "example": {
@@ -2597,22 +2356,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-withdraw"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/ECFParticipantWithdraw"
-              }
-            }
+            "$ref": "#/components/schemas/ECFParticipantWithdraw"
           }
         },
         "example": {
@@ -2833,8 +2577,8 @@
           }
         }
       },
-      "MultipleNPQEnrollmentsCsvResponse": {
-        "description": "A list of NPQ enrollments in the Comma Separated Value (CSV) format",
+      "MultipleNPQEnrolmentsCsvResponse": {
+        "description": "A list of NPQ enrolments in the Comma Separated Value (CSV) format",
         "type": "string",
         "required": [
           "data"
@@ -2843,7 +2587,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NPQEnrollmentCsvRow"
+              "$ref": "#/components/schemas/NPQEnrolmentCsvRow"
             }
           }
         },
@@ -2870,7 +2614,7 @@
                   "email": "isabelle.macdonald2@some-school.example.com",
                   "teacher_reference_number": "1234567",
                   "updated_at": "2021-05-31T02:21:32.000Z",
-                  "npq_enrollments": [
+                  "npq_enrolments": [
                     {
                       "course_identifier": "npq-headship",
                       "schedule_identifier": "npq-leadership-autumn",
@@ -2900,7 +2644,7 @@
             }
           }
         },
-        "example": "id,participant_id,declaration_type,course_identifier,eligible_for_payment,declaration_date,voided,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,false,2021-08-26T15:38:52Z,false,2021-05-31T02:22:32.000Z\n"
+        "example": "id,participant_id,declaration_type,course_identifier,declaration_date,state,updated_at\nc88eb9a9-773a-4f53-9716-121b981154d8,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,2021-08-26T15:38:52Z,eligible,2021-05-31T02:22:32.000Z\n31a521ec-82c5-451c-aea3-426523f1facc,825f0a27-af62-43cb-8d80-fd1ec7599f62,started,ecf-induction,2021-08-26T15:38:52Z,eligible,2021-05-31T02:22:32.000Z\n"
       },
       "MultipleParticipantDeclarationsResponse": {
         "description": "A list of participant declarations",
@@ -2922,8 +2666,7 @@
                   "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
                   "declaration_date": "2021-05-31T02:21:32.000Z",
-                  "course_identifier": "ecf-mentor",
-                  "eligible_for_payment": false
+                  "course_identifier": "ecf-mentor"
                 }
               },
               {
@@ -2933,8 +2676,7 @@
                   "participant_id": "ab3a7848-7308-4879-942a-c4a70ced400a",
                   "declaration_type": "started",
                   "declaration_date": "2021-05-31T02:21:32.000Z",
-                  "course_identifier": "ecf-mentor",
-                  "eligible_for_payment": true
+                  "course_identifier": "ecf-mentor"
                 }
               }
             ]
@@ -2986,11 +2728,6 @@
           "updated_at"
         ],
         "properties": {
-          "id": {
-            "type": "string",
-            "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-            "format": "uuid"
-          },
           "participant_id": {
             "description": "The unique identifier of this NPQ participant",
             "type": "string",
@@ -3133,6 +2870,18 @@
               "establishment-ineligible",
               "previously-funded"
             ]
+          },
+          "cohort": {
+            "description": "The start year of the cohort this application belongs to",
+            "type": "string",
+            "nullable": false,
+            "example": "2022"
+          },
+          "targeted_delivery_funding_eligibility": {
+            "description": "Whether or not this application is eligible for Targeted Delivery Funding uplift",
+            "nullable": false,
+            "type": "boolean",
+            "example": true
           }
         }
       },
@@ -3290,8 +3039,8 @@
           }
         }
       },
-      "NPQEnrollment": {
-        "description": "The details of an NPQ Participant enrollment",
+      "NPQEnrolment": {
+        "description": "The details of an NPQ Participant enrolment",
         "type": "object",
         "required": [
           "course_identifier",
@@ -3340,7 +3089,7 @@
             "example": "2021"
           },
           "npq_application_id": {
-            "description": "The ID of the NPQ application that was accepted to create this enrollment",
+            "description": "The ID of the NPQ application that was accepted to create this enrolment",
             "type": "string",
             "format": "uuid",
             "example": "db3a7848-7308-4879-942a-c4a70ced400a"
@@ -3365,10 +3114,16 @@
             "nullable": true,
             "type": "string",
             "example": "123456"
+          },
+          "targeted_delivery_funding_eligibility": {
+            "description": "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift",
+            "nullable": false,
+            "type": "boolean",
+            "example": true
           }
         }
       },
-      "NPQEnrollmentCsvRow": {
+      "NPQEnrolmentCsvRow": {
         "description": "The details of an NPQ application",
         "type": "object",
         "required": [
@@ -3406,7 +3161,7 @@
             ]
           },
           "schedule_identifier": {
-            "description": "The schedule currently applied to this enrollment",
+            "description": "The schedule currently applied to this enrolment",
             "type": "string",
             "example": "npq-specialist-autumn",
             "enum": [
@@ -3426,7 +3181,7 @@
             "example": "2021"
           },
           "npq_application_id": {
-            "description": "The unique identifier of this NPQ application that was accepted to create this enrollment",
+            "description": "The unique identifier of this NPQ application that was accepted to create this enrolment",
             "type": "string",
             "example": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
             "format": "uuid"
@@ -3487,7 +3242,7 @@
         "required": [
           "full_name",
           "email",
-          "npq_enrollments",
+          "npq_enrolments",
           "updated_at"
         ],
         "properties": {
@@ -3508,11 +3263,11 @@
             "example": "1234567",
             "nullable": true
           },
-          "npq_enrollments": {
-            "description": "Information about the course(s) the participant is enrolled in",
+          "npq_enrolments": {
+            "description": "Information about the course(s) the participant is enroled in",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NPQEnrollment"
+              "$ref": "#/components/schemas/NPQEnrolment"
             }
           },
           "updated_at": {
@@ -3612,22 +3367,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-change-schedule"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantChangeSchedule"
           }
         },
         "example": {
@@ -3713,22 +3453,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-defer"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantDefer"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantDefer"
           }
         },
         "example": {
@@ -3811,22 +3536,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-resume"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantResume"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantResume"
           }
         },
         "example": {
@@ -4073,22 +3783,7 @@
         ],
         "properties": {
           "data": {
-            "type": "object",
-            "description": "The request data",
-            "required": [
-              "type",
-              "attributes"
-            ],
-            "properties": {
-              "type": {
-                "description": "The data type",
-                "type": "string",
-                "example": "participant-withdraw"
-              },
-              "attributes": {
-                "$ref": "#/components/schemas/NPQParticipantWithdraw"
-              }
-            }
+            "$ref": "#/components/schemas/NPQParticipantWithdraw"
           }
         },
         "example": {
@@ -4182,8 +3877,6 @@
           "declaration_type",
           "declaration_date",
           "course_identifier",
-          "eligible_for_payment",
-          "voided",
           "state",
           "updated_at"
         ],
@@ -4232,18 +3925,6 @@
             ],
             "example": "ecf-induction"
           },
-          "eligible_for_payment": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
-            "type": "boolean",
-            "nullable": false,
-            "example": true
-          },
-          "voided": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
-            "type": "boolean",
-            "nullable": false,
-            "example": true
-          },
           "state": {
             "description": "Indicates the state of this payment declaration",
             "type": "string",
@@ -4273,9 +3954,7 @@
           "participant_id",
           "declaration_type",
           "course_identifier",
-          "eligible_for_payment",
           "declaration_date",
-          "voided",
           "updated_at"
         ],
         "properties": {
@@ -4328,18 +4007,6 @@
               "npq-early-headship-coaching-offer"
             ],
             "example": "ecf-induction"
-          },
-          "eligible_for_payment": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
-            "type": "boolean",
-            "nullable": false,
-            "example": true
-          },
-          "voided": {
-            "description": "[Deprecated - use state instead] Indicates whether this declaration has been voided",
-            "type": "boolean",
-            "nullable": false,
-            "example": false
           },
           "state": {
             "description": "Indicates the state of this payment declaration",

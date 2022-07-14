@@ -33,7 +33,7 @@ module Api
         object.updated_at.rfc3339
       end
 
-      attribute(:npq_enrollments) do |object, params|
+      attribute(:npq_enrolments) do |object, params|
         scope = object.npq_profiles
         scope = scope.includes(:npq_course, :npq_application, schedule: [:cohort])
 

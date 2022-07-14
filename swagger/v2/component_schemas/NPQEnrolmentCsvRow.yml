@@ -31,7 +31,7 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
   schedule_identifier:
-    description: "The schedule currently applied to this enrollment"
+    description: "The schedule currently applied to this enrolment"
     type: string
     example: "npq-specialist-autumn"
     enum:
@@ -48,7 +48,7 @@ properties:
     type: string
     example: "2021"
   npq_application_id:
-    description: "The unique identifier of this NPQ application that was accepted to create this enrollment"
+    description: "The unique identifier of this NPQ application that was accepted to create this enrolment"
     type: string
     example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
     format: uuid

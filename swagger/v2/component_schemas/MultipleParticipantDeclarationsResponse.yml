@@ -15,7 +15,6 @@ properties:
           declaration_type: started
           declaration_date: "2021-05-31T02:21:32.000Z"
           course_identifier: ecf-mentor
-          eligible_for_payment: false
       - id: bb36d74a-68a7-47b6-86b6-1fd0d141c590
         type: "participant-declaration"
         attributes:
@@ -23,4 +22,3 @@ properties:
           declaration_type: started
           declaration_date: "2021-05-31T02:21:32.000Z"
           course_identifier: ecf-mentor
-          eligible_for_payment: true
