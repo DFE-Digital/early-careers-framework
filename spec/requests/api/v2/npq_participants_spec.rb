@@ -105,19 +105,25 @@ RSpec.describe "NPQ Participants API", type: :request do
         end
       end
 
-      describe "JSON Participant Withdrawal" do
-        it_behaves_like "a participant withdraw action endpoint" do
-          let(:url) { "/api/v2/participants/npq/#{npq_application.user.id}/withdraw" }
-          let(:params) do
-            { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
-          end
+      it_behaves_like "a participant withdraw action endpoint" do
+        let(:course_identifier) { npq_course.identifier }
+        let(:url) { "/api/v2/participants/npq/#{npq_application.user.id}/withdraw" }
+        let(:params) do
+          { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
+        end
 
-          it "changes the training status of a participant to withdrawn" do
-            put url, params: params
+        before do
+          participant_profile = npq_application.profile
+          user = npq_application.user
 
-            expect(response).to be_successful
-            expect(npq_application.reload.profile.training_status).to eql("withdrawn")
-          end
+          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
+        end
+
+        it "changes the training status of a participant to withdrawn" do
+          put url, params: params
+
+          expect(response).to be_successful
+          expect(npq_application.reload.profile.training_status).to eql("withdrawn")
         end
       end
 
@@ -127,6 +133,13 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:withdrawal_url)    { "/api/v2/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+
+        before do
+          participant_profile = npq_application.profile
+          user = npq_application.user
+
+          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
+        end
       end
 
       it_behaves_like "JSON Participant Resume endpoint", "npq-participant" do
@@ -135,7 +148,13 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:withdrawal_url)    { "/api/v2/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier: } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+
         before do
+          participant_profile = npq_application.profile
+          user = npq_application.user
+
+          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
+
           put "/api/v2/participants/npq/#{npq_application.user.id}/defer",
               params: { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } }
         end
