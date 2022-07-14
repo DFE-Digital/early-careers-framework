@@ -317,7 +317,7 @@ module ManageTrainingSteps
   end
 
   def and_see_the_other_programs_before_choosing(labels:, choice:, snapshot:)
-    expect(page).to have_text "Change how you run your traingin programme"
+    expect(page).to have_text "Change how you run your training programme"
     expect(page).to be_accessible
     click_on "Check the other options available"
 
