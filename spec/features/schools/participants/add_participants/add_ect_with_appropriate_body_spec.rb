@@ -27,7 +27,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     privacy_policy
   end
   let!(:induction_coordinator) do
-    induction_coordinator_profile = create(:induction_coordinator_profile, schools: [school_cohort.school], user: user)
+    induction_coordinator_profile = create(:induction_coordinator_profile, schools: [school_cohort.school], user:)
     PrivacyPolicy.current.accept!(user)
     induction_coordinator_profile
   end
@@ -113,7 +113,7 @@ private
     click_on "Continue"
     fill_in "schools_add_participant_form[start_date(3i)]", with: "1"
     fill_in "schools_add_participant_form[start_date(2i)]", with: "1"
-    fill_in "schools_add_participant_form[start_date(1i)]", with: Date.today.year + 1
+    fill_in "schools_add_participant_form[start_date(1i)]", with: Time.zone.today.year + 1
     click_on "Continue"
   end
 
