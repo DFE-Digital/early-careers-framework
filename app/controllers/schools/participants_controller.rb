@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class Schools::ParticipantsController < Schools::BaseController
+  include AppropriateBodySelection::Controller
+
   before_action :set_school_cohort
   before_action :set_participant, except: %i[index email_used]
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
+
+  helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
   def index
     if FeatureFlag.active?(:change_of_circumstances)
@@ -88,6 +92,14 @@ class Schools::ParticipantsController < Schools::BaseController
     end
   end
 
+  def add_appropriate_body
+    if @school_cohort.appropriate_body.present?
+      start_appropriate_body_selection
+    else
+      redirect_to schools_participant_path(id: @profile.id)
+    end
+  end
+
   def remove; end
 
   def destroy
@@ -135,5 +147,21 @@ private
 
   def email_used?(email)
     User.where(email:).where.not(id: @profile.user.id).any? || ParticipantIdentity.where(email:).where.not(user_id: @profile.user.id).any?
+  end
+
+  def start_appropriate_body_selection
+    super from_path: schools_participant_path(id: @profile.id),
+          submit_action: :save_appropriate_body,
+          school_name: @profile.user.full_name,
+          ask_appointed: false
+  end
+
+  def save_appropriate_body
+    @induction_record.update!({ appropriate_body_id: @appropriate_body_form.body_id })
+    redirect_to appropriate_body_from_path
+  end
+
+  def participant_has_appropriate_body?
+    @induction_record.appropriate_body.present?
   end
 end

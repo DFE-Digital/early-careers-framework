@@ -5,7 +5,14 @@ module AppropriateBodySelection
     extend ActiveSupport::Concern
 
     included do
-      before_action :load_appropriate_body_form
+      before_action :load_appropriate_body_form,
+                    :ensure_appropriate_body_data,
+                    only: %i[appropriate_body_appointed
+                             update_appropriate_body_appointed
+                             appropriate_body_type
+                             update_appropriate_body_type
+                             appropriate_body
+                             update_appropriate_body]
 
       helper_method :appropriate_body_from_path, :appropriate_body_school_name, :appropriate_body_type_back_link
     end
@@ -41,13 +48,18 @@ module AppropriateBodySelection
     end
 
     def appropriate_body
-      render "/appropriate_body_selection/body_selection"
+      if @appropriate_body_form.body_type
+        render "/appropriate_body_selection/body_selection"
+      else
+        redirect_to action: :appropriate_body_type
+      end
     end
 
     def update_appropriate_body
       if @appropriate_body_form.valid? :body
         store_appropriate_body_form
         method(appropriate_body_submit_action).call
+        appropriate_body_clear_data
       else
         render "/appropriate_body_selection/body_selection"
       end
@@ -70,6 +82,10 @@ module AppropriateBodySelection
       else
         redirect_to action: :appropriate_body_type
       end
+    end
+
+    def ensure_appropriate_body_data
+      head :bad_request unless appropriate_body_session_data
     end
 
     def load_appropriate_body_form
@@ -116,6 +132,10 @@ module AppropriateBodySelection
       else
         appropriate_body_from_path
       end
+    end
+
+    def appropriate_body_clear_data
+      session.delete(:appropriate_body_selection)
     end
   end
 end
