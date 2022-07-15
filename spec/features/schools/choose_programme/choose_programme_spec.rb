@@ -125,6 +125,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "A school with challenged partnership chooses expects ects" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_but_partnership_was_challenged
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
@@ -138,6 +139,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "A school chooses to keep the same FIP programme in the new cohort" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
@@ -176,6 +178,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "Empty LP and DP names for challenged partnerships" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
@@ -208,6 +211,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       scenario "A school chooses to use a different lead provider" do
         given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
+        and_a_provider_relationship_exists_for_the_lp_and_dp
         and_the_next_cohort_is_open_for_registrations
         and_i_am_signed_in_as_an_induction_coordinator
         when_i_start_programme_selection_for_next_cohort
@@ -247,6 +251,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       scenario "A school chooses to change delivery partner" do
         given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
+        and_a_provider_relationship_exists_for_the_lp_and_dp
         and_the_next_cohort_is_open_for_registrations
         and_i_am_signed_in_as_an_induction_coordinator
         when_i_start_programme_selection_for_next_cohort
@@ -284,6 +289,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       scenario "A school chooses to deliver own programme" do
         given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
+        and_a_provider_relationship_exists_for_the_lp_and_dp
         and_the_next_cohort_is_open_for_registrations
         and_i_am_signed_in_as_an_induction_coordinator
         when_i_start_programme_selection_for_next_cohort
@@ -319,6 +325,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
       scenario "A school chooses to design and deliver own programme" do
         given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
         and_cohort_for_next_academic_year_is_created
+        and_a_provider_relationship_exists_for_the_lp_and_dp
         and_the_next_cohort_is_open_for_registrations
         and_i_am_signed_in_as_an_induction_coordinator
         when_i_start_programme_selection_for_next_cohort
@@ -363,6 +370,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "A school does not appoint an appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
@@ -389,6 +397,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "A school chooses to appoint a local authority as appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
@@ -423,6 +432,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "A school chooses to appoint a national organisation as appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
@@ -457,6 +467,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     scenario "A school chooses to appoint a teaching school hub as appropriate body" do
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_cohort_for_next_academic_year_is_created
+      and_a_provider_relationship_exists_for_the_lp_and_dp
       and_the_next_cohort_is_open_for_registrations
       and_i_am_signed_in_as_an_induction_coordinator
       when_i_start_programme_selection_for_next_cohort
