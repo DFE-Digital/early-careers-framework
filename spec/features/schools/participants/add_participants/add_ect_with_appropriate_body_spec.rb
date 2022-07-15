@@ -66,7 +66,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     and_i_see_the_appropriate_body(ect_appropriate_body)
 
     when_i_check_the_ect_details
-    and_i_see_the_appropriate_body(ect_appropriate_body)
+    then_i_see_the_appropriate_body(ect_appropriate_body)
   end
 
   scenario "Appropriate body is confirmed and then changed in the confirm page" do
@@ -89,7 +89,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     and_i_see_the_appropriate_body(ect_appropriate_body)
 
     when_i_check_the_ect_details
-    and_i_see_the_appropriate_body(ect_appropriate_body)
+    then_i_see_the_appropriate_body(ect_appropriate_body)
   end
 
 private
@@ -158,6 +158,8 @@ private
   def and_i_see_the_appropriate_body(ect_appropriate_body)
     expect(page).to have_summary_row("Appropriate body", ect_appropriate_body.name)
   end
+
+  alias_method :then_i_see_the_appropriate_body, :and_i_see_the_appropriate_body
 
   def when_i_click_on_confirm
     click_on "Confirm"
