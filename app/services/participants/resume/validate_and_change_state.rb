@@ -6,7 +6,7 @@ module Participants
       extend ActiveSupport::Concern
       include ActiveModel::Validations
 
-      included do
+      prepended do
         validate :not_already_active
         validate :not_already_withdrawn
       end

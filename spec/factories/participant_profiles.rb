@@ -84,7 +84,7 @@ FactoryBot.define do
     end
 
     after :build do |participant_profile|
-      participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
+      participant_profile.participant_identity ||= Identity::Create.call(user: participant_profile.user)
     end
   end
 end

@@ -6,11 +6,14 @@ module Participants
       extend ActiveSupport::Concern
       include ActiveModel::Validations
 
+      prepended do
+        validate :not_already_withdrawn
+      end
+
       included do
         attr_accessor :reason
 
         validates :reason, inclusion: { in: reasons }
-        validate :not_already_withdrawn
       end
 
       def perform_action!

@@ -417,4 +417,74 @@ RSpec.describe "Participants API", type: :request do
       Induction::Enrol.call(participant_profile: early_career_teacher_profile, induction_programme:)
     end
   end
+
+  describe "PUT /api/v1/participants/ecf/ID/defer" do
+    context "with withdrawn profile and incorrect course" do
+      let(:participant_identity) { participant_profile.participant_identity }
+      let(:participant_profile) { create(:ect_participant_profile, :withdrawn) }
+      let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }
+      let(:params) { { data: { attributes: { course_identifier: "ecf-mentor", reason: "career-break" } } } }
+
+      it "is not successful and returns an error message" do
+        put url, params: params
+        expect(response).not_to be_successful
+        expect(response.body).to include("The property '#/participant_id' must be a valid Participant ID")
+      end
+    end
+  end
+
+  describe "PUT /api/v1/participants/ecf/ID/resume" do
+    context "with withdrawn profile and incorrect course" do
+      let(:participant_identity) { participant_profile.participant_identity }
+      let(:participant_profile) { create(:ect_participant_profile, :withdrawn) }
+      let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/resume" }
+      let(:params) { { data: { attributes: { course_identifier: "ecf-mentor" } } } }
+
+      it "is not successful and returns an error message" do
+        put url, params: params
+        expect(response).not_to be_successful
+        expect(response.body).to include("The property '#/participant_id' must be a valid Participant ID")
+      end
+    end
+  end
+
+  describe "PUT /api/v1/participants/ecf/ID/withdraw" do
+    context "with withdrawn profile and incorrect course" do
+      let(:participant_identity) { participant_profile.participant_identity }
+      let(:participant_profile) { create(:ect_participant_profile, :withdrawn) }
+      let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/withdraw" }
+      let(:params) { { data: { attributes: { course_identifier: "ecf-mentor" } } } }
+
+      it "is not successful and returns an error message" do
+        put url, params: params
+        expect(response).not_to be_successful
+        expect(response.body).to include("The property '#/participant_id' must be a valid Participant ID")
+      end
+    end
+  end
+
+  describe "PUT /api/v1/participants/ecf/ID/change-schedule" do
+    context "with withdrawn profile and incorrect course" do
+      let(:new_schedule) { create(:ecf_schedule) }
+      let(:participant_identity) { participant_profile.participant_identity }
+      let(:participant_profile) { create(:ect_participant_profile, :withdrawn) }
+      let(:url) { "/api/v1/participants/#{early_career_teacher_profile.user.id}/change-schedule" }
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              course_identifier: "ecf-mentor",
+              schedule_identifier: new_schedule.schedule_identifier,
+            },
+          },
+        }
+      end
+
+      it "is not successful and returns an error message" do
+        put url, params: params
+        expect(response).not_to be_successful
+        expect(response.body).to include("The property '#/participant_id' must be a valid Participant ID")
+      end
+    end
+  end
 end

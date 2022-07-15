@@ -3,9 +3,13 @@
 module Participants
   module Mentor
     include ECF
+
     extend ActiveSupport::Concern
+
     included do
       extend MentorClassMethods
+
+      validate :validate_profile_not_withdrawn
     end
 
     def mentor_profile
@@ -18,6 +22,16 @@ module Participants
     module MentorClassMethods
       def valid_courses
         %w[ecf-mentor]
+      end
+    end
+
+  private
+
+    def validate_profile_not_withdrawn
+      return unless participant_identity
+
+      if mentor_profile.nil? && participant_identity.participant_profiles.mentors.any?
+        errors.add :base, I18n.t("withdrawn_participant")
       end
     end
   end
