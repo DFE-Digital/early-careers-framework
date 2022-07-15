@@ -440,6 +440,12 @@ Rails.application.routes.draw do
             get "what-changes", to: "setup_school_cohort#what_changes"
             put "what-changes", to: "setup_school_cohort#what_changes"
 
+            get "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
+            put "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
+
+            get "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
+            put "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
+
             get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
             put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
 
