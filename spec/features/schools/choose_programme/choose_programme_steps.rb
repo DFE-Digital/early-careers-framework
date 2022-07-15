@@ -136,6 +136,14 @@ module ChooseProgrammeSteps
     expect(page).to have_content("Which teaching school hub have you appointed?")
   end
 
+  def then_i_am_taken_to_the_provider_relationship_invalid_page
+    expect(page).to have_content("You cannot use this combination of lead provider and delivery partner for your new ECTs and their mentors")
+  end
+
+  def then_i_am_taken_to_the_use_different_delivery_partner
+    expect(page).to have_content("Will you use #{@lead_provider.name} with another delivery partner?")
+  end
+
   # And steps
 
   def and_a_notification_email_is_sent_to_the_lead_provider
@@ -153,6 +161,10 @@ module ChooseProgrammeSteps
     privacy_policy = create(:privacy_policy)
     privacy_policy.accept!(@induction_coordinator_profile.user)
     sign_in_as @induction_coordinator_profile.user
+  end
+
+  def and_a_provider_relationship_exists_for_the_lp_and_dp
+    @provider_relationship = create(:provider_relationship, cohort: @cohort_2022, delivery_partner: @delivery_partner, lead_provider: @lead_provider)
   end
 
   def and_i_click_continue
