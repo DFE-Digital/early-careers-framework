@@ -7,12 +7,13 @@ module Schools
     include ActiveModel::Serialization
 
     attr_accessor :expect_any_ects_choice, :how_will_you_run_training_choice, :change_provider_choice,
-                  :what_changes_choice
+                  :what_changes_choice, :use_different_delivery_partner_choice
 
     validates :expect_any_ects_choice, presence: true, on: :expect_any_ects
     validates :how_will_you_run_training_choice, presence: true, on: :how_will_you_run_training
     validates :change_provider_choice, presence: true, on: :change_provider
     validates :what_changes_choice, presence: true, on: :what_changes
+    validates :use_different_delivery_partner_choice, presence: true, on: :use_different_delivery_partner
 
     PROGRAMME_CHOICES_MAP = {
       "change_lead_provider" => "full_induction_programme",
@@ -27,6 +28,7 @@ module Schools
         how_will_you_run_training_choice:,
         change_provider_choice:,
         what_changes_choice:,
+        use_different_delivery_partner_choice:,
       }
     end
 
@@ -52,6 +54,10 @@ module Schools
     end
 
     def change_provider_choices
+      yes_no_choices
+    end
+
+    def use_different_delivery_partner_choices
       yes_no_choices
     end
 
