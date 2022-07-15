@@ -227,12 +227,12 @@ module Schools
       @previous_cohort ||= previous_school_cohort&.cohort
     end
 
-    def lead_provider_name
-      @lead_provider_name ||= school.lead_provider(previous_cohort.start_year)&.name
+    def lead_provider
+      @lead_provider ||= school.lead_provider(previous_cohort.start_year)
     end
 
-    def delivery_partner_name
-      @delivery_partner_name ||= school.delivery_partner_for(previous_cohort.start_year)&.name
+    def delivery_partner
+      @delivery_partner ||= school.delivery_partner_for(previous_cohort.start_year)
     end
 
     def delivery_partner_to_be_confirmed?
