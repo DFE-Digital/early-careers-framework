@@ -1,0 +1,33 @@
+<% content_for :title, t('page_titles.schools.participants.should_not_have_been_registered', name: @profile.user.full_name) %>
+
+<% content_for :before_content,
+               govuk_back_link(text: "Back",
+                               href: schools_participant_edit_name_path(participant_id: @profile)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl">
+      <%= t('page_titles.schools.participants.should_not_have_been_registered', name: @profile.user.full_name) %>
+    </h1>
+
+    <p class="govuk-body">As <%= @profile.full_name %> has been registered with a training provider,
+      you’ll need to contact the lead provider <%= @induction_record.lead_provider_name %> to withdraw them.</p>
+    <p class="govuk-body"><%= @induction_record.lead_provider_name %> will confirm the change directly with us.
+      We’ll then remove <%= @profile.full_name %>’s information from your account.</p>
+
+    <p class="govuk-body">
+      <%= govuk_link_to "Return to manage your training", schools_dashboard_path, class: "govuk-link govuk-link--no-visited-state" %>
+    </p>
+
+    <% if participant_not_started_validation?(@profile, @induction_record) %>
+      <p class="govuk-body">
+        If <%= @profile.full_name %> should not have been registered, you need to
+        <%= govuk_link_to "remove all their information from this service.",
+                          schools_participant_remove_path(school_id: @induction_record.school,
+                                                          cohort_id: @induction_record.cohort,
+                                                          participant_id: @profile) %>
+      </p>
+    <% end %>
+  </div>
+</div>

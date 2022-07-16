@@ -13,7 +13,8 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   let!(:mentor_user_2) { mentor_profile_2.user }
   let(:ect_profile) { create(:ect_participant_profile, mentor_profile: mentor_user.mentor_profile, school_cohort:) }
   let!(:ect_user) { ect_profile.user }
-  let!(:withdrawn_ect) { create(:ect_participant_profile, :withdrawn_record, school_cohort:).user }
+  let!(:withdrawn_ect_profile) { create(:ect_participant_profile, :withdrawn_record, school_cohort:) }
+  let!(:withdrawn_ect) { withdrawn_ect_profile.user }
   let!(:unrelated_mentor_profile) { create(:mentor_participant_profile, school_cohort: another_cohort) }
   let!(:unrelated_mentor) { unrelated_mentor_profile.user }
   let!(:unrelated_ect) { create(:ect_participant_profile, school_cohort: another_cohort).user }
@@ -164,36 +165,96 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-name" do
-    it "renders the edit name template with the correct name for an ECT" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name"
+    context "when no reason to change the name is included in the request" do
+      it "renders the reason_to_edit_name template to ask for a reason to edit the participant's name" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name"
 
-      expect(response).to render_template("schools/participants/edit_name")
-      expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
+        expect(response).to render_template("schools/participants/reason_to_edit_name")
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+      end
     end
 
-    it "renders the edit name template with the correct name for a mentor" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name"
+    context "when unknown reason to change the name is included in the request" do
+      it "renders the reason_to_edit_name template to ask for a reason to edit the participant's name" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name",
+            params: { reason: "any_unknown_reason" }
 
-      expect(response).to render_template("schools/participants/edit_name")
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
+        expect(response).to render_template("schools/participants/reason_to_edit_name")
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+      end
+    end
+
+    context "when the participant's name has changed in real life for any reason" do
+      it "renders the edit name template with the current name of the participant" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name?",
+            params: { reason: "name_has_changed" }
+
+        expect(response).to render_template("schools/participants/edit_name")
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+      end
+    end
+
+    context "when the current participant's name is incorrect" do
+      it "renders the edit name template with the current name of the participant" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name?",
+            params: { reason: "name_is_incorrect" }
+
+        expect(response).to render_template("schools/participants/edit_name")
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+      end
+    end
+
+    context "when a participant should not have been registered" do
+      it "renders the should not have been registered template with the current name of the participant" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name?",
+            params: { reason: "should_not_have_been_registered" }
+
+        expect(response).to render_template("schools/participants/should_not_have_been_registered")
+        expect(response.body).to include(CGI.escapeHTML(mentor_profile.full_name))
+        expect(response.body).to include(CGI.escapeHTML("remove all their information from this service."))
+      end
+    end
+
+    context "when an ect needs to be replaced with a different person" do
+      it "renders the replace with a different person template with the current name of the ect" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name?",
+            params: { reason: "replace_with_a_different_person" }
+
+        expect(response).to render_template("schools/participants/replace_with_a_different_person")
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+        expect(response.body).to include(CGI.escapeHTML("Add the other ECT to this service"))
+      end
+    end
+
+    context "when a mentor needs to be replaced with a different person" do
+      it "renders the replace with a different person template with the current name of the mentor" do
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name?",
+            params: { reason: "replace_with_a_different_person" }
+
+        expect(response).to render_template("schools/participants/replace_with_a_different_person")
+        expect(response.body).to include(CGI.escapeHTML(mentor_profile.full_name))
+        expect(response.body).to include(CGI.escapeHTML("Add the other mentor to this service"))
+      end
     end
   end
 
   describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-name" do
-    it "updates the name of an ECT" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name", params: {
-          user: { full_name: "Joe Bloggs" },
-        }
-      }.to change { ect_user.reload.full_name }.to("Joe Bloggs")
+    it "renders the update name template with the new name of an ect" do
+      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name",
+          params: { user: { full_name: "Joe Bloggs" } }
+
+      expect(response).to render_template("schools/participants/update_name")
+      expect(response.body).to include(CGI.escapeHTML("#{ect_profile.full_name}’s name has been edited to Joe Bloggs"))
+      expect(ect_profile.reload.full_name).to eq("Joe Bloggs")
     end
 
-    it "updates the name of a mentor" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name", params: {
-          user: { full_name: "Sally Mentor" },
-        }
-      }.to change { mentor_user.reload.full_name }.to("Sally Mentor")
+    it "renders the update name template with the new name of a mentor" do
+      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name",
+          params: { user: { full_name: "Sally Mentor" } }
+
+      expect(response).to render_template("schools/participants/update_name")
+      expect(response.body).to include(CGI.escapeHTML("#{mentor_profile.full_name}’s name has been edited to Sally Mentor"))
+      expect(mentor_profile.reload.full_name).to eq("Sally Mentor")
     end
 
     it "rejects a blank name" do

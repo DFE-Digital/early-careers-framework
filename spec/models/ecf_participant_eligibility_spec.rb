@@ -166,4 +166,38 @@ RSpec.describe ECFParticipantEligibility, type: :model do
       end
     end
   end
+
+  describe "#ineligible_but_not_duplicated_or_previously_participated?" do
+    (described_class.statuses.keys - %w[ineligible]).each do |status|
+      context "when the status is #{status}" do
+        described_class.reasons.each_key do |reason|
+          context "when the reason is #{reason}" do
+            subject { described_class.new(status:, reason:) }
+
+            it { is_expected.not_to be_ineligible_but_not_duplicated_or_previously_participated }
+          end
+        end
+      end
+    end
+
+    context "when the status is ineligible" do
+      let(:status) { :ineligible }
+
+      (described_class.reasons.keys - %w[previous_participation duplicate_profile]).each do |reason|
+        context "when the reason is #{reason}" do
+          subject { described_class.new(status:, reason:) }
+
+          it { is_expected.to be_ineligible_but_not_duplicated_or_previously_participated }
+        end
+      end
+
+      %i[previous_participation duplicate_profile].each do |reason|
+        context "when the reason is #{reason}" do
+          subject { described_class.new(status:, reason:) }
+
+          it { is_expected.not_to be_ineligible_but_not_duplicated_or_previously_participated }
+        end
+      end
+    end
+  end
 end

@@ -1,0 +1,39 @@
+<% content_for :title, t('page_titles.schools.participants.replace_with_a_different_person', name: @profile.user.full_name) %>
+
+<% content_for :before_content,
+               govuk_back_link(text: "Back",
+                               href: schools_participant_edit_name_path(participant_id: @profile)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl">
+      <%= t('page_titles.schools.participants.replace_with_a_different_person', name: @profile.full_name) %>
+    </h1>
+    <h2 class="govuk-heading-m">Contact the lead provider to withdraw this
+      <%= participant_type(@profile, downcase: true) %></h2>
+
+    <p class="govuk-body">If you want to replace <%= @profile.full_name %> because this
+      <%= participant_type(@profile, downcase: true) %> will not be serving their induction at your school,
+      you’ll need to contact the lead provider <%= @induction_record.lead_provider_name %> to withdraw them.</p>
+
+    <p class="govuk-body"><%= @induction_record.lead_provider_name %> will confirm the change directly with us.
+      We’ll then remove <%= @profile.full_name %>’s information from your account.</p>
+
+    <h2 class="govuk-heading-m">Add the other <%= participant_type(@profile, downcase: true) %> to this service</h2>
+
+    <p class="govuk-body">You need to do this separately so that:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>we can check their eligibility for DfE funding for ECF-based training, mentor support and time off timetable
+      </li>
+      <li>their training can be recorded against the correct teacher reference number (TRN)</li>
+    </ul>
+
+    <p class="govuk-body">
+      <%= govuk_link_to "Add a new #{participant_type(@profile, downcase: true)}",
+                        add_schools_participants_path(cohort_id: @school_cohort.start_year,
+                                                      type: participant_type(@profile, symbol: true)),
+                        class: "govuk-link--no-visited-state" %>
+    </p>
+  </div>
+</div>

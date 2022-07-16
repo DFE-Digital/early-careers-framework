@@ -153,24 +153,63 @@ RSpec.describe "Update participants details", js: true do
   end
 
   scenario "Induction tutor can change ECT / mentor name from participant profile page" do
-    click_on "Sally Teacher"
+    click_on @participant_profile_ect.full_name
     then_i_am_taken_to_participant_profile
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
 
     when_i_click_on_change_name
+    then_i_am_taken_to_why_change_ect_name_page
+
+    when_i_select "They’ve changed their name - for example, due to marriage or divorce"
+    when_i_click_on_continue
     then_i_am_taken_to_change_ect_name_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor changes existing ECT name"
 
-    when_i_change_ect_name_to_blank
+    when_i_change_etc_name_to_blank
     when_i_click_on_continue
     then_i_see_an_error_message("Enter a full name")
 
-    when_i_change_ect_name
+    when_i_change_etc_name
     when_i_click_on_continue
+    then_i_am_taken_to_the_ect_name_change_confirmation_page
+    and_i_can_go_to_the_participants_profile
+    and_i_can_go_to_the_ect_and_mentors_page
+
+    when_i_click_on_return_to_their_details
     then_i_am_taken_to_participant_profile
     then_i_can_view_the_updated_participant_name
+  end
+
+  scenario "Induction tutor can't remove an ECT / mentor by changing their name in participant profile page" do
+    click_on @participant_profile_ect.full_name
+    then_i_am_taken_to_participant_profile
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
+
+    when_i_click_on_change_name
+    then_i_am_taken_to_why_change_ect_name_page
+
+    when_i_select "This teacher should not have been registered on this service"
+    when_i_click_on_continue
+    then_i_am_not_allowed_to_edit_the_participant_name
+    and_i_can_go_to_remove_the_participant_from_the_system
+  end
+
+  scenario "Induction tutor can't replace an ECT / mentor by changing their name in participant profile page" do
+    click_on @participant_profile_ect.full_name
+    then_i_am_taken_to_participant_profile
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
+
+    when_i_click_on_change_name
+    then_i_am_taken_to_why_change_ect_name_page
+
+    when_i_select "I want to replace them with a different person"
+    when_i_click_on_continue
+    then_i_am_not_allowed_to_edit_the_participant_name
+    and_i_can_go_to_add_a_new_ect
   end
 
   scenario "Induction tutor can change ECT / mentor email from participant profile page" do

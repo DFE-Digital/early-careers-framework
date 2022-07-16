@@ -39,7 +39,7 @@ class SchoolCohort < ApplicationRecord
 
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
-  delegate :description, :academic_year, to: :cohort
+  delegate :description, :academic_year, :start_year, to: :cohort
   delegate :delivery_partner_to_be_confirmed, to: :default_induction_programme
 
   after_save :update_analytics

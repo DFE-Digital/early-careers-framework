@@ -24,12 +24,10 @@ class InductionProgramme < ApplicationRecord
   has_many :current_participant_profiles, through: :current_induction_records, source: :participant_profile
 
   delegate :school, to: :school_cohort
+  delegate :lead_provider, to: :partnership, allow_nil: true
+  delegate :lead_provider_name, to: :partnership, allow_nil: true
 
   after_commit :touch_induction_records
-
-  def lead_provider
-    partnership&.lead_provider
-  end
 
   def delivery_partner
     partnership&.delivery_partner

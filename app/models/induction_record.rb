@@ -12,6 +12,7 @@ class InductionRecord < ApplicationRecord
   has_one :mentor, through: :mentor_profile, source: :user
 
   has_one :school_cohort, through: :induction_programme
+  has_one :cohort, through: :school_cohort
   has_one :school, through: :school_cohort
   has_one :user, through: :participant_profile
 
@@ -59,6 +60,9 @@ class InductionRecord < ApplicationRecord
   def self.latest
     order(created_at: :asc).last
   end
+
+  delegate :lead_provider, to: :induction_programme, allow_nil: true
+  delegate :lead_provider_name, to: :induction_programme, allow_nil: true
 
   def enrolled_in_fip?
     induction_programme.full_induction_programme?
