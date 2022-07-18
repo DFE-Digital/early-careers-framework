@@ -209,8 +209,8 @@ module Schools
 
     def save_appropriate_body
       Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
-                                                     appropriate_body_id: @appropriate_body_form.body_id,
-                                                     appropriate_body_appointed: @appropriate_body_form.body_appointed?)
+                                                     appropriate_body_id: appropriate_body_form.body_id,
+                                                     appropriate_body_appointed: appropriate_body_form.body_appointed?)
     end
 
     def school_cohort
@@ -244,7 +244,7 @@ module Schools
     end
 
     def appropriate_body_appointed?
-      @appropriate_body_form.body_appointed?
+      appropriate_body_form.body_appointed?
     end
   end
 end
