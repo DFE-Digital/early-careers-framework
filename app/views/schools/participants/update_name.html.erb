@@ -1,4 +1,4 @@
-<% content_for :title, t('page_titles.schools.participants.replace_with_a_different_person', name: @profile.user.full_name) %>
+<% content_for :title, t('participant_name_edited', old_name: @old_name, new_name: @profile.full_name) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
