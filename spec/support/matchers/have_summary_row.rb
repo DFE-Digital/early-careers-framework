@@ -37,6 +37,39 @@ module Support
       end
     end
 
+    define :have_summary_row_action do |key, action|
+      match do |actual|
+        key_node = find_key_node(actual, key)
+        action_node = find_action_node(key_node)
+        if action_node.text != action
+          @failure_message = "Expected summary row \"#{key}\" with action \"#{action}\" but \"#{action_node.text}\" found instead"
+          return false
+        end
+        true
+      rescue Capybara::ElementNotFound
+        false
+      end
+
+      failure_message do
+        @failure_message || "Can't find a summary row where the key is \"#{key}\" and the action is \"#{action}\""
+      end
+
+      description do
+        "have summary row where the key is \"#{key}\" and the action is \"#{action}\""
+      end
+
+      def find_key_node(actual, key)
+        actual.find("dt.govuk-summary-list__key", text: key)
+      rescue Capybara::ElementNotFound
+        @failure_message = "Can't find a summary row where the key is \"#{key}\""
+        raise
+      end
+
+      def find_action_node(key_node)
+        key_node.sibling("dd.govuk-summary-list__actions")
+      end
+    end
+
     RSpec.configure do |rspec|
       rspec.include self, type: :feature
     end
