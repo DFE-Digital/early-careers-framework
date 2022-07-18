@@ -93,7 +93,7 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def add_appropriate_body
-    if @school_cohort.appropriate_body.present?
+    if can_appropriate_body_be_changed?
       start_appropriate_body_selection
     else
       redirect_to schools_participant_path(id: @profile.id)
@@ -163,5 +163,9 @@ private
 
   def participant_has_appropriate_body?
     @induction_record.appropriate_body.present?
+  end
+
+  def can_appropriate_body_be_changed?
+    @school_cohort.appropriate_body.present? && @profile.ect?
   end
 end
