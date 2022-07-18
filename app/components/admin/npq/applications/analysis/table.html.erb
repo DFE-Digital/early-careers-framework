@@ -1,0 +1,13 @@
+<div class="nhsuk-table-container">
+  <table data-test="admin-npq-applications-invalid-payments-analysis-table" class="govuk-table nhsuk-table-responsive">
+    <thead  class="nhsuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Full name</th>
+        <th scope="col" class="govuk-table__header">Date added</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body nhsuk-table__body">
+      <%= render Admin::NPQ::Applications::Analysis::TableRow.with_collection(applications) %>
+    </tbody>
+  </table>
+</div>

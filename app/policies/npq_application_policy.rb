@@ -9,6 +9,10 @@ class NPQApplicationPolicy < ApplicationPolicy
     admin?
   end
 
+  def invalid_payments_analysis?
+    admin?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user.admin?

@@ -21,6 +21,10 @@ FactoryBot.define do
       end
     end
 
+    trait :rejected do
+      lead_provider_approval_status { "rejected" }
+    end
+
     trait :not_in_school do
       works_in_school { false }
       school_urn { nil }

@@ -1,0 +1,12 @@
+<tr class="govuk-table__row nhsuk-table__row">
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Full name</span>
+    <div class="school-name-with-tag">
+      <%= govuk_link_to application.profile.user.full_name, admin_participant_path(application.profile) %>
+    </div>
+  </td>
+  <td class="govuk-table__cell nhsuk-table__cell">
+    <span class="nhsuk-table-responsive__heading">Date added</span>
+    <%= application.created_at.to_date.to_s(:govuk_short) %>
+  </td>
+</tr>
