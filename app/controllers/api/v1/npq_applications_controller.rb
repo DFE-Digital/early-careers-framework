@@ -21,18 +21,19 @@ module Api
         end
       end
 
-      def reject
-        profile = npq_lead_provider.npq_applications.find(params[:id])
+      def show
+        render json: json_serializer_class.new(npq_application).serializable_hash
+      end
 
-        if profile.update(lead_provider_approval_status: "rejected")
-          render json: json_serializer_class.new(profile).serializable_hash
+      def reject
+        if npq_application.update(lead_provider_approval_status: "rejected")
+          render json: json_serializer_class.new(npq_application).serializable_hash
         else
-          render json: { errors: Api::ErrorFactory.new(model: profile).call }, status: :bad_request
+          render json: { errors: Api::ErrorFactory.new(model: npq_application).call }, status: :bad_request
         end
       end
 
       def accept
-        npq_application = npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course).find(params[:id])
         if NPQ::Accept.call(npq_application:)
           render json: json_serializer_class.new(npq_application).serializable_hash
         else
@@ -65,6 +66,10 @@ module Api
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:npq_lead_provider])
+      end
+
+      def npq_application
+        @npq_application ||= npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course).find(params[:id])
       end
     end
   end
