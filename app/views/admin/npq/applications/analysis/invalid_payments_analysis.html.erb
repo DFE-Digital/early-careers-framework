@@ -2,9 +2,9 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-header-xl">Potentially Invalid NPQ Application participant records</h1>
+    <h1 class="govuk-header-xl">NPQ Application analysis</h1>
 
-    <h2 class="govuk-header-l">Paid or Payable declarations made against a rejected or pending NPQ Application</h2>
+    <p class="govuk-body-l">Paid or Payable declarations made against a rejected or pending NPQ Application</p>
 
     <%= render Admin::NPQ::Applications::Analysis::Table.new(applications: @applications) %>
   </div>

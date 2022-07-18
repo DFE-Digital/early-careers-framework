@@ -27,5 +27,10 @@ RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, type: :view_compone
   component { described_class.new application: }
 
   it { is_expected.to have_link application.user.full_name, href: admin_participant_path(application.profile) }
-  it { is_expected.to have_content application.created_at.to_date.to_s(:govuk_short) }
+  it { is_expected.to have_content "rejected" }
+  it { is_expected.to have_content npq_course.name }
+  it { is_expected.to have_content "started" }
+  it { is_expected.to have_content "NPQ Lead Provider" }
+  it { is_expected.to have_content "paid" }
+  it { is_expected.to have_content declaration.created_at.to_date.to_s(:govuk_short) }
 end
