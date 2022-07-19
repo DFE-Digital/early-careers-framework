@@ -2,10 +2,9 @@
 
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
+
   belongs_to :teacher_profile, touch: true
-
   belongs_to :schedule, class_name: "Finance::Schedule"
-
   belongs_to :participant_identity
 
   has_one :user, through: :teacher_profile
@@ -47,6 +46,8 @@ class ParticipantProfile < ApplicationRecord
   self.validation_steps = []
 
   self.ignored_columns = %w[user_id]
+
+  delegate :full_name, to: :user
 
   def state
     participant_profile_state&.state

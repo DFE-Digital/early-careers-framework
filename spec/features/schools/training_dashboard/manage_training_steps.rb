@@ -231,7 +231,7 @@ module ManageTrainingSteps
   end
 
   def when_i_select_a_mentor
-    choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
+    choose(@participant_profile_mentor.full_name.to_s, allow_label_click: true)
   end
 
   def then_i_am_on_schools_page
@@ -488,7 +488,7 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_a_mentor
-    choose(@participant_profile_mentor.user.full_name.to_s, allow_label_click: true)
+    choose(@participant_profile_mentor.full_name.to_s, allow_label_click: true)
   end
 
   def when_i_add_ect_or_mentor_name
@@ -571,12 +571,12 @@ module ManageTrainingSteps
     then_i_am_taken_to_your_ect_and_mentors_page
   end
 
-  def when_i_change_ect_name
-    fill_in "Change ECT’s name", with: @updated_participant_data[:full_name]
+  def when_i_change_mentor_name
+    fill_in "What should we edit #{@participant_profile_mentor.full_name}’s name to?", with: @updated_participant_data[:full_name]
   end
 
-  def when_i_change_ect_name_to_blank
-    fill_in "Change ECT’s name", with: ""
+  def when_i_change_mentor_name_to_blank
+    fill_in "What should we edit #{@participant_profile_mentor.full_name}’s name to?", with: ""
   end
 
   def when_i_change_ect_email
@@ -650,8 +650,12 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
   end
 
-  def then_i_am_taken_to_change_ect_name_page
-    expect(page).to have_selector("h1", text: "Change ECT’s name")
+  def then_i_am_taken_to_change_mentor_name_page
+    expect(page).to have_selector("h1", text: "What should we edit #{@participant_profile_mentor.full_name}’s name to?")
+  end
+
+  def then_i_am_taken_to_why_change_mentor_name_page
+    expect(page).to have_selector("h1", text: "Why do you need to edit #{@participant_profile_mentor.full_name}’s name?")
   end
 
   def then_i_am_taken_to_change_ect_email_page
@@ -708,6 +712,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_participant_profile
     expect(page).to have_text("Name")
+  end
+
+  def then_i_am_taken_to_the_ect_name_change_confirmation_page
+    expect(page).to have_text("#{@participant_profile_ect.full_name}’s name has been edited to #{@updated_participant_data[:full_name]}")
   end
 
   def then_i_am_taken_to_do_you_know_your_teachers_trn_page
@@ -774,7 +782,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_mentor_name
     expect(page).to have_selector("h1", text: "Check your answers")
-    expect(page).to have_text(@participant_profile_mentor.user.full_name.to_s)
+    expect(page).to have_text(@participant_profile_mentor.full_name.to_s)
   end
 
   def then_i_can_view_updated_name
@@ -796,10 +804,6 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Materials")
     expect(page).to have_text(@cip.name)
-  end
-
-  def then_i_can_view_the_updated_participant_name
-    expect(page).to have_content @updated_participant_data[:full_name]
   end
 
   def then_i_can_view_the_updated_participant_email
@@ -952,7 +956,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_are_they_a_transfer_page
-    expect(page).to have_selector("h1", text: "Is #{@participant_profile_ect.user.full_name} transferring from another school?")
+    expect(page).to have_selector("h1", text: "Is #{@participant_profile_ect.full_name} transferring from another school?")
     expect(page).to have_text("Yes")
     expect(page).to have_text("No")
   end
@@ -976,7 +980,7 @@ module ManageTrainingSteps
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We’ll let #{@participant_profile_ect.user.full_name}")
+    expect(page).to have_text("We’ll let #{@participant_profile_ect.full_name}")
   end
 
   def then_i_see_the_tab_for_the_cohort(cohort)

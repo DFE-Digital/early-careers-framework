@@ -29,17 +29,17 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor = @induction_record.mentor
   end
 
-  def edit_name; end
+  def edit_name
+    render helpers.edit_name_template(params[:reason])
+  end
 
   def update_name
+    @old_name = @profile.full_name
+
     if @profile.user.update(params.require(:user).permit(:full_name))
-      if @profile.ect?
-        set_success_message(heading: "The ECT’s name has been updated")
-      else
-        set_success_message(heading: "The mentor’s name has been updated")
-      end
-      redirect_to schools_participant_path(id: @profile)
+      render :update_name
     else
+      @profile.user.full_name = @old_name
       render "schools/participants/edit_name"
     end
   end

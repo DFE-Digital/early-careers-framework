@@ -54,4 +54,8 @@ class ECFParticipantEligibility < ApplicationRecord
                                  end
     end
   end
+
+  def ineligible_but_not_duplicated_or_previously_participated?
+    ineligible_status? && !(previous_participation_reason? || duplicate_profile_reason?)
+  end
 end

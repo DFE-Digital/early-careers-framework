@@ -33,6 +33,14 @@ class ParticipantProfile < ApplicationRecord
     after_save :update_analytics
     after_update :sync_status_with_induction_record
 
+    def completed_validation_wizard?
+      ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
+    end
+
+    def contacted_for_info?
+      ecf_participant_validation_data.nil?
+    end
+
     def current_induction_record
       induction_records.current&.latest
     end
@@ -45,17 +53,17 @@ class ParticipantProfile < ApplicationRecord
       true
     end
 
-    def completed_validation_wizard?
-      ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
+    delegate :ineligible_but_not_duplicated_or_previously_participated?,
+             to: :ecf_participant_eligibility,
+             allow_nil: true
+
+    def fundable?
+      ecf_participant_eligibility&.eligible_status?
     end
 
     def manual_check_needed?
       ecf_participant_eligibility&.manual_check_status? ||
         (ecf_participant_validation_data.present? && ecf_participant_eligibility.nil?)
-    end
-
-    def fundable?
-      ecf_participant_eligibility&.eligible_status?
     end
 
     def policy_class

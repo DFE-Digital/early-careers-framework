@@ -270,7 +270,7 @@ en:
             transfer:
               blank: "Select whether the teacher is transferring from another school"
             start_date:
-              blank: "Enter the teacher's induction start date"
+              blank: "Enter the teacher’s induction start date"
               invalid: "Enter a valid start date"
         participant_mentor_form:
           attributes:
@@ -300,6 +300,19 @@ en:
         help: "Get help"
       content:
         partnership_guide: "Guide for providers to manage their schools on the ECF service"
+
+    schools:
+      participants:
+        should_not_have_been_registered: "You cannot make that change by editing %{name}’s name"
+        replace_with_a_different_person: "You cannot make that change by editing %{name}’s name"
+        reason_to_edit_name: "Why do you need to edit %{name}’s name?"
+
+  participant_name_edited: "%{old_name}’s name has been edited to %{new_name}"
+  reasons_to_edit_a_participants_name:
+    name_has_changed: "They’ve changed their name - for example, due to marriage or divorce"
+    name_is_incorrect: "Their name has been entered incorrectly"
+    should_not_have_been_registered: "This teacher should not have been registered on this service"
+    replace_with_a_different_person: "I want to replace them with a different person"
 
   setup_school_cohort:
     appropriate_body_type:

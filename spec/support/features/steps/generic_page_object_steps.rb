@@ -48,7 +48,7 @@ module Steps
           args[key.to_sym] = query_values[i]
         end
 
-        page_object.public_send(method_symbol, args)
+        page_object.public_send(method_symbol, **args)
       end
     end
   end

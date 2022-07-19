@@ -35,6 +35,8 @@ class Partnership < ApplicationRecord
   scope :unchallenged, -> { where(challenged_at: nil, challenge_reason: nil) }
   scope :relationships, -> { where(relationship: true) }
 
+  delegate :name, to: :lead_provider, allow_nil: true, prefix: true
+
   def challenge!(reason)
     raise ArgumentError if reason.blank?
 

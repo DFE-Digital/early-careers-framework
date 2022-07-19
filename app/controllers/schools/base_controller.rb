@@ -20,30 +20,26 @@ private
   end
 
   def active_school
-    return if params[:school_id].blank?
-
-    School.friendly.find(params[:school_id])
+    School.friendly.find(params[:school_id]) if params[:school_id].present?
   end
 
   def active_cohort
-    return if params[:cohort_id].blank?
+    Cohort.find_by(start_year: params[:cohort_id]) if params[:cohort_id].present?
+  end
 
-    Cohort.find_by(start_year: params[:cohort_id])
+  def multiple_cohorts?
+    FeatureFlag.active?(:multiple_cohorts)
   end
 
   def set_school_cohort
     @school = active_school
     @cohort = active_cohort
+    @school_cohort = policy_scope(SchoolCohort).find_by(cohort: @cohort, school: @school)
 
-    @school_cohort = policy_scope(SchoolCohort).find_by(
-      cohort: @cohort,
-      school: @school,
-    )
+    redirect_to schools_choose_programme_path(cohort_id: start_year) unless @school_cohort
+  end
 
-    if FeatureFlag.active?(:multiple_cohorts)
-      redirect_to schools_choose_programme_path(cohort_id: Cohort.active_registration_cohort.start_year) unless @school_cohort
-    else
-      redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year) unless @school_cohort
-    end
+  def start_year
+    multiple_cohorts? ? Cohort.active_registration_cohort.start_year : Cohort.current.start_year
   end
 end
