@@ -33,11 +33,11 @@ module EarlyCareerTeachers
 
         ParticipantProfileState.create!(participant_profile: profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
         if school_cohort.default_induction_programme.present?
-          induction_record = Induction::Enrol.call(participant_profile: profile,
-                                                   induction_programme: school_cohort.default_induction_programme,
-                                                   mentor_profile:,
-                                                   start_date:,
-                                                   appropriate_body_id:)
+          Induction::Enrol.call(participant_profile: profile,
+                                induction_programme: school_cohort.default_induction_programme,
+                                mentor_profile:,
+                                start_date:,
+                                appropriate_body_id:)
         end
       end
 
