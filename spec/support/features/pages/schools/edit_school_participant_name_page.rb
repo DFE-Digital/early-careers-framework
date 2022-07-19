@@ -7,8 +7,13 @@ module Pages
     set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/edit-name{?reason*}"
     set_primary_heading(/\AWhat should we edit (.*)’s name to\?\z/)
 
-    def confirm_the_participant_name(name:)
+    def confirm_the_participant(name:)
       element_has_content?(header, "What should we edit #{name}’s name to?")
+    end
+
+    def set_a_blank_name
+      fill_in("user[full_name]", with: "")
+      click_on("Continue")
     end
 
     def set_the_name(new_name:)
@@ -16,11 +21,6 @@ module Pages
       click_on("Continue")
 
       Pages::SchoolParticipantNameUpdatedPage.loaded
-    end
-
-    def set_a_blank_name
-      fill_in("user[full_name]", with: "")
-      click_on("Continue")
     end
   end
 end

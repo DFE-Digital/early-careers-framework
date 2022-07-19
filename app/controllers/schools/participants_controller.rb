@@ -59,13 +59,6 @@ class Schools::ParticipantsController < Schools::BaseController
 
     Induction::ChangePreferredEmail.call(induction_record: @induction_record,
                                          preferred_email: identity.email)
-
-    if @profile.ect?
-      set_success_message(heading: "The ECT’s email address has been updated")
-    else
-      set_success_message(heading: "The mentor’s email address has been updated")
-    end
-    redirect_to schools_participant_path(id: @profile)
   end
 
   def email_used; end

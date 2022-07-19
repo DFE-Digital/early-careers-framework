@@ -161,13 +161,13 @@ RSpec.describe "Update participants details", js: true do
     then_i_am_on_the_reason_to_change_school_participant_name_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Why do you need to edit ect name"
-    and_i_confirm_the_participant_name_on_the_reason_to_change_school_participant_name_page_with_name "Sally Teacher"
+    and_i_confirm_the_participant_on_the_reason_to_change_school_participant_name_page_with_name "Sally Teacher"
 
     when_i_choose_they_have_changed_their_name_from_the_reason_to_change_school_participant_name_page
     then_i_am_on_the_edit_school_participant_name_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor edits the name of a participant"
-    and_i_confirm_the_participant_name_on_the_edit_school_participant_name_page_with_name "Sally Teacher"
+    and_i_confirm_the_participant_on_the_edit_school_participant_name_page_with_name "Sally Teacher"
 
     when_i_set_a_blank_name_on_the_edit_school_participant_name_page
     then_i_see_an_error_message "Enter a full name"
@@ -178,7 +178,7 @@ RSpec.describe "Update participants details", js: true do
     then_percy_should_be_sent_a_snapshot_named "Induction tutor completed the change of a participant's name"
 
     when_i_return_to_the_participant_profile_from_the_school_participant_name_updated_page
-    then_i_confirm_participant_name_on_the_school_participant_details_page "Sally Teacher"
+    then_i_confirm_the_participant_on_the_school_participant_details_page_with_name "Sally Teacher"
   end
 
   scenario "Induction tutor can change ECT / mentor name form the profile page when their name was incorrect" do
@@ -186,7 +186,7 @@ RSpec.describe "Update participants details", js: true do
     when_i_click_on_change_name
     when_i_choose_name_is_incorrect_from_the_reason_to_change_school_participant_name_page
     then_i_am_on_the_edit_school_participant_name_page
-    and_i_confirm_the_participant_name_on_the_edit_school_participant_name_page_with_name "Sally Teacher"
+    and_i_confirm_the_participant_on_the_edit_school_participant_name_page_with_name "Sally Teacher"
 
     when_i_set_the_name_on_the_edit_school_participant_name_page_with_new_name "Jane Teacher"
     then_i_see_a_confirmation_message_on_the_school_participant_name_updated_page_with_old_name_and_new_name "Sally Teacher", "Jane Teacher"
@@ -216,21 +216,26 @@ RSpec.describe "Update participants details", js: true do
   end
 
   scenario "Induction tutor can change ECT / mentor email from participant profile page" do
-    click_on "Sally Teacher"
-    then_i_am_taken_to_participant_profile
-
+    when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     when_i_click_on_change_email
-    then_i_am_taken_to_change_ect_email_page
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor changes existing ECT email"
+    then_i_am_on_the_edit_school_participant_email_page
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor edits the email of a participant"
+    and_i_confirm_the_participant_on_the_edit_school_participant_email_page_with_name "Sally Teacher"
 
-    when_i_change_ect_email_to_blank
-    when_i_click_on_continue
-    then_i_see_an_error_message("Enter an email")
+    when_i_set_a_blank_email_on_the_edit_school_participant_email_page
+    then_i_see_an_error_message "Enter an email"
 
-    when_i_change_ect_email
-    when_i_click_on_continue
-    then_i_am_taken_to_participant_profile
-    then_i_can_view_the_updated_participant_email
+    when_i_set_an_invalid_email_on_the_edit_school_participant_email_page
+    then_i_see_an_error_message "Enter an email"
+
+    when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email "jane@school.com"
+    then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name "Sally Teacher"
+    then_the_page_should_be_accessible
+    then_percy_should_be_sent_a_snapshot_named "Induction tutor completed the change of a participant's email"
+
+    when_i_return_to_the_participant_profile_from_the_school_participant_email_updated_page
+    then_i_confirm_the_participant_on_the_school_participant_details_page_with_name "Sally Teacher"
   end
 
   context "When the school cohort does not have an appropriate body assigned" do
