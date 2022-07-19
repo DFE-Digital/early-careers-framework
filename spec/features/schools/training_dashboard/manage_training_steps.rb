@@ -597,10 +597,6 @@ module ManageTrainingSteps
 
   # Then_steps
 
-  def and_i_can_go_to_add_a_new_ect
-    expect(page).to have_link("Add a new ECT")
-  end
-
   def then_i_am_taken_to_roles_page
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
