@@ -36,8 +36,8 @@ module EarlyCareerTeachers
           induction_record = Induction::Enrol.call(participant_profile: profile,
                                                    induction_programme: school_cohort.default_induction_programme,
                                                    mentor_profile:,
-                                                   start_date:)
-          induction_record.update!({ appropriate_body_id: })
+                                                   start_date:,
+                                                   appropriate_body_id:)
         end
       end
 

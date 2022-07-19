@@ -14,24 +14,26 @@ class Induction::Enrol < BaseService
         preferred_identity:,
         mentor_profile:,
         school_transfer:,
+        appropriate_body_id:,
       )
     end
   end
 
 private
 
-  attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile, :school_transfer
+  attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile, :school_transfer, :appropriate_body_id
 
   # preferred_email can be supplied if the participant_profile.participant_identity does not have
   # the required email for the induction i.e. a participant transferring schools might have a new email
   # address at their new school - really only used for display in the UI
-  def initialize(participant_profile:, induction_programme:, start_date: nil, preferred_email: nil, mentor_profile: nil, school_transfer: false)
+  def initialize(participant_profile:, induction_programme:, start_date: nil, preferred_email: nil, mentor_profile: nil, school_transfer: false, appropriate_body_id: nil)
     @participant_profile = participant_profile
     @induction_programme = induction_programme
     @start_date = start_date || schedule_start_date
     @preferred_email = preferred_email
     @mentor_profile = mentor_profile
     @school_transfer = school_transfer
+    @appropriate_body_id = appropriate_body_id
   end
 
   def preferred_identity
