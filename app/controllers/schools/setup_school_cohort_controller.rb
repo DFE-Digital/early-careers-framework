@@ -82,6 +82,8 @@ module Schools
                                        school_name: @school.name
     end
 
+    def appropriate_body_type; end
+
     def what_changes_submitted; end
 
     def change_fip_programme_choice; end
