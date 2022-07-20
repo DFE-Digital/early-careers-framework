@@ -73,7 +73,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, only: %i[index], path: "participants/npq" do
+      resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
       end
       resources :users, only: %i[index create]
