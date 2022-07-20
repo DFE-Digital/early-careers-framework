@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_08_142423) do
+ActiveRecord::Schema.define(version: 2022_07_13_094058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -389,6 +389,8 @@ ActiveRecord::Schema.define(version: 2022_07_08_142423) do
     t.string "induction_status", default: "active", null: false
     t.uuid "mentor_profile_id"
     t.boolean "school_transfer", default: false, null: false
+    t.uuid "appropriate_body_id"
+    t.index ["appropriate_body_id"], name: "index_induction_records_on_appropriate_body_id"
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_induction_records_on_mentor_profile_id"
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"

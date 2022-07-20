@@ -232,4 +232,32 @@ RSpec.describe "Update participants details", js: true do
     then_i_am_taken_to_participant_profile
     then_i_can_view_the_updated_participant_email
   end
+
+  context "When the school cohort does not have an appropriate body assigned" do
+    scenario "Induction tutor does not see the appropriate body from participant profile page" do
+      click_on "Sally Teacher"
+      then_i_am_taken_to_participant_profile
+      and_i_dont_see_appropriate_body
+    end
+  end
+
+  context "When the school cohort has an appropriate body assigned" do
+    let!(:appropriate_body) { create(:appropriate_body_national_organisation) }
+    before do
+      @school_cohort.update!(appropriate_body:)
+    end
+
+    scenario "Induction tutor can change the appropriate body from participant profile page" do
+      click_on "Sally Teacher"
+      then_i_am_taken_to_participant_profile
+      and_i_see_no_appropriate_body_selected
+
+      when_i_click_on_summary_row_action("Appropriate body", "Add")
+      then_i_am_taken_to_the_appropriate_body_type_page
+
+      when_i_choose_an_appropriate_body
+      then_i_see_appropriate_body(appropriate_body)
+      and_i_can_change_the_appropriate_body
+    end
+  end
 end

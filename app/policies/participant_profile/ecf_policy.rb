@@ -21,6 +21,11 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :edit_name?, :update?
   alias_method :update_email?, :update?
   alias_method :edit_email?, :update?
+  alias_method :add_appropriate_body?, :update?
+  alias_method :appropriate_body_type?, :update?
+  alias_method :update_appropriate_body_type?, :update?
+  alias_method :appropriate_body?, :update?
+  alias_method :update_appropriate_body?, :update?
 
   def update_start_term?
     return true if admin?

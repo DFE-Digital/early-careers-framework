@@ -488,6 +488,18 @@ Rails.application.routes.draw do
           end
 
           resources :participants, only: %i[index show destroy] do
+            collection do
+              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
+                get :who, path: "who", controller: :add_participants
+                put :participant_type, path: "participant-type", controller: :add_participants
+                get :what_we_need, path: "what-we-need", controller: :add_participants
+                put "transfer", as: nil
+
+                appropriate_body_selection_routes "add_participants"
+                get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
+              end
+            end
+
             get :remove
             get :edit_name, path: "edit-name"
             put :update_name, path: "update-name"
@@ -496,15 +508,8 @@ Rails.application.routes.draw do
             get :email_used, path: "email-used"
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
-
-            collection do
-              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
-                get :who, path: "who", controller: :add_participants
-                put :participant_type, path: "participant-type", controller: :add_participants
-                get :what_we_need, path: "what-we-need", controller: :add_participants
-                put "transfer", as: nil
-              end
-            end
+            get :add_appropriate_body, path: "add-appropriate-body"
+            appropriate_body_selection_routes "participants"
           end
 
           namespace :core_programme, path: "core-programme" do

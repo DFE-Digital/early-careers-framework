@@ -72,6 +72,18 @@
     <% end %>
   <% end %>
 
+  <% if add_participant_form.appropriate_body_selected.present? %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Appropriate body" } %>
+      <% row.value do %>
+        <p class="govuk-body"><%= add_participant_form.appropriate_body_selected.name %></p>
+      <% end %>
+      <% row.action(text: "Change",
+                    visually_hidden_text: "mentor",
+                    href: url_for({ action: :change_appropriate_body })) %>
+    <% end %>
+  <% end %>
+
   <% if @school_cohort.default_induction_programme %>
     <% summary_list.row do |row| %>
       <% row.key { "Training with" } %>

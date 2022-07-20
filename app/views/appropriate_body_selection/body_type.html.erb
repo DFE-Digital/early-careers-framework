@@ -1,12 +1,14 @@
 <% title = "Which type of appropriate body have you appointed?" %>
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: url_for(action: :appropriate_body_appointed)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: appropriate_body_type_back_link) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= appropriate_body_school_name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <%= yield :pre_form %>
 
     <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body_type }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
@@ -14,10 +16,7 @@
         :body_type,
         @appropriate_body_form.body_type_choices,
         :id, :name,
-        legend: { hidden: true }) do %>
-
-        <p class="govuk-body">If your school works with more than one, first tell us about the appropriate body appointed for the majority of your ECTs. You can add the others later.</p>
-      <% end %>
+        legend: { hidden: true }) %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>

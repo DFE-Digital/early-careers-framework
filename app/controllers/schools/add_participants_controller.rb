@@ -3,6 +3,7 @@
 module Schools
   class AddParticipantsController < ::Schools::BaseController
     include Multistep::Controller
+    include AppropriateBodySelection::Controller
 
     skip_after_action :verify_authorized
     before_action :set_school_cohort
@@ -62,6 +63,13 @@ module Schools
       end
     end
 
+    def change_appropriate_body
+      add_participant_form.appropriate_body_confirmed = false
+      add_participant_form.complete_step(:confirm_appropriate_body)
+      store_form_in_session
+      start_appropriate_body_selection
+    end
+
     abandon_journey_path do
       school_cohort.active_ecf_participants.any? ? schools_participants_path : schools_cohort_path
     end
@@ -72,6 +80,10 @@ module Schools
     end
 
   private
+
+    def redirect_to_next_step
+      redirect_to action: :show, step: step_param(form.next_step)
+    end
 
     def type_param
       params[:type]&.to_sym
@@ -106,6 +118,22 @@ module Schools
 
     def in_current_active_cohort?
       school_cohort.cohort == Cohort.active_registration_cohort
+    end
+
+    def save_appropriate_body
+      add_participant_form.assign_attributes({
+        appropriate_body_confirmed: false,
+        appropriate_body_id: @appropriate_body_form.body_id,
+      })
+      store_form_in_session
+      redirect_to_next_step
+    end
+
+    def start_appropriate_body_selection
+      super from_path: url_for(action: :show, step: "confirm-appropriate-body"),
+            submit_action: :save_appropriate_body,
+            school_name: @school.name,
+            ask_appointed: false
     end
   end
 end

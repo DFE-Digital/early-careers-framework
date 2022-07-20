@@ -97,6 +97,18 @@ module ManageTrainingSteps
 
   # And_steps
 
+  def and_i_dont_see_appropriate_body
+    expect(page).to_not have_summary_row("Appropriate body", "")
+  end
+
+  def and_i_see_no_appropriate_body_selected
+    expect(page).to have_summary_row("Appropriate body", "")
+  end
+
+  def and_i_can_change_the_appropriate_body
+    expect(page).to have_summary_row_action("Appropriate body", "Change")
+  end
+
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
     privacy_policy = create(:privacy_policy)
@@ -521,6 +533,13 @@ module ManageTrainingSteps
 
   def when_i_add_ect_or_mentor_updated_term
     choose(@updated_participant_data[:start_term].humanize, allow_label_click: true)
+  end
+
+  def when_i_choose_an_appropriate_body
+    choose "National organisation"
+    click_on "Continue"
+    choose appropriate_body.name
+    click_on "Continue"
   end
 
   def when_i_add_the_trn
@@ -1002,6 +1021,14 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_what_we_need_from_you_page
     expect(page).to have_content("What we need from you")
+  end
+
+  def then_i_am_taken_to_the_appropriate_body_type_page
+    expect(page).to have_content("Which type of appropriate body have you appointed?")
+  end
+
+  def then_i_see_appropriate_body(appropriate_body)
+    expect(page).to have_summary_row("Appropriate body", appropriate_body.name)
   end
 
   # Set_steps

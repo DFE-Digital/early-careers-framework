@@ -61,4 +61,14 @@ module InteractionHelper
   end
 
   alias_method :and_i_fill_in_autocomplete, :when_i_fill_in_autocomplete
+
+  def when_i_click_on_summary_row_action(row_key, selector)
+    key_node = find("dt.govuk-summary-list__key", text: row_key)
+    actions_node = key_node.sibling("dd.govuk-summary-list__actions")
+    within(actions_node) do
+      click_on selector
+    end
+  end
+
+  alias_method :and_i_click_on_summary_row_action, :when_i_click_on_summary_row_action
 end

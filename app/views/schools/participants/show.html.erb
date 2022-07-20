@@ -85,6 +85,21 @@
             </dd>
           </div>
         <% end %>
+
+        <% if can_appropriate_body_be_changed? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Appropriate body
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <%= @induction_record.appropriate_body&.name %>
+            </dd>
+            <dd class="govuk-summary-list__actions">
+              <%= govuk_link_to (participant_has_appropriate_body? ? "Change" : "Add"), { action: :add_appropriate_body, participant_id: @profile } %>
+            </dd>
+          </div>
+        <% end %>
+
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Status
