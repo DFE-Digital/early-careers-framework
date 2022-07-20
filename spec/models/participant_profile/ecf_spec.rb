@@ -51,6 +51,24 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
+  describe "contacted_for_info?" do
+    context "when no ecf_participant_validation_data exists" do
+      it "returns true" do
+        expect(profile.contacted_for_info?).to be_truthy
+      end
+    end
+
+    context "when ecf_participant_validation_data exists" do
+      before do
+        create(:ecf_participant_validation_data, participant_profile: profile)
+      end
+
+      it "returns false" do
+        expect(profile.contacted_for_info?).to be_falsey
+      end
+    end
+  end
+
   describe "current_induction_record" do
     let(:induction_programme) { create(:induction_programme, :fip, school_cohort: profile.school_cohort) }
 

@@ -105,7 +105,7 @@ RSpec.describe "Reporting participants with a known TRN",
 
     when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
     click_on "Continue"
-    then_i_see_an_error_message "Enter the teacher's induction start date"
+    then_i_see_an_error_message "Enter the teacher’s induction start date"
 
     when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
     click_on "Continue"

@@ -2,7 +2,7 @@
 
 module Api
   module V2
-    class NPQEnrollmentsController < Api::ApiController
+    class NPQEnrolmentsController < Api::ApiController
       include ApiTokenAuthenticatable
       include ApiPagination
       include ApiFilter
@@ -30,7 +30,7 @@ module Api
       end
 
       def csv_response
-        @csv_response ||= NPQEnrollmentsCsvSerializer.new(scope: npq_profiles).call
+        @csv_response ||= NPQEnrolmentsCsvSerializer.new(scope: npq_profiles).call
       end
 
       def npq_lead_provider

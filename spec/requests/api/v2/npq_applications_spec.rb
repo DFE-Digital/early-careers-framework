@@ -52,24 +52,26 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
           expect(parsed_response["data"][0]["id"]).to be_in(NPQApplication.pluck(:id))
 
-          profile = NPQApplication.find(parsed_response["data"][0]["id"])
+          npq_application = NPQApplication.find(parsed_response["data"][0]["id"])
           user = User.find(parsed_response["data"][0]["attributes"]["participant_id"])
 
           expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
           expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
           expect(parsed_response["data"][0]["attributes"]["email_validated"]).to eql(true)
-          expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(profile.school_urn)
-          expect(parsed_response["data"][0]["attributes"]["school_ukprn"]).to eql(profile.school_ukprn)
-          expect(parsed_response["data"][0]["attributes"]["private_childcare_provider_urn"]).to eql(profile.private_childcare_provider_urn)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(profile.teacher_reference_number)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(profile.teacher_reference_number_verified)
-          expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(profile.eligible_for_funding)
-          expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(profile.npq_course.identifier)
+          expect(parsed_response["data"][0]["attributes"]["school_urn"]).to eql(npq_application.school_urn)
+          expect(parsed_response["data"][0]["attributes"]["school_ukprn"]).to eql(npq_application.school_ukprn)
+          expect(parsed_response["data"][0]["attributes"]["private_childcare_provider_urn"]).to eql(npq_application.private_childcare_provider_urn)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(npq_application.teacher_reference_number)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number_validated"]).to eql(npq_application.teacher_reference_number_verified)
+          expect(parsed_response["data"][0]["attributes"]["eligible_for_funding"]).to eql(npq_application.eligible_for_funding)
+          expect(parsed_response["data"][0]["attributes"]["course_identifier"]).to eql(npq_application.npq_course.identifier)
           expect(parsed_response["data"][0]["attributes"]["status"]).to eql("accepted")
-          expect(parsed_response["data"][0]["attributes"]["works_in_school"]).to eql(profile.works_in_school)
-          expect(parsed_response["data"][0]["attributes"]["employment_role"]).to eql(profile.employment_role)
-          expect(parsed_response["data"][0]["attributes"]["employer_name"]).to eql(profile.employer_name)
-          expect(parsed_response["data"][0]["attributes"]["private_childcare_provider_urn"]).to eql(profile.private_childcare_provider_urn)
+          expect(parsed_response["data"][0]["attributes"]["works_in_school"]).to eql(npq_application.works_in_school)
+          expect(parsed_response["data"][0]["attributes"]["employment_role"]).to eql(npq_application.employment_role)
+          expect(parsed_response["data"][0]["attributes"]["employer_name"]).to eql(npq_application.employer_name)
+          expect(parsed_response["data"][0]["attributes"]["private_childcare_provider_urn"]).to eql(npq_application.private_childcare_provider_urn)
+          expect(parsed_response["data"][0]["attributes"]["cohort"]).to eql(npq_application.cohort.start_year.to_s)
+          expect(parsed_response["data"][0]["attributes"]["targeted_delivery_funding_eligibility"]).to eql(npq_application.targeted_delivery_funding_eligibility)
         end
 
         it "can return paginated data" do
@@ -112,7 +114,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
             let!(:cohort_2022_npq_applications) { create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
 
             it "returns npq applications only for the 2022 cohort" do
-              get "/api/v1/npq-applications", params: { filter: { cohort: 2022 } }
+              get "/api/v2/npq-applications", params: { filter: { cohort: 2022 } }
               expect(parsed_response["data"].size).to eq(2)
             end
           end
@@ -157,7 +159,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               employment_role
               created_at
               updated_at
+              cohort
               ineligible_for_funding_reason
+              targeted_delivery_funding_eligibility
             ],
           )
         end
@@ -186,6 +190,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["employment_role"]).to eql(application.employment_role)
           expect(row["created_at"]).to eql(application.created_at.rfc3339)
           expect(row["updated_at"]).to eql(application.updated_at.rfc3339)
+          expect(row["cohort"]).to eql(application.cohort.start_year.to_s)
+          expect(row["ineligible_for_funding_reason"]).to eql(application.ineligible_for_funding_reason)
+          expect(row["targeted_delivery_funding_eligibility"]).to eql(application.targeted_delivery_funding_eligibility.to_s)
         end
       end
     end

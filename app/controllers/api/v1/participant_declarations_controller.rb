@@ -24,11 +24,12 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            participant_declarations_hash = ParticipantDeclarationSerializer.new(paginate(query_scope)).serializable_hash
+            participant_declarations_hash = serializer_class.new(paginate(query_scope)).serializable_hash
             render json: participant_declarations_hash.to_json
           end
+
           format.csv do
-            participant_declarations_hash = ParticipantDeclarationSerializer.new(query_scope).serializable_hash
+            participant_declarations_hash = serializer_class.new(query_scope).serializable_hash
             render body: to_csv(participant_declarations_hash)
           end
         end
@@ -38,13 +39,17 @@ module Api
         record = ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find_by(id: params[:id])
 
         if record.present?
-          render json: ParticipantDeclarationSerializer.new(record).serializable_hash.to_json
+          render json: serializer_class.new(record).serializable_hash.to_json
         else
           raise ActiveRecord::RecordNotFound
         end
       end
 
     private
+
+      def serializer_class
+        ParticipantDeclarationSerializer
+      end
 
       def query_scope
         ParticipantDeclarations::Index.new(

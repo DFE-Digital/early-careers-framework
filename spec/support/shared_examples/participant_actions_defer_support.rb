@@ -11,11 +11,13 @@ RSpec.shared_examples "JSON Participant Deferral endpoint" do |serialiser_type|
     expect(parsed_response.dig("data", "type")).to eq(serialiser_type)
   end
 
-  it "returns an error when the participant is already withdrawn" do
-    put withdrawal_url, params: withdrawal_params
-    put url, params: params
+  context "when participant is already withdrawn" do
+    it "returns an error" do
+      put withdrawal_url, params: withdrawal_params
+      put url, params: params
 
-    expect(response).not_to be_successful
+      expect(response).not_to be_successful
+    end
   end
 
   it "returns an error when the participant is already deferred" do

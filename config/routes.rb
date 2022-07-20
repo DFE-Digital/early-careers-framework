@@ -79,7 +79,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: %i[create], path: "participant-validation"
-      resources :npq_applications, only: :index, path: "npq-applications" do
+      resources :npq_applications, only: %i[index show], path: "npq-applications" do
         member do
           post :accept
           post :reject
@@ -109,7 +109,7 @@ Rails.application.routes.draw do
       resources :npq_participants, only: %i[index], path: "participants/npq" do
         concerns :participant_actions
       end
-      resources :npq_enrollments, only: %i[index], path: "npq-enrollments"
+      resources :npq_enrolments, only: %i[index], path: "npq-enrolments"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: %i[create], path: "participant-validation"

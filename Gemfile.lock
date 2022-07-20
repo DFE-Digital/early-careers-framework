@@ -348,7 +348,7 @@ GEM
       ast (~> 2.4.1)
     percy-capybara (5.0.0)
       capybara (>= 3)
-    pg (1.3.5)
+    pg (1.4.1)
     pretender (0.4.0)
       actionpack (>= 5.2)
     pry (0.13.1)
@@ -520,7 +520,7 @@ GEM
       semantic_range (>= 2.3.0)
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
-    sidekiq (6.4.1)
+    sidekiq (6.5.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -674,7 +674,7 @@ DEPENDENCIES
   paper_trail
   parallel_tests
   percy-capybara
-  pg (~> 1.3)
+  pg (~> 1.4)
   pretender (>= 0.4.0)
   pry-byebug
   puma (~> 5.6)

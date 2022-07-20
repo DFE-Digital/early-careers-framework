@@ -4,18 +4,7 @@ required:
   - data
 properties:
   data:
-    type: object
-    description: "The request data"
-    required:
-      - type
-      - attributes
-    properties:
-      type:
-        description: "The data type"
-        type: string
-        example: participant-change-schedule
-      attributes:
-        $ref: "#/components/schemas/NPQParticipantChangeSchedule"
+    $ref: "#/components/schemas/NPQParticipantChangeSchedule"
 example:
   data:
     type: "participant-change-schedule"
