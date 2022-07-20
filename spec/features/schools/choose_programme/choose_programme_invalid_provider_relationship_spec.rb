@@ -3,11 +3,10 @@
 require "rails_helper"
 require_relative "./choose_programme_steps"
 
-RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false do
+RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0), with_feature_flags: { multiple_cohorts: "active" } do
   include ChooseProgrammeSteps
 
   before do
-    FeatureFlag.activate(:multiple_cohorts)
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_cohort_for_next_academic_year_is_created
     and_i_am_signed_in_as_an_induction_coordinator
@@ -15,7 +14,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_ects_expected_in_next_academic_year_page
   end
 
-  context "school cohort provider relationship for 2022 is invalid", travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do
+  context "school cohort provider relationship for 2022 is invalid" do
     scenario "school continues with same lead provider" do
       when_i_choose_ects_expected
       and_i_click_continue

@@ -3,14 +3,6 @@
 module ChooseProgrammeSteps
   include Capybara::DSL
 
-  def freeze_time
-    Timecop.freeze(Time.zone.local(2021, 5, 15, 16, 15, 0))
-  end
-
-  def reset_time
-    Timecop.return
-  end
-
   # Given steps
 
   def given_a_school_with_no_chosen_programme_for_next_academic_year
@@ -173,10 +165,6 @@ module ChooseProgrammeSteps
 
   def and_cohort_2022_is_created
     @cohort_2022 = create(:cohort, start_year: 2022)
-  end
-
-  def and_the_next_cohort_is_open_for_registrations
-    Timecop.freeze(Time.zone.local(2022, 5, 10, 16, 15, 0))
   end
 
   def and_the_dashboard_page_shows_the_no_ects_message
