@@ -9,11 +9,9 @@
     <%= form_for @profile.user, url: schools_participant_update_name_path, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :full_name,
-                             label: {
-                               text: "What should we edit #{@profile.full_name}’s name to?",
-                               tag: 'h1',
-                               size: 'xl'
-                             } %>
+                             class: 'govuk-!-width-two-thirds',
+                             label: -> { tag.h1(t('participant.edit_name', name: @profile.full_name),
+                                                 class: 'govuk-heading-xl') } %>
       <%= f.govuk_submit %>
     <% end %>
 
