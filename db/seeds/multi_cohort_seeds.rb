@@ -65,6 +65,12 @@ Partnership.find_or_create_by!(school: fip2_school,
   partnership.challenge_deadline = Date.new(2021, 12, 1)
 end
 
+Cohort.all.each do |cohort|
+  ProviderRelationship.find_or_create_by!(cohort:,
+                                          lead_provider:,
+                                          delivery_partner:)
+end
+
 Induction::SetCohortInductionProgramme.call(school_cohort: fip2_school_cohort,
                                             programme_choice: "full_induction_programme")
 
