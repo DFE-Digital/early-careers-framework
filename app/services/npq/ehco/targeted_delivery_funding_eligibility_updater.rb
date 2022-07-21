@@ -13,7 +13,7 @@ module NPQ
         logger = Logger.new($stdout)
         logger.info "Updating EHCO NPQ Applications, this may take a couple of minutes..."
 
-        ehco_npq_course = NPQCourse.find_by(id: "66dff4af-a518-498f-9042-36a41f9e8aa7")
+        ehco_npq_course = NPQCourse.find_by(identifier: "npq-early-headship-coaching-offer")
 
         arel_table = NPQApplication.arel_table
         npq_applications = ehco_npq_course.npq_applications
