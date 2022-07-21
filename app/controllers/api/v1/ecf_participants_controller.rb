@@ -45,9 +45,10 @@ module Api
         scope = ParticipantProfile
                   .joins(participant_identity: :user)
                   .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND induction_records.training_status_precedence = 1")
+
         if updated_since.present?
           scope.where(users: { updated_at: updated_since.. })
-             .order("induction_records.updated_since ASC")
+             .order("induction_records.updated_at ASC")
         else
           scope.order("induction_records.created_at")
         end

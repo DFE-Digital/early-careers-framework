@@ -172,12 +172,11 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "when updated_since parameter is supplied" do
-          before do
-            User.first.update!(updated_at: 2.days.ago)
-          end
+          before { User.first.update!(updated_at: 2.days.ago) }
 
           it "returns users changed since the updated_since parameter" do
             get "/api/v1/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+
             expect(parsed_response["data"].size).to eql(3)
           end
 

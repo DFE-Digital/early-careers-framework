@@ -105,7 +105,10 @@ module Api
 
       attribute :pupil_premium_uplift
       attribute :sparsity_uplift
-      attribute :training_status
+
+      attribute :training_status do |profile|
+        induction_record(profile).training_status
+      end
 
       attribute :schedule_identifier do |profile|
         profile.schedule&.schedule_identifier
