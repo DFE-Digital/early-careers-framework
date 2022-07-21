@@ -160,7 +160,7 @@ module Finance
     private
 
       def output_calculator
-        @output_calculator ||= OutputCalculator.new(statement:)
+        @output_calculator ||= OutputCalculator2.new(statement:)
       end
 
       def event_types
