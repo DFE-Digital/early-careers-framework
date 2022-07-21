@@ -12,7 +12,7 @@ module Finance
       def banding_breakdown
         return @banding_breakdown if @banding_breakdown
 
-        bandings = declaration_types.each.map do |declaration_type|
+        bandings = declaration_types.map do |declaration_type|
           current_banding_for_declaration_type(declaration_type)
         end
 
