@@ -65,7 +65,7 @@ module Api
       end
 
       attribute :school_urn do |profile|
-        profile.school.urn
+        profile.current_induction_record.school.urn
       end
 
       attribute :participant_type
@@ -74,7 +74,14 @@ module Api
         profile.cohort.start_year.to_s
       end
 
-      attribute :status
+      attribute :status do |profile|
+        case profile.current_induction_record.induction_status
+        when "active", "completed", "leaving"
+          "active"
+        when "withdrawn", "changed"
+          "withdrawn"
+        end
+      end
 
       attribute :teacher_reference_number do |profile|
         trn(profile)

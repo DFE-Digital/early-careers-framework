@@ -29,14 +29,28 @@ module Api
 
       def participant_profiles
         join = InductionRecord
-          .select("induction_records.id, induction_records.participant_profile_id, MAX(induction_records.created_at), lead_providers.id AS lead_provider_id, schedules.cohort_id")
-          .joins(:schedule, induction_programme: { partnership: :lead_provider })
-          .group("induction_records.id, induction_records.participant_profile_id, lead_providers.id, schedules.cohort_id")
+                 .select("induction_records.participant_profile_id, induction_records.updated_at, induction_records.created_at, ROW_NUMBER() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY CASE WHEN induction_records.training_status = 'active' THEN 0 ELSE 1 END) AS training_status_precedence")
+                 .joins(:participant_profile, :schedule, { induction_programme: { partnership: :lead_provider } })
+                 .where(
+                   schedule: { cohort_id: with_cohorts.map(&:id) },
+                   induction_programme: {
+                     partnerships: {
+                       lead_provider_id: lead_provider.id,
+                       challenged_at: nil,
+                       challenge_reason: nil,
+                     },
+                   },
+                 )
 
-        query = ParticipantProfile
-          .joins("JOIN (#{join.to_sql}) AS ir ON ir.participant_profile_id = participant_profiles.id")
-          .where("ir.lead_provider_id = ? AND ir.cohort_id IN (?)", lead_provider.id, with_cohorts.map(&:id))
-        query.order
+        scope = ParticipantProfile
+                  .joins(participant_identity: :user)
+                  .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND induction_records.training_status_precedence = 1")
+        if updated_since.present?
+          scope.where(users: { updated_at: updated_since.. })
+             .order("induction_records.updated_since ASC")
+        else
+          scope.order("induction_records.created_at")
+        end
       end
 
       def serialized_response(profile)

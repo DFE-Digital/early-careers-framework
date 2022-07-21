@@ -104,7 +104,8 @@ module Api
             .where(id: induction_record_ids_with_deduped_induction_records)
             .joins(participant_profile: [:participant_identity])
             .select("DISTINCT ON (participant_profiles.participant_identity_id) participant_identity_id, induction_records.training_status, participant_profiles.created_at, induction_records.id")
-            .order("participant_profiles.participant_identity_id", "induction_records.training_status ASC", "participant_profiles.created_at DESC")
+            .order("participant_profiles.participant_identity_id", "induction_records.training_status
+ ASC", "participant_profiles.created_at DESC")
             .to_sql
 
           ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")
