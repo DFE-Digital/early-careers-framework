@@ -9,9 +9,17 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       class << self
+        def induction_record(profile)
+          if profile.active?
+            profile.current_induction_record
+          else
+            profile.induction_records.latest
+          end
+        end
+
         def active_participant_attribute(attr, &blk)
           attribute attr do |profile, params|
-            if !profile.withdrawn_record? && !profile.training_status_withdrawn?
+            if profile.active?
               if blk.parameters.count == 1
                 blk.call(profile)
               else
@@ -65,7 +73,7 @@ module Api
       end
 
       attribute :school_urn do |profile|
-        profile.current_induction_record.school.urn
+        induction_record(profile).school.urn
       end
 
       attribute :participant_type
@@ -75,7 +83,7 @@ module Api
       end
 
       attribute :status do |profile|
-        case profile.current_induction_record.induction_status
+        case induction_record(profile).induction_status
         when "active", "completed", "leaving"
           "active"
         when "withdrawn", "changed"

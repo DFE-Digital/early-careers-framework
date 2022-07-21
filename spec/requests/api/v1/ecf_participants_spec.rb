@@ -68,6 +68,7 @@ RSpec.describe "Participants API", type: :request do
 
         it "returns all users" do
           get "/api/v1/participants/ecf"
+
           expect(parsed_response["data"].size).to eql(4)
         end
 

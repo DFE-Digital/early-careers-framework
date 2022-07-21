@@ -53,6 +53,12 @@ class ParticipantProfile < ApplicationRecord
     participant_profile_state&.state
   end
 
+  def active?
+    return false unless current_induction_record
+
+    current_induction_record.active?
+  end
+
   def ect?
     false
   end
