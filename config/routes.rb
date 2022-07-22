@@ -445,7 +445,7 @@ Rails.application.routes.draw do
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
 
-            appropriate_body_selection_routes "setup_school_cohort"
+            appropriate_body_selection_routes :setup_school_cohort
 
             get "complete", to: "setup_school_cohort#complete"
           end
@@ -495,7 +495,7 @@ Rails.application.routes.draw do
                 get :what_we_need, path: "what-we-need", controller: :add_participants
                 put "transfer", as: nil
 
-                appropriate_body_selection_routes "add_participants"
+                appropriate_body_selection_routes :add_participants
                 get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
               end
             end
@@ -509,7 +509,7 @@ Rails.application.routes.draw do
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
             get :add_appropriate_body, path: "add-appropriate-body"
-            appropriate_body_selection_routes "participants"
+            appropriate_body_selection_routes :participants
           end
 
           namespace :core_programme, path: "core-programme" do
@@ -523,6 +523,8 @@ Rails.application.routes.draw do
             get :confirm_programme, path: "confirm-programme"
             post :save_programme, path: "save-programme"
             get :success
+
+            appropriate_body_selection_routes :choose_programme
           end
         end
       end

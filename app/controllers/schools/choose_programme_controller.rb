@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Schools::ChooseProgrammeController < Schools::BaseController
+  include AppropriateBodySelection::Controller
+
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
   before_action :load_programme_form
@@ -16,7 +18,10 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     render :show and return unless @induction_choice_form.valid?
 
     session[:induction_choice_form] = @induction_choice_form.serializable_hash
-    redirect_to action: :confirm_programme
+    # redirect_to action: :confirm_programme
+    start_appropriate_body_selection from_path: url_for(action: :create),
+                                     submit_action: :save_appropriate_body,
+                                     school_name: school.name
   end
 
   def confirm_programme; end
@@ -46,6 +51,10 @@ private
     @induction_choice_form = InductionChoiceForm.new(
       session_params.merge(programme_choice_form_params).merge(school_cohort:),
     )
+  end
+
+  def save_appropriate_body
+    form = appropriate_body_form
   end
 
   def save_school_choice!
