@@ -186,6 +186,7 @@ module Finance
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
@@ -193,6 +194,7 @@ module Finance
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
           .count
 
