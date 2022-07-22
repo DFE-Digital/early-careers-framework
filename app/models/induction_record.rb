@@ -28,7 +28,9 @@ class InductionRecord < ApplicationRecord
 
   validates :start_date, presence: true
 
-  validate :cannot_resume_from_withdrawn
+  attr_accessor :force_training_status_change
+
+  validate :cannot_resume_from_withdrawn, unless: :force_training_status_change
 
   enum induction_status: {
     active: "active",

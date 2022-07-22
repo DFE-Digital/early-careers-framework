@@ -10,7 +10,7 @@ module Participants
         attr_accessor :reason
 
         validates :reason, inclusion: { in: reasons }
-        validate :not_already_withdrawn
+        validate :not_already_withdrawn, unless: :force_training_status_change
         validate :not_already_deferred
       end
 
@@ -19,7 +19,7 @@ module Participants
           ParticipantProfileState.create!(participant_profile: user_profile, state: ParticipantProfileState.states[:deferred], cpd_lead_provider:, reason:)
           user_profile.training_status_deferred!
 
-          relevant_induction_record.update!(training_status: "deferred") if relevant_induction_record
+          relevant_induction_record.update!(training_status: "deferred", force_training_status_change:) if relevant_induction_record
         end
 
         user_profile
