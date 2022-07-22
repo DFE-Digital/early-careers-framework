@@ -1118,4 +1118,44 @@ RSpec.describe Finance::ECF::OutputCalculator2 do
       end
     end
   end
+
+  describe "#uplift_breakdown" do
+    before do
+      declarations = create_list(
+        :ect_participant_declaration, 1,
+        state: :paid,
+        declaration_type: "started",
+        sparsity_uplift: true,
+        pupil_premium_uplift: true
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement: first_statement,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+
+      declarations = create_list(
+        :ect_participant_declaration, 1,
+        state: :paid,
+        declaration_type: "retained-1",
+        sparsity_uplift: true,
+        pupil_premium_uplift: true
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement: first_statement,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+    end
+
+    it "only counts started declarations" do
+      expect(second_statement_calc.uplift_breakdown[:previous_count]).to eql(1)
+    end
+  end
 end
