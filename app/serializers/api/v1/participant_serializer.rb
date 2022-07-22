@@ -9,8 +9,9 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       class << self
-        def induction_record(profile)
-          if profile.active?
+        def induction_record(profile, lead_provider)
+          # TODO: must be scopped to the lead provider
+          if profile.active?(lead_provider)
             profile.current_induction_record
           else
             profile.induction_records.latest
@@ -72,8 +73,8 @@ module Api
         end
       end
 
-      attribute :school_urn do |profile|
-        induction_record(profile).school.urn
+      attribute :school_urn do |profile, params|
+        induction_record(profile, params[:lead_provider]).school.urn
       end
 
       attribute :participant_type

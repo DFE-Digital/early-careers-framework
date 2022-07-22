@@ -16,6 +16,7 @@ class InductionRecord < ApplicationRecord
   has_one :cohort, through: :school_cohort
   has_one :school, through: :school_cohort
   has_one :user, through: :participant_profile
+  has_one :partnership, through: :induction_programme
 
   # optional while the data is setup
   # enables a different identity/email to be used for this induction
@@ -65,7 +66,9 @@ class InductionRecord < ApplicationRecord
   delegate :lead_provider, to: :induction_programme, allow_nil: true
   delegate :lead_provider_name, to: :induction_programme, allow_nil: true
 
-  def active?
+  def active?(lead_provider)
+    return false if lead_provider != partnership.lead_provider
+
     !(withdrawn_induction_status? || training_status_withdrawn? || changed_induction_status?)
   end
 

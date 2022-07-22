@@ -14,7 +14,7 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            participant_hash = ParticipantSerializer.new(paginate(participant_profiles)).serializable_hash
+            participant_hash = ParticipantSerializer.new(paginate(participant_profiles), params: { lead_provider: lead_provider }).serializable_hash
             render json: participant_hash.to_json
           end
 
@@ -47,10 +47,9 @@ module Api
                   .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND induction_records.training_status_precedence = 1")
 
         if updated_since.present?
-          scope.where(users: { updated_at: updated_since.. })
-             .order("induction_records.updated_at ASC")
+          scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
         else
-          scope.order("induction_records.created_at")
+          scope.order("induction_records.created_at ASC")
         end
       end
 

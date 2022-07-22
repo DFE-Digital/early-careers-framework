@@ -33,7 +33,13 @@ class ParticipantProfile < ApplicationRecord
     after_save :update_analytics
     after_update :sync_status_with_induction_record
 
-    def completed_validation_wizard?
+    def active?(lead_provider)
+      return false unless current_induction_record
+
+      current_induction_record.active?(lead_provider)
+    end
+
+    def complete_validation_wizard?
       ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
     end
 

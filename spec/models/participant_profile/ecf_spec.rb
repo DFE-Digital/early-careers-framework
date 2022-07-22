@@ -210,4 +210,56 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       end
     end
   end
+
+  describe "#active?" do
+    let(:lead_provider) { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+    let(:school)        { create(:school) }
+    let(:cohort)        { create(:cohort, :current) }
+    let(:school_cohort) { create(:school_cohort, cohort:, school:) }
+
+    subject { create(:ecf_participant_profile) }
+
+    before do
+      create(:partnership, school:, cohort:, lead_provider:)
+      Induction::SetCohortInductionProgramme.call(school_cohort:, programme_choice: "full_induction_programme")
+    end
+
+    describe  do
+      context "with no current induction record" do
+        it { is_expected.not_to be_active lead_provider }
+      end
+
+      context "with current induction record" do
+        before do
+          Induction::Enrol.call(
+            participant_profile: subject,
+            induction_programme: school_cohort.default_induction_programme,
+          )
+        end
+
+        it { is_expected.to be_active lead_provider }
+
+        context "when the participant as been transferred to another lead provider" do
+          let!(:new_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "New Lead Provider").lead_provider }
+          let(:new_school)         { create(:school) }
+          let(:new_school_cohort)  { create(:school_cohort, cohort:, school: new_school)  }
+          let(:delivery_partner)   { create(:delivery_partner) }
+
+          before do
+            create(:partnership, school: new_school, cohort:, lead_provider: new_lead_provider)
+            Induction::SetCohortInductionProgramme.call(school_cohort: new_school_cohort, programme_choice: "full_induction_programme")
+            Induction::TransferToSchoolsProgramme
+              .call(
+                participant_profile: subject,
+                induction_programme: new_school_cohort.default_induction_programme,
+              )
+          end
+
+          it "does something" do
+            is_expected.not_to be_active lead_provider
+          end
+        end
+      end
+    end
+  end
 end

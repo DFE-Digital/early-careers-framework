@@ -242,7 +242,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = ParticipantProfile::ECT.active_record.first.user
+          ect = ParticipantProfile::ECT.active_record.order(:created_at).first.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
