@@ -4,9 +4,13 @@
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <%= form_for @induction_record.preferred_identity, url: schools_participant_update_email_path, method: :put do |f| %>
+    <%= form_with model: @induction_record.preferred_identity,
+                  scope: '',
+                  url: schools_participant_update_email_path,
+                  method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :email,
+                             value: nil,
                              class: 'govuk-!-width-two-thirds',
                              hint: -> { tag.p(t('participant.edit_email_hint')) },
                              label: -> { tag.h1(t('participant.edit_email', name: @profile.full_name),

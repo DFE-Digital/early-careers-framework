@@ -12,17 +12,17 @@ module Pages
     end
 
     def set_a_blank_email
-      fill_in("participant_identity[email]", with: "")
+      fill_in("email", with: "")
       click_on("Continue")
     end
 
     def set_an_invalid_email
-      fill_in("participant_identity[email]", with: "invalidemail")
+      fill_in("email", with: "invalidemail")
       click_on("Continue")
     end
 
     def set_the_email(new_email:)
-      fill_in("participant_identity[email]", with: new_email)
+      fill_in("email", with: new_email)
       click_on("Continue")
 
       Pages::SchoolParticipantEmailUpdatedPage.loaded

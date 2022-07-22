@@ -105,10 +105,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
     end
@@ -120,10 +120,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
     end
@@ -135,10 +135,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to forbid_action(:edit_start_term) }
       it { is_expected.to forbid_action(:update_start_term) }
     end
@@ -150,10 +150,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to forbid_action(:edit_start_term) }
       it { is_expected.to forbid_action(:update_start_term) }
     end
@@ -164,10 +164,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
     end

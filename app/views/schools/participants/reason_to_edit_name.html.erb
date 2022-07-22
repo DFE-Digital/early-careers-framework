@@ -6,11 +6,13 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <%= form_with url: schools_participant_edit_name_path(participant_id: @profile), method: :get do |f| %>
+    <%= form_with model: edit_name_reason(@selected_reason),
+                  scope: '',
+                  url: schools_participant_edit_name_path(participant_id: @profile), method: :get do |f| %>
       <%= f.govuk_collection_radio_buttons(
             :reason,
             edit_name_reasons,
-            :id,
+            :reason,
             :name,
             legend: -> { tag.h1(t('page_titles.schools.participants.reason_to_edit_name', name: @profile.full_name),
                                 class: 'govuk-heading-xl') }

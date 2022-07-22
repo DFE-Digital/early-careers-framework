@@ -11,14 +11,22 @@ module Schools
       replace_with_a_different_person: :replace_with_a_different_person,
     }.freeze
 
+    class EditNameReason
+      include ActiveModel::Model
+
+      attr_accessor :reason, :name
+    end
+
     def edit_name_reasons
-      EDIT_NAME_TEMPLATE_BY_REASON.keys.map do |id|
-        OpenStruct.new(id:, name: t(id, scope: :reasons_to_edit_a_participants_name))
-      end
+      EDIT_NAME_TEMPLATE_BY_REASON.keys.map { |reason| edit_name_reason(reason) }
+    end
+
+    def edit_name_reason(key)
+      EditNameReason.new(reason: key, name: t(key, scope: :reasons_to_edit_a_participants_name))
     end
 
     def edit_name_template(reason)
-      EDIT_NAME_TEMPLATE_BY_REASON[reason&.to_sym] || :reason_to_edit_name
+      EDIT_NAME_TEMPLATE_BY_REASON[reason] || :reason_to_edit_name
     end
 
     def participant_not_started_validation?(profile, induction_record)
