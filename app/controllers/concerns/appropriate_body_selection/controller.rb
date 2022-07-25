@@ -14,7 +14,8 @@ module AppropriateBodySelection
                              appropriate_body
                              update_appropriate_body]
 
-      helper_method :appropriate_body_from_path, :appropriate_body_school_name, :appropriate_body_type_back_link
+      helper_method :appropriate_body_form, :appropriate_body_from_path, :appropriate_body_school_name,
+                    :appropriate_body_type_back_link
     end
 
     def appropriate_body_appointed
