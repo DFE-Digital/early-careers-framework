@@ -9,27 +9,24 @@ module Api
         let(:lead_provider)       { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
         let(:partnership)         { create(:partnership, lead_provider:) }
         let(:cohort)              { partnership.cohort }
-        let(:induction_programme) { create(:induction_programme, partnership:) }
         let(:school_cohort)       { create(:school_cohort, school: partnership.school, cohort:, induction_programme_choice: "full_induction_programme") }
 
-        let(:ect_cohort)     { ect.early_career_teacher_profile.cohort }
-        let(:mentor_cohort)  { mentor.mentor_profile.cohort }
-
         subject { ParticipantSerializer.new(participant_profile, params: { lead_provider: }) }
+
+        before do
+          Induction::Enrol.call(participant_profile:, induction_programme: create(:induction_programme, partnership:))
+          ECFParticipantEligibility.create!(participant_profile:).eligible_status!
+        end
 
         context "when the participant is eligible for funding" do
           def expected_json_string(participant_profile, status: "active")
             user = participant_profile.user
             "{\"data\":{\"id\":\"#{user.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{user.email}\",\"full_name\":\"#{user.full_name}\",\"mentor_id\":#{participant_profile.mentor_id.to_json},\"school_urn\":\"#{participant_profile.current_induction_record.school.urn}\",\"participant_type\":\"#{participant_profile.participant_type}\",\"cohort\":\"#{school_cohort.start_year}\",\"status\":\"#{status}\",\"teacher_reference_number\":\"#{user.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":true,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":\"ecf-standard-september\",\"updated_at\":\"#{user.updated_at.rfc3339}\"}}}"
           end
-          let(:participant_profile) { create(:mentor_participant_profile) }
-
-          before do
-            Induction::Enrol.call(participant_profile:, induction_programme:)
-            ECFParticipantEligibility.create!(participant_profile:).eligible_status!
-          end
 
           context "with a mentor profile" do
+            let(:participant_profile) { create(:mentor_participant_profile) }
+
             it "outputs correctly formatted serialized Mentors" do
               expect(subject.serializable_hash.to_json).to eq expected_json_string(participant_profile)
             end
@@ -197,54 +194,45 @@ module Api
                 end
               end
             end
-          end
-        end
 
-        describe "pupil_premium_uplift" do
-          let(:result) { ParticipantSerializer.new(ect_profile).serializable_hash }
+            describe "#pupil_premium_uplift" do
+              let(:pupil_premium_uplift) { subject.serializable_hash.dig(:data, :attributes, :pupil_premium_uplift) }
+              let(:sparsity_uplift) { subject.serializable_hash.dig(:data, :attributes, :sparsity_uplift) }
 
-          context "when participant belongs to a school" do
-            context "eligible pupil premium uplift" do
-              before { ect_profile.update!(pupil_premium_uplift: true) }
+              context "when participant belongs to a school" do
+                context "eligible pupil premium uplift" do
+                  before { participant_profile.update!(pupil_premium_uplift: true) }
 
-              it "returns true" do
-                expect(result[:data][:attributes][:pupil_premium_uplift]).to be true
+                  it "returns true" do
+                    expect(pupil_premium_uplift).to be true
+                  end
+                end
+
+                context "not eligible pupil premium uplift" do
+                  before { participant_profile.update!(pupil_premium_uplift: false) }
+
+                  it "returns false" do
+                    expect(pupil_premium_uplift).to be false
+                  end
+                end
+
+                context "eligible sparsity uplift" do
+                  before { participant_profile.update!(sparsity_uplift: true) }
+
+                  it "returns true" do
+                    expect(sparsity_uplift).to be true
+                  end
+                end
+
+                context "not eligible sparsity uplift" do
+                  before { participant_profile.update!(sparsity_uplift: false) }
+
+                  it "returns false" do
+                    expect(sparsity_uplift).to be false
+                  end
+                end
               end
             end
-
-            context "not eligible pupil premium uplift" do
-              before { ect_profile.update!(pupil_premium_uplift: false) }
-
-              it "returns false" do
-                expect(result[:data][:attributes][:pupil_premium_uplift]).to be false
-              end
-            end
-
-            context "eligible sparsity uplift" do
-              before { ect_profile.update!(sparsity_uplift: true) }
-
-              it "returns true" do
-                expect(result[:data][:attributes][:sparsity_uplift]).to be true
-              end
-            end
-
-            context "not eligible sparsity uplift" do
-              before { ect_profile.update!(sparsity_uplift: false) }
-
-              it "returns false" do
-                expect(result[:data][:attributes][:sparsity_uplift]).to be false
-              end
-            end
-          end
-        end
-
-        context "when training_status is withdrawn" do
-          subject { ParticipantSerializer.new(ect_profile) }
-
-          let(:ect_profile) { create(:ect_participant_profile, training_status: "withdrawn") }
-
-          it "nullifies email" do
-            expect(subject.serializable_hash[:data][:attributes][:email]).to be_nil
           end
         end
       end
