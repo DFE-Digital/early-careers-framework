@@ -29,7 +29,7 @@ module Schools
       end
 
       def lead_provider
-        induction_record.induction_programme.lead_provider
+        induction_record.lead_provider
       end
     end
   end
