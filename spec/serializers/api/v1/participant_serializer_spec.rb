@@ -6,27 +6,73 @@ module Api
   module V1
     RSpec.describe ParticipantSerializer do
       describe "serialization" do
-        let(:mentor_profile) { create(:mentor_participant_profile) }
-        let(:mentor) { mentor_profile.user }
-        let(:ect_profile) { create(:ect_participant_profile, mentor_profile:) }
-        let(:ect) { ect_profile.user }
-        let(:ect_cohort) { ect.early_career_teacher_profile.cohort }
-        let(:mentor_cohort) { mentor.mentor_profile.cohort }
+        let(:lead_provider)       { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+        let(:partnership)         { create(:partnership, lead_provider:) }
+        let(:cohort)              { partnership.cohort }
+        let(:induction_programme) { create(:induction_programme, partnership:) }
+        let(:school_cohort)       { create(:school_cohort, school: partnership.school, cohort:, induction_programme_choice: "full_induction_programme") }
+
+        let(:ect_cohort)     { ect.early_career_teacher_profile.cohort }
+        let(:mentor_cohort)  { mentor.mentor_profile.cohort }
+
+        subject { ParticipantSerializer.new(participant_profile, params: { lead_provider: }) }
 
         context "when the participant is eligible for funding" do
+          def expected_json_string(participant_profile, status: "active")
+            user = participant_profile.user
+            "{\"data\":{\"id\":\"#{user.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{user.email}\",\"full_name\":\"#{user.full_name}\",\"mentor_id\":#{participant_profile.mentor_id.to_json},\"school_urn\":\"#{participant_profile.current_induction_record.school.urn}\",\"participant_type\":\"#{participant_profile.participant_type}\",\"cohort\":\"#{school_cohort.start_year}\",\"status\":\"#{status}\",\"teacher_reference_number\":\"#{user.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":true,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":\"ecf-standard-september\",\"updated_at\":\"#{user.updated_at.rfc3339}\"}}}"
+          end
+          let(:participant_profile) { create(:mentor_participant_profile) }
+
           before do
-            ECFParticipantEligibility.create!(participant_profile: ect_profile).eligible_status!
-            ECFParticipantEligibility.create!(participant_profile: mentor_profile).eligible_status!
+            Induction::Enrol.call(participant_profile:, induction_programme:)
+            ECFParticipantEligibility.create!(participant_profile:).eligible_status!
           end
 
-          it "outputs correctly formatted serialized Mentors" do
-            expected_json_string = "{\"data\":{\"id\":\"#{mentor.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{mentor.email}\",\"full_name\":\"#{mentor.full_name}\",\"mentor_id\":null,\"school_urn\":\"#{mentor.mentor_profile.school.urn}\",\"participant_type\":\"mentor\",\"cohort\":\"#{mentor_cohort.start_year}\",\"status\":\"active\",\"teacher_reference_number\":\"#{mentor.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":true,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":\"ecf-standard-september\",\"updated_at\":\"#{mentor.updated_at.rfc3339}\"}}}"
-            expect(ParticipantSerializer.new(mentor_profile).serializable_hash.to_json).to eq expected_json_string
+          context "with a mentor profile" do
+            it "outputs correctly formatted serialized Mentors" do
+              expect(subject.serializable_hash.to_json).to eq expected_json_string(participant_profile)
+            end
+
+            context "when the participant record is withdrawn" do
+              before { participant_profile.current_induction_record.withdrawn_induction_status! }
+
+              it "outputs correctly formatted serialized Mentors" do
+                expected_json = {
+                  data: {
+                    id: participant_profile.user_id,
+                    type: "participant",
+                    attributes: {
+                      email: nil,
+                      full_name: participant_profile.user.full_name,
+                      mentor_id: nil,
+                      school_urn: participant_profile.induction_records.latest.school.urn,
+                      participant_type: "mentor",
+                      cohort: cohort.start_year.to_s,
+                      status: "withdrawn",
+                      teacher_reference_number: participant_profile.teacher_profile.trn,
+                      teacher_reference_number_validated: true,
+                      eligible_for_funding: true,
+                      pupil_premium_uplift: participant_profile.pupil_premium_uplift,
+                      sparsity_uplift: participant_profile.sparsity_uplift,
+                      training_status: participant_profile.training_status,
+                      schedule_identifier: participant_profile.schedule.schedule_identifier,
+                      updated_at: participant_profile.updated_at.rfc3339,
+                    },
+                  },
+                }.to_json
+
+                expect(subject.serializable_hash.to_json).to eq expected_json
+              end
+            end
           end
 
-          it "outputs correctly formatted serialized ECTs" do
-            expected_json_string = "{\"data\":{\"id\":\"#{ect.id}\",\"type\":\"participant\",\"attributes\":{\"email\":\"#{ect.email}\",\"full_name\":\"#{ect.full_name}\",\"mentor_id\":\"#{mentor.id}\",\"school_urn\":\"#{ect.early_career_teacher_profile.school.urn}\",\"participant_type\":\"ect\",\"cohort\":\"#{ect_cohort.start_year}\",\"status\":\"active\",\"teacher_reference_number\":\"#{ect.teacher_profile.trn}\",\"teacher_reference_number_validated\":true,\"eligible_for_funding\":true,\"pupil_premium_uplift\":false,\"sparsity_uplift\":false,\"training_status\":\"active\",\"schedule_identifier\":\"ecf-standard-september\",\"updated_at\":\"#{ect.updated_at.rfc3339}\"}}}"
-            expect(ParticipantSerializer.new(ect_profile).serializable_hash.to_json).to eq expected_json_string
+          context "with an ect profile" do
+            let(:participant_profile) { create(:ect_participant_profile) }
+
+            it "outputs correctly formatted serialized ECTs" do
+              expect(subject.serializable_hash.to_json).to eq expected_json_string(participant_profile)
+            end
           end
         end
 
@@ -35,29 +81,6 @@ module Api
           let(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, mentor_profile:) }
 
           it "outputs correctly formatted serialized Mentors" do
-            expected_json = {
-              data: {
-                id: mentor_profile.user.id,
-                type: "participant",
-                attributes: {
-                  email: nil,
-                  full_name: mentor_profile.user.full_name,
-                  mentor_id: nil,
-                  school_urn: mentor_profile.school.urn,
-                  participant_type: mentor_profile.participant_type,
-                  cohort: mentor_profile.cohort.start_year.to_s,
-                  status: "withdrawn",
-                  teacher_reference_number: mentor_profile.teacher_profile.trn,
-                  teacher_reference_number_validated: false,
-                  eligible_for_funding: nil,
-                  pupil_premium_uplift: mentor_profile.pupil_premium_uplift,
-                  sparsity_uplift: mentor_profile.sparsity_uplift,
-                  training_status: mentor_profile.training_status,
-                  schedule_identifier: mentor_profile.schedule.schedule_identifier,
-                  updated_at: mentor_profile.reload.updated_at.rfc3339,
-                },
-              },
-            }.to_json
 
             expect(ParticipantSerializer.new(mentor_profile).serializable_hash.to_json).to eql(expected_json)
           end

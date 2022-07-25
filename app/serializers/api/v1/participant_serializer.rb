@@ -20,7 +20,7 @@ module Api
 
         def active_participant_attribute(attr, &blk)
           attribute attr do |profile, params|
-            if profile.active?
+            if profile.active?(params.fetch(:lead_provider))
               if blk.parameters.count == 1
                 blk.call(profile)
               else
@@ -51,7 +51,7 @@ module Api
         # NOTE: using this will retain the original ID exposed to provider
         profile.participant_identity.external_identifier
         # NOTE: use this instead to use new (de-duped) ID
-        # profile.user.id
+        # profile.participant_identity.user_id
       end
 
       active_participant_attribute :email do |profile|
@@ -74,7 +74,7 @@ module Api
       end
 
       attribute :school_urn do |profile, params|
-        induction_record(profile, params[:lead_provider]).school.urn
+        induction_record(profile, params.fetch(:lead_provider)).school.urn
       end
 
       attribute :participant_type
@@ -83,8 +83,8 @@ module Api
         profile.cohort.start_year.to_s
       end
 
-      attribute :status do |profile|
-        case induction_record(profile).induction_status
+      attribute :status do |profile, params|
+        case induction_record(profile, params.fetch(:lead_provider)).induction_status
         when "active", "completed", "leaving"
           "active"
         when "withdrawn", "changed"
@@ -107,8 +107,8 @@ module Api
       attribute :pupil_premium_uplift
       attribute :sparsity_uplift
 
-      attribute :training_status do |profile|
-        induction_record(profile).training_status
+      attribute :training_status do |profile, params|
+        induction_record(profile, params.fetch(:lead_provider)).training_status
       end
 
       attribute :schedule_identifier do |profile|
