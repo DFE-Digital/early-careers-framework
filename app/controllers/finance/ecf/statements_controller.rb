@@ -11,15 +11,6 @@ module Finance
         @calculator = StatementCalculator.new(statement: @statement)
       end
 
-      def show2
-        @ecf_lead_provider = lead_provider_scope.find(params[:payment_breakdown_id])
-        statement_name = params[:statement_id].humanize.gsub("-", " ")
-        @statement = @ecf_lead_provider.statements.find_by(name: statement_name)
-        @calculator = StatementCalculator2.new(statement: @statement)
-
-        render :show
-      end
-
     private
 
       def identifier_to_name
