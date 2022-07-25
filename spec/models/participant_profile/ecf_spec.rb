@@ -242,7 +242,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
         context "when the participant as been transferred to another lead provider" do
           let!(:new_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "New Lead Provider").lead_provider }
           let(:new_school)         { create(:school) }
-          let(:new_school_cohort)  { create(:school_cohort, cohort:, school: new_school)  }
+          let(:new_school_cohort)  { create(:school_cohort, cohort:, school: new_school) }
           let(:delivery_partner)   { create(:delivery_partner) }
 
           before do
