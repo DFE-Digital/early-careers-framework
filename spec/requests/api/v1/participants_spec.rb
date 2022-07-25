@@ -127,7 +127,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
           expect(mentors).to eql(1)
           expect(ects).to eql(3)
-          expect(withdrawn).to eql(1)
+          expect(withdrawn).to eql(2)
         end
 
         it "returns the right number of users per page" do
@@ -148,13 +148,14 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "returns users in a consistent order" do
-          users = User.all
-          users.first.participant_profiles.each { |pp| pp.induction_records.first.update!(created_at: 1.day.ago) }
-          users.last.participant_profiles.each { |pp| pp.induction_records.first.update!(created_at: 2.days.ago) }
+          users = User.order(created_at: :asc).all
+          users.first.update!(created_at: 2.days.ago)
+          users.last.update!(created_at: 1.day.ago)
 
           get "/api/v1/participants"
-          expect(parsed_response["data"][0]["id"]).to eq User.last.id
-          expect(parsed_response["data"][1]["id"]).to eq User.first.id
+
+          expect(parsed_response["data"].first["id"]).to eq User.order(created_at: :asc).first.id
+          expect(parsed_response["data"].last["id"]).to eq User.order(created_at: :asc).last.id
         end
 
         context "when updated_since parameter is supplied" do

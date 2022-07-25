@@ -69,7 +69,7 @@ module Api
         if params[:mentor_ids].present?
           params[:mentor_ids][profile.id]
         elsif profile.ect?
-          profile.mentor&.id
+          induction_record(profile, params)&.mentor_profile&.participant_identity&.external_identifier
         end
       end
 

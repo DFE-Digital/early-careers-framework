@@ -255,7 +255,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
               )
           end
 
-          it "does something" do
+          it "is not active for the viewing lead provider" do
             is_expected.not_to be_active lead_provider
           end
         end
