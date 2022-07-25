@@ -9,6 +9,10 @@ Feature: Induction tutors choosing programmes - CIP only
   Scenario: Choosing the school funded fip programme
     When I click on "use a training provider funded by your school radio button"
     And I click the submit button
+    Then I should be on "have you appointed an appropriate body" page
+
+    When I click on "No" label
+    And I click the submit button
     Then I should be on "choose programme confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "Confirm school funded fip page"
