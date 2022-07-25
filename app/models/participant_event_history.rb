@@ -36,10 +36,6 @@ class ParticipantEventHistory
         record_eligibility_events(profile.ecf_participant_eligibility) unless profile.ecf_participant_eligibility.nil?
 
         record_validation_decision_events(profile.validation_decisions) unless profile.validation_decisions.nil?
-
-        # if profile.mentor?
-        # profile.school_mentors
-        # end
       end
     end
 
