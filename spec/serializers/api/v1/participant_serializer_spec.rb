@@ -68,229 +68,134 @@ module Api
           end
 
           context "with an ect profile" do
-            let(:participant_profile) { create(:ect_participant_profile) }
+            let(:participant_profile) { create(:ect_participant_profile, :ecf_participant_validation_data) }
 
             it "outputs correctly formatted serialized ECTs" do
               expect(subject.serializable_hash.to_json).to eq expected_json_string(participant_profile)
             end
-          end
-        end
 
-        context "when the participant record is withdrawn" do
-          let(:mentor_profile) { create(:mentor_participant_profile, :withdrawn_record) }
-          let(:ect_profile) { create(:ect_participant_profile, :withdrawn_record, mentor_profile:) }
+            describe "participant eligibility" do
+              let(:eligible_for_funding)               { subject.serializable_hash.dig(:data, :attributes, :eligible_for_funding) }
+              let(:teacher_reference_number_validated) { subject.serializable_hash.dig(:data, :attributes, :teacher_reference_number_validated) }
+              context "when there is no eligibility record" do
+                before do
+                  participant_profile.ecf_participant_eligibility.destroy!
+                  participant_profile.reload
+                end
 
-          it "outputs correctly formatted serialized Mentors" do
+                it "eligible_for_funding is nil" do
+                  expect(participant_profile.reload.ecf_participant_eligibility).to be_nil
+                  expect(eligible_for_funding).to be_nil
+                end
 
-            expect(ParticipantSerializer.new(mentor_profile).serializable_hash.to_json).to eql(expected_json)
-          end
-
-          it "outputs correctly formatted serialized ECTs" do
-            expected_json = {
-              data: {
-                id: ect_profile.user.id,
-                type: "participant",
-                attributes: {
-                  email: nil,
-                  full_name: ect_profile.user.full_name,
-                  mentor_id: ect_profile.mentor.id,
-                  school_urn: ect_profile.school.urn,
-                  participant_type: ect_profile.participant_type,
-                  cohort: ect_profile.cohort.start_year.to_s,
-                  status: "withdrawn",
-                  teacher_reference_number: ect_profile.teacher_profile.trn,
-                  teacher_reference_number_validated: false,
-                  eligible_for_funding: nil,
-                  pupil_premium_uplift: ect_profile.pupil_premium_uplift,
-                  sparsity_uplift: ect_profile.sparsity_uplift,
-                  training_status: ect_profile.training_status,
-                  schedule_identifier: ect_profile.schedule.schedule_identifier,
-                  updated_at: ect_profile.updated_at.rfc3339,
-                },
-              },
-            }.to_json
-
-            expect(ParticipantSerializer.new(ect_profile).serializable_hash.to_json).to eql(expected_json)
-          end
-        end
-
-        describe "funding_eligibility" do
-          context "when there is no eligibility record" do
-            it "returns nil" do
-              expect(ect_profile.ecf_participant_eligibility).to be_nil
-
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
-            end
-          end
-
-          context "when the eligibility is manual_check" do
-            before do
-              eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-              eligibility.manual_check_status!
-            end
-
-            it "returns nil" do
-              expect(ect_profile.ecf_participant_eligibility.status).to eql "manual_check"
-
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
-            end
-          end
-
-          context "when the eligibility is matched" do
-            before do
-              eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-              eligibility.matched_status!
-            end
-
-            it "returns nil" do
-              expect(ect_profile.ecf_participant_eligibility.status).to eql "matched"
-
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:eligible_for_funding]).to be_nil
-            end
-          end
-
-          context "when the eligibility is eligible" do
-            before do
-              eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-              eligibility.eligible_status!
-            end
-
-            it "returns true" do
-              expect(ect_profile.ecf_participant_eligibility.status).to eql "eligible"
-
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:eligible_for_funding]).to be true
-            end
-          end
-
-          context "when the eligibility is ineligible" do
-            before do
-              eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-              eligibility.ineligible_status!
-            end
-
-            it "returns false" do
-              expect(ect_profile.ecf_participant_eligibility.status).to eql "ineligible"
-
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:eligible_for_funding]).to be false
-            end
-          end
-        end
-
-        describe "teacher_reference_number" do
-          context "when there is a trn on the teacher profile" do
-            it "returns the correct TRN" do
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:teacher_reference_number]).to eql ect_profile.teacher_profile.trn
-            end
-          end
-
-          context "when there is a trn on the validation details" do
-            before do
-              ect_profile.teacher_profile.update!(trn: nil)
-            end
-            let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: ect_profile) }
-
-            it "returns the correct TRN" do
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:teacher_reference_number]).to eql validation_data.trn
-            end
-          end
-
-          context "when there is no TRN" do
-            before do
-              ect_profile.teacher_profile.update!(trn: nil)
-            end
-
-            it "returns nil" do
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:teacher_reference_number]).to be_nil
-            end
-          end
-        end
-
-        describe "teacher_reference_number_validated" do
-          context "when there is a trn on the teacher profile" do
-            context "when the participant is matched" do
-              before do
-                eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-                eligibility.matched_status!
+                it "teacher_reference_number_validated is false" do
+                  expect(teacher_reference_number_validated).to be false
+                end
               end
 
-              it "returns true" do
-                result = ParticipantSerializer.new(ect_profile).serializable_hash
-                expect(result[:data][:attributes][:teacher_reference_number_validated]).to be true
+              context "when the eligibility is manual_check" do
+                before do
+                  participant_profile.ecf_participant_eligibility.manual_check_status!
+                end
+
+                it "returns nil" do
+                  expect(participant_profile.ecf_participant_eligibility).to be_manual_check_status
+
+                  expect(eligible_for_funding).to be_nil
+                end
+
+                it "teacher_reference_number_validated is true" do
+                  expect(teacher_reference_number_validated).to be true
+                end
+              end
+
+              context "when the eligibility is matched" do
+                before do
+                  participant_profile.ecf_participant_eligibility.matched_status!
+                end
+
+                it "eligible_for_funding returns nil" do
+                  expect(participant_profile.ecf_participant_eligibility).to be_matched_status
+
+                  expect(eligible_for_funding).to be_nil
+                end
+
+                it "teacher_reference_number_validated is true" do
+                  expect(teacher_reference_number_validated).to be true
+                end
+              end
+
+              context "when the eligibility is eligible" do
+                before do
+                  participant_profile.ecf_participant_eligibility.eligible_status!
+                end
+
+                it "eligible_for_funding returns true" do
+                  expect(participant_profile.ecf_participant_eligibility).to be_eligible_status
+
+                  expect(eligible_for_funding).to be true
+                end
+
+                it "teacher_reference_number_validated is true" do
+                  expect(teacher_reference_number_validated).to be true
+                end
+              end
+
+              context "when the eligibility is ineligible" do
+                before do
+                  participant_profile.ecf_participant_eligibility.ineligible_status!
+                  participant_profile.ecf_participant_eligibility.different_trn_reason!
+                end
+
+                it "eligible_for_funding returns false" do
+                  expect(participant_profile.ecf_participant_eligibility).to be_ineligible_status
+
+                  expect(eligible_for_funding).to be false
+                end
+
+                it "teacher_reference_number_validated returns false" do
+                  expect(teacher_reference_number_validated).to be false
+                end
               end
             end
 
-            context "when the participant is eligible" do
-              before do
-                eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-                eligibility.eligible_status!
+            describe "#teacher_reference_number" do
+              let(:teacher_reference_number)           { subject.serializable_hash.dig(:data, :attributes, :teacher_reference_number) }
+              let(:teacher_reference_number_validated) { subject.serializable_hash.dig(:data, :attributes, :teacher_reference_number_validated) }
+
+              context "when there is a trn on the teacher profile" do
+                it "returns the correct TRN" do
+                  expect(teacher_reference_number).to eq(participant_profile.teacher_profile.trn)
+                end
               end
 
-              it "returns true" do
-                result = ParticipantSerializer.new(ect_profile).serializable_hash
-                expect(result[:data][:attributes][:teacher_reference_number_validated]).to be true
-              end
-            end
+              context "when there is a trn on the validation details" do
+                before { participant_profile.teacher_profile.update!(trn: nil) }
 
-            context "when the participant is in manual check" do
-              before do
-                eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-                eligibility.manual_check_status!
-              end
+                it "returns the correct TRN" do
+                  expect(teacher_reference_number).to eq(participant_profile.ecf_participant_validation_data.trn)
+                end
 
-              it "returns true" do
-                result = ParticipantSerializer.new(ect_profile).serializable_hash
-                expect(result[:data][:attributes][:teacher_reference_number_validated]).to be true
-              end
-            end
-
-            context "when the reason is different_trn" do
-              before do
-                eligibility = ECFParticipantEligibility.create!(participant_profile: ect_profile)
-                eligibility.different_trn_reason!
+                it "teacher_reference_number_validated returns true" do
+                  expect(teacher_reference_number_validated).to be true
+                end
               end
 
-              it "returns false" do
-                result = ParticipantSerializer.new(ect_profile).serializable_hash
-                expect(result[:data][:attributes][:teacher_reference_number_validated]).to be false
+              context "when there is no TRN" do
+                before do
+                  participant_profile.teacher_profile.update!(trn: nil)
+                  participant_profile.ecf_participant_validation_data.destroy!
+                  participant_profile.reload
+                end
+
+                it "teacher_reference_number returns nil" do
+                  expect(teacher_reference_number).to be_nil
+                end
+
+                it "teacher_reference_number_validated returns nil" do
+                  expect(teacher_reference_number_validated).to be nil
+                end
               end
-            end
-
-            context "when the participant has not started validation" do
-              it "returns false" do
-                result = ParticipantSerializer.new(ect_profile).serializable_hash
-                expect(result[:data][:attributes][:teacher_reference_number_validated]).to be false
-              end
-            end
-          end
-
-          context "when there is a trn on the validation details" do
-            before do
-              ect_profile.teacher_profile.update!(trn: nil)
-              create(:ecf_participant_validation_data, participant_profile: ect_profile)
-            end
-
-            it "returns false" do
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:teacher_reference_number_validated]).to be false
-            end
-          end
-
-          context "when there is no TRN" do
-            before do
-              ect_profile.teacher_profile.update!(trn: nil)
-            end
-
-            it "returns nil" do
-              result = ParticipantSerializer.new(ect_profile).serializable_hash
-              expect(result[:data][:attributes][:teacher_reference_number_validated]).to be_nil
             end
           end
         end
