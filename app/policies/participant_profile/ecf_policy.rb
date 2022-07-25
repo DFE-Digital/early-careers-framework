@@ -39,7 +39,7 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   def withdraw_record?
     return false if record.participant_declarations.where.not(state: :voided).any?
     return false unless user.induction_coordinator? || admin?
-    return false if record.complete_validation_wizard? && !record.ecf_participant_eligibility&.ineligible_status?
+    return false if record.completed_validation_wizard? && !record.ecf_participant_eligibility&.ineligible_status?
 
     admin? || same_school?
   end

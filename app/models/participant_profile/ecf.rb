@@ -39,7 +39,7 @@ class ParticipantProfile < ApplicationRecord
       current_induction_record.active?(lead_provider)
     end
 
-    def complete_validation_wizard?
+    def completed_validation_wizard?
       ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
     end
 
