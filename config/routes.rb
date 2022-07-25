@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
       resources :npq_funding, only: [:show], path: "npq-funding", param: :trn
 
-      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+      resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
       end
       resources :participants, only: %i[index], controller: "ecf_participants"

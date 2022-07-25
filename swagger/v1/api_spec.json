@@ -996,6 +996,56 @@
         }
       }
     },
+    "/api/v1/participants/ecf/{id}": {
+      "get": {
+        "summary": "Get a single ECF participant",
+        "operationId": "ecf_participant",
+        "tags": [
+          "ECF participants"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the ECF participant.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single ECF participant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/ecf/{id}/defer": {
       "put": {
         "summary": "Notify that an ECF participant is taking a break from their course",
