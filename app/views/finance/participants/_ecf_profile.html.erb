@@ -72,7 +72,7 @@
 
 <h4>Induction records</h4>
 
-<% pp.induction_records.order(:start_date).each do |ir| %>
+<% pp.induction_records.ordered_historically.each do |ir| %>
   <h5>Induction record: <%= ir.id %></h5>
 
   <%= govuk_summary_list do |summary_list| %>
