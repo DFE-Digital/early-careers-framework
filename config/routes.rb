@@ -358,8 +358,6 @@ Rails.application.routes.draw do
       resources :payment_breakdowns, only: [] do
         resources :statements, only: %i[show] do
           resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
-
-          get :show2
         end
       end
     end
