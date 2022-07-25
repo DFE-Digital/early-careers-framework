@@ -13,6 +13,10 @@ Feature: Induction tutors choosing programmes
   Scenario: Choosing Core Induction Programme
     When I click on "accredited materials" label
     And I click the submit button
+    Then I should be on "have you appointed an appropriate body" page
+
+    When I click on "No" label
+    And I click the submit button
     Then I should be on "choose programme confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "Confirm materials CIP page"
@@ -37,6 +41,10 @@ Feature: Induction tutors choosing programmes
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
     And I click the submit button
+    Then I should be on "have you appointed an appropriate body" page
+
+    When I click on "No" label
+    And I click the submit button
     Then I should be on "choose programme confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "Confirm materials FIP page"
@@ -54,6 +62,10 @@ Feature: Induction tutors choosing programmes
   Scenario: Choosing to design and deliver our own programme
     When I click on "design and deliver our own programme radio button"
     And I click the submit button
+    Then I should be on "have you appointed an appropriate body" page
+
+    When I click on "No" label
+    And I click the submit button
     Then I should be on "choose programme confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "Confirm materials DIY page"
@@ -67,6 +79,7 @@ Feature: Induction tutors choosing programmes
   Scenario: Choosing there are no early career teachers for this year
     When I click on "no early career teachers radio button"
     And I click the submit button
+
     Then I should be on "choose programme confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "Confirm materials no ECT page"
