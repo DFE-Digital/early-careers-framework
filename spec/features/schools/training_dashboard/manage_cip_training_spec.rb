@@ -65,7 +65,6 @@ RSpec.describe "Manage CIP training", js: true do
                                                choice: "Deliver your own programme using DfE accredited materials",
                                                snapshot: "Design Our Own - change programme options")
 
-    expect(page).to have_text "compare and choose which DfE-accredited materials you want to use"
     expect(page).to have_text "You’ve submitted your training information"
   end
 end
