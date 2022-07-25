@@ -7,26 +7,27 @@
   </tbody>
 </table>
 
-<table class="govuk-table">
-  <tbody class="govuk-table__body">
-    <% if historical_induction_records.any? %>
-      <h2>School transfers</h2>
-      <tr>
-       <th scope="row" class="govuk-table__header">School name</th>
-       <th scope="row" class="govuk-table__header">Induction Programme</th>
-       <th scope="row" class="govuk-table__header">Start Date</th>
-       <th scope="row" class="govuk-table__header">End Date</th>
-      </tr>
-      <% historical_induction_records.each do |record| %>
+<% if historical_induction_records.any? %>
+  <h2 class="govuk-heading-l">School transfers</h2>
+
+  <table class="govuk-table">
+    <tbody class="govuk-table__body">
         <tr>
-         <td class="govuk-table__cell"><%= record.school_cohort.school.name %></td>
-         <td class="govuk-table__cell"><%= record.induction_programme.training_programme.humanize %></td>
-         <td class="govuk-table__cell"><%= record.start_date.to_date.to_s(:govuk) %></td>
-         <td class="govuk-table__cell"><%= record.end_date&.to_date&.to_s(:govuk) %></td>
+         <th scope="row" class="govuk-table__header">School name</th>
+         <th scope="row" class="govuk-table__header">Induction Programme</th>
+         <th scope="row" class="govuk-table__header">Start Date</th>
+         <th scope="row" class="govuk-table__header">End Date</th>
         </tr>
-      <% end %>
-    <% else %>
-      <h2>No transfer history</h2>
-    <% end %>
-  </tbody>
-</table>
+        <% historical_induction_records.each do |record| %>
+          <tr>
+           <td class="govuk-table__cell"><%= record.school_cohort.school.name %></td>
+           <td class="govuk-table__cell"><%= record.induction_programme.training_programme.humanize %></td>
+           <td class="govuk-table__cell"><%= record.start_date.to_date.to_s(:govuk) %></td>
+           <td class="govuk-table__cell"><%= record.end_date&.to_date&.to_s(:govuk) %></td>
+          </tr>
+        <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <h2>No transfer history</h2>
+<% end %>

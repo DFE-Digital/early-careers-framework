@@ -8,6 +8,7 @@ module Admin
     before_action :load_participant, except: :index
     before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
     before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
+    before_action :event_list, only: :show
 
     def show; end
 
@@ -92,8 +93,12 @@ module Admin
       scope.order("DATE(users.created_at) ASC, users.full_name")
     end
 
+    def event_list
+      @event_list ||= ParticipantEventHistory.from_profile(@participant_profile).events
+    end
+
     def historical_induction_records
-      @historical_induction_records ||= @participant_profile.induction_records.order(created_at: :desc).offset(1)
+      @historical_induction_records ||= @participant_profile.induction_records.ordered_historically.offset(1)
     end
 
     def latest_induction_record

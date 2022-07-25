@@ -58,6 +58,13 @@ class InductionRecord < ApplicationRecord
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
+  def self.ordered_historically
+    order(
+      arel_table[:start_date].asc,
+      arel_table[:end_date].asc.nulls_first,
+    )
+  end
+
   def self.latest
     order(created_at: :asc).last
   end

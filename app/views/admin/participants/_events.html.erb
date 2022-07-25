@@ -1,0 +1,22 @@
+<% if event_list.any? %>
+  <h2 class="govuk-heading-l">Events</h2>
+
+  <table class="govuk-table">
+    <tbody class="govuk-table__body">
+      <tr>
+        <th scope="row" class="govuk-table__header">Date</th>
+        <th scope="row" class="govuk-table__header">Description</th>
+        <th scope="row" class="govuk-table__header">Reporter</th>
+      </tr>
+      <% event_list.each do |event| %>
+        <tr>
+          <td class="govuk-table__cell"><%= event.date.to_s(:govuk) %></td>
+          <td class="govuk-table__cell"><%= event.description %></td>
+          <td class="govuk-table__cell"><%= event.reporter %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <h2>No event history was found</h2>
+<% end %>
