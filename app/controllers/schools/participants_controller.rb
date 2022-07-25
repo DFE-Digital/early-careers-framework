@@ -30,7 +30,7 @@ class Schools::ParticipantsController < Schools::BaseController
   def show
     @induction_record = @profile.induction_records.for_school(@school).latest
     @first_induction_record = @profile.induction_records.for_school(@school).order(created_at: :asc).first
-    @mentor = @induction_record.mentor
+    @mentor_profile = @induction_record.mentor_profile
   end
 
   def edit_name
@@ -103,17 +103,8 @@ class Schools::ParticipantsController < Schools::BaseController
   def remove; end
 
   def destroy
-    ActiveRecord::Base.transaction do
-      @profile.withdrawn_record!
-      @profile.mentee_profiles.update_all(mentor_profile_id: nil) if @profile.mentor?
-      if @profile.request_for_details_sent?
-        ParticipantMailer.participant_removed_by_sti(
-          participant_profile: @profile,
-          sti_profile: current_user.induction_coordinator_profile,
-        ).deliver_later
-      end
-    end
-
+    Induction::RemoveParticipant.call(participant_profile: @profile,
+                                      sit_profile: current_user.induction_coordinator_profile)
     render :removed
   end
 

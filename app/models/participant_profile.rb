@@ -47,7 +47,7 @@ class ParticipantProfile < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
-  delegate :full_name, to: :user
+  delegate :full_name, :user_description, to: :user
 
   def state
     participant_profile_state&.state
