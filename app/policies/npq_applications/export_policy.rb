@@ -2,6 +2,10 @@
 
 module NPQApplications
   class ExportPolicy < ApplicationPolicy
+    def index?
+      admin?
+    end
+
     def new?
       admin?
     end

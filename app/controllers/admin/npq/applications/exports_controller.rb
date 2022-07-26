@@ -4,7 +4,16 @@ module Admin
   module NPQ
     module Applications
       class ExportsController < Admin::BaseController
-        skip_after_action :verify_policy_scoped
+        skip_after_action :verify_policy_scoped, except: [:index]
+
+        def index
+          authorize ::NPQApplications::Export
+
+          all_exports = policy_scope(::NPQApplications::Export).new_to_old
+          @pagy, @exports = pagy_array(all_exports, page: params[:page], items: 20)
+          @page = @pagy.page
+          @total_pages = @pagy.pages
+        end
 
         def new
           authorize ::NPQApplications::Export
