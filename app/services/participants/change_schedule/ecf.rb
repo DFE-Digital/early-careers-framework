@@ -26,10 +26,6 @@ module Participants
       validate :validate_provider
       validate :validate_permitted_schedule_for_course
 
-      def validate_participant_identity_found
-        errors.add(:participant_id, I18n.t(:invalid_participant)) if participant_identity.blank?
-      end
-
       def initialize(params:)
         @participant_id = params[:participant_id]
         @course_identifier = params[:course_identifier]
@@ -173,6 +169,10 @@ module Participants
 
       def matches_lead_provider?
         relevant_induction_record.present?
+      end
+
+      def validate_participant_identity_found
+        errors.add(:participant_id, I18n.t(:invalid_participant)) if participant_identity.blank?
       end
     end
   end

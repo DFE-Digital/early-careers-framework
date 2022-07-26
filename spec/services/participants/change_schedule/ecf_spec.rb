@@ -4,33 +4,13 @@ require "rails_helper"
 require "securerandom"
 
 RSpec.describe Participants::ChangeSchedule::ECF do
-  let(:klass) do
-    Class.new(described_class) do
-      def self.model_name
-        ActiveModel::Name.new(self, nil, "temp")
-      end
-
-      def self.valid_courses
-        %w[ecf-induction ecf-mentor]
-      end
-
-      def user_profile
-        User.find(participant_id).participant_profiles[0]
-      end
-
-      def matches_lead_provider?
-        true
-      end
-    end
-  end
-
   describe "validations" do
     context "when null schedule_identifier given" do
       let(:user) { profile.user }
       let(:profile) { create(:ecf_participant_profile) }
 
       subject do
-        klass.new(params: {
+        described_class.new(params: {
           schedule_identifier: nil,
           participant_id: user.id,
           course_identifier: "ecf-induction",
@@ -50,16 +30,22 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     context "when changing to schedule suitable for the course" do
       let(:user) { profile.user }
       let(:profile) { create(:mentor_participant_profile) }
-      let(:schedule) do
-        create(:ecf_mentor_schedule)
+      let(:schedule) { create(:ecf_mentor_schedule) }
+      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+      let(:lead_provider) { cpd_lead_provider.lead_provider }
+      let(:partnership) { create(:partnership, lead_provider:) }
+      let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+
+      before do
+        Induction::Enrol.new(participant_profile: profile, induction_programme:).call
       end
 
       subject do
-        klass.new(params: {
+        described_class.new(params: {
           schedule_identifier: schedule.schedule_identifier,
           participant_id: user.id,
           course_identifier: "ecf-mentor",
-          cpd_lead_provider: CpdLeadProvider.new,
+          cpd_lead_provider:,
         })
       end
 
@@ -76,7 +62,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       end
 
       subject do
-        klass.new(params: {
+        described_class.new(params: {
           schedule_identifier: schedule.schedule_identifier,
           participant_id: user.id,
           course_identifier: "ecf-induction",
@@ -93,7 +79,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       let(:schedule) { create(:ecf_schedule) }
 
       subject do
-        klass.new(params: {
+        described_class.new(params: {
           schedule_identifier: schedule.schedule_identifier,
           participant_id: SecureRandom.uuid,
           course_identifier: "ecf-induction",
@@ -119,7 +105,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     end
     let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule:) }
     let(:user) { profile.user }
-    let(:profile) { create(:ecf_participant_profile) }
+    let(:profile) { create(:ect_participant_profile) }
     let!(:declaration) do
       create(:participant_declaration,
              user:,
@@ -127,12 +113,21 @@ RSpec.describe Participants::ChangeSchedule::ECF do
              course_identifier: "ecf-induction")
     end
 
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+
+    before do
+      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+    end
+
     subject do
-      klass.new(params: {
+      described_class.new(params: {
         schedule_identifier: schedule.schedule_identifier,
         participant_id: user.id,
         course_identifier: "ecf-induction",
-        cpd_lead_provider: CpdLeadProvider.new,
+        cpd_lead_provider:,
         cohort: schedule.cohort.start_year,
       })
     end
