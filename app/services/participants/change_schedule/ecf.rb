@@ -7,20 +7,28 @@ module Participants
 
       attr_accessor :course_identifier, :participant_id, :cpd_lead_provider
 
+      delegate :school_cohort, to: :user_profile, allow_nil: true
+
       validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
       validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
       validates :cpd_lead_provider, presence: { message: I18n.t(:missing_cpd_lead_provider) }
-      validates :participant_id, format: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, allow_blank: true
-      validate :course_valid_for_participant
-      validate :participant_has_user_profile
-
-      delegate :school_cohort, to: :user_profile, allow_nil: true
-
       validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
+
+      validates :participant_id, format: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, allow_blank: true
+
+      validate :validate_participant_identity_found
+
+      validate :participant_has_user_profile
+      validate :course_valid_for_participant
+
       validate :not_already_withdrawn
       validate :schedule_valid_with_pending_declarations
       validate :validate_provider
       validate :validate_permitted_schedule_for_course
+
+      def validate_participant_identity_found
+        errors.add(:participant_id, I18n.t(:invalid_participant)) if participant_identity.blank?
+      end
 
       def initialize(params:)
         @participant_id = params[:participant_id]
@@ -48,9 +56,7 @@ module Participants
     private
 
       def participant_has_user_profile
-        return if errors.any?
-
-        errors.add(:participant_id, I18n.t(:invalid_participant)) if user_profile.blank?
+        errors.add(:participant_id, I18n.t(:invalid_participant)) if user && user_profile.blank?
       end
 
       def participant_identity
@@ -88,6 +94,8 @@ module Participants
       end
 
       def relevant_induction_record
+        return if user.blank? || user_profile.blank?
+
         user_profile
           .induction_records
           .joins(induction_programme: { partnership: [:lead_provider] })
@@ -105,6 +113,8 @@ module Participants
       end
 
       def validate_provider
+        return if user.blank? || user_profile.blank?
+
         unless user_profile && matches_lead_provider?
           errors.add(:participant_id, I18n.t(:invalid_participant))
         end
@@ -136,6 +146,8 @@ module Participants
       end
 
       def schedule_valid_with_pending_declarations
+        return if user.blank? || user_profile.blank?
+
         user_profile&.participant_declarations&.each do |declaration|
           if declaration.changeable?
             milestone = schedule.milestones.find_by(declaration_type: declaration.declaration_type)

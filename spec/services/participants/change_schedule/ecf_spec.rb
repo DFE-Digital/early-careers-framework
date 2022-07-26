@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "securerandom"
 
 RSpec.describe Participants::ChangeSchedule::ECF do
   let(:klass) do
@@ -85,6 +86,24 @@ RSpec.describe Participants::ChangeSchedule::ECF do
 
       it "should have an error" do
         expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+      end
+    end
+
+    context "when no identity found" do
+      let(:schedule) { create(:ecf_schedule) }
+
+      subject do
+        klass.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: SecureRandom.uuid,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: CpdLeadProvider.new,
+        })
+      end
+
+      it "returns error with invalid participant_id" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+        expect(subject.errors.full_messages.join(",")).to include("Participant The property '#/participant_id' must be a valid Participant ID")
       end
     end
   end
