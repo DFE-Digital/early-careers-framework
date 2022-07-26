@@ -157,7 +157,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     end
 
     subject do
-      Participants::ChangeSchedule::EarlyCareerTeacher.new(params: {
+      described_class.new(params: {
         schedule_identifier: new_schedule.schedule_identifier,
         participant_id: user.id,
         course_identifier: "ecf-induction",

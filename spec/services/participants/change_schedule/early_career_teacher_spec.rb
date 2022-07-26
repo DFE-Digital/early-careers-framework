@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
+RSpec.describe Participants::ChangeSchedule::ECF do
   describe "validations" do
     context "when null schedule_identifier given" do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }

@@ -3,8 +3,16 @@
 module Participants
   module ChangeSchedule
     class ECF
-      include ProfileAttributes
       include ActiveModel::Validations
+
+      attr_accessor :course_identifier, :participant_id, :cpd_lead_provider
+
+      validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
+      validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
+      validates :cpd_lead_provider, presence: { message: I18n.t(:missing_cpd_lead_provider) }
+      validates :participant_id, format: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, allow_blank: true
+      validate :course_valid_for_participant
+      validate :participant_has_user_profile
 
       delegate :school_cohort, to: :user_profile, allow_nil: true
 
@@ -39,7 +47,45 @@ module Participants
 
     private
 
+      def participant_has_user_profile
+        return if errors.any?
+
+        errors.add(:participant_id, I18n.t(:invalid_participant)) if user_profile.blank?
+      end
+
+      def participant_identity
+        @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+      end
+
+      def user
+        @user ||= participant_identity&.user
+      end
+
       attr_reader :schedule_identifier, :cohort_year
+
+      def course_valid_for_participant
+        valid_courses
+      end
+
+      def valid_courses
+        case course_identifier
+        when "ecf-induction"
+          %w[ecf-induction]
+        when "ecf-mentor"
+          %w[ecf-mentor]
+        else
+          errors.add(:course_identifier, I18n.t(:invalid_identifier))
+        end
+      end
+
+      def user_profile
+        case course_identifier
+        when "ecf-induction"
+          user&.early_career_teacher_profile
+        when "ecf-mentor"
+          user&.mentor_profile
+        end
+      end
 
       def relevant_induction_record
         user_profile
