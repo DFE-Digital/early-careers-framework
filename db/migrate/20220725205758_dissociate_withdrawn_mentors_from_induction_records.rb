@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DissociateWithdrawnMentorsFromInductionRecords < ActiveRecord::Migration[6.1]
   def change
     InductionRecord.joins(:mentor_profile)

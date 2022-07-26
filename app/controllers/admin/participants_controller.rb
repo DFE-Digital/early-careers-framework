@@ -65,16 +65,7 @@ module Admin
     def remove; end
 
     def destroy
-      # FIXME: this will need looking at when we properly have mentors at multiple schools
-      @participant_profile.current_induction_record&.withdrawing!
-      # belt and braces while we transition
-      @participant_profile.withdrawn_record!
-      if @participant_profile.mentor?
-        # FIXME: decide how to handle removing mentor_profile_id from induction_records
-        # this vvv will sync to the induction records but we should make it a new induction record
-        @participant_profile.mentee_profiles.update_all(mentor_profile_id: nil)
-      end
-
+      Induction::RemoveParticipant.call(participant_profile: @participant_profile)
       render :destroy_success
     end
 
