@@ -35,7 +35,7 @@ RSpec.describe "Participants API", type: :request do
     )
     Induction::Enrol.call(participant_profile: profile, induction_programme:)
       .tap do |induction_record|
-      induction_record.update!(training_status: "withdrawn")
+      induction_record.update!(training_status: "withdrawn", created_at: 2.days.ago)
     end
     default_headers[:Authorization] = bearer_token
   end
