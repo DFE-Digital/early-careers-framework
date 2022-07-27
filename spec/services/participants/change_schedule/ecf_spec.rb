@@ -132,7 +132,17 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       })
     end
 
-    it "changes schedule" do
+    it "create a new induction record with new schedule" do
+      expect {
+        subject.call
+      }.to change { InductionRecord.count }.by(1)
+
+      new_induction_record = InductionRecord.order(created_at: :asc).last
+
+      expect(new_induction_record.schedule).to eql(schedule)
+    end
+
+    it "also updates the schedule on the profile" do
       expect {
         subject.call
       }.to change { profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("soft-schedule")
@@ -179,10 +189,14 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       })
     end
 
-    it "allows new provider to change schedule" do
+    it "creates a new induction record with new schedule" do
       expect {
         subject.call
-      }.to change { induction_record_2.reload.schedule }.to(new_schedule)
+      }.to change { InductionRecord.count }.by(1)
+
+      new_induction_record = InductionRecord.order(created_at: :asc).last
+
+      expect(new_induction_record.schedule).to eql(new_schedule)
     end
   end
 
@@ -219,7 +233,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       expect {
         subject.call
       }.to raise_error(ActionController::ParameterMissing, /The property '#\/cohort' cannot be changed/)
-       .and not_change { profile.reload.schedule.schedule_identifier }
+       .and not_change { InductionRecord.count }
     end
   end
 
@@ -256,7 +270,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       expect {
         subject.call
       }.to raise_error(ActionController::ParameterMissing, /Cannot perform actions on a withdrawn participant/)
-       .and not_change { profile.reload.schedule.schedule_identifier }
+       .and not_change { InductionRecord.count }
     end
   end
 
@@ -296,7 +310,17 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       })
     end
 
-    it "changes schedule" do
+    it "creates a new induction record with new schedule" do
+      expect {
+        subject.call
+      }.to change { InductionRecord.count }.by(1)
+
+      new_induction_record = InductionRecord.order(created_at: :asc).last
+
+      expect(new_induction_record.schedule).to eql(new_schedule)
+    end
+
+    it "also changes schedule on the profile" do
       expect {
         subject.call
       }.to change { profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("new-schedule")
@@ -343,7 +367,45 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       expect {
         subject.call
       }.to raise_error(ActionController::ParameterMissing, /Changing schedule would invalidate existing declarations. Please void them first./)
-       .and not_change { profile.reload.schedule.schedule_identifier }
+       .and not_change { InductionRecord.count }
+    end
+  end
+
+  context "when there are multiple induction records for same provider" do
+    let(:user) { profile.user }
+    let(:profile) { create(:ect_participant_profile) }
+    let(:schedule) { create(:ecf_schedule) }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+    let(:mentor_profile) { create(:mentor_participant_profile) }
+
+    let(:first_induction_record) { Induction::Enrol.new(participant_profile: profile, induction_programme:).call }
+
+    before do
+      Induction::ChangeMentor.call(induction_record: first_induction_record, mentor_profile:)
+    end
+
+    subject do
+      described_class.new(params: {
+        schedule_identifier: schedule.schedule_identifier,
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider:,
+      })
+    end
+
+    it "creates a new induction record" do
+      expect { subject.call }.to change { InductionRecord.count }.by(1)
+    end
+
+    it "bases new induction record from correct induction record" do
+      subject.call
+
+      new_induction_record = InductionRecord.order(created_at: :asc).last
+
+      expect(new_induction_record.mentor_profile).to eql(mentor_profile)
     end
   end
 end

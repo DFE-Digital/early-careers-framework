@@ -76,8 +76,14 @@ RSpec.describe Participants::ChangeSchedule::ECF do
         expect { subject.call }.to change { profile.reload.schedule }.from(original_schedule).to(schedule)
       end
 
-      it "updates induction_record#schedule" do
-        expect { subject.call }.to change { induction_record.reload.schedule }.from(original_schedule).to(schedule)
+      it "creates a new induction_record with correct schedule" do
+        expect {
+          subject.call
+        }.to change { InductionRecord.count }.by(1)
+
+        new_induction_record = InductionRecord.order(created_at: :asc).last
+
+        expect(new_induction_record.schedule).to eql(schedule)
       end
     end
 

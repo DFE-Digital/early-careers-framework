@@ -45,7 +45,14 @@ module Participants
           ParticipantProfileSchedule.create!(participant_profile: user_profile, schedule:)
           user_profile.update_schedule!(schedule)
 
-          relevant_induction_record.update!(schedule:) if relevant_induction_record
+          if relevant_induction_record
+            Induction::ChangeInductionRecord.call(
+              induction_record: relevant_induction_record,
+              changes: {
+                schedule:,
+              },
+            )
+          end
         end
 
         user_profile
@@ -105,8 +112,8 @@ module Participants
           .induction_records
           .joins(induction_programme: { partnership: [:lead_provider] })
           .where(induction_programme: { partnerships: { lead_provider: } })
-          .order(start_date: :desc)
-          .first
+          .order(created_at: :asc)
+          .last
       end
 
       def lead_provider
