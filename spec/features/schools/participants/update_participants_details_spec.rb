@@ -152,7 +152,13 @@ RSpec.describe "Update participants details", js: true do
     and_percy_should_be_sent_a_snapshot_named "Participant details without change links"
   end
 
+  scenario "Induction tutor can't change ECT / mentor name or email for a participant contacted for info" do
+    when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
+    and_it_should_not_allow_a_sit_to_edit_the_participant_details
+  end
+
   scenario "Induction tutor can change ECT / mentor name form the profile page when their name has changed" do
+    given_the_ect_has_been_validated
     when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
@@ -182,6 +188,7 @@ RSpec.describe "Update participants details", js: true do
   end
 
   scenario "Induction tutor can change ECT / mentor name form the profile page when their name was incorrect" do
+    given_the_ect_has_been_validated
     when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     when_i_click_on_change_name
     when_i_choose_name_is_incorrect_from_the_reason_to_change_school_participant_name_page
@@ -196,16 +203,17 @@ RSpec.describe "Update participants details", js: true do
   end
 
   scenario "Induction tutor can't remove an ECT / mentor by changing their name in participant profile page" do
+    given_the_ect_has_been_validated
     when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     when_i_click_on_change_name
     when_i_choose_should_not_be_registered_from_the_reason_to_change_school_participant_name_page
     then_i_cant_edit_the_participant_name_on_the_school_participant_should_not_have_been_registered_page "Sally Teacher"
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor can't edit the name of a participant because they should not have been registered"
-    then_i_can_remove_the_participant_from_the_school_participant_should_not_have_been_registered_page "Sally Teacher"
   end
 
   scenario "Induction tutor can't replace an ECT / mentor by changing their name in participant profile page" do
+    given_the_ect_has_been_validated
     when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     when_i_click_on_change_name
     when_i_choose_replaced_by_a_different_person_from_the_reason_to_change_school_participant_name_page
@@ -216,6 +224,7 @@ RSpec.describe "Update participants details", js: true do
   end
 
   scenario "Induction tutor can change ECT / mentor email from participant profile page" do
+    given_the_ect_has_been_validated
     when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     when_i_click_on_change_email
     then_i_am_on_the_edit_school_participant_email_page

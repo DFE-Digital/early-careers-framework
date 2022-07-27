@@ -88,6 +88,10 @@ module ManageTrainingSteps
     expect(page).to have_text(@school_cohort.delivery_partner.name)
   end
 
+  def given_the_ect_has_been_validated
+    create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect)
+  end
+
   def given_an_ect_has_been_withdrawn_by_the_provider
     @participant_profile_ect.training_status_withdrawn!
     @participant_profile_ect.induction_records.latest.training_status_withdrawn!
@@ -389,6 +393,7 @@ module ManageTrainingSteps
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
     expect(page).not_to have_link("//a[text()='Change']")
   end
+  alias_method :then_it_should_not_allow_a_sit_to_edit_the_participant_details, :and_it_should_not_allow_a_sit_to_edit_the_participant_details
 
   def and_i_click_on_view_your_early_career_teacher_and_mentor_details
     click_on("View your early career teacher and mentor details")

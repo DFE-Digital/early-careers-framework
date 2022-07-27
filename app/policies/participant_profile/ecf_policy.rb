@@ -10,6 +10,7 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
 
   def update?
     return true if admin?
+    return false if record.contacted_for_info?
 
     user.induction_coordinator? && same_school?
   end
