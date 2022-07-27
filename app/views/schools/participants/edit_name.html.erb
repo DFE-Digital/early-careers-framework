@@ -12,8 +12,10 @@
       <%= f.govuk_text_field :full_name,
                              value: nil,
                              class: 'govuk-!-width-two-thirds',
-                             label: -> { tag.h1(t('participant.edit_name', name: @profile.full_name),
-                                                 class: 'govuk-heading-xl') } %>
+                             label: { text: t('participant.edit_name', name: @profile.full_name),
+                                      size: 'xl',
+                                      tag: 'h1',
+                                      class: 'govuk-heading-xl' } %>
       <%= f.govuk_submit %>
     <% end %>
 

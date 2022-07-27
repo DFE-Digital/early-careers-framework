@@ -13,8 +13,10 @@
                              value: nil,
                              class: 'govuk-!-width-two-thirds',
                              hint: -> { tag.p(t('participant.edit_email_hint')) },
-                             label: -> { tag.h1(t('participant.edit_email', name: @profile.full_name),
-                                                class: 'govuk-heading-xl') } %>
+                             label: { text: t('participant.edit_email', name: @profile.full_name),
+                                      size: 'xl',
+                                      tag: 'h1',
+                                      class: 'govuk-heading-xl' } %>
       <%= f.govuk_submit %>
     <% end %>
   </div>
