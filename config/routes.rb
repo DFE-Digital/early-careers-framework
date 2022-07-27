@@ -416,8 +416,8 @@ Rails.application.routes.draw do
           get "change-programme", as: :change_programme
           get "roles", as: :roles
 
-          get "add-appropriate-body", as: :add_appropriate_body
-          appropriate_body_selection_routes :cohorts
+          get "add-appropriate-body", to: "cohorts/appropriate_body#add_appropriate_body"
+          appropriate_body_selection_routes "cohorts/appropriate_body"
 
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
