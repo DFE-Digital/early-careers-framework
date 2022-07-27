@@ -24,7 +24,6 @@ RSpec.describe "Manage Design Our Own training", js: true do
                                                choice: "Design and deliver your own programme based on the Early Career Framework (ECF)",
                                                snapshot: "Design Your Own - change programme")
 
-    expect(page).to have_text "design a 2-year programme of support and training that covers every ‘learn that’ and ‘learn how to’ statement in the Early Career Framework (ECF)"
     expect(page).to have_text "You’ve submitted your training information"
   end
 end

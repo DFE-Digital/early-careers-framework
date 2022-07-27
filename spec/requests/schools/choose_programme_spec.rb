@@ -42,7 +42,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
     it "should redirect to confirmation page" do
       induction_programme_choice = "full_induction_programme"
       post "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme", params: { induction_choice_form: { programme_choice: induction_programme_choice } }
-      expect(response).to redirect_to(action: :confirm_programme)
+      expect(response).to redirect_to(action: :appropriate_body_appointed)
     end
   end
 

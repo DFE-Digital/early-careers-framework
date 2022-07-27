@@ -14,7 +14,8 @@ module AppropriateBodySelection
                              appropriate_body
                              update_appropriate_body]
 
-      helper_method :appropriate_body_from_path, :appropriate_body_school_name, :appropriate_body_type_back_link
+      helper_method :appropriate_body_form, :appropriate_body_from_path, :appropriate_body_school_name,
+                    :appropriate_body_type_back_link
     end
 
     def appropriate_body_appointed
@@ -27,7 +28,7 @@ module AppropriateBodySelection
         if appropriate_body_form.body_appointed?
           redirect_to action: :appropriate_body_type
         else
-          method(appropriate_body_submit_action).call
+          submit_appropriate_body_selection
         end
       else
         render "/appropriate_body_selection/body_appointed"
@@ -57,9 +58,7 @@ module AppropriateBodySelection
 
     def update_appropriate_body
       if appropriate_body_form.valid? :body
-        store_appropriate_body_form
-        method(appropriate_body_submit_action).call
-        appropriate_body_clear_data
+        submit_appropriate_body_selection
       else
         render "/appropriate_body_selection/body_selection"
       end
@@ -133,14 +132,20 @@ module AppropriateBodySelection
 
     def appropriate_body_type_back_link
       if appropriate_body_ask_appointed
-        url_for({ action: :update_appropriate_body_type })
+        url_for({ action: :appropriate_body_appointed })
       else
         appropriate_body_from_path
       end
     end
 
-    def appropriate_body_clear_data
+    def appropriate_body_delete_session
       session.delete(:appropriate_body_selection)
+    end
+
+    def submit_appropriate_body_selection
+      store_appropriate_body_form
+      method(appropriate_body_submit_action).call
+      appropriate_body_delete_session
     end
   end
 end
