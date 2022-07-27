@@ -29,7 +29,7 @@ module Api
 
       def participant_profiles
         join = InductionRecord
-                 .select("induction_records.participant_profile_id, induction_records.training_status, induction_records.updated_at, induction_records.created_at, ROW_NUMBER() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY induction_records.created_at DESC) AS training_status_precedence")
+                 .select("CASE WHEN induction_records.training_status = 'active' THEN 0 ELSE 1 END AS sort_order, induction_records.participant_profile_id, induction_records.training_status, induction_records.updated_at, induction_records.created_at, ROW_NUMBER() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY induction_records.created_at DESC) AS training_status_precedence")
                  .joins(:participant_profile, :schedule, { induction_programme: { partnership: :lead_provider } })
                  .where(
                    schedule: { cohort_id: with_cohorts.map(&:id) },
@@ -43,14 +43,13 @@ module Api
                  )
 
         scope = ParticipantProfile
-                  .select("participant_profiles.*, CASE WHEN induction_records.training_status = 'active' THEN 0 ELSE 1 END AS sort_order")
                   .joins(participant_identity: :user)
                   .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND induction_records.training_status_precedence = 1")
-
+        pp updated_since
         if updated_since.present?
           scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
         else
-          scope.order("sort_order ASC, users.created_at ASC")
+          scope.order("induction_records.sort_order ASC, users.created_at ASC")
         end
       end
 
