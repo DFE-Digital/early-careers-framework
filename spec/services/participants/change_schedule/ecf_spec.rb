@@ -259,4 +259,91 @@ RSpec.describe Participants::ChangeSchedule::ECF do
        .and not_change { profile.reload.schedule.schedule_identifier }
     end
   end
+
+  describe "changing schedule when hard awaiting_clawback declaration present" do
+    let(:cohort) { profile.schedule.cohort }
+    let(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
+
+    let(:user) { profile.user }
+    let(:profile) { create(:ect_participant_profile) }
+
+    let!(:declaration) do
+      create(
+        :participant_declaration,
+        user:,
+        participant_profile: profile,
+        course_identifier: "ecf-induction",
+        state: "awaiting_clawback",
+      )
+    end
+
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+
+    before do
+      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+    end
+
+    subject do
+      described_class.new(params: {
+        schedule_identifier: new_schedule.schedule_identifier,
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider:,
+        cohort: cohort.start_year,
+      })
+    end
+
+    it "changes schedule" do
+      expect {
+        subject.call
+      }.to change { profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("new-schedule")
+    end
+  end
+
+  describe "changing schedule when hard paid declaration present" do
+    let(:cohort) { profile.schedule.cohort }
+    let(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
+
+    let(:user) { profile.user }
+    let(:profile) { create(:ect_participant_profile) }
+
+    let!(:declaration) do
+      create(
+        :participant_declaration,
+        user:,
+        participant_profile: profile,
+        course_identifier: "ecf-induction",
+        state: "paid",
+      )
+    end
+
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+
+    before do
+      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+    end
+
+    subject do
+      described_class.new(params: {
+        schedule_identifier: new_schedule.schedule_identifier,
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider:,
+        cohort: cohort.start_year,
+      })
+    end
+
+    it "does not change schedule" do
+      expect {
+        subject.call
+      }.to raise_error(ActionController::ParameterMissing, /Changing schedule would invalidate existing declarations. Please void them first./)
+       .and not_change { profile.reload.schedule.schedule_identifier }
+    end
+  end
 end

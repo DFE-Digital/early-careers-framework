@@ -22,7 +22,7 @@ module Participants
       validate :course_valid_for_participant
 
       validate :not_already_withdrawn
-      validate :schedule_valid_with_pending_declarations
+      validate :validate_new_schedule_valid_with_existing_declarations
       validate :validate_provider
       validate :validate_permitted_schedule_for_course
 
@@ -150,20 +150,20 @@ module Participants
         errors.add(:participant_id, I18n.t(:withdrawn_participant)) if relevant_induction_record&.training_status_withdrawn?
       end
 
-      def schedule_valid_with_pending_declarations
+      def validate_new_schedule_valid_with_existing_declarations
         return if user.blank? || user_profile.blank?
 
-        user_profile&.participant_declarations&.each do |declaration|
-          if declaration.changeable?
-            milestone = schedule.milestones.find_by(declaration_type: declaration.declaration_type)
+        user_profile.participant_declarations.each do |declaration|
+          next unless %w[submitted eligible payable paid].include?(declaration.state)
 
-            if declaration.declaration_date <= milestone.start_date.beginning_of_day
-              errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
-            end
+          milestone = schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
 
-            if milestone.milestone_date && (milestone.milestone_date.end_of_day < declaration.declaration_date)
-              errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
-            end
+          if declaration.declaration_date <= milestone.start_date.beginning_of_day
+            errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
+          end
+
+          if milestone.milestone_date && (milestone.milestone_date.end_of_day < declaration.declaration_date)
+            errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
           end
         end
       end
