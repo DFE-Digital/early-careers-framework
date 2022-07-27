@@ -13,15 +13,16 @@ RSpec.describe "Participants API", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let!(:mentor_profile) do
-    create(:mentor_participant_profile, school_cohort:)
+    create(:mentor_participant_profile, school_cohort:, created_at: 3.days.ago)
       .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
   end
 
   before :each do
     profiles = create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-    profiles.each do |profile|
+    profiles.each_with_index do |profile, index|
       Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
         ir.update!(mentor_profile:)
+        profile.update!(created_at: index.days.ago)
       end
     end
 
@@ -33,7 +34,9 @@ RSpec.describe "Participants API", type: :request do
       school_cohort:,
     )
     Induction::Enrol.call(participant_profile: profile, induction_programme:)
-      .tap { |induction_record| induction_record.update!(training_status: "withdrawn") }
+      .tap do |induction_record|
+      induction_record.update!(training_status: "withdrawn")
+    end
     default_headers[:Authorization] = bearer_token
   end
 
@@ -162,13 +165,10 @@ RSpec.describe "Participants API", type: :request do
         end
 
         it "returns users in a consistent order" do
-          users = User.all
-          users.first.participant_profiles.each { |pp| pp.induction_records.first.update!(created_at: 1.day.ago) }
-          users.last.participant_profiles.each { |pp| pp.induction_records.first.update!(created_at: 2.days.ago) }
-
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"][0]["id"]).to eq User.last.id
-          expect(parsed_response["data"][1]["id"]).to eq User.first.id
+
+          expect(parsed_response["data"].first["id"]).to eq User.order(created_at: :asc).first.id
+          expect(parsed_response["data"].last["id"]).to eq User.order(created_at: :asc).last.id
         end
 
         context "when updated_since parameter is supplied" do
