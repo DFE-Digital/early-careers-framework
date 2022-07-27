@@ -10,7 +10,7 @@ module Schools
 
       before_action :set_school_cohort
 
-      def add_appropriate_body
+      def add
         if @school_cohort.appropriate_body.present?
           redirect_to schools_dashboard_path
         else
@@ -18,7 +18,7 @@ module Schools
         end
       end
 
-      def add_appropriate_body_confirm; end
+      def confirm; end
 
     private
 
@@ -34,7 +34,7 @@ module Schools
                                                        appropriate_body_id: appropriate_body_form.body_id,
                                                        appropriate_body_appointed: appropriate_body_form.body_appointed,
                                                        update_induction_records: true)
-        redirect_to schools_dashboard_path
+        redirect_to url_for({ action: :confirm })
       end
     end
   end
