@@ -36,6 +36,7 @@ en:
   bad_request: "Bad request"
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
+  cannot_change_cohort: "The property '#/cohort' cannot be changed"
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"

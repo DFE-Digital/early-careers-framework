@@ -95,7 +95,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
   end
 
   describe "changing to a soft schedules with previous declarations" do
-    let(:cohort) { create(:cohort) }
+    let(:cohort) { profile.schedule.cohort }
     let(:schedule) do
       Finance::Schedule.create!(
         cohort:,
@@ -183,6 +183,43 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       expect {
         subject.call
       }.to change { induction_record_2.reload.schedule }.to(new_schedule)
+    end
+  end
+
+  describe "changing schedule in a different cohort" do
+    let(:user) { profile.user }
+    let(:profile) { create(:ect_participant_profile) }
+
+    let(:cohort) { profile.schedule.cohort }
+    let(:cohort_year) { cohort.start_year }
+    let(:next_cohort) { Cohort.find_by(start_year: (cohort_year + 1)) || create(:cohort, start_year: (cohort_year + 1)) }
+
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+
+    let(:new_schedule) { create(:ecf_schedule, cohort: next_cohort, schedule_identifier: "new-schedule") }
+
+    before do
+      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+    end
+
+    subject do
+      described_class.new(params: {
+        schedule_identifier: new_schedule.schedule_identifier,
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider:,
+        cohort: cohort_year + 1,
+      })
+    end
+
+    it "does not change schedule as not permitted" do
+      expect {
+        subject.call
+      }.to raise_error(ActionController::ParameterMissing, /The property '#\/cohort' cannot be changed/)
+       .and not_change { profile.reload.schedule.schedule_identifier }
     end
   end
 end

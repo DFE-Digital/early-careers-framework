@@ -26,6 +26,8 @@ module Participants
       validate :validate_provider
       validate :validate_permitted_schedule_for_course
 
+      validate :validate_cannot_change_cohort
+
       def initialize(params:)
         @participant_id = params[:participant_id]
         @course_identifier = params[:course_identifier]
@@ -50,6 +52,13 @@ module Participants
       end
 
     private
+
+      def validate_cannot_change_cohort
+        if relevant_induction_record &&
+            relevant_induction_record.schedule.cohort.start_year != cohort.start_year
+          errors.add(:cohort, I18n.t("cannot_change_cohort"))
+        end
+      end
 
       def participant_has_user_profile
         errors.add(:participant_id, I18n.t(:invalid_participant)) if user && user_profile.blank?
