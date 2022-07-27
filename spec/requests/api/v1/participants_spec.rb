@@ -20,14 +20,16 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         school_cohort:,
       ).tap do |profile|
         Induction::Enrol.call(participant_profile: profile, induction_programme:)
+        profile.update!(created_at: 3.days.ago)
       end
 
       profiles = create_list :ect_participant_profile, 2, school_cohort: school_cohort
 
-      profiles.each do |profile|
+      profiles.each_with_index do |profile, index|
         Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
           ir.update!(mentor_profile:)
         end
+        profile.update!(created_at: index.days.ago)
       end
 
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
@@ -39,7 +41,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         school_cohort:,
       ).tap do |profile|
         Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
-          induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn")
+          induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn", created_at: 2.days.ago)
         end
       end
     end
@@ -127,7 +129,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
           expect(mentors).to eql(1)
           expect(ects).to eql(3)
-          expect(withdrawn).to eql(2)
+          expect(withdrawn).to eql(1)
         end
 
         it "returns the right number of users per page" do
@@ -148,10 +150,6 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "returns users in a consistent order" do
-          users = User.order(created_at: :asc).all
-          users.first.update!(created_at: 2.days.ago)
-          users.last.update!(created_at: 1.day.ago)
-
           get "/api/v1/participants"
 
           expect(parsed_response["data"].first["id"]).to eq User.order(created_at: :asc).first.id

@@ -10,11 +10,10 @@ module Api
 
       class << self
         def induction_record(profile, lead_provider)
-          # TODO: must be scopped to the lead provider
           if profile.active?(lead_provider)
             profile.current_induction_record
           else
-            profile.induction_records.latest
+            profile.induction_records.joins(:lead_provider).where(partnership: { lead_provider: }).latest
           end
         end
 
@@ -69,7 +68,7 @@ module Api
         if params[:mentor_ids].present?
           params[:mentor_ids][profile.id]
         elsif profile.ect?
-          induction_record(profile, params)&.mentor_profile&.participant_identity&.external_identifier
+          induction_record(profile, params.fetch(:lead_provider))&.mentor_profile&.participant_identity&.external_identifier
         end
       end
 
