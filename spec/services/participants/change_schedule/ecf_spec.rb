@@ -222,4 +222,41 @@ RSpec.describe Participants::ChangeSchedule::ECF do
        .and not_change { profile.reload.schedule.schedule_identifier }
     end
   end
+
+  describe "changing schedule when induction record is withdrawn" do
+    let(:user) { profile.user }
+    let(:profile) { create(:ect_participant_profile) }
+
+    let(:cohort) { profile.schedule.cohort }
+
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:partnership) { create(:partnership, lead_provider:) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+
+    let(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
+
+    before do
+      Induction::Enrol.new(participant_profile: profile, induction_programme:).call.tap do |ir|
+        ir.update!(training_status: "withdrawn", induction_status: "withdrawn")
+      end
+    end
+
+    subject do
+      described_class.new(params: {
+        schedule_identifier: new_schedule.schedule_identifier,
+        participant_id: user.id,
+        course_identifier: "ecf-induction",
+        cpd_lead_provider:,
+        cohort: cohort.start_year,
+      })
+    end
+
+    it "does not change schedule as not permitted" do
+      expect {
+        subject.call
+      }.to raise_error(ActionController::ParameterMissing, /Cannot perform actions on a withdrawn participant/)
+       .and not_change { profile.reload.schedule.schedule_identifier }
+    end
+  end
 end
