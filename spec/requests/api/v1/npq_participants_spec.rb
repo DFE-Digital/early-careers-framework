@@ -7,6 +7,7 @@ RSpec.describe "NPQ Participants API", type: :request do
   let(:bearer_token) { "Bearer #{token}" }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
+  let(:parsed_response) { JSON.parse(response.body) }
 
   before { default_headers[:Authorization] = bearer_token }
 
@@ -20,8 +21,7 @@ RSpec.describe "NPQ Participants API", type: :request do
       let(:npq_course)      { npq_application.npq_course }
 
       describe "JSON Index API" do
-        let(:parsed_response) { JSON.parse(response.body) }
-        let(:npq_course)      { npq_applications.sample.npq_course }
+        let(:npq_course) { npq_applications.sample.npq_course }
 
         it "returns correct jsonapi content type header" do
           get "/api/v1/participants/npq"
@@ -169,6 +169,55 @@ RSpec.describe "NPQ Participants API", type: :request do
         default_headers[:Authorization] = bearer_token
         get "/api/v1/participants/npq"
         expect(response.status).to eq 403
+      end
+    end
+  end
+
+  describe "GET /api/v1/participants/npq/:id", :with_default_schedules do
+    let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
+    let(:npq_participant) { npq_application.profile }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      get "/api/v1/participants/npq/#{npq_participant.user_id}"
+    end
+
+    context "when authorized" do
+      let(:expected_response) do
+        {
+          "data" => {
+            "id" => npq_participant.user_id,
+            "type" => "npq-participant",
+            "attributes" => {
+              "participant_id" => npq_participant.user_id,
+              "full_name" => npq_participant.user.full_name,
+              "email" => npq_participant.user.email,
+              "teacher_reference_number" => npq_participant.teacher_profile&.trn,
+              "npq_courses" => [npq_application.npq_course.identifier],
+              "updated_at" => npq_participant.updated_at.rfc3339,
+            },
+          },
+        }
+      end
+
+      it "returns correct jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "returns 200" do
+        expect(response.status).to eq 200
+      end
+
+      it "returns correct data" do
+        expect(parsed_response).to eq(expected_response)
+      end
+    end
+
+    context "when unauthorized" do
+      let(:token) { "wrong_token" }
+
+      it "returns 401 for invalid bearer token" do
+        expect(response.status).to eq 401
       end
     end
   end

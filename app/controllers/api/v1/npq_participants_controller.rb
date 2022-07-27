@@ -12,6 +12,10 @@ module Api
         render json: serializer_class.new(paginate(npq_participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
+      def show
+        render json: serializer_class.new(npq_participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
+      end
+
       def withdraw
         if any_participant_declarations_started?
           perform_action(service_namespace: ::Participants::Withdraw)
@@ -46,6 +50,10 @@ module Api
         npq_participants = npq_participants.where("users.updated_at > ?", updated_since) if updated_since.present?
         npq_participants.order(:created_at)
         npq_participants
+      end
+
+      def npq_participant
+        @npq_participant ||= npq_lead_provider.npq_participants.find(params[:id])
       end
 
       def access_scope
