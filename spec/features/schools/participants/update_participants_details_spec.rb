@@ -262,6 +262,7 @@ RSpec.describe "Update participants details", js: true do
     end
 
     scenario "Induction tutor can change the appropriate body from participant profile page" do
+      given_the_ect_has_been_validated
       click_on "Sally Teacher"
       then_i_am_taken_to_participant_profile
       and_i_see_no_appropriate_body_selected
