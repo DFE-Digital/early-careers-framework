@@ -12,12 +12,12 @@ RSpec.describe Mentors::RemoveFromSchool do
 
   it "removes the school mentor record" do
     expect {
-      described_class.call(mentor_profile:)
+      described_class.call(mentor_profile:, school:)
     }.to change { SchoolMentor.count }.by(-1)
   end
 
   it "removes the mentor from the school's mentor pool" do
-    described_class.call(mentor_profile:)
+    described_class.call(mentor_profile:, school:)
 
     expect(school.mentor_profiles).not_to include mentor_profile
   end

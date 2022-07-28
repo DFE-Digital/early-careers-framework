@@ -65,7 +65,7 @@ module Admin
     def remove; end
 
     def destroy
-      Induction::RemoveParticipant.call(participant_profile: @participant_profile)
+      Induction::RemoveParticipantFromSchool.call(participant_profile: @participant_profile)
       render :destroy_success
     end
 

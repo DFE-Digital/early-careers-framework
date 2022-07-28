@@ -38,7 +38,7 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def participant_removed_by_sit(participant_profile:, sit_profile:)
+  def participant_removed_by_sit(participant_profile:, sit_name:)
     template_mail(
       PARTICIPANT_REMOVED_BY_SIT,
       to: participant_profile.user.email,
@@ -48,7 +48,7 @@ class ParticipantMailer < ApplicationMailer
         subject: "You have been removed from early career teacher training",
         name: participant_profile.user.full_name,
         school_name: participant_profile.school.name,
-        sti_name: sit_profile.user.full_name,
+        sti_name: sit_name,
       },
     ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
   end

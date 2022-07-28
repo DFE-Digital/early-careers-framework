@@ -8,12 +8,11 @@ module Mentors
 
   private
 
-    attr_reader :mentor_profile
+    attr_reader :mentor_profile, :school
 
-    delegate :school, to: :mentor_profile
-
-    def initialize(mentor_profile:)
+    def initialize(mentor_profile:, school:)
       @mentor_profile = mentor_profile
+      @school = school
     end
   end
 end

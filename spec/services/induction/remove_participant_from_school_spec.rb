@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::RemoveParticipant do
+RSpec.describe Induction::RemoveParticipantFromSchool do
   describe "#call" do
     let(:induction_programme) { create(:induction_programme, :fip) }
     let(:school_cohort) { induction_programme.school_cohort }
@@ -8,7 +8,7 @@ RSpec.describe Induction::RemoveParticipant do
     let(:ect_profile) { create(:ect_participant_profile, school_cohort:) }
     let(:mentor_profile_1) { create(:mentor_participant_profile, school_cohort:) }
     let(:mentor_profile_2) { create(:mentor_participant_profile, school_cohort:) }
-    let(:sit_profile) { create(:induction_coordinator_profile, schools: [school]) }
+    let(:sit_name) { "sit_full_name" }
 
     let(:participant_profile) { ect_profile }
     let(:mentor_profile) { mentor_profile_1 }
@@ -28,17 +28,17 @@ RSpec.describe Induction::RemoveParticipant do
 
     it "withdraw the participant profile" do
       expect {
-        service.call(participant_profile:, sit_profile:)
+        service.call(participant_profile:, school:, sit_name:)
       }.to change { participant_profile.status }.from("active").to("withdrawn")
     end
 
     it "withdraw the induction record induction status" do
       expect {
-        service.call(participant_profile:, sit_profile:)
+        service.call(participant_profile:, school:, sit_name:)
       }.to change { induction_record.reload.induction_status }.from("active").to("withdrawn")
     end
 
-    context "when the sit_profile is not provided" do
+    context "when the sit_name is not provided" do
       before do
         participant_profile.update!(request_for_details_sent_at: 70.days.ago)
       end
@@ -53,7 +53,7 @@ RSpec.describe Induction::RemoveParticipant do
     context "when the participant was not sent the email requesting for details" do
       it "do not notify the participant" do
         expect {
-          service.call(participant_profile:, sit_profile:)
+          service.call(participant_profile:, school:, sit_name:)
         }.not_to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
       end
     end
@@ -65,9 +65,9 @@ RSpec.describe Induction::RemoveParticipant do
 
       it "notify the participant" do
         expect {
-          service.call(participant_profile:, sit_profile:)
+          service.call(participant_profile:, school:, sit_name:)
         }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
-               .with(participant_profile:, sit_profile:)
+               .with(participant_profile:, sit_name:)
       end
     end
 
@@ -76,13 +76,13 @@ RSpec.describe Induction::RemoveParticipant do
 
       it "nullify all the mentorships of the mentor" do
         expect {
-          service.call(participant_profile:, sit_profile:)
+          service.call(participant_profile:, school:, sit_name:)
         }.to change { ect_profile.current_induction_record.mentor_profile_id }.from(participant_profile.id).to(nil)
       end
 
       it "remove the mentor from the school list" do
         expect {
-          service.call(participant_profile:, sit_profile:)
+          service.call(participant_profile:, school:, sit_name:)
         }.to change { SchoolMentor.count }.from(2).to(1)
       end
     end

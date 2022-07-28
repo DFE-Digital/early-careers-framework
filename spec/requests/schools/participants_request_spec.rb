@@ -440,10 +440,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
         expect {
           delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
         }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
-          .with(
-            participant_profile: ect_profile,
-            sit_profile: user.induction_coordinator_profile,
-          )
+          .with(participant_profile: ect_profile, sit_name: user.full_name)
       end
     end
 

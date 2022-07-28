@@ -98,8 +98,9 @@ class Schools::ParticipantsController < Schools::BaseController
   def remove; end
 
   def destroy
-    Induction::RemoveParticipant.call(participant_profile: @profile,
-                                      sit_profile: current_user.induction_coordinator_profile)
+    Induction::RemoveParticipantFromSchool.call(participant_profile: @profile,
+                                                school: @school,
+                                                sit_name: current_user.full_name)
     render :removed
   end
 
