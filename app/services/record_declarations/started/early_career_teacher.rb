@@ -4,7 +4,10 @@ module RecordDeclarations
   module Started
     class EarlyCareerTeacher < ::RecordDeclarations::Base
       include Participants::EarlyCareerTeacher
-      include RecordDeclarations::ECF
+
+      def self.declaration_model
+        ParticipantDeclaration::ECF
+      end
     end
   end
 end

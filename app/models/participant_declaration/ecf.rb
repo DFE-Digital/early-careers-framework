@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration::ECF < ParticipantDeclaration
-  include RecordDeclarations::ECF
-
   has_many :statements, class_name: "Finance::Statement::ECF", through: :statement_line_items
 
   validate :validate_backdated_declaration_before_induction_record_end_date

@@ -4,7 +4,10 @@ module RecordDeclarations
   module Started
     class Mentor < ::RecordDeclarations::Base
       include Participants::Mentor
-      include RecordDeclarations::ECF
+
+      def self.declaration_model
+        ParticipantDeclaration::ECF
+      end
     end
   end
 end
