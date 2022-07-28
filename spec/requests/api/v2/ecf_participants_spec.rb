@@ -29,7 +29,6 @@ RSpec.describe "Participants API", type: :request do
     [
       create(:ect_participant_profile, mentor_profile:, school_cohort:),
       create(:ect_participant_profile, mentor_profile:, school_cohort:).tap do |profile|
-        create(:mentor_participant_profile, school_cohort:, teacher_profile: profile.teacher_profile)
         Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
           induction_record.update!(training_status: "withdrawn")
         end
@@ -123,22 +122,22 @@ RSpec.describe "Participants API", type: :request do
           get "/api/v2/participants/ecf"
           expect(parsed_response["data"][0])
             .to(have_jsonapi_attributes(
-                  :email,
-                  :full_name,
-                  :mentor_id,
-                  :school_urn,
-                  :participant_type,
-                  :cohort,
-                  :status,
-                  :teacher_reference_number,
-                  :teacher_reference_number_validated,
-                  :eligible_for_funding,
-                  :pupil_premium_uplift,
-                  :sparsity_uplift,
-                  :training_status,
-                  :schedule_identifier,
-                  :updated_at,
-                ).exactly)
+              :email,
+              :full_name,
+              :mentor_id,
+              :school_urn,
+              :participant_type,
+              :cohort,
+              :status,
+              :teacher_reference_number,
+              :teacher_reference_number_validated,
+              :eligible_for_funding,
+              :pupil_premium_uplift,
+              :sparsity_uplift,
+              :training_status,
+              :schedule_identifier,
+              :updated_at,
+            ).exactly)
         end
 
         it "returns correct user types" do
@@ -290,9 +289,6 @@ RSpec.describe "Participants API", type: :request do
         it "returns the correct values" do
           mentor = ParticipantProfile::Mentor.first.user
           mentor_row = parsed_response.find { |row| row["id"] == mentor.id && row["participant_type"] == "mentor" }
-
-
-
           expect(mentor_row).not_to be_nil
           expect(mentor_row["email"]).to eql mentor.email
           expect(mentor_row["full_name"]).to eql mentor.full_name

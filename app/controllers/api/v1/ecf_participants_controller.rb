@@ -26,9 +26,10 @@ module Api
       end
 
     private
+
       def participant_profiles
         join = InductionRecord
-                 .select("induction_records.participant_profile_id, induction_records.training_status, induction_records.updated_at, induction_records.created_at, ROW_NUMBER() OVER (PARTITION BY participant_profiles.participant_identity_id, participant_profiles.type ORDER BY induction_records.created_at DESC) AS created_at_precedence")
+                 .select("participant_profiles.participant_identity_id, participant_profiles.type AS participant_type, induction_records.participant_profile_id, induction_records.training_status, induction_records.updated_at, induction_records.created_at, ROW_NUMBER() OVER (PARTITION BY induction_records.participant_profile_id ORDER BY induction_records.created_at DESC) AS created_at_precedence")
                  .joins(:participant_profile, :schedule, { induction_programme: { partnership: :lead_provider } })
                  .where(
                    schedule: { cohort_id: with_cohorts.map(&:id) },
@@ -43,7 +44,7 @@ module Api
 
         scope = ParticipantProfile
                   .joins(participant_identity: :user)
-                  .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND induction_records.created_at_precedence = 1")
+                  .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND participant_profiles.type = induction_records.participant_type AND induction_records.created_at_precedence = 1")
 
         if updated_since.present?
           scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
