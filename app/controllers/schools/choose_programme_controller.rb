@@ -25,6 +25,8 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     end
   end
 
+  def appropriate_body_type; end
+
   def confirm_programme; end
 
   def save_programme
