@@ -79,6 +79,15 @@ class ParticipantProfile < ApplicationRecord
         .first
     end
 
+    def role
+      case participant_type
+      when :ect
+        "Early career teacher"
+      when :mentor
+        "Mentor"
+      end
+    end
+
   private
 
     def update_analytics

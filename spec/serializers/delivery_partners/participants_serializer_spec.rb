@@ -36,7 +36,7 @@ module DeliveryPartners
           full_name: participant_profile.user.full_name,
           email_address: participant_profile.user.email,
           trn: participant_profile.teacher_profile.trn,
-          role: participant_profile.user.user_description,
+          role: participant_profile.role,
           lead_provider: lead_provider.name,
           school: school.name,
           school_unique_reference_number: school.urn,
@@ -44,6 +44,16 @@ module DeliveryPartners
           training_status: "withdrawn",
           status: "No longer being trained",
         )
+      end
+
+      context "when participant is Mentor and Induction Tutor" do
+        let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+
+        it "returns Mentor" do
+          create(:induction_coordinator_profile, user: participant_profile.user)
+
+          expect(subject.serializable_hash[:data][:attributes][:role]).to eq("Mentor")
+        end
       end
     end
   end

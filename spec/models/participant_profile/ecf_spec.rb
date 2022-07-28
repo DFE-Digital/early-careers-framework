@@ -210,4 +210,22 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       end
     end
   end
+
+  describe "#role" do
+    context "when participant is Mentor" do
+      let(:profile) { create(:mentor_participant_profile) }
+
+      it "returns Mentor" do
+        expect(profile.role).to eq("Mentor")
+      end
+    end
+
+    context "when participant is ECT" do
+      let(:profile) { create(:ect_participant_profile) }
+
+      it "returns Early career teacher" do
+        expect(profile.role).to eq("Early career teacher")
+      end
+    end
+  end
 end
