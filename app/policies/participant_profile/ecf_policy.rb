@@ -10,9 +10,7 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
 
   def update?
     return true if admin?
-    return false if record.user.npq_applications.any?
-    return false if record.completed_validation_wizard?
-    return false if record.participant_declarations.any?
+    return false if record.contacted_for_info?
 
     user.induction_coordinator? && same_school?
   end

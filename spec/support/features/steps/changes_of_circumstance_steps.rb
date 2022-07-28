@@ -326,7 +326,7 @@ module Steps
         raise "Participant Type \"#{scenario.participant_type}\" not recognised"
       end
 
-      and_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "the Participant"
       and_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
       and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
       and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
@@ -340,7 +340,7 @@ module Steps
       when_i_view_participant_details_from_the_school_dashboard_page
       and_i_view_not_training_on_the_school_participants_dashboard_page "the Participant"
 
-      and_i_confirm_participant_name_on_the_school_participant_details_page "the Participant"
+      and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "the Participant"
       and_i_confirm_full_name_on_the_school_participant_details_page "the Participant"
       and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
       and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"

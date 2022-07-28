@@ -34,13 +34,15 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def edit_name
-    render helpers.edit_name_template(params[:reason])
+    @reason = params[:reason].presence&.to_sym
+    @selected_reason = params[:selected_reason].presence&.to_sym
+    render helpers.edit_name_template(@reason)
   end
 
   def update_name
     @old_name = @profile.full_name
 
-    if @profile.user.update(params.require(:user).permit(:full_name))
+    if @profile.user.update(full_name: params[:full_name])
       render :update_name
     else
       @profile.user.full_name = @old_name
@@ -52,20 +54,13 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def update_email
     identity = @induction_record.preferred_identity
-    identity.assign_attributes(params.require(:participant_identity).permit(:email))
+    identity.assign_attributes(email: params[:email])
     redirect_to action: :email_used and return if email_used?(identity.email)
 
     render "schools/participants/edit_email" and return if identity.invalid?
 
     Induction::ChangePreferredEmail.call(induction_record: @induction_record,
                                          preferred_email: identity.email)
-
-    if @profile.ect?
-      set_success_message(heading: "The ECT’s email address has been updated")
-    else
-      set_success_message(heading: "The mentor’s email address has been updated")
-    end
-    redirect_to schools_participant_path(id: @profile)
   end
 
   def email_used; end

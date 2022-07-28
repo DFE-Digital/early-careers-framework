@@ -165,168 +165,255 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-name" do
-    context "when no reason to change the name is included in the request" do
-      it "renders the reason_to_edit_name template to ask for a reason to edit the participant's name" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name"
+    context "when the participant is in contacted for info status" do
+      it "don't allow the edition of the name of an ECT" do
+        expect {
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name"
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
 
-        expect(response).to render_template("schools/participants/reason_to_edit_name")
-        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+      it "don't allow the edition of the name of a mentor" do
+        expect {
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name"
+        }.to raise_exception(Pundit::NotAuthorizedError)
       end
     end
 
-    context "when unknown reason to change the name is included in the request" do
-      it "renders the reason_to_edit_name template to ask for a reason to edit the participant's name" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name",
-            params: { reason: "any_unknown_reason" }
-
-        expect(response).to render_template("schools/participants/reason_to_edit_name")
-        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+    context "when the participant is not in contacted for info status" do
+      before do
+        create(:ecf_participant_validation_data, participant_profile: ect_profile)
+        create(:ecf_participant_validation_data, participant_profile: mentor_profile)
       end
-    end
 
-    context "when the participant's name has changed in real life for any reason" do
-      it "renders the edit name template with the current name of the participant" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name?",
-            params: { reason: "name_has_changed" }
+      context "when no reason to change the name is included in the request" do
+        it "renders the reason_to_edit_name template to ask for a reason to edit the participant's name" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name"
 
-        expect(response).to render_template("schools/participants/edit_name")
-        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+          expect(response).to render_template("schools/participants/reason_to_edit_name")
+          expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+        end
       end
-    end
 
-    context "when the current participant's name is incorrect" do
-      it "renders the edit name template with the current name of the participant" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name?",
-            params: { reason: "name_is_incorrect" }
+      context "when unknown reason to change the name is included in the request" do
+        it "renders the reason_to_edit_name template to ask for a reason to edit the participant's name" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name",
+              params: { reason: "any_unknown_reason" }
 
-        expect(response).to render_template("schools/participants/edit_name")
-        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+          expect(response).to render_template("schools/participants/reason_to_edit_name")
+          expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+        end
       end
-    end
 
-    context "when a participant should not have been registered" do
-      it "renders the should not have been registered template with the current name of the participant" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name?",
-            params: { reason: "should_not_have_been_registered" }
+      context "when the participant's name has changed in real life for any reason" do
+        it "renders the edit name template with the current name of the participant" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name",
+              params: { reason: "name_has_changed" }
 
-        expect(response).to render_template("schools/participants/should_not_have_been_registered")
-        expect(response.body).to include(CGI.escapeHTML(mentor_profile.full_name))
-        expect(response.body).to include(CGI.escapeHTML("remove all their information from this service."))
+          expect(response).to render_template("schools/participants/edit_name")
+          expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+        end
       end
-    end
 
-    context "when an ect needs to be replaced with a different person" do
-      it "renders the replace with a different person template with the current name of the ect" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name?",
-            params: { reason: "replace_with_a_different_person" }
+      context "when the current participant's name is incorrect" do
+        it "renders the edit name template with the current name of the participant" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name",
+              params: { reason: "name_is_incorrect" }
 
-        expect(response).to render_template("schools/participants/replace_with_a_different_person")
-        expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
-        expect(response.body).to include(CGI.escapeHTML("Add the other ECT to this service"))
+          expect(response).to render_template("schools/participants/edit_name")
+          expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+        end
       end
-    end
 
-    context "when a mentor needs to be replaced with a different person" do
-      it "renders the replace with a different person template with the current name of the mentor" do
-        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name?",
-            params: { reason: "replace_with_a_different_person" }
+      context "when a participant should not have been registered" do
+        it "renders the should not have been registered template with the current name of the participant" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name",
+              params: { reason: "should_not_have_been_registered" }
 
-        expect(response).to render_template("schools/participants/replace_with_a_different_person")
-        expect(response.body).to include(CGI.escapeHTML(mentor_profile.full_name))
-        expect(response.body).to include(CGI.escapeHTML("Add the other mentor to this service"))
+          expect(response).to render_template("schools/participants/should_not_have_been_registered")
+          expect(response.body).to include(CGI.escapeHTML(mentor_profile.full_name))
+        end
+      end
+
+      context "when an ect needs to be replaced with a different person" do
+        it "renders the replace with a different person template with the current name of the ect" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-name",
+              params: { reason: "replace_with_a_different_person" }
+
+          expect(response).to render_template("schools/participants/replace_with_a_different_person")
+          expect(response.body).to include(CGI.escapeHTML(ect_profile.full_name))
+          expect(response.body).to include(CGI.escapeHTML("Add the other ECT to this service"))
+        end
+      end
+
+      context "when a mentor needs to be replaced with a different person" do
+        it "renders the replace with a different person template with the current name of the mentor" do
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-name",
+              params: { reason: "replace_with_a_different_person" }
+
+          expect(response).to render_template("schools/participants/replace_with_a_different_person")
+          expect(response.body).to include(CGI.escapeHTML(mentor_profile.full_name))
+          expect(response.body).to include(CGI.escapeHTML("Add the other mentor to this service"))
+        end
       end
     end
   end
 
   describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-name" do
-    it "renders the update name template with the new name of an ect" do
-      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name",
-          params: { user: { full_name: "Joe Bloggs" } }
+    context "when the participant is not in contacted for info status" do
+      before do
+        create(:ecf_participant_validation_data, participant_profile: ect_profile)
+        create(:ecf_participant_validation_data, participant_profile: mentor_profile)
+      end
 
-      expect(response).to render_template("schools/participants/update_name")
-      expect(response.body).to include(CGI.escapeHTML("#{ect_profile.full_name}’s name has been edited to Joe Bloggs"))
-      expect(ect_profile.reload.full_name).to eq("Joe Bloggs")
+      it "renders the update name template with the new name of an ect" do
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name",
+            params: { full_name: "Joe Bloggs" }
+
+        expect(response).to render_template("schools/participants/update_name")
+        expect(response.body).to include(CGI.escapeHTML("#{ect_profile.full_name}’s name has been edited to Joe Bloggs"))
+        expect(ect_profile.reload.full_name).to eq("Joe Bloggs")
+      end
+
+      it "renders the update name template with the new name of a mentor" do
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name",
+            params: { full_name: "Sally Mentor" }
+
+        expect(response).to render_template("schools/participants/update_name")
+        expect(response.body).to include(CGI.escapeHTML("#{mentor_profile.full_name}’s name has been edited to Sally Mentor"))
+        expect(mentor_profile.reload.full_name).to eq("Sally Mentor")
+      end
+
+      it "rejects a blank name" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name",
+              params: { full_name: "" }
+        }.not_to change { mentor_user.reload.full_name }
+
+        expect(response).to render_template("schools/participants/edit_name")
+      end
     end
 
-    it "renders the update name template with the new name of a mentor" do
-      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name",
-          params: { user: { full_name: "Sally Mentor" } }
+    context "when the participant is in contacted for info status" do
+      it "don't allow a SIT to update the name of an ect" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name",
+              params: { full_name: "Joe Bloggs" }
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
 
-      expect(response).to render_template("schools/participants/update_name")
-      expect(response.body).to include(CGI.escapeHTML("#{mentor_profile.full_name}’s name has been edited to Sally Mentor"))
-      expect(mentor_profile.reload.full_name).to eq("Sally Mentor")
-    end
-
-    it "rejects a blank name" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name", params: {
-          user: { full_name: "" },
-        }
-      }.not_to change { mentor_user.reload.full_name }
-
-      expect(response).to render_template("schools/participants/edit_name")
+      it "don't allow a SIT to update the name of a mentor" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name",
+              params: { full_name: "Sally Mentor" }
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
     end
   end
 
   describe "GET /schools/:school_id/cohorts/:start_year/participants/:id/edit-email" do
-    it "renders the edit email template with the correct name for an ECT" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-email"
+    context "when the participant is not in contacted for info status" do
+      it "renders the edit email template with the correct name for an ECT" do
+        create(:ecf_participant_validation_data, participant_profile: ect_profile)
 
-      expect(response).to render_template("schools/participants/edit_email")
-      expect(response.body).to include(CGI.escapeHTML(ect_user.email))
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-email"
+
+        expect(response).to render_template("schools/participants/edit_email")
+        expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
+      end
+
+      it "renders the edit email template with the correct name for a mentor" do
+        create(:ecf_participant_validation_data, participant_profile: mentor_profile)
+
+        get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-email"
+
+        expect(response).to render_template("schools/participants/edit_email")
+        expect(response.body).to include(CGI.escapeHTML(mentor_user.full_name))
+      end
     end
 
-    it "renders the edit email template with the correct name for a mentor" do
-      get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-email"
+    context "when the participant is in contacted for info status" do
+      it "don't allow the edition of the email of an ECT" do
+        expect {
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/edit-email"
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
 
-      expect(response).to render_template("schools/participants/edit_email")
-      expect(response.body).to include(CGI.escapeHTML(mentor_user.email))
+      it "don't allow the edition of the email of a mentor" do
+        expect {
+          get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/edit-email"
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
     end
   end
 
   describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-email" do
-    it "updates the email of an ECT" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-email", params: {
-          participant_identity: { email: "new@email.com" },
-        }
-      }.to change { ect_profile.current_induction_record.preferred_identity.email }.to("new@email.com")
+    context "when the participant is not in contacted for info status" do
+      before do
+        create(:ecf_participant_validation_data, participant_profile: ect_profile)
+        create(:ecf_participant_validation_data, participant_profile: mentor_profile)
+      end
+
+      it "updates the email of an ECT" do
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-email",
+            params: { email: "new@email.com" }
+
+        expect(response).to render_template("schools/participants/update_email")
+        expect(response.body).to include(CGI.escapeHTML("#{ect_profile.full_name}’s email address has been updated"))
+        expect(ect_profile.current_induction_record.preferred_identity.email).to eq("new@email.com")
+      end
+
+      it "updates the email of a mentor" do
+        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email",
+            params: { email: "new@email.com" }
+
+        expect(response).to render_template("schools/participants/update_email")
+        expect(response.body).to include(CGI.escapeHTML("#{mentor_profile.full_name}’s email address has been updated"))
+        expect(mentor_profile.current_induction_record.preferred_identity.email).to eq("new@email.com")
+      end
+
+      it "rejects a blank email" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email",
+              params: { email: "" }
+        }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
+
+        expect(response).to render_template("schools/participants/edit_email")
+      end
+
+      it "rejects a malformed email" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email",
+              params: { email: "nonsense" }
+        }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
+
+        expect(response).to render_template("schools/participants/edit_email")
+      end
+
+      it "rejects an email in use by another user" do
+        other_user = create(:user)
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email",
+              params: { email: other_user.email }
+        }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
+
+        expect(response).to redirect_to("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/email-used")
+      end
     end
 
-    it "updates the email of a mentor" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          participant_identity: { email: "new@email.com" },
-        }
-      }.to change { mentor_profile.current_induction_record.preferred_identity.email }.to("new@email.com")
-    end
+    context "when the participant is in contacted for info status" do
+      it "don't allow a SIT to update the email of an ect" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-email",
+              params: { email: "new@email.com" }
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
 
-    it "rejects a blank email" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          participant_identity: { email: "" },
-        }
-      }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
-      expect(response).to render_template("schools/participants/edit_email")
-    end
-
-    it "rejects a malformed email" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          participant_identity: { email: "nonsense" },
-        }
-      }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
-      expect(response).to render_template("schools/participants/edit_email")
-    end
-
-    it "rejects an email in use by another user" do
-      other_user = create(:user)
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email", params: {
-          participant_identity: { email: other_user.email },
-        }
-      }.not_to change { mentor_profile.current_induction_record.preferred_identity.email }
-      expect(response).to redirect_to("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/email-used")
+      it "don't allow a SIT to update the email of a mentor" do
+        expect {
+          put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-email",
+              params: { email: "new@email.com" }
+        }.to raise_exception(Pundit::NotAuthorizedError)
+      end
     end
   end
 
@@ -335,24 +422,6 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/email-used"
 
       expect(response).to render_template("schools/participants/email_used")
-    end
-  end
-
-  describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-name" do
-    it "updates the name of an ECT" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-name", params: {
-          user: { full_name: "Joe Bloggs" },
-        }
-      }.to change { ect_user.reload.full_name }.to("Joe Bloggs")
-    end
-
-    it "updates the name of a mentor" do
-      expect {
-        put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{mentor_profile.id}/update-name", params: {
-          user: { full_name: "Sally Mentor" },
-        }
-      }.to change { mentor_user.reload.full_name }.to("Sally Mentor")
     end
   end
 

@@ -8,8 +8,8 @@ module Pages
     # this is a hack as the participants name is the page title
     set_primary_heading(/^.*$/)
 
-    def confirm_participant_name(participant_name)
-      has_primary_heading? participant_name
+    def confirm_the_participant(name:)
+      has_primary_heading? name
     end
 
     def confirm_email_address(email)

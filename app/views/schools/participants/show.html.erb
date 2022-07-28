@@ -16,15 +16,13 @@
         <dd class="govuk-summary-list__value">
           <%= @profile.user.full_name %>
         </dd>
-        <% unless @induction_record.training_status_withdrawn? %>
-          <dd class="govuk-summary-list__actions">
-            <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
-              <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
-                Change <span class="govuk-visually-hidden">name</span>
-              <% end %>
+        <dd class="govuk-summary-list__actions">
+          <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
+            <%= govuk_link_to schools_participant_edit_name_path(participant_id: @profile) do %>
+              Change <span class="govuk-visually-hidden">name</span>
             <% end %>
-          </dd>
-        <% end %>
+          <% end %>
+        </dd>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -33,15 +31,13 @@
         <dd class="govuk-summary-list__value">
           <%= @induction_record.preferred_identity.email %>
         </dd>
-        <% unless @induction_record.training_status_withdrawn? %>
           <dd class="govuk-summary-list__actions">
-            <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
-              <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
-                Change <span class="govuk-visually-hidden">email address</span>
-              <% end %>
+          <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
+            <%= govuk_link_to schools_participant_edit_email_path(participant_id: @profile) do %>
+              Change <span class="govuk-visually-hidden">email address</span>
             <% end %>
+          <% end %>
           </dd>
-        <% end %>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
