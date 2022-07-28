@@ -1,13 +1,8 @@
 # frozen_string_literal: true
 
-require "abstract_interface"
-
 module RecordDeclarations
   class Base
     include Participants::ProfileAttributes
-    include AbstractInterface
-    implement_class_method :required_params
-    implement_instance_method :user_profile
 
     MultipleParticipantDeclarationDuplicate = Class.new(ArgumentError)
 
