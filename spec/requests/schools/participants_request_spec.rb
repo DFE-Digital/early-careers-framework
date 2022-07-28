@@ -96,7 +96,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
 
       it "uses the mentor from the induction record" do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
-        expect(assigns(:mentor)).to eq mentor_user_2
+        expect(assigns(:mentor_profile)).to eq mentor_profile_2
       end
 
       context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
@@ -439,11 +439,8 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       it "queues 'participant deleted' email" do
         expect {
           delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
-        }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sti)
-          .with(
-            participant_profile: ect_profile,
-            sti_profile: user.induction_coordinator_profile,
-          )
+        }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
+          .with(participant_profile: ect_profile, sit_name: user.full_name)
       end
     end
 
@@ -451,7 +448,7 @@ RSpec.describe "Schools::Participants", type: :request, js: true, with_feature_f
       it "does not queue 'participant deleted' email" do
         expect {
           delete "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
-        }.to_not have_enqueued_mail(ParticipantMailer, :participant_removed_by_sti)
+        }.to_not have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
       end
     end
   end

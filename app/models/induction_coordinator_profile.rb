@@ -6,4 +6,6 @@ class InductionCoordinatorProfile < ApplicationRecord
   belongs_to :user
   has_many :induction_coordinator_profiles_schools, dependent: :destroy
   has_many :schools, through: :induction_coordinator_profiles_schools
+
+  delegate :full_name, to: :user
 end

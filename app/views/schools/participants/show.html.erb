@@ -6,7 +6,7 @@
   <div class="govuk-grid-column-two-thirds">
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl"><%= @profile.user.full_name %></h1>
+    <h1 class="govuk-heading-xl"><%= @profile.full_name %></h1>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-7">
       <div class="govuk-summary-list__row">
@@ -14,7 +14,7 @@
           Name
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @profile.user.full_name %>
+          <%= @profile.full_name %>
         </dd>
         <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_name? %>
@@ -54,7 +54,7 @@
           Role
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @profile.user.user_description %>
+          <%= @profile.user_description %>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
@@ -66,8 +66,8 @@
               Mentor
             </dt>
             <dd class="govuk-summary-list__value">
-              <% if @mentor %>
-                <%= govuk_link_to @mentor.full_name, schools_participant_path(id: @mentor.mentor_profile.id) %>
+              <% if @mentor_profile %>
+                <%= govuk_link_to @mentor_profile.full_name, schools_participant_path(id: @mentor_profile.id) %>
               <% else %>
                 Not yet assigned
               <% end %>
@@ -114,7 +114,10 @@
     <% end %>
 
     <% unless @induction_record.training_status_withdrawn? %>
-      <p class="govuk-body"><%= render Schools::Participants::RemoveFromCohortComponent.new(induction_record: @induction_record, current_user: current_user) %></p>
+      <p class="govuk-body">
+        <%= render Schools::Participants::RemoveFromCohortComponent.new(induction_record: @induction_record,
+                                                                        current_user: current_user) %>
+      </p>
     <% end %>
 
   </div>
