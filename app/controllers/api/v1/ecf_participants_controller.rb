@@ -14,12 +14,12 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            participant_hash = ParticipantSerializer.new(paginate(participant_profiles), params: { lead_provider: }).serializable_hash
+            participant_hash = ParticipantFromInductionRecordSerializer.new(paginate(participant_profiles), params: { lead_provider: }).serializable_hash
             render json: participant_hash.to_json
           end
 
           format.csv do
-            participant_hash = ParticipantSerializer.new(participant_profiles, params: { lead_provider: }).serializable_hash
+            participant_hash = ParticipantFromInductionRecordSerializer.new(participant_profiles, params: { lead_provider: }).serializable_hash
             render body: to_csv(participant_hash)
           end
         end
@@ -29,8 +29,8 @@ module Api
 
       def participant_profiles
         join = InductionRecord
-                 .select("participant_profiles.participant_identity_id, participant_profiles.type AS participant_type, induction_records.participant_profile_id, induction_records.training_status, induction_records.updated_at, induction_records.created_at, ROW_NUMBER() OVER (PARTITION BY induction_records.participant_profile_id ORDER BY induction_records.created_at DESC) AS created_at_precedence")
-                 .joins(:participant_profile, :schedule, { induction_programme: { partnership: :lead_provider } })
+                 .select("induction_records.id, ROW_NUMBER() OVER (PARTITION BY induction_records.participant_profile_id ORDER BY induction_records.created_at DESC) AS created_at_precedence")
+                 .joins(:participant_profile, :schedule, { induction_programme: :partnership })
                  .where(
                    schedule: { cohort_id: with_cohorts.map(&:id) },
                    induction_programme: {
@@ -42,9 +42,9 @@ module Api
                    },
                  )
 
-        scope = ParticipantProfile
-                  .joins(participant_identity: :user)
-                  .joins("JOIN (#{join.to_sql}) AS induction_records ON induction_records.participant_profile_id = participant_profiles.id AND participant_profiles.type = induction_records.participant_type AND induction_records.created_at_precedence = 1")
+        scope = InductionRecord
+                  .includes(participant_profile: { teacher_profile: :user })
+                  .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.id = induction_records.id AND latest_induction_records.created_at_precedence = 1")
 
         if updated_since.present?
           scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")

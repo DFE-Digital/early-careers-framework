@@ -72,7 +72,7 @@ RSpec.describe "Participants API", type: :request do
         it "returns all users" do
           get "/api/v1/participants/ecf"
 
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "only returns users for the current cohort" do
@@ -82,7 +82,7 @@ RSpec.describe "Participants API", type: :request do
           create(:ect_participant_profile, school_cohort: school_cohort_2020)
 
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
@@ -92,7 +92,7 @@ RSpec.describe "Participants API", type: :request do
           create(:ect_participant_profile, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
 
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
 
           parsed_response["data"].each do |user|
             next unless user["id"] == mentor_profile.user.id
@@ -143,7 +143,7 @@ RSpec.describe "Participants API", type: :request do
           ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
           expect(mentors).to eql(1)
-          expect(ects).to eql(3)
+          expect(ects).to eql(4)
           expect(withdrawn).to eql(1)
         end
 
@@ -172,25 +172,23 @@ RSpec.describe "Participants API", type: :request do
         end
 
         context "when updated_since parameter is supplied" do
-          before { User.first.update!(updated_at: 2.days.ago) }
-
           it "returns users changed since the updated_since parameter" do
             get "/api/v1/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }
 
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eql(5)
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
             User.first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v1/participants/ecf", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eql(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do
             it "unescapes the value and returns users changed since the updated_since date" do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
               get "/api/v1/participants/ecf", params: { filter: { updated_since: since } }
-              expect(parsed_response["data"].size).to eql(3)
+              expect(parsed_response["data"].size).to eql(5)
             end
           end
 
@@ -258,7 +256,7 @@ RSpec.describe "Participants API", type: :request do
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "returns the correct headers" do
@@ -333,13 +331,13 @@ RSpec.describe "Participants API", type: :request do
 
         it "ignores pagination parameters" do
           get "/api/v1/participants/ecf.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "respects the updated_since parameter" do
           User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants/ecf.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(parsed_response.length).to eql(3)
+          expect(parsed_response.length).to eql(4)
         end
       end
 

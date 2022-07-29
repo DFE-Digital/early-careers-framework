@@ -14,24 +14,26 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
 
-    before :each do
-      mentor_profile = create(
-        :mentor_participant_profile,
-        school_cohort:,
-      ).tap do |profile|
-        Induction::Enrol.call(participant_profile: profile, induction_programme:)
-        profile.update!(created_at: 3.days.ago)
-      end
-
-      profiles = create_list :ect_participant_profile, 2, school_cohort: school_cohort
-
-      profiles.each_with_index do |profile, index|
-        Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
-          ir.update!(mentor_profile:)
+    let!(:mentor_profile) do
+      travel_to 4.days.ago do
+        create(
+          :mentor_participant_profile,
+          school_cohort:,
+        ).tap do |profile|
+          Induction::Enrol.call(participant_profile: profile, induction_programme:)
+          profile.update!(created_at: 3.days.ago)
         end
-        profile.update!(created_at: index.days.ago)
       end
+    end
 
+    before :each do
+      travel_to 3.days.ago do
+        create_list :ect_participant_profile, 2, school_cohort: school_cohort do |profile|
+          Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
+            ir.update!(mentor_profile:)
+          end
+        end
+      end
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
 
       create(
@@ -85,11 +87,12 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
         it "returns all users" do
           get "/api/v1/participants"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "returns correct type" do
           get "/api/v1/participants"
+
           expect(parsed_response["data"][0]).to have_type("participant")
         end
 
@@ -128,8 +131,8 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
           expect(mentors).to eql(1)
-          expect(ects).to eql(3)
-          expect(withdrawn).to eql(1)
+          expect(ects).to eql(4)
+          expect(withdrawn).to eql(2)
         end
 
         it "returns the right number of users per page" do
@@ -157,10 +160,6 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         context "when updated_since parameter is supplied" do
-          before do
-            User.first.update!(updated_at: 2.days.ago)
-          end
-
           it "returns users changed since the updated_since parameter" do
             get "/api/v1/participants", params: { filter: { updated_since: 1.day.ago.iso8601 } }
             expect(parsed_response["data"].size).to eql(3)
@@ -169,7 +168,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           it "returns users changed since the updated_since parameter with other formats" do
             User.first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v1/participants", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eql(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do
@@ -200,7 +199,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "returns the correct headers" do
@@ -275,11 +274,10 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
         it "ignores pagination parameters" do
           get "/api/v1/participants.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "respects the updated_since parameter" do
-          User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
           expect(parsed_response.length).to eql(3)
         end
