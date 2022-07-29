@@ -13,16 +13,16 @@ RSpec.describe "Participants API", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let!(:mentor_profile) do
-    create(:mentor_participant_profile, school_cohort:, created_at: 3.days.ago)
-      .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
+    travel_to 3.days.ago do
+      create(:mentor_participant_profile, school_cohort:)
+        .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
+    end
   end
 
   before :each do
-    profiles = create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-    profiles.each_with_index do |profile, index|
-      Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
-        ir.update!(mentor_profile:)
-        profile.update!(created_at: index.days.ago)
+    travel_to 2.days.ago do
+      create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort do |profile|
+        Induction::Enrol.call(participant_profile: profile, induction_programme:, mentor_profile:)
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe "Participants API", type: :request do
     )
     Induction::Enrol.call(participant_profile: profile, induction_programme:)
       .tap do |induction_record|
-      induction_record.update!(training_status: "withdrawn", created_at: 2.days.ago)
+      induction_record.update!(training_status: "withdrawn" )
     end
     default_headers[:Authorization] = bearer_token
   end
@@ -175,20 +175,20 @@ RSpec.describe "Participants API", type: :request do
           it "returns users changed since the updated_since parameter" do
             get "/api/v1/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }
 
-            expect(parsed_response["data"].size).to eql(5)
+            expect(parsed_response["data"].size).to eq(3)
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
-            User.first.update!(updated_at: Date.new(1970, 1, 1))
+            User.order(created_at: :asc).first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v1/participants/ecf", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(4)
+            expect(parsed_response["data"].size).to eq(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do
             it "unescapes the value and returns users changed since the updated_since date" do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
               get "/api/v1/participants/ecf", params: { filter: { updated_since: since } }
-              expect(parsed_response["data"].size).to eql(5)
+              expect(parsed_response["data"].size).to eq(3)
             end
           end
 
@@ -297,7 +297,11 @@ RSpec.describe "Participants API", type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = ParticipantProfile::ECT.active_record.first.user
+          ect = InductionRecord
+            .joins(:participant_profile)
+            .where(participant_profile: { type: "ParticipantProfile::ECT" })
+            .first
+            .participant_profile.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
@@ -335,9 +339,8 @@ RSpec.describe "Participants API", type: :request do
         end
 
         it "respects the updated_since parameter" do
-          User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants/ecf.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(parsed_response.length).to eql(4)
+          expect(parsed_response.length).to eql(3)
         end
       end
 
