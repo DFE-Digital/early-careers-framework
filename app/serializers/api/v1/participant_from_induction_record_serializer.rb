@@ -11,7 +11,7 @@ module Api
       class << self
         def active_participant_attribute(attr, &blk)
           attribute attr do |induction_record, params|
-            unless induction_record.active?(params.fetch(:lead_provider))
+            if induction_record.active?(params.fetch(:lead_provider))
               if blk.parameters.count == 1
                 blk.call(induction_record)
               else
