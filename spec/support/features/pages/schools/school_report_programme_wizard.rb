@@ -9,9 +9,9 @@ module Pages
 
     def complete(programme_type)
       choose_programme_type programme_type
+      click_button "Confirm"
       choose "No"
       click_button "Continue"
-      click_button "Confirm"
     end
 
     def choose_programme_type(programme_type)
