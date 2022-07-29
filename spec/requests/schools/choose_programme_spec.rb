@@ -42,7 +42,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
     it "should redirect to confirmation page" do
       induction_programme_choice = "full_induction_programme"
       post "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme", params: { induction_choice_form: { programme_choice: induction_programme_choice } }
-      expect(response).to redirect_to(action: :appropriate_body_appointed)
+      expect(response).to redirect_to(action: :confirm_programme)
     end
   end
 
@@ -63,16 +63,6 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
 
       expect(response).to render_template(:confirm_programme)
       expect(response.body).to include I18n.t("schools.induction_choice_form.confirmation_options.#{induction_programme_choice}")
-    end
-  end
-
-  describe "POST /schools/choose-programme/save-programme" do
-    it "should store the induction choice" do
-      induction_programme_choice = "full_induction_programme"
-      expect {
-        post "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme/save-programme", params: { induction_choice_form: { programme_choice: induction_programme_choice } }
-      }.to change { SchoolCohort.count }.by(1)
-      expect(response).to redirect_to(action: :success)
     end
   end
 
