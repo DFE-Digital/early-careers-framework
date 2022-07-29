@@ -9,17 +9,9 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       class << self
-        def induction_record(profile, lead_provider)
-          if profile.active?(lead_provider)
-            profile.current_induction_record
-          else
-            profile.induction_records.joins(:lead_provider).where(partnership: { lead_provider: }).latest
-          end
-        end
-
         def active_participant_attribute(attr, &blk)
           attribute attr do |profile, params|
-            if profile.active?(params.fetch(:lead_provider))
+            if !profile.withdrawn_record? && !profile.training_status_withdrawn?
               if blk.parameters.count == 1
                 blk.call(profile)
               else
@@ -50,7 +42,7 @@ module Api
         # NOTE: using this will retain the original ID exposed to provider
         profile.participant_identity.external_identifier
         # NOTE: use this instead to use new (de-duped) ID
-        # profile.participant_identity.user_id
+        # profile.user.id
       end
 
       active_participant_attribute :email do |profile|
@@ -68,12 +60,12 @@ module Api
         if params[:mentor_ids].present?
           params[:mentor_ids][profile.id]
         elsif profile.ect?
-          induction_record(profile, params.fetch(:lead_provider))&.mentor_profile&.participant_identity&.external_identifier
+          profile.mentor&.id
         end
       end
 
-      attribute :school_urn do |profile, params|
-        induction_record(profile, params.fetch(:lead_provider)).school.urn
+      attribute :school_urn do |profile|
+        profile.school.urn
       end
 
       attribute :participant_type
@@ -82,14 +74,7 @@ module Api
         profile.cohort.start_year.to_s
       end
 
-      attribute :status do |profile, params|
-        case induction_record(profile, params.fetch(:lead_provider)).induction_status
-        when "active", "completed", "leaving"
-          "active"
-        when "withdrawn", "changed"
-          "withdrawn"
-        end
-      end
+      attribute :status
 
       attribute :teacher_reference_number do |profile|
         trn(profile)
@@ -105,10 +90,7 @@ module Api
 
       attribute :pupil_premium_uplift
       attribute :sparsity_uplift
-
-      attribute :training_status do |profile, params|
-        induction_record(profile, params.fetch(:lead_provider)).training_status
-      end
+      attribute :training_status
 
       attribute :schedule_identifier do |profile|
         profile.schedule&.schedule_identifier

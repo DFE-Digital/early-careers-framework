@@ -53,14 +53,6 @@ module Api
         end
       end
 
-      def serialized_response(profile)
-        relevant_induction_record = profile.relevant_induction_record(lead_provider:)
-
-        ParticipantFromInductionRecordSerializer
-          .new(relevant_induction_record)
-          .serializable_hash.to_json
-      end
-
       def access_scope
         LeadProviderApiToken
           .joins(cpd_lead_provider: [:lead_provider])

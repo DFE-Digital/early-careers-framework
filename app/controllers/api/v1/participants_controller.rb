@@ -14,7 +14,7 @@ module Api
         relevant_induction_record = profile.relevant_induction_record(lead_provider:)
 
         ParticipantFromInductionRecordSerializer
-          .new(relevant_induction_record)
+          .new(relevant_induction_record, params: { lead_provider: })
           .serializable_hash.to_json
       end
 
