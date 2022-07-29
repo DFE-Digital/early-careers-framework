@@ -42,6 +42,8 @@ module RecordDeclarations
         declaration_attempt.update!(participant_declaration:)
       end
 
+      # TODO: serialization should not happen at this point
+      # it is not the responsibility of this class to determine this interface or even know about it
       Api::V1::ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
