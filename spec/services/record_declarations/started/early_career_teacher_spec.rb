@@ -6,6 +6,7 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   let(:declaration_date_object) { Date.new(2021, 10, 1) }
   let(:declaration_date) { declaration_date_object.rfc3339 }
 
+  let(:user) { profile.user }
   let(:profile) { create(:ect_participant_profile) }
 
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
@@ -249,6 +250,42 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
         subject.call
       }.to raise_error(ActionController::ParameterMissing, /The property '#\/participant_id' must be a valid Participant ID/)
        .and not_change { ParticipantDeclaration.count }
+    end
+  end
+
+  context "re-declaring after a clawback" do
+    let!(:declaration) do
+      create(
+        :ect_participant_declaration,
+        :awaiting_clawback,
+        user:,
+        participant_profile: profile,
+        cpd_lead_provider:,
+      )
+    end
+
+    let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+
+    let!(:statement) do
+      create(
+        :ecf_statement,
+        :output_fee,
+        cpd_lead_provider:,
+        deadline_date: 6.months.from_now,
+        payment_date: 7.months.from_now,
+      )
+    end
+
+    before do
+      Induction::Enrol.new(induction_programme:, participant_profile: profile).call
+    end
+
+    it "creates the declaration as eligible" do
+      expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+
+      declaration = ParticipantDeclaration.order(created_at: :asc).last
+
+      expect(declaration).to be_eligible
     end
   end
 end
