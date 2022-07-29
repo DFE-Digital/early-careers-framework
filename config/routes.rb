@@ -528,7 +528,7 @@ Rails.application.routes.draw do
 
           resource :choose_programme, controller: :choose_programme, only: %i[show create], path: "choose-programme" do
             get :confirm_programme, path: "confirm-programme"
-            post :save_programme, path: "save-programme"
+            post :choose_appropriate_body, path: "choose-appropriate-body"
             get :success
 
             appropriate_body_selection_routes :choose_programme

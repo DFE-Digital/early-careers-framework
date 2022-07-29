@@ -18,16 +18,26 @@ class Schools::ChooseProgrammeController < Schools::BaseController
     render :show and return unless @induction_choice_form.valid?
 
     save_induction_choice_form
-    if needs_to_choose_appropriate_body?
-      start_appropriate_body_selection
-    else
-      redirect_to action: :confirm_programme
-    end
+    redirect_to action: :confirm_programme
   end
 
   def appropriate_body_type; end
 
   def confirm_programme; end
+
+  def choose_appropriate_body
+    if needs_to_choose_appropriate_body?
+      start_appropriate_body_selection
+    else
+      save_programme
+    end
+  end
+
+  def success
+    render locals: { school_cohort: }
+  end
+
+private
 
   def save_programme
     save_school_choice!
@@ -36,12 +46,6 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
     redirect_to success_schools_choose_programme_path
   end
-
-  def success
-    render locals: { school_cohort: }
-  end
-
-private
 
   def save_induction_choice_form
     session[:induction_choice_form] = @induction_choice_form.serializable_hash
@@ -53,7 +57,7 @@ private
 
   def start_appropriate_body_selection
     super from_path: url_for(action: :create),
-          submit_action: :end_appropriate_body_selection,
+          submit_action: :save_programme,
           school_name: school.name
   end
 
@@ -68,10 +72,6 @@ private
     @induction_choice_form = InductionChoiceForm.new(
       session_params.merge(programme_choice_form_params).merge(school_cohort:),
     )
-  end
-
-  def end_appropriate_body_selection
-    redirect_to action: :confirm_programme
   end
 
   def save_school_choice!
