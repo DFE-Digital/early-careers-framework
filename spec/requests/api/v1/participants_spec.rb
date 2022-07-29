@@ -16,12 +16,8 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
     let!(:mentor_profile) do
       travel_to 4.days.ago do
-        create(
-          :mentor_participant_profile,
-          school_cohort:,
-        ).tap do |profile|
+        create(:mentor_participant_profile, school_cohort:).tap do |profile|
           Induction::Enrol.call(participant_profile: profile, induction_programme:)
-          profile.update!(created_at: 3.days.ago)
         end
       end
     end
@@ -29,21 +25,17 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     before :each do
       travel_to 3.days.ago do
         create_list :ect_participant_profile, 2, school_cohort: school_cohort do |profile|
-          Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
-            ir.update!(mentor_profile:)
-          end
+          Induction::Enrol.call(participant_profile: profile, induction_programme:, mentor_profile:)
         end
       end
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
 
-      create(
-        :ect_participant_profile,
-        :withdrawn_record,
-        teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
-        school_cohort:,
-      ).tap do |profile|
+      create(:ect_participant_profile,
+             :withdrawn_record,
+             teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record,
+             school_cohort:).tap do |profile|
         Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |induction_record|
-          induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn", created_at: 2.days.ago)
+          induction_record.update!(training_status: "withdrawn", induction_status: "withdrawn")
         end
       end
     end
@@ -166,9 +158,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
-            User.first.update!(updated_at: Date.new(1970, 1, 1))
+            User.order(created_at: :asc).first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v1/participants", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(4)
+            expect(parsed_response["data"].size).to eq(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do

@@ -35,7 +35,7 @@ RSpec.describe "Participants API", type: :request do
     )
     Induction::Enrol.call(participant_profile: profile, induction_programme:)
       .tap do |induction_record|
-      induction_record.update!(training_status: "withdrawn" )
+      induction_record.update!(training_status: "withdrawn")
     end
     default_headers[:Authorization] = bearer_token
   end
@@ -300,6 +300,7 @@ RSpec.describe "Participants API", type: :request do
           ect = InductionRecord
             .joins(:participant_profile)
             .where(participant_profile: { type: "ParticipantProfile::ECT" })
+            .order(created_at: :asc)
             .first
             .participant_profile.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
