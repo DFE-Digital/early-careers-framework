@@ -345,13 +345,13 @@ module ManageTrainingSteps
     choose choice
     click_on "Continue"
 
+    expect(page).to have_text "Confirm your training programme"
+    click_on "Confirm"
+
     unless choice == "We do not expect any early career teachers to join"
       choose "No"
       click_on "Continue"
     end
-
-    expect(page).to have_text "Confirm your training programme"
-    click_on "Confirm"
   end
 
   def and_i_have_added_a_details_being_checked_ect_with_mentor
