@@ -13,15 +13,15 @@ Feature: Induction tutors choosing programmes
   Scenario: Choosing Core Induction Programme
     When I click on "accredited materials" label
     And I click the submit button
-    Then I should be on "have you appointed an appropriate body" page
-
-    When I click on "No" label
-    And I click the submit button
     Then I should be on "choose programme confirm" page
     And the page should be accessible
     And percy should be sent snapshot called "Confirm materials CIP page"
 
     When I click the submit button
+    Then I should be on "have you appointed an appropriate body" page
+
+    When I click on "No" label
+    And I click the submit button
     Then I should be on "choose programme success" page
     And the page should be accessible
     And percy should be sent snapshot called "Choose materials success"
