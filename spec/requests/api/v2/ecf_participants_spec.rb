@@ -184,7 +184,7 @@ RSpec.describe "Participants API", type: :request do
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
-            User.first.update!(updated_at: Date.new(1970, 1, 1))
+            User.order(created_at: :asc).first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v2/participants/ecf", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
             expect(parsed_response["data"].size).to eql(3)
           end
