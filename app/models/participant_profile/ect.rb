@@ -12,5 +12,9 @@ class ParticipantProfile < ApplicationRecord
     def participant_type
       :ect
     end
+
+    def role
+      "Early career teacher"
+    end
   end
 end

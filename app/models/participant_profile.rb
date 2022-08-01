@@ -110,6 +110,10 @@ class ParticipantProfile < ApplicationRecord
   def policy_class
     ParticipantProfilePolicy
   end
+
+  def role
+    raise "Not implemented"
+  end
 end
 
 require "participant_profile/npq"

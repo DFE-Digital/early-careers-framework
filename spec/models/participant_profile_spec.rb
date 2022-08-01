@@ -64,4 +64,10 @@ RSpec.describe ParticipantProfile, type: :model do
     it { is_expected.to belong_to(:school).optional }
     it { is_expected.to be_versioned }
   end
+
+  describe "#role" do
+    it "should fail with 'Not implemented'" do
+      expect { subject.role }.to raise_error("Not implemented")
+    end
+  end
 end

@@ -20,5 +20,9 @@ class ParticipantProfile < ApplicationRecord
     def participant_type
       :mentor
     end
+
+    def role
+      "Mentor"
+    end
   end
 end
