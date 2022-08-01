@@ -5,23 +5,24 @@ class Induction::ChangeInductionRecord < BaseService
     ActiveRecord::Base.transaction do
       time_now = Time.zone.now
 
-      new_record = induction_record.dup
-      induction_record.changing!(time_now)
-
-      default_attrs = {
-        start_date: time_now,
-        school_transfer: false,
-      }
-
       if induction_record.start_date > time_now
-        default_attrs[:start_date] = induction_record.start_date
+        induction_record.update!(changes)
+      else
+        default_attrs = {
+          start_date: time_now,
+          school_transfer: false,
+        }
+        new_record = induction_record.dup
 
-        # transferring participant that hasn't started yet
-        default_attrs[:school_transfer] = induction_record.school_transfer?
+        if induction_record.end_date.present? && induction_record.end_date > time_now
+          default_attrs[:school_transfer] = induction_record.school_transfer?
+          induction_record.update!(school_transfer: false)
+        end
+
+        induction_record.changing!(time_now)
+        new_record.assign_attributes(default_attrs.merge(changes))
+        new_record.save!
       end
-
-      new_record.assign_attributes(default_attrs.merge(changes))
-      new_record.save!
     end
   end
 

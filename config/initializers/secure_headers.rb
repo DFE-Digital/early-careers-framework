@@ -9,7 +9,7 @@ SecureHeaders::Configuration.default do |config|
   config.x_permitted_cross_domain_policies = "none"
   config.referrer_policy = %w[origin-when-cross-origin strict-origin-when-cross-origin]
 
-  google_analytics = %w[www.google-analytics.com ssl.google-analytics.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
+  google_analytics = %w[*.google-analytics.com ssl.google-analytics.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
 
   config.csp = SecureHeaders::OPT_OUT
 
