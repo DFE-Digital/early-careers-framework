@@ -26,7 +26,7 @@ module Api
       end
 
       def show
-        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_record).serializable_hash
+        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_records.first, params: { lead_provider: }).serializable_hash
 
         render json: participant_hash.to_json
       end
@@ -34,11 +34,7 @@ module Api
     private
 
       def induction_records
-        @induction_records ||= ECFParticipants::Index.new(cpd_lead_provider: current_user, params:).induction_records
-      end
-
-      def induction_record
-        @induction_record = ECFParticipants::Index.new(cpd_lead_provider: current_user, params:).induction_record.first
+        @induction_records ||= ecf_participant_query.induction_records
       end
 
       def access_scope
@@ -48,6 +44,10 @@ module Api
 
       def lead_provider
         current_user.lead_provider
+      end
+
+      def ecf_participant_query
+        ECFParticipants::Index.new(cpd_lead_provider: current_user, params:)
       end
     end
   end
