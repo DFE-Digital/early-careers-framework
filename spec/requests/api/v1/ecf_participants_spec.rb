@@ -298,11 +298,12 @@ RSpec.describe "Participants API", type: :request do
           expect(mentor_row["training_status"]).to eql "active"
 
           ect = InductionRecord
-            .joins(:participant_profile)
-            .where(participant_profile: { type: "ParticipantProfile::ECT" })
-            .order(created_at: :asc)
-            .first
-            .participant_profile.user
+                  .active_induction_status
+                  .joins(:participant_profile)
+                  .where(participant_profile: { type: "ParticipantProfile::ECT" })
+                  .first
+                  .participant_profile
+                  .user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
