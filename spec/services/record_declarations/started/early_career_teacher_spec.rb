@@ -191,7 +191,15 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   context "when user profile ParticipantProfileState is withdrawn, but was active on declaration date" do
     before do
       Induction::Enrol.new(induction_programme:, participant_profile: profile).call
-      create(:participant_profile_state, :withdrawn, participant_profile: profile, cpd_lead_provider:)
+
+      Participants::Withdraw::EarlyCareerTeacher.call(
+        params: {
+          participant_id: user.id,
+          course_identifier:,
+          cpd_lead_provider:,
+          reason: "left-teaching-profession",
+        },
+      )
     end
 
     it "creates the declaration" do
@@ -202,7 +210,17 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
   context "when user profile ParticipantProfileState is withdrawn and also withdrawn on declaration date" do
     before do
       Induction::Enrol.new(induction_programme:, participant_profile: profile).call
-      create(:participant_profile_state, :withdrawn, participant_profile: profile, cpd_lead_provider:, created_at: declaration_date_object - 2.days)
+
+      travel_to(declaration_date_object - 2.days) do
+        Participants::Withdraw::EarlyCareerTeacher.call(
+          params: {
+            participant_id: user.id,
+            course_identifier:,
+            cpd_lead_provider:,
+            reason: "left-teaching-profession",
+          },
+        )
+      end
     end
 
     it "does not create the declaration" do
