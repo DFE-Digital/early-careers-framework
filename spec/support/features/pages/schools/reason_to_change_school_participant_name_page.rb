@@ -35,7 +35,7 @@ module Pages
       Pages::EditSchoolParticipantNamePage.loaded
     end
 
-    def confirm_the_participant_name(name:)
+    def confirm_the_participant(name:)
       element_has_content?(header, "Why do you need to edit #{name}’s name?")
     end
   end

@@ -12,7 +12,7 @@ module Finance
       def banding_breakdown
         return @banding_breakdown if @banding_breakdown
 
-        bandings = declaration_types.each.map do |declaration_type|
+        bandings = declaration_types.map do |declaration_type|
           current_banding_for_declaration_type(declaration_type)
         end
 
@@ -169,7 +169,6 @@ module Finance
           .billable
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
-          .merge(ParticipantDeclaration.unique_id)
           .count
 
         refundable = Finance::StatementLineItem
@@ -177,7 +176,6 @@ module Finance
           .refundable
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
-          .merge(ParticipantDeclaration.unique_id)
           .count
 
         billable - refundable
@@ -188,16 +186,16 @@ module Finance
           .where(statement: statement.previous_statements)
           .billable
           .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-          .merge(ParticipantDeclaration.unique_id)
           .count
 
         refundable = Finance::StatementLineItem
           .where(statement: statement.previous_statements)
           .refundable
           .joins(:participant_declaration)
+          .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-          .merge(ParticipantDeclaration.unique_id)
           .count
 
         billable - refundable
@@ -208,7 +206,6 @@ module Finance
           .billable_statement_line_items
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
-          .merge(ParticipantDeclaration.unique_id)
           .count
       end
 
@@ -217,7 +214,6 @@ module Finance
           .refundable_statement_line_items
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: })
-          .merge(ParticipantDeclaration.unique_id)
           .count
       end
 
@@ -227,7 +223,6 @@ module Finance
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-          .merge(ParticipantDeclaration.unique_id)
           .count
       end
 
@@ -237,7 +232,6 @@ module Finance
           .joins(:participant_declaration)
           .where(participant_declarations: { declaration_type: "started" })
           .where("participant_declarations.sparsity_uplift = true OR participant_declarations.pupil_premium_uplift = true")
-          .merge(ParticipantDeclaration.unique_id)
           .count
       end
     end

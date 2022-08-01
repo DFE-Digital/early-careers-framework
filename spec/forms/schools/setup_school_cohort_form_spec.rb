@@ -28,7 +28,8 @@ RSpec.describe Schools::SetupSchoolCohortForm, type: :model do
       choices = { expect_any_ects_choice: "yes",
                   how_will_you_run_training_choice: "core_induction_programme",
                   change_provider_choice: "yes",
-                  what_changes_choice: "change_lead_provider" }
+                  what_changes_choice: "change_lead_provider",
+                  use_different_delivery_partner_choice: "yes" }
       expect(described_class.new(choices).attributes).to eq(choices)
     end
   end
@@ -36,6 +37,17 @@ RSpec.describe Schools::SetupSchoolCohortForm, type: :model do
   describe "#expect_any_ects_choices" do
     it "returns an Array with the correct choices" do
       expect(described_class.new.expect_any_ects_choices).to match_array(
+        [
+          have_attributes(class: OpenStruct, id: "yes", name: "Yes"),
+          have_attributes(class: OpenStruct, id: "no", name: "No"),
+        ],
+      )
+    end
+  end
+
+  describe "#use_different_delivery_partner_choices" do
+    it "returns an Array with the correct choices" do
+      expect(described_class.new.use_different_delivery_partner_choices).to match_array(
         [
           have_attributes(class: OpenStruct, id: "yes", name: "Yes"),
           have_attributes(class: OpenStruct, id: "no", name: "No"),

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantMailer < ApplicationMailer
-  PARTICIPANT_REMOVED_BY_STI = "ab8fb8b1-9f44-4d27-8e80-01d5d70d22f6"
+  PARTICIPANT_REMOVED_BY_SIT = "ab8fb8b1-9f44-4d27-8e80-01d5d70d22f6"
 
   PARTICIPANT_TEMPLATES = {
     ect_cip: "3bfad27e-e7af-4b53-94cb-af36362f43d8",
@@ -38,9 +38,9 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def participant_removed_by_sti(participant_profile:, sti_profile:)
+  def participant_removed_by_sit(participant_profile:, sit_name:)
     template_mail(
-      PARTICIPANT_REMOVED_BY_STI,
+      PARTICIPANT_REMOVED_BY_SIT,
       to: participant_profile.user.email,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
@@ -48,7 +48,7 @@ class ParticipantMailer < ApplicationMailer
         subject: "You have been removed from early career teacher training",
         name: participant_profile.user.full_name,
         school_name: participant_profile.school.name,
-        sti_name: sti_profile.user.full_name,
+        sti_name: sit_name,
       },
     ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
   end

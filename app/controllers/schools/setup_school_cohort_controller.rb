@@ -8,13 +8,15 @@ module Schools
     before_action :school
     before_action :cohort
     before_action :previous_cohort, only: %i[what_changes what_changes_confirmation]
-    before_action :lead_provider_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
-    before_action :delivery_partner_name, only: %i[what_changes what_changes_confirmation what_changes_submitted]
+    before_action :lead_provider, only: %i[what_changes what_changes_confirmation what_changes_submitted change_provider provider_relation_invalid use_different_delivery_partner]
+    before_action :delivery_partner, only: %i[what_changes what_changes_confirmation what_changes_submitted change_provider provider_relation_invalid]
     before_action :validate_request_or_render,
                   only: %i[expect_any_ects
                            how_will_you_run_training
                            programme_confirmation
                            change_provider
+                           provider_relation_invalid
+                           use_different_delivery_partner
                            what_changes
                            what_changes_confirmation
                            what_changes_submitted
@@ -64,11 +66,24 @@ module Schools
       when "yes"
         store_form_redirect_to_next_step :what_changes
       when "no"
-        store_form
-        start_appropriate_body_selection from_path: url_for(action: :programme_confirmation),
-                                         submit_action: :save_provider_change,
-                                         school_name: @school.name
+        if provider_relationship_is_valid?
+          store_form
+          start_appropriate_body_selection from_path: url_for(action: :programme_confirmation),
+                                           submit_action: :save_provider_change,
+                                           school_name: @school.name
+        else
+          store_form_redirect_to_next_step :provider_relation_invalid
+        end
       end
+    end
+
+    def provider_relation_invalid; end
+
+    def use_different_delivery_partner
+      store_form
+      start_appropriate_body_selection from_path: url_for(action: :use_different_delivery_partner),
+                                       submit_action: :delivery_partner_choice,
+                                       school_name: @school.name
     end
 
     def what_changes
@@ -111,6 +126,17 @@ module Schools
       else
         use_the_same_training_programme!
       end
+      redirect_to action: :complete
+    end
+
+    def delivery_partner_choice
+      case @setup_school_cohort_form.use_different_delivery_partner_choice
+      when "yes"
+        @setup_school_cohort_form.what_changes_choice = "change_delivery_partner"
+      end
+
+      set_cohort_induction_programme!("full_induction_programme")
+
       redirect_to action: :complete
     end
 
@@ -173,7 +199,8 @@ module Schools
             .permit(:expect_any_ects_choice,
                     :how_will_you_run_training_choice,
                     :change_provider_choice,
-                    :what_changes_choice)
+                    :what_changes_choice,
+                    :use_different_delivery_partner_choice)
     end
 
     def validate_request_or_render
@@ -227,16 +254,21 @@ module Schools
       @previous_cohort ||= previous_school_cohort&.cohort
     end
 
-    def lead_provider_name
-      @lead_provider_name ||= school.lead_provider(previous_cohort.start_year)&.name
+    def lead_provider
+      @lead_provider ||= school.lead_provider(previous_cohort.start_year)
     end
 
-    def delivery_partner_name
-      @delivery_partner_name ||= school.delivery_partner_for(previous_cohort.start_year)&.name
+    def delivery_partner
+      @delivery_partner ||= school.delivery_partner_for(previous_cohort.start_year)
     end
 
     def delivery_partner_to_be_confirmed?
       @setup_school_cohort_form.what_changes_choice == "change_delivery_partner"
+    end
+
+    def provider_relationship_is_valid?
+      provider_relationship = ProviderRelationship.find_by(lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort:)
+      !provider_relationship.nil?
     end
 
     def end_appropriate_body_selection

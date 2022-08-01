@@ -407,6 +407,63 @@ RSpec.describe "Participants API", type: :request do
     end
   end
 
+  describe "GET /api/v1/participants/ecf/:id", :with_default_schedules, travel_to: Time.zone.local(2022, 7, 22, 11, 30, 0) do
+    let(:parsed_response) { JSON.parse(response.body) }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      get "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}"
+    end
+
+    context "when authorized" do
+      let(:expected_response) do
+        {
+          "data" => {
+            "id" => early_career_teacher_profile.participant_identity.external_identifier,
+            "type" => "participant",
+            "attributes" => {
+              "email" => (early_career_teacher_profile.induction_records[0].preferred_identity&.email || early_career_teacher_profile.user.email),
+              "full_name" => early_career_teacher_profile.user.full_name,
+              "mentor_id" => early_career_teacher_profile.mentor_profile&.participant_identity&.external_identifier,
+              "school_urn" => early_career_teacher_profile.induction_records[0].school_cohort.school.urn,
+              "participant_type" => early_career_teacher_profile.participant_type.to_s,
+              "cohort" => early_career_teacher_profile&.cohort&.start_year&.to_s,
+              "status" => early_career_teacher_profile.induction_records[0].induction_status,
+              "teacher_reference_number" => early_career_teacher_profile.teacher_profile.trn,
+              "teacher_reference_number_validated" => false,
+              "eligible_for_funding" => nil,
+              "pupil_premium_uplift" => early_career_teacher_profile.pupil_premium_uplift,
+              "sparsity_uplift" => early_career_teacher_profile.sparsity_uplift,
+              "training_status" => early_career_teacher_profile.training_status,
+              "schedule_identifier" => early_career_teacher_profile.induction_records[0].schedule&.schedule_identifier,
+              "updated_at" => Time.zone.local(2022, 7, 22, 11, 30, 0).rfc3339,
+            },
+          },
+        }
+      end
+
+      it "returns correct jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "returns 200" do
+        expect(response.status).to eq 200
+      end
+
+      it "returns correct data" do
+        expect(parsed_response).to eq(expected_response)
+      end
+    end
+
+    context "when unauthorized" do
+      let(:token) { "wrong_token" }
+
+      it "returns 401 for invalid bearer token" do
+        expect(response.status).to eq 401
+      end
+    end
+  end
+
   it_behaves_like "JSON Participant Deferral endpoint", "participant" do
     let(:url)               { "/api/v1/participants/#{early_career_teacher_profile.user.id}/defer" }
     let(:params)            { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }

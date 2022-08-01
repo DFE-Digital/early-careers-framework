@@ -3,14 +3,6 @@
 module ChooseProgrammeSteps
   include Capybara::DSL
 
-  def freeze_time
-    Timecop.freeze(Time.zone.local(2021, 5, 15, 16, 15, 0))
-  end
-
-  def reset_time
-    Timecop.return
-  end
-
   # Given steps
 
   def given_a_school_with_no_chosen_programme_for_next_academic_year
@@ -136,6 +128,14 @@ module ChooseProgrammeSteps
     expect(page).to have_content("Which teaching school hub have you appointed?")
   end
 
+  def then_i_am_taken_to_the_provider_relationship_invalid_page
+    expect(page).to have_content("You cannot use this combination of lead provider and delivery partner for your new ECTs and their mentors")
+  end
+
+  def then_i_am_taken_to_the_use_different_delivery_partner
+    expect(page).to have_content("Will you use #{@lead_provider.name} with another delivery partner?")
+  end
+
   # And steps
 
   def and_a_notification_email_is_sent_to_the_lead_provider
@@ -155,16 +155,16 @@ module ChooseProgrammeSteps
     sign_in_as @induction_coordinator_profile.user
   end
 
+  def and_a_provider_relationship_exists_for_the_lp_and_dp
+    @provider_relationship = create(:provider_relationship, cohort: @cohort_2022, delivery_partner: @delivery_partner, lead_provider: @lead_provider)
+  end
+
   def and_i_click_continue
     click_on("Continue")
   end
 
   def and_cohort_2022_is_created
     @cohort_2022 = create(:cohort, start_year: 2022)
-  end
-
-  def and_the_next_cohort_is_open_for_registrations
-    Timecop.freeze(Time.zone.local(2022, 5, 10, 16, 15, 0))
   end
 
   def and_the_dashboard_page_shows_the_no_ects_message

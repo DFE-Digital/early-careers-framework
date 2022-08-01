@@ -25,10 +25,9 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
 
   describe "/api/v1/participants/ID/change-schedule with cohort" do
     let(:parsed_response) { JSON.parse(response.body) }
-    let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, :next) }
 
-    let!(:schedule_2021) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2021") }
-    let!(:schedule_2022) { create(:schedule, schedule_identifier: "ecf", name: "ECF 2022", cohort: cohort_2022) }
+    let!(:schedule) { create(:schedule, schedule_identifier: "schedule", name: "schedule") }
+    let!(:new_schedule) { create(:schedule, schedule_identifier: "new-schedule", name: "new schedule") }
 
     it "changes participant schedule" do
       expect {
@@ -36,15 +35,15 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
           data: {
             attributes: {
               course_identifier: "ecf-induction",
-              schedule_identifier: schedule_2022.schedule_identifier,
-              cohort: "2022",
+              schedule_identifier: new_schedule.schedule_identifier,
+              cohort: "2021",
             },
           },
         }
-      }.to change { early_career_teacher_profile.reload.schedule }.to(schedule_2022)
+      }.to change { early_career_teacher_profile.reload.schedule }.to(new_schedule)
 
       expect(response).to be_successful
-      expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql(schedule_2022.schedule_identifier)
+      expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql(new_schedule.schedule_identifier)
     end
   end
 

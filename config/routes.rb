@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
       resources :npq_funding, only: [:show], path: "npq-funding", param: :trn
 
-      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+      resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
       end
       resources :participants, only: %i[index], controller: "ecf_participants"
@@ -73,7 +73,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, only: %i[index], path: "participants/npq" do
+      resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
       end
       resources :users, only: %i[index create]
@@ -95,7 +95,7 @@ Rails.application.routes.draw do
 
     namespace :v2 do
       concern :participant_actions, Participants::Routing.new
-      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+      resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
       end
       resources :participants, only: %i[index], controller: "ecf_participants"
@@ -106,7 +106,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, only: %i[index], path: "participants/npq" do
+      resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
       end
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"
@@ -323,6 +323,7 @@ Rails.application.routes.draw do
     namespace :npq do
       resource :applications, only: [] do
         resource :exports, only: %i[new create], controller: "applications/exports"
+        get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
       end
     end
   end
@@ -443,6 +444,12 @@ Rails.application.routes.draw do
 
             get "what-changes", to: "setup_school_cohort#what_changes"
             put "what-changes", to: "setup_school_cohort#what_changes"
+
+            get "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
+            put "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
+
+            get "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
+            put "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
 
             get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
             put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
