@@ -37,6 +37,12 @@ module Api
           end
         end
 
+        def induction_record
+          induction_records
+            .joins(participant_profile: [:participant_identity])
+            .where(participant_profile: { participant_identities: { external_identifier: params[:id] } })
+        end
+
       private
 
         def lead_provider

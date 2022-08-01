@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
       resources :npq_funding, only: [:show], path: "npq-funding", param: :trn
 
-      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+      resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
       end
       resources :participants, only: %i[index], controller: "ecf_participants"
@@ -73,7 +73,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, only: %i[index], path: "participants/npq" do
+      resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
       end
       resources :users, only: %i[index create]
@@ -95,7 +95,7 @@ Rails.application.routes.draw do
 
     namespace :v2 do
       concern :participant_actions, Participants::Routing.new
-      resources :ecf_participants, path: "participants/ecf", only: %i[index] do
+      resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
       end
       resources :participants, only: %i[index], controller: "ecf_participants"
@@ -106,7 +106,7 @@ Rails.application.routes.draw do
       resources :participant_declarations, only: %i[create index show], path: "participant-declarations" do
         member { put :void }
       end
-      resources :npq_participants, only: %i[index], path: "participants/npq" do
+      resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
       end
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"
@@ -358,8 +358,6 @@ Rails.application.routes.draw do
       resources :payment_breakdowns, only: [] do
         resources :statements, only: %i[show] do
           resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
-
-          get :show2
         end
       end
     end
@@ -454,7 +452,7 @@ Rails.application.routes.draw do
 
             get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
 
-            appropriate_body_selection_routes "setup_school_cohort"
+            appropriate_body_selection_routes :setup_school_cohort
 
             get "complete", to: "setup_school_cohort#complete"
           end
@@ -504,7 +502,7 @@ Rails.application.routes.draw do
                 get :what_we_need, path: "what-we-need", controller: :add_participants
                 put "transfer", as: nil
 
-                appropriate_body_selection_routes "add_participants"
+                appropriate_body_selection_routes :add_participants
                 get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
               end
             end
@@ -518,7 +516,7 @@ Rails.application.routes.draw do
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
             get :add_appropriate_body, path: "add-appropriate-body"
-            appropriate_body_selection_routes "participants"
+            appropriate_body_selection_routes :participants
           end
 
           namespace :core_programme, path: "core-programme" do
@@ -532,6 +530,8 @@ Rails.application.routes.draw do
             get :confirm_programme, path: "confirm-programme"
             post :save_programme, path: "save-programme"
             get :success
+
+            appropriate_body_selection_routes :choose_programme
           end
         end
       end

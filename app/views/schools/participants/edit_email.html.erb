@@ -4,10 +4,19 @@
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <%= form_for @induction_record.preferred_identity, url: schools_participant_update_email_path, method: :put do |f| %>
-    <%= f.govuk_error_summary %>
-
-      <%= f.govuk_text_field :email, label: { text: "Change #{@profile.ect? ? "ECT’s" : "mentor’s"} email address", tag: 'h1', size: 'xl' } %>
+    <%= form_with model: @induction_record.preferred_identity,
+                  scope: '',
+                  url: schools_participant_update_email_path,
+                  method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field :email,
+                             value: nil,
+                             width: 'two-thirds',
+                             hint: -> { tag.p(t('participant.edit_email_hint')) },
+                             label: { text: t('participant.edit_email', name: @profile.full_name),
+                                      size: 'xl',
+                                      tag: 'h1',
+                                      class: 'govuk-heading-xl' } %>
       <%= f.govuk_submit %>
     <% end %>
   </div>

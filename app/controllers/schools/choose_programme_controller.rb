@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Schools::ChooseProgrammeController < Schools::BaseController
+  include AppropriateBodySelection::Controller
+
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
   before_action :load_programme_form
@@ -15,8 +17,12 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   def create
     render :show and return unless @induction_choice_form.valid?
 
-    session[:induction_choice_form] = @induction_choice_form.serializable_hash
-    redirect_to action: :confirm_programme
+    save_induction_choice_form
+    if needs_to_choose_appropriate_body?
+      start_appropriate_body_selection
+    else
+      redirect_to action: :confirm_programme
+    end
   end
 
   def confirm_programme; end
@@ -35,6 +41,20 @@ class Schools::ChooseProgrammeController < Schools::BaseController
 
 private
 
+  def save_induction_choice_form
+    session[:induction_choice_form] = @induction_choice_form.serializable_hash
+  end
+
+  def needs_to_choose_appropriate_body?
+    @induction_choice_form.programme_choice != :no_early_career_teachers
+  end
+
+  def start_appropriate_body_selection
+    super from_path: url_for(action: :create),
+          submit_action: :end_appropriate_body_selection,
+          school_name: school.name
+  end
+
   def verify_can_choose_programme
     return if school_cohort.new_record? || school_cohort.can_change_programme?
 
@@ -48,10 +68,19 @@ private
     )
   end
 
+  def end_appropriate_body_selection
+    redirect_to action: :confirm_programme
+  end
+
   def save_school_choice!
     Induction::SetCohortInductionProgramme.call(school_cohort:,
                                                 programme_choice: @induction_choice_form.programme_choice,
                                                 opt_out_of_updates: @induction_choice_form.opt_out_choice_selected?)
+    if needs_to_choose_appropriate_body?
+      Induction::SetSchoolCohortAppropriateBody.call(school_cohort:,
+                                                     appropriate_body_id: appropriate_body_form.body_id,
+                                                     appropriate_body_appointed: appropriate_body_form.body_appointed?)
+    end
   end
 
   def programme_choice_form_params

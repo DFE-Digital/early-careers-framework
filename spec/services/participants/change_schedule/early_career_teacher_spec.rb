@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
+RSpec.describe Participants::ChangeSchedule::ECF do
   describe "validations" do
     context "when null schedule_identifier given" do
       let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
@@ -76,8 +76,14 @@ RSpec.describe Participants::ChangeSchedule::EarlyCareerTeacher do
         expect { subject.call }.to change { profile.reload.schedule }.from(original_schedule).to(schedule)
       end
 
-      it "updates induction_record#schedule" do
-        expect { subject.call }.to change { induction_record.reload.schedule }.from(original_schedule).to(schedule)
+      it "creates a new induction_record with correct schedule" do
+        expect {
+          subject.call
+        }.to change { InductionRecord.count }.by(1)
+
+        new_induction_record = InductionRecord.order(created_at: :asc).last
+
+        expect(new_induction_record.schedule).to eql(schedule)
       end
     end
 

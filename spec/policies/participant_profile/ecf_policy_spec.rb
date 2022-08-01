@@ -94,10 +94,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
     let(:user) { create(:user, :induction_coordinator, schools: [participant_profile.school]) }
     it { is_expected.to permit_action(:show) }
     it { is_expected.to permit_action(:withdraw_record) }
-    it { is_expected.to permit_action(:edit_name) }
-    it { is_expected.to permit_action(:update_name) }
-    it { is_expected.to permit_action(:edit_email) }
-    it { is_expected.to permit_action(:update_email) }
+    it { is_expected.to forbid_action(:edit_name) }
+    it { is_expected.to forbid_action(:update_name) }
+    it { is_expected.to forbid_action(:edit_email) }
+    it { is_expected.to forbid_action(:update_email) }
 
     context "after the participant has provided validation data" do
       before do
@@ -105,10 +105,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
     end
@@ -120,25 +120,26 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
       end
 
       it { is_expected.to permit_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
     end
 
     context "with a declaration" do
       before do
+        create(:ecf_participant_validation_data, participant_profile:)
         declaration_type = participant_profile.ect? ? :ect_participant_declaration : :mentor_participant_declaration
         create(declaration_type, participant_profile:, user: participant_profile.user)
       end
 
       it { is_expected.to forbid_action(:withdraw_record) }
-      it { is_expected.to forbid_action(:edit_name) }
-      it { is_expected.to forbid_action(:update_name) }
-      it { is_expected.to forbid_action(:edit_email) }
-      it { is_expected.to forbid_action(:update_email) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
       it { is_expected.to forbid_action(:edit_start_term) }
       it { is_expected.to forbid_action(:update_start_term) }
     end
@@ -174,6 +175,10 @@ RSpec.describe ParticipantProfile::ECFPolicy, type: :policy do
   end
 
   context "induction tutor at a different school" do
+    before do
+      create(:ecf_participant_validation_data, participant_profile:)
+    end
+
     let(:user) { create(:user, :induction_coordinator) }
     it { is_expected.to forbid_action(:show) }
     it { is_expected.to forbid_action(:withdraw_record) }

@@ -46,6 +46,5 @@ RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021,
                                                snapshot: "FIP - change programme options")
 
     expect(page).to have_text "You’ve submitted your training information"
-    expect(page).to have_text "choose one of the 6 DfE-funded training providers as soon as possible"
   end
 end

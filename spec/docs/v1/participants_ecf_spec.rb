@@ -91,6 +91,38 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
     end
   end
 
+  path "/api/v1/participants/ecf/{id}" do
+    get "Get a single ECF participant" do
+      operationId :ecf_participant
+      tags "ECF participants"
+      security [bearerAuth: []]
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the ECF participant."
+
+      response "200", "A single ECF participant" do
+        let(:id) { mentor_profile.user.id }
+
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:id) { mentor_profile.user.id }
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+    end
+  end
+
   it_behaves_like "JSON Participant Deferral documentation",
                   "/api/v1/participants/ecf/{id}/defer",
                   "#/components/schemas/ECFParticipantDeferRequest",

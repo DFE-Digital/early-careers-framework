@@ -36,6 +36,7 @@ en:
   bad_request: "Bad request"
   bad_parameter: "Bad parameter"
   invalid_transition: "Invalid action"
+  cannot_change_cohort: "The property '#/cohort' cannot be changed"
   invalid_participant: "The property '#/participant_id' must be a valid Participant ID"
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
@@ -311,7 +312,12 @@ en:
         replace_with_a_different_person: "You cannot make that change by editing %{name}’s name"
         reason_to_edit_name: "Why do you need to edit %{name}’s name?"
 
-  participant_name_edited: "%{old_name}’s name has been edited to %{new_name}"
+  participant:
+    edit_email: "What’s %{name}’s correct email address?"
+    edit_email_hint: "You can enter their personal or school email address."
+    edit_name: "What should we edit %{name}’s name to?"
+    email_edited: "%{name}’s email address has been updated"
+    name_edited: "%{old_name}’s name has been edited to %{new_name}"
   reasons_to_edit_a_participants_name:
     name_has_changed: "They’ve changed their name - for example, due to marriage or divorce"
     name_is_incorrect: "Their name has been entered incorrectly"
