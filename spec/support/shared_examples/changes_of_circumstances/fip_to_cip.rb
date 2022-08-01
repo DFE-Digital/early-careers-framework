@@ -24,13 +24,13 @@ RSpec.shared_examples "FIP to CIP" do |scenario, participant_status|
   context "Then the Original Lead Provider" do
     subject(:original_lead_provider) { "Original Lead Provider" }
 
-    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_obfuscated_context(scenario, scenario.prior_declarations, participant_status, see_prior_school: true),
+    it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.prior_declarations, participant_status, see_prior_school: true),
        :aggregate_failures do
-      then_lead_provider_can_see_obfuscated_participant_in_api subject,
-                                                               scenario,
-                                                               scenario.prior_declarations,
-                                                               participant_status,
-                                                               see_prior_school: true
+      then_lead_provider_can_see_participant_in_api subject,
+                                                    scenario,
+                                                    scenario.prior_declarations,
+                                                    participant_status,
+                                                    see_prior_school: true
     end
 
     # previous lead provider can void ??
