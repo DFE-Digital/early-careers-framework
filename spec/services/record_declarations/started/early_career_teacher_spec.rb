@@ -54,11 +54,18 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     end
 
     it "ignores the superfluous parameter" do
-      expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
-
-      new_declaration = ParticipantDeclaration.order(created_at: :asc).last
-
-      expect(new_declaration.evidence_held).to be_nil
+      expect {
+        subject.call
+      }.to change {
+        profile
+          .participant_declarations
+          .where(
+            declaration_date:,
+            course_identifier:,
+            declaration_type:,
+            evidence_held: nil,
+          ).count
+      }.by(1)
     end
   end
 
@@ -87,13 +94,24 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
     end
   end
 
-  context "happy path" do
+  context "creating a declaration" do
     before do
       Induction::Enrol.new(induction_programme:, participant_profile: profile).call
     end
 
     it "creates the declaration" do
-      expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+      expect {
+        subject.call
+      }.to change {
+        profile
+          .participant_declarations
+          .where(
+            declaration_date:,
+            course_identifier:,
+            declaration_type:,
+            evidence_held: nil,
+          ).count
+      }.by(1)
     end
 
     context "if called a subsequent time" do
