@@ -417,7 +417,11 @@ Rails.application.routes.draw do
           get "change-programme", as: :change_programme
           get "roles", as: :roles
 
-          get "add-appropriate-body-not-available", action: :add
+          scope module: :cohorts, path: "appropriate-body" do
+            get "add", to: "appropriate_body#add", as: :add_appropriate_body
+            appropriate_body_selection_routes "appropriate_body"
+            get "confirm", to: "appropriate_body#confirm"
+          end
 
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
