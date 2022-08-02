@@ -81,5 +81,29 @@ RSpec.describe Importers::Clawbacks do
         expect(subject.errors).to be_present
       end
     end
+
+    context "when exception from within service" do
+      let(:service) { instance_double(Finance::ClawbackDeclaration, errors: []) }
+
+      before do
+        allow(Finance::ClawbackDeclaration).to receive(:new).and_return(service)
+        allow(service).to receive(:call).and_raise(ActiveRecord::RecordNotSaved)
+
+        csv.write "declaration_id"
+        csv.write "\n"
+        csv.write participant_declaration.id
+        csv.write "\n"
+        csv.close
+      end
+
+      it "does not throw an exception" do
+        expect { subject.call }.not_to raise_error
+      end
+
+      it "logs the exception as an error" do
+        subject.call
+        expect(subject.errors).to include("declaration #{participant_declaration.id} has the following errors: ActiveRecord::RecordNotSaved")
+      end
+    end
   end
 end
