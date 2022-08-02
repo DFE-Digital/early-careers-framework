@@ -25,7 +25,14 @@ module Api
                    )
 
           scope = InductionRecord
-                    .includes(participant_profile: { teacher_profile: :user })
+                    .references(participant_profile: %i[participant_identity])
+                    .includes(
+                      :preferred_identity,
+                      :schedule,
+                      induction_programme: { school_cohort: %i[school cohort] },
+                      mentor_profile: [:participant_identity],
+                      participant_profile: %i[participant_identity user ecf_participant_eligibility ecf_participant_validation_data],
+                    )
                     .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.id = induction_records.id AND latest_induction_records.created_at_precedence = 1")
 
           if updated_since.present?
@@ -37,8 +44,7 @@ module Api
 
         def induction_record
           induction_records
-            .includes(:preferred_identity, :schedule, induction_programme:, mentor_profile: [:participant_identity], school_cohort: :cohort)
-            .joins(participant_profile: %i[participant_identity user ecf_participant_eligibility ecf_participant_validation_data])
+            .joins(participant_profile: %i[participant_identity])
             .where(participant_profile: { participant_identities: { external_identifier: params[:id] } })
         end
 
