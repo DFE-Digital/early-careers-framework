@@ -99,40 +99,6 @@ RSpec.describe "Participants API", type: :request do
           end
         end
 
-        context "when induction_status is withdrawn" do
-          let(:induction_record) do
-            create(
-              :induction_record,
-              induction_programme:,
-              participant_profile: profile,
-              induction_status: "withdrawn",
-            )
-          end
-
-          it "nullifies email" do
-            get "/api/v1/participants/ecf"
-
-            expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
-          end
-        end
-
-        context "when induction_status is changed" do
-          let(:induction_record) do
-            create(
-              :induction_record,
-              induction_programme:,
-              participant_profile: profile,
-              induction_status: "changed",
-            )
-          end
-
-          it "nullifies email" do
-            get "/api/v1/participants/ecf"
-
-            expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
-          end
-        end
-
         context "one profile with 2 induction records" do
           let(:profile) do
             create(
@@ -203,29 +169,6 @@ RSpec.describe "Participants API", type: :request do
               start_date: 1.week.ago,
               training_status: "active",
             )
-          end
-
-          context "as old provider" do
-            it "returns participant with nullified fields" do
-              get "/api/v1/participants/ecf"
-
-              expect(parsed_response["data"].size).to eql(1)
-              expect(parsed_response["data"][0]["attributes"]["email"]).to be_nil
-              expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
-            end
-          end
-
-          context "as new provider" do
-            let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: cpd_lead_provider2, private_api_access: true) }
-            let(:bearer_token) { "Bearer #{token}" }
-
-            it "returns participant without nullification" do
-              get "/api/v1/participants/ecf"
-
-              expect(parsed_response["data"].size).to eql(1)
-              expect(parsed_response["data"][0]["attributes"]["email"]).to eql(identity.email)
-              expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
-            end
           end
         end
 

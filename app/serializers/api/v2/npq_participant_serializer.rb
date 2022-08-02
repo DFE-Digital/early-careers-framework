@@ -8,21 +8,10 @@ module Api
       include JSONAPI::Serializer
       include JSONAPI::Serializer::Instrumentation
 
-      class << self
-        def active_participant_attribute(attr, &blk)
-          attribute attr do |user, params|
-            unless NPQ::IsUserWithdrawn.new(user:, cpd_lead_provider: params[:cpd_lead_provider]).call
-              blk.call(user)
-            end
-          end
-        end
-      end
-
       set_id :id
       set_type :'npq-participant'
 
-      active_participant_attribute :email, &:email
-
+      attribute :email
       attribute :full_name
 
       attribute(:teacher_reference_number) do |object|

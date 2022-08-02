@@ -26,7 +26,12 @@ module Importers
         end
 
         service = Finance::ClawbackDeclaration.new(participant_declaration:)
-        service.call
+
+        begin
+          service.call
+        rescue StandardError => e
+          errors << "declaration #{row['declaration_id']} has the following errors: #{e}"
+        end
 
         if service.errors.any?
           errors << "declaration #{row['declaration_id']} has the following issues: #{service.errors.full_messages.join(', ')}"

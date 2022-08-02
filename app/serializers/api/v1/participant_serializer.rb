@@ -9,18 +9,6 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       class << self
-        def active_participant_attribute(attr, &blk)
-          attribute attr do |profile, params|
-            if !profile.withdrawn_record? && !profile.training_status_withdrawn?
-              if blk.parameters.count == 1
-                blk.call(profile)
-              else
-                blk.call(profile, params)
-              end
-            end
-          end
-        end
-
         def trn(profile)
           profile.teacher_profile.trn || profile.ecf_participant_validation_data&.trn
         end
@@ -45,7 +33,7 @@ module Api
         # profile.user.id
       end
 
-      active_participant_attribute :email do |profile|
+      attribute :email do |profile|
         # NOTE: using this will retain the original email exposed to provider
         profile.participant_identity.email
         # NOTE: use this instead to use new (de-duped) email

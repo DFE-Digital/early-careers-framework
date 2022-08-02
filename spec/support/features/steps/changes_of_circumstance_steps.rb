@@ -386,32 +386,6 @@ module Steps
                                                          declarations
     end
 
-    def self.then_lead_provider_can_see_obfuscated_context(scenario, declarations, participant_status = "active", see_prior_school: false)
-      school_name = see_prior_school ? "Original SIT's School" : "New SIT's School"
-      str = "can see \"the Participant\" as a \"#{scenario.participant_type}\"\n"
-      str += "          with the participant email is obfuscated\n"
-      str += "          and with the participant trn as \"#{scenario.participant_trn}\"\n"
-      str += "          and with the participant status of \"#{participant_status}\"\n"
-      str += "          and with the participants school as \"#{school_name}\"\n"
-      str += "          and with the participants declarations #{declarations}\n"
-      str
-    end
-
-    def then_lead_provider_can_see_obfuscated_participant_in_api(lead_provider_name, scenario, declarations, participant_status = "active", see_prior_school: false)
-      then_ecf_participants_api_has_participant_details lead_provider_name,
-                                                        "the Participant",
-                                                        nil,
-                                                        scenario.participant_trn,
-                                                        scenario.participant_type,
-                                                        see_prior_school ? "Original SIT's School" : "New SIT's School",
-                                                        participant_status,
-                                                        "active"
-
-      then_participant_declarations_api_has_declarations lead_provider_name,
-                                                         "the Participant",
-                                                         declarations
-    end
-
     def then_ecf_participants_api_does_not_have_participant_details(lead_provider_name, participant_name)
       user = User.find_by(full_name: participant_name)
 
