@@ -50,14 +50,26 @@ class InductionRecord < ApplicationRecord
   scope :fip, -> { joins(:induction_programme).merge(InductionProgramme.full_induction_programme) }
   scope :cip, -> { joins(:induction_programme).merge(InductionProgramme.core_induction_programme) }
 
-  scope :active, -> { active_induction_status.where("(end_date IS NULL OR end_date > ?) AND (start_date < ? OR school_transfer=false)", Time.zone.now, Time.zone.now) }
-  scope :current, -> { active.or(sit_unknown_transferring_out) }
-  scope :transferring_in, -> { active_induction_status.where("start_date > ? AND school_transfer=true", Time.zone.now) }
-  scope :transferring_out, -> { leaving_induction_status.where("end_date > ? AND school_transfer=true", Time.zone.now) }
-  scope :sit_unknown_transferring_out, -> { leaving_induction_status.where("end_date > ? AND school_transfer=false", Time.zone.now) }
-  scope :transferred, -> { leaving_induction_status.where("end_date < ?", Time.zone.now) }
-  scope :mentors, -> { joins(:participant_profile).where(participant_profiles: { type: "ParticipantProfile::Mentor" }) }
-  scope :ects, -> { joins(:participant_profile).where(participant_profiles: { type: "ParticipantProfile::ECT" }) }
+  scope :end_date_null, -> { where(end_date: nil) }
+  scope :end_date_in_past, -> { where(end_date: ...Time.zone.now) }
+  scope :end_date_in_future, -> { where(end_date: Time.zone.now...) }
+  scope :start_date_in_past, -> { where(start_date: ...Time.zone.now) }
+  scope :start_date_in_future, -> { where(start_date: Time.zone.now...) }
+
+  scope :school_transfer, -> { where(school_transfer: true) }
+  scope :not_school_transfer, -> { where(school_transfer: false) }
+
+  scope :active, -> { active_induction_status.merge(end_date_null.or(end_date_in_future)).and(start_date_in_past.or(not_school_transfer)) }
+  scope :current, -> { active.or(claimed_by_another_school) }
+
+  scope :transferring_in, -> { active_induction_status.merge(start_date_in_future.and(school_transfer)) }
+  scope :transferring_out, -> { leaving_induction_status.merge(end_date_in_future.and(school_transfer)) }
+
+  scope :claimed_by_another_school, -> { leaving_induction_status.merge(not_school_transfer.and(end_date_in_future)) }
+  scope :transferred, -> { leaving_induction_status.merge(end_date_in_past) }
+
+  scope :mentors, -> { joins(:participant_profile).merge(ParticipantProfile.mentors) }
+  scope :ects, -> { joins(:participant_profile).merge(ParticipantProfile.ects) }
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
