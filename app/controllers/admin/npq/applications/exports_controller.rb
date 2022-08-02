@@ -7,13 +7,13 @@ module Admin
         skip_after_action :verify_policy_scoped
 
         def new
-          authorize NPQApplication
+          authorize ::NPQApplications::Export
 
           @export_form = Admin::ApplicationExportsForm.new
         end
 
         def create
-          authorize NPQApplication
+          authorize ::NPQApplications::Export
 
           @export_form = Admin::ApplicationExportsForm.new(export_params.merge(user: current_user))
 
