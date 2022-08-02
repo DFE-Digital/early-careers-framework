@@ -45,6 +45,9 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
 
       when_i_choose_deliver_own_programme
       and_i_click_on_continue
+      then_i_am_on_the_confirm_your_training_page
+
+      when_i_click_on_confirm
       then_i_see_appropriate_body_appointed_page
 
       when_i_choose_yes
@@ -55,9 +58,7 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
 
       when_i_choose_appropriate_body
       and_i_click_on_continue
-      then_i_am_on_the_confirm_your_training_page
 
-      when_i_click_on_confirm
       then_i_see_appropriate_body_reported_confirmation
       and_i_dont_see_appropriate_body_reminder
 
@@ -75,13 +76,13 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
 
       when_i_choose_deliver_own_programme
       and_i_click_on_continue
-      then_i_see_appropriate_body_appointed_page
+      then_i_am_on_the_confirm_your_training_page
 
+      when_i_click_on_confirm
+      then_i_see_appropriate_body_appointed_page
       when_i_choose_no
       and_i_click_on_continue
 
-      then_i_am_on_the_confirm_your_training_page
-      when_i_click_on_confirm
       then_i_am_on_the_training_submitted_page
       and_i_dont_see_appropriate_body_reported_title
 

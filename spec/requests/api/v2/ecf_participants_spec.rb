@@ -210,14 +210,6 @@ RSpec.describe "Participants API", type: :request do
             expect(matching_records.size).to eql 1
             expect(matching_records.first["attributes"]["status"]).to eql "withdrawn"
           end
-
-          it "does not include personal information of the participant" do
-            get "/api/v2/participants/ecf"
-            matching_records = parsed_response["data"].select { |record| record["id"] == active_profile_with_other_provider.user.id }
-            expect(matching_records.first["attributes"]["full_name"]).to eql(active_profile_with_other_provider.user.full_name)
-            expect(matching_records.first["attributes"]["email"]).to be_nil
-            expect(matching_records.first["attributes"]["teacher_reference_number"]).to eql(active_profile_with_other_provider.teacher_profile.trn)
-          end
         end
 
         # skip until after identities backfilled
@@ -317,7 +309,7 @@ RSpec.describe "Participants API", type: :request do
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
           expect(withdrawn_record_row).not_to be_nil
-          expect(withdrawn_record_row["email"]).to be_empty
+          expect(withdrawn_record_row["email"]).to eql(withdrawn_ect_profile_record.user.email)
           expect(withdrawn_record_row["full_name"]).to eql(withdrawn_ect_profile_record.user.full_name)
           expect(withdrawn_record_row["mentor_id"]).to be_empty
           expect(withdrawn_record_row["school_urn"]).to eql withdrawn_ect_profile_record.induction_records[0].school_cohort.school.urn

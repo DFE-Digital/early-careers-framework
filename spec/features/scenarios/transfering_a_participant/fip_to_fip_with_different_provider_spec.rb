@@ -125,7 +125,7 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant",
           and_eligible_training_declarations_are_made_payable
         end
 
-        include_examples "FIP to FIP with different provider", scenario, "active", is_obfuscated: false
+        include_examples "FIP to FIP with different provider", scenario, "active"
       end
     end
   end

@@ -9,18 +9,6 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       class << self
-        def active_participant_attribute(attr, &blk)
-          attribute attr do |induction_record, params|
-            unless induction_record.training_status_withdrawn? || induction_record.withdrawn_induction_status? || induction_record.changed_induction_status?
-              if blk.parameters.count == 1
-                blk.call(induction_record)
-              else
-                blk.call(induction_record, params)
-              end
-            end
-          end
-        end
-
         def trn(profile)
           profile.teacher_profile.trn || profile.ecf_participant_validation_data&.trn
         end
@@ -47,7 +35,7 @@ module Api
         # induction_record.participant_profile.user.id
       end
 
-      active_participant_attribute :email do |induction_record|
+      attribute :email do |induction_record|
         induction_record.preferred_identity&.email ||
           induction_record.participant_profile.user.email
       end
