@@ -40,7 +40,7 @@ module Api
                 id: mentor_profile.user.id,
                 type: "participant",
                 attributes: {
-                  email: nil,
+                  email: mentor_profile.user.email,
                   full_name: mentor_profile.user.full_name,
                   mentor_id: nil,
                   school_urn: mentor_profile.school.urn,
@@ -68,7 +68,7 @@ module Api
                 id: ect_profile.user.id,
                 type: "participant",
                 attributes: {
-                  email: nil,
+                  email: ect_profile.user.email,
                   full_name: ect_profile.user.full_name,
                   mentor_id: ect_profile.mentor.id,
                   school_urn: ect_profile.school.urn,
@@ -307,16 +307,6 @@ module Api
                 expect(result[:data][:attributes][:sparsity_uplift]).to be false
               end
             end
-          end
-        end
-
-        context "when training_status is withdrawn" do
-          subject { ParticipantSerializer.new(ect_profile) }
-
-          let(:ect_profile) { create(:ect_participant_profile, training_status: "withdrawn") }
-
-          it "nullifies email" do
-            expect(subject.serializable_hash[:data][:attributes][:email]).to be_nil
           end
         end
       end

@@ -22,10 +22,6 @@ module APIs
       has_attribute_value? "email", expected_value
     end
 
-    def has_obfuscated_email?
-      has_attribute_value? "email", nil
-    end
-
     def has_trn?(expected_value)
       has_attribute_value? "teacher_reference_number", expected_value
     end

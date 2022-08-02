@@ -17,10 +17,6 @@ module APIs
       has_attribute_value? "email", expected_value
     end
 
-    def responded_with_obfuscated_email?
-      has_attribute_value? "email", nil
-    end
-
     def responded_with_status?(expected_value)
       has_attribute_value? "status", expected_value
     end
