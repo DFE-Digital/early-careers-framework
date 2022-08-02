@@ -1,13 +1,8 @@
 # frozen_string_literal: true
 
-require "abstract_interface"
-
 module RecordDeclarations
   class Base
     include Participants::ProfileAttributes
-    include AbstractInterface
-    implement_class_method :required_params
-    implement_instance_method :user_profile
 
     MultipleParticipantDeclarationDuplicate = Class.new(ArgumentError)
 
@@ -47,6 +42,8 @@ module RecordDeclarations
         declaration_attempt.update!(participant_declaration:)
       end
 
+      # TODO: serialization should not happen at this point
+      # it is not the responsibility of this class to determine this interface or even know about it
       Api::V1::ParticipantDeclarationSerializer.new(participant_declaration).serializable_hash.to_json
     end
 
