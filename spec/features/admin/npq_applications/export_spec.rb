@@ -28,7 +28,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
     }
 
     expect(
-      NPQApplication::Export.find_by(
+      NPQApplications::Export.find_by(
         user: @logged_in_admin_user,
         start_date: Date.new(2022, 6, 6),
         end_date: Date.new(2022, 7, 1),
@@ -58,7 +58,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
       when_i_click_the_button_labelled("Schedule Export")
     }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplication::Export.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -77,7 +77,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
       when_i_click_the_button_labelled("Schedule Export")
     }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplication::Export.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -104,7 +104,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
       when_i_click_the_button_labelled("Schedule Export")
     }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplication::Export.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -130,7 +130,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
       when_i_click_the_button_labelled("Schedule Export")
     }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplication::Export.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -145,7 +145,7 @@ private
   end
 
   def the_npq_applications_export_page
-    new_admin_npq_applications_exports_path
+    new_admin_npq_applications_export_path
   end
 
   def the_npq_applications_exports_page

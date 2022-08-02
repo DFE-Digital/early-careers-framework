@@ -9,7 +9,7 @@ module Admin
         start_date = npq_application_export.start_date
         end_date = npq_application_export.end_date
 
-        csv_generator = Admin::ApplicationCsvGenerator.new(start_date:, end_date:)
+        csv_generator = Admin::NPQApplications::CsvGenerator.new(start_date:, end_date:)
 
         uploader = Admin::SecureDriveUploader.new(
           file: csv_generator.csv,

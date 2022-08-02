@@ -30,7 +30,7 @@ module Admin
             @export_form.npq_application_export.perform_later
 
             set_success_message heading: "Export scheduled, check secure drive for results"
-            redirect_to new_admin_npq_applications_exports_url
+            redirect_to new_admin_npq_applications_export_url
           else
             render :new
           end

@@ -64,7 +64,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           .to change { npq_application.reload.slice(:eligible_for_funding, :funding_eligiblity_status_code) }
           .from({
             eligible_for_funding: false,
-            funding_eligiblity_status_code: nil,
+            funding_eligiblity_status_code: "ineligible_establishment_type",
           })
           .to({
             eligible_for_funding: true,

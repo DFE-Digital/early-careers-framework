@@ -1,19 +1,21 @@
-<% content_for :title, "NPQ Application Exports" %>
+<% content_for :title, t(".title") %>
 
-<%= govuk_button_link_to "Schedule an Export", new_admin_npq_applications_export_path %>
+<%= render "admin/npq/applications/layout", locals = { page: "exports" } %>
+
+<%= govuk_button_link_to t(".new"), new_admin_npq_applications_export_path %>
 
 <table class="govuk-table">
   <thead>
   <tr class="govuk-table__row">
-    <th scope="col" class="govuk-table__header">Start Date</th>
-    <th scope="col" class="govuk-table__header">End Date</th>
-    <th scope="col" class="govuk-table__header">Scheduled</th>
+    <th scope="col" class="govuk-table__header"><%= t(".table.start_date") %></th>
+    <th scope="col" class="govuk-table__header"><%= t(".table.end_date") %></th>
+    <th scope="col" class="govuk-table__header"><%= t(".table.created_at") %></th>
   </tr>
   </thead>
   <tbody class="govuk-table__body">
   <% if @exports.none? %>
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell govuk-!-text-align-centre" colspan="5">No Exports found</td>
+      <td class="govuk-table__cell govuk-!-text-align-centre" colspan="5"><%= t(".table.empty") %></td>
     </tr>
   <% else %>
     <% @exports.each do |export| %>

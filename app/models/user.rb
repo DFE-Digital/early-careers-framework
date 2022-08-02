@@ -28,6 +28,7 @@ class User < ApplicationRecord
   has_many :npq_profiles, through: :teacher_profile
   # end: TODO
 
+  has_many :npq_application_eligibility_imports
   has_many :npq_application_exports
 
   before_validation :strip_whitespace
