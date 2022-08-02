@@ -4,11 +4,9 @@ module Api
   module V1
     module ECFParticipants
       class Index
-        attr_reader :cpd_lead_provider, :params
-
-        def initialize(cpd_lead_provider:, params:)
-          @cpd_lead_provider = cpd_lead_provider
-          @params = params
+        def initialize(lead_provider, params)
+          self.lead_provider = lead_provider
+          self.params        = params
         end
 
         def induction_records
@@ -39,15 +37,14 @@ module Api
 
         def induction_record
           induction_records
-            .joins(participant_profile: [:participant_identity])
+            .includes(:preferred_identity, :schedule, induction_programme:, mentor_profile: [:participant_identity], school_cohort: :cohort)
+            .joins(participant_profile: %i[participant_identity user ecf_participant_eligibility ecf_participant_validation_data])
             .where(participant_profile: { participant_identities: { external_identifier: params[:id] } })
         end
 
       private
 
-        def lead_provider
-          @lead_provider ||= cpd_lead_provider.lead_provider
-        end
+        attr_accessor :lead_provider, :params
 
         def filter
           params[:filter] ||= {}

@@ -47,7 +47,7 @@ module Api
       end
 
       def ecf_participant_query
-        ECFParticipants::Index.new(cpd_lead_provider: current_user, params:)
+        ECFParticipants::Index.new(lead_provider, params)
       end
     end
   end
