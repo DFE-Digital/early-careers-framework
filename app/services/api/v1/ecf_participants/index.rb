@@ -45,7 +45,7 @@ module Api
         def induction_record
           induction_records
             .joins(participant_profile: %i[participant_identity])
-            .where(participant_profile: { participant_identities: { external_identifier: params[:id] } })
+            .find_by!(participant_profile: { participant_identities: { external_identifier: params[:id] } })
         end
 
       private

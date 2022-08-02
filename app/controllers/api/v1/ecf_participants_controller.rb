@@ -26,7 +26,7 @@ module Api
       end
 
       def show
-        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_records.first, params: { lead_provider: }).serializable_hash
+        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_record, params: { lead_provider: }).serializable_hash
 
         render json: participant_hash.to_json
       end
@@ -35,6 +35,10 @@ module Api
 
       def induction_records
         @induction_records ||= ecf_participant_query.induction_records
+      end
+
+      def induction_record
+        @induction_record ||= ecf_participant_query.induction_record
       end
 
       def access_scope
