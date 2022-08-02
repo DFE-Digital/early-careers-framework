@@ -90,6 +90,38 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
     end
   end
 
+  path "/api/v2/npq-applications/{id}" do
+    get "Get a single NPQ application" do
+      operationId :npq_application
+      tags "NPQ applications"
+      security [bearerAuth: []]
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the NPQ application."
+
+      response "200", "A single NPQ application" do
+        let(:id) { npq_application.id }
+
+        schema({ "$ref": "#/components/schemas/NPQApplicationResponse" })
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:id) { npq_application.id }
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+    end
+  end
+
   path "/api/v2/npq-applications/{id}/accept" do
     post "Accept an NPQ application" do
       operationId :npq_applications_accept
