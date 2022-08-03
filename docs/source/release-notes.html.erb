@@ -12,7 +12,7 @@ weight: 7
 <h2 class="govuk-heading-l" id="2-8-2022">2nd August 2022</h2>
 <p class="govuk-body-m">
   <ul class="govuk-list govuk-list--bullet">
-    <li>Removed the nullification of fields. Any field that was previously nullified will now be available.</li>
+    <li>Removed the logic where the API would nullify the <code>email</code> field on the ECF and NPQ participant responses where the <code>status</code> is withdrawn. Now, where <code>status</code> is withdrawn, we will continue to display the participant’s <code>email</code>. Generally, the <code>status</code> will show withdrawn when a School Induction Tutor has withdrawn or “deleted” a participant in the schools user interface or “portal”. Where <code>email</code> was nullified, they will now be visible again.</li>
   </ul>
 </p>
 
