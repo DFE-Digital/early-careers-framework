@@ -284,8 +284,8 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
 
     context "when there is an failure during updating" do
       before do
-        # This will trigger a validation failure due to the model thinking there is a status change when there isn't
-        allow_any_instance_of(NPQApplication).to receive(:lead_provider_approval_status_changed?).and_return(true)
+        # This forces a validation failure on model, so we have failed model saves
+        allow_any_instance_of(NPQApplication).to receive(:eligible_for_funding_before_type_cast).and_return(nil)
       end
 
       it "cancels the import, sends an error to sentry, and directs the user to an admin", :aggregate_failures do
@@ -301,13 +301,11 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
             slice_data(npq_application_to_mark_invalid_status_code.reload),
           ]
         }
-
         expect(npq_application_eligibility_import.updated_records).to eq(0)
-        puts npq_application_eligibility_import.import_errors
         expect(npq_application_eligibility_import.import_errors).to match([
-          "ROW 2: Application with ecf_id #{npq_application_to_mark_funded.id} invalid: Status Once rejected an application cannot change state, Status Once accepted an application cannot change state",
-          "ROW 3: Application with ecf_id #{npq_application_to_mark_unfunded.id} invalid: Status Once rejected an application cannot change state, Status Once accepted an application cannot change state",
-          "ROW 4: Application with ecf_id #{npq_application_to_mark_other.id} invalid: Status Once rejected an application cannot change state, Status Once accepted an application cannot change state",
+          "ROW 2: Application with ecf_id #{npq_application_to_mark_funded.id} invalid: Eligible for funding before type cast is not included in the list",
+          "ROW 3: Application with ecf_id #{npq_application_to_mark_unfunded.id} invalid: Eligible for funding before type cast is not included in the list",
+          "ROW 4: Application with ecf_id #{npq_application_to_mark_other.id} invalid: Eligible for funding before type cast is not included in the list",
           "ROW 5: Application with ecf_id #{npq_application_to_mark_invalid_status_code.id} invalid: Invalid funding eligibility status code, `not funded`",
           "ROW 6: Application with ecf_id #{fake_ecf_id} not found",
         ])

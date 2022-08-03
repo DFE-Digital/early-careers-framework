@@ -241,9 +241,9 @@ RSpec.describe NPQ::Accept do
       end
 
       it "cannot then be accepted" do
-        expect {
-          subject.call
-        }.not_to change { npq_application.reload.lead_provider_approval_status }
+        subject.call
+        expect(npq_application.reload).to be_rejected
+        expect(npq_application.errors[:lead_provider_approval_status]).to be_present
       end
     end
 

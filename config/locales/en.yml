@@ -176,6 +176,9 @@ en:
             lead_provider_approval_status:
               has_another_accepted_application: The participant already has an accepted application for this course
               has_already_been_accepted: This NPQ application has already been accepted
+              has_already_been_rejected: This NPQ application has already been rejected
+              cannot_change_from_accepted: Once accepted an application cannot change state
+              cannot_change_from_rejected: Once rejected an application cannot change state
 
   activemodel:
     errors:
@@ -308,6 +311,10 @@ en:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
+        finance/change_lead_provider_approval_status_form:
+          attributes:
+            confirmation:
+              inclusion: Choose yes or no
 
   page_titles:
     lead_providers:
