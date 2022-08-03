@@ -9,7 +9,7 @@
       :id,
       :filename,
     ]
-    attributes << :updated_records if @eligibility_import.done?
+    attributes << :updated_records if @eligibility_import.processed?
 
     attributes.each do |attribute|
   %>

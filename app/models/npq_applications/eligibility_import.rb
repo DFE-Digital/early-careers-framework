@@ -27,7 +27,7 @@ module NPQApplications
       Admin::NPQApplications::EligibilityImportJob.perform_later(self)
     end
 
-    def done?
+    def processed?
       completed? || failed? || completed_with_errors?
     end
 

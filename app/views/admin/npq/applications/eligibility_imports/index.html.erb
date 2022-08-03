@@ -29,7 +29,7 @@
           <td class="govuk-table__cell">
             <%=
               text = eligibility_import.failed? ? t(".table.show.failed") : t(".table.show.success")
-              link_to(text, admin_npq_applications_eligibility_import_path(eligibility_import)) if eligibility_import.done?
+              link_to(text, admin_npq_applications_eligibility_import_path(eligibility_import)) if eligibility_import.processed?
             %>
           </td>
         </tr>
