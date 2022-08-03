@@ -1,0 +1,18 @@
+description: "An ECF participant change schedule action"
+type: object
+properties:
+  type:
+    description: "The data type"
+    type: string
+    enum:
+      - participant-change-schedule
+  attributes:
+    $ref: "#/components/schemas/ECFParticipantChangeScheduleAttributes"
+required:
+  - type
+  - attributes
+example:
+  type: "participant-change-schedule"
+  attributes:
+    schedule_identifier: "ecf-standard-january"
+    course_identifier: "ecf-mentor"

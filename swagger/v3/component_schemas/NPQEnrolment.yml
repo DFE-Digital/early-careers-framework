@@ -1,0 +1,69 @@
+description: "The details of an NPQ Participant enrolment"
+type: object
+required:
+  - course_identifier
+  - schedule_identifier
+  - cohort
+  - npq_application_id
+  - eligible_for_funding
+  - training_status
+properties:
+  course_identifier:
+    description: "The course the participant is enrolled in"
+    type: string
+    example: "npq-senior-leadership"
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+  schedule_identifier:
+    description: "The schedule the participant is enrolled in"
+    type: string
+    example: "npq-leadership-autumn"
+    enum:
+      - npq-leadership-autumn
+      - npq-leadership-spring
+      - npq-specialist-autumn
+      - npq-specialist-spring
+      - npq-aso-november
+      - npq-aso-december
+      - npq-aso-march
+      - npq-aso-june
+  cohort:
+    description: "The start year of the cohort the participant is enrolled in"
+    type: string
+    example: "2021"
+  npq_application_id:
+    description: "The ID of the NPQ application that was accepted to create this enrolment"
+    type: string
+    format: uuid
+    example: "db3a7848-7308-4879-942a-c4a70ced400a"
+  eligible_for_funding:
+    description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
+    type: boolean
+    example: true
+  training_status:
+    description: "The training status of the NPQ participant"
+    type: string
+    example: "active"
+    enum:
+      - active
+      - deferred
+      - withdrawn
+  school_urn:
+    description: "The URN of the school when the application was made, if any"
+    nullable: true
+    type: string
+    example: "123456"
+  targeted_delivery_funding_eligibility:
+    description: "Whether or not this enrolment is eligible for Targeted Delivery Funding uplift"
+    nullable: false
+    type: boolean
+    example: true

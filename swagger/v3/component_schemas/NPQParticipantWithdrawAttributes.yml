@@ -1,0 +1,44 @@
+description: "An NPQ participant withdrawal action"
+type: object
+properties:
+  reason:
+    description: "The reason for the withdrawal"
+    type: string
+    enum:
+      - insufficient-capacity-to-undertake-programme
+      - personal-reason-health-or-pregnancy-related
+      - personal-reason-moving-school
+      - personal-reason-other
+      - insufficient-capacity
+      - change-in-developmental-or-personal-priorities
+      - change-in-school-circumstances
+      - change-in-school-leadership
+      - quality-of-programme-structure-not-suitable.
+      - quality-of-programme-content-not-suitable
+      - quality-of-programme-facilitation-not-effective
+      - quality-of-programme-accessibility
+      - quality-of-programme-other
+      - programme-not-appropriate-for-role-and-cpd-needs
+      - other
+    example: quality-of-programme-other
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-leading-teaching-development
+required:
+  - reason
+  - course_identifier
+example:
+  reason: left-teaching-profession
+  course_identifier: npq-headship

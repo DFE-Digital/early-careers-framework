@@ -1,0 +1,143 @@
+description: "The data attributes associated with an NPQ application"
+type: object
+required:
+  - participant_id
+  - full_name
+  - email
+  - email_validated
+  - teacher_reference_number
+  - teacher_reference_number_validated
+  - eligible_for_funding
+  - course_identifier
+  - status
+  - created_at
+  - updated_at
+properties:
+  participant_id:
+    description: "The unique identifier of this NPQ participant"
+    type: string
+    example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+    format: uuid
+  full_name:
+    description: "The full name of this NPQ participant"
+    type: string
+    example: "Isabelle MacDonald"
+  email:
+    description: "The email address registered for this NPQ participant"
+    type: string
+    example: "isabelle.macdonald2@some-school.example.com"
+  email_validated:
+    description: "Indicates whether the email address has been validated"
+    type: boolean
+    example: true
+  teacher_reference_number:
+    description: "The Teacher Reference Number (TRN) for this NPQ participant"
+    type: string
+    example: "1234567"
+  teacher_reference_number_validated:
+    description: "Indicates whether the Teacher Reference Number (TRN) has been validated"
+    type: boolean
+    example: true
+  works_in_school:
+    description: "Indicates whether the participant is currently employed by school"
+    type: boolean
+    example: true
+  employer_name:
+    description: "The name of current employer of the participant if not currently employed by school"
+    type: string
+    nullable: true
+    example: "Some Company Ltd"
+  employment_role:
+    description: "Participant's current role in the company they are employed in if not currently employed by school"
+    type: string
+    nullable: true
+    example: "Director"
+  school_urn:
+    description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed"
+    type: string
+    example: "106286"
+  private_childcare_provider_urn:
+    description: "The Unique Reference Number (URN) of the private child care provider"
+    type: string
+    example: "EY944860"
+    nullable: true
+  school_ukprn:
+    description: "The UK Provider Reference Number (UK Provider Reference Number) of the school where this NPQ participant is employed"
+    type: string
+    example: "10079319"
+  headteacher_status:
+    description: "Indicates whether this NPQ participant is or will be a head teacher"
+    type: string
+    example: "no"
+    enum:
+      - "no"
+      - yes_when_course_starts
+      - yes_in_first_two_years
+      - yes_over_two_years
+      - yes_in_first_five_years
+      - yes_over_five_years
+  eligible_for_funding:
+    description: "Indicates whether this NPQ participant would be eligible for funding from the DfE"
+    type: boolean
+    example: true
+  funding_choice:
+    description: "Indicates how this NPQ participant has said they will funded their training"
+    type: string
+    example: "trust"
+    enum:
+      - school
+      - trust
+      - self
+      - another
+      - employer
+  course_identifier:
+    description: "The NPQ course this NPQ application relates to"
+    type: string
+    example: npq-leading-teaching
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+  status:
+    description: "The current state of the NPQ application"
+    type: string
+    example: pending
+    enum:
+      - pending
+      - accepted
+      - rejected
+  created_at:
+    description: "The date the application was created"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:21:32.000Z"
+  updated_at:
+    description: "The date the application was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  ineligible_for_funding_reason:
+    description: "Indicates why this NPQ participant is not eligible for DfE funding"
+    type: string
+    nullable: true
+    example: "establishment-ineligible"
+    enum:
+      - "establishment-ineligible"
+      - "previously-funded"
+  cohort:
+    description: "The start year of the cohort this application belongs to"
+    type: string
+    nullable: false
+    example: "2022"
+  targeted_delivery_funding_eligibility:
+    description: "Whether or not this application is eligible for Targeted Delivery Funding uplift"
+    nullable: false
+    type: boolean
+    example: true

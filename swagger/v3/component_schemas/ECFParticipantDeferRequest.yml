@@ -1,0 +1,13 @@
+description: "The deferral request for a participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ECFParticipantDefer"
+example:
+  data:
+    type: "participant-defer"
+    attributes:
+      reason: "career-break"
+      course_identifier: "ecf-mentor"

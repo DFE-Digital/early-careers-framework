@@ -1,0 +1,13 @@
+description: "The deferral request for an NPQ participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQParticipantDefer"
+example:
+  data:
+    type: "participant-defer"
+    attributes:
+      reason: "parental-leave"
+      course_identifier: "npq-senior-leadership"
