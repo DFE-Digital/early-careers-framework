@@ -21,7 +21,7 @@ module Participants
                                           reason:)
 
           user_profile.training_status_withdrawn!
-          relevant_induction_record.update!(training_status: "withdrawn") if relevant_induction_record
+          relevant_induction_record.update!(training_status: "withdrawn", force_training_status_change:) if relevant_induction_record
         end
 
         unless user_profile.npq?

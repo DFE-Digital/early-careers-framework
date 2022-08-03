@@ -332,6 +332,9 @@ Rails.application.routes.draw do
     resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
 
     resources :participants, only: %i[index show]
+    resources :participant_profiles, only: [] do
+      resource :change_training_status, only: %i[new create]
+    end
 
     namespace :banding_tracker, path: "banding-tracker" do
       resources :providers, only: %i[show]
