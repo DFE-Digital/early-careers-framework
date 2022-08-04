@@ -4,11 +4,12 @@ ci_node_total = ENV["CI_NODE_TOTAL"] || "1"
 ci_node_index = ENV["CI_NODE_INDEX"] || "0"
 github_sha = ENV['GITHUB_SHA'] || "fake-sha-123"
 
-tests = Dir["spec/**/*_spec.rb"].
-  sort.
+tests = Dir["spec/**/*_spec.rb"]
+  .reject { |path| path.match?(/spec\/docs\/v3/) }
+  .sort
   # Add randomization seed based on SHA of each commit
-  shuffle(random: Random.new(github_sha.to_i(16))).
-  select.
-  with_index { |el, i| i % ci_node_total.to_i == ci_node_index.to_i }
+  .shuffle(random: Random.new(github_sha.to_i(16)))
+  .select
+  .with_index { |el, i| i % ci_node_total.to_i == ci_node_index.to_i }
 
 exec "bundle exec rspec #{tests.join(" ")} --format documentation --profile #{ARGV.any? ? ARGV.join(' ') : ''}"
