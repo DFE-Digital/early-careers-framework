@@ -322,7 +322,10 @@ Rails.application.routes.draw do
 
     namespace :npq do
       resource :applications, only: [] do
-        resource :exports, only: %i[new create], controller: "applications/exports"
+        resources :exports, only: %i[index new create], controller: "applications/exports"
+        get "/eligibility_imports/example", to: "applications/eligibility_imports#example", as: :example_csv_file
+        resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
+
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
       end
     end

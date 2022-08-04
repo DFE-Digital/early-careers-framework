@@ -1,0 +1,31 @@
+<% content_for :title, t(".title") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl"><%= t(".title") %></h1>
+
+    <p class="govuk-body">
+      To schedule an import of an eligibility update file, please upload your file to the dedicated secure drive on Google Drive then enter the filename below.
+      An example file can be found <%= link_to "here", example_csv_file_admin_npq_applications_path(format: :csv) %>.
+    </p>
+
+    <div class="admin-search-box">
+      <%= form_for(@eligibility_import, url: admin_npq_applications_eligibility_imports_path) do |f| %>
+        <%= f.govuk_error_summary %>
+
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <%= f.govuk_text_field :filename,
+                                   label: { text: t(".form.filename.label") },
+                                   hint: { text: t(".form.filename.hint"), size: "s" } %>
+          </div>
+        </div>
+
+        <%= f.govuk_submit t(".form.submit") %>
+      <% end %>
+
+      <p class="govuk-body"><small>If multiple files with the same name are found or the imported file contains columns other than those in the example file above the scheduled import will be cancelled to prevent ambiguous updates.</small></p>
+    </div>
+  </div>
+</div>

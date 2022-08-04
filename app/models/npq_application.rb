@@ -41,7 +41,7 @@ class NPQApplication < ApplicationRecord
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 
-  delegate :start_year, to: :cohort, prefix: true
+  delegate :start_year, to: :cohort, prefix: true, allow_nil: true
 
   delegate :user, to: :participant_identity
   delegate :id, :full_name, :email, to: :user, prefix: true

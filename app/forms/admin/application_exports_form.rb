@@ -29,7 +29,7 @@ module Admin
     def save
       return false unless valid?
 
-      @npq_application_export = NPQApplicationExport.create!(
+      @npq_application_export = ::NPQApplications::Export.create!(
         start_date:,
         end_date:,
         user:,

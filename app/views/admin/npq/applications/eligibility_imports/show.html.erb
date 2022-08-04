@@ -1,0 +1,60 @@
+<% content_for :title, t(".title") %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+
+<h1 class="govuk-heading-l"><%= t(".title") %></h1>
+
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  <%
+    attributes = [
+      :id,
+      :filename,
+    ]
+    attributes << :updated_records if @eligibility_import.processed?
+
+    attributes.each do |attribute|
+  %>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        <%= t(".table.#{attribute}") %>
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%= @eligibility_import.send(attribute) || "-" %>
+      </dd>
+    </div>
+  <% end %>
+
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      <%= t(".table.status") %>
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <%= t("npq_applications.eligibility_import.status.#{@eligibility_import.status}") %>
+    </dd>
+  </div>
+
+  <%
+    [
+      :processed_at,
+      :created_at,
+    ].each do |attribute|
+  %>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        <%= t(".table.#{attribute}") %>
+      </dt>
+      <dd class="govuk-summary-list__value">
+        <%= @eligibility_import.send(attribute)&.to_s(:govuk) || "-" %>
+      </dd>
+    </div>
+  <% end %>
+</dl>
+
+<% if @eligibility_import.import_errors.any? %>
+  <h2 class="govuk-heading-l"><%= t(".table.import_errors") %></h2>
+
+  <ul>
+    <% @eligibility_import.import_errors.each do |import_error| %>
+      <li><%= import_error %></li>
+    <% end %>
+  </ul>
+<% end %>

@@ -1,0 +1,42 @@
+<% content_for :title, t(".title") %>
+
+<%= render "admin/npq/applications/layout", locals = { page: "eligibility_import" } %>
+
+<% if policy(NPQApplications::EligibilityImport).new? %>
+  <%= govuk_button_link_to t(".new"), new_admin_npq_applications_eligibility_import_path %>
+<% end %>
+
+<table class="govuk-table">
+  <thead>
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header"><%= t(".table.filename") %></th>
+      <th scope="col" class="govuk-table__header"><%= t(".table.status") %></th>
+      <th scope="col" class="govuk-table__header"><%= t(".table.created_at") %></th>
+      <th scope="col" class="govuk-table__header"><%= t(".table.processed_at") %></th>
+      <th scope="col" class="govuk-table__header"></th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% if @eligibility_imports.none? %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell govuk-!-text-align-centre" colspan="5">No Imports found</td>
+      </tr>
+    <% else %>
+      <% @eligibility_imports.each do |eligibility_import| %>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell"><%= eligibility_import.filename %></td>
+          <td class="govuk-table__cell"><%= t("npq_applications.eligibility_import.status.#{eligibility_import.status}") %></td>
+          <td class="govuk-table__cell"><%= eligibility_import.created_at.to_s(:govuk) %></td>
+          <td class="govuk-table__cell"><%= eligibility_import.processed_at&.to_s(:govuk) || "-" %></td>
+          <td class="govuk-table__cell">
+            <%=
+              text = eligibility_import.failed? ? t(".table.show.failed") : t(".table.show.success")
+              link_to(text, admin_npq_applications_eligibility_import_path(eligibility_import)) if eligibility_import.processed?
+            %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<%== govuk_paginate @eligibility_imports, @pagy %>

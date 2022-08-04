@@ -15,6 +15,14 @@ FactoryBot.define do
     date_of_birth { rand(25..50).years.ago + rand(0..365).days }
     teacher_reference_number { rand(1_000_000..9_999_999).to_s }
 
+    eligible_for_funding { false }
+    funding_eligiblity_status_code { :ineligible_establishment_type }
+
+    trait :funded do
+      eligible_for_funding { true }
+      funding_eligiblity_status_code { :funded }
+    end
+
     trait :accepted do
       after :create do |npq_application|
         NPQ::Accept.call(npq_application:)

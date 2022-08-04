@@ -4,16 +4,25 @@ module Admin
   module NPQ
     module Applications
       class ExportsController < Admin::BaseController
-        skip_after_action :verify_policy_scoped
+        skip_after_action :verify_policy_scoped, except: [:index]
+
+        def index
+          authorize ::NPQApplications::Export
+
+          all_exports = policy_scope(::NPQApplications::Export).new_to_old
+          @pagy, @exports = pagy_array(all_exports, page: params[:page], items: 20)
+          @page = @pagy.page
+          @total_pages = @pagy.pages
+        end
 
         def new
-          authorize NPQApplication
+          authorize ::NPQApplications::Export
 
           @export_form = Admin::ApplicationExportsForm.new
         end
 
         def create
-          authorize NPQApplication
+          authorize ::NPQApplications::Export
 
           @export_form = Admin::ApplicationExportsForm.new(export_params.merge(user: current_user))
 
@@ -21,7 +30,7 @@ module Admin
             @export_form.npq_application_export.perform_later
 
             set_success_message heading: "Export scheduled, check secure drive for results"
-            redirect_to new_admin_npq_applications_exports_url
+            redirect_to new_admin_npq_applications_export_url
           else
             render :new
           end

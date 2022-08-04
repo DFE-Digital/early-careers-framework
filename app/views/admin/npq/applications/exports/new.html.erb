@@ -1,9 +1,9 @@
-<% content_for :title, "Applications Export" %>
+<% content_for :title, t(".title") %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Applications Export</h1>
+    <h1 class="govuk-heading-xl"><%= t(".title") %></h1>
 
     <div class="admin-search-box">
       <%= form_for(@export_form, url: admin_npq_applications_exports_path) do |f| %>
@@ -12,18 +12,18 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full">
             <%= f.govuk_date_field :start_date,
-                                   legend: { text: "Export Start Date", size: "s" } %>
+                                   legend: { text: t(".form.start_date.label"), size: "s" } %>
           </div>
         </div>
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-full">
             <%= f.govuk_date_field :end_date,
-                                   legend: { text: "Export End Date", size: "s" } %>
+                                   legend: { text: t(".form.end_date.label"), size: "s" } %>
           </div>
         </div>
 
-        <%= f.govuk_submit "Schedule Export" %>
+        <%= f.govuk_submit t(".form.submit") %>
       <% end %>
     </div>
   </div>

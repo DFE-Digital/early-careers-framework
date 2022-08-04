@@ -20,7 +20,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
     expect {
       when_i_click_the_button_labelled("Schedule Export")
     }.to have_enqueued_job(
-      Admin::ApplicationExportJob,
+      Admin::NPQApplications::ExportJob,
     ).with { |npq_application_export|
       expect(npq_application_export.user).to eq @logged_in_admin_user
       expect(npq_application_export.start_date).to eq Date.new(2022, 6, 6)
@@ -28,7 +28,7 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
     }
 
     expect(
-      NPQApplicationExport.find_by(
+      NPQApplications::Export.find_by(
         user: @logged_in_admin_user,
         start_date: Date.new(2022, 6, 6),
         end_date: Date.new(2022, 7, 1),
@@ -56,9 +56,9 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
 
     expect {
       when_i_click_the_button_labelled("Schedule Export")
-    }.to_not have_enqueued_job(Admin::ApplicationExportJob)
+    }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplicationExport.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -75,9 +75,9 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
 
     expect {
       when_i_click_the_button_labelled("Schedule Export")
-    }.to_not have_enqueued_job(Admin::ApplicationExportJob)
+    }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplicationExport.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -102,9 +102,9 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
 
     expect {
       when_i_click_the_button_labelled("Schedule Export")
-    }.to_not have_enqueued_job(Admin::ApplicationExportJob)
+    }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplicationExport.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -128,9 +128,9 @@ RSpec.feature "Admin NPQ Application export system", js: true, rutabaga: false d
 
     expect {
       when_i_click_the_button_labelled("Schedule Export")
-    }.to_not have_enqueued_job(Admin::ApplicationExportJob)
+    }.to_not have_enqueued_job(Admin::NPQApplications::ExportJob)
 
-    expect(NPQApplicationExport.any?).to be_falsey
+    expect(NPQApplications::Export.any?).to be_falsey
 
     then_i_should_be_on the_npq_applications_exports_page
     and_the_page_should_be_accessible
@@ -145,7 +145,7 @@ private
   end
 
   def the_npq_applications_export_page
-    new_admin_npq_applications_exports_path
+    new_admin_npq_applications_export_path
   end
 
   def the_npq_applications_exports_page

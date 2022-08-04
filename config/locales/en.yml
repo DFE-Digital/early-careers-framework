@@ -472,6 +472,69 @@ en:
             title: "Transferring from your school"
             description: ""
 
+  admin:
+    npq:
+      applications:
+        layout:
+          title: NPQ Applications
+          exports: Application Exports
+          eligibility_imports: Eligibility Imports
+        exports:
+          new:
+            title: New NPQ Applications Export
+            form:
+              start_date:
+                label: Export Start Date
+              end_date:
+                label: Export End Date
+              submit: Schedule Export
+          index:
+            title: NPQ Application Exports
+            new: Schedule Export
+            table:
+              start_date: Start Date
+              end_date: End Date
+              created_at: Scheduled At
+              empty: No Imports Found
+        eligibility_imports:
+          new:
+            title: NPQ Eligibility Imports
+            form:
+              filename:
+                label: Secure Drive Filename
+                hint: This is the name of the file within the Imports folder
+              submit: Schedule Import
+          index:
+            title: NPQ Application Eligibility Imports
+            new: Schedule Import
+            table:
+              filename: Filename
+              status: Status
+              processed_at: Processed At
+              created_at: Scheduled At
+              show:
+                failed: View Errors
+                success: View Results
+          show:
+            title: NPQ Application Eligibility Import
+            table:
+              id: Import ID
+              filename: Filename
+              status: Status
+              updated_records: Updated Records
+              import_errors: Import Errors
+              processed_at: Processed At
+              created_at: Scheduled At
+
+  npq_applications:
+    eligibility_import:
+      status:
+        pending: Pending
+        processing: Processing
+        completed: Completed
+        completed_with_errors: Completed With Errors
+        failed: Failed
+
   pagy:
     nav:
       prev: ← Previous
