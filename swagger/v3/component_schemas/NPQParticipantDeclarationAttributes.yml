@@ -22,7 +22,6 @@ properties:
       - retained-1
       - retained-2
       - retained-3
-      - retained-4
     example: started
   declaration_date:
     description: "The event declaration date"
@@ -33,8 +32,6 @@ properties:
     description: "The type of course the participant is enrolled in"
     type: string
     enum:
-      - ecf-induction
-      - ecf-mentor
       - npq-leading-teaching
       - npq-leading-behaviour-culture
       - npq-leading-teaching-development
@@ -45,7 +42,7 @@ properties:
       - npq-early-years-leadership
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
-    example: ecf-induction
+    example: npq-leading-teaching
   state:
     description: "Indicates the state of this payment declaration"
     type: string
@@ -56,9 +53,38 @@ properties:
       - paid
       - voided
       - ineligible
+      - awaiting-clawback
+      - clawed-back
     example: submitted
   updated_at:
     description: "The date the declaration was last updated"
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  created_at:
+    description: "The date the declaration was created"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  statement_id:
+    description: "Unique ID of the statement the declaration will be paid as part of"
+    type: string
+    format: uuid
+    example: cd3a12347-7308-4879-942a-c4a70ced400a
+  clawback_statement_id:
+    description: "Unique id of the statement to which the declaration will be clawed back on, if any"
+    type: string
+    format: uuid
+    example: cd3a12347-7308-4879-942a-c4a70ced400a
+  inelgible_for_funding_reason:
+    description: "If the declaration is ineligible, the reason why"
+    type: string
+    enum:
+      - to
+      - be
+      - determined
+    example: unknown
+  uplift_paid:
+    description: "If participant is eligible for uplift, whether it has been paid as part of this declaration"
+    type: boolean
+    example: true

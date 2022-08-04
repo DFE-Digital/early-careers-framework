@@ -23,5 +23,11 @@ components:
       type: http
       scheme: bearer
   schemas:
+    ParticipantDeclarationResponse:
+      anyOf:
+        - $ref: "#/components/schemas/ECFParticipantDeclarationResponse"
+        - $ref: "#/components/schemas/NPQParticipantDeclarationResponse"
+      discriminator:
+        propertyName: type
 security:
   - "bearerAuth": []
