@@ -13,15 +13,16 @@ RSpec.describe "Participants API", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let!(:mentor_profile) do
-    create(:mentor_participant_profile, school_cohort:)
-      .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
+    travel_to 3.days.ago do
+      create(:mentor_participant_profile, school_cohort:)
+        .tap { |profile| Induction::Enrol.call(participant_profile: profile, induction_programme:) }
+    end
   end
 
   before :each do
-    profiles = create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort
-    profiles.each do |profile|
-      Induction::Enrol.call(participant_profile: profile, induction_programme:).tap do |ir|
-        ir.update!(mentor_profile:)
+    travel_to 2.days.ago do
+      create_list :ect_participant_profile, 2, mentor_profile: mentor_profile, school_cohort: school_cohort do |profile|
+        Induction::Enrol.call(participant_profile: profile, induction_programme:, mentor_profile:)
       end
     end
 
@@ -33,7 +34,9 @@ RSpec.describe "Participants API", type: :request do
       school_cohort:,
     )
     Induction::Enrol.call(participant_profile: profile, induction_programme:)
-      .tap { |induction_record| induction_record.update!(training_status: "withdrawn") }
+      .tap do |induction_record|
+      induction_record.update!(training_status: "withdrawn")
+    end
     default_headers[:Authorization] = bearer_token
   end
 
@@ -68,7 +71,8 @@ RSpec.describe "Participants API", type: :request do
 
         it "returns all users" do
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "only returns users for the current cohort" do
@@ -78,7 +82,7 @@ RSpec.describe "Participants API", type: :request do
           create(:ect_participant_profile, school_cohort: school_cohort_2020)
 
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
@@ -88,7 +92,7 @@ RSpec.describe "Participants API", type: :request do
           create(:ect_participant_profile, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
 
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"].size).to eql(4)
+          expect(parsed_response["data"].size).to eql(5)
 
           parsed_response["data"].each do |user|
             next unless user["id"] == mentor_profile.user.id
@@ -139,7 +143,7 @@ RSpec.describe "Participants API", type: :request do
           ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
           expect(mentors).to eql(1)
-          expect(ects).to eql(3)
+          expect(ects).to eql(4)
           expect(withdrawn).to eql(1)
         end
 
@@ -161,36 +165,30 @@ RSpec.describe "Participants API", type: :request do
         end
 
         it "returns users in a consistent order" do
-          users = User.all
-          users.first.participant_profiles.each { |pp| pp.induction_records.first.update!(created_at: 1.day.ago) }
-          users.last.participant_profiles.each { |pp| pp.induction_records.first.update!(created_at: 2.days.ago) }
-
           get "/api/v1/participants/ecf"
-          expect(parsed_response["data"][0]["id"]).to eq User.last.id
-          expect(parsed_response["data"][1]["id"]).to eq User.first.id
+
+          expect(parsed_response["data"].first["id"]).to eq User.order(created_at: :asc).first.id
+          expect(parsed_response["data"].last["id"]).to eq User.order(created_at: :asc).last.id
         end
 
         context "when updated_since parameter is supplied" do
-          before do
-            User.first.update!(updated_at: 2.days.ago)
-          end
-
           it "returns users changed since the updated_since parameter" do
             get "/api/v1/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-            expect(parsed_response["data"].size).to eql(3)
+
+            expect(parsed_response["data"].size).to eq(3)
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
-            User.first.update!(updated_at: Date.new(1970, 1, 1))
+            User.order(created_at: :asc).first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v1/participants/ecf", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(3)
+            expect(parsed_response["data"].size).to eq(4)
           end
 
           context "when updated_since parameter is encoded/escaped" do
             it "unescapes the value and returns users changed since the updated_since date" do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
               get "/api/v1/participants/ecf", params: { filter: { updated_since: since } }
-              expect(parsed_response["data"].size).to eql(3)
+              expect(parsed_response["data"].size).to eq(3)
             end
           end
 
@@ -251,7 +249,7 @@ RSpec.describe "Participants API", type: :request do
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "returns the correct headers" do
@@ -292,7 +290,13 @@ RSpec.describe "Participants API", type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = ParticipantProfile::ECT.active_record.first.user
+          ect = InductionRecord
+                  .active_induction_status
+                  .joins(:participant_profile)
+                  .where(participant_profile: { type: "ParticipantProfile::ECT" })
+                  .first
+                  .participant_profile
+                  .user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
@@ -326,11 +330,10 @@ RSpec.describe "Participants API", type: :request do
 
         it "ignores pagination parameters" do
           get "/api/v1/participants/ecf.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 4
+          expect(parsed_response.length).to eql 5
         end
 
         it "respects the updated_since parameter" do
-          User.first.update!(updated_at: 2.days.ago)
           get "/api/v1/participants/ecf.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
           expect(parsed_response.length).to eql(3)
         end
@@ -400,12 +403,14 @@ RSpec.describe "Participants API", type: :request do
     end
   end
 
-  describe "GET /api/v1/participants/ecf/:id", :with_default_schedules, travel_to: Time.zone.local(2022, 7, 22, 11, 30, 0) do
+  describe "GET /api/v1/participants/ecf/:id", :with_default_schedules do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before do
       default_headers[:Authorization] = bearer_token
-      get "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}"
+      travel_to Time.zone.local(2022, 7, 22, 11, 30, 0) do
+        get "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}"
+      end
     end
 
     context "when authorized" do

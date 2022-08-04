@@ -5,7 +5,11 @@ require "rails_helper"
 module Api
   module V1
     RSpec.describe ParticipantFromInductionRecordSerializer do
-      let(:induction_record) { create(:induction_record) }
+      let(:lead_provider)        { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
+      let(:partnership)          { create(:partnership, lead_provider:) }
+      let(:induction_programme)  { create(:induction_programme, partnership:) }
+      let(:participant_identity) { nil }
+      let(:induction_record)     { create(:induction_record, induction_programme:, preferred_identity: participant_identity) }
 
       subject { described_class.new(induction_record) }
 
@@ -51,7 +55,6 @@ module Api
 
       describe "#email" do
         let(:participant_identity) { create(:participant_identity, email: "second_email@example.com") }
-        let(:induction_record) { create(:induction_record, preferred_identity: participant_identity) }
 
         it "returns preferred identity email" do
           expect(subject.serializable_hash[:data][:attributes][:email]).to eql(participant_identity.email)
@@ -59,7 +62,6 @@ module Api
       end
 
       describe "#updated_at" do
-        let(:induction_record) { create(:induction_record) }
         let(:user) { induction_record.participant_profile.user }
         let(:profile) { induction_record.participant_profile }
         let(:identity) { induction_record.participant_profile.participant_identity }

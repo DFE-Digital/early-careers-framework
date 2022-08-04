@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.feature "Banding tracker", type: :feature, js: true do
   let!(:cpd_lead_provider) do
-    create(:cpd_lead_provider, :with_lead_provider).tap do |cpd_lead_provider|
+    create(:cpd_lead_provider, :with_lead_provider, name: "Lead provider name").tap do |cpd_lead_provider|
       create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider, revised_target: 65).tap do |call_off_contract|
         band_a, band_b, band_c, band_d = call_off_contract.bands
         band_a.update!(min: nil, max: 2)
@@ -80,7 +80,7 @@ RSpec.feature "Banding tracker", type: :feature, js: true do
       expect(page).to have_link("Please select a provider", href: "#finance-banding-tracker-choose-provider-id-field-error")
     end
 
-    choose "Lead Provider"
+    choose "Lead provider name"
     click_on "Continue"
 
     expect(page).to have_css("h2", text: "Banding Tracker")

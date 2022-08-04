@@ -22,6 +22,8 @@ RSpec.describe InductionRecord, type: :model do
     it { is_expected.to belong_to(:schedule) }
     it { is_expected.to belong_to(:preferred_identity).optional }
     it { is_expected.to belong_to(:mentor_profile).optional }
+    it { is_expected.to have_one(:partnership).through(:induction_programme) }
+    it { is_expected.to have_one(:lead_provider).through(:partnership) }
   end
 
   describe "validations" do

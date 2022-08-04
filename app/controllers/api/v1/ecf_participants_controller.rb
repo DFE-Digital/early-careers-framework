@@ -34,11 +34,11 @@ module Api
     private
 
       def induction_records
-        @induction_records ||= ECFParticipants::Index.new(cpd_lead_provider: current_user, params:).induction_records
+        @induction_records ||= ecf_participant_query.induction_records
       end
 
       def induction_record
-        @induction_record = ECFParticipants::Index.new(cpd_lead_provider: current_user, params:).induction_record.first
+        @induction_record ||= ecf_participant_query.induction_record
       end
 
       def access_scope
@@ -48,6 +48,10 @@ module Api
 
       def lead_provider
         current_user.lead_provider
+      end
+
+      def ecf_participant_query
+        ECFParticipants::Index.new(lead_provider, params)
       end
     end
   end

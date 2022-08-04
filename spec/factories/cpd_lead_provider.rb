@@ -5,7 +5,7 @@ FactoryBot.define do
     name  { Faker::Company.name }
 
     trait :with_lead_provider do
-      lead_provider
+      lead_provider { create(:lead_provider, name:) }
     end
 
     trait :with_npq_lead_provider do
