@@ -6,13 +6,11 @@ module NPQApplications
       admin?
     end
 
-    def new?
-      admin?
+    def create?
+      admin? && !Rails.env.sandbox?
     end
 
-    def create?
-      admin?
-    end
+    alias_method :new?, :create?
 
     class Scope < Scope
       def resolve

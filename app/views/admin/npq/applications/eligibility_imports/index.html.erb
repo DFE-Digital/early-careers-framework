@@ -2,7 +2,9 @@
 
 <%= render "admin/npq/applications/layout", locals = { page: "eligibility_import" } %>
 
-<%= govuk_button_link_to t(".new"), new_admin_npq_applications_eligibility_import_path %>
+<% if policy(NPQApplications::EligibilityImport).new? %>
+  <%= govuk_button_link_to t(".new"), new_admin_npq_applications_eligibility_import_path %>
+<% end %>
 
 <table class="govuk-table">
   <thead>

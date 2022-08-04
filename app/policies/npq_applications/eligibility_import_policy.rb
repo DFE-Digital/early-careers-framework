@@ -2,25 +2,18 @@
 
 module NPQApplications
   class EligibilityImportPolicy < ApplicationPolicy
-    def index?
-      admin?
-    end
-
     def show?
       admin?
     end
 
-    def new?
-      admin?
-    end
-
-    def example?
-      admin?
-    end
+    alias_method :index?, :show?
+    alias_method :example?, :show?
 
     def create?
-      admin?
+      admin? && !Rails.env.sandbox?
     end
+
+    alias_method :new?, :create?
 
     class Scope < Scope
       def resolve

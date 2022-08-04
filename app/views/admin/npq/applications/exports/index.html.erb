@@ -2,7 +2,9 @@
 
 <%= render "admin/npq/applications/layout", locals = { page: "exports" } %>
 
-<%= govuk_button_link_to t(".new"), new_admin_npq_applications_export_path %>
+<% if policy(NPQApplications::Export).new? %>
+  <%= govuk_button_link_to t(".new"), new_admin_npq_applications_export_path %>
+<% end %>
 
 <table class="govuk-table">
   <thead>
