@@ -64,7 +64,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
   describe "steps" do
     describe "STEP trn" do
       context "when no_trn flag is not set" do
-        it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter your TRN (teacher reference number)") }
+        it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter your teacher reference number (TRN)") }
 
         it "validates the TRN has at least 5 digits" do
           form.trn = "RP22/12"
