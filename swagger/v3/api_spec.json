@@ -2,12 +2,12 @@
   "openapi": "3.0.1",
   "info": {
     "version": "3.0.0",
-    "title": "Manage teacher CPD - lead provider API",
+    "title": "Lead provider API - 3.0.0 (Draft)",
     "contact": {
       "name": "DfE",
       "email": "continuing-professional-development@digital.education.gov.uk"
     },
-    "description": "The lead provider API for DfE's manage teacher CPD service"
+    "description": "The lead provider API for DfE's manage teacher CPD service. You cannot make calls to this version in any environment. We are sharing as a spec only now - your feedback is welcome"
   },
   "servers": [
     {
