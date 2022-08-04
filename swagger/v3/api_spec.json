@@ -24,6 +24,44 @@
     }
   ],
   "paths": {
+    "/api/v3/partnerships/ecf": {
+      "get": {
+        "summary": "Retrieve multiple ECF partnerships",
+        "operationId": "partnerships_ecf_get",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of ECF partnerships",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleECFPartnershipsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/npq-applications": {
       "get": {
         "summary": "Retrieve multiple NPQ applications",
@@ -2299,6 +2337,93 @@
           }
         }
       },
+      "ECFPartnership": {
+        "description": "An ECF partnership",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the partnership",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "partnership"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFPartnershipAttributes"
+          }
+        }
+      },
+      "ECFPartnershipAttributes": {
+        "description": "The data attributes associated with a participant declaration response",
+        "type": "object",
+        "required": [
+          "cohort",
+          "urn",
+          "delivery_partner_id",
+          "status",
+          "updated_at",
+          "created_at"
+        ],
+        "properties": {
+          "cohort": {
+            "description": "The cohort for which you have partnered with the school",
+            "type": "string",
+            "example": "2021"
+          },
+          "urn": {
+            "description": "The Unique Reference Number (URN) of the school you are partnered with",
+            "type": "string",
+            "example": "123456"
+          },
+          "delivery_partner_id": {
+            "description": "The Unique Reference Number (URN) of the school you are partnered with",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "status": {
+            "description": "The status of the partnership which includes active or challenged",
+            "type": "string",
+            "enum": [
+              "active",
+              "challenged"
+            ],
+            "example": "active"
+          },
+          "challenged_reason": {
+            "description": "If the partnership has been challenged, the reason provided for the challenge by the SIT",
+            "type": "string",
+            "enum": [
+              "another_provider",
+              "not_confirmed",
+              "do_not_recognise",
+              "no_ects",
+              "mistake"
+            ]
+          },
+          "updated_at": {
+            "description": "The date the partnership was reported by you",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "created_at": {
+            "description": "The date the partnership was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
       "Error": {
         "description": "An single error element",
         "type": "object",
@@ -2425,6 +2550,21 @@
                 }
               }
             ]
+          }
+        }
+      },
+      "MultipleECFPartnershipsResponse": {
+        "description": "A list of ECF partnerships",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ECFPartnership"
+            }
           }
         }
       },

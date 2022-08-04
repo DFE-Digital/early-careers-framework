@@ -1,0 +1,49 @@
+description: "The data attributes associated with a participant declaration response"
+type: object
+required:
+  - cohort
+  - urn
+  - delivery_partner_id
+  - status
+  - updated_at
+  - created_at
+properties:
+  cohort:
+    description: "The cohort for which you have partnered with the school"
+    type: string
+    example: "2021"
+  urn:
+    description: "The Unique Reference Number (URN) of the school you are partnered with"
+    type: string
+    example: "123456"
+  delivery_partner_id:
+    description: "The Unique Reference Number (URN) of the school you are partnered with"
+    type: string
+    format: uuid
+    example: cd3a12347-7308-4879-942a-c4a70ced400a
+  status:
+    description: "The status of the partnership which includes active or challenged"
+    type: string
+    enum:
+      - active
+      - challenged
+    example: "active"
+  challenged_reason:
+    description: "If the partnership has been challenged, the reason provided for the challenge by the SIT"
+    type: string
+    enum:
+      - another_provider
+      - not_confirmed
+      - do_not_recognise
+      - no_ects
+      - mistake
+  updated_at:
+    description: "The date the partnership was reported by you"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  created_at:
+    description: "The date the partnership was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
