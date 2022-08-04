@@ -48,13 +48,13 @@ RSpec.describe DeliveryPartners::Participants::TableRow, type: :view_component d
   context "mentor with multiple profiles" do
     let(:school_cohort) { create(:school_cohort) }
 
+    before do
+      participant_profile.reload
+    end
+
     context "when the primary profile is eligible" do
       let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
-
-      before do
-        participant_profile.reload
-      end
 
       it { is_expected.to have_text("Training or eligible for training") }
     end
@@ -63,11 +63,14 @@ RSpec.describe DeliveryPartners::Participants::TableRow, type: :view_component d
       let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
-      before do
-        participant_profile.reload
-      end
-
       it { is_expected.to have_text("Training or eligible for training") }
+    end
+
+    context "when participant is Mentor and Induction Tutor" do
+      let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+      let(:induction_coordinator_profile) { create(:induction_coordinator_profile, user: participant_profile.user) }
+
+      it { is_expected.to have_text("Mentor") }
     end
   end
 

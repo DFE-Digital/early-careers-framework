@@ -8,9 +8,10 @@ module DeliveryPartners
       delegate :user,
                :teacher_profile,
                :cohort,
+               :role,
                to: :participant_profile
 
-      delegate :full_name, :user_description,
+      delegate :full_name,
                to: :user
 
       delegate :training_status,

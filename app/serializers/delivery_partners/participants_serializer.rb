@@ -43,9 +43,7 @@ module DeliveryPartners
       participant_profile.teacher_profile.trn
     end
 
-    attribute :role do |participant_profile|
-      participant_profile.user.user_description
-    end
+    attribute :role, &:role
 
     attribute :lead_provider do |participant_profile, params|
       induction_record(participant_profile, params[:delivery_partner])&.induction_programme&.partnership&.lead_provider&.name
