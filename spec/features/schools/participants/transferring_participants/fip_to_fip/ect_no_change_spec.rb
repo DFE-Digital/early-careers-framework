@@ -267,11 +267,11 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def then_i_should_see_a_enter_trn_error_message
-        expect(page).to have_text("Enter the teachers TRN (teacher reference number)")
+        expect(page).to have_text("Enter the teacher reference number (TRN)")
       end
 
       def then_i_should_see_invalid_trn_message
-        expect(page).to have_text("Teacher reference number is at least 5 digits long")
+        expect(page).to have_text("Teacher reference number contains at least 5 digits")
       end
 
       def then_i_should_see_enter_date_of_birth_error_message

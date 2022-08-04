@@ -49,7 +49,7 @@ RSpec.feature "Participant validation journey",
 
     when_i_am_on_the_participant_registration_wizard
     click_on "Continue"
-    then_i_see_an_error_message "Enter your teacher reference number"
+    then_i_see_an_error_message "Enter your teacher reference number (TRN)"
 
     when_i_add_teacher_reference_number_to_the_participant_registration_wizard "1234567"
     click_on "Continue"

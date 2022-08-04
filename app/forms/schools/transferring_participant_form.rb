@@ -9,11 +9,7 @@ module Schools
     attr_accessor :full_name, :trn, :date_of_birth, :start_date, :email, :mentor_id, :schools_current_programme_choice, :teachers_current_programme_choice, :same_programme, :current_step, :steps
 
     validates :full_name, presence: true, on: :full_name
-    validates :trn,
-              presence: true,
-              format: { with: /\A\d+\z/ },
-              length: { within: 5..7 },
-              on: :trn
+    validates :trn, teacher_reference_number: true, on: :trn
     validates :email, presence: true, notify_email: true, on: :email
     validates :mentor_id, presence: true, on: :choose_mentor
     validate :schools_programme_choice, on: :schools_current_programme
@@ -40,6 +36,10 @@ module Schools
 
     def formatted_full_name
       full_name.split("-").map(&:titleize).join("-")
+    end
+
+    def formatted_trn
+      TeacherReferenceNumber.new(trn).formatted_trn
     end
 
     def full_name_to_display

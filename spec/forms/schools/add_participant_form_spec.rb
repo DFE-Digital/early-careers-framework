@@ -24,7 +24,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   it { is_expected.to validate_presence_of(:transfer).on(:transfer) }
 
   describe "when a SIT knows the teachers trn" do
-    it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter the teacher reference number (TRN) for the teacher you are adding") }
+    it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter the teacher reference number (TRN)") }
     it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
     it { is_expected.to validate_presence_of(:date_of_birth).on(:dob) }
 

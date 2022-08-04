@@ -51,9 +51,7 @@ module Participants
       attribute :no_trn, :boolean, default: false
 
       validates :trn,
-                presence: true,
-                format: { with: /\A\d+\z/ },
-                length: { within: 5..7 },
+                teacher_reference_number: { message_scope: "errors.teacher_reference_number_personalised" },
                 unless: :no_trn
 
       before_complete { check_eligibility! if dob.present? && !no_trn }
@@ -129,7 +127,7 @@ module Participants
     def check_eligibility!
       self.dqt_response = ParticipantValidationService.validate(
         full_name:,
-        trn:,
+        trn: formatted_trn,
         date_of_birth: dob,
         nino:,
         config: {
@@ -162,7 +160,7 @@ module Participants
       StoreValidationResult.call(
         participant_profile:,
         validation_data: {
-          trn:,
+          trn: formatted_trn,
           nino:,
           full_name:,
           dob:,
@@ -188,6 +186,10 @@ module Participants
 
     def additional_step
       (EXTRA_STEPS - completed_steps).first || :manual_check
+    end
+
+    def formatted_trn
+      TeacherReferenceNumber.new(trn).formatted_trn
     end
 
     def call(save_validation_data_without_match: true)
