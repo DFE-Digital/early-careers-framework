@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NotifyEmailValidator do
+RSpec.describe TeacherReferenceNumberValidator do
   with_model :teacher do
     table do |t|
       t.string :trn
