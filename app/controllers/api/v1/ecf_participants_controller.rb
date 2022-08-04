@@ -14,19 +14,19 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            participant_hash = ParticipantFromInductionRecordSerializer.new(paginate(induction_records), params: { lead_provider: }).serializable_hash
+            participant_hash = ParticipantFromInductionRecordSerializer.new(paginate(induction_records)).serializable_hash
             render json: participant_hash.to_json
           end
 
           format.csv do
-            participant_hash = ParticipantFromInductionRecordSerializer.new(induction_records, params: { lead_provider: }).serializable_hash
+            participant_hash = ParticipantFromInductionRecordSerializer.new(induction_records).serializable_hash
             render body: to_csv(participant_hash)
           end
         end
       end
 
       def show
-        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_record, params: { lead_provider: }).serializable_hash
+        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_record).serializable_hash
 
         render json: participant_hash.to_json
       end

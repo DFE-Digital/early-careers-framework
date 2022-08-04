@@ -66,12 +66,6 @@ class InductionRecord < ApplicationRecord
   delegate :lead_provider, to: :induction_programme, allow_nil: true
   delegate :lead_provider_name, to: :induction_programme, allow_nil: true
 
-  def active?(lead_provider)
-    return false if partnership.nil? || lead_provider != partnership.lead_provider
-
-    !(withdrawn_induction_status? || training_status_withdrawn? || changed_induction_status?)
-  end
-
   def enrolled_in_fip?
     induction_programme.full_induction_programme?
   end

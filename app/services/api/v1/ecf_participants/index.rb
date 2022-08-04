@@ -31,7 +31,7 @@ module Api
                       :schedule,
                       induction_programme: { school_cohort: %i[school cohort] },
                       mentor_profile: [:participant_identity],
-                      participant_profile: %i[participant_identity user ecf_participant_eligibility ecf_participant_validation_data],
+                      participant_profile: %i[ecf_participant_eligibility ecf_participant_validation_data participant_identity teacher_profile user],
                     )
                     .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.id = induction_records.id AND latest_induction_records.created_at_precedence = 1")
 

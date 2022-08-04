@@ -11,7 +11,7 @@ module Api
       let(:participant_identity) { nil }
       let(:induction_record)     { create(:induction_record, induction_programme:, preferred_identity: participant_identity) }
 
-      subject { described_class.new(induction_record, params: { lead_provider: induction_record.lead_provider }) }
+      subject { described_class.new(induction_record) }
 
       describe "#status" do
         context "when active" do
