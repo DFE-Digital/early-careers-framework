@@ -37,6 +37,14 @@ properties:
       - do_not_recognise
       - no_ects
       - mistake
+  induction_tutor_name:
+    description: "The name of the induction tutor at the school you are in partnership with"
+    type: string
+    example: "John Doe"
+  induction_tutor_email:
+    description: "The email address of the induction tutor at the school you are in partnership with"
+    type: string
+    example: "john.doe@example.com"
   updated_at:
     description: "The date the partnership was reported by you"
     type: string
