@@ -1,0 +1,9 @@
+description: "A list of ECF delivery partners"
+type: object
+required:
+  - data
+properties:
+  data:
+    type: array
+    items:
+      $ref: "#/components/schemas/ECFDeliveryPartner"

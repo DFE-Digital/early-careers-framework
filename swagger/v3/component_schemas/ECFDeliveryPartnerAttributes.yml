@@ -1,0 +1,10 @@
+description: "The data attributes associated with an ECF delivery partner"
+type: object
+required:
+  - name
+properties:
+  name:
+    description: "The name of the delivery partner"
+    type: string
+    nullable: false
+    example: "Awesome Delivery Partner Ltd"
