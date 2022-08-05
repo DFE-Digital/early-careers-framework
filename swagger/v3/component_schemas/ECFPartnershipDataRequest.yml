@@ -1,0 +1,9 @@
+description: "An ECF partnership"
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - ecf-partnership
+  attributes:
+    $ref: "#/components/schemas/ECFPartnershipAttibutesRequest"

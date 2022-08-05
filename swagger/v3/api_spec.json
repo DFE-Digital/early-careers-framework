@@ -98,6 +98,51 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "Create an ECF partnership with a school and delivery partner",
+        "operationId": "partnerships_ecf_post",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFPartnershipRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create an ECF partnership",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v3/npq-applications": {
@@ -2455,6 +2500,29 @@
           }
         }
       },
+      "ECFPartnershipAttibutesRequest": {
+        "type": "object",
+        "required": [
+          "cohort",
+          "delivery_partner_id",
+          "urn"
+        ],
+        "properties": {
+          "cohort": {
+            "description": "The cohort for which you are reporting the partnership",
+            "type": "string",
+            "example": 2021
+          },
+          "delivery_partner_id": {
+            "description": "The unique ID of the delivery partner you will work with for this school partnership",
+            "type": "string"
+          },
+          "urn": {
+            "description": "The Unique Reference Number (URN) of the school you are partnering with",
+            "type": "string"
+          }
+        }
+      },
       "ECFPartnershipAttributes": {
         "description": "The data attributes associated with a participant declaration response",
         "type": "object",
@@ -2524,6 +2592,55 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "ECFPartnershipDataRequest": {
+        "description": "An ECF partnership",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ecf-partnership"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFPartnershipAttibutesRequest"
+          }
+        }
+      },
+      "ECFPartnershipRequest": {
+        "description": "An ECF partnership",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ECFPartnershipDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "ecf-partnership",
+            "attributes": {
+              "cohort": "2021",
+              "urn": "123456",
+              "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
+            }
+          }
+        }
+      },
+      "ECFPartnershipResponse": {
+        "description": "A list of ECF partnerships",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ECFPartnership"
           }
         }
       },
