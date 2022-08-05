@@ -286,7 +286,7 @@ module Schools
 
     def check_against_dqt?
       @transferring_participant_form.full_name.present? &&
-        @transferring_participant_form.trn.present? &&
+        @transferring_participant_form.formatted_trn.present? &&
         @transferring_participant_form.date_of_birth.present?
     end
 
@@ -300,14 +300,14 @@ module Schools
       @participant_profile ||= ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
           .where("full_name ILIKE ? AND trn = ? AND date_of_birth = ?",
                  "#{first_name} %",
-                 @transferring_participant_form.trn,
+                 @transferring_participant_form.formatted_trn,
                  @transferring_participant_form.date_of_birth).first
     end
 
     def dqt_record
       ParticipantValidationService.validate(
         full_name: @transferring_participant_form.full_name,
-        trn: @transferring_participant_form.trn,
+        trn: @transferring_participant_form.formatted_trn,
         date_of_birth: @transferring_participant_form.date_of_birth,
         nino: nil,
         config: {

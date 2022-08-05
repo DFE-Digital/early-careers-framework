@@ -55,10 +55,7 @@ module Schools
     step :trn do
       attribute :trn, :string
 
-      validates :trn,
-                presence: true,
-                format: { with: /\A\d+\z/ },
-                length: { within: 5..7 }
+      validates :trn, teacher_reference_number: true
       before_complete { check_records if check_for_dqt_record? }
       next_step do
         if type == :self
@@ -224,14 +221,14 @@ module Schools
       self.existing_participant_profile = ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
                                                         .where("LOWER(full_name) = ? AND trn = ? AND date_of_birth = ?",
                                                                full_name.downcase,
-                                                               trn,
+                                                               formatted_trn,
                                                                date_of_birth).first
     end
 
     def validate_dqt_record
       self.dqt_record = ParticipantValidationService.validate(
         full_name:,
-        trn:,
+        trn: formatted_trn,
         date_of_birth:,
         config: {
           check_first_name_only: true,
@@ -318,7 +315,7 @@ module Schools
       ::Participants::ParticipantValidationForm.call(
         profile,
         data: {
-          trn:,
+          trn: formatted_trn,
           nino: nil,
           date_of_birth:,
           full_name:,
@@ -328,6 +325,10 @@ module Schools
 
     def display_name
       type == :self ? "your" : "#{full_name&.titleize}’s"
+    end
+
+    def formatted_trn
+      TeacherReferenceNumber.new(trn).formatted_trn
     end
 
     def send_added_and_validated_email(profile)

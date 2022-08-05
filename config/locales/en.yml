@@ -138,6 +138,14 @@ en:
       blank: "Please select programme type"
     provider:
       blank: "Please select a provider"
+    teacher_reference_number: &trn_error_messages
+      blank: Enter the teacher reference number (TRN)
+      too_short: Teacher reference number contains at least 5 digits
+      too_long: Teacher reference number contains at most 7 digits
+      invalid: Teacher reference number is not the correct format (for example, RP99/12345)
+    teacher_reference_number_personalised:
+      <<: *trn_error_messages
+      blank: Enter your teacher reference number (TRN)
 
   activerecord:
     attributes:

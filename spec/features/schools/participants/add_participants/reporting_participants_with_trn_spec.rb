@@ -90,7 +90,7 @@ RSpec.describe "Reporting participants with a known TRN",
 
     when_i_choose_i_know_the_participants_trn_to_the_school_add_participant_wizard
     click_on "Continue"
-    then_i_see_an_error_message "Enter the teacher reference number (TRN) for the teacher you are adding"
+    then_i_see_an_error_message "Enter the teacher reference number (TRN)"
 
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
     click_on "Continue"
