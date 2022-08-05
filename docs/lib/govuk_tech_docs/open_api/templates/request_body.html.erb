@@ -1,6 +1,16 @@
 <% if request_body %>
-  <h3 id="<%= id %>">Request Body</h3>
+  <h3 id="<%= id %>">Request body</h3>
   <p>
     This consumes a <%= get_schema_link(request_body.content['application/json'].schema) %> schema.
   </p>
+
+  <h3 id="<%= id %>">Request example</h3>
+  <%
+    source = json_prettyprint(request_body.content['application/json'].schema.example)
+    formatter = Rouge::Formatters::HTML.new
+    lexer = Rouge::Lexers::JSON.new
+    output = formatter.format(lexer.lex(source))
+  %>
+
+  <pre class="highlight"><code><%= output %></code></pre>
 <% end %>
