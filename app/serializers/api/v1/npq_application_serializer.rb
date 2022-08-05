@@ -63,6 +63,7 @@ module Api
       end
 
       attribute(:eligible_for_funding, &:eligible_for_dfe_funding)
+      attribute(:targeted_delivery_funding_eligibility)
     end
   end
 end

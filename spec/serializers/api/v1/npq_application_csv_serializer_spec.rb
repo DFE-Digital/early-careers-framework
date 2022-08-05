@@ -3,7 +3,7 @@
 require "rails_helper"
 
 module Api
-  module V2
+  module V1
     RSpec.describe NPQApplicationCsvSerializer do
       describe "serialization" do
         let(:npq_application) { create(:npq_application, targeted_delivery_funding_eligibility: true) }
