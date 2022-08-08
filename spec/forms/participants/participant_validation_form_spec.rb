@@ -113,7 +113,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
             expect(ParticipantValidationService).to have_received(:validate).with(
               hash_including(
                 date_of_birth: form.dob,
-                trn: form.trn,
+                trn: form.formatted_trn,
               ),
             )
           end
