@@ -347,6 +347,44 @@
         }
       }
     },
+    "/api/v3/outcomes/npq/{id}": {
+      "get": {
+        "summary": "Retrieve NPQ outcomes for the specified participant",
+        "operationId": "npq_outcome_get",
+        "tags": [
+          "outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully return NPQ outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/participants/npq": {
       "get": {
         "summary": "Retrieve multiple NPQ participants",
@@ -3333,6 +3371,87 @@
             "nullable": false,
             "type": "boolean",
             "example": true
+          }
+        }
+      },
+      "NPQOutcome": {
+        "description": "An NPQ outcome",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the NPQ outcome",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-outcome-confirmation"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQOutcomeAttributes"
+          }
+        }
+      },
+      "NPQOutcomeAttributes": {
+        "description": "The data attributes associated with an NPQ outcome",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "course_identifier",
+          "has_passed"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "nullable": false,
+            "format": "uuid",
+            "example": "66218835-9430-4d0c-98ef-7caf0bb4a59b"
+          },
+          "course_identifier": {
+            "description": "The course the participant is enrolled in",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
+            ],
+            "example": "npq-leading-teaching"
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "NPQOutcomesResponse": {
+        "description": "A list of NPQ outcomes",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NPQOutcome"
+            }
           }
         }
       },
