@@ -20,7 +20,7 @@ RSpec.describe DistrictSparsity, type: :model do
     end
   end
 
-  describe ":for_year" do
+  describe ".for_year" do
     let!(:new_sparsity) { create(:district_sparsity, start_year: 2021) }
     let!(:existing_sparsity) { create(:district_sparsity, start_year: 2020) }
     let!(:previous_sparsity) { create(:district_sparsity, start_year: 2019, end_year: 2020) }
