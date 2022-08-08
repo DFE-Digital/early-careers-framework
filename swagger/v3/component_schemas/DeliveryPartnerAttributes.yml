@@ -1,4 +1,4 @@
-description: "The data attributes associated with an ECF delivery partner"
+description: "The data attributes associated with a delivery partner"
 type: object
 required:
   - name

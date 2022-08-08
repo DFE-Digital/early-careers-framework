@@ -24,12 +24,12 @@
     }
   ],
   "paths": {
-    "/api/v3/delivery-partners/ecf": {
+    "/api/v3/delivery-partners": {
       "get": {
-        "summary": "Retrieve delivery partners for ECF",
-        "operationId": "delivery_patrners_ecf_get",
+        "summary": "Retrieve delivery partners",
+        "operationId": "delivery_patrners_get",
         "tags": [
-          "ECF delivery partners"
+          "delivery partners"
         ],
         "security": [
           {
@@ -40,11 +40,11 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of ECF delivery partners",
+            "description": "Successfully return a list of delivery partners",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFDeliveryPartnersResponse"
+                  "$ref": "#/components/schemas/DeliveryPartnersResponse"
                 }
               }
             }
@@ -1223,8 +1223,8 @@
           }
         }
       },
-      "ECFDeliveryPartner": {
-        "description": "An ECF delivery partner",
+      "DeliveryPartner": {
+        "description": "A delivery partner",
         "type": "object",
         "required": [
           "id",
@@ -1233,7 +1233,7 @@
         ],
         "properties": {
           "id": {
-            "description": "The unique identifier of the ECF delivery partner",
+            "description": "The unique identifier of the delivery partner",
             "type": "string",
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
@@ -1241,15 +1241,15 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "ecf-delivery-partner"
+            "example": "delivery-partner"
           },
           "attributes": {
-            "$ref": "#/components/schemas/ECFDeliveryPartnerAttributes"
+            "$ref": "#/components/schemas/DeliveryPartnerAttributes"
           }
         }
       },
-      "ECFDeliveryPartnerAttributes": {
-        "description": "The data attributes associated with an ECF delivery partner",
+      "DeliveryPartnerAttributes": {
+        "description": "The data attributes associated with a delivery partner",
         "type": "object",
         "required": [
           "name"
@@ -1263,8 +1263,8 @@
           }
         }
       },
-      "ECFDeliveryPartnersResponse": {
-        "description": "A list of ECF delivery partners",
+      "DeliveryPartnersResponse": {
+        "description": "A list of delivery partners",
         "type": "object",
         "required": [
           "data"
@@ -1273,7 +1273,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ECFDeliveryPartner"
+              "$ref": "#/components/schemas/DeliveryPartner"
             }
           }
         }

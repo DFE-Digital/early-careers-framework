@@ -3,14 +3,14 @@
 require "swagger_helper"
 
 RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
-  path "/api/v3/delivery-partners/ecf" do
-    get "Retrieve delivery partners for ECF" do
-      operationId :delivery_patrners_ecf_get
-      tags "ECF delivery partners"
+  path "/api/v3/delivery-partners" do
+    get "Retrieve delivery partners" do
+      operationId :delivery_patrners_get
+      tags "delivery partners"
       security [bearerAuth: []]
 
-      response "200", "A list of ECF delivery partners" do
-        schema({ "$ref": "#/components/schemas/ECFDeliveryPartnersResponse" })
+      response "200", "Successfully return a list of delivery partners" do
+        schema({ "$ref": "#/components/schemas/DeliveryPartnersResponse" })
 
         run_test!
       end

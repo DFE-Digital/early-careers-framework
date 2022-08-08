@@ -1,4 +1,4 @@
-description: "An ECF delivery partner"
+description: "A delivery partner"
 type: object
 required:
   - id
@@ -6,13 +6,13 @@ required:
   - attributes
 properties:
   id:
-    description: "The unique identifier of the ECF delivery partner"
+    description: "The unique identifier of the delivery partner"
     type: string
     format: uuid
     example: cd3a12347-7308-4879-942a-c4a70ced400a
   type:
     description: "The data type"
     type: string
-    example: ecf-delivery-partner
+    example: delivery-partner
   attributes:
-    $ref: "#/components/schemas/ECFDeliveryPartnerAttributes"
+    $ref: "#/components/schemas/DeliveryPartnerAttributes"
