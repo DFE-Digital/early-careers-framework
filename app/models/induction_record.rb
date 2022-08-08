@@ -68,6 +68,8 @@ class InductionRecord < ApplicationRecord
   delegate :lead_provider, to: :induction_programme, allow_nil: true
   delegate :lead_provider_name, to: :induction_programme, allow_nil: true
 
+  after_save :update_analytics
+
   def enrolled_in_fip?
     induction_programme.full_induction_programme?
   end
@@ -100,8 +102,14 @@ class InductionRecord < ApplicationRecord
     leaving_induction_status? && end_date.present? && end_date < Time.zone.now
   end
 
+private
+
   def cannot_resume_from_withdrawn
     errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "active")
     errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "deferred")
+  end
+
+  def update_analytics
+    Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
   end
 end

@@ -142,4 +142,23 @@ RSpec.describe InductionRecord, type: :model do
         .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
     end
   end
+
+  it "updates analytics when an induction record is created", :with_default_schedules do
+    induction_programme = create(:induction_programme)
+    participant_profile = create(:ecf_participant_profile)
+
+    expect {
+      Induction::Enrol.call(participant_profile:, induction_programme:)
+    }.to change { InductionRecord.count }.by(1).and have_enqueued_job(Analytics::UpsertECFInductionJob)
+  end
+
+  it "updates analytics when any attributes changes", :with_default_schedules do
+    induction_record = create(:induction_record)
+
+    expect {
+      induction_record.leaving!(1.week.from_now)
+    }.to have_enqueued_job(Analytics::UpsertECFInductionJob).with(
+      induction_record:,
+    )
+  end
 end
