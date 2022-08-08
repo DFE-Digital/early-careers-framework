@@ -1,0 +1,7 @@
+description: "A single financial statement"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/Statement"

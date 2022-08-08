@@ -24,4 +24,26 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       end
     end
   end
+
+  path "/api/v3/statements/{id}" do
+    get "Retrieve specific financial statement" do
+      operationId :statement_get
+      tags "statements"
+      security [bearerAuth: []]
+
+      response "200", "A specific financial statement" do
+        schema({ "$ref": "#/components/schemas/StatementResponse" })
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+    end
+  end
 end

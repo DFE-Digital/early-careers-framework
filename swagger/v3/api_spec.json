@@ -1225,11 +1225,49 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully return a list of financial statements",
+            "description": "A list of statements as part of which the DfE will make output payments for ecf or npq participants",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StatementsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/statements/{id}": {
+      "get": {
+        "summary": "Retrieve specific financial statement",
+        "operationId": "statement_get",
+        "tags": [
+          "statements"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A specific financial statement",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatementResponse"
                 }
               }
             }
@@ -4196,6 +4234,18 @@
             "type": "boolean",
             "nullable": false,
             "example": true
+          }
+        }
+      },
+      "StatementResponse": {
+        "description": "A single financial statement",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Statement"
           }
         }
       },
