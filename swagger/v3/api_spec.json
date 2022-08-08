@@ -1208,6 +1208,44 @@
           }
         }
       }
+    },
+    "/api/v3/statements": {
+      "get": {
+        "summary": "Retrieve financial statements",
+        "operationId": "statements_get",
+        "tags": [
+          "statements"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully return a list of financial statements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatementsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4078,6 +4116,101 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+          }
+        }
+      },
+      "Statement": {
+        "description": "A financial statement",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the financial statement",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "statement"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/StatementAttributes"
+          }
+        }
+      },
+      "StatementAttributes": {
+        "description": "The data attributes associated with a financial statement",
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "month": {
+            "description": "The month which appears on the statement in the DfE portal",
+            "type": "string",
+            "nullable": false,
+            "example": "1"
+          },
+          "year": {
+            "description": "The calendar year which appears on the statement in the dfe portal",
+            "type": "string",
+            "nullable": false,
+            "example": "2022"
+          },
+          "framework": {
+            "description": "The framework this statement applies to",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "ecf",
+              "npq"
+            ],
+            "example": "ecf"
+          },
+          "cohort": {
+            "description": "The cohort - 2021 or 2022 - which the statement funds",
+            "type": "string",
+            "nullable": false,
+            "example": "2021"
+          },
+          "cut_off_date": {
+            "description": "The milestone cut off or review point for the statement",
+            "type": "string",
+            "nullable": false,
+            "example": "2022-04-30"
+          },
+          "payment_date": {
+            "description": "The date we expect to pay you for any declarations attached to the statement, which are eligible for payment",
+            "type": "string",
+            "nullable": false,
+            "example": "2022-05-25"
+          },
+          "paid": {
+            "description": "Indicates whether the DfE has paid providers for any declarations attached to the statement",
+            "type": "boolean",
+            "nullable": false,
+            "example": true
+          }
+        }
+      },
+      "StatementsResponse": {
+        "description": "A list of financial statements",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Statement"
+            }
           }
         }
       },
