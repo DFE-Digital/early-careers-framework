@@ -30,3 +30,9 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  withdrawal_date:
+    description: "If the participant has been withdrawn by you, the date we have recorded for the withdrawal"
+    type: string
+    format: date
+    nullable: true
+    example: "2021-06-13"
