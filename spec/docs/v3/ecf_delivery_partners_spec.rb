@@ -24,4 +24,26 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       end
     end
   end
+
+  path "/api/v3/delivery-partners/{id}" do
+    get "Retrieve a specific delivery partner" do
+      operationId :delivery_patrner_get
+      tags "delivery partners"
+      security [bearerAuth: []]
+
+      response "200", "Successfully return a specific delivery partner" do
+        schema({ "$ref": "#/components/schemas/DeliveryPartnerResponse" })
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+    end
+  end
 end
