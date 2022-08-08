@@ -13,7 +13,7 @@ RSpec.describe "NPQ Participants API", type: :request do
 
   describe "GET /api/v2/participants/npq", :with_default_schedules do
     let!(:npq_applications) do
-      create_list(:npq_application, 3, :accepted, npq_lead_provider:, school_urn: "123456")
+      create_list(:npq_application, 3, :accepted, :with_started_declaration, npq_lead_provider:, school_urn: "123456")
     end
 
     context "when authorized" do
@@ -105,25 +105,39 @@ RSpec.describe "NPQ Participants API", type: :request do
         end
       end
 
-      it_behaves_like "a participant withdraw action endpoint" do
+      describe "JSON Participant Withdrawal" do
         let(:course_identifier) { npq_course.identifier }
         let(:url) { "/api/v2/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params) do
-          { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
+          { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } }
         end
 
-        before do
-          participant_profile = npq_application.profile
-          user = npq_application.user
+        context "when there is a started declaration" do
+          it_behaves_like "a participant withdraw action endpoint" do
+            before do
+              participant_profile = npq_application.profile
+              user = npq_application.user
 
-          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
+              create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
+            end
+
+            it "changes the training status of a participant to withdrawn" do
+              put url, params: params
+
+              expect(response).to be_successful
+              expect(npq_application.reload.profile.training_status).to eql("withdrawn")
+            end
+          end
         end
 
-        it "changes the training status of a participant to withdrawn" do
-          put url, params: params
+        context "when there are no started declarations" do
+          let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456") }
 
-          expect(response).to be_successful
-          expect(npq_application.reload.profile.training_status).to eql("withdrawn")
+          it "returns an error message" do
+            put url, params: params
+
+            expect(response.status).to eq(422)
+          end
         end
       end
 
@@ -225,7 +239,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "returns correct data" do
+      it "returns correct data", travel_to: Time.zone.local(2022, 8, 4, 10, 0, 0) do
         expect(parsed_response).to eq(expected_response)
       end
     end

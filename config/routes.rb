@@ -113,7 +113,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
       resources :participant_validation, only: %i[create], path: "participant-validation"
-      resources :npq_applications, only: :index, path: "npq-applications" do
+      resources :npq_applications, only: %i[index show], path: "npq-applications" do
         member do
           post :accept
           post :reject

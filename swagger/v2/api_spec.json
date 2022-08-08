@@ -140,6 +140,56 @@
         }
       }
     },
+    "/api/v2/npq-applications/{id}": {
+      "get": {
+        "summary": "Get a single NPQ application",
+        "operationId": "npq_application",
+        "tags": [
+          "NPQ applications"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the NPQ application.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single NPQ application",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v2/npq-applications/{id}/accept": {
       "post": {
         "summary": "Accept an NPQ application",

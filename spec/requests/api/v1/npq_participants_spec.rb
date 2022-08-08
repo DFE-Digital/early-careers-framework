@@ -208,7 +208,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "returns correct data" do
+      it "returns correct data", travel_to: Time.zone.local(2022, 8, 4, 10, 0, 0) do
         expect(parsed_response).to eq(expected_response)
       end
     end

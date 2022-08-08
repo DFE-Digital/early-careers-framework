@@ -7,7 +7,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
+  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
 
   path "/api/v2/participants/npq" do
     get "Retrieve multiple NPQ participants" do
