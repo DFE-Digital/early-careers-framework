@@ -1,0 +1,30 @@
+type: object
+required:
+  - participant_id
+  - course_identifier
+  - has_passed
+properties:
+  participant_id:
+    description: "The unique ID of the participant"
+    type: string
+    format: uuid
+    example: f05c81dd-8089-4f3b-a416-b092be364e87
+  course_identifier:
+    description: "The course the participant is enrolled in"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-leading-teaching
+  has_passed:
+    description: "Whether the participant has failed or passed"
+    type: boolean
+    example: false

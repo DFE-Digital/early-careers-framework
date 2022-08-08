@@ -24,4 +24,34 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       end
     end
   end
+
+  path "/api/v3/outcomes/npq" do
+    post "Submit an NPQ outcome" do
+      operationId :npq_outcome_post
+      tags "outcomes"
+      security [bearerAuth: []]
+
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/NPQOutcomeRequest",
+          },
+        },
+      }
+
+      response "200", "Successfully submit an NPQ outcome" do
+        schema({ "$ref": "#/components/schemas/NPQOutcomeResponse" })
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+    end
+  end
 end
