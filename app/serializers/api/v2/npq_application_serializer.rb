@@ -8,7 +8,7 @@ module Api
       include JSONAPI::Serializer
       include JSONAPI::Serializer::Instrumentation
 
-      attribute(:targeted_delivery_funding_eligibility, &:targeted_delivery_funding_eligibility)
+      attribute(:targeted_delivery_funding_eligibility)
     end
   end
 end

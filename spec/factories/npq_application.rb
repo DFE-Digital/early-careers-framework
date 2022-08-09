@@ -17,6 +17,7 @@ FactoryBot.define do
 
     eligible_for_funding { false }
     funding_eligiblity_status_code { :ineligible_establishment_type }
+    targeted_delivery_funding_eligibility { true }
 
     trait :funded do
       eligible_for_funding { true }

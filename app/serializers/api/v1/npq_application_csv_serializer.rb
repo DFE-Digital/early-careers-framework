@@ -47,6 +47,7 @@ module Api
           updated_at
           cohort
           ineligible_for_funding_reason
+          targeted_delivery_funding_eligibility
         ]
       end
 
@@ -74,6 +75,7 @@ module Api
           record.updated_at.rfc3339,
           record.cohort.start_year.to_s,
           record.ineligible_for_funding_reason,
+          record.targeted_delivery_funding_eligibility,
         ]
       end
     end

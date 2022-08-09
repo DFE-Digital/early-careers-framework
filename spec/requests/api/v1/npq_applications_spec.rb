@@ -143,6 +143,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               updated_at
               cohort
               ineligible_for_funding_reason
+              targeted_delivery_funding_eligibility
             ],
           )
         end
@@ -375,6 +376,7 @@ def single_json_application(npq_application:)
       "updated_at" => npq_application.updated_at.rfc3339,
       "cohort" => npq_application.cohort.start_year.to_s,
       "eligible_for_funding" => npq_application.eligible_for_funding,
+      "targeted_delivery_funding_eligibility" => npq_application.targeted_delivery_funding_eligibility,
     },
   }
 end
