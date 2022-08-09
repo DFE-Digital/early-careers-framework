@@ -17,7 +17,10 @@ module Finance
       return false unless valid?
       return true if change_status_to_pending == "no"
 
-      ::NPQ::ChangeToPending.call(npq_application:)
+      unless ::NPQ::ChangeToPending.call(npq_application:)
+        errors.add(:change_status_to_pending, npq_application.errors[:lead_provider_approval_status].first)
+        return false
+      end
 
       true
     end

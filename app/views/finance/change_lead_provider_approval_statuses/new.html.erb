@@ -15,7 +15,7 @@
     <%= form_for @change_lead_provider_approval_status_form, url: finance_npq_application_change_lead_provider_approval_status_path(@npq_application) do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_radio_buttons_fieldset :training_status, legend: { text: "Change the status to pending?", tag: 'h1', size: 'm' } do %>
-        <%= f.govuk_radio_button :change_status_to_pending, "yes", label: { text: "Yes" }, link_erorrs: true %>
+        <%= f.govuk_radio_button :change_status_to_pending, "yes", label: { text: "Yes" }, link_errors: true %>
         <%= f.govuk_radio_button :change_status_to_pending, "no", label: { text: "No" } %>
       <% end %>
       <%= f.govuk_submit "Continue" %>
