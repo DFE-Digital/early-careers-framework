@@ -1,0 +1,34 @@
+<% content_for :title, "You cannot add #{add_participant_form.full_name}" %>
+
+<% content_for :before_content, govuk_back_link( text: "Back",
+                                                 href: step_schools_add_participants_path(action: :show, step: :trn)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl">
+      You cannot add <%= add_participant_form.full_name.titleize %> as a mentor without their TRN
+    </h1>
+
+    <p class="govuk-body">If they:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>had a TRN but cannot find it, ask them to use the
+        <%= govuk_link_to "find a lost TRN service (opens in new tab)",
+                          "https://find-a-lost-trn.education.gov.uk/start",
+                          target: :_blank,
+                          class: "govuk-link govuk-link--no-visited-state" %>
+      </li>
+      <li>have never had one, you’ll need to
+        <%= govuk_link_to "get a TRN (opens in new tab)",
+                          get_a_trn_participants_start_registrations_path,
+                          target: :_blank,
+                          class: "govuk-link govuk-link--no-visited-state" %>
+      </li>
+    </ul>
+
+    <%= govuk_link_to "View your ECTs and mentors",
+                      schools_participants_path,
+                      class: "govuk-link govuk-link--no-visited-state" %>
+
+  </div>
+</div>

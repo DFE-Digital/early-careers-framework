@@ -105,9 +105,23 @@ private
   end
 
   def and_i_fill_in_all_info
+    allow(ParticipantValidationService).to receive(:validate).and_return(
+      {
+        trn: "AB123445A",
+        full_name: "George ECT",
+        nino: nil,
+        dob: Date.new(1998, 11, 22),
+        config: {},
+      },
+    )
+
     fill_in "schools_add_participant_form[full_name]", with: "George ECT"
     click_on "Continue"
-    choose "No"
+    fill_in "schools_add_participant_form[trn]", with: "AB123445A"
+    click_on "Continue"
+    fill_in "Day", with: "22"
+    fill_in "Month", with: "11"
+    fill_in "Year", with: "1998"
     click_on "Continue"
     fill_in "schools_add_participant_form[email]", with: "ect@email.gov.uk"
     click_on "Continue"

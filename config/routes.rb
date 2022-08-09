@@ -510,6 +510,7 @@ Rails.application.routes.draw do
           resources :participants, only: %i[index show destroy] do
             collection do
               multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
+                get :cannot_add_mentor_without_trn
                 get :who, path: "who", controller: :add_participants
                 put :participant_type, path: "participant-type", controller: :add_participants
                 get :what_we_need, path: "what-we-need", controller: :add_participants

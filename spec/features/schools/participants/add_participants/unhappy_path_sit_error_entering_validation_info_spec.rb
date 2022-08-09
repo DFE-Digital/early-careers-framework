@@ -32,10 +32,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
     when_i_add_ect_or_mentor_name
     when_i_click_on_continue
-    then_i_am_taken_to_do_you_know_your_teachers_trn_page
-
-    when_i_select "Yes"
-    when_i_click_on_continue
     then_i_am_taken_to_add_teachers_trn_page
 
     when_i_add_the_wrong_trn

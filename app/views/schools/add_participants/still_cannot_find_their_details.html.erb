@@ -1,0 +1,41 @@
+<% title = "We still cannot find #{add_participant_form.display_name} record" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link( text: "Back",
+                                                 href: step_schools_add_participants_path(action: :show, step: :nino)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <p class="govuk-body">
+      This could be because the information does not match their Teaching Regulation Agency (TRA) record
+    </p>
+    <h2 class="govuk-heading-m">
+     Contact our support team as soon as possible
+    </h2>
+    <p class="govuk-body">
+      We need to do a manual check of the records.
+    </p>
+    <p class="govuk-body">
+      Email us at: <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk",
+                                     "continuing-professional-development@digital.education.gov.uk" %>
+    </p>
+    <p class="govuk-body">
+      Include their:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>full name</li>
+      <li>teacher-reference-number (TRN)</li>
+      <li>date of birth</li>
+    </ul>
+
+    <p>
+      <%= govuk_link_to "View your ECTs and mentors",
+                        schools_participants_path,
+                        class: "govuk-link govuk-link--no-visited-state" %>
+    </p>
+  </div>
+</div>

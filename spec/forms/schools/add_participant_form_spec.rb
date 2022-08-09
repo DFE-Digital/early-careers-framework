@@ -9,7 +9,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     {
       trn: "1234567",
       full_name: "Danny DeVito",
-      nino: nil,
+      nino: "AB 12 34 56 D",
       dob: Date.new(1990, 1, 1),
       config: {},
     }
@@ -18,16 +18,14 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   subject(:form) { described_class.new(current_user_id: user.id, school_cohort_id: school_cohort.id) }
 
   it { is_expected.to validate_presence_of(:full_name).on(:name).with_message("Enter a full name") }
+  it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter the teacher reference number (TRN)") }
+  it { is_expected.to validate_presence_of(:date_of_birth).on(:dob) }
+  it { is_expected.to validate_presence_of(:nino).on(:nino).with_message("Enter the national insurance number (NINo)") }
   it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email address") }
-  it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
   it { is_expected.to validate_presence_of(:start_date).on(:start_date) }
   it { is_expected.to validate_presence_of(:transfer).on(:transfer) }
 
-  describe "when a SIT knows the teachers trn" do
-    it { is_expected.to validate_presence_of(:trn).on(:trn).with_message("Enter the teacher reference number (TRN)") }
-    it { is_expected.to validate_presence_of(:do_you_know_teachers_trn).on(:do_you_know_teachers_trn).with_message("Select whether you know the teacher reference number (TRN) for the teacher you are adding") }
-    it { is_expected.to validate_presence_of(:date_of_birth).on(:dob) }
-
+  describe "when a record matches the validation data" do
     before do
       form.trn = "1234567"
       form.date_of_birth = Date.new(1990, 1, 1)
@@ -35,7 +33,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       allow(ParticipantValidationService).to receive(:validate).and_return(dqt_response)
     end
 
-    it "returns a response from the dqt when a record matches" do
+    it "returns a response from the dqt" do
       form.complete_step(:dob, date_of_birth: form.date_of_birth)
       expect(form.dqt_record).to eq(dqt_response)
     end
@@ -166,16 +164,6 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
   end
 
-  describe "#trn_known?" do
-    before do
-      form.do_you_know_teachers_trn = "true"
-    end
-
-    it "returns true" do
-      expect(form.trn_known?).to be true
-    end
-  end
-
   describe "#display_name" do
     it "returns your" do
       form.assign_attributes(type: :self)
@@ -193,7 +181,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       response = {
         trn: form.trn,
         full_name: form.full_name,
-        nino: nil,
+        nino: form.formatted_nino,
         date_of_birth: form.date_of_birth,
         config: {},
       }
@@ -203,6 +191,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       form.email = Faker::Internet.email
       form.trn = "1234567"
       form.date_of_birth = Date.new(1990, 1, 1)
+      form.nino = "AB123456D"
       form.start_date = Date.new(2022, 9, 1)
       form.dqt_record = dqt_response
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
@@ -217,25 +206,27 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         allow(ParticipantMailer).to receive(:sit_has_added_and_validated_participant).and_call_original
       end
 
-      context "No DQT record has been returned" do
-        it "creates new participant record" do
-          expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
+      context "When no DQT record has been returned" do
+        before do
+          form.dqt_record = nil
+        end
+
+        it "does not create a new participant record" do
+          expect { form.save! }.not_to change(ParticipantProfile::ECF, :count)
         end
 
         it "does not create ecf validation data" do
-          form.dqt_record = nil
           expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
         end
 
-        it "sends a participant the added email when there is no validation data" do
-          form.dqt_record = nil
+        it "does not send a participant any email" do
           form.save!
           expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
-          expect(ParticipantMailer).to have_received(:participant_added)
+          expect(ParticipantMailer).not_to have_received(:participant_added)
         end
       end
 
-      context "Validated against the DQT" do
+      context "When participant details validated against the DQT" do
         it "creates new participant record" do
           expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
         end
@@ -248,7 +239,8 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
           form.save!
           profile = ECFParticipantValidationData.find_by(trn: form.trn).participant_profile
           expect(ParticipantMailer).not_to have_received(:participant_added)
-          expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant).with(participant_profile: profile, school_name: school_cohort.school.name)
+          expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant)
+                                         .with(participant_profile: profile, school_name: school_cohort.school.name)
         end
       end
 
@@ -268,24 +260,17 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         end
       end
     end
+  end
 
-    describe "sit_adding_themselves?" do
-      it "returns true when type is set to self" do
-        form.type = :self
-        expect(form.sit_adding_themselves?).to be true
-      end
-
-      it "returns false when type is not self" do
-        form.type = :mentor
-        expect(form.sit_adding_themselves?).to be false
-      end
+  describe "sit_adding_themselves?" do
+    it "returns true when type is set to self" do
+      form.type = :self
+      expect(form.sit_adding_themselves?).to be true
     end
 
-    context "no dqt record is present" do
-      it "does not create ecf validation data" do
-        form.dqt_record = nil
-        expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
-      end
+    it "returns false when type is not self" do
+      form.type = :mentor
+      expect(form.sit_adding_themselves?).to be false
     end
   end
 end

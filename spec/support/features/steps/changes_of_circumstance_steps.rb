@@ -62,7 +62,7 @@ module Steps
       end
     end
 
-    def and_sit_reported_participant(sit_name, participant_name, participant_email, participant_type)
+    def and_sit_reported_participant(sit_name, participant_name, participant_trn, participant_dob, participant_email, participant_type)
       next_ideal_time Time.zone.local(2021, 6, 1, 9, 0, 0)
       travel_to(@timestamp) do
         given_i_sign_in_as_the_user_with_the_full_name sit_name
@@ -71,34 +71,23 @@ module Steps
                                            .add_participant_details
                                            .continue
                                            .choose_to_add_an_ect_or_mentor
+        # participant_dob = Date.new(1990, 9, 1)
+        participant_start_date = Date.new(2021, 9, 1)
+        response = {
+          trn: participant_trn,
+          qts: true,
+          active_alert: false,
+          previous_participation: false,
+          previous_induction: false,
+          no_induction: false,
+          exempt_from_induction: false,
+        }
+        allow(ParticipantValidationService).to receive(:validate).and_return(response)
 
         if participant_type == "ECT"
-          wizard.add_ect participant_name, participant_email, Date.new(2021, 9, 1)
+          wizard.add_ect participant_name, participant_trn, participant_dob, participant_email, participant_start_date
         else
-          wizard.add_mentor participant_name, participant_email
-        end
-        sign_out
-
-        travel_to 1.minute.from_now
-      end
-    end
-
-    def and_participant_has_completed_registration(participant_name, participant_trn, participant_dob, participant_type)
-      next_ideal_time Time.zone.local(2021, 9, 2, 9, 0, 0)
-      travel_to(@timestamp) do
-        given_i_sign_in_as_the_user_with_the_full_name participant_name
-
-        case participant_type
-        when "ECT"
-          Pages::PrivacyPolicyPage.loaded
-                                  .continue_for_ect
-                                  .complete(participant_name, participant_dob, participant_trn)
-        when "Mentor"
-          Pages::PrivacyPolicyPage.loaded
-                                  .continue_for_mentor
-                                  .complete(participant_name, participant_dob, participant_trn)
-        else
-          raise "Participant_type not recognised"
+          wizard.add_mentor participant_name, participant_trn, participant_dob, participant_email
         end
         sign_out
 

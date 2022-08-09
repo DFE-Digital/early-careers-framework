@@ -138,6 +138,9 @@ en:
       blank: "Please select programme type"
     provider:
       blank: "Please select a provider"
+    national_insurance_number:
+      blank: Enter the national insurance number (NINo)
+      invalid: National Insurance number is not the correct format (for example, AB 12 34 56 A or AB123456A)
     teacher_reference_number: &trn_error_messages
       blank: Enter the teacher reference number (TRN)
       too_short: Teacher reference number must include at least 5 digits
