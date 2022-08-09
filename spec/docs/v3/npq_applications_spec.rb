@@ -19,14 +19,20 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
       parameter name: :filter,
                 in: :query,
                 schema: {
-                  "$ref": "#/components/schemas/ListFilter",
+                  "$ref": "#/components/schemas/NPQApplicationsFilter",
                 },
                 type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
                 description: "Refine NPQ applications to return.",
-                example: CGI.unescape({ filter: { cohort: 2022, updated_since: "2020-11-13T11:21:55Z" } }.to_param)
+                example: CGI.unescape({
+                  filter: {
+                    cohort: "2021,2022",
+                    updated_since: "2020-11-13T11:21:55Z",
+                    participant_id: "7e5bcdbf-c818-4961-8da5-439cab1984e0,c2a7ef98-bbfc-48c5-8f02-d484071d2165",
+                  },
+                }.to_param)
 
       parameter name: :page,
                 in: :query,
