@@ -7,7 +7,7 @@ module Admin
 
     def index
       @participant_profiles = policy_scope(ParticipantProfile::ECF, policy_scope_class: ParticipantProfilePolicy::Scope)
-        .where(id: school.current_induction_records.select(:participant_profile_id))
+        .where(id: InductionRecord.for_school(school).current_or_transferring_in.select(:participant_profile_id))
         .includes(participant_identity: :user)
         .order("users.full_name")
     end

@@ -195,6 +195,41 @@ RSpec.describe InductionRecord, type: :model do
         end
       end
     end
+
+    describe ".current_or_transferring_in" do
+      let(:induction_programme) { create(:induction_programme, :fip) }
+      let(:charlie_current_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:theresa_transfer_in_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.from_now, school_transfer: true) }
+      let(:linda_leaving_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:tina_transferred_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:wendy_withdrawn_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
+
+      before do
+        linda_leaving_ir.leaving!(1.month.from_now)
+        tina_transferred_ir.leaving!(1.month.ago)
+        wendy_withdrawn_ir.withdrawing!(1.day.ago)
+      end
+
+      it "includes current users" do
+        expect(induction_programme.induction_records.current_or_transferring_in).to include charlie_current_ir
+      end
+
+      it "includes transferring in users" do
+        expect(induction_programme.induction_records.current_or_transferring_in).to include theresa_transfer_in_ir
+      end
+
+      it "includes transferring out users" do
+        expect(induction_programme.induction_records.current_or_transferring_in).to include linda_leaving_ir
+      end
+
+      it "does not include transferred users" do
+        expect(induction_programme.induction_records.current_or_transferring_in).not_to include tina_transferred_ir
+      end
+
+      it "does not include withdrawn users" do
+        expect(induction_programme.induction_records.current_or_transferring_in).not_to include wendy_withdrawn_ir
+      end
+    end
   end
 
   describe "enums" do
