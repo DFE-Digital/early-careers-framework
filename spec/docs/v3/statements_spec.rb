@@ -9,6 +9,22 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "statements"
       security [bearerAuth: []]
 
+      parameter name: :filter,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/StatementsFilter",
+                },
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine statements to return.",
+                example: CGI.unescape({
+                  filter: {
+                    cohort: "2021,2022",
+                  },
+                }.to_param)
+
       response "200", "A list of statements as part of which the DfE will make output payments for ecf or npq participants" do
         schema({ "$ref": "#/components/schemas/StatementsResponse" })
 
