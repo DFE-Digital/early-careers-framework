@@ -1685,6 +1685,40 @@
             "format": "date",
             "nullable": true,
             "example": "2021-06-13"
+          },
+          "participant_status": {
+            "description": "Replaces the old status field. Indicates if a SIT has advised DfE of a transfer or a withdrawal of the participant from the school",
+            "type": "string",
+            "enum": [
+              "joining",
+              "leaving",
+              "active",
+              "withdrawn"
+            ],
+            "example": "active"
+          },
+          "validation_status": {
+            "description": "Indicates where a participant is in the DfE’s validation and eligibility process. Same detail shown to SITs and Delivery Partners.",
+            "type": "string",
+            "enum": [
+              "Contacted for information",
+              "DfE checking eligibility",
+              "Checking QTS",
+              "Not eligible for funded training",
+              "Eligible to start"
+            ],
+            "example": "Eligible to start"
+          },
+          "start_date_with_provider": {
+            "description": "The date the School Induction Tutor has told us the participant will begin their training with you",
+            "type": "string",
+            "example": "2022-05-09T16:07:10Z"
+          },
+          "end_date_with_provider": {
+            "description": "If a participant is transferring from you, the date the School Induction Tutor has told us the participant will end their training with you",
+            "type": "string",
+            "nullable": true,
+            "example": "2022-11-09T16:07:38Z"
           }
         }
       },
