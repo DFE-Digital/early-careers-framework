@@ -30,6 +30,173 @@ RSpec.describe InductionRecord, type: :model do
     it { is_expected.to validate_presence_of(:start_date) }
   end
 
+  describe "scopes" do
+    describe "end dates" do
+      describe ".end_date_null" do
+        let!(:ir_with_null_end_date) { create(:induction_record, end_date: nil) }
+        let!(:ir_with_end_date) { create(:induction_record, :with_end_date) }
+
+        it "only includes the induction record with a null end date" do
+          expect(described_class.end_date_null).to include(ir_with_null_end_date)
+          expect(described_class.end_date_null).not_to include(ir_with_end_date)
+        end
+      end
+
+      describe "past and future end dates" do
+        let!(:ir_with_past_end_date) { create(:induction_record, end_date: 1.day.ago) }
+        let!(:ir_with_future_end_date) { create(:induction_record, end_date: 1.day.from_now) }
+
+        describe ".end_date_in_past" do
+          it "only includes the induction record with an end_date in the past" do
+            expect(described_class.end_date_in_past).to include(ir_with_past_end_date)
+            expect(described_class.end_date_in_past).not_to include(ir_with_future_end_date)
+          end
+        end
+
+        describe ".end_date_in_future" do
+          it "only includes the induction record with an end_date in the future" do
+            expect(described_class.end_date_in_future).to include(ir_with_future_end_date)
+            expect(described_class.end_date_in_future).not_to include(ir_with_past_end_date)
+          end
+        end
+      end
+    end
+
+    describe "start dates" do
+      let!(:ir_with_past_start_date) { create(:induction_record, start_date: 1.day.ago) }
+      let!(:ir_with_future_start_date) { create(:induction_record, start_date: 1.day.from_now) }
+
+      describe ".start_date_in_past" do
+        it "only includes the induction record with an start_date in the past" do
+          expect(described_class.start_date_in_past).to include(ir_with_past_start_date)
+          expect(described_class.start_date_in_past).not_to include(ir_with_future_start_date)
+        end
+      end
+
+      describe ".start_date_in_future" do
+        it "only includes the induction record with an start_date in the future" do
+          expect(described_class.start_date_in_future).to include(ir_with_future_start_date)
+          expect(described_class.start_date_in_future).not_to include(ir_with_past_start_date)
+        end
+      end
+    end
+
+    describe "school transfers" do
+      let!(:ir_school_transfer) { create(:induction_record, :school_transfer) }
+      let!(:ir_not_school_transfer) { create(:induction_record, :not_school_transfer) }
+
+      describe ".school_transfer" do
+        it "only includes school transfers" do
+          expect(described_class.school_transfer).to include(ir_school_transfer)
+          expect(described_class.school_transfer).not_to include(ir_not_school_transfer)
+        end
+      end
+
+      describe ".not_school_transfer" do
+        it "only includes non school transfers" do
+          expect(described_class.not_school_transfer).to include(ir_not_school_transfer)
+          expect(described_class.not_school_transfer).not_to include(ir_school_transfer)
+        end
+      end
+
+      describe ".claimed_by_another_school" do
+        # the school that the leaver is at doesn’t know they are leaving but
+        # another school has told us the participant is transferring to their
+        # school
+
+        let!(:ir_school_transfer) { create(:induction_record, :school_transfer) }
+        let!(:ir_leaving_school_transfer_future_end_date) { create(:induction_record, :leaving, :school_transfer) }
+        let!(:ir_leaving_not_school_transfer_past_end_date) { create(:induction_record, :leaving, :not_school_transfer, :with_end_date) }
+        let!(:ir_leaving_not_school_transfer_future_end_date) { create(:induction_record, :leaving, :not_school_transfer, :future_end_date) }
+
+        it "excludes records with without status leaving" do
+          expect(described_class.claimed_by_another_school).not_to include(ir_school_transfer)
+        end
+
+        it "excludes records that are leaving that are school transfers with future end date" do
+          expect(described_class.claimed_by_another_school).not_to include(ir_leaving_school_transfer_future_end_date)
+        end
+
+        it "excludes records that are leaving that aren't school transfers with past end date" do
+          expect(described_class.claimed_by_another_school).not_to include(ir_leaving_not_school_transfer_past_end_date)
+        end
+
+        it "includes records that are leaving that aren't school transfers with future end date" do
+          expect(described_class.claimed_by_another_school).to include(ir_leaving_not_school_transfer_future_end_date)
+        end
+      end
+    end
+
+    describe ".active" do
+      let!(:ir_with_null_end_date) { create(:induction_record, end_date: nil) }
+      let!(:ir_with_future_end_date) { create(:induction_record, end_date: 1.week.from_now) }
+      let!(:ir_with_future_start_date_non_transfer) { create(:induction_record, :future_start_date, :not_school_transfer) }
+      let!(:ir_with_future_start_date_transfer) { create(:induction_record, :future_start_date, :school_transfer) }
+      let!(:ir_with_end_date_in_past) { create(:induction_record, :past_end_date) }
+      let!(:ir_with_past_start_date_transfer) { create(:induction_record, :school_transfer) }
+      let!(:ir_with_past_start_date_non_transfer) { create(:induction_record, :not_school_transfer) }
+
+      it "includes records with a past start date and a null end date" do
+        expect(described_class.active).to include(ir_with_null_end_date)
+      end
+
+      it "includes records with a past start date and a future end date" do
+        expect(described_class.active).to include(ir_with_future_end_date)
+      end
+
+      it "includes records with a future start date that aren't school transfers" do
+        expect(described_class.active).to include(ir_with_future_start_date_non_transfer)
+      end
+
+      it "excludes records with a future start date that are school transfers" do
+        expect(described_class.active).not_to include(ir_with_future_start_date_transfer)
+      end
+
+      it "excudes records with an end date in the past" do
+        expect(described_class.active).not_to include(ir_with_end_date_in_past)
+      end
+
+      it "includes records with a past start date that are school transfers" do
+        expect(described_class.active).to include(ir_with_past_start_date_transfer)
+      end
+
+      it "includes records with a past start date that are not school transfers" do
+        expect(described_class.active).to include(ir_with_past_start_date_non_transfer)
+      end
+    end
+
+    describe ".transferred" do
+      let!(:ir_leaving_with_past_end_date) { create(:induction_record, :leaving, :past_end_date) }
+      let!(:ir_with_past_end_date) { create(:induction_record, :past_end_date) }
+      let!(:ir_leaving_with_future_end_date) { create(:induction_record, :leaving, :future_end_date) }
+
+      it "ony includes records with leaving status and past end date" do
+        expect(described_class.transferred).to include(ir_leaving_with_past_end_date)
+        expect(described_class.transferred).not_to include(ir_with_past_end_date)
+        expect(described_class.transferred).not_to include(ir_leaving_with_future_end_date)
+      end
+    end
+
+    describe "particiant profile types" do
+      let!(:ir_mentor) { create(:induction_record, :mentor) }
+      let!(:ir_ect) { create(:induction_record, :ect) }
+
+      describe ".mentors" do
+        it "only includes induction records related to a ParticipantProfile::Mentor" do
+          expect(described_class.mentors).to include(ir_mentor)
+          expect(described_class.mentors).not_to include(ir_ect)
+        end
+      end
+
+      describe ".ects" do
+        it "only includes induction records related to a ParticipantProfile::ECT" do
+          expect(described_class.ects).to include(ir_ect)
+          expect(described_class.ects).not_to include(ir_mentor)
+        end
+      end
+    end
+  end
+
   describe "enums" do
     it {
       is_expected.to define_enum_for(:induction_status).with_values(

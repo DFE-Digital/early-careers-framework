@@ -6,6 +6,11 @@ FactoryBot.define do
     total_pupils { Faker::Number.between(from: 1, to: 1000) }
     eligible_pupils { Faker::Number.between(from: 0, to: total_pupils) }
 
+    trait :no_pupils do
+      total_pupils { 0 }
+      eligible_pupils { 0 }
+    end
+
     trait :eligible do
       eligible_pupils { Faker::Number.between(from: (0.4 * total_pupils).ceil, to: total_pupils) }
     end
