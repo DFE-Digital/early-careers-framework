@@ -235,6 +235,18 @@
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ applications."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/NPQApplicationsSort"
+            },
+            "style": "simple",
+            "explode": false,
+            "required": false,
+            "description": "Sort NPQ applications being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -3400,6 +3412,19 @@
               "117f9f24-b610-4f8e-bf49-f253230cfc70,7bdfb2fc-23a1-486f-bfd5-db69d13866de"
             ]
           }
+        }
+      },
+      "NPQApplicationsSort": {
+        "description": "Sort NPQ applications being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "-created_at",
+            "updated_at",
+            "-updated_at"
+          ]
         }
       },
       "NPQEnrolment": {

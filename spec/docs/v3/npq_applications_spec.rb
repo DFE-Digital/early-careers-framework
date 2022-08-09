@@ -46,6 +46,18 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of NPQ applications."
 
+      parameter name: :sort,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/NPQApplicationsSort",
+                },
+                type: :array,
+                style: :simple,
+                explode: false,
+                required: false,
+                description: "Sort NPQ applications being returned.",
+                example: "sort=-updated_at"
+
       response "200", "A list of NPQ applications" do
         schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsResponse" })
 

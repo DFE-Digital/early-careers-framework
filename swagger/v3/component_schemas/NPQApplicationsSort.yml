@@ -1,0 +1,9 @@
+description: "Sort NPQ applications being returned"
+type: array
+items:
+  type: string
+  enum:
+    - created_at
+    - -created_at
+    - updated_at
+    - -updated_at
