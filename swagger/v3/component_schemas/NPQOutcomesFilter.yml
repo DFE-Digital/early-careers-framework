@@ -1,0 +1,10 @@
+description: "Filter NPQ outcomes to return more specific results"
+type: object
+required:
+  - participant_id
+properties:
+  participant_id:
+    description: Return only NPQ outcomes for the specified participant
+    type: string
+    example:
+      - aecc9409-3c30-4538-b849-5831ea442430
