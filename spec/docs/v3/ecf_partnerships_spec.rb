@@ -9,6 +9,18 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "ECF partnerships"
       security [bearerAuth: []]
 
+      parameter name: :filter,
+                schema: {
+                  "$ref": "#/components/schemas/PartnershipsFilter",
+                },
+                in: :query,
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine partnerships to return.",
+                example: "filter[cohort]=2021,2022"
+
       response "200", "A list of ECF partnerships" do
         schema({ "$ref": "#/components/schemas/MultipleECFPartnershipsResponse" })
 
