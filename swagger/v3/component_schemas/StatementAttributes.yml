@@ -13,8 +13,8 @@ properties:
     type: string
     nullable: false
     example: "2022"
-  framework:
-    description: "The framework this statement applies to"
+  type:
+    description: Type of statement
     type: string
     nullable: false
     enum:
