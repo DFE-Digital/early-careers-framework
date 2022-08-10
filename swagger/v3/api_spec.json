@@ -38,6 +38,20 @@
             ]
           }
         ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/DeliveryPartnersFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine delivery partners to return.",
+            "example": "filter[cohort]=2021"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successfully return a list of delivery partners",
@@ -1534,6 +1548,19 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/DeliveryPartner"
+          }
+        }
+      },
+      "DeliveryPartnersFilter": {
+        "description": "Filter delivery partners to return more specific results",
+        "type": "object",
+        "properties": {
+          "cohort": {
+            "description": "Return delivery partners from the specified cohort or cohorts. This is a comma delimited string of years.",
+            "type": "string",
+            "example": [
+              20212022
+            ]
           }
         }
       },
