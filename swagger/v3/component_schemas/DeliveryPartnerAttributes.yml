@@ -4,7 +4,15 @@ required:
   - name
 properties:
   name:
-    description: "The name of the delivery partner"
+    description: The name of the delivery partner you are working with
     type: string
     nullable: false
     example: "Awesome Delivery Partner Ltd"
+  cohort:
+    description: The cohorts for which you may report school partnerships with this delivery partner
+    type: array
+    items:
+      type: string
+    example:
+      - "2021"
+      - "2022"
