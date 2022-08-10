@@ -22,6 +22,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                 example: CGI.unescape({
                   filter: {
                     cohort: "2021,2022",
+                    type: "ecf",
                   },
                 }.to_param)
 
