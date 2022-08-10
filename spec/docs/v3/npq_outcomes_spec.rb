@@ -3,27 +3,21 @@
 require "swagger_helper"
 
 RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
-  path "/api/v3/outcomes/npq" do
+  path "/api/v3/participants/npq/{id}/outcomes" do
     get "Retrieve NPQ outcomes for the specified participant" do
       operationId :npq_outcome_get
       tags "outcomes"
       security [bearerAuth: []]
 
-      parameter name: :filter,
-                in: :query,
-                schema: {
-                  "$ref": "#/components/schemas/NPQOutcomesFilter",
-                },
-                type: :object,
-                style: :deepObject,
-                explode: true,
+      parameter name: :id,
+                description: "The unique ID of the participant",
+                in: :path,
                 required: true,
-                description: "Refine NPQ outcomes to return.",
-                example: CGI.unescape({
-                  filter: {
-                    participant_id: "dcb52af5-e2c9-4f30-8138-60e7dfb54e36",
-                  },
-                }.to_param)
+                schema: {
+                  type: :string,
+                  format: :uuid,
+                },
+                example: "70885c85-f52b-45fe-b969-e09a93ffc6ee"
 
       response "200", "Successfully return NPQ outcomes" do
         schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })
@@ -41,11 +35,21 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     end
   end
 
-  path "/api/v3/outcomes/npq" do
+  path "/api/v3/participants/npq/{id}/outcomes" do
     post "Submit an NPQ outcome" do
       operationId :npq_outcome_post
       tags "outcomes"
       security [bearerAuth: []]
+
+      parameter name: :id,
+                description: "The unique ID of the participant",
+                in: :path,
+                required: true,
+                schema: {
+                  type: :string,
+                  format: :uuid,
+                },
+                example: "70885c85-f52b-45fe-b969-e09a93ffc6ee"
 
       request_body content: {
         "application/json": {

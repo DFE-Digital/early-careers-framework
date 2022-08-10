@@ -387,7 +387,7 @@
         }
       }
     },
-    "/api/v3/outcomes/npq": {
+    "/api/v3/participants/npq/{id}/outcomes": {
       "get": {
         "summary": "Retrieve NPQ outcomes for the specified participant",
         "operationId": "npq_outcome_get",
@@ -403,16 +403,15 @@
         ],
         "parameters": [
           {
-            "name": "filter",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/NPQOutcomesFilter"
-            },
-            "style": "deepObject",
-            "explode": true,
+            "name": "id",
+            "description": "The unique ID of the participant",
+            "in": "path",
             "required": true,
-            "description": "Refine NPQ outcomes to return.",
-            "example": "filter[participant_id]=dcb52af5-e2c9-4f30-8138-60e7dfb54e36"
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
           }
         ],
         "responses": {
@@ -449,6 +448,19 @@
             "bearerAuth": [
 
             ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The unique ID of the participant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
           }
         ],
         "requestBody": {
@@ -3661,12 +3673,6 @@
           "has_passed"
         ],
         "properties": {
-          "participant_id": {
-            "description": "The unique ID of the participant",
-            "type": "string",
-            "format": "uuid",
-            "example": "f05c81dd-8089-4f3b-a416-b092be364e87"
-          },
           "course_identifier": {
             "description": "The course the participant is enrolled in",
             "type": "string",
@@ -3724,7 +3730,6 @@
           "data": {
             "type": "npq-outcome-confirmation",
             "attributes": {
-              "participant_id": "c1f8c9c1-76df-4103-9373-14cab226e0dc",
               "course_identifier": "npq-leading-teaching",
               "has_passed": false
             }
@@ -3740,22 +3745,6 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/NPQOutcome"
-          }
-        }
-      },
-      "NPQOutcomesFilter": {
-        "description": "Filter NPQ outcomes to return more specific results",
-        "type": "object",
-        "required": [
-          "participant_id"
-        ],
-        "properties": {
-          "participant_id": {
-            "description": "Return only NPQ outcomes for the specified participant",
-            "type": "string",
-            "example": [
-              "aecc9409-3c30-4538-b849-5831ea442430"
-            ]
           }
         }
       },

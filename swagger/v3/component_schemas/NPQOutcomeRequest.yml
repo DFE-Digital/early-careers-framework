@@ -9,6 +9,5 @@ example:
   data:
     type: "npq-outcome-confirmation"
     attributes:
-      participant_id: c1f8c9c1-76df-4103-9373-14cab226e0dc
       course_identifier: npq-leading-teaching
       has_passed: false

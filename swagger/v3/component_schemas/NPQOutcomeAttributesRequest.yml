@@ -4,11 +4,6 @@ required:
   - course_identifier
   - has_passed
 properties:
-  participant_id:
-    description: "The unique ID of the participant"
-    type: string
-    format: uuid
-    example: f05c81dd-8089-4f3b-a416-b092be364e87
   course_identifier:
     description: "The course the participant is enrolled in"
     type: string
