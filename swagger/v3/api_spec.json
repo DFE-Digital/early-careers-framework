@@ -2831,7 +2831,7 @@
         "description": "The data attributes associated with an ECF partnership",
         "type": "object",
         "required": [
-          "cohorts",
+          "cohort",
           "urn",
           "delivery_partner_id",
           "status",
@@ -2839,18 +2839,10 @@
           "created_at"
         ],
         "properties": {
-          "cohorts": {
-            "description": "The cohorts for which you are reporting the partnership",
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "string"
-            },
-            "uniqueItems": true,
-            "example": [
-              "2021",
-              "2022"
-            ]
+          "cohort": {
+            "description": "The cohort for which you are reporting the partnership",
+            "type": "string",
+            "example": 2021
           },
           "urn": {
             "description": "The Unique Reference Number (URN) of the school you are partnered with",
