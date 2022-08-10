@@ -44,6 +44,8 @@ class Partnership < ApplicationRecord
   end
 
   def in_challenge_window?
+    return false if challenge_deadline.blank?
+
     challenge_deadline > Time.zone.now
   end
 
