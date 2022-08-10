@@ -3606,7 +3606,9 @@
         "required": [
           "participant_id",
           "course_identifier",
-          "has_passed"
+          "has_passed",
+          "declaration_date",
+          "created_at"
         ],
         "properties": {
           "participant_id": {
@@ -3638,6 +3640,16 @@
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
             "example": true
+          },
+          "declaration_date": {
+            "description": "The date the participant received the assessment outcome for this course",
+            "type": "string",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "created_at": {
+            "description": "The date you created the latest npq-outcome-confirmation record",
+            "type": "string",
+            "example": "2021-05-31T02:21:32.000Z"
           }
         }
       },
