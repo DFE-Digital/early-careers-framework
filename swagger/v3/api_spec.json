@@ -90,6 +90,19 @@
             ]
           }
         ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The unique ID of the delivery partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "00acafd3-e6f6-41e7-a770-3207be94f755"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successfully return a specific delivery partner",

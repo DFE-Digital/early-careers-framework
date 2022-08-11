@@ -47,6 +47,16 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "delivery partners"
       security [bearerAuth: []]
 
+      parameter name: :id,
+                description: "The unique ID of the delivery partner",
+                in: :path,
+                required: true,
+                schema: {
+                  type: :string,
+                  format: :uuid,
+                },
+                example: "00acafd3-e6f6-41e7-a770-3207be94f755"
+
       response "200", "Successfully return a specific delivery partner" do
         schema({ "$ref": "#/components/schemas/DeliveryPartnerResponse" })
 
