@@ -10,6 +10,7 @@ required:
   - training_status
   - schedule_identifier
   - updated_at
+  - joining_date
 properties:
   email:
     description: "The email address registered for this ECF participant"
@@ -115,11 +116,11 @@ properties:
       - Not eligible for funded training
       - Eligible to start
     example: Eligible to start
-  start_date_with_provider:
+  joining_date:
     description: The date the School Induction Tutor has told us the participant will begin their training with you
     type: string
     example: "2022-05-09T16:07:10Z"
-  end_date_with_provider:
+  leaving_date:
     description: If a participant is transferring from you, the date the School Induction Tutor has told us the participant will end their training with you
     type: string
     nullable: true
