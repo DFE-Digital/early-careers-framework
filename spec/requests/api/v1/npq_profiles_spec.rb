@@ -151,6 +151,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               kind_of_nursery: nil,
               private_childcare_provider_urn: nil,
               funding_eligiblity_status_code: "funded",
+              teacher_catchment: "other",
+              teacher_catchment_country: "United Kingdom",
             },
             relationships: {
               user: {
@@ -216,6 +218,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           "kind_of_nursery" => nil,
           "private_childcare_provider_urn" => nil,
           "funding_eligiblity_status_code" => "funded",
+          "teacher_catchment" => "other",
+          "teacher_catchment_country" => "United Kingdom",
         })
       end
 

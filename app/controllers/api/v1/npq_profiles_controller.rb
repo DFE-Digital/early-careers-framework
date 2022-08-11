@@ -98,6 +98,8 @@ module Api
             :kind_of_nursery,
             :private_childcare_provider_urn,
             :funding_eligiblity_status_code,
+            :teacher_catchment,
+            :teacher_catchment_country,
           ).transform_keys! { |key| key == "national_insurance_number" ? "nino" : key }
       end
 
