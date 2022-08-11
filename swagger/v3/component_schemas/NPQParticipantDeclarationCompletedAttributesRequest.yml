@@ -1,5 +1,11 @@
-description: "An NPQ started and completed participant declaration"
+description: "An NPQ completed participant declaration"
 type: object
+required:
+  - participant_id
+  - declaration_type
+  - declaration_date
+  - course_identifier
+  - has_passed
 additionalProperties: false
 properties:
   participant_id:
@@ -11,9 +17,8 @@ properties:
     description: "The event declaration type"
     type: string
     enum:
-      - started
       - completed
-    example: started
+    example: completed
   declaration_date:
     description: "The event declaration date"
     type: string
@@ -34,13 +39,13 @@ properties:
       - npq-additional-support-offer
       - npq-early-headship-coaching-offer
     example: npq-headship
-required:
-  - participant_id
-  - declaration_type
-  - declaration_date
-  - course_identifier
+  has_passed:
+    description: Whether the participant has failed or passed
+    type: boolean
+    example: true
 example:
   participant_id: db3a7848-7308-4879-942a-c4a70ced400a
-  declaration_type: started
+  declaration_type: completed
   declaration_date: "2021-05-31T02:21:32.000Z"
   course_identifier: npq-leading-teaching
+  has_passed: true

@@ -27,16 +27,10 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
       request_body content: {
         "application/json": {
           "schema": {
-            "$ref": "#/components/schemas/ParticipantDeclaration",
+            "$ref": "#/components/schemas/ParticipantDeclarationRequest",
           },
         },
       }
-
-      parameter name: :params,
-                in: :body,
-                schema: {
-                  "$ref": "#/components/schemas/ParticipantDeclaration",
-                }
 
       response 200, "Successful" do
         let(:attributes) do

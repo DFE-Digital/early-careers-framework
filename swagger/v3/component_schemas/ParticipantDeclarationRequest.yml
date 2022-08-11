@@ -1,0 +1,7 @@
+description: "An participant declaration request"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ParticipantDeclarationDataRequest"

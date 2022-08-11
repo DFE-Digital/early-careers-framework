@@ -1,4 +1,4 @@
-description: "An ECF started and completed participant declaration"
+description: "An NPQ started participant declaration"
 type: object
 additionalProperties: false
 properties:
@@ -12,7 +12,6 @@ properties:
     type: string
     enum:
       - started
-      - completed
     example: started
   declaration_date:
     description: "The event declaration date"
@@ -23,9 +22,17 @@ properties:
     description: "The type of course the participant is enrolled in"
     type: string
     enum:
-      - ecf-induction
-      - ecf-mentor
-    example: ecf-induction
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-headship
 required:
   - participant_id
   - declaration_type
@@ -35,4 +42,4 @@ example:
   participant_id: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type: started
   declaration_date: "2021-05-31T02:21:32.000Z"
-  course_identifier: ecf-mentor
+  course_identifier: npq-leading-teaching

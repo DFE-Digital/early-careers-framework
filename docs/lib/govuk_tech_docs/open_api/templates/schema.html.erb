@@ -37,6 +37,16 @@
               end
             %>
 
+            <% if property[1].node_data["anyOf"].node.present? %>
+              <p>This conforms to any of the following schemas:</p>
+
+              <ul>
+                <% property[1].node_data["anyOf"].node.each do |node| %>
+                  <li><%= get_schema_link node %></li>
+                <% end %>
+              </ul>
+            <% end %>
+
             <% if enum = property[1].enum %>
               <p>Possible values:</p>
 
