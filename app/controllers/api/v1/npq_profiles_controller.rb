@@ -106,7 +106,12 @@ module Api
       def npq_application_update_params
         params
           .require(:data)
-          .permit(attributes: %i[eligible_for_funding funding_eligiblity_status_code])
+          .permit(attributes: %i[
+            eligible_for_funding
+            funding_eligiblity_status_code
+            teacher_catchment
+            teacher_catchment_country
+          ])
       end
     end
   end

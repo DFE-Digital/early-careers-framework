@@ -54,6 +54,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             attributes: {
               eligible_for_funding: true,
               funding_eligiblity_status_code: "funded",
+              teacher_catchment: "other",
+              teacher_catchment_country: "United Kingdom",
             },
           },
         }
@@ -61,14 +63,25 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
       it "updates the record" do
         expect { patch "/api/v1/npq-profiles/#{npq_application.id}", params: json }
-          .to change { npq_application.reload.slice(:eligible_for_funding, :funding_eligiblity_status_code) }
+          .to change {
+            npq_application.reload.slice(
+              :eligible_for_funding,
+              :funding_eligiblity_status_code,
+              :teacher_catchment,
+              :teacher_catchment_country,
+            )
+          }
           .from({
             eligible_for_funding: false,
             funding_eligiblity_status_code: "ineligible_establishment_type",
+            teacher_catchment: nil,
+            teacher_catchment_country: nil,
           })
           .to({
             eligible_for_funding: true,
             funding_eligiblity_status_code: "funded",
+            teacher_catchment: "other",
+            teacher_catchment_country: "United Kingdom",
           })
 
         expect(response).to be_ok
