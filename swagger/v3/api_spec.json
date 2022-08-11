@@ -1434,6 +1434,19 @@
             ]
           }
         ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The unique ID of the statement",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "fe82db5d-a7ff-42b4-9eb7-19a87bf0ce5f"
+          }
+        ],
         "responses": {
           "200": {
             "description": "A specific financial statement",

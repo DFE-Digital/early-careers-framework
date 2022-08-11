@@ -48,6 +48,16 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
       tags "statements"
       security [bearerAuth: []]
 
+      parameter name: :id,
+                description: "The unique ID of the statement",
+                in: :path,
+                required: true,
+                schema: {
+                  type: :string,
+                  format: :uuid,
+                },
+                example: "fe82db5d-a7ff-42b4-9eb7-19a87bf0ce5f"
+
       response "200", "A specific financial statement" do
         schema({ "$ref": "#/components/schemas/StatementResponse" })
 
