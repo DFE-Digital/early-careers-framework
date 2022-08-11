@@ -102,12 +102,12 @@ properties:
     description: Indicates where a participant is in the DfE’s validation and eligibility process. Same detail shown to SITs and Delivery Partners.
     type: string
     enum:
-      - Contacted for information
-      - DfE checking eligibility
-      - Checking QTS
-      - Not eligible for funded training
-      - Eligible to start
-    example: Eligible to start
+      - contacted_for_information
+      - dfe_checking_eligibility
+      - checking_qts
+      - not_eligible_for_funded_training
+      - eligible_to_start
+    example: eligible_to_start
   joining_date:
     description: The date the School Induction Tutor has told us the participant will begin their training with you
     type: string
