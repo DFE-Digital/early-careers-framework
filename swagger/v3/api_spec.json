@@ -269,7 +269,7 @@
             "schema": {
               "$ref": "#/components/schemas/NPQApplicationsSort"
             },
-            "style": "simple",
+            "style": "form",
             "explode": false,
             "required": false,
             "description": "Sort NPQ applications being returned.",

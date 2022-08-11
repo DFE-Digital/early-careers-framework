@@ -52,7 +52,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                   "$ref": "#/components/schemas/NPQApplicationsSort",
                 },
                 type: :array,
-                style: :simple,
+                style: :form,
                 explode: false,
                 required: false,
                 description: "Sort NPQ applications being returned.",
