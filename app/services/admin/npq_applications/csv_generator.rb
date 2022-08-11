@@ -33,7 +33,7 @@ module Admin
         :user_email,
         :user_full_name,
         :teacher_reference_number_verified,
-        # :teacher_reference_number # Possibly not needed
+        :teacher_reference_number, # Possibly not needed
       ].freeze
 
       attr_reader :start_date, :end_date
