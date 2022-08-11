@@ -74,7 +74,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           .from({
             eligible_for_funding: false,
             funding_eligiblity_status_code: "ineligible_establishment_type",
-            teacher_catchment: nil,
+            teacher_catchment: "england",
             teacher_catchment_country: nil,
           })
           .to({

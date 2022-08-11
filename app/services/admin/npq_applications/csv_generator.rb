@@ -12,8 +12,8 @@ module Admin
         :npq_lead_provider_id,
         :npq_course_name,
         :npq_lead_provider_name,
-        # :teacher_catchment, # Not currently sent to ECF from NPQ
-        # :teacher_catchment_country, # Not currently sent to ECF from NPQ
+        :teacher_catchment, # Not currently sent to ECF from NPQ
+        :teacher_catchment_country, # Not currently sent to ECF from NPQ
         :works_in_school,
         :works_in_childcare,
         :works_in_nursery,

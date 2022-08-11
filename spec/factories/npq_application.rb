@@ -19,6 +19,9 @@ FactoryBot.define do
     funding_eligiblity_status_code { :ineligible_establishment_type }
     targeted_delivery_funding_eligibility { true }
 
+    teacher_catchment { "england" }
+    teacher_catchment_country { nil }
+
     trait :funded do
       eligible_for_funding { true }
       funding_eligiblity_status_code { :funded }
