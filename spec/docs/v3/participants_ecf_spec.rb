@@ -89,17 +89,97 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
     end
   end
 
-  it_behaves_like "JSON Participant Deferral documentation",
-                  "/api/v3/participants/ecf/{id}/defer",
-                  "#/components/schemas/ECFParticipantDeferRequest",
-                  "#/components/schemas/ECFParticipantDeferResponse",
-                  "ECF Participant" do
-    let(:participant) { mentor_profile }
-    let(:attributes) do
-      {
-        reason: "career-break",
-        course_identifier: "ecf-mentor",
+  path "/api/v3/participants/ecf/{id}/defer" do
+    put "Notify that an ECF participant is taking a break from their course" do
+      operationId "ecf_participant_defer"
+      tags "ECF Participant"
+      security [bearerAuth: []]
+      consumes "application/json"
+
+      request_body content: {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/ECFParticipantDeferRequest",
+          },
+        },
       }
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the participant to defer"
+
+      parameter name: :params,
+                in: :body,
+                type: :object,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantDeferRequest",
+                }
+
+      response "200", "The ECF participant being deferred" do
+        let(:id) { mentor_profile.user.id }
+
+        let(:params) do
+          {
+            data: {
+              type: "participant",
+              attributes: {
+                reason: "career-break",
+                course_identifier: "ecf-mentor",
+              },
+            },
+          }
+        end
+
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
+        # TODO: replace with actual implementation once implemented
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success: {
+                  value: JSON.parse({
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "participant",
+                      attributes: {
+                        email: "jane.smith@some-school.example.com",
+                        full_name: "Jane Smith",
+                        mentor_id: "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                        school_urn: "106286",
+                        participant_type: "ect",
+                        cohort: "2021",
+                        teacher_reference_number: "1234567",
+                        teacher_reference_number_validated: true,
+                        eligible_for_funding: true,
+                        pupil_premium_uplift: true,
+                        sparsity_uplift: true,
+                        training_status: "deferred",
+                        schedule_identifier: "ecf-standard-january",
+                        updated_at: "2021-05-31T02:22:32.000Z",
+                        withdrawal_date: nil,
+                        participant_status: "active",
+                        validation_status: "eligible_to_start",
+                        joining_date: "2022-05-09T16:07:10Z",
+                        leaving_date: "2022-11-09T16:07:38Z",
+                      },
+                    },
+                  }.to_json, symbolize_names: true),
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
+
+        run_test!
+      end
     end
   end
 

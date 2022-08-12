@@ -1175,7 +1175,7 @@
     "/api/v3/participants/ecf/{id}/defer": {
       "put": {
         "summary": "Notify that an ECF participant is taking a break from their course",
-        "operationId": "participant",
+        "operationId": "ecf_participant_defer",
         "tags": [
           "ECF Participant"
         ],
@@ -1213,7 +1213,38 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ECFParticipantDeferResponse"
+                  "$ref": "#/components/schemas/ECFParticipantResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "participant",
+                        "attributes": {
+                          "email": "jane.smith@some-school.example.com",
+                          "full_name": "Jane Smith",
+                          "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                          "school_urn": "106286",
+                          "participant_type": "ect",
+                          "cohort": "2021",
+                          "teacher_reference_number": "1234567",
+                          "teacher_reference_number_validated": true,
+                          "eligible_for_funding": true,
+                          "pupil_premium_uplift": true,
+                          "sparsity_uplift": true,
+                          "training_status": "deferred",
+                          "schedule_identifier": "ecf-standard-january",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "withdrawal_date": null,
+                          "participant_status": "active",
+                          "validation_status": "eligible_to_start",
+                          "joining_date": "2022-05-09T16:07:10Z",
+                          "leaving_date": "2022-11-09T16:07:38Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -2204,120 +2235,6 @@
           "course_identifier": "ecf-mentor"
         }
       },
-      "ECFParticipantDeferAttributesResponse": {
-        "description": "The data attributes associated with an ECF participant",
-        "type": "object",
-        "required": [
-          "email",
-          "full_name",
-          "school_urn",
-          "participant_type",
-          "cohort",
-          "status",
-          "training_status",
-          "schedule_identifier",
-          "updated_at"
-        ],
-        "properties": {
-          "email": {
-            "description": "The email address registered for this ECF participant",
-            "type": "string",
-            "example": "jane.smith@some-school.example.com"
-          },
-          "full_name": {
-            "description": "The full name of this ECF participant",
-            "type": "string",
-            "example": "Jane Smith"
-          },
-          "mentor_id": {
-            "description": "The unique identifier of this ECF participants mentor",
-            "type": "string",
-            "nullable": true,
-            "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-            "format": "uuid"
-          },
-          "school_urn": {
-            "description": "The Unique Reference Number (URN) of the school that submitted this ECF participant",
-            "type": "string",
-            "example": "106286"
-          },
-          "participant_type": {
-            "description": "The type of ECF participant this record refers to",
-            "type": "string",
-            "example": "ect",
-            "enum": [
-              "ect",
-              "mentor"
-            ]
-          },
-          "cohort": {
-            "description": "Which cohort this ECF participant is associated with",
-            "type": "string",
-            "example": "2021"
-          },
-          "status": {
-            "description": "The status of this ECF participant record",
-            "type": "string",
-            "example": "active",
-            "enum": [
-              "active",
-              "withdrawn"
-            ]
-          },
-          "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
-            "type": "string",
-            "example": "1234567"
-          },
-          "teacher_reference_number_validated": {
-            "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
-            "type": "boolean",
-            "example": true
-          },
-          "eligible_for_funding": {
-            "description": "Indicates whether this participant is eligible to receive DfE funded induction",
-            "type": "boolean",
-            "nullable": true,
-            "example": true
-          },
-          "pupil_premium_uplift": {
-            "description": "Indicates whether this participant qualifies for an uplift payment due to pupil premium",
-            "type": "boolean",
-            "example": true
-          },
-          "sparsity_uplift": {
-            "description": "Indicates whether this participant qualifies for an uplift payment due to sparsity",
-            "type": "boolean",
-            "example": true
-          },
-          "training_status": {
-            "description": "The training status of the ECF participant",
-            "type": "string",
-            "example": "deferred",
-            "enum": [
-              "active",
-              "deferred",
-              "withdrawn"
-            ]
-          },
-          "schedule_identifier": {
-            "description": "The schedule of the ECF participant",
-            "type": "string",
-            "example": "ecf-standard-january",
-            "enum": [
-              "ecf-standard-september",
-              "ecf-standard-january",
-              "ecf-standard-april"
-            ]
-          },
-          "updated_at": {
-            "description": "The date the ECF participant was last updated",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
-          }
-        }
-      },
       "ECFParticipantDeferRequest": {
         "description": "The deferral request for a participant",
         "type": "object",
@@ -2336,43 +2253,6 @@
               "reason": "career-break",
               "course_identifier": "ecf-mentor"
             }
-          }
-        }
-      },
-      "ECFParticipantDeferResponse": {
-        "description": "An ECF Participant",
-        "type": "object",
-        "required": [
-          "data"
-        ],
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ECFParticipantDeferResponseData"
-          }
-        }
-      },
-      "ECFParticipantDeferResponseData": {
-        "description": "The details of a participant",
-        "type": "object",
-        "required": [
-          "id",
-          "type",
-          "attributes"
-        ],
-        "properties": {
-          "id": {
-            "description": "The unique identifier of the participant record",
-            "type": "string",
-            "format": "uuid",
-            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
-          },
-          "type": {
-            "description": "The data type",
-            "type": "string",
-            "example": "participant"
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantDeferAttributesResponse"
           }
         }
       },

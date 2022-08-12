@@ -53,6 +53,14 @@
           end
         end %>
 
+        <% if response.content['application/json'] %>
+          <% if response.content['application/json']["examples"] %>
+            <% response.content['application/json']["examples"].each do |name, hash| %>
+              <% request_body = json_prettyprint(hash["value"]) %>
+            <% end %>
+          <% end %>
+        <% end %>
+
         <% if request_body.present? %>
           <%
             source = request_body
