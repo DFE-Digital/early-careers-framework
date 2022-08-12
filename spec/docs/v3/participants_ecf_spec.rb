@@ -287,7 +287,48 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
           }
         end
 
-        schema({ "$ref": "#/components/schemas/ECFParticipantWithdrawResponse" })
+        schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
+        # TODO: replace with actual implementation once implemented
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success: {
+                  value: JSON.parse({
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "participant",
+                      attributes: {
+                        email: "jane.smith@some-school.example.com",
+                        full_name: "Jane Smith",
+                        mentor_id: "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                        school_urn: "106286",
+                        participant_type: "ect",
+                        cohort: "2021",
+                        teacher_reference_number: "1234567",
+                        teacher_reference_number_validated: true,
+                        eligible_for_funding: true,
+                        pupil_premium_uplift: true,
+                        sparsity_uplift: true,
+                        training_status: "withdrawn",
+                        schedule_identifier: "ecf-standard-january",
+                        updated_at: "2021-05-31T02:22:32.000Z",
+                        withdrawal_date: nil,
+                        participant_status: "withdrawn",
+                        validation_status: "eligible_to_start",
+                        joining_date: "2022-05-09T16:07:10Z",
+                        leaving_date: "2022-11-09T16:07:38Z",
+                      },
+                    },
+                  }.to_json, symbolize_names: true),
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
 
         run_test!
       end
