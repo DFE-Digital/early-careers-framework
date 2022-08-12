@@ -13,6 +13,8 @@ properties:
   type:
     description: "The data type"
     type: string
+    enum:
+      - npq-participant-declaration
     example: npq-participant-declaration
   attributes:
     $ref: "#/components/schemas/NPQParticipantDeclarationAttributes"

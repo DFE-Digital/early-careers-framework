@@ -53,6 +53,63 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
 
         schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
 
+        # TODO: replace with actual implementation once implemented
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success_ecf: {
+                  value: {
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "ecf-participant-declaration",
+                      attributes: {
+                        participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
+                        declaration_type: "started",
+                        declaration_date: "2020-11-13T11:21:55Z",
+                        course_identifier: "ecf-induction",
+                        state: "eligible",
+                        updated_at: "2020-11-13T11:21:55Z",
+                        created_at: "2020-11-13T11:21:55Z",
+                        delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                        statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                        clawback_statement_id: nil,
+                        inelgible_for_funding_reason: nil,
+                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        uplift_paid: true,
+                      },
+                    },
+                  },
+                },
+                success_npq: {
+                  value: {
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "npq-participant-declaration",
+                      attributes: {
+                        participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                        declaration_type: "started",
+                        declaration_date: "2020-11-13T11:21:55Z",
+                        course_identifier: "npq-leading-teaching",
+                        state: "eligible",
+                        updated_at: "2020-11-13T11:21:55Z",
+                        created_at: "2020-11-13T11:21:55Z",
+                        statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                        clawback_statement_id: nil,
+                        inelgible_for_funding_reason: nil,
+                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        uplift_paid: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
+
         run_test!
       end
 
@@ -126,6 +183,61 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
       response "200", "A list of participant declarations" do
         schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsResponse" })
 
+        # TODO: replace with actual implementation once implemented
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success: {
+                  value: {
+                    data: [
+                      {
+                        id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                        type: "ecf-participant-declaration",
+                        attributes: {
+                          participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
+                          declaration_type: "started",
+                          declaration_date: "2020-11-13T11:21:55Z",
+                          course_identifier: "ecf-induction",
+                          state: "eligible",
+                          updated_at: "2020-11-13T11:21:55Z",
+                          created_at: "2020-11-13T11:21:55Z",
+                          delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                          clawback_statement_id: nil,
+                          inelgible_for_funding_reason: nil,
+                          mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                          uplift_paid: true,
+                        },
+                      },
+                      {
+                        id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                        type: "npq-participant-declaration",
+                        attributes: {
+                          participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                          declaration_type: "started",
+                          declaration_date: "2020-11-13T11:21:55Z",
+                          course_identifier: "npq-leading-teaching",
+                          state: "eligible",
+                          updated_at: "2020-11-13T11:21:55Z",
+                          created_at: "2020-11-13T11:21:55Z",
+                          statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                          clawback_statement_id: nil,
+                          inelgible_for_funding_reason: nil,
+                          mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                          uplift_paid: true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
+
         run_test!
       end
 
@@ -160,6 +272,63 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
 
       response "200", "A single participant declaration" do
         schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
+
+        # TODO: replace with actual implementation once implemented
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success_ecf: {
+                  value: {
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "ecf-participant-declaration",
+                      attributes: {
+                        participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
+                        declaration_type: "started",
+                        declaration_date: "2020-11-13T11:21:55Z",
+                        course_identifier: "ecf-induction",
+                        state: "eligible",
+                        updated_at: "2020-11-13T11:21:55Z",
+                        created_at: "2020-11-13T11:21:55Z",
+                        delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                        statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                        clawback_statement_id: nil,
+                        inelgible_for_funding_reason: nil,
+                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        uplift_paid: true,
+                      },
+                    },
+                  },
+                },
+                success_npq: {
+                  value: {
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "npq-participant-declaration",
+                      attributes: {
+                        participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                        declaration_type: "started",
+                        declaration_date: "2020-11-13T11:21:55Z",
+                        course_identifier: "npq-leading-teaching",
+                        state: "eligible",
+                        updated_at: "2020-11-13T11:21:55Z",
+                        created_at: "2020-11-13T11:21:55Z",
+                        statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                        clawback_statement_id: nil,
+                        inelgible_for_funding_reason: nil,
+                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        uplift_paid: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
 
         run_test!
       end
@@ -203,6 +372,63 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
         end
 
         schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
+
+        # TODO: replace with actual implementation once implemented
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success_ecf: {
+                  value: {
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "ecf-participant-declaration",
+                      attributes: {
+                        participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
+                        declaration_type: "started",
+                        declaration_date: "2020-11-13T11:21:55Z",
+                        course_identifier: "ecf-induction",
+                        state: "voided",
+                        updated_at: "2020-11-13T11:21:55Z",
+                        created_at: "2020-11-13T11:21:55Z",
+                        delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                        statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+                        clawback_statement_id: nil,
+                        inelgible_for_funding_reason: nil,
+                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        uplift_paid: true,
+                      },
+                    },
+                  },
+                },
+                success_npq: {
+                  value: {
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "npq-participant-declaration",
+                      attributes: {
+                        participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+                        declaration_type: "started",
+                        declaration_date: "2020-11-13T11:21:55Z",
+                        course_identifier: "npq-leading-teaching",
+                        state: "voided",
+                        updated_at: "2020-11-13T11:21:55Z",
+                        created_at: "2020-11-13T11:21:55Z",
+                        statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+                        clawback_statement_id: nil,
+                        inelgible_for_funding_reason: nil,
+                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        uplift_paid: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
 
         run_test!
       end
