@@ -71,7 +71,6 @@ module Steps
                                            .add_participant_details
                                            .continue
                                            .choose_to_add_an_ect_or_mentor
-        # participant_dob = Date.new(1990, 9, 1)
         participant_start_date = Date.new(2021, 9, 1)
         response = {
           trn: participant_trn,
