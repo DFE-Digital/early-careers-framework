@@ -36,9 +36,6 @@ class NPQApplication < ApplicationRecord
     rejected: "rejected",
   }
 
-  validate :validate_rejected_status_cannot_change
-  validate :validate_accepted_status_cannot_change
-
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 
   delegate :start_year, to: :cohort, prefix: true, allow_nil: true
@@ -48,18 +45,6 @@ class NPQApplication < ApplicationRecord
 
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
-
-  def validate_rejected_status_cannot_change
-    if lead_provider_approval_status_changed?(from: "rejected")
-      errors.add(:lead_provider_approval_status, :invalid, message: "Once rejected an application cannot change state")
-    end
-  end
-
-  def validate_accepted_status_cannot_change
-    if lead_provider_approval_status_changed?(from: "accepted")
-      errors.add(:lead_provider_approval_status, :invalid, message: "Once accepted an application cannot change state")
-    end
-  end
 
   # this builds upon #eligible_for_funding
   # eligible_for_funding is solely based on what NPQ app knows

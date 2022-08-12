@@ -26,7 +26,7 @@ module Api
       end
 
       def reject
-        if npq_application.update(lead_provider_approval_status: "rejected")
+        if NPQ::Reject.call(npq_application:)
           render json: json_serializer_class.new(npq_application).serializable_hash
         else
           render json: { errors: Api::ErrorFactory.new(model: npq_application).call }, status: :bad_request

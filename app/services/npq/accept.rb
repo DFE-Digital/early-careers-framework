@@ -25,6 +25,11 @@ module NPQ
         return false
       end
 
+      if npq_application.rejected?
+        npq_application.errors.add(:lead_provider_approval_status, :cannot_change_from_rejected)
+        return false
+      end
+
       ApplicationRecord.transaction do
         teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
         participant_profile

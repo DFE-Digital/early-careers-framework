@@ -338,6 +338,9 @@ Rails.application.routes.draw do
     resources :participant_profiles, only: [] do
       resource :change_training_status, only: %i[new create]
     end
+    resources :npq_applications, only: [] do
+      resource :change_lead_provider_approval_status, only: %i[new create]
+    end
 
     namespace :banding_tracker, path: "banding-tracker" do
       resources :providers, only: %i[show]

@@ -276,7 +276,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
         expect(parsed_response["errors"][0].key?("title")).to be_truthy
         expect(parsed_response["errors"][0].key?("detail")).to be_truthy
-        expect(parsed_response["errors"][0]["title"]).to eql("Status invalid")
+        expect(parsed_response["errors"][0]["title"]).to eql("Status cannot change from accepted")
         expect(parsed_response["errors"][0]["detail"]).to eql("Once accepted an application cannot change state")
       end
     end
@@ -336,7 +336,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
         expect(parsed_response["errors"][0].key?("title")).to be_truthy
         expect(parsed_response["errors"][0].key?("detail")).to be_truthy
-        expect(parsed_response["errors"][0]["title"]).to eql("Status invalid")
+        expect(parsed_response["errors"][0]["title"]).to eql("Status cannot change from rejected")
         expect(parsed_response["errors"][0]["detail"]).to eql("Once rejected an application cannot change state")
       end
     end
