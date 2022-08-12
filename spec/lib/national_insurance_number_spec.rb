@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe NationalInsuranceNumber do
-  describe "valid?" do
+  describe "#valid?" do
     context "when the original value with spaces removed sticks to the official NINO format definition" do
       it "returns true" do
         expect(described_class.new("AB 12 34 56 A")).to be_valid
