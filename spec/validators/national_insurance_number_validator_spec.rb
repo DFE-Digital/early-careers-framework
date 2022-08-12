@@ -15,10 +15,10 @@ RSpec.describe NationalInsuranceNumberValidator, type: :model do
 
   def valid_ninos
     [
-      "AB123456A",
+      "Ab123456A",
       "AB123456   A",
-      "AB 12 34 56 A",
-      "A B 1 2 3 4 5 6 A",
+      "ab 12 34 56 A",
+      "A B 1 2 3 4 5 6 a",
     ]
   end
 
@@ -28,17 +28,17 @@ RSpec.describe NationalInsuranceNumberValidator, type: :model do
        IA123456A
        QA123456A
        UA123456A
-       VA123456A
-       AD123456A
+       va123456A
+       AD123456a
        AF123456A
        AI123456A
        AQ123456A
        AU123456A
        AV123456A
        AO123456A
-       BG123456A
+       Bg123456A
        GB123456A
-       KN123456A
+       kn123456A
        NK123456A
        NT123456A
        TN123456A

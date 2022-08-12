@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NationalInsuranceNumber
-  REGEXP = /(^(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]$)/
+  REGEXP = /\A(?!BG)(?!GB)(?!NK)(?!KN)(?!TN)(?!NT)(?!ZZ)[A-Z&&[^DFIQUV]][A-Z&&[^DFIOQUV]][0-9]{6}[A-D]\z/
 
   attr_reader :nino, :formatted_nino, :error
 
@@ -17,7 +17,7 @@ class NationalInsuranceNumber
 private
 
   def parse_nino
-    parsed = nino.to_s.gsub(/\s*/, "")
+    parsed = nino.to_s.upcase.gsub(/\s*/, "")
     return [nil, :blank]   if parsed.blank?
     return [nil, :invalid] if parsed !~ REGEXP
 

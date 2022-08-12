@@ -6,9 +6,9 @@ RSpec.describe NationalInsuranceNumber do
   describe "#valid?" do
     context "when the original value with spaces removed sticks to the official NINO format definition" do
       it "returns true" do
-        expect(described_class.new("AB 12 34 56 A")).to be_valid
-        expect(described_class.new("AB123456A")).to be_valid
-        expect(described_class.new("AB   12 3456 A")).to be_valid
+        expect(described_class.new("AB   12 34 56 A")).to be_valid
+        expect(described_class.new("Ab123456A")).to be_valid
+        expect(described_class.new("ab 12   3456  a")).to be_valid
       end
     end
 
@@ -40,8 +40,8 @@ RSpec.describe NationalInsuranceNumber do
   end
 
   describe "#formatted_nino" do
-    it "removes space characters" do
-      expect(described_class.new("AB 12 34    56 A").formatted_nino).to eq("AB123456A")
+    it "upcase and removes space characters" do
+      expect(described_class.new("ab 12 34 56 A").formatted_nino).to eq("AB123456A")
     end
 
     context "when the original value is not valid" do

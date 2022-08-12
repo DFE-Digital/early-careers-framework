@@ -15,8 +15,9 @@
             <%= f.govuk_error_summary %>
             <%= f.govuk_text_field :nino,
                                    width: "two-thirds",
+                                   spellcheck: false,
                                    label: { text: title, size: 'xl', tag: 'h1', class: 'govuk-heading-xl' },
-                                   hint: -> { tag.div("It’s on their National Insurance card, benefit letter, payslip or P60. For example, ‘AB 12 34 56 C’.",
+                                   hint: -> { tag.div("It’s on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.",
                                                       class: "govuk-hint") } %>
             <%= f.govuk_submit "Continue" %>
         <% end %>
