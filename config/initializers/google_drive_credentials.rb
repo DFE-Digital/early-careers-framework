@@ -8,6 +8,7 @@
   GOOGLE_ACCOUNT_TYPE
   GOOGLE_PRIVATE_KEY
   GOOGLE_DRIVE_NPQ_UPLOAD_FOLDER_ID
+  GOOGLE_DRIVE_NPQ_DOWNLOAD_FOLDER_ID
 ].each do |identifier|
   next if ENV.key?(identifier.to_s)
 
