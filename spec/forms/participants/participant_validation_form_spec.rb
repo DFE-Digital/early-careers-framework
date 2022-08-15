@@ -69,13 +69,13 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
         it "validates the TRN has at least 5 digits" do
           form.trn = "RP22/12"
           expect(form).not_to be_valid
-          expect(form.errors[:trn]).to include "Teacher reference number contains at least 5 digits"
+          expect(form.errors[:trn]).to include "Teacher reference number must include at least 5 digits"
         end
 
         it "validates the TRN has at most 7 digits" do
           form.trn = "RP22/1234567"
           expect(form).not_to be_valid
-          expect(form.errors[:trn]).to include "Teacher reference number contains at most 7 digits"
+          expect(form.errors[:trn]).to include "Teacher reference number cannot include more than 7 digits"
         end
       end
 

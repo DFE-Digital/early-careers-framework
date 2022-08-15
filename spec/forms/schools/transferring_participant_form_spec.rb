@@ -47,7 +47,7 @@ RSpec.describe Schools::TransferringParticipantForm, type: :model do
       it "returns false when TRN is less than 5 digits" do
         form.trn = "1234"
         expect(form.valid?(:trn)).to be false
-        expect(form.errors[:trn]).to include "Teacher reference number contains at least 5 digits"
+        expect(form.errors[:trn]).to include "Teacher reference number must include at least 5 digits"
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Schools::TransferringParticipantForm, type: :model do
       it "returns false when TRN is more than 7 digits" do
         form.trn = "12345678"
         expect(form.valid?(:trn)).to be false
-        expect(form.errors[:trn]).to include "Teacher reference number contains at most 7 digits"
+        expect(form.errors[:trn]).to include "Teacher reference number cannot include more than 7 digits"
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe Schools::TransferringParticipantForm, type: :model do
       it "returns false" do
         form.trn = "ABCD/EFGH"
         expect(form.valid?(:trn)).to be false
-        expect(form.errors[:trn]).to include "Teacher reference number is not the correct format (for example, RP99/12345)"
+        expect(form.errors[:trn]).to include "Teacher reference number must include at least 5 digits"
       end
     end
   end

@@ -140,9 +140,9 @@ en:
       blank: "Please select a provider"
     teacher_reference_number: &trn_error_messages
       blank: Enter the teacher reference number (TRN)
-      too_short: Teacher reference number contains at least 5 digits
-      too_long: Teacher reference number contains at most 7 digits
-      invalid: Teacher reference number is not the correct format (for example, RP99/12345)
+      too_short: Teacher reference number must include at least 5 digits
+      too_long: Teacher reference number cannot include more than 7 digits
+      invalid: Teacher reference number must include at least 5 digits
     teacher_reference_number_personalised:
       <<: *trn_error_messages
       blank: Enter your teacher reference number (TRN)
