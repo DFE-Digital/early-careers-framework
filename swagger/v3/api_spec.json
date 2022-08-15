@@ -1569,8 +1569,8 @@
     },
     "/api/v3/participants/ecf/{id}/change-schedule": {
       "put": {
-        "summary": "Notify that an ECF participant is changing training schedule",
-        "operationId": "participant",
+        "summary": "Notify that an ECF Participant is changing training schedule",
+        "operationId": "ecf_participant_change_schedule",
         "tags": [
           "ECF Participant"
         ],
@@ -1604,7 +1604,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The ECF participant changing schedule",
+            "description": "The ECF Participant changing schedule",
             "content": {
               "application/json": {
                 "schema": {
