@@ -22,10 +22,12 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
     let(:csv_file_contents) do
       CSV.generate do |csv|
         csv << csv_headers
-        csv << [npq_application_to_mark_funded.id, "TRUE", "funded"]
-        csv << [npq_application_to_mark_unfunded.id, "FALSE", "ineligible_establishment_type"]
-        csv << [npq_application_to_mark_other.id, "no", "previously_funded"]
-        csv << [npq_application_to_mark_invalid_status_code.id, "no", "not funded"]
+        # The array sample is to check that different cases of true all resolve to the boolean value true
+        # We also in various other values add padding to check that whitespace is being stripped out
+        csv << [npq_application_to_mark_funded.id, ["TRUE", "true", "TRue", " TRUE"].sample, "funded"]
+        csv << [npq_application_to_mark_unfunded.id, "FALSE", "ineligible_establishment_type  "]
+        csv << ["#{npq_application_to_mark_other.id} ", " no", "previously_funded"]
+        csv << [npq_application_to_mark_invalid_status_code.id, "false", "not funded"]
         csv << [fake_ecf_id, "TRUE", "funded"]
       end
     end

@@ -41,9 +41,9 @@ module Admin
 
             OpenStruct.new(
               csv_row:,
-              ecf_id: row["ecf_id"],
-              eligible_for_funding: row["eligible_for_funding"] == "TRUE",
-              funding_eligiblity_status_code: row["funding_eligiblity_status_code"],
+              ecf_id: row["ecf_id"].strip,
+              eligible_for_funding: row["eligible_for_funding"].strip.upcase == "TRUE",
+              funding_eligiblity_status_code: row["funding_eligiblity_status_code"].strip,
             )
           end
         end
