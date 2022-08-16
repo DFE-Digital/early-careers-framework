@@ -898,7 +898,7 @@
                           "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -920,7 +920,7 @@
                           "created_at": "2020-11-13T11:21:55Z",
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "uplift_paid": true
                         }
                       }
@@ -1027,7 +1027,7 @@
                             "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                             "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                             "clawback_statement_id": null,
-                            "inelgible_for_funding_reason": null,
+                            "ineligible_for_funding_reason": null,
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                             "uplift_paid": true
                           }
@@ -1045,7 +1045,7 @@
                             "created_at": "2020-11-13T11:21:55Z",
                             "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                             "clawback_statement_id": null,
-                            "inelgible_for_funding_reason": null,
+                            "ineligible_for_funding_reason": null,
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                             "uplift_paid": true
                           }
@@ -1121,7 +1121,7 @@
                           "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1143,7 +1143,7 @@
                           "created_at": "2020-11-13T11:21:55Z",
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1228,7 +1228,7 @@
                           "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1250,7 +1250,7 @@
                           "created_at": "2020-11-13T11:21:55Z",
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -2233,7 +2233,7 @@
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "inelgible_for_funding_reason": {
+          "ineligible_for_funding_reason": {
             "description": "If the declaration is ineligible, the reason why",
             "type": "string",
             "enum": [
@@ -3761,7 +3761,7 @@
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "inelgible_for_funding_reason": {
+          "ineligible_for_funding_reason": {
             "description": "If the declaration is ineligible, the reason why",
             "type": "string",
             "enum": [
@@ -4256,7 +4256,7 @@
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "inelgible_for_funding_reason": {
+          "ineligible_for_funding_reason": {
             "description": "If the declaration is ineligible, the reason why",
             "type": "string",
             "enum": [
@@ -4361,7 +4361,7 @@
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "inelgible_for_funding_reason": {
+          "ineligible_for_funding_reason": {
             "description": "If the declaration is ineligible, the reason why",
             "type": "string",
             "enum": [

@@ -72,7 +72,7 @@ properties:
     type: string
     format: uuid
     example: cd3a12347-7308-4879-942a-c4a70ced400a
-  inelgible_for_funding_reason:
+  ineligible_for_funding_reason:
     description: "If the declaration is ineligible, the reason why"
     type: string
     enum:
