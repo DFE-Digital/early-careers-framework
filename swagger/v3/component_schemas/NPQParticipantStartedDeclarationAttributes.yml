@@ -18,10 +18,6 @@ properties:
     type: string
     enum:
       - started
-      - completed
-      - retained-1
-      - retained-2
-      - retained-3
     example: started
   declaration_date:
     description: "The event declaration date"
