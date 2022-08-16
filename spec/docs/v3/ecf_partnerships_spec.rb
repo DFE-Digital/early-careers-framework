@@ -75,8 +75,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                         induction_tutor_email: "john.doe@example.com",
                         updated_at: "2021-05-31T02:22:32.000Z",
                         created_at: "2021-05-31T02:22:32.000Z",
-                      }
-                    }
+                      },
+                    },
                   },
                 },
               },
