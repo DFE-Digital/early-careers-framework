@@ -7,21 +7,3 @@ properties:
     type: array
     items:
       $ref: "#/components/schemas/NPQParticipant"
-    example:
-      - id: db3a7848-7308-4879-942a-c4a70ced400a
-        type: npq-participant
-        attributes:
-          full_name: "Isabelle MacDonald"
-          email: "isabelle.macdonald2@some-school.example.com"
-          teacher_reference_number: "1234567"
-          updated_at: "2021-05-31T02:21:32.000Z"
-          npq_enrolments: [
-            {
-              course_identifier: "npq-headship",
-              schedule_identifier: "npq-leadership-autumn",
-              cohort: "2021",
-              npq_application_id: "db3a7848-7308-4879-942a-c4a70ced400a",
-              eligible_for_funding: true,
-              training_status: "active",
-            }
-          ]
