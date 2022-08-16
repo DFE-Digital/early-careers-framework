@@ -17,10 +17,6 @@ module Api
         render json: RecordParticipantDeclaration.call(params)
       end
 
-      def void
-        render json: VoidParticipantDeclaration.new(cpd_lead_provider:, id: params[:id]).call
-      end
-
       def index
         respond_to do |format|
           format.json do
@@ -36,13 +32,11 @@ module Api
       end
 
       def show
-        record = ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find_by(id: params[:id])
+        render json: serializer_class.new(participant_declaration).serializable_hash.to_json
+      end
 
-        if record.present?
-          render json: serializer_class.new(record).serializable_hash.to_json
-        else
-          raise ActiveRecord::RecordNotFound
-        end
+      def void
+        render json: serializer_class.new(VoidParticipantDeclaration.new(participant_declaration:).call).serializable_hash.to_json
       end
 
     private
@@ -71,8 +65,8 @@ module Api
         current_user
       end
 
-      def participant_declarations
-        ParticipantDeclaration.for_lead_provider(cpd_lead_provider)
+      def participant_declaration
+        @participant_declaration ||= ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(params[:id])
       end
 
       def permitted_params

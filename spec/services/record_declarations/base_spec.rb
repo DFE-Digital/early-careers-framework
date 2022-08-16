@@ -74,8 +74,7 @@ RSpec.describe RecordDeclarations::Base do
       context "when a similar declaration has been voided" do
         let!(:void_declaration) do
           VoidParticipantDeclaration.new(
-            cpd_lead_provider:,
-            id: JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))).dig("data", "id"),
+            participant_declaration: ParticipantDeclaration.for_lead_provider(cpd_lead_provider).find(JSON.parse(RecordDeclarations::Started::EarlyCareerTeacher.call(params: params.merge(declaration_date: (declaration_date + 1.day).rfc3339))).dig("data", "id")),
           ).call
         end
 

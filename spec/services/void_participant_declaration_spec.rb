@@ -9,14 +9,13 @@ RSpec.describe VoidParticipantDeclaration do
   let(:school) { profile.school_cohort.school }
   let(:user) { profile.user }
   let(:cpd_lead_provider) { profile.school_cohort.school.partnerships[0].lead_provider.cpd_lead_provider }
-  let(:another_cpd_lead_provider) { create(:cpd_lead_provider) }
 
   before do
     create(:partnership, school:)
   end
 
   describe "#call" do
-    let(:declaration) do
+    let(:participant_declaration) do
       create(
         :ect_participant_declaration,
         user:,
@@ -27,12 +26,12 @@ RSpec.describe VoidParticipantDeclaration do
     end
 
     subject do
-      described_class.new(cpd_lead_provider:, id: declaration.id)
+      described_class.new(participant_declaration:)
     end
 
     it "voids a participant declaration" do
       subject.call
-      expect(declaration.reload).to be_voided
+      expect(participant_declaration.reload).to be_voided
     end
 
     it "does not void a voided declaration" do
@@ -43,14 +42,8 @@ RSpec.describe VoidParticipantDeclaration do
       }.to raise_error Api::Errors::InvalidTransitionError
     end
 
-    it "cannot not void another provider's declaration" do
-      expect {
-        described_class.new(cpd_lead_provider: another_cpd_lead_provider, id: declaration.id).call
-      }.to raise_error ActiveRecord::RecordNotFound
-    end
-
     context "when declaration is payable" do
-      let(:declaration) do
+      let(:participant_declaration) do
         create(
           :ect_participant_declaration,
           user:,
@@ -63,12 +56,13 @@ RSpec.describe VoidParticipantDeclaration do
 
       it "can be voided" do
         subject.call
-        expect(declaration.reload).to be_voided
+        expect(participant_declaration.reload).to be_voided
       end
     end
 
     context "when declaration is paid" do
-      let(:declaration) do
+      let!(:next_statement) { create(:ecf_statement, :output_fee, cpd_lead_provider:, deadline_date: 3.months.from_now) }
+      let(:participant_declaration) do
         create(
           :ect_participant_declaration,
           user:,
@@ -79,15 +73,32 @@ RSpec.describe VoidParticipantDeclaration do
         )
       end
 
-      it "cannot be voided" do
-        expect {
-          subject.call
-        }.to raise_error Api::Errors::InvalidTransitionError
+      it "transitions to awaiting_clawback" do
+        subject.call
+        expect(participant_declaration.reload).to be_awaiting_clawback
+      end
+    end
+
+    context "when declaration is submitted" do
+      let(:participant_declaration) do
+        create(
+          :ect_participant_declaration,
+          user:,
+          cpd_lead_provider:,
+          declaration_date:,
+          participant_profile: profile,
+          state: "submitted",
+        )
+      end
+
+      it "can be voided" do
+        subject.call
+        expect(participant_declaration.reload).to be_voided
       end
     end
 
     context "when declaration is attached to a statement" do
-      let(:declaration) do
+      let(:participant_declaration) do
         create(
           :ect_participant_declaration,
           user:,
@@ -107,15 +118,15 @@ RSpec.describe VoidParticipantDeclaration do
         )
       end
 
-      let(:line_item) { declaration.statement_line_items.first }
+      let(:line_item) { participant_declaration.statement_line_items.first }
 
       before do
-        Finance::DeclarationStatementAttacher.new(participant_declaration: declaration).call
+        Finance::DeclarationStatementAttacher.new(participant_declaration:).call
       end
 
       it "update line item state to voided" do
         subject.call
-        expect(declaration.reload).to be_voided
+        expect(participant_declaration.reload).to be_voided
         expect(line_item.reload).to be_voided
       end
     end
