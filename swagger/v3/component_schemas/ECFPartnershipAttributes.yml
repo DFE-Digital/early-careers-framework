@@ -27,16 +27,18 @@ properties:
     enum:
       - active
       - challenged
-    example: "active"
+    example: challenged
   challenged_reason:
     description: "If the partnership has been challenged, the reason provided for the challenge by the SIT"
     type: string
+    nullable: true
     enum:
       - another_provider
       - not_confirmed
       - do_not_recognise
       - no_ects
       - mistake
+    example: mistake
   induction_tutor_name:
     description: "The name of the induction tutor at the school you are in partnership with"
     type: string
