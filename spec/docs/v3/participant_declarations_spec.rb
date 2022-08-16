@@ -98,7 +98,6 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
                         inelgible_for_funding_reason: nil,
-                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
                       },
                     },
