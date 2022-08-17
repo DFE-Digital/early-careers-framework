@@ -37,6 +37,12 @@ FactoryBot.define do
         participant_profile.schedule = schedule
         participant_profile.npq_course = npq_application.npq_course
       end
+
+      trait :with_participant_profile_state do
+        after(:build) do |participant_profile|
+          participant_profile.participant_profile_states << build(:participant_profile_state, state: participant_profile.training_status)
+        end
+      end
     end
 
     trait :sparsity_uplift do

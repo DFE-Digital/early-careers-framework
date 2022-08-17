@@ -10,7 +10,7 @@ RSpec.feature "Finance users participant change training status", type: :feature
   end
 
   describe "NPQ" do
-    let!(:participant_profile) { create(:npq_participant_profile, training_status: "active") }
+    let!(:participant_profile) { create(:npq_participant_profile, :with_participant_profile_state, training_status: "active") }
     let!(:user) { participant_profile.user }
     let!(:participant_declaration) { create(:npq_participant_declaration, participant_profile:, user:) }
 
