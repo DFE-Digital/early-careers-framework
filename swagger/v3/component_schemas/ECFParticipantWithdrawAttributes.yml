@@ -1,0 +1,26 @@
+description: "An ECF participant withdrawal action"
+type: object
+properties:
+  reason:
+    description: "The reason for the withdrawal"
+    type: string
+    enum:
+      - left-teaching-profession
+      - moved-school
+      - mentor-no-longer-being-mentor
+      - school-left-fip
+      - other
+    example: left-teaching-profession
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - ecf-induction
+      - ecf-mentor
+    example: ecf-induction
+required:
+  - reason
+  - course_identifier
+example:
+  reason: left-teaching-profession
+  course_identifier: ecf-mentor

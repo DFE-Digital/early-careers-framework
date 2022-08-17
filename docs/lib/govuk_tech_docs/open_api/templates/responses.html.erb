@@ -53,7 +53,29 @@
           end
         end %>
 
-        <% if request_body.present? %>
+        <% example_done = false %>
+
+        <% if response.content['application/json'] %>
+          <% if response.content['application/json']["examples"] %>
+            <% response.content['application/json']["examples"].each do |name, hash| %>
+              <% body = json_prettyprint(hash["value"]) %>
+
+              <%
+                source = body
+                formatter = Rouge::Formatters::HTML.new
+                lexer = Rouge::Lexers::JSON.new
+                output = formatter.format(lexer.lex(source))
+              %>
+
+              <pre class="highlight"><code><%= output %></code></pre>
+
+              <% example_done = true %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+
+        <% if request_body.present? && !example_done %>
           <%
             source = request_body
             formatter = Rouge::Formatters::HTML.new

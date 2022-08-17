@@ -1,0 +1,13 @@
+description: "The NPQ outcome submission request"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQOutcomeDataRequest"
+example:
+  data:
+    type: "npq-outcome-confirmation"
+    attributes:
+      course_identifier: npq-leading-teaching
+      has_passed: false

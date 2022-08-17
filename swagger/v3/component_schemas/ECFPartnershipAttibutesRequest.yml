@@ -1,0 +1,16 @@
+type: object
+required:
+  - cohort
+  - delivery_partner_id
+  - urn
+properties:
+  cohort:
+    description: "The cohort for which you are reporting the partnership"
+    type: string
+    example: 2021
+  delivery_partner_id:
+    description: "The unique ID of the delivery partner you will work with for this school partnership"
+    type: string
+  urn:
+    description: "The Unique Reference Number (URN) of the school you are partnering with"
+    type: string

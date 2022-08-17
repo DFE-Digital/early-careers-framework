@@ -1,0 +1,7 @@
+description: "An NPQ participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQParticipant"

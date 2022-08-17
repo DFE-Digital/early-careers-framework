@@ -1,0 +1,13 @@
+description: "The withdrawal request for an NPQ participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQParticipantWithdraw"
+example:
+  data:
+    type: "participant-withdraw"
+    attributes:
+      reason: "quality-of-programme-other"
+      course_identifier: "npq-leading-teaching-development"

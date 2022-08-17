@@ -1,0 +1,43 @@
+description: "An NPQ participant change schedule action"
+type: object
+properties:
+  schedule_identifier:
+    description: "The new schedule of the participant"
+    type: string
+    enum:
+      - npq-aso-november
+      - npq-aso-december
+      - npq-aso-march
+      - npq-aso-june
+      - npq-leadership-spring
+      - npq-leadership-autumn
+      - npq-specialist-autumn
+      - npq-specialist-spring
+    example: npq-leadership-autumn
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-executive-leadership
+  cohort:
+    description: "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified"
+    type: string
+    default: "2021"
+    example: "2021"
+required:
+  - schedule_identifier
+  - course_identifier
+example:
+  schedule_identifier: npq-leadership-autumn
+  course_identifier: npq-leading-teaching
+  cohort: "2021"

@@ -3,3 +3,4 @@
 --require payment_calculator
 --format progress
 --format ParallelTests::RSpec::RuntimeLogger --out tmp/parallel_runtime_rspec.log
+--exclude-pattern="spec/docs/v3/*"

@@ -1,0 +1,14 @@
+description: "An ECF partnership"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ECFPartnershipDataRequest"
+example:
+  data:
+    type: "ecf-partnership"
+    attributes:
+      cohort: "2021"
+      urn: "123456"
+      delivery_partner_id: "db2fbf67-b7b7-454f-a1b7-0020411e2314"

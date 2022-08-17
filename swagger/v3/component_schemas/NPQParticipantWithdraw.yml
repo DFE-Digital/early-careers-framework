@@ -1,0 +1,13 @@
+description: "An NPQ participant withdrawal action"
+type: object
+properties:
+  type:
+    description: "The data type"
+    type: string
+    example: participant-withdraw
+    enum:
+      - participant-withdraw
+  attributes:
+    $ref: "#/components/schemas/NPQParticipantWithdrawAttributes"
+required:
+  - attributes

@@ -159,7 +159,11 @@ module GovukTechDocs
           when "object"
             schema_properties(property.items || property)
           when "array"
-            property.items ? [schema_properties(property.items)] : []
+            if property.example
+              property.example
+            else
+              property.items ? [schema_properties(property.items)] : []
+            end
           else
             property.example || property.type
           end

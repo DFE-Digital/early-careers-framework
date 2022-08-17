@@ -1,0 +1,13 @@
+description: "The withdrawal request for a participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ECFParticipantWithdraw"
+example:
+  data:
+    type: "participant-withdraw"
+    attributes:
+      reason: "left-teaching-profession"
+      course_identifier: "ecf-mentor"

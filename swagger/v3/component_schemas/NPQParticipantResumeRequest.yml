@@ -1,0 +1,12 @@
+description: "The resume request for an NPQ participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQParticipantResume"
+example:
+  data:
+    type: "participant-resume"
+    attributes:
+      course_identifier: "npq-leading-teaching-development"

@@ -1,0 +1,17 @@
+description: "Filter NPQ applications to return more specific results"
+type: object
+properties:
+  updated_since:
+    description: "Return only records that have been updated since this date and time (ISO 8601 date format)"
+    type: string
+    example: "2021-05-13T11:21:55Z"
+  cohort:
+    description: Return only NPQ applications from the specified cohort or cohorts. This is a comma delimited string of years.
+    type: string
+    example:
+      - 2021,2022
+  participant_id:
+    description: Return only NPQ applications from the specified participant or participants. This is comma delimited string of participant IDs
+    type: string
+    example:
+      - 117f9f24-b610-4f8e-bf49-f253230cfc70,7bdfb2fc-23a1-486f-bfd5-db69d13866de

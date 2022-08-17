@@ -1,0 +1,22 @@
+description: "An NPQ participant resume action"
+type: object
+properties:
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-senior-leadership
+required:
+  - course_identifier
+example:
+  course_identifier: npq-leading-teaching-development

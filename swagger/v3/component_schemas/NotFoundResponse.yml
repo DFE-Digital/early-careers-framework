@@ -1,0 +1,6 @@
+description: "The requested resource was not found"
+type: object
+properties:
+  error:
+    type: string
+    example: "Resource not found"

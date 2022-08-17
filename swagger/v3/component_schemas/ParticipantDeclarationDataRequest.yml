@@ -1,0 +1,15 @@
+description: "A participant declaration data request"
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - participant-declaration
+  attributes:
+    anyOf:
+      - $ref: "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+      - $ref: "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+      - $ref: "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
+      - $ref: "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
+      - $ref: "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"

@@ -1,0 +1,14 @@
+description: "The change schedule request for a participant"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/NPQParticipantChangeSchedule"
+example:
+  data:
+    type: "participant-change-schedule"
+    attributes:
+      schedule_identifier: npq-leadership-autumn
+      course_identifier: npq-leading-teaching
+      cohort: "2021"

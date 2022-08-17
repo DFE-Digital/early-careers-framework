@@ -1,0 +1,34 @@
+description: "An NPQ participant deferral action"
+type: object
+required:
+  - reason
+  - course_identifier
+properties:
+  reason:
+    description: "The reason for the deferral"
+    type: string
+    enum:
+      - bereavement
+      - long-term-sickness
+      - parental-leave
+      - career-break
+      - other
+    example: career-break
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-senior-leadership
+example:
+  reason: parental-leave
+  course_identifier: npq-senior-leadership

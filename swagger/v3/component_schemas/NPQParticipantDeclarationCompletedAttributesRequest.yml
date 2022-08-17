@@ -1,0 +1,51 @@
+description: "An NPQ completed participant declaration"
+type: object
+required:
+  - participant_id
+  - declaration_type
+  - declaration_date
+  - course_identifier
+  - has_passed
+additionalProperties: false
+properties:
+  participant_id:
+    description: "The unique id of the participant"
+    type: string
+    format: uuid
+    example: db3a7848-7308-4879-942a-c4a70ced400a
+  declaration_type:
+    description: "The event declaration type"
+    type: string
+    enum:
+      - completed
+    example: completed
+  declaration_date:
+    description: "The event declaration date"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:21:32.000Z"
+  course_identifier:
+    description: "The type of course the participant is enrolled in"
+    type: string
+    enum:
+      - npq-leading-teaching
+      - npq-leading-behaviour-culture
+      - npq-leading-teaching-development
+      - npq-leading-literacy
+      - npq-senior-leadership
+      - npq-headship
+      - npq-executive-leadership
+      - npq-early-years-leadership
+      - npq-additional-support-offer
+      - npq-early-headship-coaching-offer
+    example: npq-headship
+  has_passed:
+    description: Whether the participant has failed or passed
+    type: boolean
+    example: true
+example:
+  participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+  declaration_type: completed
+  declaration_date: "2021-05-31T02:21:32.000Z"
+  course_identifier: npq-leading-teaching
+  has_passed: true

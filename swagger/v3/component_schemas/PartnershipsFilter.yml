@@ -1,0 +1,7 @@
+description: "Filter partnerships to return more specific results"
+type: object
+properties:
+  cohort:
+    description: "Return partnerships within the specified cohorts. This is a comma delimited string of years."
+    type: string
+    example: "2021,2022"

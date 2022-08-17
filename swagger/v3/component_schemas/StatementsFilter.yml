@@ -1,0 +1,15 @@
+description: "Filter statements to return more specific results"
+type: object
+properties:
+  cohort:
+    description: Return statements associated to the specified cohort or cohorts. This is a comma delimited string of years.
+    type: string
+    example:
+      - 2021,2022
+  type:
+    description: Return statements of a given type
+    type: string
+    enum:
+      - ecf
+      - npq
+    example: ecf

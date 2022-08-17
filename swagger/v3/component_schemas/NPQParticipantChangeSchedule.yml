@@ -1,0 +1,19 @@
+description: "An NPQ participant change schedule action"
+type: object
+properties:
+  type:
+    description: "The data type"
+    type: string
+    enum:
+      - participant-change-schedule
+  attributes:
+    $ref: "#/components/schemas/NPQParticipantChangeScheduleAttributes"
+required:
+  - type
+  - attributes
+example:
+  type: "participant-change-schedule"
+  attributes:
+    schedule_identifier: npq-leadership-autumn
+    course_identifier: npq-leading-teaching
+    cohort: "2021"

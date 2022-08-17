@@ -1,0 +1,38 @@
+description: "The data attributes associated with an NPQ participants"
+type: object
+required:
+  - full_name
+  - email
+  - npq_enrolments
+  - updated_at
+properties:
+  full_name:
+    description: "The full name of this NPQ participant"
+    type: string
+    example: "Isabelle MacDonald"
+  email:
+    description: "The email address registered for this NPQ participant"
+    type: string
+    nullable: true
+    example: "isabelle.macdonald2@some-school.example.com"
+  teacher_reference_number:
+    description: "The Teacher Reference Number (TRN) for this NPQ participant"
+    type: string
+    example: "1234567"
+    nullable: true
+  npq_enrolments:
+    description: "Information about the course(s) the participant is enroled in"
+    type: array
+    items:
+      $ref: "#/components/schemas/NPQEnrolment"
+  updated_at:
+    description: "The date the NPQ participant was last updated"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  withdrawal_date:
+    description: "If the participant has been withdrawn by you, the date we have recorded for the withdrawal"
+    type: string
+    format: date
+    nullable: true
+    example: "2021-06-13"
