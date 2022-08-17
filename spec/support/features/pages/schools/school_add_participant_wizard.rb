@@ -140,7 +140,7 @@ module Pages
     end
 
     def confirm_details_and_continue
-      click_on "Confirm and continue"
+      click_on "Continue"
 
       self
     end
