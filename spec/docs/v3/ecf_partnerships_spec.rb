@@ -95,6 +95,12 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
 
         run_test!
       end
+
+      response "422", "Unprocessable entity" do
+        schema({ "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse" })
+
+        run_test!
+      end
     end
   end
 end

@@ -241,6 +241,16 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2802,6 +2812,25 @@
           }
         }
       },
+      "ECFPartnershipRequestErrorResponse": {
+        "description": "A list of errors",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/UrnInvalidError"
+                },
+                {
+                  "$ref": "#/components/schemas/PartnershipExistsError"
+                }
+              ]
+            }
+          }
+        }
+      },
       "ECFPartnershipResponse": {
         "description": "A list of ECF partnerships",
         "type": "object",
@@ -4632,6 +4661,25 @@
           }
         }
       },
+      "PartnershipExistsError": {
+        "description": "Partnership already exists",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
+            "type": "string",
+            "enum": [
+              "Partnership already exists"
+            ],
+            "example": "Partnership already exists"
+          },
+          "detail": {
+            "description": "Additional info about existing partnership",
+            "type": "string",
+            "example": "Partnership with school 123456 for cohort 2022 and delivery partner d1027b7f-664d-48bb-8b9f-c378116d8a16 already exists"
+          }
+        }
+      },
       "PartnershipsFilter": {
         "description": "Filter partnerships to return more specific results",
         "type": "object",
@@ -4791,6 +4839,25 @@
           "error": {
             "type": "string",
             "example": "HTTP Token: Access denied"
+          }
+        }
+      },
+      "UrnInvalidError": {
+        "description": "URN entered is not valid",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
+            "type": "string",
+            "enum": [
+              "URN is not valid"
+            ],
+            "example": "URN is not valid"
+          },
+          "detail": {
+            "description": "Additional info why URN is not valid",
+            "type": "string",
+            "example": "URN must is at most 6 digits long"
           }
         }
       }

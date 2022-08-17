@@ -1,0 +1,9 @@
+description: "A list of errors"
+type: object
+properties:
+  error:
+    type: array
+    items:
+      anyOf:
+        - $ref: "#/components/schemas/UrnInvalidError"
+        - $ref: "#/components/schemas/PartnershipExistsError"

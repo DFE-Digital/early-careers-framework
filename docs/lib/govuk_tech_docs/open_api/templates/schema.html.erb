@@ -22,20 +22,31 @@
           <td>
             <%= markdown(property[1].description) %>
 
-            <%=
-              nested_schema = property[1]
-              # If property is an array, check the items property for a reference.
-              if property[1].type == 'array'
-                nested_schema = property[1]['items']
-              end
-              schema_location = nested_schema.node_context.source_location.to_s
-              # Only print a link if it's a referenced schema.
-              if !schema_location.include?('/properties/')
-                "It conforms to #{get_schema_link(nested_schema)} schema."
-              elsif schema_location.end_with?("data")
-                "It conforms to #{get_schema_link_data(nested_schema)} schema."
-              end
-            %>
+            <% nested_schema = property[1] %>
+
+            <% # If property is an array, check the items property for a reference. %>
+
+            <% if property[1].type == 'array' %>
+              <% nested_schema = property[1]['items'] %>
+
+              <% if nested_schema["anyOf"] %>
+                <p>This conforms to any of the following schemas:</p>
+
+                <ul>
+                  <% nested_schema["anyOf"].each do |node| %>
+                    <li><%= get_schema_link node %></li>
+                  <% end %>
+                </ul>
+              <% end %>
+            <% end %>
+
+            <% schema_location = nested_schema.node_context.source_location.to_s %>
+            <% # Only print a link if it's a referenced schema. %>
+            <% if !schema_location.include?('/properties/') %>
+              <%= "It conforms to #{get_schema_link(nested_schema)} schema." %>
+            <% elsif schema_location.end_with?("data") %>
+              <%= "It conforms to #{get_schema_link_data(nested_schema)} schema." %>
+            <% end %>
 
             <% if property[1].node_data["anyOf"].node.present? %>
               <p>This conforms to any of the following schemas:</p>
