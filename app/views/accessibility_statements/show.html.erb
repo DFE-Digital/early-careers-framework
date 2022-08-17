@@ -21,10 +21,24 @@
     </p>
 
     <h2 class="govuk-heading-l">How accessible this service is</h2>
-    <p class="govuk-body">All parts of this service are fully accessible.</p>
+
+    <p class="govuk-body">
+      When tested, the service was compliant with
+      <%= govuk_link_to(
+        "Web Content Accessibility Guidelines version 2.1) AA standard (opens in a new tab)",
+        "https://www.w3.org/TR/WCAG21/",
+        target: "_blank") %>.
+        We’re always looking to improve the accessibility of this website.
+    </p>
+
+    <p class="govuk-body">
+      If you find any problems not listed on this page or think we’re not meeting
+      accessibility requirements, contact:<br/>
+      <%= govuk_mail_to("continuing-professional-development@digital.education.gov.uk") %>
+    </p>
 
     <h2 class="govuk-heading-l">Reporting accessibility problems with this service</h2>
-    <p class="govuk-body">We are always looking to improve the accessibility of this service.</p>
+
     <p class="govuk-body">If you find any problems not listed on this page or think we are not meeting accessibility requirements, contact us:</p>
     <p class="govuk-body">Email:<br>
     <%= render MailToSupportComponent.new %></p>
@@ -47,12 +61,21 @@
     <p class="govuk-body">The Department for Education is committed to making this service accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
 
     <h2 class="govuk-heading-l">Compliance status</h2>
-    <p class="govuk-body">This service is fully compliant with the
+    <p class="govuk-body">This service is found to be compliant with the
       <%= govuk_link_to 'Web Content Accessibility Guidelines version 2.1) AA standard (opens in a new tab)',
           "https://www.w3.org/TR/WCAG21/",
           target: :_blank,
           rel: "noopener noreferrer"  %>.</p>
-    <p class="govuk-body">There may be accessibility issues we have not found yet. If you find any please contact us so we can continue to improve the services we provide.</p>
+
+    <p class="govuk-body">
+      This was determined from conducting both manual and automated accessibility
+      tests, but without using assistive technology. There may be issues we have
+      not found yet; if so, please contact us so we can continue to improve.
+    </p>
+
+    <p class="govuk-body">Email:</p>
+
+    <%= render MailToSupportComponent.new %></p>
 
     <h3 class="govuk-heading-m">Disproportionate burden</h3>
     <p class="govuk-body">Not applicable</p>
@@ -61,12 +84,14 @@
     <p class="govuk-body">Not applicable</p>
 
     <h2 class="govuk-heading-l">Preparation of this accessibility statement</h2>
-    <p class="govuk-body">This statement was prepared on 16 April 2021.</p>
-    <p class="govuk-body">The service was last tested on 1 April 2021 for compliance with WCAG 2.1 AA.</p>
-    <p class="govuk-body">Testing was carried out internally by the Department for Education.</p>
-    <p class="govuk-body">We tested the service based on a user’s ability to complete key journeys.</p>
-    <p class="govuk-body">All parts of the chosen journeys were tested.</p>
-    <p class="govuk-body">Journeys were chosen based on a number of factors, including risk assessments and subject matter.</p>
+    <p class="govuk-body">This statement was prepared on 16 April 2021 and updated 9 August 2022.</p>
+    <p class="govuk-body">The service was last tested on 9 August 2022 for compliance with WCAG 2.1 AA.</p>
+    <p class="govuk-body">
+      Testing was carried out internally by the Department for Education using
+      manual and automated tests, without using assistive technology. We tested
+      the service based on a user’s ability to complete key journeys based on a
+      number of factors, including risk assessments and subject matter.
+    </p>
     <p class="govuk-body">We are organising an external accessibility audit to be carried out in 2022.</p>
   </div>
 </div>
