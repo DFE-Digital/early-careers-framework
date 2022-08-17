@@ -11,7 +11,7 @@ RSpec.describe Api::ParticipantDeclarations::Index, :with_default_schedules do
       let(:new_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "New CPD LeadProvider") }
       let(:new_school_cohort)     { create(:school_cohort, :fip, :with_induction_programme, lead_provider: new_cpd_lead_provider.lead_provider) }
 
-      let!(:profile) { create(:ect, school_cohort: old_school_cohort, lead_provider: old_cpd_lead_provider.lead_provider) }
+      let!(:profile) { create(:ect, :eligible_for_funding, school_cohort: old_school_cohort, lead_provider: old_cpd_lead_provider.lead_provider) }
       let(:user) { profile.user }
 
       let(:old_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: old_cpd_lead_provider.lead_provider) }

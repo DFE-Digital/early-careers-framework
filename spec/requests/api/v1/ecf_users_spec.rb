@@ -10,9 +10,14 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
   describe "#index" do
     before :each do
       # Heads up, for some reason the stored CIP IDs don't match
-      mentor_profile = create(:mentor)
-      create(:npq_participant_profile, school: mentor_profile.school_cohort.school, user: mentor_profile.teacher_profile.user)
-      create_list(:ect_participant_profile, 2, school_cohort: mentor_profile.school_cohort, core_induction_programme: create(:core_induction_programme, name: "Teach First"), cohort: mentor_profile.school_cohort.cohort)
+      cip = create(:core_induction_programme, name: "Teach First")
+      school = create(:school)
+      cohort = Cohort.current
+      school_cohort = create(:school_cohort, school:)
+      mentor_profile = create(:mentor_participant_profile, school_cohort:, core_induction_programme: cip, cohort:)
+      create(:npq_participant_profile, school:)
+      create(:npq_participant_profile, school:, teacher_profile: mentor_profile.teacher_profile)
+      create_list(:ect_participant_profile, 2, school_cohort:, core_induction_programme: cip, cohort:)
     end
 
     context "when authorized" do
