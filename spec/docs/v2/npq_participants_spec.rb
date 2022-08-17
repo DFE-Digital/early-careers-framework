@@ -112,6 +112,14 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
         cohort: new_schedule.cohort.start_year,
       }
     end
+
+    before do
+      declaration = profile.participant_declarations.first
+      new_schedule
+        .milestones
+        .find_by!(declaration_type: declaration.declaration_type)
+        .update!(start_date: declaration.declaration_date - 1.day)
+    end
   end
 
   it_behaves_like "JSON Participant Deferral documentation",
