@@ -3,7 +3,7 @@
 module Finance
   class SchedulesController < BaseController
     def index
-      @schedules = Finance::Schedule.includes(:cohort, :milestones).order(:schedule_identifier)
+      @cohorts = Cohort.order(start_year: :asc)
     end
 
     def show

@@ -2,28 +2,29 @@
 
 <h1 class="govuk-heading-xl">Schedules</h1>
 
-<table class="govuk-table">
-  <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header">Identifier</th>
-      <th scope="col" class="govuk-table__header">Cohort</th>
-      <th scope="col" class="govuk-table__header">Milestones</th>
-    </tr>
-  </thead>
+<% @cohorts.each do |cohort| %>
+  <h2>Cohort: <%= cohort.start_year %></h2>
 
-  <tbody class="govuk-table__body">
-    <% @schedules.each do |schedule| %>
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">
-          <%= govuk_link_to schedule.schedule_identifier, finance_schedule_path(schedule) %>
-        </th>
-        <td class="govuk-table__cell">
-          <%= schedule.cohort.start_year %>
-        </td>
-        <td class="govuk-table__cell">
-          <%= schedule.milestones.size %>
-        </td>
+        <th scope="col" class="govuk-table__header">Identifier</th>
+        <th scope="col" class="govuk-table__header">Milestones</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody class="govuk-table__body">
+      <% cohort.schedules.each do |schedule| %>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">
+            <%= govuk_link_to schedule.schedule_identifier, finance_schedule_path(schedule) %>
+          </th>
+
+          <td class="govuk-table__cell">
+            <%= schedule.milestones.size %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -29,25 +29,29 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
     end
   end
 
-  it "seeds ecf schedules and milestones" do
-    schedule = described_class.find_by(schedule_identifier: "ecf-standard-april")
+  context "for 2021 cohort" do
+    let(:cohort) { Cohort.find_by(start_year: 2021) }
 
-    expect(schedule).to be_present
-    expect(schedule.milestones.count).to eql(6)
+    it "seeds ecf schedules and milestones" do
+      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-standard-april")
 
-    schedule = described_class.find_by(schedule_identifier: "ecf-reduced-april")
+      expect(schedule).to be_present
+      expect(schedule.milestones.count).to eql(6)
 
-    expect(schedule).to be_present
-    expect(schedule.milestones.count).to eql(6)
+      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-reduced-april")
 
-    schedule = described_class.find_by(schedule_identifier: "ecf-extended-april")
+      expect(schedule).to be_present
+      expect(schedule.milestones.count).to eql(6)
 
-    expect(schedule).to be_present
-    expect(schedule.milestones.count).to eql(6)
+      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-extended-april")
 
-    schedule = described_class.find_by(schedule_identifier: "ecf-replacement-april")
+      expect(schedule).to be_present
+      expect(schedule.milestones.count).to eql(6)
 
-    expect(schedule).to be_present
-    expect(schedule.milestones.count).to eql(6)
+      schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-replacement-april")
+
+      expect(schedule).to be_present
+      expect(schedule.milestones.count).to eql(6)
+    end
   end
 end

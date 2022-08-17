@@ -12,9 +12,10 @@ RSpec.feature "Finance users payment breakdowns", type: :feature do
     then_i_see("Schedules")
     and_see_table_with_schedule
 
-    within page.find("table tbody tr", text: /#{schedule.schedule_identifier} #{schedule.cohort.start_year}/) do
+    within page.find("table tbody tr", text: /#{schedule.schedule_identifier}/) do
       when_i_click(schedule.schedule_identifier)
     end
+
     then_i_see("Milestones")
     and_see_table_of_milestones_for_schedule
   end
