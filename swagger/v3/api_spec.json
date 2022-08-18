@@ -2061,6 +2061,12 @@
             "type": "string",
             "nullable": true,
             "example": "2022-11-09T16:07:38Z"
+          },
+          "delivery_partner_id": {
+            "description": "Unique ID of the delivery partner associated with the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           }
         }
       },
