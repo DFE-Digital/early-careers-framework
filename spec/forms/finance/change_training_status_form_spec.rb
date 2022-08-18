@@ -85,7 +85,7 @@ RSpec.describe Finance::ChangeTrainingStatusForm, :with_default_schedules, type:
 
     describe "Mentor" do
       let!(:participant_declaration) { create(:mentor_participant_declaration, participant_profile:, cpd_lead_provider:) }
-      let(:participant_profile)      { create(:mentor, lead_provider: cpd_lead_provider.lead_provider ) }
+      let(:participant_profile)      { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
 
       it { is_expected.to validate_presence_of(:training_status) }
       it { is_expected.to validate_inclusion_of(:reason).in_array(Participants::Defer::ECF.reasons) }

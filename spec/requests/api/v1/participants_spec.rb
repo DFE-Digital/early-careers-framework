@@ -217,9 +217,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(ect_row["email"]).to eql ect.email
           expect(ect_row["full_name"]).to eql ect.full_name
           expect(ect_row["mentor_id"]).to eql mentor.id
-          expect(ect_row["school_urn"]).to eql ect.participant_profiles[0].induction_records[0].school_cohort.school.urn
+          expect(ect_row["school_urn"]).to eql ect.participant_profiles[0].induction_records.latest.school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
-          expect(ect_row["cohort"]).to eql ect.participant_profiles[0].current_induction_record.cohort.start_year.to_s
+          expect(ect_row["cohort"]).to eql ect.participant_profiles[0].induction_records.latest.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to eql ect.teacher_profile.trn
           expect(ect_row["teacher_reference_number_validated"]).to eql "true"
           expect(ect_row["eligible_for_funding"]).to eq "true"

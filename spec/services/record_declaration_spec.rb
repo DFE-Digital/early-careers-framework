@@ -65,7 +65,7 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     let(:traits) { [:withdrawn] }
     before do
-      travel_to withdrawal_time { participant_profile }
+      travel_to(withdrawal_time) { participant_profile }
     end
 
     context "when the declaration is backdated before the participant has been withdrawn" do
