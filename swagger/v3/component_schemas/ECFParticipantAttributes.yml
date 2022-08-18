@@ -9,6 +9,7 @@ required:
   - training_status
   - schedule_identifier
   - updated_at
+  - created_at
   - joining_date
 properties:
   email:
@@ -79,7 +80,12 @@ properties:
       - ecf-standard-january
       - ecf-standard-april
   updated_at:
-    description: "The date the ECF participant was last updated"
+    description: The date and time the ECF participant was last updated
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  created_at:
+    description: The date and time the ECF participant was created
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
