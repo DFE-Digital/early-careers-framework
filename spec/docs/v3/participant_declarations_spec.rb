@@ -332,18 +332,18 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
         run_test!
       end
 
-      response "404", "Not found", exceptions_app: true do
-        let(:id) { "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }
-
-        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
-
-        run_test!
-      end
-
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+
+      response "404", "Not found", exceptions_app: true do
+        let(:id) { "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }
+
+        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
       end

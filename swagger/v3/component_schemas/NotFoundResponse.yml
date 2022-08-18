@@ -1,6 +1,13 @@
-description: "The requested resource was not found"
+description: The requested resource was not found
 type: object
 properties:
-  error:
+  title:
+    description: The title of the error message
     type: string
-    example: "Resource not found"
+  detail:
+    description: Further information regarding the error
+    type: string
+example:
+  errors:
+    - title: The requested resource was not found
+      detail: Nothing could be found for the provided details
