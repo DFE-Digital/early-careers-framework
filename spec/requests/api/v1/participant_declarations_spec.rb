@@ -195,7 +195,6 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         let(:transfer_lp_token)        { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: new_cpd_lead_provider) }
         let(:transfer_lp_bearer_token) { "Bearer #{transfer_lp_token}" }
         let(:url)                      { "/api/v1/participants/ecf/#{participant_profile.user_id}/withdraw" }
-        let(:withdrawal_date)          { (milestone_start_date + 5.days).in_time_zone }
 
         before do
           Induction::TransferToSchoolsProgramme.call(
@@ -203,13 +202,16 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
             start_date: milestone_start_date + 1,
             participant_profile:,
           )
-
-          travel_to withdrawal_date do
-            put url, params: { data: { type: :participant, attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } }.to_json
-          end
         end
 
         context "when the participant has been withdrawn" do
+          let(:withdrawal_date) { (milestone_start_date + 5.days).in_time_zone }
+          before do
+            travel_to(withdrawal_date) do
+              put url, params: { data: { type: :participant, attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } }.to_json
+            end
+          end
+
           context "when the new lead provider posts a declaration" do
             before do
               default_headers[:Authorization] = transfer_lp_bearer_token
@@ -408,9 +410,10 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
           expect(parsed_response["errors"])
             .to eq(
               [
-                { "title" => "declaration_date", "detail" => "can't be blank" },
-                { "title" => "declaration_type", "detail" => "can't be blank, The property '#/declaration_type does not exist for this schedule" },
-                { "title" => "participant_id", "detail" => "The property '#/participant_id' must be a valid Participant ID" },
+                { "title" => "declaration_date",  "detail" => "can't be blank" },
+                { "title" => "declaration_type",  "detail" => "can't be blank, The property '#/declaration_type does not exist for this schedule" },
+                { "title" => "participant_id",    "detail" => "The property '#/participant_id' must be a valid Participant ID" },
+                { "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" },
               ],
             )
         end

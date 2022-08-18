@@ -64,9 +64,7 @@ end
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     let(:traits) { [:withdrawn] }
-    before do
-      travel_to(withdrawal_time) { participant_profile }
-    end
+    before { travel_to(withdrawal_time) { participant_profile } }
 
     context "when the declaration is backdated before the participant has been withdrawn" do
       let(:withdrawal_time) { declaration_date - 1.second }
@@ -209,7 +207,8 @@ RSpec.shared_examples "validates the participant milestone" do
 end
 
 RSpec.describe RecordDeclaration, :with_default_schedules do
-  let(:declaration_date) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
+  let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+  let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
   let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Unknown") }
   let(:params) do
@@ -229,23 +228,14 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
   end
 
-  subject(:service) { described_class.new(params) }
+  subject(:service) do
+    described_class.new(params)
+  end
 
   context "when the participant is an ECF" do
     let(:traits)              { [] }
-    let(:participant_profile) { create(particpant_type, *traits) }
-    let(:delivery_partner)    { create(:delivery_partner) }
-    let!(:partnership) do
-      create(:partnership,
-             school: participant_profile.school,
-             lead_provider: cpd_lead_provider.lead_provider,
-             cohort: participant_profile.cohort,
-             delivery_partner:)
-    end
-
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-    let!(:induction_record) do
-      Induction::Enrol.call(participant_profile:, induction_programme:)
+    let(:participant_profile) do
+      create(particpant_type, *traits, lead_provider: cpd_lead_provider.lead_provider)
     end
 
     context "when the participant is an ECT" do
