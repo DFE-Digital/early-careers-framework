@@ -1,0 +1,13 @@
+description: Recruited by other provider
+type: object
+properties:
+  title:
+    description: Title of error message
+    type: string
+    enum:
+      - Recruited by other provider
+    example: Recruited by other provider
+  detail:
+    description: Additional info
+    type: string
+    example: This partnership cannot be created as it has already partnered with another provider

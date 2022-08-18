@@ -7,3 +7,5 @@ properties:
       anyOf:
         - $ref: "#/components/schemas/UrnInvalidError"
         - $ref: "#/components/schemas/PartnershipExistsError"
+        - $ref: "#/components/schemas/DeliveryPartnerCohortError"
+        - $ref: "#/components/schemas/OtherProviderRecruitedError"

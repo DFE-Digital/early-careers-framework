@@ -1,0 +1,13 @@
+description: Not a delivery partner you have a relationship with for this cohort
+type: object
+properties:
+  title:
+    description: Title of error message
+    type: string
+    enum:
+      - Not a delivery partner you have a relationship with for this cohort
+    example: Not a delivery partner you have a relationship with for this cohort
+  detail:
+    description: Additional info on which cohorts are available
+    type: string
+    example: Delivery partner is available for 2021 cohort only
