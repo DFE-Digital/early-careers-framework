@@ -387,6 +387,16 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3119,6 +3129,41 @@
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQApplicationAttributes"
+          }
+        }
+      },
+      "NPQApplicationAcceptErrorResponse": {
+        "description": "A list of errors",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/NPQApplicationAlreadyAccepted"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "NPQApplicationAlreadyAccepted": {
+        "description": "NPQ Application has already been accepted",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "The title of the error",
+            "type": "string",
+            "enum": [
+              "NPQ Application has already been accepted"
+            ],
+            "example": "NPQ Application has already been accepted"
+          },
+          "detail": {
+            "description": "Additional info about the error",
+            "type": "string",
+            "example": "You cannot accept this NPQ application as it has already been accepted"
           }
         }
       },

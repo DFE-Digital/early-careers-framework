@@ -103,6 +103,14 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
         run_test!
       end
+
+      response "422", "Unprocessable Entity" do
+        let(:id) { npq_application.id }
+
+        schema({ "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse" })
+
+        run_test!
+      end
     end
   end
 
