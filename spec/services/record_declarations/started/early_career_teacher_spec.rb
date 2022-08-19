@@ -324,4 +324,37 @@ RSpec.describe RecordDeclarations::Started::EarlyCareerTeacher do
       expect(declaration).to be_eligible
     end
   end
+
+  context "when declaring for a participant in 2022" do
+    let(:school_cohort) { create(:school_cohort, cohort:) }
+    let(:cohort) { create(:cohort, start_year: 2022) }
+    let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
+    let(:schedule) { create(:ecf_schedule, cohort:) }
+    let(:profile) { create(:ect_participant_profile, schedule:) }
+
+    before do
+      Induction::Enrol.new(induction_programme:, participant_profile: profile).call
+    end
+
+    let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+
+    let!(:statement) do
+      create(
+        :ecf_statement,
+        :output_fee,
+        cpd_lead_provider:,
+        deadline_date: 6.months.from_now,
+        payment_date: 7.months.from_now,
+        cohort:,
+      )
+    end
+
+    it "accepts the declaration as eligible" do
+      expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+
+      declaration = ParticipantDeclaration.order(created_at: :asc).last
+
+      expect(declaration).to be_eligible
+    end
+  end
 end
