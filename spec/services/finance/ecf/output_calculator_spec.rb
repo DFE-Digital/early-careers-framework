@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::OutputCalculator do
+RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
   let(:first_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 6.months.ago) }
   let(:second_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 4.months.ago) }
   let(:third_statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 2.months.ago) }
@@ -153,15 +153,14 @@ RSpec.describe Finance::ECF::OutputCalculator do
     end
 
     context "when fully filled bands" do
-      let(:to_be_paid_declarations) do
-        travel_to first_statement.deadline_date - 1.day do
-          create_list(:ect_participant_declaration, 2, :payable, cpd_lead_provider:)
+      let!(:to_be_paid_declarations) do
+        travel_to first_statement.deadline_date do
+          create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider:)
         end
       end
       before do
-        travel_to first_statement.deadline_date do
-          Statements::MarkAsPaid.new(first_statement).call
-        end
+        Statements::MarkAsPayable.new(first_statement).call
+        Statements::MarkAsPaid.new(first_statement).call
       end
 
       it "returns correct bands" do
@@ -203,25 +202,19 @@ RSpec.describe Finance::ECF::OutputCalculator do
             started_subtractions: 0,
           },
         ]
-        byebug
         expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(expected)
       end
     end
 
     context "when multiple bands" do
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 7,
-          state: :paid
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement: first_statement,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      let!(:to_be_paid_declarations) do
+        travel_to first_statement.deadline_date do
+          create_list(:ect_participant_declaration, 7, :eligible, cpd_lead_provider:)
         end
+      end
+      before do
+        Statements::MarkAsPayable.new(first_statement).call
+        Statements::MarkAsPaid.new(first_statement).call
       end
 
       it "returns correct bands" do
@@ -269,19 +262,14 @@ RSpec.describe Finance::ECF::OutputCalculator do
     end
 
     context "when overfilled all bands" do
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 9,
-          state: :paid
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement: first_statement,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      let!(:to_be_paid_declarations) do
+        travel_to first_statement.deadline_date do
+          create_list(:ect_participant_declaration, 9, :eligible, cpd_lead_provider:)
         end
+      end
+      before do
+        Statements::MarkAsPayable.new(first_statement).call
+        Statements::MarkAsPaid.new(first_statement).call
       end
 
       it "does not count extra declarations" do
@@ -740,29 +728,11 @@ RSpec.describe Finance::ECF::OutputCalculator do
     end
 
     context "when there is a clawback followed by a declaration again" do
-      let(:user) { create(:user, :early_career_teacher) }
-      let(:participant_profile) { user.participant_profiles.first }
-
-      before do
-        setup_statement_one
-        setup_statement_two
-        setup_statement_three
-      end
+      let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
 
       def setup_statement_one
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          state: :paid,
-          user:,
-          participant_profile:
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement: first_statement,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+        travel_to first_statement.deadline_date do
+          create_list(:ect_participant_declaration, 1, :paid, participant_profile:, cpd_lead_provider:)
         end
       end
 
@@ -784,20 +754,15 @@ RSpec.describe Finance::ECF::OutputCalculator do
       end
 
       def setup_statement_three
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          state: :payable,
-          user:,
-          participant_profile:
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement: third_statement,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+        travel_to third_statement.deadline_date do
+          create_list(:ect_participant_declaration, 1, :payable, participant_profile:, cpd_lead_provider:)
         end
+      end
+
+      before do
+        setup_statement_one
+        setup_statement_two
+        setup_statement_three
       end
 
       it "pays out the following declaration" do

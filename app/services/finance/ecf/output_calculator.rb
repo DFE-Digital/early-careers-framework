@@ -87,7 +87,6 @@ module Finance
         pot_size = current_billable_count_for_declaration_type(declaration_type)
 
         banding = previous_banding_for_declaration_type(declaration_type).map do |hash|
-          byebug if declaration_type == "started"
           band_capacity = hash[:max] - (hash[:min] - 1) - hash[:"previous_#{declaration_type.underscore}_count"]
 
           fill_level = [pot_size, band_capacity].min
