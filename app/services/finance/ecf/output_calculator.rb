@@ -10,22 +10,22 @@ module Finance
       end
 
       def banding_breakdown
-        return @banding_breakdown if @banding_breakdown
-
-        bandings = declaration_types.map do |declaration_type|
-          current_banding_for_declaration_type(declaration_type)
-        end
-
-        result = bandings[0]
-
-        band_letters.each do |letter|
-          bandings[1..].each do |banding|
-            new_chunk = banding.find { |e| e[:band] == letter }
-            result.find { |e| e[:band] == letter }.merge!(new_chunk)
+        @banding_breakdown ||= begin
+          bandings = declaration_types.map do |declaration_type|
+            current_banding_for_declaration_type(declaration_type)
           end
-        end
 
-        @banding_breakdown = result
+          result = bandings[0]
+
+          band_letters.each do |letter|
+            bandings[1..].each do |banding|
+              new_chunk = banding.find { |e| e[:band] == letter }
+              result.find { |e| e[:band] == letter }.merge!(new_chunk)
+            end
+          end
+
+          result
+        end
       end
 
       def uplift_breakdown
@@ -87,6 +87,7 @@ module Finance
         pot_size = current_billable_count_for_declaration_type(declaration_type)
 
         banding = previous_banding_for_declaration_type(declaration_type).map do |hash|
+          byebug if declaration_type == "started"
           band_capacity = hash[:max] - (hash[:min] - 1) - hash[:"previous_#{declaration_type.underscore}_count"]
 
           fill_level = [pot_size, band_capacity].min

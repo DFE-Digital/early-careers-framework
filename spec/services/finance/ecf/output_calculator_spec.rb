@@ -95,19 +95,16 @@ RSpec.describe Finance::ECF::OutputCalculator do
       end
     end
 
-    context "when partially filled bands" do
-      before do
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          state: :paid
-        )
+    context "when partially filled bands", :with_default_schedules do
+      let!(:to_be_paid_participant_declaration) do
+        travel_to first_statement.deadline_date - 1.day do
+          create(:ect_participant_declaration, :payable, cpd_lead_provider:)
+        end
+      end
 
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement: first_statement,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+      before do
+        travel_to first_statement.deadline_date do
+          Statements::MarkAsPaid.new(first_statement).call
         end
       end
 
@@ -156,18 +153,14 @@ RSpec.describe Finance::ECF::OutputCalculator do
     end
 
     context "when fully filled bands" do
+      let(:to_be_paid_declarations) do
+        travel_to first_statement.deadline_date - 1.day do
+          create_list(:ect_participant_declaration, 2, :payable, cpd_lead_provider:)
+        end
+      end
       before do
-        declarations = create_list(
-          :ect_participant_declaration, 2,
-          state: :paid
-        )
-
-        declarations.each do |dec|
-          Finance::StatementLineItem.create!(
-            statement: first_statement,
-            participant_declaration: dec,
-            state: dec.state,
-          )
+        travel_to first_statement.deadline_date do
+          Statements::MarkAsPaid.new(first_statement).call
         end
       end
 
@@ -210,7 +203,7 @@ RSpec.describe Finance::ECF::OutputCalculator do
             started_subtractions: 0,
           },
         ]
-
+        byebug
         expect(first_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(expected)
       end
     end
