@@ -30,14 +30,12 @@ private
     @profile_type = profile_type
   end
 
-  def ineligible_participants
-    active_induction_records
-      .fip
-      .merge(profile_type.ineligible_status)
+  def eligible_participants
+    fip_eligible_participants + cip_eligible_participants + sffip_eligible_participants
   end
 
-  def eligible_participants
-    fip_eligible_participants + cip_eligible_participants
+  def ineligible_participants
+    fip_ineligible_participants + sffip_ineligible_participants
   end
 
   def withdrawn_participants
@@ -50,9 +48,7 @@ private
   end
 
   def details_being_checked_participants
-    active_induction_records
-      .fip
-      .merge(profile_type.details_being_checked)
+    fip_details_being_checked_participants + sffip_details_being_checked_participants
   end
 
   def details_being_checked
@@ -134,17 +130,47 @@ private
     ).resolve
   end
 
-  def fip_eligible_participants
-    active_induction_records
-      .fip
-      .merge(profile_type.eligible_status)
-  end
-
   def cip_eligible_participants
     # find all the participants that have attempted to validate in any core_induction_programme
     # for the school_cohort
     active_induction_records
       .joins(participant_profile: :ecf_participant_validation_data)
       .cip
+  end
+
+  def fip_details_being_checked_participants
+    active_induction_records
+      .fip
+      .merge(profile_type.details_being_checked)
+  end
+
+  def fip_eligible_participants
+    active_induction_records
+      .fip
+      .merge(profile_type.eligible_status)
+  end
+
+  def fip_ineligible_participants
+    active_induction_records
+      .fip
+      .merge(profile_type.ineligible_status)
+  end
+
+  def sffip_details_being_checked_participants
+    active_induction_records
+      .sffip
+      .merge(profile_type.details_being_checked)
+  end
+
+  def sffip_eligible_participants
+    active_induction_records
+      .sffip
+      .merge(profile_type.eligible_status)
+  end
+
+  def sffip_ineligible_participants
+    active_induction_records
+      .sffip
+      .merge(profile_type.ineligible_status)
   end
 end
