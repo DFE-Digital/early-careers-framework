@@ -17,6 +17,9 @@ module Analytics
         record.induction_programme_choice = school_cohort.induction_programme_choice
         record.default_induction_programme_training_choice = school_cohort&.default_induction_programme&.training_programme
 
+        record.appropriate_body_id = school_cohort.appropriate_body_id
+        record.appropriate_body_unknown = school_cohort.appropriate_body_unknown
+
         record.created_at = school_cohort.created_at
         record.updated_at = school_cohort.updated_at
 

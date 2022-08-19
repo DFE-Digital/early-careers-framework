@@ -14,4 +14,12 @@ class AppropriateBody < ApplicationRecord
   scope :local_authorities, -> { where(body_type: :local_authority) }
   scope :teaching_school_hubs, -> { where(body_type: :teaching_school_hub) }
   scope :nationals, -> { where(body_type: :national) }
+
+  after_save :update_analytics
+
+private
+
+  def update_analytics
+    Analytics::UpsertECFAppropriateBodyJob.perform_later(appropriate_body: self) if saved_changes?
+  end
 end
