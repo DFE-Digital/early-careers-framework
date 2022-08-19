@@ -1,0 +1,13 @@
+description: URN entered is not valid
+type: object
+properties:
+  title:
+    description: Title of error message
+    type: string
+    enum:
+      - URN is not valid
+    example: URN is not valid
+  detail:
+    description: Additional info why URN is not valid
+    type: string
+    example: URN must is at most 6 digits long

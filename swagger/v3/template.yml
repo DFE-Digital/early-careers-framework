@@ -29,5 +29,10 @@ components:
         - $ref: "#/components/schemas/NPQParticipantDeclarationResponse"
       discriminator:
         propertyName: type
+    NPQParticipantDeclarationAttributes:
+      anyOf:
+        - $ref: "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+        - $ref: "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+        - $ref: "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
 security:
   - "bearerAuth": []

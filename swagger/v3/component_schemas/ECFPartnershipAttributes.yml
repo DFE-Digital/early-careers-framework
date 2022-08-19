@@ -17,7 +17,7 @@ properties:
     type: string
     example: "123456"
   delivery_partner_id:
-    description: "The Unique Reference Number (URN) of the school you are partnered with"
+    description: The unique ID of the delivery partner you are working with for this partnership
     type: string
     format: uuid
     example: cd3a12347-7308-4879-942a-c4a70ced400a
@@ -27,16 +27,18 @@ properties:
     enum:
       - active
       - challenged
-    example: "active"
+    example: challenged
   challenged_reason:
     description: "If the partnership has been challenged, the reason provided for the challenge by the SIT"
     type: string
+    nullable: true
     enum:
       - another_provider
       - not_confirmed
       - do_not_recognise
       - no_ects
       - mistake
+    example: mistake
   induction_tutor_name:
     description: "The name of the induction tutor at the school you are in partnership with"
     type: string

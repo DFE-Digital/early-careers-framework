@@ -84,6 +84,12 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
         run_test!
       end
+
+      response "404", "Not Found" do
+        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
+
+        run_test!
+      end
     end
   end
 

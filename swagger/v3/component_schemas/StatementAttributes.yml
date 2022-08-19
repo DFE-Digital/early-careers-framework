@@ -7,7 +7,7 @@ properties:
     description: "The month which appears on the statement in the DfE portal"
     type: string
     nullable: false
-    example: "1"
+    example: "5"
   year:
     description: "The calendar year which appears on the statement in the dfe portal"
     type: string

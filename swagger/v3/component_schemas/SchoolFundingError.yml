@@ -1,0 +1,12 @@
+description: School is not eligible for DfE-funded FIP
+type: object
+properties:
+  title:
+    description: Title of error message
+    type: string
+    enum:
+      - School is not eligible for DfE-funded FIP
+    example: School is not eligible for DfE-funded FIP
+  detail:
+    description: Additional info why school is not for DfE-funded FIP if any
+    type: string

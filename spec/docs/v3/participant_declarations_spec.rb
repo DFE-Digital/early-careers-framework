@@ -75,7 +75,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                         statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                         clawback_statement_id: nil,
-                        inelgible_for_funding_reason: nil,
+                        ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
                       },
@@ -97,8 +97,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         created_at: "2020-11-13T11:21:55Z",
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
-                        inelgible_for_funding_reason: nil,
-                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        ineligible_for_funding_reason: nil,
                         uplift_paid: true,
                       },
                     },
@@ -206,7 +205,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                           delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           clawback_statement_id: nil,
-                          inelgible_for_funding_reason: nil,
+                          ineligible_for_funding_reason: nil,
                           mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                           uplift_paid: true,
                         },
@@ -224,7 +223,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                           created_at: "2020-11-13T11:21:55Z",
                           statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           clawback_statement_id: nil,
-                          inelgible_for_funding_reason: nil,
+                          ineligible_for_funding_reason: nil,
                           mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                           uplift_paid: true,
                         },
@@ -295,7 +294,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                         statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                         clawback_statement_id: nil,
-                        inelgible_for_funding_reason: nil,
+                        ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
                       },
@@ -317,7 +316,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         created_at: "2020-11-13T11:21:55Z",
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
-                        inelgible_for_funding_reason: nil,
+                        ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
                       },
@@ -333,18 +332,18 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
         run_test!
       end
 
-      response "404", "Not found", exceptions_app: true do
-        let(:id) { "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }
-
-        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
-
-        run_test!
-      end
-
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+
+      response "404", "Not found", exceptions_app: true do
+        let(:id) { "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" }
+
+        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
       end
@@ -395,7 +394,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         delivery_partner_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                         statement_id: "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                         clawback_statement_id: nil,
-                        inelgible_for_funding_reason: nil,
+                        ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
                       },
@@ -417,7 +416,7 @@ RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_
                         created_at: "2020-11-13T11:21:55Z",
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
-                        inelgible_for_funding_reason: nil,
+                        ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
                       },

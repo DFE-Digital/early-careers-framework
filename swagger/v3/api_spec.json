@@ -123,6 +123,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -207,6 +217,27 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ECFPartnershipResponse"
+                },
+                "examples": {
+                  "create_partnership": {
+                    "value": {
+                      "data": {
+                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                        "type": "partnership",
+                        "attributes": {
+                          "cohort": 2021,
+                          "urn": "123456",
+                          "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                          "status": "active",
+                          "challenged_reason": null,
+                          "induction_tutor_name": "John Doe",
+                          "induction_tutor_email": "john.doe@example.com",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "created_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -217,6 +248,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
                 }
               }
             }
@@ -343,6 +384,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQApplicationAcceptErrorResponse"
                 }
               }
             }
@@ -619,6 +670,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -877,7 +938,7 @@
                           "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -899,8 +960,7 @@
                           "created_at": "2020-11-13T11:21:55Z",
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+                          "ineligible_for_funding_reason": null,
                           "uplift_paid": true
                         }
                       }
@@ -1007,7 +1067,7 @@
                             "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                             "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                             "clawback_statement_id": null,
-                            "inelgible_for_funding_reason": null,
+                            "ineligible_for_funding_reason": null,
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                             "uplift_paid": true
                           }
@@ -1025,7 +1085,7 @@
                             "created_at": "2020-11-13T11:21:55Z",
                             "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                             "clawback_statement_id": null,
-                            "inelgible_for_funding_reason": null,
+                            "ineligible_for_funding_reason": null,
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                             "uplift_paid": true
                           }
@@ -1101,7 +1161,7 @@
                           "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1123,7 +1183,7 @@
                           "created_at": "2020-11-13T11:21:55Z",
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1134,22 +1194,22 @@
               }
             }
           },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundResponse"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
                 }
               }
             }
@@ -1208,7 +1268,7 @@
                           "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1230,7 +1290,7 @@
                           "created_at": "2020-11-13T11:21:55Z",
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
-                          "inelgible_for_funding_reason": null,
+                          "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
                           "uplift_paid": true
                         }
@@ -1351,6 +1411,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
                 }
               }
             }
@@ -1715,6 +1785,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1822,6 +1902,25 @@
           }
         }
       },
+      "DeliveryPartnerCohortError": {
+        "description": "Not a delivery partner you have a relationship with for this cohort",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
+            "type": "string",
+            "enum": [
+              "Not a delivery partner you have a relationship with for this cohort"
+            ],
+            "example": "Not a delivery partner you have a relationship with for this cohort"
+          },
+          "detail": {
+            "description": "Additional info on which cohorts are available",
+            "type": "string",
+            "example": "Delivery partner is available for 2021 cohort only"
+          }
+        }
+      },
       "DeliveryPartnerResponse": {
         "description": "A delivery partner",
         "type": "object",
@@ -1899,6 +1998,7 @@
           "training_status",
           "schedule_identifier",
           "updated_at",
+          "created_at",
           "joining_date"
         ],
         "properties": {
@@ -1940,7 +2040,7 @@
             "example": "2021"
           },
           "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "description": "The Teacher Reference Number (TRN) for this participant",
             "type": "string",
             "example": "1234567"
           },
@@ -1986,7 +2086,13 @@
             ]
           },
           "updated_at": {
-            "description": "The date the ECF participant was last updated",
+            "description": "The date and time the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "created_at": {
+            "description": "The date and time the ECF participant was created",
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
@@ -2031,6 +2137,12 @@
             "type": "string",
             "nullable": true,
             "example": "2022-11-09T16:07:38Z"
+          },
+          "delivery_partner_id": {
+            "description": "Unique ID of the delivery partner associated with the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           }
         }
       },
@@ -2213,7 +2325,7 @@
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "inelgible_for_funding_reason": {
+          "ineligible_for_funding_reason": {
             "description": "If the declaration is ineligible, the reason why",
             "type": "string",
             "enum": [
@@ -2694,7 +2806,7 @@
             "example": "123456"
           },
           "delivery_partner_id": {
-            "description": "The Unique Reference Number (URN) of the school you are partnered with",
+            "description": "The unique ID of the delivery partner you are working with for this partnership",
             "type": "string",
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
@@ -2706,18 +2818,20 @@
               "active",
               "challenged"
             ],
-            "example": "active"
+            "example": "challenged"
           },
           "challenged_reason": {
             "description": "If the partnership has been challenged, the reason provided for the challenge by the SIT",
             "type": "string",
+            "nullable": true,
             "enum": [
               "another_provider",
               "not_confirmed",
               "do_not_recognise",
               "no_ects",
               "mistake"
-            ]
+            ],
+            "example": "mistake"
           },
           "induction_tutor_name": {
             "description": "The name of the induction tutor at the school you are in partnership with",
@@ -2776,6 +2890,34 @@
               "cohort": "2021",
               "urn": "123456",
               "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
+            }
+          }
+        }
+      },
+      "ECFPartnershipRequestErrorResponse": {
+        "description": "A list of errors",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/UrnInvalidError"
+                },
+                {
+                  "$ref": "#/components/schemas/PartnershipExistsError"
+                },
+                {
+                  "$ref": "#/components/schemas/SchoolFundingError"
+                },
+                {
+                  "$ref": "#/components/schemas/DeliveryPartnerCohortError"
+                },
+                {
+                  "$ref": "#/components/schemas/OtherProviderRecruitedError"
+                }
+              ]
             }
           }
         }
@@ -2921,29 +3063,7 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NPQParticipant"
-            },
-            "example": [
-              {
-                "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                "type": "npq-participant",
-                "attributes": {
-                  "full_name": "Isabelle MacDonald",
-                  "email": "isabelle.macdonald2@some-school.example.com",
-                  "teacher_reference_number": "1234567",
-                  "updated_at": "2021-05-31T02:21:32.000Z",
-                  "npq_enrolments": [
-                    {
-                      "course_identifier": "npq-headship",
-                      "schedule_identifier": "npq-leadership-autumn",
-                      "cohort": "2021",
-                      "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                      "eligible_for_funding": true,
-                      "training_status": "active"
-                    }
-                  ]
-                }
-              }
-            ]
+            }
           }
         }
       },
@@ -3009,6 +3129,41 @@
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQApplicationAttributes"
+          }
+        }
+      },
+      "NPQApplicationAcceptErrorResponse": {
+        "description": "A list of errors",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/NPQApplicationAlreadyAccepted"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "NPQApplicationAlreadyAccepted": {
+        "description": "NPQ Application has already been accepted",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "The title of the error",
+            "type": "string",
+            "enum": [
+              "NPQ Application has already been accepted"
+            ],
+            "example": "NPQ Application has already been accepted"
+          },
+          "detail": {
+            "description": "Additional info about the error",
+            "type": "string",
+            "example": "You cannot accept this NPQ application as it has already been accepted"
           }
         }
       },
@@ -3375,9 +3530,7 @@
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-early-years-leadership",
-              "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-years-leadership"
             ],
             "example": "npq-leading-teaching"
           },
@@ -3417,9 +3570,7 @@
               "npq-senior-leadership",
               "npq-headship",
               "npq-executive-leadership",
-              "npq-early-years-leadership",
-              "npq-additional-support-offer",
-              "npq-early-headship-coaching-offer"
+              "npq-early-years-leadership"
             ],
             "example": "npq-leading-teaching"
           },
@@ -3676,7 +3827,7 @@
           }
         }
       },
-      "NPQParticipantDeclarationAttributes": {
+      "NPQParticipantCompletedDeclarationAttributes": {
         "description": "The data attributes associated with a participant declaration response",
         "type": "object",
         "required": [
@@ -3685,7 +3836,8 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at"
+          "updated_at",
+          "has_passed"
         ],
         "properties": {
           "participant_id": {
@@ -3698,13 +3850,9 @@
             "description": "The event declaration type",
             "type": "string",
             "enum": [
-              "started",
-              "completed",
-              "retained-1",
-              "retained-2",
-              "retained-3"
+              "completed"
             ],
-            "example": "started"
+            "example": "completed"
           },
           "declaration_date": {
             "description": "The event declaration date",
@@ -3768,7 +3916,7 @@
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "inelgible_for_funding_reason": {
+          "ineligible_for_funding_reason": {
             "description": "If the declaration is ineligible, the reason why",
             "type": "string",
             "enum": [
@@ -3782,8 +3930,26 @@
             "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
             "type": "boolean",
             "example": true
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": true
           }
         }
+      },
+      "NPQParticipantDeclarationAttributes": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+          },
+          {
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+          },
+          {
+            "$ref": "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
+          }
+        ]
       },
       "NPQParticipantDeclarationCompletedAttributesRequest": {
         "description": "An NPQ completed participant declaration",
@@ -4156,6 +4322,217 @@
           }
         }
       },
+      "NPQParticipantRetainedDeclarationAttributes": {
+        "description": "The data attributes associated with a participant declaration response",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "state",
+          "updated_at"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "retained-1",
+              "retained-2"
+            ],
+            "example": "retained-1"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
+            ],
+            "example": "npq-leading-teaching"
+          },
+          "state": {
+            "description": "Indicates the state of this payment declaration",
+            "type": "string",
+            "enum": [
+              "submitted",
+              "eligible",
+              "payable",
+              "paid",
+              "voided",
+              "ineligible",
+              "awaiting-clawback",
+              "clawed-back"
+            ],
+            "example": "submitted"
+          },
+          "updated_at": {
+            "description": "The date the declaration was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "created_at": {
+            "description": "The date the declaration was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "statement_id": {
+            "description": "Unique ID of the statement the declaration will be paid as part of",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "clawback_statement_id": {
+            "description": "Unique id of the statement to which the declaration will be clawed back on, if any",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "ineligible_for_funding_reason": {
+            "description": "If the declaration is ineligible, the reason why",
+            "type": "string",
+            "enum": [
+              "to",
+              "be",
+              "determined"
+            ],
+            "example": "unknown"
+          },
+          "uplift_paid": {
+            "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "NPQParticipantStartedDeclarationAttributes": {
+        "description": "The data attributes associated with a participant declaration response",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "declaration_type",
+          "declaration_date",
+          "course_identifier",
+          "state",
+          "updated_at"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique id of the participant",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "declaration_type": {
+            "description": "The event declaration type",
+            "type": "string",
+            "enum": [
+              "started"
+            ],
+            "example": "started"
+          },
+          "declaration_date": {
+            "description": "The event declaration date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "course_identifier": {
+            "description": "The type of course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-early-years-leadership",
+              "npq-additional-support-offer",
+              "npq-early-headship-coaching-offer"
+            ],
+            "example": "npq-leading-teaching"
+          },
+          "state": {
+            "description": "Indicates the state of this payment declaration",
+            "type": "string",
+            "enum": [
+              "submitted",
+              "eligible",
+              "payable",
+              "paid",
+              "voided",
+              "ineligible",
+              "awaiting-clawback",
+              "clawed-back"
+            ],
+            "example": "submitted"
+          },
+          "updated_at": {
+            "description": "The date the declaration was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "created_at": {
+            "description": "The date the declaration was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "statement_id": {
+            "description": "Unique ID of the statement the declaration will be paid as part of",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "clawback_statement_id": {
+            "description": "Unique id of the statement to which the declaration will be clawed back on, if any",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "ineligible_for_funding_reason": {
+            "description": "If the declaration is ineligible, the reason why",
+            "type": "string",
+            "enum": [
+              "to",
+              "be",
+              "determined"
+            ],
+            "example": "unknown"
+          },
+          "uplift_paid": {
+            "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
       "NPQParticipantWithdraw": {
         "description": "An NPQ participant withdrawal action",
         "type": "object",
@@ -4254,9 +4631,40 @@
         "description": "The requested resource was not found",
         "type": "object",
         "properties": {
-          "error": {
+          "title": {
+            "description": "The title of the error message",
+            "type": "string"
+          },
+          "detail": {
+            "description": "Further information regarding the error",
+            "type": "string"
+          }
+        },
+        "example": {
+          "errors": [
+            {
+              "title": "The requested resource was not found",
+              "detail": "Nothing could be found for the provided details"
+            }
+          ]
+        }
+      },
+      "OtherProviderRecruitedError": {
+        "description": "Recruited by other provider",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
             "type": "string",
-            "example": "Resource not found"
+            "enum": [
+              "Recruited by other provider"
+            ],
+            "example": "Recruited by other provider"
+          },
+          "detail": {
+            "description": "Additional info",
+            "type": "string",
+            "example": "This partnership cannot be created as it has already partnered with another provider"
           }
         }
       },
@@ -4410,6 +4818,25 @@
           }
         }
       },
+      "PartnershipExistsError": {
+        "description": "Partnership already exists",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
+            "type": "string",
+            "enum": [
+              "Partnership already exists"
+            ],
+            "example": "Partnership already exists"
+          },
+          "detail": {
+            "description": "Additional info about existing partnership",
+            "type": "string",
+            "example": "Partnership with school 123456 for cohort 2022 and delivery partner d1027b7f-664d-48bb-8b9f-c378116d8a16 already exists"
+          }
+        }
+      },
       "PartnershipsFilter": {
         "description": "Filter partnerships to return more specific results",
         "type": "object",
@@ -4418,6 +4845,24 @@
             "description": "Return partnerships within the specified cohorts. This is a comma delimited string of years.",
             "type": "string",
             "example": "2021,2022"
+          }
+        }
+      },
+      "SchoolFundingError": {
+        "description": "School is not eligible for DfE-funded FIP",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
+            "type": "string",
+            "enum": [
+              "School is not eligible for DfE-funded FIP"
+            ],
+            "example": "School is not eligible for DfE-funded FIP"
+          },
+          "detail": {
+            "description": "Additional info why school is not for DfE-funded FIP if any",
+            "type": "string"
           }
         }
       },
@@ -4469,7 +4914,7 @@
             "description": "The month which appears on the statement in the DfE portal",
             "type": "string",
             "nullable": false,
-            "example": "1"
+            "example": "5"
           },
           "year": {
             "description": "The calendar year which appears on the statement in the dfe portal",
@@ -4569,6 +5014,25 @@
           "error": {
             "type": "string",
             "example": "HTTP Token: Access denied"
+          }
+        }
+      },
+      "UrnInvalidError": {
+        "description": "URN entered is not valid",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Title of error message",
+            "type": "string",
+            "enum": [
+              "URN is not valid"
+            ],
+            "example": "URN is not valid"
+          },
+          "detail": {
+            "description": "Additional info why URN is not valid",
+            "type": "string",
+            "example": "URN must is at most 6 digits long"
           }
         }
       }

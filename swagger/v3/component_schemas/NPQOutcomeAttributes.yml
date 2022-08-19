@@ -26,8 +26,6 @@ properties:
       - npq-headship
       - npq-executive-leadership
       - npq-early-years-leadership
-      - npq-additional-support-offer
-      - npq-early-headship-coaching-offer
     example: npq-leading-teaching
   has_passed:
     description: Whether the participant has failed or passed

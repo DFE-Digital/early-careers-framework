@@ -1,0 +1,13 @@
+description: Partnership already exists
+type: object
+properties:
+  title:
+    description: Title of error message
+    type: string
+    enum:
+      - Partnership already exists
+    example: Partnership already exists
+  detail:
+    description: Additional info about existing partnership
+    type: string
+    example: "Partnership with school 123456 for cohort 2022 and delivery partner d1027b7f-664d-48bb-8b9f-c378116d8a16 already exists"
