@@ -188,4 +188,51 @@ RSpec.describe RecordDeclarations::Started::NPQ do
       expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
     end
   end
+
+  context "when declaring for a participant in 2022" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+
+    let(:npq_application) { create(:npq_application, :funded, npq_lead_provider:, cohort:) }
+
+    let(:schedule_factory) do
+      case npq_course.identifier
+      when "npq-leading-teaching", "npq-leading-behaviour-culture", "npq-leading-teaching-development", "npq-leading-literacy"
+        :npq_specialist_schedule
+      when "npq-senior-leadership", "npq-headship", "npq-executive-leadership", "npq-early-years-leadership"
+        :npq_leadership_schedule
+      when "npq-additional-support-offer"
+        :npq_aso_schedule
+      when "npq-early-headship-coaching-offer"
+        :npq_ehco_schedule
+      else
+        raise
+      end
+    end
+
+    let(:schedule) { create(schedule_factory, cohort:) }
+
+    let!(:statement) do
+      create(
+        :npq_statement,
+        :output_fee,
+        cpd_lead_provider:,
+        deadline_date: 6.months.from_now,
+        payment_date: 7.months.from_now,
+        cohort:,
+      )
+    end
+
+    before do
+      profile.update!(schedule:)
+    end
+
+    it "accepts the declaration as eligible" do
+      expect { subject.call }.to change { ParticipantDeclaration.count }.by(1)
+
+      declaration = ParticipantDeclaration.order(created_at: :asc).last
+
+      expect(declaration).to be_eligible
+      expect(declaration.statements).to include(statement)
+    end
+  end
 end
