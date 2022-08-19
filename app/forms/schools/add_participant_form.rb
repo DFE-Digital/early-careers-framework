@@ -33,30 +33,17 @@ module Schools
         elsif check_for_dqt_record?
           :cannot_find_their_details
         else
-          :do_you_know_teachers_trn
-        end
-      end
-    end
-
-    step :do_you_know_teachers_trn do
-      attribute :do_you_know_teachers_trn
-      validates :do_you_know_teachers_trn,
-                presence: true,
-                inclusion: { in: %w[true false] }
-      next_step do
-        if trn_known?
           :trn
-        else
-          :email
         end
       end
     end
 
     step :trn do
       attribute :trn, :string
-
       validates :trn, teacher_reference_number: true
+
       before_complete { check_records if check_for_dqt_record? }
+
       next_step do
         if type == :self
           :dob
@@ -96,6 +83,21 @@ module Schools
       end
     end
 
+    step :nino, update: true do
+      attribute :nino, :string
+      validates :nino, national_insurance_number: true
+
+      before_complete { check_records if check_for_dqt_record? }
+
+      next_step do
+        next :confirm  if type == :self
+        next :transfer if existing_participant_profile.present?
+        next :email    if dqt_record.present?
+
+        :still_cannot_find_their_details
+      end
+    end
+
     step :email do
       attribute :email
 
@@ -103,7 +105,6 @@ module Schools
                 presence: { message: I18n.t("errors.email_address.blank") },
                 notify_email: { allow_blank: true }
 
-      before_complete { reset_dqt_details unless trn_known? }
       next_step do
         if email_already_taken?
           :email_taken
@@ -176,6 +177,8 @@ module Schools
 
     step :cannot_find_their_details
 
+    step :still_cannot_find_their_details
+
     step :confirm
 
     def type_options
@@ -204,10 +207,6 @@ module Schools
       @mentor = (User.find(mentor_id) if mentor_id.present? && mentor_id != "later")
     end
 
-    def trn_known?
-      do_you_know_teachers_trn == "true"
-    end
-
     def transfer?
       transfer == "true"
     end
@@ -218,11 +217,10 @@ module Schools
     end
 
     def check_for_existing_profile
-      self.existing_participant_profile = ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
-                                                        .where("LOWER(full_name) = ? AND trn = ? AND date_of_birth = ?",
-                                                               full_name.downcase,
-                                                               formatted_trn,
-                                                               date_of_birth).first
+      self.existing_participant_profile = ParticipantProfile::ECF
+                                            .joins(:ecf_participant_validation_data)
+                                            .where(ecf_participant_validation_data: { trn: formatted_trn })
+                                            .first
     end
 
     def validate_dqt_record
@@ -230,6 +228,7 @@ module Schools
         full_name:,
         trn: formatted_trn,
         date_of_birth:,
+        nino: formatted_nino,
         config: {
           check_first_name_only: true,
         },
@@ -290,6 +289,8 @@ module Schools
     end
 
     def save!
+      return if dqt_record.blank?
+
       profile = nil
       ActiveRecord::Base.transaction do
         profile = creators[participant_type].call(
@@ -298,14 +299,13 @@ module Schools
           school_cohort:,
           mentor_profile_id: mentor&.mentor_profile&.id,
           start_date:,
-          sit_validation: dqt_record.present? ? true : false,
+          sit_validation: true,
           appropriate_body_id:,
         )
-        store_validation_result!(profile) if dqt_record.present?
+        store_validation_result!(profile)
       end
 
       participant_validation_record = validation_record(profile)
-
       send_added_and_validated_email(profile) if profile && participant_validation_record && !sit_adding_themselves?
 
       profile
@@ -316,7 +316,7 @@ module Schools
         profile,
         data: {
           trn: formatted_trn,
-          nino: nil,
+          nino: formatted_nino,
           date_of_birth:,
           full_name:,
         },
@@ -325,6 +325,10 @@ module Schools
 
     def display_name
       type == :self ? "your" : "#{full_name&.titleize}’s"
+    end
+
+    def formatted_nino
+      NationalInsuranceNumber.new(nino).formatted_nino
     end
 
     def formatted_trn

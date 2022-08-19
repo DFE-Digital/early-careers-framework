@@ -67,10 +67,6 @@ RSpec.describe "Transferring participants", with_feature_flags: { change_of_circ
 
           when_i_update_the_name_with(@participant_data[:full_name])
           click_on "Continue"
-          then_i_am_taken_to_do_you_know_your_teachers_trn_page
-
-          when_i_select "Yes"
-          click_on "Continue"
           then_i_should_be_on_trn_page
 
           when_i_add_the_trn
@@ -162,7 +158,6 @@ RSpec.describe "Transferring participants", with_feature_flags: { change_of_circ
 
   def then_i_should_be_on_what_we_need_for_adding_participant_page
     expect(page).to have_selector("h1", text: "What we need from you")
-    expect(page).to have_text("You can now choose to enter their teacher reference number ")
   end
 
   def then_i_am_taken_to_add_ect_name_page

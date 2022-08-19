@@ -86,10 +86,6 @@ RSpec.describe "Reporting participants with a known TRN",
 
     when_i_add_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
     click_on "Continue"
-    then_i_see_an_error_message "Select whether you know the teacher reference number (TRN) for the teacher you are adding"
-
-    when_i_choose_i_know_the_participants_trn_to_the_school_add_participant_wizard
-    click_on "Continue"
     then_i_see_an_error_message "Enter the teacher reference number (TRN)"
 
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
@@ -130,10 +126,6 @@ RSpec.describe "Reporting participants with a known TRN",
     then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT do you know teachers TRN"
 
-    when_i_choose_i_know_the_participants_trn_from_the_school_add_participant_wizard
-    then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT trn"
-
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
     then_the_page_is_accessible
     then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT date of birth"
@@ -173,7 +165,6 @@ RSpec.describe "Reporting participants with a known TRN",
     then_percy_is_sent_a_snapshot_named "Induction tutor adds mentor name"
 
     when_i_add_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
-    when_i_choose_i_know_the_participants_trn_on_the_school_add_participant_wizard
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
     when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
 

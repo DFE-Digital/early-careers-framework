@@ -3,7 +3,7 @@
 class ParticipantValidationService
   attr_reader :trn, :nino, :full_name, :date_of_birth, :config
 
-  def self.validate(trn:, full_name:, date_of_birth:, nino: nil, config: {})
+  def self.validate(trn:, full_name:, date_of_birth:, nino:, config: {})
     new(trn:, full_name:, date_of_birth:, nino:, config:).validate
   end
 
@@ -17,7 +17,6 @@ class ParticipantValidationService
 
   def validate
     validated_record = matching_record(trn:, nino:, full_name:, dob: date_of_birth)
-
     return if validated_record.nil?
 
     {

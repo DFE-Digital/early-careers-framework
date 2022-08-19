@@ -12,6 +12,8 @@ module Schools
     form AddParticipantForm, as: :add_participant_form
     result as: :participant_profile
 
+    def cannot_add_mentor_without_trn; end
+
     def start
       reset_form
 
@@ -28,8 +30,8 @@ module Schools
     end
 
     def who
+      @who_to_add_form = build_participant_type_form(type: add_participant_form.type)
       reset_form
-      @who_to_add_form = build_participant_type_form
     end
 
     def participant_type
@@ -89,14 +91,14 @@ module Schools
       params[:type]&.to_sym
     end
 
-    def build_participant_type_form
-      Schools::NewParticipantOrTransferForm.new(who_to_add_params)
+    def build_participant_type_form(**defaults)
+      Schools::NewParticipantOrTransferForm.new(defaults.merge(who_to_add_params))
     end
 
     def who_to_add_params
       return {} unless params.key?(:schools_new_participant_or_transfer_form)
 
-      params.require(:schools_new_participant_or_transfer_form).permit(:type)
+      params.require(:schools_new_participant_or_transfer_form).permit(:type).to_h.symbolize_keys
     end
 
     def email_used_in_the_same_school?

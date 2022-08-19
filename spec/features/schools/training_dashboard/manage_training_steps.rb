@@ -521,6 +521,10 @@ module ManageTrainingSteps
     fill_in "Email", with: @participant_data[:email]
   end
 
+  def when_i_add_ect_or_mentor_nino_for(name)
+    fill_in "What’s #{name}’s National Insurance number?", with: @participant_data[:nino]
+  end
+
   def when_i_add_ect_or_mentor_email_that_already_exists
     fill_in "Email", with: @participant_profile_ect.user.email
   end
@@ -667,6 +671,10 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
 
+  def then_i_am_taken_to_add_ect_or_mentor_nino_page
+    expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s National Insurance number?")
+  end
+
   def then_i_am_taken_to_add_ect_or_mentor_email_page
     expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s email address?")
   end
@@ -682,6 +690,10 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_check_details_page
     expect(page).to have_selector("h1", text: "Check your answers")
+  end
+
+  def then_i_am_taken_to_still_cannot_find_their_details_page
+    expect(page).to have_selector("h1", text: "We still cannot find #{@participant_data[:full_name]}’s record")
   end
 
   def then_i_am_taken_to_ect_confirmation_page
@@ -1029,7 +1041,7 @@ module ManageTrainingSteps
       full_name: "Sally Teacher",
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
-      nino: "",
+      nino: "AB123456A",
       start_term: "summer_2022",
       start_date: Date.new(2022, 9, 1),
     }
@@ -1075,5 +1087,13 @@ module ManageTrainingSteps
       config: {},
     }
     allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
+  end
+
+  def set_dqt_validation_with_nino
+    response = @participant_data.slice(:full_name, :trn, :date_of_birth, :nino).merge(config: {})
+
+    allow(ParticipantValidationService).to receive(:validate) do |args|
+      response if args[:nino] == @participant_data[:nino]
+    end
   end
 end

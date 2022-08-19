@@ -17,73 +17,18 @@ RSpec.describe "Update participants details", js: true do
     and_i_have_added_a_mentor
   end
 
-  scenario "Induction tutor can change ECT / mentor name from check details page" do
-    when_i_click_on_add_ect
-    then_i_am_taken_to_add_ect_name_page
-
-    when_i_add_ect_or_mentor_name
-    when_i_click_on_continue
-    then_i_am_taken_to_do_you_know_your_teachers_trn_page
-
-    when_i_select "No"
-    when_i_click_on_continue
-    then_i_am_taken_to_add_ect_or_mentor_email_page
-
-    when_i_add_ect_or_mentor_email
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_start_date_page
-
-    when_i_add_a_start_date
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_mentor_page
-
-    when_i_choose_assign_mentor_later
-    when_i_click_on_continue
-    then_i_am_taken_to_check_details_page
-
-    when_i_click_on_change_name
-    then_i_am_taken_to_add_ect_name_page
-
-    when_i_add_ect_or_mentor_updated_name
-    when_i_click_on_continue
-    then_i_am_taken_to_updated_do_you_know_your_teachers_trn_page
-
-    when_i_select "No"
-    when_i_click_on_continue
-    then_i_am_taken_to_add_ect_or_mentor_updated_email_page
-
-    when_i_click_on_continue
-    then_i_am_taken_to_updated_choose_start_date_page
-
-    when_i_click_on_continue
-
-    when_i_choose_assign_mentor_later
-    when_i_click_on_continue
-    then_i_am_taken_to_check_details_page
-    then_i_can_view_updated_name
-  end
-
   scenario "Induction tutor can change ECT / mentor email from check details page" do
+    set_dqt_validation_result
+
     when_i_click_on_add_ect
     then_i_am_taken_to_add_ect_name_page
 
-    when_i_add_ect_or_mentor_name
-    when_i_click_on_continue
-    then_i_am_taken_to_do_you_know_your_teachers_trn_page
-
-    when_i_select "No"
-    when_i_click_on_continue
-    then_i_am_taken_to_add_ect_or_mentor_email_page
-
-    when_i_add_ect_or_mentor_email
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_start_date_page
-
-    when_i_add_a_start_date
-    when_i_click_on_continue
-
-    when_i_choose_assign_mentor_later
-    when_i_click_on_continue
+    when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
+    and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
+    and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
+    and_i_add_email_address_to_the_school_add_participant_wizard @participant_data[:email]
+    and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
+    and_i_choose_mentor_later_on_the_school_add_participant_wizard
     then_i_am_taken_to_check_details_page
 
     when_i_click_on_change_email
@@ -100,24 +45,16 @@ RSpec.describe "Update participants details", js: true do
   end
 
   scenario "Induction tutor can change ECTs mentor from check details page" do
+    set_dqt_validation_result
+
     when_i_click_on_add_ect
     then_i_am_taken_to_add_ect_name_page
 
-    when_i_add_ect_or_mentor_name
-    when_i_click_on_continue
-    then_i_am_taken_to_do_you_know_your_teachers_trn_page
-
-    when_i_select "No"
-    when_i_click_on_continue
-    then_i_am_taken_to_add_ect_or_mentor_email_page
-
-    when_i_add_ect_or_mentor_email
-    when_i_click_on_continue
-    then_i_am_taken_to_choose_start_date_page
-
-    when_i_add_a_start_date
-    when_i_click_on_continue
-
+    when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
+    and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
+    and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
+    and_i_add_email_address_to_the_school_add_participant_wizard @participant_data[:email]
+    and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
     then_i_am_taken_to_add_mentor_page
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named "Induction tutor chooses mentor for ECT"

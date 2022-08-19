@@ -26,45 +26,24 @@ module Pages
       end
     end
 
-    def add_ect(full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
+    def add_ect(full_name, trn, date_of_birth, email_address, start_date, mentor_full_name = nil)
       choose_to_add_a_new_ect
 
       add_full_name full_name
-
-      if participant_trn.blank?
-        choose_i_do_not_know_the_participants_trn
-      else
-        choose_i_know_the_participants_trn
-        add_teacher_reference_number full_name, participant_trn
-        add_date_of_birth date_of_birth
-      end
-
+      add_teacher_reference_number full_name, trn
+      add_date_of_birth date_of_birth
       add_email_address email_address
       add_start_date start_date
-
-      # this will need skipping if no mentors added to the school yet
-      if mentor_full_name.present?
-        choose_a_mentor mentor_full_name
-        # else
-        # puts page.html
-      end
+      choose_a_mentor mentor_full_name if mentor_full_name.present?
 
       confirm_and_add
     end
 
-    def add_mentor(full_name, email_address, participant_trn = nil, date_of_birth = nil)
+    def add_mentor(full_name, trn, date_of_birth, email_address)
       choose_to_add_a_new_mentor
-
       add_full_name full_name
-
-      if participant_trn.blank?
-        choose_i_do_not_know_the_participants_trn
-      else
-        choose_i_know_the_participants_trn
-        add_teacher_reference_number full_name, participant_trn
-        add_date_of_birth date_of_birth
-      end
-
+      add_teacher_reference_number full_name, trn
+      add_date_of_birth date_of_birth
       add_email_address email_address
 
       confirm_and_add
@@ -101,13 +80,6 @@ module Pages
       self
     end
 
-    def choose_i_know_the_participants_trn
-      choose "Yes"
-      click_on "Continue"
-
-      self
-    end
-
     def add_teacher_reference_number(full_name, trn)
       fill_in "What’s #{full_name.titleize}’s teacher reference number (TRN)?", with: trn
       click_on "Continue"
@@ -124,15 +96,15 @@ module Pages
       self
     end
 
-    def choose_i_do_not_know_the_participants_trn
-      choose "No"
+    def add_email_address(participant_email)
+      fill_in "Email", with: participant_email
       click_on "Continue"
 
       self
     end
 
-    def add_email_address(participant_email)
-      fill_in "Email", with: participant_email
+    def add_nino(participant_name, participant_nino)
+      fill_in "What’s #{participant_name}’s National Insurance number?", with: participant_nino
       click_on "Continue"
 
       self
@@ -155,8 +127,7 @@ module Pages
     end
 
     def choose_mentor_later
-      puts page.html
-      choose "Do this later"
+      choose "Assign mentor later"
       click_on "Continue"
 
       self
@@ -166,6 +137,12 @@ module Pages
       click_on "Confirm and add"
 
       Pages::SchoolAddParticipantCompletedPage.loaded
+    end
+
+    def confirm_details_and_continue
+      click_on "Continue"
+
+      self
     end
   end
 end

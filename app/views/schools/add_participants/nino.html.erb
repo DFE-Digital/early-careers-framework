@@ -1,0 +1,26 @@
+<% title = "What’s #{add_participant_form.display_name} National Insurance number?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content,
+               govuk_back_link(text: "Back",
+                               href: step_schools_add_participants_path(step: "cannot-find-their-details")) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+
+        <%= form_for add_participant_form, url: { action: :update }, method: :patch do |f| %>
+            <%= f.govuk_error_summary %>
+            <%= f.govuk_text_field :nino,
+                                   width: "two-thirds",
+                                   spellcheck: false,
+                                   label: { text: title, size: 'xl', tag: 'h1', class: 'govuk-heading-xl' },
+                                   hint: -> { tag.div("It’s on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.",
+                                                      class: "govuk-hint") } %>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+
+    </div>
+</div>

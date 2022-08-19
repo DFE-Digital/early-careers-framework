@@ -1,6 +1,9 @@
 <% content_for :title, "What we need from you" %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: who_schools_add_participants_path) %>
+<% content_for :before_content,
+               govuk_back_link(text: "Back",
+                               href: who_schools_add_participants_path(
+                                 schools_new_participant_or_transfer_form: { type: :transfer })) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

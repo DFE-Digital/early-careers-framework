@@ -90,12 +90,10 @@ RSpec.feature "FIP to FIP with same provider - Onboarding a withdrawn participan
 
         and_sit_reported_participant "Original SIT",
                                      "the Participant",
+                                     scenario.participant_trn,
+                                     scenario.participant_dob,
                                      scenario.participant_email,
                                      scenario.participant_type
-        and_participant_has_completed_registration "the Participant",
-                                                   scenario.participant_trn,
-                                                   scenario.participant_dob,
-                                                   scenario.participant_type
       end
 
       context when_context(scenario) do

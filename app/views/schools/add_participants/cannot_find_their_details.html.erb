@@ -6,7 +6,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <span class="govuk-caption-xl"><%= @school.name %></span>
         <h1 class="govuk-heading-xl">We cannot find <%= add_participant_form.full_name.titleize %>’s record</h1>
 
@@ -40,9 +40,9 @@
         <% end %>
 
         <h3 class="govuk-heading-s">If this information is correct.</h3>
-        <p class="govuk-body">You can still continue to register <%= add_participant_form.full_name.titleize %>. We'll contact them to check their information.</p>
+        <p class="govuk-body">We may be able to find their record using their National Insurance number.</p>
 
-        <%= govuk_button_link_to "Confirm and continue", step_schools_add_participants_path(step: :email)  %>
+        <%= govuk_button_link_to "Continue", step_schools_add_participants_path(step: :nino)  %>
 
     </div>
 </div>
