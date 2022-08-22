@@ -15,6 +15,10 @@ module AxeAndPercyHelper
 
   def and_percy_is_sent_a_snapshot_named(name)
     page.percy_snapshot(name)
+  rescue StandardError => e
+    raise e unless e.message =~ /Can only finalize pending builds/
+
+    Rails.logger.error(e.message)
   end
 
   alias_method :then_the_page_is_accessible, :and_the_page_is_accessible
