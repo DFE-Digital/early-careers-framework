@@ -15,7 +15,7 @@ FactoryBot.define do
       training_programme { "core_induction_programme" }
     end
 
-    trait :sffip do
+    trait :school_funded_fip do
       partnership
       training_programme { "school_funded_fip" }
     end

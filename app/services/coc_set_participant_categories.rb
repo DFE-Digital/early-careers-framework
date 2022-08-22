@@ -31,11 +31,11 @@ private
   end
 
   def eligible_participants
-    fip_eligible_participants + cip_eligible_participants + sffip_eligible_participants
+    fip_eligible_participants + cip_eligible_participants + school_funded_fip_eligible_participants
   end
 
   def ineligible_participants
-    fip_ineligible_participants + sffip_ineligible_participants
+    fip_ineligible_participants + school_funded_fip_ineligible_participants
   end
 
   def withdrawn_participants
@@ -48,7 +48,7 @@ private
   end
 
   def details_being_checked_participants
-    fip_details_being_checked_participants + sffip_details_being_checked_participants
+    fip_details_being_checked_participants + school_funded_fip_details_being_checked_participants
   end
 
   def details_being_checked
@@ -156,21 +156,21 @@ private
       .merge(profile_type.ineligible_status)
   end
 
-  def sffip_details_being_checked_participants
+  def school_funded_fip_details_being_checked_participants
     active_induction_records
-      .sffip
+      .school_funded_fip
       .merge(profile_type.details_being_checked)
   end
 
-  def sffip_eligible_participants
+  def school_funded_fip_eligible_participants
     active_induction_records
-      .sffip
+      .school_funded_fip
       .merge(profile_type.eligible_status)
   end
 
-  def sffip_ineligible_participants
+  def school_funded_fip_ineligible_participants
     active_induction_records
-      .sffip
+      .school_funded_fip
       .merge(profile_type.ineligible_status)
   end
 end

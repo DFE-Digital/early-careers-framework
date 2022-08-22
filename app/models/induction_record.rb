@@ -49,7 +49,7 @@ class InductionRecord < ApplicationRecord
 
   scope :cip, -> { joins(:induction_programme).merge(InductionProgramme.core_induction_programme) }
   scope :fip, -> { joins(:induction_programme).merge(InductionProgramme.full_induction_programme) }
-  scope :sffip, -> { joins(:induction_programme).merge(InductionProgramme.school_funded_fip) }
+  scope :school_funded_fip, -> { joins(:induction_programme).merge(InductionProgramme.school_funded_fip) }
 
   scope :end_date_null, -> { where(end_date: nil) }
   scope :end_date_in_past, -> { where(end_date: ...Time.zone.now) }
