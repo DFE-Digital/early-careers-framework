@@ -8,29 +8,23 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
 
   let!(:lead_provider)         { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider)      { lead_provider.cpd_lead_provider }
-  let(:ecf_september_schedule) { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september") }
-  let!(:statement)             { create(:ecf_statement, cpd_lead_provider:) }
-  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1") }
-  let(:cohort)                 { contract.cohort }
-  let(:school)                 { create(:school) }
-  let!(:school_cohort)         { create(:school_cohort, :fip, :with_induction_programme, school:, cohort:) }
-  let(:nov_statement)          { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider:) }
-  let(:jan_statement)          { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider:) }
-  let(:voided_declarations) { create_list(:ect_participant_declaration, 2, cpd_lead_provider:) }
+  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
+  let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
   let(:participant_aggregator_nov) do
     Finance::ECF::ParticipantAggregator.new(
-      statement: nov_statement,
+      statement: november_statement,
       recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
     )
   end
   let(:participant_aggregator_jan) do
     Finance::ECF::ParticipantAggregator.new(
-      statement: jan_statement,
+      statement: january_statement,
       recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
     )
   end
 
-  before { Importers::SeedStatements.new.call }
+  let!(:january_statement)  { create(:ecf_statement, name: "January 2022", deadline_date: Date.new(2022, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
+  let!(:november_statement) { create(:ecf_statement, name: "November 2021", deadline_date: Date.new(2021, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -59,6 +53,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
 
     select("November 2021", from: "statement-field")
     click_button("View")
+
     then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
@@ -83,32 +78,32 @@ private
   end
 
   def multiple_start_declarations_are_submitted_nov_statement
-    create_list(:ect_participant_declaration, 4, cpd_lead_provider:)
+    travel_to november_statement.deadline_date do
+      create_list(:ect_participant_declaration, 4, cpd_lead_provider:)
+    end
   end
 
   def multiple_retained_declarations_are_submitted_nov_statement
-    # milestone = ecf_september_schedule.milestones.find_by!(declaration_type: "retained-1")
-    create_list(:ect_participant_declaration,
-                4,
-                :eligible,
-                declaration_type: "retained-1",
-                # declaration_date: milestone.start_date,
-                cpd_lead_provider:)
+    travel_to november_statement.deadline_date do
+      create_list(:ect_participant_declaration,
+                  4,
+                  :eligible,
+                  declaration_type: "retained-1",
+                  cpd_lead_provider:)
+    end
   end
 
   def multiple_ineligible_declarations_are_submitted_jan_statement
-    create_list(:ect_participant_declaration, 3, :ineligible, cpd_lead_provider:)
+    travel_to january_statement.deadline_date do
+      create_list(:ect_participant_declaration, 3, :ineligible, cpd_lead_provider:)
+    end
   end
 
   def multiple_retained_declarations_are_submitted_jan_statement
-    mentor_participant_profiles = create_list(:mentor_participant_profile, 5, school_cohort:, cohort: contract.cohort, sparsity_uplift: true)
-    mentor_participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    mentor_participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    mentor_participant_profiles.map { |participant| create_retained_declarations_jan_mentor(participant) }
-    participant_profiles = create_list(:ect_participant_profile, 6, school_cohort:, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_retained_declarations_jan_ect(participant) }
+    travel_to january_statement.deadline_date do
+      create_list(:mentor_participant_declaration, 5, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
+      create_list(:ect_participant_declaration,    6, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
+    end
   end
 
   def and_multiple_declarations_are_submitted
@@ -119,7 +114,7 @@ private
   end
 
   def and_voided_payable_declarations_are_submitted
-    voided_declarations
+    travel_to(november_statement.deadline_date) { voided_declarations }
   end
 
   def create_start_declarations_nov(participant)
@@ -215,7 +210,7 @@ private
 
   def nov_retained_breakdowns_are_calculated
     @nov_retained_1 = Finance::ECF::CalculationOrchestrator.new(
-      statement: nov_statement,
+      statement: november_statement,
       contract: lead_provider.call_off_contract,
       aggregator: participant_aggregator_nov,
       calculator: PaymentCalculator::ECF::PaymentCalculation,
@@ -224,7 +219,7 @@ private
 
   def nov_starts_breakdowns_are_calculated
     @nov_starts = Finance::ECF::CalculationOrchestrator.new(
-      statement: nov_statement,
+      statement: november_statement,
       contract: lead_provider.call_off_contract,
       aggregator: participant_aggregator_nov,
       calculator: PaymentCalculator::ECF::PaymentCalculation,
@@ -233,7 +228,7 @@ private
 
   def jan_starts_breakdowns_are_calculated
     @jan_starts = Finance::ECF::CalculationOrchestrator.new(
-      statement: jan_statement,
+      statement: january_statement,
       contract: lead_provider.call_off_contract,
       aggregator: participant_aggregator_jan,
       calculator: PaymentCalculator::ECF::PaymentCalculation,
@@ -242,7 +237,7 @@ private
 
   def jan_retained_breakdowns_are_calculated
     @jan_retained_1 = Finance::ECF::CalculationOrchestrator.new(
-      statement: jan_statement,
+      statement: january_statement,
       contract: lead_provider.call_off_contract,
       aggregator: participant_aggregator_jan,
       calculator: PaymentCalculator::ECF::PaymentCalculation,
@@ -263,7 +258,7 @@ private
 
     within ".finance-panel__summary" do
       expect(page).to have_content("Milestone cut off date")
-      expect(page).to have_content(jan_statement.deadline_date.to_s(:govuk))
+      expect(page).to have_content(january_statement.deadline_date.to_s(:govuk))
     end
   end
 
