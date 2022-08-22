@@ -6,7 +6,6 @@ FactoryBot.define do
       user { create(:user) }
     end
 
-    npq_course
     npq_lead_provider                     { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
     cohort                                { Cohort.current || create(:cohort, :current) }
     headteacher_status                    { NPQApplication.headteacher_statuses.keys.sample }

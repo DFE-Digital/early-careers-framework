@@ -27,9 +27,12 @@ FactoryBot.define do
     end
 
     factory :npq_participant_declaration, class: "ParticipantDeclaration::NPQ" do
+      transient do
+        course_identifier { create(:npq_course).course_identifier }
+        npq_course        { NPQCourse.find_by(identifier: course_identifier) }
+      end
       cpd_lead_provider   { create(:cpd_lead_provider, :with_npq_lead_provider) }
-      participant_profile { create(:npq_application, :accepted, *profile_traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider).profile }
-      course_identifier   { participant_profile.npq_course.identifier }
+      participant_profile { create(:npq_application, :accepted, *profile_traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:).profile }
     end
 
     initialize_with do
