@@ -13,7 +13,7 @@ module Finance
       @change_lead_provider_approval_status_form.npq_application = @npq_application
 
       if @change_lead_provider_approval_status_form.save
-        redirect_to finance_participant_path(@change_lead_provider_approval_status_form.profile.user)
+        redirect_to finance_participant_path(@npq_application.user)
       else
         render :new
       end
