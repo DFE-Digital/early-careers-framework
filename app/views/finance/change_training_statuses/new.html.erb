@@ -13,7 +13,11 @@
       <p>
         <strong>Training status</strong>
         <br/>
-        <%= @participant_profile.training_status %>
+        <% if @participant_profile.npq? %>
+          <%= @participant_profile.state %>
+        <% else %>
+          <%= @participant_profile.training_status %>
+        <% end %>
       </p>
     </div>
 
