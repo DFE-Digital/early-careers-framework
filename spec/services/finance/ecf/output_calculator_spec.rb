@@ -728,11 +728,11 @@ RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
     end
 
     context "when there is a clawback followed by a declaration again" do
-      let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
 
       def setup_statement_one
         travel_to first_statement.deadline_date do
-          create_list(:ect_participant_declaration, 1, :paid, participant_profile:, cpd_lead_provider:)
+          create(:ect_participant_declaration, :paid, participant_profile:, cpd_lead_provider:)
         end
       end
 
@@ -754,8 +754,9 @@ RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
       end
 
       def setup_statement_three
+        declaration = create(:ect_participant_declaration, :eligible, participant_profile:, cpd_lead_provider:)
         travel_to third_statement.deadline_date do
-          create_list(:ect_participant_declaration, 1, :payable, participant_profile:, cpd_lead_provider:)
+          Statements::MarkAsPayable.new(declaration.statement_line_items.eligible.first.statement).call
         end
       end
 
