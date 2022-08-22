@@ -56,14 +56,13 @@ RSpec.describe "Lead Provider school reporting: uploading csv", type: :request d
       end
 
       it "redirects to the confirm page when there are no errors" do
-        schools = create_list(:school, 5)
-        file = Tempfile.new
-        file.write(schools.map(&:urn).join("\n"))
-        file.close
+        csv_contents = StringIO.new(create_list(:school, 5).map(&:urn).join("\n"))
+
         set_session(:delivery_partner_id, delivery_partner.id)
+
         form_params = {
           partnership_csv_upload: {
-            csv: Rack::Test::UploadedFile.new(File.open(file), "text/csv", original_filename: "test.csv"),
+            csv: Rack::Test::UploadedFile.new(csv_contents, "text/csv", original_filename: "test.csv"),
           },
         }
         post "/lead-providers/report-schools/csv", params: form_params
