@@ -15,14 +15,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
   describe "#billable_declarations_count_for_declaration_type" do
     before do
       travel_to statement.deadline_date do
-        create_list(
-          :npq_participant_declaration,
-          6,
-          :eligible,
-          course_identifier: npq_course.identifier,
-          declaration_type: %w[started retained-1 retained-2 completed].sample,
-          cpd_lead_provider:,
-        )
+        create_list(:npq_participant_declaration, 6, :eligible, npq_course:, declaration_type: %w[started retained-1 retained-2 completed].sample, cpd_lead_provider:,)
       end
     end
 
@@ -43,7 +36,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
     context "when there are billable declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, course_identifier: npq_course.identifier, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:)
         end
       end
 
@@ -58,7 +51,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
       end
       before do
         travel_to statement.deadline_date do
-          create_list(:npq_participant_declaration, 2, :eligible, participant_profile:, course_identifier: npq_course.identifier, cpd_lead_provider:)
+          create_list(:npq_participant_declaration, 2, :eligible, participant_profile:, npq_course:, cpd_lead_provider:)
         end
       end
 
@@ -78,7 +71,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
             :npq_participant_declaration, 2,
             :eligible,
             participant_profile:,
-            course_identifier: npq_course.identifier,
+            npq_course:,
             declaration_type: "started",
             cpd_lead_provider:
           )
@@ -86,7 +79,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
             :npq_participant_declaration, 2,
             :eligible,
             participant_profile:,
-            course_identifier: npq_course.identifier,
+            npq_course:,
             declaration_type: "retained-1",
             cpd_lead_provider:
           )
@@ -107,7 +100,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
     end
 
     context "when there are refundable declarations" do
-      let!(:to_be_awaiting_clawed_back) { create(:npq_participant_declaration, :paid, course_identifier: npq_course.identifier, cpd_lead_provider:) }
+      let!(:to_be_awaiting_clawed_back) { create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:) }
       before do
         travel_to statement.deadline_date do
           Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
@@ -121,12 +114,12 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
   end
 
   describe "#refundable_declarations_by_type_count" do
-    let!(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration, :paid, declaration_type: "started", course_identifier: npq_course.identifier, cpd_lead_provider:) }
-    let!(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :paid, declaration_type: "retained-1", course_identifier: npq_course.identifier, cpd_lead_provider:) }
-    let!(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :paid, declaration_type: "retained-2", course_identifier: npq_course.identifier, cpd_lead_provider:) }
+    let!(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration, :paid, declaration_type: "started", npq_course:, cpd_lead_provider:) }
+    let!(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :paid, declaration_type: "retained-1", npq_course:, cpd_lead_provider:) }
+    let!(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :paid, declaration_type: "retained-2", npq_course:, cpd_lead_provider:) }
     before do
       travel_to statement.deadline_date do
-        ([to_be_awaiting_claw_back_started] + to_be_awaiting_claw_back_retained_1 + to_be_awaiting_claw_back_completed).each { |declaration|Finance::ClawbackDeclaration.new(declaration).call}
+        ([to_be_awaiting_claw_back_started] + to_be_awaiting_claw_back_retained_1 + to_be_awaiting_claw_back_completed).each { |declaration| Finance::ClawbackDeclaration.new(declaration).call }
       end
     end
 
@@ -145,7 +138,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
     context "when there are voided declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, :voided, course_identifier: npq_course.identifier, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, :voided, npq_course: npq_course, cpd_lead_provider:)
         end
       end
 
@@ -167,7 +160,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
     context "when there are declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, course_identifier: npq_course.identifier, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:)
         end
       end
 
@@ -179,7 +172,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
     context "when there are multiple declarations from same user and same type" do
       before do
         travel_to statement.deadline_date do
-          create_list(:npq_participant_declaration, 2, :eligible, participant_profile:, course_identifier: npq_course.identifier, cpd_lead_provider:)
+          create_list(:npq_participant_declaration, 2, :eligible, participant_profile:, npq_course:, cpd_lead_provider:)
         end
       end
 
