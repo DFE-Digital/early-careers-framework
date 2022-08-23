@@ -2,14 +2,12 @@
 
 RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:lead_provider)     { cpd_lead_provider.lead_provider }
-  let(:statement)         { create(:ecf_statement, cpd_lead_provider:, payment_date: 1.week.ago) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+
+  let!(:statement) { create(:ecf_statement, cpd_lead_provider:, payment_date: 1.week.ago) }
+  let!(:contract) { create(:call_off_contract, :with_minimal_bands, lead_provider:) }
 
   subject { described_class.new(statement:) }
-
-  before do
-    create(:call_off_contract, :with_minimal_bands, lead_provider:)
-  end
 
   describe "#total" do
     let(:default_total) { BigDecimal("-0.5132793103448275862068965517241379310345e4") }

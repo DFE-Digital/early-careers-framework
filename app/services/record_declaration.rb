@@ -114,6 +114,7 @@ private
   def participant_declaration
     @participant_declaration ||= participant_profile
                                    .participant_declarations
+                                   .billable
                                    .find_or_create_by!(declaration_parameters)
                                    .tap { |pd| pd.update!(uplift_flags) }
   end

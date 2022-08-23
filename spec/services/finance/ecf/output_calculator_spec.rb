@@ -754,9 +754,8 @@ RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
       end
 
       def setup_statement_three
-        declaration = create(:ect_participant_declaration, :eligible, participant_profile:, cpd_lead_provider:)
         travel_to third_statement.deadline_date do
-          Statements::MarkAsPayable.new(declaration.statement_line_items.eligible.first.statement).call
+          create(:ect_participant_declaration, :payable, participant_profile:, cpd_lead_provider:)
         end
       end
 
