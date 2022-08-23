@@ -191,4 +191,32 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
       end
     end
   end
+
+  context "when there exists contracts over multiple cohorts", with_feature_flags: { multiple_cohorts: "active" } do
+    let!(:cohort_2022) { Cohort.next || create(:cohort, :next) }
+    let!(:contract_2022) { create(:npq_contract, npq_lead_provider:, cohort: cohort_2022) }
+    let!(:statement_2022) { create(:npq_statement, cpd_lead_provider:, cohort: cohort_2022) }
+
+    before do
+      declarations = create_list(
+        :npq_participant_declaration, 1,
+        state: "eligible",
+        course_identifier: npq_course.identifier,
+        npq_course:
+      )
+
+      declarations.each do |dec|
+        Finance::StatementLineItem.create!(
+          statement: statement_2022,
+          participant_declaration: dec,
+          state: dec.state,
+        )
+      end
+    end
+
+    it "only includes declarations for the related cohort" do
+      expect(described_class.new(statement:).total_starts).to be_zero
+      expect(described_class.new(statement: statement_2022).total_starts).to eql(1)
+    end
+  end
 end
