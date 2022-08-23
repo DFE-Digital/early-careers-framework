@@ -15,11 +15,30 @@ module Schools
     validates :what_changes_choice, presence: true, on: :what_changes
     validates :use_different_delivery_partner_choice, presence: true, on: :use_different_delivery_partner
 
+    CIP_ONLY_SCHOOL_PROGRAMME_CHOICES = %i[
+      core_induction_programme
+      school_funded_fip
+      design_our_own
+    ].freeze
+
+    NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES = %i[
+      full_induction_programme
+      core_induction_programme
+      design_our_own
+    ].freeze
+
+    PROGRAMME_CHOICES = {
+      full_induction_programme: "Use a training provider, funded by the DfE",
+      core_induction_programme: "Deliver your own programme using DfE-accredited materials",
+      school_funded_fip: "Use a training provider funded by your school",
+      design_our_own: "Design and deliver you own programme based on the early career framework (ECF)",
+    }.freeze
+
     PROGRAMME_CHOICES_MAP = {
-      "change_lead_provider" => "full_induction_programme",
-      "change_delivery_partner" => "full_induction_programme",
-      "change_to_core_induction_programme" => "core_induction_programme",
-      "change_to_design_our_own" => "design_our_own",
+      change_lead_provider: :full_induction_programme,
+      change_delivery_partner: :full_induction_programme,
+      change_to_core_induction_programme: :core_induction_programme,
+      change_to_design_our_own: :design_our_own,
     }.freeze
 
     def attributes
@@ -32,16 +51,19 @@ module Schools
       }
     end
 
-    def expect_any_ects_choices
+    def change_provider_choices
       yes_no_choices
     end
+    alias_method :expect_any_ects_choices, :change_provider_choices
+    alias_method :use_different_delivery_partner_choices, :change_provider_choices
 
-    def how_will_you_run_training_choices
-      [
-        OpenStruct.new(id: "full_induction_programme", name: "Use a training provider, funded by the DfE"),
-        OpenStruct.new(id: "core_induction_programme", name: "Deliver your own programme using DfE-accredited materials"),
-        OpenStruct.new(id: "design_our_own", name: "Design and deliver you own programme based on the early career framework (ECF)"),
-      ]
+    def how_will_you_run_training_choices(cip_only: false)
+      choices = cip_only ? CIP_ONLY_SCHOOL_PROGRAMME_CHOICES : NON_CIP_ONLY_SCHOOL_PROGRAMME_CHOICES
+      choices.map { |choice| programme_choice_option(choice) }
+    end
+
+    def programme_choice
+      PROGRAMME_CHOICES_MAP[what_changes_choice.to_sym].to_s
     end
 
     def what_changes_choices(lead_provider_name, delivery_partner_name)
@@ -53,19 +75,11 @@ module Schools
       ]
     end
 
-    def change_provider_choices
-      yes_no_choices
-    end
-
-    def use_different_delivery_partner_choices
-      yes_no_choices
-    end
-
-    def programme_choice
-      PROGRAMME_CHOICES_MAP[what_changes_choice]
-    end
-
   private
+
+    def programme_choice_option(id)
+      OpenStruct.new(id: id.to_s, name: PROGRAMME_CHOICES[id])
+    end
 
     def yes_no_choices
       [

@@ -3,21 +3,15 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    <% academic_year = Cohort.active_registration_cohort.description %>
     <%= govuk_panel title_text: title, classes: "govuk-!-margin-bottom-7" do %>
       Academic year<br/>
-      <strong><%= academic_year %></strong>
+      <strong><%= Cohort.active_registration_cohort.description %></strong>
     <% end %>
 
-    <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'full_induction_programme' %>
-      <%= render 'training_confirmation_fip' %>
-    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'core_induction_programme' %>
-      <%= render 'training_confirmation_cip' %>
-    <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'design_our_own' %>
-      <%= render 'training_confirmation_diy' %>
-    <% end %>
-    <%= govuk_link_to "Return to manage your training", schools_dashboard_path, class: "govuk-link govuk-link--no-visited-state" %>
+    <%= render training_confirmation_template(@setup_school_cohort_form.attributes[:how_will_you_run_training_choice]) %>
 
+    <%= govuk_link_to "Return to manage your training",
+                      schools_dashboard_path,
+                      class: "govuk-link govuk-link--no-visited-state" %>
   </div>
 </div>

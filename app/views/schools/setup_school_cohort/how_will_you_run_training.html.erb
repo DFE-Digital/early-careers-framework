@@ -16,14 +16,14 @@
 
       <%= f.govuk_collection_radio_buttons(
         :how_will_you_run_training_choice,
-        @setup_school_cohort_form.how_will_you_run_training_choices,
+        @setup_school_cohort_form.how_will_you_run_training_choices(cip_only: @school.cip_only?),
         :id, :name,
         legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
         <p class="govuk-body">This choice will only apply for ECTs and mentors starting in the <%= registration_cohort %> academic year.</p>
         <p class="govuk-body">
           Read our guidance to
-          <%= govuk_link_to 'check your options (opens in new tab)', 
+          <%= govuk_link_to 'check your options (opens in new tab)',
           "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training",
           target: :_blank,
           rel: "noopener noreferrer" %>.

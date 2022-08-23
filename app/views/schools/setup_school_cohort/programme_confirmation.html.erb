@@ -22,6 +22,8 @@
                 <li>choose your training materials</li>
                 <li>add your ECTs and mentors</li>
             </ul>
+        <% elsif @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'school_funded_fip' %>
+            <p class="govuk-body">You‘ve chosen to use a training provider funded by your school.</p>
         <% end %>
 
         <% if @setup_school_cohort_form.attributes[:how_will_you_run_training_choice] == 'design_our_own' %>
