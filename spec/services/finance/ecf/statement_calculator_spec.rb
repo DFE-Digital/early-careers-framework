@@ -565,21 +565,10 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
 
   describe "#uplift_count" do
     context "when uplift is not applicable" do
-      let(:profile) { create(:ect_participant_profile) }
-
       before do
-        declaration = create(
-          :ect_participant_declaration, :without_uplift,
-          cpd_lead_provider:,
-          state: "eligible",
-          participant_profile: profile
-        )
-
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: declaration,
-          state: declaration.state,
-        )
+        travel_to statement.deadline_date do
+          create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
+        end
       end
 
       it "does not count it" do
@@ -588,22 +577,10 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
     end
 
     context "when uplift is applicable" do
-      let(:profile) { create(:ect_participant_profile) }
-      let(:declaration) do
-        create(
-          :ect_participant_declaration, :pupil_premium_uplift,
-          cpd_lead_provider:,
-          state: "eligible",
-          participant_profile: profile
-        )
-      end
-
       before do
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: declaration,
-          state: declaration.state,
-        )
+        travel_to statement.deadline_date do
+          create(:ect_participant_declaration, :eligible, uplifts: [:pupil_premium_uplift], cpd_lead_provider:)
+        end
       end
 
       it "does count it" do
