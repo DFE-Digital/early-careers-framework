@@ -442,26 +442,21 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
       end
 
       context "when existing declaration" do
+        let(:traits) { [:eligible_for_funding] }
         context "has state awaiting_clawback" do
           let!(:existing_participant_declaration) do
-            create(
-              :participant_declaration,
-              :awaiting_clawback,
-              user: ect_profile.user,
-              cpd_lead_provider:,
-              participant_profile: ect_profile,
-              course_identifier: valid_params[:course_identifier],
-            )
+            travel_to create(:ecf_statement, cpd_lead_provider:).deadline_date do
+              create(:ect_participant_declaration, :eligible, :awaiting_clawback, cpd_lead_provider:, participant_profile:)
+            end
           end
 
           it "returns 200" do
-            expect(ect_profile.participant_declarations.awaiting_clawback.count).to eq(1)
+            expect(participant_profile.participant_declarations.awaiting_clawback.count).to eq(1)
 
-            params = build_params(valid_params)
             expect {
-              post "/api/v1/participant-declarations", params: params
+              post "/api/v1/participant-declarations", params: params.to_json
               expect(response.status).to eq 200
-            }.to change { ect_profile.participant_declarations.submitted.count }.from(0).to(1)
+            }.to change { participant_profile.reload.participant_declarations.eligible.count }.from(0).to(1)
 
             expect(existing_participant_declaration.reload).to be_awaiting_clawback
           end
@@ -469,24 +464,18 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         context "has state clawed_back" do
           let!(:existing_participant_declaration) do
-            create(
-              :participant_declaration,
-              :clawed_back,
-              user: ect_profile.user,
-              cpd_lead_provider:,
-              participant_profile: ect_profile,
-              course_identifier: valid_params[:course_identifier],
-            )
+            travel_to create(:ecf_statement, cpd_lead_provider:).deadline_date do
+              create(:ect_participant_declaration, :eligible, :clawed_back, cpd_lead_provider:, participant_profile:)
+            end
           end
 
           it "returns 200" do
-            expect(ect_profile.participant_declarations.clawed_back.count).to eq(1)
+            expect(participant_profile.participant_declarations.clawed_back.count).to eq(1)
 
-            params = build_params(valid_params)
             expect {
-              post "/api/v1/participant-declarations", params: params
+              post "/api/v1/participant-declarations", params: params.to_json
               expect(response.status).to eq 200
-            }.to change { ect_profile.participant_declarations.submitted.count }.from(0).to(1)
+            }.to change { participant_profile.participant_declarations.eligible.count }.from(0).to(1)
 
             expect(existing_participant_declaration.reload).to be_clawed_back
           end
@@ -494,24 +483,18 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         context "has state non clawback state" do
           let!(:existing_participant_declaration) do
-            create(
-              :participant_declaration,
-              :paid,
-              user: ect_profile.user,
-              cpd_lead_provider:,
-              participant_profile: ect_profile,
-              course_identifier: valid_params[:course_identifier],
-            )
+            travel_to create(:ecf_statement, cpd_lead_provider:).deadline_date do
+              create(:ect_participant_declaration, :paid, cpd_lead_provider:, participant_profile:)
+            end
           end
 
-          it "returns 422" do
-            expect(ect_profile.participant_declarations.paid.count).to eq(1)
+          it "returns return the exisitng declaration" do
+            expect(participant_profile.participant_declarations.paid.count).to eq(1)
 
-            params = build_params(valid_params)
-            post "/api/v1/participant-declarations", params: params
-            expect(response.status).to eq 422
-
-            expect(ect_profile.participant_declarations.paid.count).to eq(1)
+            expect {
+              post "/api/v1/participant-declarations", params: params.to_json
+              expect(response).to be_successful
+            }.not_to change { participant_profile.participant_declarations.paid.count }
           end
         end
       end

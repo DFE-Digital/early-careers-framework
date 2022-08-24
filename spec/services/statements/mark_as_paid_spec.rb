@@ -20,7 +20,7 @@ RSpec.describe Statements::MarkAsPaid, :with_default_schedules do
 
     travel_to statement.deadline_date - 1.day do
       create(:npq_participant_declaration, :eligible, cpd_lead_provider:)
-      VoidParticipantDeclaration.new(cpd_lead_provider:, id: create(:npq_participant_declaration, :eligible, cpd_lead_provider:).id).call
+      VoidParticipantDeclaration.new(create(:npq_participant_declaration, :eligible, cpd_lead_provider:)).call
       Finance::ClawbackDeclaration.new(awaiting_clawback_declaration.reload).call
     end
     Statements::MarkAsPayable.new(statement).call
