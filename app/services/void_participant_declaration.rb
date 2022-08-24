@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class VoidParticipantDeclaration
-  attr_reader :participant_declaration
-
   def initialize(participant_declaration:)
     @participant_declaration = participant_declaration
   end
@@ -39,6 +37,8 @@ class VoidParticipantDeclaration
   end
 
 private
+
+  attr_reader :participant_declaration
 
   def line_item
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])
