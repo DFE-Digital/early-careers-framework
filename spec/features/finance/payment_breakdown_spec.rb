@@ -26,11 +26,27 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   let!(:january_statement)  { create(:ecf_statement, name: "January 2022", deadline_date: Date.new(2022, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
   let!(:november_statement) { create(:ecf_statement, name: "November 2021", deadline_date: Date.new(2021, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
+  let(:jan_starts_breakdowns) do
+    Finance::ECF::CalculationOrchestrator.new(
+      statement: january_statement,
+      contract: lead_provider.call_off_contract,
+      aggregator: participant_aggregator_jan,
+      calculator: PaymentCalculator::ECF::PaymentCalculation,
+    ).call(event_type: :started)
+  end
+
+  let(:jan_retained_breakdowns) do
+    Finance::ECF::CalculationOrchestrator.new(
+      statement: january_statement,
+      contract: lead_provider.call_off_contract,
+      aggregator: participant_aggregator_jan,
+      calculator: PaymentCalculator::ECF::PaymentCalculation,
+    ).call(event_type: :retained_1)
+  end
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
     and_multiple_declarations_are_submitted
     and_voided_payable_declarations_are_submitted
-    and_breakdowns_are_calculated
     when_i_click_on_payment_breakdown_header
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named("Payment breakdown select programme")
@@ -154,103 +170,6 @@ private
       end
     end
   end
-
-  def create_retained_declarations_nov(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.second.start_date + 1.day
-    travel_to(timestamp) do
-      RecordDeclaration.new(
-        participant_id: participant.user.id,
-        course_identifier: "ecf-induction",
-        declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-        cpd_lead_provider: lead_provider.cpd_lead_provider,
-        declaration_type: "retained-1",
-        evidence_held: "other",
-      ).call
-        .tap(&:make_eligible!)
-        .tap(&:make_payable!)
-    end
-  end
-
-  def create_retained_declarations_jan_mentor(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.second.start_date + 1.day
-    travel_to(timestamp) do
-      RecordDeclaration.new(
-        participant_id: participant.user.id,
-        course_identifier: "ecf-mentor",
-        declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-        cpd_lead_provider: lead_provider.cpd_lead_provider,
-        declaration_type: "retained-1",
-        evidence_held: "other",
-      ).call
-        .tap(&:make_eligible!)
-        .tap(&:make_payable!)
-    end
-  end
-
-  def create_retained_declarations_jan_ect(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.second.start_date + 1.day
-    travel_to(timestamp) do
-      RecordDeclaration.new(
-        participant_id: participant.user.id,
-        course_identifier: "ecf-induction",
-        declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-        cpd_lead_provider: lead_provider.cpd_lead_provider,
-        declaration_type: "retained-1",
-        evidence_held: "other",
-      ).call
-        .tap(&:make_eligible!)
-    end
-  end
-
-  def nov_retained_breakdowns_are_calculated
-    @nov_retained_1 = Finance::ECF::CalculationOrchestrator.new(
-      statement: november_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_nov,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :retained_1)
-  end
-
-  def nov_starts_breakdowns_are_calculated
-    @nov_starts = Finance::ECF::CalculationOrchestrator.new(
-      statement: november_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_nov,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :started)
-  end
-
-  def jan_starts_breakdowns_are_calculated
-    @jan_starts = Finance::ECF::CalculationOrchestrator.new(
-      statement: january_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_jan,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :started)
-  end
-
-  def jan_retained_breakdowns_are_calculated
-    @jan_retained_1 = Finance::ECF::CalculationOrchestrator.new(
-      statement: january_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_jan,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :retained_1)
-  end
-
-  def and_breakdowns_are_calculated
-    nov_starts_breakdowns_are_calculated
-    nov_retained_breakdowns_are_calculated
-    jan_starts_breakdowns_are_calculated
-    jan_retained_breakdowns_are_calculated
-  end
-
   def then_i_should_see_correct_breakdown_summary
     expect(page).to have_css(".govuk-caption-l", text: lead_provider.name)
     select("January 2022", from: "statement-field")
@@ -279,36 +198,36 @@ private
 
   def then_i_should_see_the_correct_output_fees
     expect(page).to have_content("Output payments")
-    expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:per_participant]))
-    expect(page).to have_content(@jan_starts[:output_payments][0][:participants])
-    expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:subtotal]))
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:per_participant]))
+    expect(page).to have_content(jan_starts_breakdowns[:output_payments][0][:participants])
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:subtotal]))
   end
 
   def then_i_should_see_the_correct_uplift_fee
     expect(page).to have_content("Uplift fee")
-    expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:per_participant]))
-    expect(page).to have_content(@jan_starts[:other_fees][:uplift][:participants])
-    expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:subtotal]))
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:other_fees][:uplift][:per_participant]))
+    expect(page).to have_content(jan_starts_breakdowns[:other_fees][:uplift][:participants])
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:other_fees][:uplift][:subtotal]))
   end
 
   def number_of_declarations
-    @jan_starts[:output_payments].map { |params| params[:participants] }.inject(&:+) + @jan_retained_1[:output_payments].map { |params| params[:participants] }.inject(&:+)
+    jan_starts_breakdowns[:output_payments].map { |params| params[:participants] }.inject(&:+) + jan_retained_breakdowns[:output_payments].map { |params| params[:participants] }.inject(&:+)
   end
 
   def service_fee_total
-    @jan_starts[:service_fees].map { |params| params[:monthly] }.inject(&:+)
+    jan_starts_breakdowns[:service_fees].map { |params| params[:monthly] }.inject(&:+)
   end
 
   def output_payment_total
-    @jan_starts[:output_payments].map { |params| params[:subtotal] }.inject(&:+) + @jan_retained_1[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
+    jan_starts_breakdowns[:output_payments].map { |params| params[:subtotal] }.inject(&:+) + jan_retained_breakdowns[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
   end
 
   def total_vat_breakdown
-    total_vat_combined(@jan_starts, @jan_retained_1, lead_provider)
+    total_vat_combined(jan_starts_breakdowns, jan_retained_breakdowns, lead_provider)
   end
 
   def total_payment_with_vat_breakdown
-    total_payment_with_vat_combined(@jan_starts, @jan_retained_1, lead_provider)
+    total_payment_with_vat_combined(jan_starts_breakdowns, jan_retained_breakdowns, lead_provider)
   end
 
   def total_payment_with_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)
