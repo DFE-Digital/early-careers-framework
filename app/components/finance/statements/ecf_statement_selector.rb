@@ -31,6 +31,10 @@ module Finance
 
     private
 
+      def cohorts
+        Cohort.where(start_year: 2021..)
+      end
+
       def i18n_scope
         %i[components finance statements ecf_statement_selector]
       end
