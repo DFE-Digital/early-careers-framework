@@ -24,6 +24,12 @@ module Finance
             )
           end
       end
+
+      private
+
+      def cohorts
+        Cohort.where(start_year: 2021..)
+      end
     end
   end
 end
