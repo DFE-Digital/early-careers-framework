@@ -375,6 +375,81 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           expect(fake_logger).to have_received(:info).with(instance_of(Array)).ordered
         end
       end
+
+      context "when existing declaration" do
+        context "has state awaiting_clawback" do
+          let!(:existing_participant_declaration) do
+            create(
+              :participant_declaration,
+              :awaiting_clawback,
+              user: ect_profile.user,
+              cpd_lead_provider:,
+              participant_profile: ect_profile,
+              course_identifier: valid_params[:course_identifier],
+            )
+          end
+
+          it "returns 200" do
+            expect(ect_profile.participant_declarations.awaiting_clawback.count).to eq(1)
+
+            params = build_params(valid_params)
+            expect {
+              post "/api/v1/participant-declarations", params: params
+              expect(response.status).to eq 200
+            }.to change { ect_profile.participant_declarations.submitted.count }.from(0).to(1)
+
+            expect(existing_participant_declaration.reload).to be_awaiting_clawback
+          end
+        end
+
+        context "has state clawed_back" do
+          let!(:existing_participant_declaration) do
+            create(
+              :participant_declaration,
+              :clawed_back,
+              user: ect_profile.user,
+              cpd_lead_provider:,
+              participant_profile: ect_profile,
+              course_identifier: valid_params[:course_identifier],
+            )
+          end
+
+          it "returns 200" do
+            expect(ect_profile.participant_declarations.clawed_back.count).to eq(1)
+
+            params = build_params(valid_params)
+            expect {
+              post "/api/v1/participant-declarations", params: params
+              expect(response.status).to eq 200
+            }.to change { ect_profile.participant_declarations.submitted.count }.from(0).to(1)
+
+            expect(existing_participant_declaration.reload).to be_clawed_back
+          end
+        end
+
+        context "has state non clawback state" do
+          let!(:existing_participant_declaration) do
+            create(
+              :participant_declaration,
+              :paid,
+              user: ect_profile.user,
+              cpd_lead_provider:,
+              participant_profile: ect_profile,
+              course_identifier: valid_params[:course_identifier],
+            )
+          end
+
+          it "returns 422" do
+            expect(ect_profile.participant_declarations.paid.count).to eq(1)
+
+            params = build_params(valid_params)
+            post "/api/v1/participant-declarations", params: params
+            expect(response.status).to eq 422
+
+            expect(ect_profile.participant_declarations.paid.count).to eq(1)
+          end
+        end
+      end
     end
 
     context "when unauthorized" do
