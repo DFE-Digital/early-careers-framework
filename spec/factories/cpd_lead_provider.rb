@@ -12,7 +12,7 @@ FactoryBot.define do
 
     trait :with_npq_lead_provider do
       after(:create) do |cpd_lead_provider|
-        create(:npq_lead_provider, name: cpd_lead_provider.name, cpd_lead_provider:)
+        create(:npq_lead_provider, cpd_lead_provider:)
       end
     end
   end
