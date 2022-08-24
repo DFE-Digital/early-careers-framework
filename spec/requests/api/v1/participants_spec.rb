@@ -19,7 +19,10 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
     before :each do
       travel_to 3.days.ago do
-        create_list :ect, 2, :eligible_for_funding, mentor_profile_id: mentor_profile.id, school_cohort:
+        create :ect, :eligible_for_funding, mentor_profile_id: mentor_profile.id, school_cohort:
+      end
+      travel_to 3.days.ago + 1.minute do
+        create :ect, :eligible_for_funding, mentor_profile_id: mentor_profile.id, school_cohort:
       end
 
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first

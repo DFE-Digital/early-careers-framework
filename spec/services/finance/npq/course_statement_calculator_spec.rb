@@ -12,10 +12,6 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
 
   subject { described_class.new(statement:, contract:) }
 
-  before do
-    pp Finance::Schedule.all
-  end
-
   describe "#billable_declarations_count_for_declaration_type" do
     before do
       travel_to statement.deadline_date do
