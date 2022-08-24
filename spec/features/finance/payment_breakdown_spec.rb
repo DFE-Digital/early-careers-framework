@@ -170,6 +170,7 @@ private
       end
     end
   end
+
   def then_i_should_see_correct_breakdown_summary
     expect(page).to have_css(".govuk-caption-l", text: lead_provider.name)
     select("January 2022", from: "statement-field")

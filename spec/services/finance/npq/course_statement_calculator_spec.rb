@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules do
+RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
   let(:statement)           { create(:npq_statement) }
   let(:cpd_lead_provider)   { statement.cpd_lead_provider }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
@@ -12,10 +12,14 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
 
   subject { described_class.new(statement:, contract:) }
 
+  before do
+    pp Finance::Schedule.all
+  end
+
   describe "#billable_declarations_count_for_declaration_type" do
     before do
       travel_to statement.deadline_date do
-        create_list(:npq_participant_declaration, 6, :eligible, npq_course:, declaration_type: %w[started retained-1 retained-2 completed].sample, cpd_lead_provider:,)
+        create_list(:npq_participant_declaration, 6, :eligible, npq_course:, declaration_type: %w[started retained-1 retained-2 completed].sample, cpd_lead_provider:)
       end
     end
 
@@ -138,7 +142,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules 
     context "when there are voided declarations" do
       before do
         travel_to statement.deadline_date do
-          create(:npq_participant_declaration, :eligible, :voided, npq_course: npq_course, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, :voided, npq_course:, cpd_lead_provider:)
         end
       end
 

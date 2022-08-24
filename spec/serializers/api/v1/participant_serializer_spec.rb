@@ -12,7 +12,7 @@ module Api
         let(:ect)            { ect_profile.user }
         let(:ect_cohort)     { ect.early_career_teacher_profile.cohort }
         let(:mentor_cohort)  { mentor.mentor_profile.cohort }
-        let(:nowish)         { Time.zone.now  }
+        let(:nowish)         { Time.zone.now }
 
         before do
           travel_to(nowish) do
