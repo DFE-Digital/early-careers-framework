@@ -17,10 +17,14 @@ class Importers::SeedStatements
       cpd_lead_provider = lead_provider.cpd_lead_provider
 
       ecf_statements.each do |statement_data|
+        cohort = Cohort.find_by(start_year: statement_data.cohort)
+
+        next unless cohort
+
         statement = Finance::Statement::ECF.find_by(
           name: statement_data.name,
           cpd_lead_provider:,
-          cohort: statement_data.cohort,
+          cohort:,
         )
 
         next if statement
@@ -28,7 +32,7 @@ class Importers::SeedStatements
         Finance::Statement::ECF.create!(
           name: statement_data.name,
           cpd_lead_provider:,
-          cohort: statement_data.cohort,
+          cohort:,
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
           output_fee: statement_data.output_fee,
@@ -42,10 +46,14 @@ class Importers::SeedStatements
       cpd_lead_provider = npq_lead_provider.cpd_lead_provider
 
       npq_statements.each do |statement_data|
+        cohort = Cohort.find_by(start_year: statement_data.cohort)
+
+        next unless cohort
+
         statement = Finance::Statement::NPQ.find_by(
           name: statement_data.name,
           cpd_lead_provider:,
-          cohort: statement_data.cohort,
+          cohort:,
         )
 
         next if statement
@@ -55,7 +63,7 @@ class Importers::SeedStatements
           cpd_lead_provider:,
           deadline_date: statement_data.deadline_date,
           payment_date: statement_data.payment_date,
-          cohort: statement_data.cohort,
+          cohort:,
           output_fee: statement_data.output_fee,
           type: class_for(statement_data, namespace: Finance::Statement::NPQ),
           contract_version: statement_data.contract_version,
@@ -80,8 +88,6 @@ private
         Date.parse(value)
       when "output_fee"
         ActiveModel::Type::Boolean.new.cast(value)
-      when "cohort"
-        Cohort.find_by!(start_year: value)
       else
         value
       end
