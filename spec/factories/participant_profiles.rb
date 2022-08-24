@@ -63,25 +63,6 @@ FactoryBot.define do
       status { :withdrawn }
     end
 
-    trait :withdrawn do
-      transient do
-        reason { "other" }
-      end
-
-      after(:create) do |participant_profile, evaluator|
-        if participant_profile.is_a?(ParticipantProfile::NPQ)
-          Participants::Withdraw::NPQ.new(
-            params: {
-              participant_id: participant_profile.teacher_profile.user_id,
-              course_identifier: participant_profile.npq_course.identifier,
-              cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
-              reason: evaluator.reason,
-            },
-          ).call
-        end
-      end
-    end
-
     trait :email_sent do
       after(:create) do |profile, _evaluator|
         create :email, associated_with: profile, status: "delivered", tags: [:request_for_details]
