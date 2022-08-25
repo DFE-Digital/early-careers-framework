@@ -10,41 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_19_102312) do
+ActiveRecord::Schema.define(version: 2022_05_27_124140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
-
-  create_table "ecf_appropriate_bodies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "appropriate_body_id"
-    t.string "name"
-    t.string "body_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "ecf_inductions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "induction_record_id"
-    t.string "external_id"
-    t.uuid "participant_profile_id"
-    t.uuid "induction_programme_id"
-    t.string "induction_programme_type"
-    t.string "school_name"
-    t.string "school_urn"
-    t.string "schedule_id"
-    t.uuid "mentor_id"
-    t.uuid "appropriate_body_id"
-    t.string "appropriate_body_name"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.string "induction_status"
-    t.string "training_status"
-    t.boolean "school_transfer"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["induction_record_id"], name: "index_ecf_inductions_on_induction_record_id", unique: true
-  end
 
   create_table "ecf_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "user_id"
@@ -106,8 +76,6 @@ ActiveRecord::Schema.define(version: 2022_08_19_102312) do
     t.string "default_induction_programme_training_choice"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.uuid "appropriate_body_id"
-    t.boolean "appropriate_body_unknown"
   end
 
   create_table "ecf_schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
