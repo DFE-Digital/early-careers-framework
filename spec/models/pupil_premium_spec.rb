@@ -23,7 +23,7 @@ RSpec.describe PupilPremium, type: :model do
       pupil_premium = PupilPremium.new(
         eligible_pupils: 41,
         total_pupils: 100,
-        pupil_premium_incentive: true
+        pupil_premium_incentive: true,
       )
 
       expect(pupil_premium).to be_uplift
@@ -44,7 +44,7 @@ RSpec.describe PupilPremium, type: :model do
       pupil_premium = PupilPremium.new(
         eligible_pupils: 41,
         total_pupils: 100,
-        sparsity_incentive: true
+        sparsity_incentive: true,
       )
 
       expect(pupil_premium).to be_sparse

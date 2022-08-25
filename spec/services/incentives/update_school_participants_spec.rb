@@ -40,9 +40,9 @@ RSpec.describe Incentives::UpdateSchoolParticipants do
     end
 
     it "updates the incentives for all active participants in any cohort at the school" do
-      expect(ect_profile).to be_pupil_premium_uplift 
+      expect(ect_profile).to be_pupil_premium_uplift
       expect(ect_profile).not_to be_sparsity_uplift
-      expect(mentor_profile).not_to be_pupil_premium_uplift 
+      expect(mentor_profile).not_to be_pupil_premium_uplift
       expect(mentor_profile).to be_sparsity_uplift
     end
 

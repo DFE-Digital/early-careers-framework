@@ -12,14 +12,14 @@ RSpec.describe Incentives::UpdateParticipant do
     it "updates the pupil premium incentives for participant based upon the given cohort" do
       create(:pupil_premium, :uplift, school: school_cohort.school)
       service.call(school_cohort:, participant_profile: ect_profile)
-      expect(ect_profile).to be_pupil_premium_uplift 
+      expect(ect_profile).to be_pupil_premium_uplift
       expect(ect_profile).not_to be_sparsity_uplift
     end
 
     it "updates the sparsity incentives for participant based upon the given cohort" do
       create(:pupil_premium, :sparse, school: school_cohort.school)
       service.call(school_cohort:, participant_profile: ect_profile)
-      expect(ect_profile).not_to be_pupil_premium_uplift 
+      expect(ect_profile).not_to be_pupil_premium_uplift
       expect(ect_profile).to be_sparsity_uplift
     end
   end

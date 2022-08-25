@@ -4,7 +4,6 @@ require "csv"
 
 module Importers
   class PupilPremium < ::BaseService
-
     def call
       check_headers!
 
