@@ -5,7 +5,7 @@ lead_provider = profile.lead_provider
 schools = [
   FactoryBot.create(:school, :pupil_premium_uplift, name: "Big School", urn: 900_001),
   FactoryBot.create(:school, :sparsity_uplift, name: "Middle School", urn: 900_002),
-  FactoryBot.create(:school, :pupil_premium_uplift, :sparsity_uplift, name: "Small School", urn: 900_003),
+  FactoryBot.create(:school, :pupil_premium_and_sparsity_uplift, name: "Small School", urn: 900_003),
 ]
 delivery_partner = FactoryBot.create(:delivery_partner, name: "Ace Delivery Partner")
 

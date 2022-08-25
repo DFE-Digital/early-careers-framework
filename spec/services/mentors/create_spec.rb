@@ -6,7 +6,7 @@ RSpec.describe Mentors::Create, :with_default_schedules do
   let(:school) { school_cohort.school }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
-  let(:uplift_school) { create :school, :sparsity_uplift, :pupil_premium_uplift }
+  let(:uplift_school) { create :school, :pupil_premium_and_sparsity_uplift }
   let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
 
   it "creates a Mentor record" do

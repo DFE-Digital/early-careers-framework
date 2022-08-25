@@ -5,7 +5,7 @@ RSpec.describe EarlyCareerTeachers::Create do
   let(:school_cohort) { create :school_cohort }
   let(:pupil_premium_school) { create :school, :pupil_premium_uplift }
   let(:sparsity_school) { create :school, :sparsity_uplift }
-  let(:uplift_school) { create :school, :sparsity_uplift, :pupil_premium_uplift }
+  let(:uplift_school) { create :school, :pupil_premium_and_sparsity_uplift }
   let!(:mentor_profile) { create :mentor_participant_profile }
   let!(:npq_participant) { create(:npq_participant_profile).teacher_profile.user }
 
