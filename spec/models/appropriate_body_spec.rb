@@ -14,4 +14,18 @@ RSpec.describe AppropriateBody, type: :model do
     not_valid_ab = build(:appropriate_body_local_authority, name: "not unique one")
     expect(not_valid_ab).to_not be_valid
   end
+
+  it "updates analytics when a record is created", :with_default_schedules do
+    expect {
+      create(:appropriate_body_local_authority)
+    }.to have_enqueued_job(Analytics::UpsertECFAppropriateBodyJob)
+  end
+
+  it "updates analytics when any attributes changes", :with_default_schedules do
+    appropriate_body = create(:appropriate_body_local_authority)
+
+    expect {
+      appropriate_body.update!(name: "Crispy Code")
+    }.to have_enqueued_job(Analytics::UpsertECFAppropriateBodyJob).with(appropriate_body:)
+  end
 end
