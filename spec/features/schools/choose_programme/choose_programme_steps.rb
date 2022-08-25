@@ -5,10 +5,11 @@ module ChooseProgrammeSteps
 
   # Given steps
 
-  def given_a_school_with_no_chosen_programme_for_next_academic_year
+  def given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: false)
+    name = "NoECTsSchool"
     @previous_cohort = create(:cohort, start_year: 2021)
     @cohort = create(:cohort, start_year: 2022)
-    @school = create(:school, name: "NoECTsSchool")
+    @school = cip_only ? create(:school, :cip_only, name:) : create(:school, name:)
     create(:school_cohort, :cip, school: @school, cohort: @previous_cohort)
   end
 
@@ -277,6 +278,10 @@ module ChooseProgrammeSteps
     click_on("Return to manage your training")
   end
 
+  def when_i_click_the_confirm_button
+    click_on("Confirm")
+  end
+
   def when_i_choose_ects_expected
     choose("Yes")
   end
@@ -285,16 +290,16 @@ module ChooseProgrammeSteps
     choose("Use a training provider, funded by the DfE")
   end
 
-  def when_i_click_the_confirm_button
-    click_on("Confirm")
-  end
-
   def when_i_choose_deliver_your_own_programme
     choose("Deliver your own programme using DfE-accredited materials")
   end
 
   def when_i_choose_design_and_deliver_your_own_material
     choose("Design and deliver you own programme based on the early career framework (ECF)")
+  end
+
+  def when_i_choose_use_a_training_provider_funded_by_your_school
+    choose("Use a training provider funded by your school")
   end
 
   def when_i_choose_to_leave_lead_provider
