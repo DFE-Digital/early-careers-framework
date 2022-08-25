@@ -15,4 +15,8 @@ Rails.application.config.filter_parameters += %i[
   ssn
   national_insurance_number
   nino
+  full_name
+  date_of_birth
+  trn
+  teacher_reference_number
 ]
