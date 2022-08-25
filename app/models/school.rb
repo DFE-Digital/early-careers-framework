@@ -143,11 +143,11 @@ class School < ApplicationRecord
   end
 
   def pupil_premium_uplift?(start_year)
-    pupil_premiums.find_by(start_year:)&.uplift? || false
+    pupil_premiums.only_with_uplift(start_year).any?
   end
 
-  def sparsity_uplift?(year = nil)
-    local_authority_district&.sparse?(year) || false
+  def sparsity_uplift?(start_year)
+    pupil_premiums.only_with_sparsity(start_year).any?
   end
 
   def characteristics_for(year)
@@ -162,9 +162,9 @@ class School < ApplicationRecord
       .merge(PupilPremium.only_with_uplift(start_year))
   }
 
-  scope :with_sparsity_uplift, lambda { |year|
-    joins(:school_local_authority_districts, :local_authority_districts)
-      .merge(LocalAuthorityDistrict.only_with_uplift(year))
+  scope :with_sparsity_uplift, lambda { |start_year|
+    joins(:pupil_premiums)
+      .merge(PupilPremium.only_with_sparsity(start_year))
   }
 
   def contact_email

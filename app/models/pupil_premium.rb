@@ -1,33 +1,18 @@
 # frozen_string_literal: true
 
 class PupilPremium < ApplicationRecord
-  THRESHOLD_PERCENTAGE = 40
-
   belongs_to :school
 
   def uplift?
-    percentage_eligible >= THRESHOLD_PERCENTAGE
+    pupil_premium_incentive?
   end
 
-  scope :with_pupils, -> { where(arel_table[:total_pupils].gt(0)) }
+  def sparse?
+    sparsity_incentive?
+  end
+
   scope :with_start_year, ->(start_year) { where(start_year:) }
-  scope :only_with_uplift, ->(start_year) { with_pupils.merge(with_start_year(start_year)).merge(exceeding_percentage) }
+  scope :only_with_uplift, ->(start_year) { with_start_year(start_year).where(pupil_premium_incentive: true) }
+  scope :only_with_sparsity, ->(start_year) { with_start_year(start_year).where(sparsity_incentive: true) }
 
-  def self.exceeding_percentage(threshold: THRESHOLD_PERCENTAGE)
-    eligible_pupils = Arel::Nodes::NamedFunction.new("CAST", [arel_table[:eligible_pupils].as("FLOAT")])
-    total_pupils = arel_table[:total_pupils]
-
-    where(
-      Arel::Nodes::Multiplication.new(
-        Arel::Nodes::Division.new(eligible_pupils, total_pupils),
-        100,
-      ).gteq(threshold),
-    )
-  end
-
-private
-
-  def percentage_eligible
-    (eligible_pupils.to_f / total_pupils) * 100
-  end
 end
