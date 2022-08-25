@@ -17,4 +17,6 @@ Rails.application.config.filter_parameters += %i[
   nino
   full_name
   date_of_birth
+  trn
+  teacher_reference_number
 ]
