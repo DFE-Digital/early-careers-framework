@@ -63,7 +63,12 @@ class RecordDeclaration
   end
 
   def participant_profile
-    @participant_profile ||= ParticipantProfileResolver.call(participant_identity, course_identifier)
+    @participant_profile ||= ParticipantProfileResolver
+                               .call(
+                                 participant_identity:,
+                                 course_identifier:,
+                                 cpd_lead_provider:,
+                               )
   end
 
   def milestone

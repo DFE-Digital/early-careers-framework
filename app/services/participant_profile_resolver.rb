@@ -2,7 +2,7 @@
 
 class ParticipantProfileResolver
   class << self
-    def call(participant_identity, course_identifier)
+    def call(participant_identity:, course_identifier:, cpd_lead_provider:)
       return unless participant_identity
 
       if ParticipantProfile::ECT::COURSE_IDENTIFIERS.include?(course_identifier)
@@ -20,7 +20,7 @@ class ParticipantProfileResolver
       elsif NPQCourse.identifiers.include?(course_identifier)
         participant_identity
           .participant_profiles
-          .joins(participant_identity: { npq_applications: :npq_course })
+          .joins(participant_identity: { npq_applications: [:npq_course, { npq_lead_provider: :cpd_lead_provider }] })
           .where(npq_courses: { identifier: course_identifier })
           .where(npq_applications: { npq_lead_providers: { cpd_lead_provider: } })
           .first
