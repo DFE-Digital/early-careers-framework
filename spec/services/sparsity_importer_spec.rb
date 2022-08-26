@@ -3,10 +3,10 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe PupilPremiumImporter do
+RSpec.describe SparsityImporter do
   let(:example_csv_file) { "spec/fixtures/files/example_sparse_lads.csv" }
   let(:start_year) { 2021 }
-  let(:sparsity_importer) { SparsityImporter.new(Logger.new($stdout), start_year, example_csv_file) }
+  let(:sparsity_importer) { described_class.new(Logger.new($stdout), start_year, example_csv_file) }
 
   before do
     create(:local_authority_district, code: "E07000026")

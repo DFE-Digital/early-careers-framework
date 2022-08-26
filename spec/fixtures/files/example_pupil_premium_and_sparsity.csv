@@ -1,0 +1,5 @@
+URN,LA (name),EstablishmentName,TypeOfEstablishment (name),EstablishmentTypeGroup (name),EstablishmentStatus (name),PhaseOfEducation (name),Postcode,Region (ONS),LAD (name),LSOA (code),NumberOfPupils,PP%,Trust Type,Trust Name,Pupil Premium Incentive,Sparsity Incentive
+100000,City of London,The Aldgate School,Voluntary aided school,Local authority maintained schools,Open,Primary,EC3A 5DE,London,City of London,E01032739,276,14.50%,NA,NA,0,0
+100006,Camden,CCfL Key Stage 4 PRU,Pupil referral unit,Local authority maintained schools,Open,Not applicable,NW3 2NY,London,Camden,E01000887,53,81.10%,NA,NA,1,0
+100007,Camden,Camden Primary Pupil Referral Unit,Pupil referral unit,Local authority maintained schools,Open,Not applicable,NW1 3EX,London,Camden,E01000945,18,77.80%,NA,NA,1,0
+124856,Suffolk,King Edward VI Church of England Voluntary Controlled Upper School,Voluntary controlled school,Local authority maintained schools,Open,Secondary,IP33 3BH,East of England,West Suffolk,E01033043,1345,21.40%,NA,NA,0,1

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_10_132404) do
+ActiveRecord::Schema.define(version: 2022_08_23_091458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -785,6 +785,8 @@ ActiveRecord::Schema.define(version: 2022_08_10_132404) do
     t.integer "eligible_pupils", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "pupil_premium_incentive", default: false, null: false
+    t.boolean "sparsity_incentive", default: false, null: false
     t.index ["school_id"], name: "index_pupil_premiums_on_school_id"
   end
 

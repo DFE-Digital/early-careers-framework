@@ -275,15 +275,15 @@ RSpec.describe School, type: :model do
       end
     end
 
-    context "it has a pupil premium record with less than 40%" do
-      let(:school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
+    context "it has a pupil premium record that isn't uplifted" do
+      let(:school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
       it "returns false" do
         expect(school.pupil_premium_uplift?(2021)).to be false
       end
     end
 
-    context "it has a pupil premium record with greater than 40%" do
+    context "it has a pupil premium record that is uplifted" do
       let(:school) { create(:school, :pupil_premium_uplift) }
 
       it "returns true" do
@@ -293,43 +293,32 @@ RSpec.describe School, type: :model do
   end
 
   describe "#sparsity_uplift?" do
-    context "it is part of a sparse district" do
+    context "it has no pupil premium eligibility record" do
+      it "returns false" do
+        expect(school.sparsity_uplift?(2021)).to be false
+      end
+    end
+
+    context "it has a pupil premium record that does not have sparsity incentive" do
+      let(:school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
+
+      it "returns false" do
+        expect(school.sparsity_uplift?(2021)).to be false
+      end
+    end
+
+    context "it has a pupil premium record that has sparsity incentive" do
       let(:school) { create(:school, :sparsity_uplift) }
 
       it "returns true" do
-        expect(school.sparsity_uplift?).to be true
-      end
-    end
-
-    context "it is part of a not sparse district" do
-      it "returns false" do
-        expect(school.sparsity_uplift?).to be false
-      end
-    end
-
-    context "it is part of a previously sparse district" do
-      let(:formerly_sparse_district) do
-        build(:local_authority_district, district_sparsities: [build(:district_sparsity, start_year: 2020, end_year: 2021)])
-      end
-      let(:school) do
-        create(:school, school_local_authority_districts: [
-          build(:school_local_authority_district, local_authority_district: formerly_sparse_district),
-        ])
-      end
-
-      it "returns false" do
-        expect(school.sparsity_uplift?).to be false
-      end
-
-      it "returns true for the year the school was sparse" do
-        expect(school.sparsity_uplift?(2020)).to be true
+        expect(school.sparsity_uplift?(2021)).to be true
       end
     end
   end
 
   describe "scope :with_pupil_premium_uplift" do
     let!(:uplifted_school) { create(:school, :pupil_premium_uplift) }
-    let!(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium, :not_eligible)]) }
+    let!(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
     it "returns uplifted schools" do
       expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)
@@ -339,14 +328,8 @@ RSpec.describe School, type: :model do
 
   describe "scope :with_sparsity_uplift" do
     let!(:sparse_school) { create(:school, :sparsity_uplift) }
-    let(:previously_sparse_district) do
-      build(:local_authority_district, district_sparsities: [build(:district_sparsity, start_year: 2020, end_year: 2021)])
-    end
-    let!(:previously_sparse_school) do
-      create(:school, school_local_authority_districts: [
-        build(:school_local_authority_district, local_authority_district: previously_sparse_district),
-      ])
-    end
+    let!(:previously_sparse_school) { create(:school) }
+    let!(:previous_sparsity_uplift) { create(:pupil_premium, :sparse, school: previously_sparse_school, start_year: 2020) }
     let!(:not_sparse_school) { create(:school) }
 
     it "includes sparse schools" do
@@ -464,7 +447,7 @@ RSpec.describe School, type: :model do
     end
 
     context "when pupil premium and sparcity uplifts apply" do
-      let(:school) { create(:school, :pupil_premium_uplift, :sparsity_uplift) }
+      let(:school) { create(:school, :pupil_premium_and_sparsity_uplift) }
 
       it "returns the correct characteristics" do
         expect(school.characteristics_for(2021)).to eq "Pupil premium above 40% and Remote school"

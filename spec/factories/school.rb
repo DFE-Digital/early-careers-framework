@@ -13,11 +13,15 @@ FactoryBot.define do
     administrative_district_code { "E123" }
 
     trait :pupil_premium_uplift do
-      pupil_premiums { [build(:pupil_premium, :eligible)] }
+      pupil_premiums { [build(:pupil_premium, :uplift)] }
     end
 
     trait :sparsity_uplift do
-      school_local_authority_districts { [build(:school_local_authority_district, :sparse)] }
+      pupil_premiums { [build(:pupil_premium, :sparse)] }
+    end
+
+    trait :pupil_premium_and_sparsity_uplift do
+      pupil_premiums { [build(:pupil_premium, :uplift, :sparse)] }
     end
 
     trait :with_local_authority do
