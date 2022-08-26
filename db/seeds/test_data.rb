@@ -915,3 +915,8 @@ create_npq_declarations = lambda {
     count: 10,
   ]
 end
+
+service = Importers::NPQContracts.new(
+  path_to_csv: Rails.root.join("db/seeds/npq_contracts/fake-2022.csv"),
+)
+service.call
