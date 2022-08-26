@@ -10,8 +10,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
   let(:milestone)           { participant_profile.schedule.milestones.find_by!(declaration_type:) }
   let(:declaration_type)    { "started" }
-
-  before { create(:npq_contract, npq_lead_provider:) }
+  let!(:contract) { create(:npq_contract, npq_lead_provider:) }
 
   subject { described_class.new(statement:) }
 
