@@ -148,4 +148,18 @@ private
   def original_participant_declaration
     @original_participant_declaration ||= participant_declaration.duplicate_declarations.order(created_at: :asc).first
   end
+
+  def validates_billable_slot_available
+    return unless participant_identity
+
+    return unless participant_declaration
+                    .where(state: %w[submitted eligible payable paid])
+                    .where(
+                      user: participant_identity.user,
+                      course_identifier:,
+                      declaration_type:,
+                    ).exists?
+
+    errors.add(:base, I18n.t(:declaration_already_exists))
+  end
 end

@@ -114,6 +114,18 @@ FactoryBot.define do
         participant_declaration.reload
       end
     end
+
+    trait :clawed_back do
+      awaiting_clawback
+
+      after(:create) do |participant_declaration|
+        statement = participant_declaration.statement_line_items.awaiting_clawback.first.statement
+        Statements::MarkAsPaid
+          .new(statement)
+          .call
+        participant_declaration.reload
+      end
+    end
     transient do
       uplift { [] }
     end

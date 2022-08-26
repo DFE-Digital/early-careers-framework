@@ -14,7 +14,7 @@ module ParticipantDeclarations
                       .statement_line_items
                       .find_by(participant_declaration:)
 
-        line_item.paid! if line_item
+        line_item.paid! if line_item && line_item.payable?
       end
     end
 
