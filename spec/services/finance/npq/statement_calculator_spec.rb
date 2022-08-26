@@ -6,7 +6,7 @@ RSpec.describe Finance::NPQ::StatementCalculator do
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
 
-  let!(:npq_course) { create(:npq_leadship_course, identifier: "npq-leading-teaching") }
+  let!(:npq_course) { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
 
   let!(:contract) { create(:npq_contract, npq_lead_provider:) }
 
