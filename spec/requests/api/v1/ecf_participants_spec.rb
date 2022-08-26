@@ -200,6 +200,26 @@ RSpec.describe "Participants API", type: :request do
           end
         end
 
+        context "when cohort parameter is supplied" do
+          it "returns participants only within that cohort" do
+            next_cohort = create(:cohort, :next)
+            next_partnership = create(:partnership, lead_provider:, cohort: next_cohort)
+            next_school_cohort = create(:school_cohort, school: next_partnership.school, cohort: next_cohort, induction_programme_choice: "full_induction_programme")
+            next_induction_programme = create(:induction_programme, school_cohort: next_school_cohort, partnership: next_partnership)
+            next_schedule = create(:schedule, name: "ECF September 2022", cohort: next_cohort)
+            next_participant_profile = create(:ect_participant_profile, school_cohort: next_school_cohort, schedule: next_schedule)
+            create(:induction_record, participant_profile: next_participant_profile, induction_programme: next_induction_programme, schedule: next_schedule)
+
+            get "/api/v1/participants/ecf", params: { filter: { cohort: Cohort.current.start_year } }
+            expect(parsed_response["data"].size).to eq(5)
+          end
+
+          it "returns no participants if cohort is not associated to any participants" do
+            get "/api/v1/participants/ecf", params: { filter: { cohort: 2018 } }
+            expect(parsed_response["data"].size).to eq(0)
+          end
+        end
+
         context "when the participant is withdrawn with this lead provider but has another active profile not associated with the provider" do
           let!(:active_profile_with_other_provider) { create(:ect_participant_profile, teacher_profile: withdrawn_ect_profile_record.teacher_profile) }
 
