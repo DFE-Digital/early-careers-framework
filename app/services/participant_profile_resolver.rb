@@ -22,6 +22,7 @@ class ParticipantProfileResolver
           .participant_profiles
           .joins(participant_identity: { npq_applications: :npq_course })
           .where(npq_courses: { identifier: course_identifier })
+          .where(npq_applications: { npq_lead_providers: { cpd_lead_provider: } })
           .first
       end
     end

@@ -115,7 +115,6 @@ module ValidTestDataGenerator
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
-        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
         started_declaration.make_payable!
         started_declaration.update!(
           created_at: profile.schedule.milestones.first.start_date + 1.day,
@@ -132,16 +131,14 @@ module ValidTestDataGenerator
 
         return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
-        RecordDeclarations::Retained::EarlyCareerTeacher.call(
-          params: {
-            participant_id: user.tap(&:reload).id,
-            course_identifier: "ecf-induction",
-            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "retained-1",
-            evidence_held: "other",
-          },
-        )
+        RecordDeclaration.new(
+          participant_id: user.tap(&:reload).id,
+          course_identifier: "ecf-induction",
+          declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+          cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+          declaration_type: "retained-1",
+          evidence_held: "other",
+        ).call
       else
         profile = ParticipantProfile::Mentor.create!(teacher_profile:, school_cohort:, status:, sparsity_uplift:, pupil_premium_uplift:, schedule:, participant_identity:) do |pp|
           ParticipantProfileState.create!(participant_profile: pp)
@@ -171,7 +168,6 @@ module ValidTestDataGenerator
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
-        started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
         started_declaration.make_payable!
         started_declaration.update!(
           created_at: profile.schedule.milestones.first.start_date + 1.day,
@@ -188,16 +184,14 @@ module ValidTestDataGenerator
 
         return if (profile.schedule.milestones.second.start_date + 1.day) > Time.zone.now
 
-        RecordDeclarations::Retained::Mentor.call(
-          params: {
-            participant_id: user.tap(&:reload).id,
-            course_identifier: "ecf-mentor",
-            declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "retained-1",
-            evidence_held: "other",
-          },
-        )
+        RecordDeclaration.new(
+          participant_id: user.tap(&:reload).id,
+          course_identifier: "ecf-mentor",
+          declaration_date: (profile.schedule.milestones.second.start_date + 1.day).rfc3339,
+          cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+          declaration_type: "retained-1",
+          evidence_held: "other",
+        ).call
 
         profile
       end
@@ -367,18 +361,15 @@ module ValidTestDataGenerator
         npq-leading-literacy
       ].include?(npq_application.npq_course.identifier)
 
-      json_participant_declaration = create_started_declarations(npq_application)
+      started_declaration = create_started_declarations(npq_application)
 
       return if [true, false].sample
 
-      deserialised_participant_declaration = JSON.parse(json_participant_declaration)
-      participant_declaration = ParticipantDeclaration::NPQ
-                                  .find(deserialised_participant_declaration.dig("data", "id"))
-                                  .tap(&:make_eligible!)
+      started_declaration.make_eligible!
 
       return if [true, false].sample
 
-      participant_declaration.make_payable!
+      started_declaration.make_payable!
     end
 
     def accept_application(npq_application)
@@ -387,15 +378,13 @@ module ValidTestDataGenerator
     end
 
     def create_started_declarations(npq_application)
-      RecordDeclarations::Started::NPQ.call(
-        params: {
-          participant_id: npq_application.user.id,
-          course_identifier: npq_application.npq_course.identifier,
-          declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-          cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-        },
-      )
+      RecordDeclaration.new(
+        participant_id: npq_application.user.id,
+        course_identifier: npq_application.npq_course.identifier,
+        declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+        declaration_type: "started",
+      ).call
     end
 
     def create_fip_school_with_cohort(urn:)
