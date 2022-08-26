@@ -450,6 +450,62 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
           end
         end
       end
+
+      context "when participant has been retained", with_feature_flags: { multiple_cohorts: "active" } do
+        let!(:cohort) { create(:cohort, :next) }
+        let!(:started_declaration) { create(:participant_declaration, user: ect_profile.user, cpd_lead_provider:, course_identifier: "ecf-induction", participant_profile: ect_profile) }
+        let(:milestone_start_date) { ect_profile.schedule.milestones.find_by(declaration_type:).start_date }
+        let(:valid_params) do
+          {
+            participant_id: ect_profile.user.id,
+            declaration_type:,
+            declaration_date: milestone_start_date.rfc3339,
+            course_identifier: "ecf-induction",
+            evidence_held: "other",
+          }
+        end
+
+        before do
+          travel_to milestone_start_date + 6.months
+        end
+
+        context "with milestone in the same year as the cohort start year" do
+          let(:declaration_type) { "retained-1" }
+          it "creates a declaration record" do
+            params = build_params(valid_params)
+            expect { post "/api/v1/participant-declarations", params: }.to change(ParticipantDeclaration, :count).by(1).and change(ParticipantDeclarationAttempt, :count).by(1)
+          end
+
+          it "sets the correct declaration type on the declaration record" do
+            params = build_params(valid_params)
+            post "/api/v1/participant-declarations", params: params
+
+            expect(response.status).to eq 200
+            declaration = ParticipantDeclaration::ECF.find(JSON.parse(response.body).dig("data", "id"))
+            expect(declaration.declaration_type).to eq(declaration_type)
+          end
+        end
+
+        context "with milestone in the year after the cohort start year" do
+          let!(:retained_1_declaration) { create(:participant_declaration, user: ect_profile.user, cpd_lead_provider:, course_identifier: "ecf-induction", participant_profile: ect_profile, declaration_type: "retained-1") }
+          let!(:retained_2_declaration) { create(:participant_declaration, user: ect_profile.user, cpd_lead_provider:, course_identifier: "ecf-induction", participant_profile: ect_profile, declaration_type: "retained-2") }
+          let(:declaration_type) { "retained-3" }
+
+          it "creates a declaration record" do
+            params = build_params(valid_params)
+            expect { post "/api/v1/participant-declarations", params: }.to change(ParticipantDeclaration, :count).by(1).and change(ParticipantDeclarationAttempt, :count).by(1)
+          end
+
+          it "sets the correct declaration type on the declaration record" do
+            params = build_params(valid_params)
+            post "/api/v1/participant-declarations", params: params
+
+            expect(response.status).to eq 200
+            declaration = ParticipantDeclaration::ECF.find(JSON.parse(response.body).dig("data", "id"))
+            expect(declaration.declaration_type).to eq(declaration_type)
+          end
+        end
+      end
     end
 
     context "when unauthorized" do
