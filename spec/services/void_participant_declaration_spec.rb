@@ -22,7 +22,7 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
     end
 
     subject do
-      described_class.new(participant_declaration:)
+      described_class.new(participant_declaration)
     end
 
     it "voids a participant declaration" do
@@ -73,14 +73,11 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
 
     context "when declaration is submitted" do
       let(:participant_declaration) do
-        create(
-          :ect_participant_declaration,
-          user:,
-          cpd_lead_provider:,
-          declaration_date:,
-          participant_profile: profile,
-          state: "submitted",
-        )
+        create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:)
+      end
+
+      before do
+        create(:ecf_statement, :output_fee, cpd_lead_provider:, deadline_date: 3.months.from_now)
       end
 
       it "can be voided" do

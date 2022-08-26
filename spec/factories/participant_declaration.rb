@@ -72,10 +72,7 @@ FactoryBot.define do
 
     trait :voided do
       after(:create) do |participant_declaration|
-        VoidParticipantDeclaration.new(
-          cpd_lead_provider: participant_declaration.cpd_lead_provider,
-          id: participant_declaration.id,
-        ).call
+        VoidParticipantDeclaration.new(participant_declaration).call
         participant_declaration.reload
       end
     end

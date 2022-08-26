@@ -16,7 +16,7 @@ class VoidParticipantDeclaration
   end
 
   def make_awaiting_clawback
-    clawback = Finance::ClawbackDeclaration.new(participant_declaration:)
+    clawback = Finance::ClawbackDeclaration.new(participant_declaration)
     clawback.call
 
     if clawback.errors.any?
