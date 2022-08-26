@@ -18,8 +18,7 @@ module Schools
     end
 
     def check_answers
-      @induction_record.leaving_induction_status!
-      @induction_record.update!(end_date: @transfer_out_form.end_date, school_transfer: true)
+      @induction_record.leaving!(@transfer_out_form.end_date, true)
       ParticipantTransferMailer.participant_transfer_out_notification(induction_record: @induction_record).deliver_later
 
       store_form_redirect_to_next_step(:complete)

@@ -60,7 +60,7 @@ class InductionRecord < ApplicationRecord
   scope :not_school_transfer, -> { where(school_transfer: false) }
 
   scope :active, -> { active_induction_status.merge(end_date_null.or(end_date_in_future)).and(start_date_in_past.or(not_school_transfer)) }
-  scope :current, -> { active.or(claimed_by_another_school) }
+  scope :current, -> { active.or(transferring_out).or(claimed_by_another_school) }
 
   scope :transferring_in, -> { active_induction_status.merge(start_date_in_future.and(school_transfer)) }
   scope :transferring_out, -> { leaving_induction_status.merge(end_date_in_future.and(school_transfer)) }
@@ -100,8 +100,9 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :withdrawn, end_date: date_of_change)
   end
 
-  def leaving!(date_of_change = Time.zone.now)
-    update!(induction_status: :leaving, end_date: date_of_change)
+  def leaving!(date_of_change = Time.zone.now, transferring_out = false)
+    # set transferring_out to true if this action originates from the school the participant is leaving
+    update!(induction_status: :leaving, end_date: date_of_change, school_transfer: transferring_out)
   end
 
   def transferring_in?
