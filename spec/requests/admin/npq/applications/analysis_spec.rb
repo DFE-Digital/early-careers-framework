@@ -13,9 +13,9 @@ RSpec.describe "Admin::NPQ::Applications::Analysis", :with_default_schedules, ty
   let!(:rejected_application_with_payable) { create(:npq_application, :accepted, :eligible_for_funding, npq_lead_provider:) }
 
   before do
-    create(:npq_participant_declaration, :paid,    participant_profile: accepted_application_with_payment.profile)
-    create(:npq_participant_declaration, :paid,    participant_profile: rejected_application_with_payment.profile)
-    create(:npq_participant_declaration, :payable, participant_profile: rejected_application_with_payable.profile)
+    create(:npq_participant_declaration, :paid,    participant_profile: accepted_application_with_payment.profile, cpd_lead_provider:)
+    create(:npq_participant_declaration, :paid,    participant_profile: rejected_application_with_payment.profile, cpd_lead_provider:)
+    create(:npq_participant_declaration, :payable, participant_profile: rejected_application_with_payable.profile, cpd_lead_provider:)
 
     rejected_application.update_column(:lead_provider_approval_status, :rejected)
     rejected_application_with_payment.update_column(:lead_provider_approval_status, :rejected)

@@ -9,7 +9,7 @@ RSpec.describe NPQ::ChangeToPending, :with_default_schedules do
   let(:npq_application) { create(:npq_application, :eligible_for_funding, application_status, npq_lead_provider:) }
   let(:participant_profile) { npq_application.profile }
 
-  let(:participant_declaration) { create(:npq_participant_declaration, participant_profile:) }
+  let(:participant_declaration) { create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:) }
 
   subject { described_class.new(npq_application:) }
 
@@ -44,7 +44,7 @@ RSpec.describe NPQ::ChangeToPending, :with_default_schedules do
     %w[eligible payable paid awaiting_clawback].each do |dec_state|
       context "accepted application with #{dec_state} declaration" do
         let(:application_status) { :accepted }
-        let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:) }
+        let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:, cpd_lead_provider:) }
 
         it "returns error", :aggregate_failures do
           subject.call
@@ -60,7 +60,7 @@ RSpec.describe NPQ::ChangeToPending, :with_default_schedules do
     %w[submitted voided ineligible].each do |dec_state|
       context "accepted application with #{dec_state} declaration" do
         let(:application_status) { :accepted }
-        let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:) }
+        let!(:participant_declaration) { create(:npq_participant_declaration, dec_state, participant_profile:, cpd_lead_provider:) }
 
         it "changes to pending", :aggregate_failures do
           subject.call

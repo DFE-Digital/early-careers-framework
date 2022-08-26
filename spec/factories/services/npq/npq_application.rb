@@ -90,7 +90,8 @@ FactoryBot.define do
         create(:npq_participant_declaration,
                declaration_type: "started",
                participant_profile: npq_application.profile,
-               course_identifier: npq_application.npq_course.identifier)
+               course_identifier: npq_application.npq_course.identifier,
+               cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider)
       end
     end
   end

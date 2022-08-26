@@ -70,6 +70,7 @@ RSpec.describe Participants::ChangeSchedule::NPQ, :with_default_schedules do
         participant_profile: profile,
         course_identifier: profile.npq_course.identifier,
         declaration_date: schedule.milestones.find_by(declaration_type: "started").start_date + 1.day,
+        cpd_lead_provider:,
       )
     end
     let(:cohort) { create(:cohort, :next) }
