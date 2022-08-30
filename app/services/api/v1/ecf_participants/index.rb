@@ -57,7 +57,7 @@ module Api
         end
 
         def with_cohorts
-          return Cohort.find_by(start_year: filter[:cohort]) if filter[:cohort].present?
+          return Cohort.where(start_year: filter[:cohort]) if filter[:cohort].present?
 
           Cohort.where("start_year > 2020")
         end
