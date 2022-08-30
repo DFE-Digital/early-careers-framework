@@ -4,26 +4,28 @@ module Seeds
   class CallOffContracts
     def call
       LeadProvider.all.each do |lp|
-        sample_call_off_contract = CallOffContract.find_or_create_by!(
-          lead_provider: lp,
-          version: example_contract_data[:version] || "0.0.1",
-          uplift_target: example_contract_data[:uplift_target],
-          uplift_amount: example_contract_data[:uplift_amount],
-          recruitment_target: example_contract_data[:recruitment_target],
-          revised_target: example_contract_data[:revised_target],
-          set_up_fee: example_contract_data[:set_up_fee],
-          raw: example_contract_data.to_json,
-          cohort: cohort_2021,
-        )
-
-        %i[band_a band_b band_c band_d].each do |band|
-          src = example_contract_data[band]
-          ParticipantBand.find_or_create_by!(
-            call_off_contract: sample_call_off_contract,
-            min: src[:min],
-            max: src[:max],
-            per_participant: src[:per_participant],
+        [cohort_2021, cohort_2022].each do |cohort|
+          sample_call_off_contract = CallOffContract.find_or_create_by!(
+            lead_provider: lp,
+            version: example_contract_data[:version] || "0.0.1",
+            uplift_target: example_contract_data[:uplift_target],
+            uplift_amount: example_contract_data[:uplift_amount],
+            recruitment_target: example_contract_data[:recruitment_target],
+            revised_target: example_contract_data[:revised_target],
+            set_up_fee: example_contract_data[:set_up_fee],
+            raw: example_contract_data.to_json,
+            cohort:,
           )
+
+          %i[band_a band_b band_c band_d].each do |band|
+            src = example_contract_data[band]
+            ParticipantBand.find_or_create_by!(
+              call_off_contract: sample_call_off_contract,
+              min: src[:min],
+              max: src[:max],
+              per_participant: src[:per_participant],
+            )
+          end
         end
       end
     end
@@ -32,6 +34,10 @@ module Seeds
 
     def cohort_2021
       @cohort_2021 ||= Cohort.find_or_create_by!(start_year: 2021)
+    end
+
+    def cohort_2022
+      @cohort_2022 ||= Cohort.find_or_create_by!(start_year: 2022)
     end
 
     def example_contract_data
