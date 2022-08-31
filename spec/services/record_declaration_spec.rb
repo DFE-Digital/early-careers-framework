@@ -245,7 +245,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   context "when the participant is an NPQ" do
     let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
     let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
-    let(:npq_course) { create(:npq_leadship_course) }
+    let(:npq_course) { create(:npq_leadership_course) }
     let(:traits)     { [] }
     let(:participant_profile) do
       create(:npq_participant_profile, *traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)

@@ -47,10 +47,6 @@ class Finance::Statement < ApplicationRecord
     def current
       with_future_deadline_date.order(deadline_date: :asc).first
     end
-
-    def attach(participant_declaration)
-      Finance::DeclarationStatementAttacher.new(participant_declaration).call
-    end
   end
 
   def open?

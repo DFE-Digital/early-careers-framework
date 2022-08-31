@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
-  let!(:npq_course)         { create(:npq_leadship_course, identifier: "npq-leading-teaching") }
+  let!(:npq_course)         { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
   let(:statement)           { create(:npq_statement, cpd_lead_provider:) }
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
   let(:milestone)           { participant_profile.schedule.milestones.find_by!(declaration_type:) }
