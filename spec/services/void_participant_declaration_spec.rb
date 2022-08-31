@@ -9,6 +9,7 @@ RSpec.describe VoidParticipantDeclaration do
   let(:school) { profile.school_cohort.school }
   let(:user) { profile.user }
   let(:cpd_lead_provider) { profile.school_cohort.school.partnerships[0].lead_provider.cpd_lead_provider }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
 
   before do
     create(:partnership, school:)
@@ -73,6 +74,15 @@ RSpec.describe VoidParticipantDeclaration do
         )
       end
 
+      let(:cohort) { school_cohort.cohort }
+      let(:school_cohort) { school.school_cohorts[0] }
+      let(:partnership) { create(:partnership, school:, lead_provider:, cohort:) }
+      let(:induction_programme) { create(:induction_programme, partnership:) }
+
+      before do
+        Induction::Enrol.call(participant_profile: profile, induction_programme:)
+      end
+
       it "transitions to awaiting_clawback" do
         subject.call
         expect(participant_declaration.reload).to be_awaiting_clawback
@@ -121,7 +131,11 @@ RSpec.describe VoidParticipantDeclaration do
       let(:line_item) { participant_declaration.statement_line_items.first }
 
       before do
-        Finance::DeclarationStatementAttacher.new(participant_declaration:).call
+        Finance::StatementLineItem.create!(
+          participant_declaration:,
+          statement:,
+          state: participant_declaration.state,
+        )
       end
 
       it "update line item state to voided" do

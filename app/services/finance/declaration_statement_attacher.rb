@@ -24,7 +24,11 @@ module Finance
   private
 
     def cohort
-      participant_declaration.participant_profile.schedule.cohort
+      participant_declaration.participant_profile.schedule_for(cpd_lead_provider:).cohort
+    end
+
+    def cpd_lead_provider
+      participant_declaration.cpd_lead_provider
     end
 
     def statement

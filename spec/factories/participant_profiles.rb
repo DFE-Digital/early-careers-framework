@@ -34,7 +34,7 @@ FactoryBot.define do
                    end
 
         participant_profile.npq_application ||= npq_application
-        participant_profile.schedule = schedule
+        participant_profile.schedule ||= schedule
         participant_profile.npq_course = npq_application.npq_course
       end
 

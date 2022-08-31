@@ -4,12 +4,24 @@ require "rails_helper"
 
 RSpec.describe Finance::ClawbackDeclaration do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
 
   let(:participant_declaration) { create(:ect_participant_declaration, :paid, cpd_lead_provider:) }
+  let(:participant_profile) { participant_declaration.participant_profile }
 
   let!(:next_statement) { create(:ecf_statement, :output_fee, cpd_lead_provider:, deadline_date: 3.months.from_now) }
 
+  let(:cohort) { Cohort.current }
+  let(:school) { create(:school) }
+  let(:school_cohort) { create(:school_cohort, school:, cohort:) }
+  let(:partnership) { create(:partnership, school:, lead_provider:, cohort:) }
+  let(:induction_programme) { create(:induction_programme, partnership:) }
+
   subject { described_class.new(participant_declaration:) }
+
+  before do
+    Induction::Enrol.call(participant_profile:, induction_programme:)
+  end
 
   describe "#call" do
     it "mutates state of delaration to awaiting_clawback" do

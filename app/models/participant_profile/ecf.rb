@@ -79,6 +79,16 @@ class ParticipantProfile < ApplicationRecord
         .first
     end
 
+    def schedule_for(cpd_lead_provider:)
+      lead_provider = cpd_lead_provider.lead_provider
+
+      induction_records
+        .joins(induction_programme: { partnership: [:lead_provider] })
+        .where(induction_programmes: { partnerships: { lead_provider: } })
+        .latest
+        .schedule
+    end
+
   private
 
     def update_analytics
