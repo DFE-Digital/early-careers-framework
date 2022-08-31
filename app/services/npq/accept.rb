@@ -73,7 +73,7 @@ module NPQ
         school_ukprn: npq_application.school_ukprn,
         participant_identity: npq_application.participant_identity,
       ).tap do |pp|
-        pp.participant_profile_states.create!
+        ParticipantProfileState.find_or_create_by(participant_profile: pp)
       end
     end
 

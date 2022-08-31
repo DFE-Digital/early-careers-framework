@@ -67,7 +67,6 @@ en:
   schedule_missing: "The participant does not have a schedule"
   declaration_before_milestone_start: "The property '#/declaration_date' can not be before milestone start"
   declaration_after_milestone_cutoff: "The property '#/declaration_date' can not be after milestone end"
-  declaration_must_be_before_end_date: "Declaration date must be before induction record end date"
   declaration_must_be_before_withdrawal_date: "The property '#/participant_id is invalid. The participant was withdrawn from this course on %{withdrawal_date}. You cannot post a declaration with a declaration date after the withdrawal date."
   invalid_data_structure: correct json data structure required. See API docs for reference
   admin_nqt_1_email_used_ect: "A user with this email address is currently participating as an ECT at school with urn %{urn}"

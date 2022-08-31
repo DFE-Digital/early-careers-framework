@@ -25,7 +25,6 @@ class InductionProgramme < ApplicationRecord
   has_one :lead_provider, through: :partnership
   has_one :cpd_lead_provider, through: :lead_provider
   delegate :school, to: :school_cohort
-  delegate :lead_provider, to: :partnership, allow_nil: true
   delegate :lead_provider_name, to: :partnership, allow_nil: true
 
   after_commit :touch_induction_records

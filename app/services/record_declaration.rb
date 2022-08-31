@@ -28,16 +28,9 @@ class RecordDeclaration
             }
 
   validate :validate_milestone_exists
+  validate :validates_billable_slot_available
 
   attr_reader :raw_declaration_date
-
-  DECLARATION_TYPE_WITH_EVIDENCE_HELD = %w[
-    completed
-    retained-1
-    retained-2
-    retained-3
-    retained-4
-  ].freeze
 
   def call
     return if invalid?
@@ -90,7 +83,7 @@ private
   end
 
   def declaration_attempt
-    if participant_id
+    if participant_id && cpd_lead_provider
       @declaration_attempt ||= ParticipantDeclarationAttempt.create!(
         course_identifier:,
         declaration_date:,
@@ -147,6 +140,8 @@ private
   end
 
   def validate_evidence_held?
+    return unless participant_profile
+
     declaration_type.present? && declaration_type != "started"
   end
 
@@ -155,9 +150,9 @@ private
   end
 
   def validates_billable_slot_available
-    return unless participant_identity
+    return unless participant_profile
 
-    return unless participant_declaration
+    return unless participant_declaration_class_for(participant_profile)
                     .where(state: %w[submitted eligible payable paid])
                     .where(
                       user: participant_identity.user,
@@ -166,5 +161,11 @@ private
                     ).exists?
 
     errors.add(:base, I18n.t(:declaration_already_exists))
+  end
+
+  def participant_declaration_class_for(participant_profile)
+    return ParticipantDeclaration::NPQ if participant_profile.is_a?(ParticipantProfile::NPQ)
+
+    ParticipantDeclaration::ECF
   end
 end

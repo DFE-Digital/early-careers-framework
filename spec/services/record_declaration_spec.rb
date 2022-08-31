@@ -93,6 +93,18 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
       expect(service).to be_invalid
       expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id' must be a valid Participant ID"])
     end
+
+    context "when validating evidence held" do
+      let(:declaration_type) { "retained-1" }
+      before do
+        params[:evidence_held] = "other"
+      end
+
+      it "has meaningful error message", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id' must be a valid Participant ID"])
+      end
+    end
   end
 
   context "when lead providers don't match" do
@@ -116,7 +128,9 @@ end
 
 RSpec.shared_examples "validates existing declarations" do
   context "when an exisiting declaration already exists" do
-    let!(:existing_declaration) { described_class.new(params).call }
+    let!(:existing_declaration) do
+      described_class.new(params).call
+    end
 
     context "with a close declaration_date" do
       before do
@@ -211,11 +225,12 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
   let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Unknown") }
+  let(:declaration_type)      { "started" }
   let(:params) do
     {
       participant_id: participant_profile.user_id,
       declaration_date: declaration_date.rfc3339,
-      declaration_type: "started",
+      declaration_type: ,
       course_identifier:,
       cpd_lead_provider:,
     }
