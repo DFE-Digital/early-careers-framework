@@ -8,12 +8,7 @@ class Cohort < ApplicationRecord
   has_many :npq_contracts
 
   def self.current
-    # TODO: Register and Partner 262: Figure out how to update current year
-    if FeatureFlag.active?(:multiple_cohorts)
-      where("academic_year_start_date <= ?", Time.zone.now).order(start_year: :desc).first
-    else
-      find_by(start_year: 2021)
-    end
+    find_by(start_year: 2021)
   end
 
   def self.next
