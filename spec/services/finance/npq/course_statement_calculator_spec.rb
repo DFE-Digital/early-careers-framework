@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
-  let(:statement)           { create(:npq_statement) }
+  let(:npq_course)          { create(:npq_course) }
+  let(:schedule)            { NPQCourse.schedule_for(npq_course:) }
+  let(:statement)           { create(:npq_statement, :next_output_fee, deadline_date: schedule.milestones.find_by(declaration_type: "completed").start_date + 30.days) }
   let(:cpd_lead_provider)   { statement.cpd_lead_provider }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
-  let(:npq_course)          { create(:npq_course) }
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
   let!(:contract)           { create(:npq_contract, npq_lead_provider:, course_identifier: npq_course.identifier) }
-
   subject { described_class.new(statement:, contract:) }
 
   describe "#billable_declarations_count_for_declaration_type" do

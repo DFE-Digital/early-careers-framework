@@ -24,32 +24,30 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
   end
 
   def generate_declarations(state:)
-    declarations = []
-
     milestone = schedule.milestones.find_by(declaration_type: "started")
     travel_to(milestone.milestone_date) do
-      declarations << create_list(:ect_participant_declaration, 17, state, declaration_type: "started", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 17, state, declaration_type: "started", cpd_lead_provider:)
     end
 
     milestone = schedule.milestones.find_by(declaration_type: "retained-1")
     travel_to milestone.milestone_date do
-      declarations << create_list(:ect_participant_declaration, 5, state, declaration_type: "retained-1", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 5, state, declaration_type: "retained-1", cpd_lead_provider:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "retained-2").milestone_date do
-      declarations << create_list(:ect_participant_declaration, 4, state, declaration_type: "retained-2", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 4, state, declaration_type: "retained-2", cpd_lead_provider:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "retained-3").milestone_date do
-      declarations << create_list(:ect_participant_declaration, 3, state, declaration_type: "retained-3", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 3, state, declaration_type: "retained-3", cpd_lead_provider:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "retained-4").milestone_date do
-      declarations << create_list(:ect_participant_declaration, 1,  state, declaration_type: "retained-4", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 1,  state, declaration_type: "retained-4", cpd_lead_provider:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "completed").milestone_date do
-      declarations << create_list(:ect_participant_declaration, 0,  state, declaration_type: "completed", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 0,  state, declaration_type: "completed", cpd_lead_provider:)
     end
   end
 

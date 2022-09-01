@@ -25,8 +25,12 @@ private
     InductionRecord
       .joins(:participant_profile, induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
       .where(participant_profile: record.participant_profile)
-      .where(induction_programme: { partnerships: { lead_provider: record.cpd_lead_provider.lead_provider } })
-      .where(induction_programme: { school_cohorts: { cohort: Cohort.current } })
+      .where(
+        induction_programme: {
+          partnerships: { lead_provider: record.cpd_lead_provider.lead_provider },
+        },
+        schedule: record.schedule,
+      )
       .order(start_date: :desc)
       .exists?
   end
