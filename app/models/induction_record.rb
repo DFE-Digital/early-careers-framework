@@ -100,7 +100,7 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :withdrawn, end_date: date_of_change)
   end
 
-  def leaving!(date_of_change = Time.zone.now, transferring_out = false)
+  def leaving!(date_of_change = Time.zone.now, transferring_out: false)
     # set transferring_out to true if this action originates from the school the participant is leaving
     update!(induction_status: :leaving, end_date: date_of_change, school_transfer: transferring_out)
   end

@@ -126,13 +126,6 @@ private
     ).resolve
   end
 
-  # def incoming_induction_records
-  #   InductionRecordPolicy::Scope.new(
-  #     user,
-  #     school_cohort.transferring_in_induction_records,
-  #   ).resolve
-  # end
-
   def fip_eligible_participants
     active_induction_records
       .fip

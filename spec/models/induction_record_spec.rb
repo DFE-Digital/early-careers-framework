@@ -207,7 +207,7 @@ RSpec.describe InductionRecord, type: :model do
 
       before do
         linda_leaving_ir.leaving!(1.month.from_now)
-        terry_transferring_out_ir.leaving!(1.month.from_now, true)
+        terry_transferring_out_ir.leaving!(1.month.from_now, transferring_out: true)
         tina_transferred_ir.leaving!(1.month.ago)
         wendy_withdrawn_ir.withdrawing!(1.day.ago)
       end
@@ -349,7 +349,7 @@ RSpec.describe InductionRecord, type: :model do
 
       context "when transferring_out" do
         it "sets the school_transfer flag to the specified value" do
-          induction_record.leaving!(date_of_change, true)
+          induction_record.leaving!(date_of_change, transferring_out: true)
           expect(induction_record).to be_school_transfer
         end
       end

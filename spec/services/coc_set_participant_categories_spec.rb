@@ -275,7 +275,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         Induction::Enrol.call(participant_profile: profile, induction_programme: fip_programme)
       end
       fip_transferring_in_participant.induction_records.first.update!(start_date: 2.months.from_now, school_transfer: true)
-      fip_transferring_out_participant.induction_records.first.leaving!(1.month.from_now, true)
+      fip_transferring_out_participant.induction_records.first.leaving!(1.month.from_now, transferring_out: true)
       fip_another_school_claimed_participant.induction_records.first.leaving!(1.month.from_now)
       fip_transferred_participant.induction_records.first.leaving!(1.month.ago)
       fip_transferred_withdrawn_participant.induction_records.first.leaving!(1.month.ago)
@@ -308,7 +308,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         Induction::Enrol.call(participant_profile: profile, induction_programme: cip_programme)
       end
       cip_transferring_in_participant.induction_records.first.update!(start_date: 2.months.from_now, school_transfer: true)
-      cip_transferring_out_participant.induction_records.first.leaving!(1.month.from_now, true)
+      cip_transferring_out_participant.induction_records.first.leaving!(1.month.from_now, transferring_out: true)
       cip_another_school_claimed_participant.induction_records.first.leaving!(1.month.from_now)
       cip_transferred_participant.induction_records.first.leaving!(1.month.ago)
       cip_transferred_withdrawn_participant.induction_records.first.leaving!(1.month.ago)
