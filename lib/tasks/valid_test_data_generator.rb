@@ -4,10 +4,10 @@ require "tasks/school_urn_generator"
 require "tasks/trn_generator"
 require "active_support/testing/time_helpers"
 
-include ActiveSupport::Testing::TimeHelpers
-
 module ValidTestDataGenerator
   class LeadProviderPopulater
+    include ActiveSupport::Testing::TimeHelpers
+
     class << self
       def call(name:, total_schools: 10, participants_per_school: 50)
         new(name:).call(total_schools:, participants_per_school:)
@@ -99,15 +99,19 @@ module ValidTestDataGenerator
 
         return unless profile.active_record?
 
-        serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-          params: {
-            participant_id: user.tap(&:reload).id,
-            course_identifier: "ecf-induction",
-            declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-            cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
-            declaration_type: "started",
-          },
-        )
+        serialized_started_declaration = nil
+
+        travel_to profile.schedule.milestones.first.start_date + 2.days do
+          serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
+            params: {
+              participant_id: user.tap(&:reload).id,
+              course_identifier: "ecf-induction",
+              declaration_date: (profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+              cpd_lead_provider: profile.school_cohort.lead_provider.cpd_lead_provider,
+              declaration_type: "started",
+            },
+          )
+        end
 
         return if profile.schedule.milestones.second.start_date > Date.current
 
