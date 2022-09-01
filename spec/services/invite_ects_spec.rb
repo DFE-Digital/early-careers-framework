@@ -7,7 +7,7 @@ RSpec.describe InviteEcts do
   let!(:cohort) { create(:cohort, :next) }
 
   let!(:school) { create(:school) }
-  let!(:school_cohort) { create(:school_cohort, school:) }
+  let!(:school_cohort) { create(:school_cohort, cohort: create(:cohort, start_year: cohort.start_year - 1)) }
 
   let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
 
