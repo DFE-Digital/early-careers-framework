@@ -125,13 +125,15 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
       it "does not create duplicate declarations with the same declaration date" do
         post "/api/v1/participant-declarations", params: params.to_json
-        original_id = parsed_response["id"]
 
-        expect { post "/api/v1/participant-declarations", params: params.to_json }
-          .not_to change(ParticipantDeclaration, :count)
+        expect {
+          expect {
+            post "/api/v1/participant-declarations", params: params.to_json
+          }.not_to change(ParticipantDeclaration, :count)
+        }.to change(ParticipantDeclarationAttempt, :count).by(1)
 
-        expect(response).to be_successful
-        expect(parsed_response["id"]).to eq(original_id)
+        expect(response).not_to be_successful
+        expect(parsed_response["errors"]).to eq(["title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event"])
       end
 
       context "with different declaration date" do
@@ -145,7 +147,11 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
             .not_to change(ParticipantDeclaration, :count)
 
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(parsed_response).to eq({ "errors" => [{ "title" => "declaration_date", "detail" => "A declaration with the date of #{milestone_start_date.in_time_zone.rfc3339} already exists." }] })
+          expect(parsed_response)
+            .to eq({ "errors" => [
+              { "title" => "declaration_date", "detail" => "A declaration with the date of #{milestone_start_date.in_time_zone.rfc3339} already exists." },
+              { "title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event" },
+            ] })
         end
       end
 
@@ -269,6 +275,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
                     [
                       { "title" => "declaration_date",
                         "detail" => "A declaration with the date of #{old_provider_declaration.dig('data', 'attributes', 'declaration_date')} already exists." },
+                      { "title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event" },
                     ],
                   )
               end
@@ -493,7 +500,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
             expect {
               post "/api/v1/participant-declarations", params: params.to_json
-              expect(response).to be_successful
+              expect(response).not_to be_successful
             }.not_to change { participant_profile.participant_declarations.paid.count }
           end
         end

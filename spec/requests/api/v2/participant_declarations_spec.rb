@@ -69,23 +69,15 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
       it "does not create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v2/participant-declarations", params: params
-        original_id = parsed_response["data"]["id"]
 
-        original_declaration = ParticipantDeclaration.find(original_id)
-        statement = original_declaration.statement_line_items.eligible.first.statement
-        ParticipantDeclarations::MarkAsPayable.new(statement).call(original_declaration)
-        ParticipantDeclarations::MarkAsPaid.new(statement).call(original_declaration)
-        Finance::ClawbackDeclaration.new(original_declaration.reload).call
+        expect {
+          expect {
+            post "/api/v2/participant-declarations", params:
+          }.not_to change(ParticipantDeclaration, :count)
+        }.to change(ParticipantDeclarationAttempt, :count).by(1)
 
-        expect { post "/api/v2/participant-declarations", params: }
-          .not_to change(ParticipantDeclaration, :count)
-        expect { post "/api/v2/participant-declarations", params: }
-          .to change(ParticipantDeclarationAttempt, :count).by(1)
-
-        print response.body
-
-        expect(response).to be_successful
-        expect(parsed_response["data"]).to eq(original_id)
+        expect(response).not_to be_successful
+        expect(parsed_response["errors"]).to eq(["title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event"])
       end
 
       it "does not create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do

@@ -230,7 +230,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     {
       participant_id: participant_profile.user_id,
       declaration_date: declaration_date.rfc3339,
-      declaration_type: ,
+      declaration_type:,
       course_identifier:,
       cpd_lead_provider:,
     }
