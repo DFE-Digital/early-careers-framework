@@ -2,6 +2,9 @@
 
 require "tasks/valid_test_data_generator"
 require_relative "call_off_contracts"
+require "active_support/testing/time_helpers"
+
+include ActiveSupport::Testing::TimeHelpers
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
 cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
@@ -894,15 +897,17 @@ create_npq_declarations = lambda {
 
       ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
-      RecordDeclarations::Started::NPQ.call(
-        params: {
-          participant_id: npq_application.user.id,
-          course_identifier: npq_application.npq_course.identifier,
-          declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-          cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-        },
-      )
+      travel_to npq_application.profile.schedule.milestones.first.start_date + 2.days do
+        RecordDeclarations::Started::NPQ.call(
+          params: {
+            participant_id: npq_application.user.id,
+            course_identifier: npq_application.npq_course.identifier,
+            declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+            cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+            declaration_type: "started",
+          },
+        )
+      end
     end
   end
 }.call
