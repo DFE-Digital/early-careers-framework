@@ -18,7 +18,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
   end
 
   describe "POST /api/v1/participant-declarations" do
-    let(:ect_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:ect_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
     let(:valid_params) do
       {
         participant_id: ect_profile.user.id,
@@ -69,15 +69,23 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
       it "does not create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v2/participant-declarations", params: params
-        original_id = parsed_response["id"]
+        original_id = parsed_response["data"]["id"]
+
+        original_declaration = ParticipantDeclaration.find(original_id)
+        statement = original_declaration.statement_line_items.eligible.first.statement
+        ParticipantDeclarations::MarkAsPayable.new(statement).call(original_declaration)
+        ParticipantDeclarations::MarkAsPaid.new(statement).call(original_declaration)
+        Finance::ClawbackDeclaration.new(original_declaration.reload).call
 
         expect { post "/api/v2/participant-declarations", params: }
           .not_to change(ParticipantDeclaration, :count)
         expect { post "/api/v2/participant-declarations", params: }
           .to change(ParticipantDeclarationAttempt, :count).by(1)
 
+        print response.body
+
         expect(response).to be_successful
-        expect(parsed_response["id"]).to eq(original_id)
+        expect(parsed_response["data"]).to eq(original_id)
       end
 
       it "does not create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do

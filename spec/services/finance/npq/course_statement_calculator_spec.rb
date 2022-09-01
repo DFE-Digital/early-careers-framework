@@ -46,12 +46,13 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
     end
 
     context "when multiple declarations from same user of one type" do
-      let(:participant_profile) do
-        create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile
-      end
+      let(:participant_declaration) { create(:npq_participant_declaration, :eligible, participant_profile:, npq_course:, cpd_lead_provider:) }
+
       before do
         travel_to statement.deadline_date do
-          create_list(:npq_participant_declaration, 2, :eligible, participant_profile:, npq_course:, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+            pd.update!(user: participant_declaration.user)
+          end
         end
       end
 
@@ -61,28 +62,25 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
     end
 
     context "when multiple declarations from same user of multiple types" do
-      let(:participant_profile) do
-        create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile
+      let(:started_participant_declaration)    { create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:) }
+      let(:retained_1_participant_declaration) do
+        create(:npq_participant_declaration,
+               :eligible,
+               participant_profile: started_participant_declaration.participant_profile,
+               declaration_type: "retained-1",
+               npq_course:,
+               cpd_lead_provider:)
       end
 
       before do
         travel_to statement.deadline_date do
-          create_list(
-            :npq_participant_declaration, 2,
-            :eligible,
-            participant_profile:,
-            npq_course:,
-            declaration_type: "started",
-            cpd_lead_provider:
-          )
-          create_list(
-            :npq_participant_declaration, 2,
-            :eligible,
-            participant_profile:,
-            npq_course:,
-            declaration_type: "retained-1",
-            cpd_lead_provider:
-          )
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+            pd.update!(user: started_participant_declaration.user)
+          end
+
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+            pd.update!(user: retained_1_participant_declaration.user)
+          end
         end
       end
 
@@ -170,9 +168,12 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
     end
 
     context "when there are multiple declarations from same user and same type" do
+      let(:participant_declaration) { create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:) }
       before do
         travel_to statement.deadline_date do
-          create_list(:npq_participant_declaration, 2, :eligible, participant_profile:, npq_course:, cpd_lead_provider:)
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:).tap do |pd|
+            pd.update!(user: participant_declaration.user)
+          end
         end
       end
 
