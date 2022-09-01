@@ -16,7 +16,7 @@ module Finance
 
     def training_status_options
       opts = TRAINING_STATUS_OPTIONS.dup
-      opts.delete(participant_profile.training_status)
+      opts.delete(current_training_status)
       opts
     end
 
@@ -40,8 +40,12 @@ module Finance
           }
         end
 
-      opts.delete(participant_profile.training_status)
+      opts.delete(current_training_status)
       opts
+    end
+
+    def current_training_status
+      participant_profile.state
     end
 
     def valid_training_status_reasons
@@ -99,7 +103,7 @@ module Finance
       return false unless valid?
 
       # Nothing to change if training_status is same
-      return true if training_status == participant_profile.training_status
+      return true if training_status == current_training_status
 
       klass = "Participants::#{action_class_name}::#{participant_class_name}".constantize
       klass.call(
