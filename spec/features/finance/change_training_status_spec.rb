@@ -18,10 +18,17 @@ RSpec.feature "Finance users participant change training status", :with_default_
     scenario "Change training status to deferred" do
       then_table_value_is(label: "Training status", value: "active")
       and_i_click_on("Change training status")
+
+      # trigger invalid form submission
+      and_i_click_on("Continue")
+
+      # check that a readable error message is displayed
+      expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-npq-change-training-status-form-training-status-field-error']", text: "something meaningful at the moment it is 'is not included in the list'")
+
       then_i_see("Change training status")
       and_i_see("Choose a different training status")
       when_i_choose("deferred")
-      and_i_select("bereavement", "finance-change-training-status-form-reason-field")
+      and_i_select("bereavement", "finance-npq-change-training-status-form-reason-field")
       and_i_click_on("Continue")
       then_i_see("Training status updated successfully")
       then_table_value_is(label: "Training status", value: "deferred")
@@ -29,17 +36,41 @@ RSpec.feature "Finance users participant change training status", :with_default_
   end
 
   describe "ECF" do
+    let(:school_cohort) { participant_profile.school_cohort }
+    let!(:partnership) do
+      create(
+        :partnership,
+        school: school_cohort.school,
+        cohort: school_cohort.cohort,
+        challenged_at: nil,
+        challenge_reason: nil,
+        pending: false,
+      )
+    end
+    let(:induction_programme) { create(:induction_programme, partnership:, school_cohort:) }
+
     describe "EarlyCareerTeacher" do
       let!(:participant_profile)     { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
       let!(:participant_declaration) { create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:) }
 
+      before do
+        Induction::Enrol.call(participant_profile:, induction_programme:)
+      end
+
       scenario "Change training status to deferred" do
         then_table_value_is(label: "Training status", value: "active")
         and_i_click_on("Change training status")
+
+        # trigger invalid form submission
+        and_i_click_on("Continue")
+
+        # check that a readable error message is displayed
+        expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-ecf-change-training-status-form-training-status-field-error']", text: "something meaningful at the moment it is 'is not included in the list'")
+
         then_i_see("Change training status")
         and_i_see("Choose a different training status")
         when_i_choose("deferred")
-        and_i_select("bereavement", "finance-change-training-status-form-reason-field")
+        and_i_select("bereavement", "finance-ecf-change-training-status-form-reason-field")
         and_i_click_on("Continue")
         then_i_see("Training status updated successfully")
         then_table_value_is(label: "Training status", value: "deferred")
@@ -50,13 +81,17 @@ RSpec.feature "Finance users participant change training status", :with_default_
       let!(:participant_profile)     { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
       let!(:participant_declaration) { create(:mentor_participant_declaration, participant_profile:, cpd_lead_provider:) }
 
+      before do
+        Induction::Enrol.call(participant_profile:, induction_programme:)
+      end
+
       scenario "Change training status to deferred" do
         then_table_value_is(label: "Training status", value: "active")
         and_i_click_on("Change training status")
         then_i_see("Change training status")
         and_i_see("Choose a different training status")
         when_i_choose("deferred")
-        and_i_select("bereavement", "finance-change-training-status-form-reason-field")
+        and_i_select("bereavement", "finance-ecf-change-training-status-form-reason-field")
         and_i_click_on("Continue")
         then_i_see("Training status updated successfully")
         then_table_value_is(label: "Training status", value: "deferred")
