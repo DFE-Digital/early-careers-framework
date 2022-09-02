@@ -48,7 +48,7 @@ private
         "attributes": {
           "participant_id": participant["id"],
           "declaration_type": "started",
-          "declaration_date": Date.new(2021, 9, 2).rfc3339,
+          "declaration_date": Date.new(2022, 9, 2).rfc3339,
           "course_identifier": course_identifier,
         },
       },
@@ -57,7 +57,7 @@ private
 
   def make_started_declaration(participant)
     uri = URI("https://#{smoke_test_domain}/api/v1/participant-declarations")
-    req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json", "Authorization" => "Bearer ambition-token", "X_WITH_SERVER_DATE" => Date.new(2021, 9, 3).rfc3339)
+    req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json", "Authorization" => "Bearer ambition-token", "X_WITH_SERVER_DATE" => Date.new(2022, 9, 3).rfc3339)
     req.body = participant_declaration_body(participant)
     http = Net::HTTP.new(uri.hostname, uri.port)
     http.use_ssl = true
