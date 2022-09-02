@@ -18,12 +18,9 @@ RSpec.feature "Finance users participant change training status", :with_default_
     scenario "Change training status to deferred" do
       then_table_value_is(label: "Training status", value: "active")
       and_i_click_on("Change training status")
-
-      # trigger invalid form submission
       and_i_click_on("Continue")
 
-      # check that a readable error message is displayed
-      expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-npq-change-training-status-form-training-status-field-error']", text: "something meaningful at the moment it is 'is not included in the list'")
+      expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-npq-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
 
       then_i_see("Change training status")
       and_i_see("Choose a different training status")
@@ -60,12 +57,9 @@ RSpec.feature "Finance users participant change training status", :with_default_
       scenario "Change training status to deferred" do
         then_table_value_is(label: "Training status", value: "active")
         and_i_click_on("Change training status")
-
-        # trigger invalid form submission
         and_i_click_on("Continue")
 
-        # check that a readable error message is displayed
-        expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-ecf-change-training-status-form-training-status-field-error']", text: "something meaningful at the moment it is 'is not included in the list'")
+        expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-ecf-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
 
         then_i_see("Change training status")
         and_i_see("Choose a different training status")

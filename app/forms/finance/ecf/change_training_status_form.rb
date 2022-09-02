@@ -22,60 +22,12 @@ module Finance
         ParticipantProfile.training_statuses.except(current_training_status)
       end
 
-      def reason_required?
-        training_status.present? && training_status != "active"
-      end
-
       def reason_options
         REASON_OPTIONS.except(current_training_status)
       end
 
       def current_training_status
-        induction_record.training_status
-      end
-
-      def valid_training_status_reasons
-        reason_options[training_status]
-      end
-
-      def participant_class_name
-        case participant_profile.participant_type
-        when :ect
-          "EarlyCareerTeacher"
-        when :mentor
-          "Mentor"
-        else
-          raise "Participant type not recognised"
-        end
-      end
-
-      def action_class_name
-        case training_status
-        when "active"
-          "Resume"
-        when "deferred"
-          "Defer"
-        when "withdrawn"
-          "Withdraw"
-        end
-      end
-
-      # this is not correct because a participant may changeable induction records
-      # with different lead provider. But due to the participant drilldown not being
-      # correct we will make the assumpion that we will change it on the latest induction record
-      # regarless of the lead provider
-      def cpd_lead_provider
-        @cpd_lead_provider ||= participant_profile.induction_records.latest.lead_provider.cpd_lead_provider
-      end
-
-      def course_identifier
-        @course_identifier ||=
-          case participant_profile.participant_type
-          when :mentor
-            "ecf-mentor"
-          when :ect
-            "ecf-induction"
-          end
+        induction_record&.training_status
       end
 
       def save
@@ -98,8 +50,58 @@ module Finance
 
     private
 
+      def reason_required?
+        training_status.present? && training_status != "active"
+      end
+
+      def valid_training_status_reasons
+        reason_options[training_status] || []
+      end
+
+      def participant_class_name
+        case participant_profile.participant_type
+        when :ect
+          "EarlyCareerTeacher"
+        when :mentor
+          "Mentor"
+        else
+          raise "Participant type not recognised"
+        end
+      end
+
+      def action_class_name
+        case training_status
+        when "active"
+          "Resume"
+        when "deferred"
+          "Defer"
+        when "withdrawn"
+          "Withdraw"
+        else
+          raise "training_status type not recognised"
+        end
+      end
+
+      # this is not correct because a participant may changeable induction records
+      # with different lead provider. But due to the participant drilldown not being
+      # correct we will make the assumpion that we will change it on the latest induction record
+      # regarless of the lead provider
+      def cpd_lead_provider
+        @cpd_lead_provider ||= participant_profile.induction_records.latest.lead_provider.cpd_lead_provider
+      end
+
+      def course_identifier
+        @course_identifier ||=
+          case participant_profile.participant_type
+          when :mentor
+            "ecf-mentor"
+          when :ect
+            "ecf-induction"
+          end
+      end
+
       def induction_record
-        @induction_record ||= participant_profile.induction_records.latest
+        @induction_record ||= participant_profile&.induction_records&.latest
       end
 
       def status_unchanged?

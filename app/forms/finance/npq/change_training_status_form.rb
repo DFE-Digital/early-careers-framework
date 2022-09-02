@@ -7,8 +7,8 @@ module Finance
       include ActiveModel::Attributes
 
       REASON_OPTIONS = {
-        "deferred" => Participants::Defer::ECF.reasons,
-        "withdrawn" => Participants::Withdraw::ECF.reasons,
+        "deferred" => Participants::Defer::NPQ.reasons,
+        "withdrawn" => Participants::Withdraw::NPQ.reasons,
       }.freeze
 
       attribute :participant_profile
@@ -22,10 +22,6 @@ module Finance
         ParticipantProfile.training_statuses.except(current_training_status)
       end
 
-      def reason_required?
-        training_status.present? && training_status != "active"
-      end
-
       def reason_options
         REASON_OPTIONS.except(current_training_status)
       end
@@ -34,24 +30,8 @@ module Finance
         participant_profile.state
       end
 
-      def valid_training_status_reasons
-        reason_options[training_status]
-      end
-
-      def action_class_name
-        case training_status
-        when "active"
-          "Resume"
-        when "deferred"
-          "Defer"
-        when "withdrawn"
-          "Withdraw"
-        end
-      end
-
       def save
         return false unless valid?
-
         return true if status_unchanged?
 
         klass = "Participants::#{action_class_name}::NPQ".constantize
@@ -69,6 +49,27 @@ module Finance
       end
 
     private
+
+      def reason_required?
+        training_status.present? && training_status != "active"
+      end
+
+      def valid_training_status_reasons
+        reason_options[training_status] || []
+      end
+
+      def action_class_name
+        case training_status
+        when "active"
+          "Resume"
+        when "deferred"
+          "Defer"
+        when "withdrawn"
+          "Withdraw"
+        else
+          raise "training_status type not recognised"
+        end
+      end
 
       def status_unchanged?
         training_status == current_training_status

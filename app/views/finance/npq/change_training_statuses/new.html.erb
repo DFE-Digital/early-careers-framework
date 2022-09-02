@@ -13,7 +13,7 @@
       <p>
         <strong>Training status</strong>
         <br/>
-        <%= @participant_profile.state %>
+        <%= @change_training_status_form.current_training_status %>
       </p>
     </div>
 
@@ -21,8 +21,8 @@
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_radio_buttons_fieldset :training_status, legend: { text: "Choose a different training status", tag: 'h1', size: 'm' } do %>
-        <% @change_training_status_form.training_status_options.each do |val, text| %>
-          <%= f.govuk_radio_button :training_status, val, label: { text: text } %>
+        <% @change_training_status_form.training_status_options.values.each_with_index do |val, n| %>
+          <%= f.govuk_radio_button :training_status, val, label: { text: val }, link_errors: n.zero? %>
         <% end %>
       <% end %>
 
