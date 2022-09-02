@@ -17,6 +17,7 @@ module RecordDeclarations
     validate :validate_milestone_exists
     validate :validates_billable_slot_available
 
+    # TODO: for schedule this should find correct induction record and query there
     delegate :schedule, :participant_declarations, to: :user_profile, allow_nil: true
 
     class << self
