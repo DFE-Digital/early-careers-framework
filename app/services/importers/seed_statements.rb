@@ -6,6 +6,13 @@
 
 class Importers::SeedStatements
   def call
+    (2021..2022).each do |start_year|
+      Cohort.find_or_create_by!(start_year:).tap do |cohort|
+        cohort.registration_start_date = Date.new(start_year, 5, 10)
+        cohort.academic_year_start_date = Date.new(start_year.to_i, 9, 1)
+      end
+    end
+
     LeadProvider.includes(:cpd_lead_provider).each do |lead_provider|
       cpd_lead_provider = lead_provider.cpd_lead_provider
 
