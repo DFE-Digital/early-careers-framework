@@ -158,6 +158,10 @@ Then("{string} should not exist", (element) => {
   get(element).should("not.exist");
 });
 
+Then("{string} should exist", (element) => {
+  get(element).should("exist");
+});
+
 Then("{string} label should be checked", (text) => {
   cy.get("label")
     .contains(text)

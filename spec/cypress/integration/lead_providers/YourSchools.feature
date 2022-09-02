@@ -9,10 +9,10 @@ Feature: Your schools flow
 
   Scenario: Viewing my schools
     Then "page body" should contain "Your schools"
-    And "page body" should not contain "Confirm more schools"
+    And "page body" should contain "Confirm more schools"
     And "page body" should contain "2022 cohort"
     And "page body" should contain "2021 cohort"
-    And "page body" should contain "Download schools for 2021"
+    And "page body" should contain "Download schools for 2022"
     And the table should have 3 rows
     And "page body" should contain "Big School"
     And "page body" should contain "Middle School"
@@ -24,8 +24,8 @@ Feature: Your schools flow
     And I click on "link" containing "Check your schools"
     Then "page body" should contain "Your schools"
     And "page body" should contain "Confirm more schools"
-    And "page body" should not contain "Download schools for 2022"
-    And "schools table" should not exist
+    And "page body" should contain "Download schools for 2022"
+    And "schools table" should exist
 
   Scenario: Searching my list of schools
     When I type "900002" into "search box"
@@ -64,7 +64,7 @@ Feature: Your schools flow
   Scenario: Viewing school with pupil premium uplift
     When I click on "link" containing "Big School"
     Then "page body" should contain "Big School"
-    And "page body" should contain "2021 participants"
+    And "page body" should contain "2022 participants"
     And "page body" should contain "900001"
     And "page body" should contain "Ace Delivery Partner"
     And "page body" should contain "Pupil premium above 40%"
@@ -75,7 +75,7 @@ Feature: Your schools flow
   Scenario: Viewing school with sparsity uplift
     When I click on "link" containing "Middle School"
     Then "page body" should contain "Middle School"
-    And "page body" should contain "2021 participants"
+    And "page body" should contain "2022 participants"
     And "page body" should contain "900002"
     And "page body" should contain "Ace Delivery Partner"
     And "page body" should contain "Remote school"
@@ -86,7 +86,7 @@ Feature: Your schools flow
   Scenario: Viewing school with pupil premium and sparsity uplifts
     When I click on "link" containing "Small School"
     Then "page body" should contain "Small School"
-    And "page body" should contain "2021 participants"
+    And "page body" should contain "2022 participants"
     And "page body" should contain "900003"
     And "page body" should contain "Ace Delivery Partner"
     And "page body" should contain "Pupil premium above 40% and Remote school"
