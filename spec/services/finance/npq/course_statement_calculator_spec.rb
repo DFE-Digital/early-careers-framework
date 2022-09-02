@@ -98,7 +98,11 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
     end
 
     context "when there are refundable declarations" do
-      let!(:to_be_awaiting_clawed_back) { create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:) }
+      let!(:to_be_awaiting_clawed_back) do
+        travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
+          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:)
+        end
+      end
       before do
         travel_to statement.deadline_date do
           Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
@@ -112,12 +116,27 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
   end
 
   describe "#refundable_declarations_by_type_count" do
-    let!(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration, :paid, declaration_type: "started", npq_course:, cpd_lead_provider:) }
-    let!(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :paid, declaration_type: "retained-1", npq_course:, cpd_lead_provider:) }
-    let!(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :paid, declaration_type: "retained-2", npq_course:, cpd_lead_provider:) }
+    let(:eligible_statement)                  { create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:) }
+    let(:to_be_awaiting_claw_back_started)    { create(:npq_participant_declaration,         :eligible, npq_course:, cpd_lead_provider:) }
+    let(:to_be_awaiting_claw_back_retained_1) { create_list(:npq_participant_declaration, 2, :eligible, declaration_type: "retained-1", npq_course:, cpd_lead_provider:) }
+    let(:to_be_awaiting_claw_back_completed)  { create_list(:npq_participant_declaration, 3, :eligible, declaration_type: "retained-2", npq_course:, cpd_lead_provider:) }
+    let(:declarations) do
+      [to_be_awaiting_claw_back_started] + to_be_awaiting_claw_back_retained_1 + to_be_awaiting_claw_back_completed
+    end
     before do
+      travel_to(eligible_statement.deadline_date) do
+        to_be_awaiting_claw_back_started
+        to_be_awaiting_claw_back_retained_1
+        to_be_awaiting_claw_back_completed
+      end
+
+      Statements::MarkAsPayable.new(eligible_statement).call
+      Statements::MarkAsPaid.new(eligible_statement).call
+
       travel_to statement.deadline_date do
-        ([to_be_awaiting_claw_back_started] + to_be_awaiting_claw_back_retained_1 + to_be_awaiting_claw_back_completed).each { |declaration| Finance::ClawbackDeclaration.new(declaration).call }
+        declarations.each do |declaration|
+          Finance::ClawbackDeclaration.new(declaration.reload).call
+        end
       end
     end
 
