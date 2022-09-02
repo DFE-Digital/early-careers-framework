@@ -22,9 +22,6 @@ class Finance::StatementLineItem < ApplicationRecord
     clawed_back: "clawed_back",
   }
 
-  scope :billable, -> { where(state: BILLABLE_STATES) }
-  scope :refundable, -> { where(state: REFUNDABLE_STATES) }
-
   validate :validate_single_billable_relationship, on: [:create]
   validate :validate_single_refundable_relationship, on: [:create]
 
