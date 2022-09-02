@@ -13,7 +13,7 @@ module Pages
     end
 
     def confirm_schools
-      click_on "Confirm your schools"
+      click_on "Confirm your schools for the 2021 to 2022 academic year"
 
       Pages::ConfirmSchoolsWizard.loaded
     end

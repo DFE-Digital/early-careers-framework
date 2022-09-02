@@ -22,6 +22,10 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*_spec.rb'
 
+Style/MixinUsage:
+  Exclude:
+    - 'db/seeds/test_data.rb'
+
 Rails/UnknownEnv:
   Environments:
     - production

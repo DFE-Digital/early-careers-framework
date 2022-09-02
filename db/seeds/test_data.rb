@@ -2,10 +2,14 @@
 
 require "tasks/valid_test_data_generator"
 require_relative "call_off_contracts"
+require "active_support/testing/time_helpers"
+
+include ActiveSupport::Testing::TimeHelpers
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
-cohort_2021 = Cohort.find_or_create_by!(start_year: 2021)
+Cohort.find_or_create_by!(start_year: 2021)
 cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
+cohort_2023 = Cohort.find_or_create_by!(start_year: 2023)
 
 local_authority = LocalAuthority.find_or_create_by!(name: "ZZ Test Local Authority", code: "ZZTEST")
 
@@ -169,7 +173,7 @@ end
 
     if idx.even?
       cip = CoreInductionProgramme.all.sample
-      SchoolCohort.find_or_create_by!(cohort: cohort_2022, school:, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
+      SchoolCohort.find_or_create_by!(cohort: cohort_2023, school:, induction_programme_choice: "core_induction_programme", core_induction_programme: cip)
     end
   end
 end
@@ -203,7 +207,7 @@ School.find_or_create_by!(urn: "000006") do |school|
     email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
     token: "abc424",
   )
-  PupilPremium.find_or_create_by!(school:, start_year: 2021, total_pupils: 500, eligible_pupils: 300)
+  PupilPremium.find_or_create_by!(school:, start_year: 2022, total_pupils: 500, eligible_pupils: 300)
 end
 
 delivery_partner = DeliveryPartner.find_or_create_by!(name: "Amazing Delivery Partner")
@@ -364,7 +368,7 @@ npq_specifics = [
 # NPQ contracts
 NPQLeadProvider.all.each do |npq_lead_provider|
   npq_specifics.each do |npq_contract|
-    attributes = npq_contract.merge(npq_lead_provider:, cohort: cohort_2021)
+    attributes = npq_contract.merge(npq_lead_provider:, cohort: cohort_2022)
     attributes.merge!(raw: attributes.to_json)
     NPQContract.create!(attributes)
   end
@@ -894,15 +898,17 @@ create_npq_declarations = lambda {
 
       ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
 
-      RecordDeclarations::Started::NPQ.call(
-        params: {
-          participant_id: npq_application.user.id,
-          course_identifier: npq_application.npq_course.identifier,
-          declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
-          cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-        },
-      )
+      travel_to npq_application.profile.schedule.milestones.first.start_date + 2.days do
+        RecordDeclarations::Started::NPQ.call(
+          params: {
+            participant_id: npq_application.user.id,
+            course_identifier: npq_application.npq_course.identifier,
+            declaration_date: (npq_application.profile.schedule.milestones.first.start_date + 1.day).rfc3339,
+            cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+            declaration_type: "started",
+          },
+        )
+      end
     end
   end
 }.call
