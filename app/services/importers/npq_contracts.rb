@@ -42,13 +42,13 @@ module Importers
     def number_of_payment_periods_for(course:)
       case course.identifier
       when *Finance::Schedule::NPQLeadership::IDENTIFIERS
-        4
+        Finance::Schedule::NPQLeadership.default.milestones.count
       when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
-        3
+        Finance::Schedule::NPQSpecialist.default.milestones.count
       when *Finance::Schedule::NPQSupport::IDENTIFIERS
-        4
+        Finance::Schedule::NPQSupport.default.milestones.count
       when *Finance::Schedule::NPQEhco::IDENTIFIERS
-        4
+        Finance::Schedule::NPQEhco.default.milestones.count
       else
         raise ArgumentError, "Invalid course identifier"
       end
