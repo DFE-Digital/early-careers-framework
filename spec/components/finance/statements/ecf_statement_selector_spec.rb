@@ -7,7 +7,9 @@ RSpec.describe Finance::Statements::ECFStatementSelector, type: :component do
   let!(:ecf_statement) { create(:ecf_statement) }
   let!(:other_ecf_statement) { create(:ecf_statement) }
 
-  let(:rendered) { render_inline(described_class.new(current_statement: ecf_statement)) }
+  let(:cohorts) { Cohort.where(start_year: 2021..) }
+
+  let(:rendered) { render_inline(described_class.new(current_statement: ecf_statement, cohorts:)) }
 
   it "has a form that PUTs to correct action" do
     expect(rendered).to have_selector("form[method=post][action='/finance/payment-breakdowns/choose-ecf-statement']")

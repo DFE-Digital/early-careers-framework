@@ -3,10 +3,11 @@
 module Finance
   module Statements
     class ECFStatementSelector < BaseComponent
-      attr_reader :current_statement
+      attr_reader :current_statement, :cohorts
 
-      def initialize(current_statement:)
+      def initialize(current_statement:, cohorts:)
         @current_statement = current_statement
+        @cohorts = cohorts
       end
 
       def lead_providers
@@ -30,10 +31,6 @@ module Finance
       end
 
     private
-
-      def cohorts
-        Cohort.where(start_year: 2021..)
-      end
 
       def i18n_scope
         %i[components finance statements ecf_statement_selector]
