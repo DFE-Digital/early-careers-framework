@@ -44,6 +44,13 @@ RSpec.describe DeclarationDateValidator do
     before { allow(subject).to receive(:milestone).and_return(milestone) }
 
     describe "the declaration date has the right format" do
+      context "When the declaration date is empty" do
+        subject { model_class.new(declaration_date: "") }
+
+        it "does not errors when the declaration date is blank" do
+          expect(subject).to be_valid
+        end
+      end
       context "when declaration date is invalid" do
         subject { model_class.new(declaration_date: "2021-06-21 08:46:29") }
 

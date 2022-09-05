@@ -18,7 +18,7 @@ private
   end
 
   def declaration_within_milestone(record)
-    return unless record.milestone
+    return unless record.milestone && record.declaration_date.present?
 
     if record.declaration_date < record.milestone.start_date.beginning_of_day
       record.errors.add(:declaration_date, I18n.t(:declaration_before_milestone_start))
