@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe(Induction::SendNotificationEmails) do
-  subject { Induction::SendNotificationEmails.new(**kwargs) }
+RSpec.describe(Induction::SendTransferNotificationEmails) do
+  subject { Induction::SendTransferNotificationEmails.new(**kwargs) }
 
   let(:provider_mailer) { double(ActionMailer::MessageDelivery, deliver_later: true) }
   let(:participant_mailer) { double(ActionMailer::MessageDelivery, deliver_later: true) }

@@ -21,7 +21,7 @@ module Induction
   #   a. Send email to current lead provider, notifying them to expect a new school.
   #   b. Send email to participant to notify them.
   #
-  class SendNotificationEmails < BaseService
+  class SendTransferNotificationEmails < BaseService
     attr_reader :induction_record,
                 :was_withdrawn_participant,
                 :same_delivery_partner,

@@ -126,7 +126,7 @@ module Schools
       current_lead_provider_profiles = current_lead_provider&.users&.map(&:lead_provider_profile) || []
       target_lead_provider_profiles = participant_lead_provider&.users&.map(&:lead_provider_profile) || []
 
-      Induction::SendNotificationEmails.new(
+      Induction::SendTransferNotificationEmails.new(
         induction_record:,
         was_withdrawn_participant:,
         same_delivery_partner: with_the_same_delivery_partner?,
