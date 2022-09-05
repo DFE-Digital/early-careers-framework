@@ -123,46 +123,18 @@ module Schools
     #   b. Send email to participant to notify them.
     #
     def send_notification_emails!(induction_record, was_withdrawn_participant)
-      current_lead_provider_users = current_lead_provider&.users || []
-      target_lead_provider_users = participant_lead_provider&.users || []
+      current_lead_provider_profiles = current_lead_provider&.users&.map(&:lead_provider_profile) || []
+      target_lead_provider_profiles = participant_lead_provider&.users&.map(&:lead_provider_profile) || []
 
-      if was_withdrawn_participant
-        current_lead_provider_users.each do |user|
-          ParticipantTransferMailer.provider_transfer_in_notification(
-            induction_record:,
-            lead_provider_profile: user.lead_provider_profile,
-          ).deliver_later
-        end
-      elsif matching_lead_provider_and_delivery_partner?
-        current_lead_provider_users.each do |user|
-          ParticipantTransferMailer.provider_existing_school_transfer_notification(
-            induction_record:,
-            lead_provider_profile: user.lead_provider_profile,
-          ).deliver_later
-        end
-      elsif @transferring_participant_form.switch_to_schools_programme?
-        current_lead_provider_users.each do |user|
-          ParticipantTransferMailer.provider_transfer_in_notification(
-            induction_record:,
-            lead_provider_profile: user.lead_provider_profile,
-          ).deliver_later
-        end
-        target_lead_provider_users.each do |user|
-          ParticipantTransferMailer.provider_transfer_out_notification(
-            induction_record:,
-            lead_provider_profile: user.lead_provider_profile,
-          ).deliver_later
-        end
-      else
-        target_lead_provider_users.each do |user|
-          ParticipantTransferMailer.provider_new_school_transfer_notification(
-            induction_record:,
-            lead_provider_profile: user.lead_provider_profile,
-          ).deliver_later
-        end
-      end
-
-      ParticipantTransferMailer.participant_transfer_in_notification(induction_record:).deliver_later
+      Induction::SendTransferNotificationEmails.call(
+        induction_record:,
+        was_withdrawn_participant:,
+        same_delivery_partner: with_the_same_delivery_partner?,
+        same_provider: with_the_same_provider?,
+        switch_to_schools_programme: @transferring_participant_form.switch_to_schools_programme?,
+        current_lead_provider_profiles:,
+        target_lead_provider_profiles:,
+      )
     end
 
     def transfer_fip_participant_to_schools_programme
