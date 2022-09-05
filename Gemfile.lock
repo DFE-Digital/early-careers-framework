@@ -110,7 +110,7 @@ GEM
     bcrypt (3.1.17)
     benchmark (0.2.0)
     bindex (0.8.1)
-    bootsnap (1.12.0)
+    bootsnap (1.13.0)
       msgpack (~> 1.2)
     builder (3.2.4)
     byebug (11.1.3)
@@ -305,7 +305,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.16.3)
-    msgpack (1.5.3)
+    msgpack (1.5.6)
     multi_json (1.15.0)
     multipart-post (2.2.3)
     net-imap (0.2.3)
@@ -638,7 +638,7 @@ DEPENDENCIES
   ar-uuid (~> 0.2.2)
   aws-sdk-s3
   axe-core-rspec
-  bootsnap (~> 1.12)
+  bootsnap (~> 1.13)
   byebug
   canonical-rails (~> 0.2.14)
   capybara (~> 3.37)
