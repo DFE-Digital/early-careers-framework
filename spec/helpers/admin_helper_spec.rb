@@ -43,4 +43,20 @@ RSpec.describe AdminHelper, type: :helper do
       end
     end
   end
+
+  describe "#html_list" do
+    let(:values) { %w[aaa bbb ccc ddd] }
+    subject { html_list(values) }
+
+    it "formats the provided values in a ul.govuk-list" do
+      expect(subject).to have_css("ul.govuk-list > li", count: values.size)
+      expect(values).to all(be_in(subject))
+    end
+
+    context "when nothing is passed in" do
+      let(:values) { [] }
+
+      it("renders nothing") { is_expected.to be_nil }
+    end
+  end
 end

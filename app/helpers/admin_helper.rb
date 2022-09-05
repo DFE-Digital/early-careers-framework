@@ -16,4 +16,10 @@ module AdminHelper
   def on_admin_npq_application_page?
     request.path.starts_with?("/admin/npq/applications")
   end
+
+  def html_list(values)
+    return nil if values.empty?
+
+    tag.ul(class: %w[govuk-list]) { safe_join(values.map { |v| tag.li(v) }) }
+  end
 end
