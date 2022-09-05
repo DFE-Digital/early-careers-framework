@@ -27,6 +27,7 @@ module Admin
         :funding_choice,
         :employer_name,
         :employment_role,
+        :employment_type,
         :targeted_delivery_funding_eligibility,
         :created_at,
         :user_id,

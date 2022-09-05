@@ -91,6 +91,7 @@ module Api
             :works_in_school,
             :employer_name,
             :employment_role,
+            :employment_type,
             :targeted_delivery_funding_eligibility,
             :cohort,
             :works_in_nursery,
