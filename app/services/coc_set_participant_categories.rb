@@ -99,13 +99,12 @@ private
     ).resolve
   end
 
-  # switch back to active_induction_records once transferring out journey is done
-  # Until this is done we want to show the active and transferring_out in this section
   def active_induction_records
     InductionRecordPolicy::Scope.new(
       user,
       school_cohort
-        .current_induction_records
+        .active_induction_records
+        .or(InductionRecord.claimed_by_another_school)
         .where.not(training_status: :withdrawn)
         .joins(:participant_profile)
         .where(participant_profiles: { type: profile_type.to_s })
@@ -124,13 +123,6 @@ private
         .where(participant_profiles: { type: profile_type.to_s })
         .includes(:user)
         .order("users.full_name"),
-    ).resolve
-  end
-
-  def incoming_induction_records
-    InductionRecordPolicy::Scope.new(
-      user,
-      school_cohort.transferring_in_induction_records,
     ).resolve
   end
 

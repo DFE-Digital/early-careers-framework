@@ -26,6 +26,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
     let(:fip_withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort:) }
     let(:fip_transferring_in_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:fip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:fip_another_school_claimed_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:fip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:fip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:fip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
@@ -46,6 +47,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
     let(:cip_withdrawn_ect) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, training_status: "withdrawn", school_cohort:) }
     let(:cip_transferring_in_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:cip_transferring_out_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
+    let(:cip_another_school_claimed_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:cip_transferred_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:cip_transferred_withdrawn_participant) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
     let(:cip_ect_no_qts) { create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, school_cohort:) }
@@ -68,6 +70,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         fip_withdrawn_ect,
         fip_transferring_in_participant,
         fip_transferring_out_participant,
+        fip_another_school_claimed_participant,
         fip_transferred_participant,
         fip_transferred_withdrawn_participant,
         fip_ect_no_qts,
@@ -92,6 +95,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         cip_withdrawn_ect,
         cip_transferring_in_participant,
         cip_transferring_out_participant,
+        cip_another_school_claimed_participant,
         cip_transferred_participant,
         cip_transferred_withdrawn_participant,
         cip_ect_no_qts,
@@ -109,7 +113,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       # NOTE: all categories under one spec as otherwise very slow
       it "returns induction_records in correct category" do
         # eligible
-        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, fip_another_school_claimed_participant].map(&:current_induction_record))
         expect(@mentor_categories.eligible).to match_array([fip_eligible_mentor, fip_ero_mentor, fip_primary_mentor, fip_secondary_mentor].map(&:current_induction_record))
 
         # ineligible
@@ -152,7 +156,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       # NOTE: all categories under one spec as otherwise very slow
       it "returns participants in correct category" do
         # eligible
-        expect(@ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_ect_no_qts].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_ect_no_qts, cip_another_school_claimed_participant].map(&:current_induction_record))
         expect(@mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
 
         # ineligible
@@ -193,7 +197,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       # NOTE: all categories under one spec as otherwise very slow
       it "returns participants in correct category" do
         # eligible
-        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_ect_no_qts].map(&:current_induction_record))
+        expect(@ect_categories.eligible).to match_array([fip_eligible_ect, fip_ero_ect, cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, cip_ect_no_qts, fip_another_school_claimed_participant, cip_another_school_claimed_participant].map(&:current_induction_record))
         expect(@mentor_categories.eligible).to match_array([fip_eligible_mentor, fip_ero_mentor, fip_primary_mentor, fip_secondary_mentor, cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
 
         # ineligible
@@ -253,7 +257,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
 
       it "only returns ECTs for the selected school cohort" do
         ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
-        expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, fip_transferring_in_participant, cip_transferring_in_participant, cip_ect_no_qts].map(&:current_induction_record).compact)
+        expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, fip_transferring_in_participant, cip_transferring_in_participant, cip_ect_no_qts, cip_another_school_claimed_participant].map(&:current_induction_record).compact)
       end
 
       it "only returns mentors for the selected school cohort" do
@@ -265,29 +269,32 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
   end
 
   def setup_fip_participants
-    school_cohort.update!(induction_programme_choice: :full_induction_programme, default_induction_programme: fip_programme)
-    fip_participants.each do |profile|
-      Induction::Enrol.call(participant_profile: profile, induction_programme: fip_programme)
-    end
-    fip_transferring_in_participant.induction_records.first.update!(start_date: 2.months.from_now, school_transfer: true)
-    fip_transferring_out_participant.induction_records.first.update!(school_transfer: true, induction_status: :leaving, end_date: 1.month.from_now)
-    fip_transferred_participant.induction_records.first.leaving!(1.month.ago)
-    fip_transferred_withdrawn_participant.induction_records.first.leaving!(1.month.ago)
-    fip_transferred_withdrawn_participant.induction_records.first.training_status_withdrawn!
-    fip_withdrawn_ect.induction_records.first.training_status_withdrawn!
+    ActiveRecord::Base.no_touching do
+      school_cohort.update!(induction_programme_choice: :full_induction_programme, default_induction_programme: fip_programme)
+      fip_participants.each do |profile|
+        Induction::Enrol.call(participant_profile: profile, induction_programme: fip_programme)
+      end
+      fip_transferring_in_participant.induction_records.first.update!(start_date: 2.months.from_now, school_transfer: true)
+      fip_transferring_out_participant.induction_records.first.leaving!(1.month.from_now, transferring_out: true)
+      fip_another_school_claimed_participant.induction_records.first.leaving!(1.month.from_now)
+      fip_transferred_participant.induction_records.first.leaving!(1.month.ago)
+      fip_transferred_withdrawn_participant.induction_records.first.leaving!(1.month.ago)
+      fip_transferred_withdrawn_participant.induction_records.first.training_status_withdrawn!
+      fip_withdrawn_ect.induction_records.first.training_status_withdrawn!
 
-    fip_ineligible_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    fip_ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    fip_ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    fip_ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    fip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
-    fip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
-    fip_ect_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    fip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+      fip_ineligible_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+      fip_ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+      fip_ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
+      fip_ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
+      fip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+      fip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+      fip_ect_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+      fip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
-    [fip_primary_mentor, fip_secondary_mentor].each do |profile|
-      profile.ecf_participant_eligibility.determine_status
-      profile.ecf_participant_eligibility.save!
+      [fip_primary_mentor, fip_secondary_mentor].each do |profile|
+        profile.ecf_participant_eligibility.determine_status
+        profile.ecf_participant_eligibility.save!
+      end
     end
 
     @ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
@@ -295,31 +302,33 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
   end
 
   def setup_cip_participants
-    school_cohort.update!(default_induction_programme: cip_programme)
-    cip_participants.each do |profile|
-      Induction::Enrol.call(participant_profile: profile, induction_programme: cip_programme)
+    ActiveRecord::Base.no_touching do
+      school_cohort.update!(default_induction_programme: cip_programme)
+      cip_participants.each do |profile|
+        Induction::Enrol.call(participant_profile: profile, induction_programme: cip_programme)
+      end
+      cip_transferring_in_participant.induction_records.first.update!(start_date: 2.months.from_now, school_transfer: true)
+      cip_transferring_out_participant.induction_records.first.leaving!(1.month.from_now, transferring_out: true)
+      cip_another_school_claimed_participant.induction_records.first.leaving!(1.month.from_now)
+      cip_transferred_participant.induction_records.first.leaving!(1.month.ago)
+      cip_transferred_withdrawn_participant.induction_records.first.leaving!(1.month.ago)
+      cip_transferred_withdrawn_participant.induction_records.first.training_status_withdrawn!
+      cip_withdrawn_ect.induction_records.first.training_status_withdrawn!
+
+      cip_ineligible_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+      cip_ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
+      cip_ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
+      cip_ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
+      cip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+      cip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
+      cip_ect_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+      cip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
+
+      [cip_primary_mentor, cip_secondary_mentor].each do |profile|
+        profile.ecf_participant_eligibility.determine_status
+        profile.ecf_participant_eligibility.save!
+      end
     end
-    cip_transferring_in_participant.induction_records.first.update!(start_date: 2.months.from_now, school_transfer: true)
-    cip_transferring_out_participant.induction_records.first.update!(school_transfer: true, induction_status: :leaving, end_date: 1.month.from_now)
-    cip_transferred_participant.induction_records.first.leaving!(1.month.ago)
-    cip_transferred_withdrawn_participant.induction_records.first.leaving!(1.month.ago)
-    cip_transferred_withdrawn_participant.induction_records.first.training_status_withdrawn!
-    cip_withdrawn_ect.induction_records.first.training_status_withdrawn!
-
-    cip_ineligible_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    cip_ineligible_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    cip_ero_ect.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    cip_ero_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "previous_participation")
-    cip_details_being_checked_ect.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
-    cip_details_being_checked_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
-    cip_ect_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-    cip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
-
-    [cip_primary_mentor, cip_secondary_mentor].each do |profile|
-      profile.ecf_participant_eligibility.determine_status
-      profile.ecf_participant_eligibility.save!
-    end
-
     @ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
     @mentor_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::Mentor)
   end
