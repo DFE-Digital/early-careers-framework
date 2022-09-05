@@ -82,7 +82,7 @@ module Api
                   sparsity_uplift: ect_profile.sparsity_uplift,
                   training_status: ect_profile.training_status,
                   schedule_identifier: ect_profile.schedule.schedule_identifier,
-                  updated_at: ect_profile.updated_at.rfc3339,
+                  updated_at: ect_profile.user.updated_at.rfc3339,
                 },
               },
             }.to_json
