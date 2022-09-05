@@ -126,7 +126,7 @@ module Schools
       current_lead_provider_profiles = current_lead_provider&.users&.map(&:lead_provider_profile) || []
       target_lead_provider_profiles = participant_lead_provider&.users&.map(&:lead_provider_profile) || []
 
-      Induction::SendTransferNotificationEmails.new(
+      Induction::SendTransferNotificationEmails.call(
         induction_record:,
         was_withdrawn_participant:,
         same_delivery_partner: with_the_same_delivery_partner?,
@@ -134,7 +134,7 @@ module Schools
         switch_to_schools_programme: @transferring_participant_form.switch_to_schools_programme?,
         current_lead_provider_profiles:,
         target_lead_provider_profiles:,
-      ).call
+      )
     end
 
     def transfer_fip_participant_to_schools_programme
