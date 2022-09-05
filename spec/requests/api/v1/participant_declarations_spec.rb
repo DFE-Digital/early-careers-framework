@@ -149,8 +149,8 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
           expect(response).to have_http_status(:unprocessable_entity)
           expect(parsed_response)
             .to eq({ "errors" => [
-              { "title" => "declaration_date", "detail" => "A declaration with the date of #{milestone_start_date.in_time_zone.rfc3339} already exists." },
               { "title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event" },
+              { "title" => "declaration_date", "detail" => "A declaration with the date of #{milestone_start_date.in_time_zone.rfc3339} already exists." },
             ] })
         end
       end
@@ -273,9 +273,8 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
                 expect(parsed_response["errors"])
                   .to eq(
                     [
-                      { "title" => "declaration_date",
-                        "detail" => "A declaration with the date of #{old_provider_declaration.dig('data', 'attributes', 'declaration_date')} already exists." },
                       { "title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event" },
+                      { "title" => "declaration_date", "detail" => "A declaration with the date of #{old_provider_declaration.dig('data', 'attributes', 'declaration_date')} already exists." },
                     ],
                   )
               end

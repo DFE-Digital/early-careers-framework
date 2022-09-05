@@ -29,20 +29,36 @@ FactoryBot.define do
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
       transient do
+        npq_course        { create(:npq_course) }
         user              { create(:user) }
         npq_lead_provider { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
         trn               { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
       end
-      npq_application { create(:npq_application, *profile_traits, :accepted, user:, npq_lead_provider:) }
+      npq_application { create(:npq_application, *profile_traits, :accepted, user:, npq_lead_provider:, npq_course:) }
+
+      trait :eligible_for_funding do
+        profile_traits { [:eligible_for_funding] }
+      end
+
+      trait :withdrawn do
+        transient do
+          reason { "other" }
+        end
+
+        after(:create) do |participant_profile, evaluator|
+          Participants::Withdraw::NPQ.new(
+            params: {
+              participant_id: participant_profile.teacher_profile.user_id,
+              cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
+              reason: evaluator.reason,
+              course_identifier: participant_profile.npq_application.npq_course.identifier,
+            },
+          ).call
+        end
+      end
 
       initialize_with do
         npq_application.profile
-      end
-
-      trait :with_participant_profile_state do
-        after(:build) do |participant_profile|
-          participant_profile.participant_profile_states << build(:participant_profile_state, state: participant_profile.training_status)
-        end
       end
     end
 

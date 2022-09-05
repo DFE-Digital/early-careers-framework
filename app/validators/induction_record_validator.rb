@@ -9,16 +9,15 @@ class InductionRecordValidator < ActiveModel::Validator
 private
 
   def has_a_participant_identity(record)
-    return unless record.participant_identity.nil?
+    return if record.participant_identity && record.participant_profile
 
     record.errors.add(:participant_id, I18n.t(:invalid_participant))
   end
 
   def has_an_induction_record_for_given_provider(record)
-    return unless record.participant_profile.is_a?(ParticipantProfile::ECF)
-    return if relevant_induction_record?(record)
-
-    record.errors.add(:participant_id, I18n.t(:invalid_participant))
+    if record.participant_profile.is_a?(ParticipantProfile::ECF) && !relevant_induction_record?(record)
+      record.errors.add(:participant_id, I18n.t(:invalid_participant))
+    end
   end
 
   def relevant_induction_record?(record)

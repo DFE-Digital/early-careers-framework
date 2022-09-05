@@ -2,65 +2,6 @@
 
 require "rails_helper"
 
-RSpec.shared_examples "validates the declaration_date" do
-  describe "#declaration_date" do
-    context "when declaration date is invalid" do
-      before { params[:declaration_date] = "2021-06-21 08:46:29" }
-
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
-      end
-    end
-
-    context "when declaration date is in future" do
-      let(:declaration_date) { (Time.zone.now + 100.years) }
-
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' can not declare a future date")
-      end
-    end
-
-    context "when before the milestone start" do
-      let(:declaration_date) { (cutoff_start_datetime - 2.days) }
-
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to eq(["The property '#/declaration_date' can not be before milestone start"])
-      end
-    end
-
-    context "when at the milestone start" do
-      let(:declaration_date) { (cutoff_start_datetime + 1.day) }
-
-      it { is_expected.to be_valid }
-    end
-
-    context "when in the middle of milestone" do
-      let(:declaration_date) { (cutoff_start_datetime + 2.days) }
-
-      it { is_expected.to be_valid }
-    end
-
-    context "when at the milestone end" do
-      let(:declaration_date) { cutoff_end_datetime }
-
-      it { is_expected.to be_valid }
-    end
-
-    context "when after the milestone start" do
-      let(:declaration_date) { (cutoff_end_datetime + 1.day) }
-
-      it "has a meaningfull error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date))
-          .to eq(["The property '#/declaration_date' can not be after milestone end"])
-      end
-    end
-  end
-end
-
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     let(:traits) { [:withdrawn] }
@@ -209,8 +150,7 @@ RSpec.shared_examples "validates the participant milestone" do
 
   context "when declaration_type does not exist for the schedule" do
     before do
-      participant_profile.schedule.milestones.find_by(declaration_type: "retained-4").destroy!
-      params[:declaration_type] = "retained-4"
+      params[:declaration_type] = "does-not-exist"
     end
 
     it "returns an error" do
@@ -221,14 +161,12 @@ RSpec.shared_examples "validates the participant milestone" do
 end
 
 RSpec.describe RecordDeclaration, :with_default_schedules do
-  let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
-  let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
-  let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Unknown") }
+  let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+  let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
   let(:params) do
     {
-      participant_id: participant_profile.user_id,
+      participant_id: participant_profile.participant_identity.external_identifier,
       declaration_date: declaration_date.rfc3339,
       declaration_type:,
       course_identifier:,
@@ -239,15 +177,17 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   let(:cutoff_start_datetime) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date.beginning_of_day }
   let(:cutoff_end_datetime)   { participant_profile.schedule.milestones.find_by(declaration_type: "started").milestone_date.end_of_day }
 
-  before do
-    create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
-  end
-
   subject(:service) do
     described_class.new(params)
   end
 
   context "when the participant is an ECF" do
+    before do
+      create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+    end
+
+    let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+    let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
     let(:traits)              { [] }
     let(:participant_profile) do
       create(particpant_type, *traits, lead_provider: cpd_lead_provider.lead_provider)
@@ -261,7 +201,6 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
         expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
       end
 
-      it_behaves_like "validates the declaration_date"
       it_behaves_like "validates the declaration for a withdrawn participant"
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
@@ -276,12 +215,34 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
         expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
       end
 
-      it_behaves_like "validates the declaration_date"
       it_behaves_like "validates the declaration for a withdrawn participant"
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
     end
+  end
+
+  context "when the participant is an NPQ" do
+    let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
+    let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
+    let(:npq_course) { create(:npq_leadship_course) }
+    let(:traits)     { [] }
+    let(:participant_profile) do
+      create(:npq_participant_profile, *traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
+    end
+    let(:course_identifier) { npq_course.identifier }
+    before do
+      create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+    end
+
+    it "creates a participant declaration" do
+      expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+    end
+
+    it_behaves_like "validates the declaration for a withdrawn participant"
+    it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
+    it_behaves_like "validates existing declarations"
+    it_behaves_like "validates the participant milestone"
   end
 
   context "when user is for 2020 cohort" do
