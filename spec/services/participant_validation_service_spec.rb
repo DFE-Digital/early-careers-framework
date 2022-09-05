@@ -308,7 +308,7 @@ RSpec.describe ParticipantValidationService do
         end
       end
 
-      context "when the participant has an induction start date before September this year" do
+      context "when the participant has an induction start date before September 2021" do
         let(:induction_start_date) { Time.zone.parse("2021-08-31T22:59:59Z") }
         let(:induction_completion_date) { nil }
         let(:induction) do
