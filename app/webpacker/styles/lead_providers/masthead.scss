@@ -1,5 +1,7 @@
 .app-masthead {
-  @include govuk-main-wrapper;
+  $masthead-spacing: 8;
+  padding-top: govuk-spacing($masthead-spacing);
+  padding-bottom: govuk-spacing($masthead-spacing);
   @include govuk-responsive-margin(6, "bottom");
 
   color: govuk-colour("white");
@@ -32,7 +34,7 @@
   .govuk-link {
     color: inherit;
 
-    &:focus  {
+    &:focus {
       @include govuk-focused-text;
     }
   }
