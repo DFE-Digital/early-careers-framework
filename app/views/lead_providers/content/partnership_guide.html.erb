@@ -60,7 +60,7 @@
 <h2 id="checking-errors-and-updating-your-csv" class="govuk-heading-l">Checking errors and updating your CSV</h2>
 <p class="govuk-body-m">When you upload your CSV, we will show you if there are any errors. These could be:</p>
 
-<%= render GovukComponent::SummaryListComponent.new do |component|
+<%= render GovukComponent::SummaryListComponent.new(actions: false) do |component|
   component.row do |row|
     row.key { "Recruited by other provider" }
     row.value { "Another training provider has confirmed this school" }
