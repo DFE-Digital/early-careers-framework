@@ -349,8 +349,6 @@ GEM
       parallel
     parser (3.1.2.0)
       ast (~> 2.4.1)
-    percy-capybara (5.0.0)
-      capybara (>= 3)
     pg (1.4.1)
     pretender (0.4.0)
       actionpack (>= 5.2)
@@ -676,7 +674,6 @@ DEPENDENCIES
   pagy (~> 5.10, >= 5.10.1)
   paper_trail
   parallel_tests
-  percy-capybara
   pg (~> 1.4)
   pretender (>= 0.4.0)
   pry-byebug
