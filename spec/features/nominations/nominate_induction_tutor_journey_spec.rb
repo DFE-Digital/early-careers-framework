@@ -114,7 +114,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     and_percy_should_be_sent_a_snapshot_named "Nominate SIT success"
   end
 
-  scenario "Nominating an induction tutor with an email already in use by another school" do
+  scenario "Nominating an induction tutor with an email already in use by another school", :with_default_schedules do
     given_an_email_is_being_used_by_an_existing_ect
     when_i_click_the_link_to_nominate_a_sit
     then_i_should_be_on_the_choose_how_to_continue_page

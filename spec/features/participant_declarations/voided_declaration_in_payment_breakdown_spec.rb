@@ -3,12 +3,10 @@
 require "rails_helper"
 require_relative "./participant_declaration_steps"
 
-RSpec.feature "Voided declaration in payment breakdown", type: :feature do
+RSpec.feature "Voided declaration in payment breakdown", :with_default_schedules, type: :feature do
   include ParticipantDeclarationSteps
 
-  before(:each) do
-    setup
-  end
+  before(:each) { setup }
 
   scenario "Payment breakdown does not include voided declarations" do
     given_an_early_career_teacher_has_been_entered_onto_the_dfe_service

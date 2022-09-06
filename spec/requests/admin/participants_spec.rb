@@ -2,28 +2,17 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Participants", type: :request do
+RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
   let(:admin_user) { create(:user, :admin) }
-  let(:cohort) { create(:cohort) }
-  let(:school) { create(:school) }
 
-  let(:school_cohort) { create(:school_cohort, school:, cohort:) }
-  let!(:mentor_profile) { create :mentor_participant_profile, school_cohort: }
-  let!(:ect_profile) { create :ect_participant_profile, school_cohort:, mentor_profile: }
-  let!(:npq_profile) { create(:npq_participant_profile, school:) }
-  let!(:withdrawn_ect_profile_record) { create(:ect_participant_profile, :withdrawn_record, school_cohort:) }
-  let!(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+  let!(:mentor_profile)               { create :mentor }
+  let!(:ect_profile)                  { create :ect, mentor_profile_id: mentor_profile.id }
+  let!(:npq_profile)                  { create(:npq_participant_profile) }
+  let!(:withdrawn_ect_profile_record) { create(:ect, :withdrawn_record) }
+  let!(:induction_programme)          { create(:induction_programme, :fip) }
 
   before do
     sign_in admin_user
-    [mentor_profile, ect_profile, withdrawn_ect_profile_record].each do |ppt|
-      Induction::Enrol.call(
-        participant_profile: ppt,
-        induction_programme:,
-        start_date: 2.months.ago,
-        mentor_profile: ppt.ect? ? mentor_profile : nil,
-      )
-    end
   end
 
   describe "GET /admin/participants" do
@@ -50,15 +39,6 @@ RSpec.describe "Admin::Participants", type: :request do
   end
 
   context "when change of circumstances enabled", with_feature_flags: { change_of_circumstances: "active" } do
-    before do
-      Induction::SetCohortInductionProgramme.call(school_cohort:,
-                                                  programme_choice: school_cohort.induction_programme_choice)
-      school_cohort.reload.active_ecf_participant_profiles.each do |profile|
-        induction_record = Induction::Enrol.call(participant_profile: profile, induction_programme: school_cohort.default_induction_programme)
-        induction_record.update!(induction_status: profile.status, training_status: profile.training_status, mentor_profile_id: profile.mentor_profile_id)
-      end
-    end
-
     describe "GET /admin/participants" do
       it "renders the index participants template" do
         get "/admin/participants"

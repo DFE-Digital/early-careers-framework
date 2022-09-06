@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration::NPQ < ParticipantDeclaration
-  include RecordDeclarations::NPQ
-
   belongs_to :participant_profile, class_name: "ParticipantProfile::NPQ"
 
   has_one :npq_application, through: :participant_profile

@@ -48,7 +48,7 @@ RSpec.describe "Manage CIP training", js: true do
     then_i_can_view_the_add_your_ect_and_mentor_link
   end
 
-  scenario "CIP Induction Mentor who has added ECT or mentors" do
+  scenario "CIP Induction Mentor who has added ECT or mentors", :with_default_schedules do
     given_there_is_a_school_that_has_chosen_cip_for_2021
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator

@@ -2,14 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V1::ParticipantDeclarationSerializer do
+RSpec.describe Api::V1::ParticipantDeclarationSerializer, :with_default_schedules do
   describe "#state" do
     let(:declaration) do
-      build(
-        :participant_declaration,
-        updated_at: 10.seconds.ago,
-        state: "awaiting_clawback",
-      )
+      create(:ect_participant_declaration, :awaiting_clawback)
     end
 
     it "dasherizes the value" do

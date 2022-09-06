@@ -2,27 +2,14 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::Withdraw::Mentor do
+RSpec.describe Participants::Withdraw::Mentor, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:profile) { create(:mentor_participant_profile) }
+  let(:profile) { create(:mentor, lead_provider:) }
   let(:user) { profile.user }
   let(:school) { profile.school_cohort.school }
   let(:cohort) { profile.school_cohort.cohort }
-  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
 
-  let!(:induction_record) do
-    Induction::Enrol.call(participant_profile: profile, induction_programme:)
-  end
-
-  let!(:partnership) do
-    create(
-      :partnership,
-      school:,
-      lead_provider:,
-      cohort:,
-    )
-  end
   let!(:induction_coordinator_profile) do
     create(
       :induction_coordinator_profile,
@@ -47,7 +34,7 @@ RSpec.describe Participants::Withdraw::Mentor do
     end
 
     it "updates induction record training_status to withdrawn" do
-      expect { subject.call }.to change { induction_record.reload.training_status }.from("active").to("withdrawn")
+      expect { subject.call }.to change { profile.reload.current_induction_record.reload.training_status }.from("active").to("withdrawn")
     end
 
     it "creates a ParticipantProfileState" do

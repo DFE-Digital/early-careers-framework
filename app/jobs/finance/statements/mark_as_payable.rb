@@ -5,8 +5,7 @@ module Finance
     class MarkAsPayable < ApplicationJob
       def perform
         Finance::Statement.where(deadline_date: 1.day.ago.to_date).find_each do |statement|
-          service = ::Statements::MarkAsPayable.new(statement:)
-          service.call
+          ::Statements::MarkAsPayable.new(statement).call
         end
       end
     end

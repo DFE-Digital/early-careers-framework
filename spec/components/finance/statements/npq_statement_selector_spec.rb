@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Finance::Statements::NPQStatementSelector, type: :component do
-  let!(:npq_lead_provider) { create(:npq_lead_provider) }
-  let!(:npq_statement) { create(:npq_statement) }
+  let(:cpd_lead_provider)    { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider)    { cpd_lead_provider.npq_lead_provider }
+  let!(:npq_statement)       { create(:npq_statement, cpd_lead_provider:) }
   let!(:other_npq_statement) { create(:npq_statement) }
 
   let(:rendered) { render_inline(described_class.new(current_statement: npq_statement)) }

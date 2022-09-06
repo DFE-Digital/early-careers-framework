@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ECF::StatementCalculator do
+RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
 
@@ -260,7 +260,7 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when we pass the uplift cap threshold" do
-      let!(:contract) { create(:call_off_contract, lead_provider:) }
+      let!(:contract) { create(:call_off_contract, lead_provider: cpd_lead_provider.lead_provider) }
 
       let(:uplift_breakdown) do
         {
@@ -408,24 +408,14 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     context "when there are declarations attached to another statement for different provider" do
       let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-      let(:other_lead_provider) { other_cpd_lead_provider.lead_provider }
 
       let!(:other_statement) { create(:ecf_statement, cpd_lead_provider: other_cpd_lead_provider, payment_date: 1.week.ago) }
-      let!(:other_contract) { create(:call_off_contract, :with_minimal_bands, lead_provider: other_lead_provider) }
 
       before do
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          cpd_lead_provider: other_cpd_lead_provider,
-          state: "eligible"
-        )
+        create(:call_off_contract, :with_minimal_bands, lead_provider: other_cpd_lead_provider.lead_provider)
 
-        declarations.each do |declaration|
-          Finance::StatementLineItem.create!(
-            statement: other_statement,
-            participant_declaration: declaration,
-            state: declaration.state,
-          )
+        travel_to other_statement.deadline_date - 1.day do
+          create(:ect_participant_declaration, :eligible, cpd_lead_provider: other_cpd_lead_provider)
         end
       end
 
@@ -436,18 +426,8 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     context "when band is partially populated" do
       before do
-        declarations = create_list(
-          :ect_participant_declaration, 1,
-          cpd_lead_provider:,
-          state: "eligible"
-        )
-
-        declarations.each do |declaration|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: declaration,
-            state: declaration.state,
-          )
+        travel_to statement.deadline_date do
+          create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
         end
       end
 
@@ -458,23 +438,13 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
     context "when the band had overflowed" do
       before do
-        declarations = create_list(
-          :ect_participant_declaration, 3,
-          cpd_lead_provider:,
-          state: "eligible"
-        )
-
-        declarations.each do |declaration|
-          Finance::StatementLineItem.create!(
-            statement:,
-            participant_declaration: declaration,
-            state: declaration.state,
-          )
+        travel_to statement.deadline_date - 1.day do
+          create_list(:ect_participant_declaration, 3, :eligible, cpd_lead_provider:)
         end
       end
 
       it "returns the maximum number allowed in the band" do
-        expect(subject.started_band_a_count).to eql(2)
+        expect(subject.started_band_a_count).to eq(2)
       end
     end
 
@@ -593,21 +563,10 @@ RSpec.describe Finance::ECF::StatementCalculator do
 
   describe "#uplift_count" do
     context "when uplift is not applicable" do
-      let(:profile) { create(:ect_participant_profile) }
-
       before do
-        declaration = create(
-          :ect_participant_declaration, :without_uplift,
-          cpd_lead_provider:,
-          state: "eligible",
-          participant_profile: profile
-        )
-
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: declaration,
-          state: declaration.state,
-        )
+        travel_to statement.deadline_date do
+          create(:ect_participant_declaration, :eligible, cpd_lead_provider:)
+        end
       end
 
       it "does not count it" do
@@ -616,22 +575,10 @@ RSpec.describe Finance::ECF::StatementCalculator do
     end
 
     context "when uplift is applicable" do
-      let(:profile) { create(:ect_participant_profile) }
-      let(:declaration) do
-        create(
-          :ect_participant_declaration, :pupil_premium_uplift,
-          cpd_lead_provider:,
-          state: "eligible",
-          participant_profile: profile
-        )
-      end
-
       before do
-        Finance::StatementLineItem.create!(
-          statement:,
-          participant_declaration: declaration,
-          state: declaration.state,
-        )
+        travel_to statement.deadline_date do
+          create(:ect_participant_declaration, :eligible, uplifts: [:pupil_premium_uplift], cpd_lead_provider:)
+        end
       end
 
       it "does count it" do

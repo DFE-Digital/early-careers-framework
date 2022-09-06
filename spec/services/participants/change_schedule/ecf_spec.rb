@@ -3,11 +3,32 @@
 require "rails_helper"
 require "securerandom"
 
-RSpec.describe Participants::ChangeSchedule::ECF do
+RSpec.describe Participants::ChangeSchedule::ECF, :with_default_schedules do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+
   describe "validations" do
+    context "when participant is withdrawn", :with_default_schedules do
+      let(:user)     { profile.user }
+      let(:profile)  { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.current) }
+
+      subject do
+        Participants::ChangeSchedule::ECF.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: CpdLeadProvider.new,
+        })
+      end
+
+      it "should have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /must be a valid Participant ID/)
+      end
+    end
+
     context "when null schedule_identifier given" do
       let(:user) { profile.user }
-      let(:profile) { create(:ecf_participant_profile) }
+      let(:profile) { create(:ect) }
 
       subject do
         described_class.new(params: {
@@ -28,16 +49,10 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     end
 
     context "when changing to schedule suitable for the course" do
-      let(:user) { profile.user }
-      let(:profile) { create(:mentor_participant_profile) }
-      let(:schedule) { create(:ecf_mentor_schedule) }
-      let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-      let(:lead_provider) { cpd_lead_provider.lead_provider }
-      let(:partnership) { create(:partnership, lead_provider:) }
-      let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-
-      before do
-        Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+      let(:user)    { profile.user }
+      let(:profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:schedule) do
+        create(:ecf_mentor_schedule)
       end
 
       subject do
@@ -55,8 +70,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     end
 
     context "when changing to schedule not suitable for the course" do
-      let(:user) { profile.user }
-      let(:profile) { create(:ect_participant_profile) }
+      let(:profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
       let(:schedule) do
         create(:ecf_mentor_schedule)
       end
@@ -64,7 +78,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
       subject do
         described_class.new(params: {
           schedule_identifier: schedule.schedule_identifier,
-          participant_id: user.id,
+          participant_id: profile.user_id,
           course_identifier: "ecf-induction",
           cpd_lead_provider: CpdLeadProvider.new,
         })
@@ -94,64 +108,52 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     end
   end
 
-  describe "changing to a soft schedules with previous declarations" do
-    let(:cohort) { profile.schedule.cohort }
-    let(:schedule) do
-      Finance::Schedule.create!(
-        cohort:,
-        schedule_identifier: "soft-schedule",
-        name: "soft-schedule",
+  describe "changing to a soft schedules with previous declarations", :with_default_schedules do
+    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:soft_schedule)       { create(:schedule, :soft, cohort: Cohort.current) }
+    let(:current_milestone)   { participant_profile.current_induction_record.schedule.milestones.find_by!(declaration_type: :started) }
+    before do
+      soft_schedule.milestones.first.update!(start_date: current_milestone.start_date)
+
+      create(
+        :ect_participant_declaration,
+        cpd_lead_provider:,
+        participant_profile:,
+        declaration_date: current_milestone.start_date + 1.minute,
       )
     end
-    let!(:started_milestone) { create(:milestone, :started, :soft_milestone, schedule:) }
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile) }
-    let!(:declaration) do
-      create(:participant_declaration,
-             user:,
-             participant_profile: profile,
-             course_identifier: "ecf-induction")
-    end
 
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+    let(:new_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:partnership)           { create(:partnership, lead_provider: new_cpd_lead_provider.lead_provider) }
+    let(:induction_programme)   { create(:induction_programme, :fip, partnership:) }
 
     before do
-      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+      Induction::Enrol.new(participant_profile:, induction_programme:).call
     end
 
     subject do
       described_class.new(params: {
-        schedule_identifier: schedule.schedule_identifier,
-        participant_id: user.id,
+        schedule_identifier: soft_schedule.schedule_identifier,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
-        cpd_lead_provider:,
-        cohort: schedule.cohort.start_year,
+        cpd_lead_provider: new_cpd_lead_provider,
+        cohort: soft_schedule.cohort.start_year,
       })
     end
 
     it "create a new induction record with new schedule" do
-      expect {
-        subject.call
-      }.to change { InductionRecord.count }.by(1)
+      expect { subject.call }.to change { InductionRecord.count }.by(1)
 
-      new_induction_record = InductionRecord.order(created_at: :asc).last
-
-      expect(new_induction_record.schedule).to eql(schedule)
+      expect(participant_profile.reload.current_induction_record.schedule).to eq(soft_schedule)
     end
 
     it "also updates the schedule on the profile" do
-      expect {
-        subject.call
-      }.to change { profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("soft-schedule")
+      expect { subject.call }.to change { participant_profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("soft-schedule")
     end
   end
 
   describe "when one profile and 2 induction records, where profile#training_status is withdrawn" do
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile, status: "active", training_status: "withdrawn") }
+    let(:participant_profile) { create(:ect, :withdrawn) }
     let(:new_schedule) { create(:ecf_schedule, schedule_identifier: "new-schedule") }
 
     let(:induction_programme_1) { create(:induction_programme, :fip)  }
@@ -160,7 +162,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     let!(:induction_record_1) do
       create(
         :induction_record,
-        participant_profile: profile,
+        participant_profile:,
         induction_programme: induction_programme_1,
       )
     end
@@ -168,7 +170,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     let!(:induction_record_2) do
       create(
         :induction_record,
-        participant_profile: profile,
+        participant_profile:,
         induction_programme: induction_programme_2,
       )
     end
@@ -176,53 +178,33 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     let(:cpd_lead_provider_1) { induction_record_1.induction_programme.partnership.lead_provider.cpd_lead_provider }
     let(:cpd_lead_provider_2) { induction_record_2.induction_programme.partnership.lead_provider.cpd_lead_provider }
 
-    before do
-      profile.participant_profile_states.create!(state: "withdrawn")
-    end
-
     subject do
       described_class.new(params: {
         schedule_identifier: new_schedule.schedule_identifier,
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider: cpd_lead_provider_2,
       })
     end
 
     it "creates a new induction record with new schedule" do
-      expect {
-        subject.call
-      }.to change { InductionRecord.count }.by(1)
+      expect { subject.call }.to change { InductionRecord.count }.by(1)
 
-      new_induction_record = InductionRecord.order(created_at: :asc).last
-
-      expect(new_induction_record.schedule).to eql(new_schedule)
+      expect(participant_profile.current_induction_record.schedule).to eql(new_schedule)
     end
   end
 
   describe "changing schedule in a different cohort" do
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile) }
-
-    let(:cohort) { profile.schedule.cohort }
-    let(:cohort_year) { cohort.start_year }
-    let(:next_cohort) { Cohort.find_by(start_year: (cohort_year + 1)) || create(:cohort, start_year: (cohort_year + 1)) }
-
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-
-    let(:new_schedule) { create(:ecf_schedule, cohort: next_cohort, schedule_identifier: "new-schedule") }
-
-    before do
-      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
-    end
+    let!(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:cohort)               { participant_profile.schedule.cohort }
+    let(:cohort_year)          { cohort.start_year }
+    let(:next_cohort)          { Cohort.find_by(start_year: (cohort_year + 1)) || create(:cohort, start_year: (cohort_year + 1)) }
+    let(:new_schedule)         { create(:ecf_schedule, cohort: next_cohort, schedule_identifier: "new-schedule") }
 
     subject do
       described_class.new(params: {
         schedule_identifier: new_schedule.schedule_identifier,
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
         cohort: cohort_year + 1,
@@ -238,28 +220,14 @@ RSpec.describe Participants::ChangeSchedule::ECF do
   end
 
   describe "changing schedule when induction record is withdrawn" do
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile) }
-
-    let(:cohort) { profile.schedule.cohort }
-
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-
-    let(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
-
-    before do
-      Induction::Enrol.new(participant_profile: profile, induction_programme:).call.tap do |ir|
-        ir.update!(training_status: "withdrawn", induction_status: "withdrawn")
-      end
-    end
+    let!(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:cohort)              { participant_profile.schedule.cohort }
+    let(:new_schedule)        { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
 
     subject do
       described_class.new(params: {
         schedule_identifier: new_schedule.schedule_identifier,
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
         cohort: cohort.start_year,
@@ -275,35 +243,25 @@ RSpec.describe Participants::ChangeSchedule::ECF do
   end
 
   describe "changing schedule when hard awaiting_clawback declaration present" do
-    let(:cohort) { profile.schedule.cohort }
-    let(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
-
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile) }
-
-    let!(:declaration) do
-      create(
-        :participant_declaration,
-        user:,
-        participant_profile: profile,
-        course_identifier: "ecf-induction",
-        state: "awaiting_clawback",
-      )
-    end
-
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+    let!(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:cohort)               { participant_profile.schedule.cohort }
+    let(:new_schedule)         { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
 
     before do
-      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+      create(:ecf_statement, :next_output_fee, cpd_lead_provider:)
+      create(
+        :ect_participant_declaration,
+        :awaiting_clawback,
+        participant_profile:,
+        cpd_lead_provider:,
+        course_identifier: "ecf-induction",
+      )
     end
 
     subject do
       described_class.new(params: {
         schedule_identifier: new_schedule.schedule_identifier,
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
         cohort: cohort.start_year,
@@ -323,40 +281,25 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     it "also changes schedule on the profile" do
       expect {
         subject.call
-      }.to change { profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("new-schedule")
+      }.to change { participant_profile.reload.schedule.schedule_identifier }.from("ecf-standard-september").to("new-schedule")
     end
   end
 
   describe "changing schedule when hard paid declaration present" do
-    let(:cohort) { profile.schedule.cohort }
-    let(:new_schedule) { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
-
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile) }
-
-    let!(:declaration) do
-      create(
-        :participant_declaration,
-        user:,
-        participant_profile: profile,
-        course_identifier: "ecf-induction",
-        state: "paid",
-      )
-    end
-
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+    let!(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:cohort)               { participant_profile.schedule.cohort }
+    let(:new_schedule)         { create(:ecf_schedule, cohort:, schedule_identifier: "new-schedule") }
 
     before do
-      Induction::Enrol.new(participant_profile: profile, induction_programme:).call
+      current_milestone = participant_profile.schedule.milestones.find_by!(declaration_type: :started)
+      create(:ect_participant_declaration, :paid, participant_profile:, cpd_lead_provider:, declaration_date: current_milestone.start_date)
+      create(:milestone, start_date: current_milestone.start_date + 1.day, milestone_date: current_milestone.milestone_date, schedule: new_schedule)
     end
 
     subject do
       described_class.new(params: {
         schedule_identifier: new_schedule.schedule_identifier,
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
         cohort: cohort.start_year,
@@ -372,16 +315,11 @@ RSpec.describe Participants::ChangeSchedule::ECF do
   end
 
   context "when there are multiple induction records for same provider" do
-    let(:user) { profile.user }
-    let(:profile) { create(:ect_participant_profile) }
+    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
     let(:schedule) { create(:ecf_schedule) }
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-    let(:mentor_profile) { create(:mentor_participant_profile) }
+    let(:mentor_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
 
-    let(:first_induction_record) { Induction::Enrol.new(participant_profile: profile, induction_programme:).call }
+    let(:first_induction_record) { participant_profile.current_induction_record }
 
     before do
       Induction::ChangeMentor.call(induction_record: first_induction_record, mentor_profile:)
@@ -390,7 +328,7 @@ RSpec.describe Participants::ChangeSchedule::ECF do
     subject do
       described_class.new(params: {
         schedule_identifier: schedule.schedule_identifier,
-        participant_id: user.id,
+        participant_id: participant_profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
       })

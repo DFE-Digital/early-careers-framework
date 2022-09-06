@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API Users", type: :request do
+RSpec.describe "API Users", :with_default_schedules, type: :request do
   let(:parsed_response) { JSON.parse(response.body) }
   let(:token) { EngageAndLearnApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
@@ -12,7 +12,7 @@ RSpec.describe "API Users", type: :request do
       # Heads up, for some reason the stored CIP IDs don't match
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
-      cohort = create(:cohort, start_year: 2021)
+      cohort = Cohort.current
       school_cohort = create(:school_cohort, school:)
       mentor_profile = create(:mentor_participant_profile, school_cohort:, core_induction_programme: cip, cohort:)
       create(:npq_participant_profile, school:)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "identity/create"
+
 module Identity
   def self.find_user_by(params = {})
     if params.key?(:id)

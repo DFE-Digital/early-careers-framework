@@ -159,7 +159,7 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
       end
     end
 
-    context "when there is an npq participant with that email" do
+    context "when there is an npq participant with that email", :with_default_schedules do
       let!(:participant_profile) { create(:npq_participant_profile) }
       let(:name) { participant_profile.user.full_name }
       let(:email) { participant_profile.user.email }

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false do
+RSpec.describe "transferring participants", :with_default_schedules, with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false do
   context "Attempting to transfer an ECT to a school" do
     context "ECT has been withdrawn" do
       before do
@@ -66,26 +66,29 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       # given
 
       def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-        @cohort = create(:cohort, start_year: 2021)
+        @cohort = Cohort.current
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
-        create(:school_cohort, school: @school_one, cohort: create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
-        @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
-        @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+        create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: create(:cohort, start_year: 2022))
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
-        @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
-        @lead_provider_two = create(:lead_provider, name: "Massive Provider Ltd")
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
+        @school_cohort_one = create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: @cohort, lead_provider: @lead_provider, delivery_partner: @delivery_partner)
+
+        @lead_provider_two = create(:lead_provider, name: "Massive Provider Ltd")
         @other_delivery_partner = create(:delivery_partner, name: "Fantastic Delivery Team")
-        @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
-        @partnership_one = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
-        @partnership_two = create(:partnership, school: @school_two, lead_provider: @lead_provider_two, delivery_partner: @other_delivery_partner, cohort: @cohort)
-        @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_one)
-        @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_two)
-        @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
-        @school_cohort_two.update!(default_induction_programme: @induction_programme_two)
-        Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
-        Mentors::AddToSchool.call(school: @school_one, mentor_profile: @mentor)
+        @school_cohort_two = create(:school_cohort, :fip, :with_induction_programme, school: @school_two, cohort: @cohort, lead_provider: @lead_provider_two, delivery_partner: @other_delivery_partner)
+
+        @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
+        @mentor = create(:mentor, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
+        # @partnership_one = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
+
+        # @partnership_two = create(:partnership, school: @school_two, lead_provider: @lead_provider_two, delivery_partner: @other_delivery_partner, cohort: @cohort)
+
+        @induction_programme_one = @school_cohort_one.default_induction_programme
+        @induction_programme_two = @school_cohort_two.default_induction_programme
+
+        # Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
+        # Mentors::AddToSchool.call(school: @school_one, mentor_profile: @mentor)
       end
 
       # when
@@ -197,7 +200,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def and_there_is_a_withdrawn_ect_who_will_be_transferring
-        @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
+        @participant_profile_ect = create(:ect, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
         induction_record = Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two, start_date: 3.months.ago)
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
         ParticipantProfileState.create!(participant_profile: @participant_profile_ect, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: @induction_programme_two.lead_provider&.cpd_lead_provider)

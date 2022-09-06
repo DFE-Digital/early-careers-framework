@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-RSpec.describe ValidationBetaService do
+RSpec.describe ValidationBetaService, :with_default_schedules do
   subject(:validation_beta_service) { described_class.new }
 
   describe "#remind_fip_induction_coordinators_to_add_ect_and_mentors" do
-    let!(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
+    let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme) }
     let(:school) { school_cohort.school }
     let!(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school]) }
 
@@ -14,15 +14,15 @@ RSpec.describe ValidationBetaService do
       expect {
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
       }.to have_enqueued_mail(SchoolMailer, :remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
-        .with(
-          induction_coordinator:,
-          school_name: school.name,
-          campaign: :remind_fip_sit_to_complete_steps,
-        )
+             .with(
+               induction_coordinator:,
+               school_name: school.name,
+               campaign: :remind_fip_sit_to_complete_steps,
+             )
     end
 
     it "does not email SIT whose school has added an ECT" do
-      create(:ect_participant_profile, school_cohort:, school:)
+      create(:ect, school_cohort:)
 
       expect {
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
@@ -30,7 +30,7 @@ RSpec.describe ValidationBetaService do
     end
 
     it "does not email SIT whose school has added an mentor" do
-      create(:mentor_participant_profile, school_cohort:, school:)
+      create(:mentor, school_cohort:)
 
       expect {
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
@@ -55,80 +55,84 @@ RSpec.describe ValidationBetaService do
   end
 
   describe "#sit_with_unvalidated_participants_reminders" do
-    it "emails sits with unvalidated participants who are on fip" do
-      school_cohort = create(:school_cohort, :fip)
+    context "with fip school cohort" do
+      let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme) }
 
-      expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
-      expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+      it "emails sits with unvalidated participants who are on fip" do
+        expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+        expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
 
-      create(:mentor_participant_profile, school_cohort:)
-      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort:)
-      sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
+        create(:mentor, school_cohort:)
+        create(:ect, :eligible_for_funding, school_cohort:)
+        sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
 
-      expect {
-        validation_beta_service.sit_with_unvalidated_participants_reminders
-      }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-        .with(
-          hash_including(
-            recipient: sit.user.email,
-            start_url: expected_start_url,
-            sign_in: expected_sign_in_url,
-          ),
-        )
+        expect {
+          validation_beta_service.sit_with_unvalidated_participants_reminders
+        }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+               .with(
+                 hash_including(
+                   recipient: sit.user.email,
+                   start_url: expected_start_url,
+                   sign_in: expected_sign_in_url,
+                 ),
+               )
+      end
     end
 
-    it "emails sits with unvalidated participants who are on cip" do
-      school_cohort = create(:school_cohort, :cip)
+    context "with fip school cohort" do
+      let(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme) }
 
-      expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
-      expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+      it "emails sits with unvalidated participants who are on cip" do
+        expected_start_url = "http://www.example.com/participants/start-registration?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
+        expected_sign_in_url = "http://www.example.com/users/sign_in?utm_campaign=unvalidated-participants-reminder&utm_medium=email&utm_source=unvalidated-participants-reminder"
 
-      create(:mentor_participant_profile, school_cohort:)
-      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort:)
-      sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
+        create(:mentor, school_cohort:)
+        create(:ect, :eligible_for_funding, school_cohort:)
+        sit = create(:induction_coordinator_profile, schools: [school_cohort.school])
 
-      expect {
-        validation_beta_service.sit_with_unvalidated_participants_reminders
-      }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-        .with(
-          hash_including(
-            recipient: sit.user.email,
-            start_url: expected_start_url,
-            sign_in: expected_sign_in_url,
-          ),
-        )
+        expect {
+          validation_beta_service.sit_with_unvalidated_participants_reminders
+        }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+               .with(
+                 hash_including(
+                   recipient: sit.user.email,
+                   start_url: expected_start_url,
+                   sign_in: expected_sign_in_url,
+                 ),
+               )
+      end
+
+      it "doesn't email schools without a sit" do
+        create(:mentor, school_cohort:)
+        create(:ect, :eligible_for_funding, school_cohort:)
+
+        expect {
+          validation_beta_service.sit_with_unvalidated_participants_reminders
+        }.to_not have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      end
+
+      it "doesn't email sits with all validated participants" do
+        create(:ect, :eligible_for_funding, school_cohort:)
+        create(:induction_coordinator_profile, schools: [school_cohort.school])
+
+        expect {
+          validation_beta_service.sit_with_unvalidated_participants_reminders
+        }.to_not have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      end
     end
 
-    it "doesn't email schools without a sit" do
-      school_cohort = create(:school_cohort, :cip)
-      create(:mentor_participant_profile, school_cohort:)
-      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort:)
+    context "with a school funded fip" do
+      let(:school_cohort) { create(:school_cohort, :school_funded_fip, :with_induction_programme) }
 
-      expect {
-        validation_beta_service.sit_with_unvalidated_participants_reminders
-      }.to_not have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-    end
+      it "doesn't email sits on a different induction programme" do
+        create(:mentor, school_cohort:)
+        create(:ect, :eligible_for_funding, school_cohort:)
+        create(:induction_coordinator_profile, schools: [school_cohort.school])
 
-    it "doesn't email sits with all validated participants" do
-      school_cohort = create(:school_cohort, :cip)
-      create(:ect_participant_profile, :ecf_participant_validation_data, school_cohort:)
-      create(:induction_coordinator_profile, schools: [school_cohort.school])
-
-      expect {
-        validation_beta_service.sit_with_unvalidated_participants_reminders
-      }.to_not have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
-    end
-
-    it "doesn't email sits on a different induction programme" do
-      school_cohort = create(:school_cohort, :school_funded_fip)
-
-      create(:mentor_participant_profile, school_cohort:)
-      create(:ecf_participant_profile, :ecf_participant_validation_data, school_cohort:)
-      create(:induction_coordinator_profile, schools: [school_cohort.school])
-
-      expect {
-        validation_beta_service.sit_with_unvalidated_participants_reminders
-      }.to_not have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+        expect {
+          validation_beta_service.sit_with_unvalidated_participants_reminders
+        }.to_not have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
+      end
     end
   end
 
@@ -137,12 +141,10 @@ RSpec.describe ValidationBetaService do
     let!(:school_cohort) { create(:school_cohort, school:) }
 
     let(:ect_user_1) { create(:user, email: "ect1@example.com") }
-    let(:teacher_profile_1) { create(:teacher_profile, school:, user: ect_user_1) }
-    let!(:ect_profile_1) { create(:ect_participant_profile, school_cohort:, teacher_profile: teacher_profile_1) }
+    let!(:ect_profile_1) { create(:ect, school_cohort:, user: ect_user_1) }
 
     let(:ect_user_2) { create(:user, email: "ect2@example.com") }
-    let(:teacher_profile_2) { create(:teacher_profile, school:, user: ect_user_2) }
-    let!(:ect_profile_2) { create(:ect_participant_profile, school_cohort:, teacher_profile: teacher_profile_2) }
+    let!(:ect_profile_2) { create(:ect, school_cohort:, user: ect_user_2) }
 
     let(:sit_user) { create(:user, email: "sit@example.com") }
     let!(:sit_profile) { create(:induction_coordinator_profile, user: sit_user, schools: [school]) }
@@ -153,28 +155,23 @@ RSpec.describe ValidationBetaService do
       expect {
         validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
       }.to have_enqueued_mail(SchoolMailer, :sit_new_ambition_ects_and_mentors_added_email)
-        .with(
-          induction_coordinator_profile: sit_profile,
-          school_name: school.name,
-          sign_in_url: "http://www.example.com/users/sign_in",
-        )
+             .with(
+               induction_coordinator_profile: sit_profile,
+               school_name: school.name,
+               sign_in_url: "http://www.example.com/users/sign_in",
+             )
     end
   end
 
   describe "#send_ineligible_previous_induction_batch" do
-    let(:school_cohort) { create(:school_cohort, :fip) }
-    let(:participant_profiles) { create_list(:ect_participant_profile, 10, school_cohort:) }
-    let!(:eligibilities) do
-      participant_profiles.each do |profile|
-        create(:ecf_participant_eligibility, :ineligible, previous_induction: true, reason: :previous_induction, participant_profile: profile)
-      end
-    end
+    let(:school_cohort)         { create(:school_cohort, :fip, :with_induction_programme) }
+    let!(:participant_profiles) { create_list(:ect, 10, :ineligible, school_cohort:, previous_induction: true) }
 
     it "sends the correct batch size" do
       expect {
         subject.send_ineligible_previous_induction_batch(batch_size: 5)
       }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
-        .exactly(5).times
+             .exactly(5).times
     end
 
     context "when emails have been sent" do
@@ -192,7 +189,7 @@ RSpec.describe ValidationBetaService do
     end
 
     context "when participants are for CIP" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
+      let(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme) }
 
       it "does not email CIP participants" do
         expect {
@@ -202,9 +199,11 @@ RSpec.describe ValidationBetaService do
     end
 
     context "when participants are eligible" do
-      let!(:eligibilities) do
-        participant_profiles.each do |profile|
-          create(:ecf_participant_eligibility, :eligible, previous_induction: true, reason: :previous_induction, participant_profile: profile)
+      let!(:participant_profiles) do
+        create_list(:ect, 10, :eligible_for_funding, previous_induction: true) do |participant_profile|
+          # Not ideal - but could not
+          # TODO: find the real way to set this up.
+          participant_profile.ecf_participant_eligibility.eligible_status!
         end
       end
 
@@ -216,7 +215,7 @@ RSpec.describe ValidationBetaService do
     end
 
     context "when participants are withdrawn" do
-      let(:participant_profiles) { create_list(:ect_participant_profile, 10, :withdrawn_record, school_cohort:) }
+      let!(:participant_profiles) { create_list(:ect, 10, :withdrawn_record, school_cohort:) }
 
       it "does not email inactive participants" do
         expect {
@@ -226,11 +225,7 @@ RSpec.describe ValidationBetaService do
     end
 
     context "when the participants are ineligible for a different reason" do
-      let!(:eligibilities) do
-        participant_profiles.each do |profile|
-          create(:ecf_participant_eligibility, :ineligible, previous_participation: true, reason: :previous_participation, participant_profile: profile)
-        end
-      end
+      let!(:participant_profiles) { create_list(:ect, 10, :ineligible, school_cohort:, previous_participation: true, previous_induction: false) }
 
       it "does not email participants who are only ineligible for a different reason" do
         expect {

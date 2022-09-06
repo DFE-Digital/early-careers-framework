@@ -11,8 +11,15 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
-  let(:participant_profile) { create(:ect_participant_profile) }
-  let(:year_2020_participant_profile) { create(:ect_participant_profile, school_cohort: build(:school_cohort, cohort: build(:cohort, start_year: 2020))) }
+  let(:participant_profile) { create(:ect) }
+  let(:cohort_2020) { create(:cohort, start_year: 2020) }
+  let(:schedule_2020) { build(:ecf_schedule, cohort: cohort_2020) }
+  let(:year_2020_participant_profile) do
+    create(:ecf_participant_profile,
+           participant_identity: build(:participant_identity, external_identifier: SecureRandom.uuid),
+           schedule: schedule_2020,
+           school_cohort: build(:school_cohort, cohort: cohort_2020))
+  end
   let(:participant_school) { participant_profile.school }
   let(:lead_provider) { create(:user, :lead_provider) }
 
@@ -66,7 +73,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
 
-    it "returns the validation start path" do
+    it "returns the validation start path", :with_default_schedules do
       expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
     end
 

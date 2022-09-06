@@ -33,6 +33,8 @@ module Participants
       end
 
       def not_already_withdrawn
+        return unless user_profile
+
         if user_profile.ecf?
           errors.add(:induction_record, I18n.t(:invalid_withdrawal)) if relevant_induction_record&.training_status_withdrawn?
         elsif user_profile&.training_status_withdrawn?

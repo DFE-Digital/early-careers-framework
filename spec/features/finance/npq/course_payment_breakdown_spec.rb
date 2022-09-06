@@ -70,15 +70,13 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def create_started_declarations(npq_application)
     timestamp = npq_application.profile.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
-      RecordDeclarations::Started::NPQ.call(
-        params: {
-          participant_id: npq_application.participant_identity.external_identifier,
-          course_identifier: npq_application.npq_course.identifier,
-          declaration_date: timestamp.rfc3339,
-          cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-        },
-      )
+      RecordDeclaration.new(
+        participant_id: npq_application.participant_identity.external_identifier,
+        course_identifier: npq_application.npq_course.identifier,
+        declaration_date: timestamp.rfc3339,
+        cpd_lead_provider: npq_application.npq_lead_provider.cpd_lead_provider,
+        declaration_type: "started",
+      ).call
     end
   end
 
@@ -94,30 +92,22 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       create_list(:user, 4)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
-        .map(&JSON.method(:parse))
-        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_eligible!)
 
       create_list(:user, 1)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
-        .map(&JSON.method(:parse))
-        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_voided!)
 
       create_list(:user, 2)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
-        .map(&JSON.method(:parse))
-        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
         .each(&:make_ineligible!)
 
       create_list(:user, 5)
         .map { |user| create_accepted_application(user, npq_course, npq_lead_provider) }
         .map { |npq_application| create_started_declarations(npq_application) }
-        .map(&JSON.method(:parse))
-        .map { |deserialised_participant_declaration| ParticipantDeclaration::NPQ.find(deserialised_participant_declaration.dig("data", "id")) }
-        .map { |participant_declaration| participant_declaration.make_eligible! && participant_declaration }
+        .map { |participant_declaration| participant_declaration.tap(&:make_eligible!) }
         .each(&:make_payable!)
     end
 

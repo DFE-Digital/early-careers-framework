@@ -10,10 +10,10 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
       NPQApplications::EligibilityImport.create!(filename:, user: create(:user, :admin))
     end
 
-    let(:npq_application_to_mark_funded) { create(:npq_application) }
+    let(:npq_application_to_mark_funded) { create(:npq_application, funding_choice: NPQApplication.funding_choices[:ineligible_establishment_type]) }
     let(:npq_application_to_mark_unfunded) { create(:npq_application, :funded) }
-    let(:npq_application_to_mark_other) { create(:npq_application) }
-    let(:npq_application_to_mark_invalid_status_code) { create(:npq_application) }
+    let(:npq_application_to_mark_other) { create(:npq_application, funding_choice: NPQApplication.funding_choices[:ineligible_establishment_type]) }
+    let(:npq_application_to_mark_invalid_status_code) { create(:npq_application, funding_choice: NPQApplication.funding_choices[:ineligible_establishment_type]) }
 
     let(:fake_ecf_id) { SecureRandom.uuid }
 
@@ -53,12 +53,12 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
     end
 
     before do
-      ENV.stub(:[]).and_call_original
-      ENV.stub(:[]).with("GOOGLE_CLIENT_ID").and_return("foo")
-      ENV.stub(:[]).with("GOOGLE_CLIENT_EMAIL").and_return("foo")
-      ENV.stub(:[]).with("GOOGLE_ACCOUNT_TYPE").and_return("foo")
-      ENV.stub(:[]).with("GOOGLE_PRIVATE_KEY").and_return(OpenSSL::PKey::RSA.generate(2048).to_s)
-      ENV.stub(:[]).with("GOOGLE_DRIVE_NPQ_DOWNLOAD_FOLDER_ID").and_return(parent_folder_id)
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("GOOGLE_CLIENT_ID").and_return("foo")
+      allow(ENV).to receive(:[]).with("GOOGLE_CLIENT_EMAIL").and_return("foo")
+      allow(ENV).to receive(:[]).with("GOOGLE_ACCOUNT_TYPE").and_return("foo")
+      allow(ENV).to receive(:[]).with("GOOGLE_PRIVATE_KEY").and_return(OpenSSL::PKey::RSA.generate(2048).to_s)
+      allow(ENV).to receive(:[]).with("GOOGLE_DRIVE_NPQ_DOWNLOAD_FOLDER_ID").and_return(parent_folder_id)
 
       stub_authentication
       stub_list_files(stubbed_files:)

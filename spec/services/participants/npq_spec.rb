@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::NPQ do
+RSpec.describe Participants::NPQ, :with_default_schedules do
   let(:user) { profile_one.user }
   let(:teacher_profile) { profile_one.teacher_profile }
 

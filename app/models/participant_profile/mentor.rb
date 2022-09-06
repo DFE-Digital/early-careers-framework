@@ -4,6 +4,8 @@ class ParticipantProfile < ApplicationRecord
   class Mentor < ECF
     self.ignored_columns = %i[mentor_profile_id school_id]
 
+    COURSE_IDENTIFIERS = %w[ecf-mentor].freeze
+
     has_many :mentee_profiles,
              class_name: "ParticipantProfile::ECT",
              foreign_key: :mentor_profile_id,

@@ -21,6 +21,14 @@ module Api
 
   private
 
+    def render_from_service(service, serializer)
+      if service.valid?
+        render json: serializer.new(service.call).serializable_hash
+      else
+        render json: Api::V1::ActiveModelErrorsSerializer.from(service), status: :unprocessable_entity
+      end
+    end
+
     def remove_charset
       ActionDispatch::Response.default_charset = nil
     end
@@ -34,6 +42,7 @@ module Api
     end
 
     def bad_request_response(exception)
+      Sentry.capture_exception(exception)
       render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: exception.message).call }, status: :bad_request
     end
 

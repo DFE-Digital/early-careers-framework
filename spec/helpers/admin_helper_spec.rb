@@ -25,13 +25,12 @@ RSpec.describe AdminHelper, type: :helper do
     end
   end
 
-  context "using the induction record for ects and mentors" do
-    let(:profile) { create(:ect_participant_profile) }
-    let(:induction_programme) { create(:induction_programme) }
+  context "using the induction record for ects and mentors", :with_default_schedules do
+    let(:profile) { create(:ect) }
+    let!(:induction_programme) { profile.current_induction_record.induction_programme }
 
     before do
-      first_record = Induction::Enrol.call(participant_profile: profile, induction_programme:)
-      first_record.withdrawing!
+      profile.current_induction_record.withdrawing!
       Induction::Enrol.call(participant_profile: profile, induction_programme:, preferred_email: "login2@example.com")
     end
 

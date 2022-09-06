@@ -6,43 +6,47 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   include FinanceHelper
   include ActionView::Helpers::NumberHelper
 
-  let!(:lead_provider)    { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
-  let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
-  let!(:statement)        { create(:ecf_statement, cpd_lead_provider:) }
-  let!(:contract)         { create(:call_off_contract, lead_provider:, version: "0.0.1") }
-  let(:school)            { create(:school) }
-  let(:cohort)            { contract.cohort }
-  let!(:school_cohort)    { create(:school_cohort, school:, cohort:) }
-  let!(:partnership)      { create(:partnership, school: school_cohort.school, lead_provider:, cohort:) }
-  let(:induction_programme) { create(:induction_programme, partnership:) }
-  let(:nov_statement)     { Finance::Statement::ECF.find_by!(name: "November 2021", cpd_lead_provider:) }
-  let(:jan_statement)     { Finance::Statement::ECF.find_by!(name: "January 2022", cpd_lead_provider:) }
-  let(:voided_declarations) do
-    participant_profiles = create_list(:ect_participant_profile, 2, school_cohort:, cohort: contract.cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_voided_declarations_nov(participant) }
-  end
+  let!(:lead_provider)         { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
+  let(:cpd_lead_provider)      { lead_provider.cpd_lead_provider }
+  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
+  let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
   let(:participant_aggregator_nov) do
     Finance::ECF::ParticipantAggregator.new(
-      statement: nov_statement,
+      statement: november_statement,
       recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
     )
   end
   let(:participant_aggregator_jan) do
     Finance::ECF::ParticipantAggregator.new(
-      statement: jan_statement,
+      statement: january_statement,
       recorder: ParticipantDeclaration::ECF.where(state: %w[paid payable eligible]),
     )
   end
 
-  before { Importers::SeedStatements.new.call }
+  let!(:january_statement)  { create(:ecf_statement, name: "January 2022", deadline_date: Date.new(2022, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
+  let!(:november_statement) { create(:ecf_statement, name: "November 2021", deadline_date: Date.new(2021, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
+  let(:jan_starts_breakdowns) do
+    Finance::ECF::CalculationOrchestrator.new(
+      statement: january_statement,
+      contract: lead_provider.call_off_contract,
+      aggregator: participant_aggregator_jan,
+      calculator: PaymentCalculator::ECF::PaymentCalculation,
+    ).call(event_type: :started)
+  end
+
+  let(:jan_retained_breakdowns) do
+    Finance::ECF::CalculationOrchestrator.new(
+      statement: january_statement,
+      contract: lead_provider.call_off_contract,
+      aggregator: participant_aggregator_jan,
+      calculator: PaymentCalculator::ECF::PaymentCalculation,
+    ).call(event_type: :retained_1)
+  end
   scenario "Can get to ECF payment breakdown page for a provider" do
     given_i_am_logged_in_as_a_finance_user
     and_multiple_declarations_are_submitted
     and_voided_payable_declarations_are_submitted
-    and_breakdowns_are_calculated
     when_i_click_on_payment_breakdown_header
     then_the_page_should_be_accessible
     then_percy_should_be_sent_a_snapshot_named("Payment breakdown select programme")
@@ -65,6 +69,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
 
     select("November 2021", from: "statement-field")
     click_button("View")
+
     then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
@@ -89,35 +94,32 @@ private
   end
 
   def multiple_start_declarations_are_submitted_nov_statement
-    participant_profiles = create_list(:ect_participant_profile, 4, school_cohort:, cohort: contract.cohort, sparsity_uplift: true)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_start_declarations_nov(participant) }
+    travel_to november_statement.deadline_date do
+      create_list(:ect_participant_declaration, 4, cpd_lead_provider:)
+    end
   end
 
   def multiple_retained_declarations_are_submitted_nov_statement
-    participant_profiles = create_list(:ect_participant_profile, 4, school_cohort:, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_retained_declarations_nov(participant) }
+    travel_to november_statement.deadline_date do
+      create_list(:ect_participant_declaration,
+                  4,
+                  :eligible,
+                  declaration_type: "retained-1",
+                  cpd_lead_provider:)
+    end
   end
 
   def multiple_ineligible_declarations_are_submitted_jan_statement
-    participant_profiles = create_list(:ect_participant_profile, 3, school_cohort:, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_ineligible_declarations_jan(participant) }
+    travel_to january_statement.deadline_date do
+      create_list(:ect_participant_declaration, 3, :ineligible, cpd_lead_provider:)
+    end
   end
 
   def multiple_retained_declarations_are_submitted_jan_statement
-    mentor_participant_profiles = create_list(:mentor_participant_profile, 5, school_cohort:, cohort: contract.cohort, sparsity_uplift: true)
-    mentor_participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    mentor_participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    mentor_participant_profiles.map { |participant| create_retained_declarations_jan_mentor(participant) }
-    participant_profiles = create_list(:ect_participant_profile, 6, school_cohort:, cohort: contract.cohort)
-    participant_profiles.map { |participant| ParticipantProfileState.create!(participant_profile: participant) }
-    participant_profiles.map { |participant| ECFParticipantEligibility.create!(participant_profile_id: participant.id).eligible_status! }
-    participant_profiles.map { |participant| create_retained_declarations_jan_ect(participant) }
+    travel_to january_statement.deadline_date do
+      create_list(:mentor_participant_declaration, 5, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
+      create_list(:ect_participant_declaration,    6, :eligible, uplifts: [:sparsity_uplift], declaration_type: "retained-1", cpd_lead_provider:)
+    end
   end
 
   def and_multiple_declarations_are_submitted
@@ -128,189 +130,45 @@ private
   end
 
   def and_voided_payable_declarations_are_submitted
-    voided_declarations
+    travel_to(november_statement.deadline_date) { voided_declarations }
   end
 
   def create_start_declarations_nov(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.first.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-          evidence_held: "other",
-        },
+      s = RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-induction",
+        declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "started",
+        evidence_held: "other",
       )
 
-      started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      started_declaration.make_eligible!
-      started_declaration.make_payable!
+      s.call
+        .tap(&:make_eligible!)
+        .tap(&:make_payable!)
     end
   end
 
   def create_voided_declarations_nov(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
     timestamp = participant.schedule.milestones.first.start_date + 1.day
     travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.first.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-          evidence_held: "other",
-        },
-      )
-      declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      declaration.make_eligible!
-      declaration.make_payable!
-      declaration.make_voided!
-
-      declaration.statement_line_items.first.update!(statement: nov_statement, state: declaration.state)
-
-      declaration
+      RecordDeclaration.new(
+        participant_id: participant.user.id,
+        course_identifier: "ecf-induction",
+        declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        declaration_type: "started",
+        evidence_held: "other",
+      ).call
+        .tap(&:make_eligible!)
+        .tap(&:make_payable!)
+        .tap(&:make_voided!)
+        .tap do |declaration|
+        declaration.statement_line_items.first.update!(statement: nov_statement, state: declaration.state)
+      end
     end
-  end
-
-  def create_retained_declarations_nov(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.second.start_date + 1.day
-    travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Retained::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.second.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "retained-1",
-          evidence_held: "other",
-        },
-      )
-      started_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      started_declaration.make_eligible!
-      started_declaration.make_payable!
-    end
-  end
-
-  def create_retained_declarations_jan_mentor(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.second.start_date + 1.day
-    travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Retained::Mentor.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-mentor",
-          declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.second.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "retained-1",
-          evidence_held: "other",
-        },
-      )
-      retained_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      retained_declaration.make_eligible!
-      retained_declaration.make_payable!
-    end
-  end
-
-  def create_retained_declarations_jan_ect(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.second.start_date + 1.day
-    travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Retained::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.second.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.second.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "retained-1",
-          evidence_held: "other",
-        },
-      )
-      retained_declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      retained_declaration.make_eligible!
-    end
-  end
-
-  def create_ineligible_declarations_jan(participant)
-    Induction::Enrol.call(participant_profile: participant, induction_programme:)
-
-    timestamp = participant.schedule.milestones.first.start_date + 1.day
-    travel_to(timestamp) do
-      serialized_started_declaration = RecordDeclarations::Started::EarlyCareerTeacher.call(
-        params: {
-          participant_id: participant.user.id,
-          course_identifier: "ecf-induction",
-          declaration_date: (participant.schedule.milestones.first.start_date + 1.day).rfc3339,
-          created_at: participant.schedule.milestones.first.start_date + 1.day,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          declaration_type: "started",
-          evidence_held: "other",
-        },
-      )
-      declaration = ParticipantDeclaration.find(JSON.parse(serialized_started_declaration).dig("data", "id"))
-      declaration.update!(
-        state: "ineligible",
-      )
-      declaration
-    end
-  end
-
-  def nov_retained_breakdowns_are_calculated
-    @nov_retained_1 = Finance::ECF::CalculationOrchestrator.new(
-      statement: nov_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_nov,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :retained_1)
-  end
-
-  def nov_starts_breakdowns_are_calculated
-    @nov_starts = Finance::ECF::CalculationOrchestrator.new(
-      statement: nov_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_nov,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :started)
-  end
-
-  def jan_starts_breakdowns_are_calculated
-    @jan_starts = Finance::ECF::CalculationOrchestrator.new(
-      statement: jan_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_jan,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :started)
-  end
-
-  def jan_retained_breakdowns_are_calculated
-    @jan_retained_1 = Finance::ECF::CalculationOrchestrator.new(
-      statement: jan_statement,
-      contract: lead_provider.call_off_contract,
-      aggregator: participant_aggregator_jan,
-      calculator: PaymentCalculator::ECF::PaymentCalculation,
-    ).call(event_type: :retained_1)
-  end
-
-  def and_breakdowns_are_calculated
-    nov_starts_breakdowns_are_calculated
-    nov_retained_breakdowns_are_calculated
-    jan_starts_breakdowns_are_calculated
-    jan_retained_breakdowns_are_calculated
   end
 
   def then_i_should_see_correct_breakdown_summary
@@ -320,7 +178,7 @@ private
 
     within ".finance-panel__summary" do
       expect(page).to have_content("Milestone cut off date")
-      expect(page).to have_content(jan_statement.deadline_date.to_s(:govuk))
+      expect(page).to have_content(january_statement.deadline_date.to_s(:govuk))
     end
   end
 
@@ -341,36 +199,36 @@ private
 
   def then_i_should_see_the_correct_output_fees
     expect(page).to have_content("Output payments")
-    expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:per_participant]))
-    expect(page).to have_content(@jan_starts[:output_payments][0][:participants])
-    expect(page).to have_content(number_to_pounds(@jan_starts[:output_payments][0][:subtotal]))
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:per_participant]))
+    expect(page).to have_content(jan_starts_breakdowns[:output_payments][0][:participants])
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:output_payments][0][:subtotal]))
   end
 
   def then_i_should_see_the_correct_uplift_fee
     expect(page).to have_content("Uplift fee")
-    expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:per_participant]))
-    expect(page).to have_content(@jan_starts[:other_fees][:uplift][:participants])
-    expect(page).to have_content(number_to_pounds(@jan_starts[:other_fees][:uplift][:subtotal]))
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:other_fees][:uplift][:per_participant]))
+    expect(page).to have_content(jan_starts_breakdowns[:other_fees][:uplift][:participants])
+    expect(page).to have_content(number_to_pounds(jan_starts_breakdowns[:other_fees][:uplift][:subtotal]))
   end
 
   def number_of_declarations
-    @jan_starts[:output_payments].map { |params| params[:participants] }.inject(&:+) + @jan_retained_1[:output_payments].map { |params| params[:participants] }.inject(&:+)
+    jan_starts_breakdowns[:output_payments].map { |params| params[:participants] }.inject(&:+) + jan_retained_breakdowns[:output_payments].map { |params| params[:participants] }.inject(&:+)
   end
 
   def service_fee_total
-    @jan_starts[:service_fees].map { |params| params[:monthly] }.inject(&:+)
+    jan_starts_breakdowns[:service_fees].map { |params| params[:monthly] }.inject(&:+)
   end
 
   def output_payment_total
-    @jan_starts[:output_payments].map { |params| params[:subtotal] }.inject(&:+) + @jan_retained_1[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
+    jan_starts_breakdowns[:output_payments].map { |params| params[:subtotal] }.inject(&:+) + jan_retained_breakdowns[:output_payments].map { |params| params[:subtotal] }.inject(&:+)
   end
 
   def total_vat_breakdown
-    total_vat_combined(@jan_starts, @jan_retained_1, lead_provider)
+    total_vat_combined(jan_starts_breakdowns, jan_retained_breakdowns, lead_provider)
   end
 
   def total_payment_with_vat_breakdown
-    total_payment_with_vat_combined(@jan_starts, @jan_retained_1, lead_provider)
+    total_payment_with_vat_combined(jan_starts_breakdowns, jan_retained_breakdowns, lead_provider)
   end
 
   def total_payment_with_vat_combined(breakdown_started, breakdown_retained_1, lead_provider)

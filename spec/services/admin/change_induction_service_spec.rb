@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe Admin::ChangeInductionService do
-  let(:cohort) { create(:cohort) }
+RSpec.describe Admin::ChangeInductionService, :with_default_schedules do
+  let(:cohort) { Cohort.current }
   let(:current_school_cohort) { school.school_cohorts.find_by(cohort:) }
   subject(:service) { Admin::ChangeInductionService.new(school:, cohort:) }
 
@@ -135,10 +135,11 @@ RSpec.describe Admin::ChangeInductionService do
     end
 
     context "when the school has participants" do
-      let!(:participant_profiles) { create_list(:ect_participant_profile, 5, school_cohort: school.school_cohorts.first) }
+      let!(:participant_profiles) { create_list(:ect, 5, school_cohort: school.school_cohorts.first) }
 
       context "when the school is doing CIP" do
         let(:school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort:).school }
+
         it "withdraws all participants when changing to NoECTs" do
           service.change_induction_provision(:no_early_career_teachers)
           expect(participant_profiles.each(&:reload)).to all be_withdrawn_record

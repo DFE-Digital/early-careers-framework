@@ -2,14 +2,13 @@
 
 require "swagger_helper"
 
-require_relative "../../shared/context/lead_provider_profiles_and_courses"
-
-describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
-  include_context "lead provider profiles and courses"
-
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-  let(:bearer_token) { "Bearer #{token}" }
-  let(:Authorization) { bearer_token }
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_spec.json" do
+  let(:cpd_lead_provider)       { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:mentor_profile)          { create(:mentor, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+  let(:deferred_mentor_profile) { create(:mentor, :deferred, lead_provider: cpd_lead_provider.lead_provider) }
+  let(:token)                   { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token)            { "Bearer #{token}" }
+  let(:Authorization)           { bearer_token }
 
   it_behaves_like "JSON Participant Deferral documentation",
                   "/api/v1/participants/{id}/defer",
@@ -31,7 +30,6 @@ describe "API", type: :request, swagger_doc: "v1/api_spec.json" do
                   "#/components/schemas/ECFParticipantResponse",
                   "ECF Participant" do
     let(:participant) { deferred_mentor_profile }
-    let!(:mentor_induction_record_deferred) { create(:induction_record, induction_programme:, participant_profile: deferred_mentor_profile, training_status: "deferred") }
     let(:attributes) { { course_identifier: "ecf-mentor" } }
   end
 

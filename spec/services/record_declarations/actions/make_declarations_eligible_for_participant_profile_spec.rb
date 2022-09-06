@@ -2,16 +2,15 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile do
+RSpec.describe RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile, :with_default_schedules do
   let!(:declaration) { create(:ect_participant_declaration) }
   let!(:participant_profile) { declaration.participant_profile }
-  let!(:eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
   context "::call" do
     let(:mock_attacher) { instance_double(Finance::DeclarationStatementAttacher, call: nil) }
 
     before do
-      allow(Finance::DeclarationStatementAttacher).to receive(:new).with(participant_declaration: declaration).and_return(mock_attacher)
+      allow(Finance::DeclarationStatementAttacher).to receive(:new).with(declaration).and_return(mock_attacher)
     end
 
     it "marks any submitted declarations for the participant as eligible" do

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::ExtractReport do
+RSpec.describe Finance::ExtractReport, :with_default_schedules do
   def with_captured_stdout
     original_stdout = $stdout
     $stdout = StringIO.new
@@ -35,19 +35,12 @@ RSpec.describe Finance::ExtractReport do
       ]
     end
 
-    let!(:profile) { create(:npq_participant_profile) }
-    let!(:user) { profile.user }
-    let!(:cpd_lead_provider) { profile.npq_application.npq_lead_provider.cpd_lead_provider }
-    let!(:statement) { create(:npq_statement, cpd_lead_provider:) }
-    let!(:npq_course) { profile.npq_application.npq_course }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+    let(:statement) { create(:npq_statement, :next_output_fee, cpd_lead_provider:) }
     let!(:declaration) do
-      create(:npq_participant_declaration, user:, course_identifier: npq_course.identifier, participant_profile: profile, state: "payable")
-    end
-    let!(:line_item) do
-      statement.statement_line_items.create!(
-        state: "payable",
-        participant_declaration: declaration,
-      )
+      travel_to statement.deadline_date do
+        create(:npq_participant_declaration, :payable)
+      end
     end
 
     it "outputs headers to stdout" do

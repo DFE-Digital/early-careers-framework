@@ -2,36 +2,24 @@
 
 require "rails_helper"
 
-RSpec.describe Statements::MarkAsPayable do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+RSpec.describe Statements::MarkAsPayable, :with_default_schedules do
+  let(:cpd_lead_provider)              { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let!(:statement)                     { create :npq_statement, :next_output_fee, cpd_lead_provider: }
+  let!(:submitted_declaration)         { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
+  let!(:eligible_declaration)          { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
+  let!(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :submitted,  cpd_lead_provider:) }
+  let!(:ineligible_declaration)        { create(:npq_participant_declaration, :ineligible, cpd_lead_provider:) }
+  let!(:voided_declaration)            { create(:npq_participant_declaration, :voided,     cpd_lead_provider:) }
 
-  let(:submitted_declaration) { create(:npq_participant_declaration, :submitted) }
-  let(:eligible_declaration) { create(:npq_participant_declaration, :eligible) }
-
-  let(:awaiting_clawback_declaration) { create(:npq_participant_declaration, :awaiting_clawback_declaration) }
-
-  let(:ineligible_declaration) { create(:npq_participant_declaration, :ineligible) }
-  let(:voided_declaration) { create(:npq_participant_declaration, :voided) }
-
-  let(:statement) { create :npq_statement, cpd_lead_provider: }
+  subject { described_class.new(statement) }
 
   before do
-    [
-      submitted_declaration,
-      eligible_declaration,
-      ineligible_declaration,
-      voided_declaration,
-    ].each do |participant_declaration|
-      participant_declaration
-        .statement_line_items
-        .create!(
-          statement:,
-          state: participant_declaration.state,
-        )
+    travel_to statement.deadline_date do
+      RecordDeclarations::Actions::MakeDeclarationsEligibleForParticipantProfile
+        .call(participant_profile: eligible_declaration.participant_profile)
+      Finance::ClawbackDeclaration.new(awaiting_clawback_declaration).call
     end
   end
-
-  subject { described_class.new(statement:) }
 
   describe "#call" do
     it "transitions the statement itself" do
@@ -59,7 +47,6 @@ RSpec.describe Statements::MarkAsPayable do
         subject.call
         statement.reload
       }.to  not_change(statement.statement_line_items, :count)
-       .and not_change(statement.statement_line_items.submitted, :count)
        .and change(statement.statement_line_items.eligible, :count).from(1).to(0)
        .and change(statement.statement_line_items.payable, :count).from(0).to(1)
        .and not_change(statement.statement_line_items.awaiting_clawback, :count)

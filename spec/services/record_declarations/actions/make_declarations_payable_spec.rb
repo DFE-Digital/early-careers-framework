@@ -2,18 +2,35 @@
 
 require "rails_helper"
 
-RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPayable do
+RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPayable, :with_default_schedules do
+  let(:cpd_lead_provider)                { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:cutoff_date)                      { Time.zone.local(2021, 11, 1) }
   let(:before_cutoff_date)               { cutoff_date - 1.day }
   let(:after_cutoff_date)                { cutoff_date + 1.day }
   let(:eligible_before_start_date_count) { 3 }
   let(:submitted_after_end_date_count)   { 2 }
-  let!(:ecf_declaration)                 { create(:ect_participant_declaration, :eligible, declaration_date: before_cutoff_date, created_at: before_cutoff_date) }
-  let!(:npq_declaration)                 { create(:npq_participant_declaration, :eligible, declaration_date: before_cutoff_date, created_at: before_cutoff_date) }
+  let(:ecf_declaration) do
+    travel_to before_cutoff_date do
+      create(:ect_participant_declaration, :eligible, declaration_date: before_cutoff_date, cpd_lead_provider:)
+    end
+  end
+  let(:npq_declaration) do
+    travel_to before_cutoff_date do
+      create(:npq_participant_declaration, :eligible, declaration_date: before_cutoff_date, cpd_lead_provider:)
+    end
+  end
 
   before do
-    create_list(:ect_participant_declaration, submitted_after_end_date_count,   :submitted, declaration_date: after_cutoff_date, created_at: after_cutoff_date)
-    create_list(:npq_participant_declaration, submitted_after_end_date_count,   :submitted, declaration_date: after_cutoff_date, created_at: after_cutoff_date)
+    create(:ecf_statement, :output_fee, cpd_lead_provider:, deadline_date: cutoff_date)
+    create(:npq_statement, :output_fee, cpd_lead_provider:, deadline_date: cutoff_date)
+
+    ecf_declaration
+    npq_declaration
+
+    travel_to after_cutoff_date do
+      create_list(:ect_participant_declaration, submitted_after_end_date_count, :submitted, declaration_date: after_cutoff_date, cpd_lead_provider:)
+      create_list(:npq_participant_declaration, submitted_after_end_date_count, :submitted, declaration_date: after_cutoff_date, cpd_lead_provider:)
+    end
   end
 
   describe "#call" do

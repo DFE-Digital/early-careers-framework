@@ -2,13 +2,12 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::Resume::NPQ do
+RSpec.describe Participants::Resume::NPQ, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let(:npq_application) { create(:npq_application, npq_lead_provider:) }
-  let(:profile) { create(:npq_participant_profile, npq_application:, training_status: "deferred") }
-  let(:user) { profile.user }
-  let(:npq_course) { profile.npq_course }
+  let!(:profile)          { create(:npq_participant_profile, :deferred, npq_lead_provider:) }
+  let(:user)              { profile.user }
+  let(:npq_course)        { profile.npq_course }
 
   subject do
     described_class.new(

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Participants::NPQValidationStatusTag, type: :view_component do
+RSpec.describe Admin::Participants::NPQValidationStatusTag, :with_default_schedules, type: :view_component do
   component { described_class.new profile: participant_profile }
 
   let!(:participant_profile) { create :npq_participant_profile }

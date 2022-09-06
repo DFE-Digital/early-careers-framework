@@ -2,11 +2,26 @@
 
 class ParticipantProfile < ApplicationRecord
   class NPQ < ParticipantProfile
+    COURSE_IDENTIFIERS = %w[
+      npq-executive-leadership
+      npq-headship
+      npq-senior-leadership
+      npq-early-years-leadership
+      npq-additional-support-offer
+      npq-leading-teaching-development
+      npq-leading-teaching
+      npq-leading-behaviour-culture
+      npq-early-headship-coaching-offer
+      npq-leading-literacy
+    ].freeze
+    VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
     self.ignored_columns = %i[mentor_profile_id school_cohort_id start_term]
     belongs_to :school, optional: true
     belongs_to :npq_course, optional: true
 
     has_one :npq_application, foreign_key: :id
+
+    has_many :participant_declarations, class_name: "ParticipantDeclaration::NPQ", foreign_key: :participant_profile_id
 
     after_commit :push_profile_to_big_query
 

@@ -1,27 +1,31 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe "participant-declarations endpoint spec", type: :request do
-  include_context "lead provider profiles and courses"
-  let(:parsed_response) { JSON.parse(response.body) }
+RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:started_milestone) { ect_profile.schedule.milestones.find_by(declaration_type: "started") }
+  let(:declaration_date)  { started_milestone.start_date }
+  let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token)      { "Bearer #{token}" }
 
-  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-  let(:bearer_token) { "Bearer #{token}" }
+  before do
+    create(:ecf_statement, :output_fee, deadline_date: 2.weeks.from_now, cpd_lead_provider:)
+  end
 
-  describe "POST /api/v2/participant-declarations" do
+  def parsed_response
+    JSON.parse(response.body)
+  end
+
+  describe "POST /api/v1/participant-declarations" do
+    let(:ect_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
     let(:valid_params) do
       {
         participant_id: ect_profile.user.id,
         declaration_type: "started",
-        declaration_date: (ect_profile.schedule.milestones.first.start_date + 2.days).rfc3339,
+        declaration_date: declaration_date.rfc3339,
         course_identifier: "ecf-induction",
       }
-    end
-
-    before do
-      travel_to ect_profile.schedule.milestones.first.start_date + 2.days
     end
 
     def build_params(attributes)
@@ -35,45 +39,48 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     context "when authorized" do
       let(:fake_logger) { double("logger", info: nil) }
-      let!(:next_output_statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:) }
 
       before do
         default_headers[:Authorization] = bearer_token
         default_headers[:CONTENT_TYPE] = "application/json"
       end
 
-      it "create declaration record and declaration attempt and return id when successful" do
+      it "create declaration record and declaration attempt and return id when successful", :aggregate_failures do
         params = build_params(valid_params)
         expect { post "/api/v2/participant-declarations", params: }
-            .to change(ParticipantDeclaration, :count).by(1)
-            .and change(ParticipantDeclarationAttempt, :count).by(1)
+          .to change(ParticipantDeclaration, :count).by(1)
+                .and change(ParticipantDeclarationAttempt, :count).by(1)
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
         expect(response.status).to eq 200
         expect(parsed_response["data"]["id"]).to eq(ParticipantDeclaration.order(:created_at).last.id)
       end
 
-      it "create eligible declaration record when user is eligible" do
-        eligibility = ECFParticipantEligibility.create!(participant_profile_id: ect_profile.id)
-        eligibility.eligible_status!
+      context "when the participant is eligible" do
+        let(:ect_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+
+        it "create eligible declaration record when user is eligible" do
+          params = build_params(valid_params)
+          post "/api/v2/participant-declarations", params: params
+
+          expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
+        end
+      end
+
+      it "does not create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
         post "/api/v2/participant-declarations", params: params
 
-        expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
+        expect {
+          expect {
+            post "/api/v2/participant-declarations", params:
+          }.not_to change(ParticipantDeclaration, :count)
+        }.to change(ParticipantDeclarationAttempt, :count).by(1)
+
+        expect(response).not_to be_successful
+        expect(parsed_response["errors"]).to eq(["title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event"])
       end
 
-      it "does not create duplicate declarations with the same declaration date" do
-        params = build_params(valid_params)
-        post "/api/v2/participant-declarations", params: params
-        original_id = parsed_response["id"]
-
-        expect { post "/api/v2/participant-declarations", params: }
-            .not_to change(ParticipantDeclaration, :count)
-
-        expect(response.status).to eq 422
-        expect(parsed_response["id"]).to eq(original_id)
-      end
-
-      it "does not create duplicate declarations with different declaration date" do
+      it "does not create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
 
         new_valid_params = valid_params
@@ -84,10 +91,12 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         post "/api/v2/participant-declarations", params: params
         original_id = parsed_response["id"]
 
+        expect { post "/api/v2/participant-declarations", params: }
+          .not_to change(ParticipantDeclaration, :count)
         expect { post "/api/v2/participant-declarations", params: params_with_different_declaration_date }
-            .not_to change(ParticipantDeclaration, :count)
+          .to change(ParticipantDeclarationAttempt, :count).by(1)
 
-        expect(response.status).to eq 422
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(parsed_response["id"]).to eq(original_id)
       end
 
@@ -103,26 +112,23 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when lead provider has no access to the user" do
-        before do
-          partnership.update!(lead_provider: create(:lead_provider))
-        end
+        let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+        let(:ect_profile)           { create(:ect, lead_provider: another_lead_provider.lead_provider) }
 
         it "create declaration attempt" do
           expect { post "/api/v2/participant-declarations", params: build_params(valid_params) }
-              .to change(ParticipantDeclarationAttempt, :count).by(1)
+            .to change(ParticipantDeclarationAttempt, :count).by(1)
         end
 
         it "does not create declaration" do
-          expect { post "/api/v2/participant-declarations", params: build_params(valid_params) }
-              .not_to change(ParticipantDeclaration, :count)
+          expect { post "/api/v1/participant-declarations", params: build_params(valid_params) }
+            .not_to change(ParticipantDeclaration, :count)
           expect(response.status).to eq 422
         end
       end
 
       context "when participant is withdrawn" do
-        before do
-          ect_profile.participant_profile_states.create({ state: "withdrawn", created_at: Time.zone.now - 1.hour })
-        end
+        let(:ect_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
 
         it "returns 200" do
           params = build_params(valid_params)
@@ -132,8 +138,8 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when participant is deferred" do
-        before do
-          ect_profile.participant_profile_states.create({ state: "deferred", created_at: Time.zone.now - 1.hour })
+        let(:ect_profile) do
+          create(:ect, :deferred, lead_provider: cpd_lead_provider.lead_provider)
         end
 
         it "returns 200" do
@@ -147,24 +153,32 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
         # Expects the user uuid. Pass the early_career_teacher_profile_id
         invalid_user_id = valid_params.merge({ participant_id: ect_profile.id })
         post "/api/v2/participant-declarations", params: build_params(invalid_user_id)
-        expect(response.status).to eq 422
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns 422 when trying to create with no id" do
         missing_user_id = valid_params.merge({ participant_id: "" })
         post "/api/v2/participant-declarations", params: build_params(missing_user_id)
-        expect(response.status).to eq 422
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
-      it "returns 422 when a required parameter is missing" do
+      it "returns 422 when a required parameter is missing", :aggregation_failures do
         missing_attribute = valid_params.except(:participant_id)
         post "/api/v2/participant-declarations", params: build_params(missing_attribute)
-        expect(response.status).to eq 422
-        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t("activemodel.errors.models.record_declarations/base.attributes.participant_id.blank") }.stringify_keys)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_response["errors"])
+          .to include(
+            "title" => "participant_id",
+            "detail" => "The property '#/participant_id' must be a valid Participant ID",
+          )
       end
 
       it "ignores an unpermitted parameter" do
         post "/api/v2/participant-declarations", params: build_params(valid_params.merge(evidence_held: "test"))
+
         expect(response.status).to eq 200
         expect(ParticipantDeclaration.order(created_at: :desc).first.evidence_held).to be_nil
       end
@@ -172,20 +186,35 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       it "returns 422 when supplied an incorrect course type" do
         incorrect_course_identifier = valid_params.merge({ course_identifier: "typoed-course-name" })
         post "/api/v2/participant-declarations", params: build_params(incorrect_course_identifier)
-        expect(response.status).to eq 422
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns 422 when a participant type doesn't match the course type" do
         invalid_participant_for_course_type = valid_params.merge({ course_identifier: "ecf-mentor" })
-        post "/api/v2/participant-declarations", params: build_params(invalid_participant_for_course_type)
-        expect(response.status).to eq 422
-        expect(JSON.parse(response.body)["errors"]).to include({ title: "Bad or missing parameters", detail: I18n.t(:invalid_participant) }.stringify_keys)
+        post "/api/v1/participant-declarations", params: build_params(invalid_participant_for_course_type)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_response["errors"])
+          .to include(
+            "title" => "declaration_type",
+            "detail" => "The property '#/declaration_type does not exist for this schedule",
+          )
       end
 
       it "returns 422 when there are multiple errors" do
-        post "/api/v2/participant-declarations", params: build_params("")
-        expect(response.status).to eq 422
-        expect(response.body).to eq({ errors: [{ title: "Bad or missing parameters", detail: I18n.t(:invalid_declaration_type) }] }.to_json)
+        post "/api/v1/participant-declarations", params: build_params("")
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(parsed_response["errors"])
+          .to eq(
+            [
+              { "title" => "declaration_date", "detail" => "can't be blank" },
+              { "title" => "declaration_type", "detail" => "can't be blank, The property '#/declaration_type does not exist for this schedule" },
+              { "title" => "participant_id", "detail" => "The property '#/participant_id' must be a valid Participant ID" },
+              { "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" },
+            ],
+          )
       end
 
       it "returns 400 when the data block is incorrect" do
@@ -221,16 +250,9 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   end
 
   describe "JSON Index Api" do
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+    let(:ect_profile)  { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:token)        { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token) { "Bearer #{token}" }
-
-    let!(:participant_declaration) do
-      create(:participant_declaration,
-             user: ect_profile.user,
-             cpd_lead_provider:,
-             participant_profile: ect_profile,
-             course_identifier: "ecf-induction")
-    end
 
     before do
       default_headers[:Authorization] = bearer_token
@@ -244,104 +266,123 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
       end
 
       context "when there is a non eligible declaration" do
+        let(:ect_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile)
         end
 
-        it "loads list of declarations" do
-          get "/api/v2/participant-declarations"
-          expect(response.status).to eq 200
-
-          expect(parsed_response).to eq(expected_response)
-        end
-      end
-
-      context "when there is a voided declaration" do
-        let(:expected_response) do
-          expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "voided")
+        let(:participant_declaration) do
+          create(:ect_participant_declaration,
+                 cpd_lead_provider:,
+                 participant_profile: ect_profile)
         end
 
-        before do
-          participant_declaration.voided!
-        end
+        before { participant_declaration }
 
         it "loads list of declarations" do
           get "/api/v2/participant-declarations"
-          expect(response.status).to eq 200
+          expect(response).to be_successful
 
           expect(parsed_response).to eq(expected_response)
         end
       end
 
       context "when there is an eligible declaration" do
-        before do
-          participant_declaration.make_eligible!
-        end
+        let(:ect_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
 
         let(:expected_response) do
           expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "eligible")
         end
 
         before do
+          participant_declaration
+
           default_headers[:Authorization] = bearer_token
           default_headers[:CONTENT_TYPE] = "application/json"
         end
 
+        let(:participant_declaration) do
+          create(:ect_participant_declaration,
+                 cpd_lead_provider:,
+                 participant_profile: ect_profile)
+        end
+
         it "loads list of declarations" do
           get "/api/v2/participant-declarations"
-          expect(response.status).to eq 200
+          expect(response).to be_successful
 
           expect(parsed_response).to eq(expected_response)
+        end
+
+        context "when there is a voided declaration" do
+          let(:expected_response) do
+            expected_json_response(declaration: participant_declaration, profile: ect_profile, state: "voided")
+          end
+
+          let!(:participant_declaration) do
+            create(:ect_participant_declaration, :voided, cpd_lead_provider:, participant_profile: ect_profile)
+          end
+
+          it "loads list of declarations", :aggregation_failures do
+            get "/api/v2/participant-declarations"
+
+            expect(response).to be_successful
+            expect(parsed_response).to eq(expected_response)
+          end
         end
       end
 
       context "when a updated since filter used" do
-        it "returns declarations changed or created since a particular time" do
-          participant_declaration.update!(updated_at: 2.days.ago)
-          get "/api/v2/participant-declarations", params: { filter: { updated_since: 1.day.ago.iso8601 } }
-          expect(response.status).to eq 200
+        before do
+          travel_to 2.days.ago do
+            create(:ect_participant_declaration, :voided, cpd_lead_provider:, participant_profile: ect_profile)
+          end
+        end
 
+        it "returns declarations changed or created since a particular time", :aggregation_failures do
+          get "/api/v2/participant-declarations", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+
+          expect(response).to be_successful
           expect(parsed_response["data"].size).to eq 0
         end
       end
 
       context "when a participant id filter used" do
-        let!(:second_ect_profile) { create(:ect_participant_profile, schedule: default_schedule) }
+        let!(:second_ect_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
         let!(:second_participant_declaration) do
-          create(:participant_declaration,
-                 user: second_ect_profile.user,
+          create(:ect_participant_declaration,
                  cpd_lead_provider:,
-                 course_identifier: "ecf-induction",
                  participant_profile: second_ect_profile)
         end
         let(:expected_response) do
           expected_json_response(declaration: second_participant_declaration, profile: second_ect_profile)
         end
 
-        it "loads only declarations for the chosen participant id" do
+        it "loads only declarations for the chosen participant id", :aggregation_failures do
           get "/api/v2/participant-declarations", params: { filter: { participant_id: second_ect_profile.user.id } }
-          expect(response.status).to eq 200
 
+          expect(response).to be_successful
           expect(parsed_response).to eq(expected_response)
         end
 
-        it "does not load declaration for a non-existent participant id" do
+        it "does not load declaration for a non-existent participant id", :aggregation_failures do
           get "/api/v2/participant-declarations", params: { filter: { participant_id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" } }
-          expect(response.status).to eq 200
 
+          expect(response.status).to eq 200
           expect(parsed_response).to eq({ "data" => [] })
         end
       end
 
       context "when querying a single participant declaration" do
         let(:expected_response) do
-          expected_single_json_response(declaration: participant_declaration, profile: ect_profile)
+          expected_single_json_response(declaration: participant_declaration, profile: ect_profile, state: "eligible")
         end
+        let(:participant_declaration) { create(:ect_participant_declaration, participant_profile: ect_profile, cpd_lead_provider:) }
 
-        it "loads declaration with the specific id" do
+        it "loads declaration with the specific id", :aggregation_failures do
           get "/api/v2/participant-declarations/#{participant_declaration.id}"
-          expect(response.status).to eq 200
 
+          expect(response).to be_successful
           expect(JSON.parse(response.body)).to eq(expected_response)
         end
 
@@ -354,22 +395,17 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
   end
 
   describe "CSV Index API" do
+    let(:ect_profile)     { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
     let(:parsed_response) { CSV.parse(response.body, headers: true) }
-    let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-    let(:bearer_token) { "Bearer #{token}" }
+    let(:token)           { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+    let(:bearer_token)    { "Bearer #{token}" }
 
     let!(:participant_declaration_one) do
-      create(:ect_participant_declaration,
-             participant_profile: ect_profile,
-             user: ect_profile.user,
-             cpd_lead_provider:)
+      create(:ect_participant_declaration, cpd_lead_provider:)
     end
 
     let!(:participant_declaration_two) do
-      create(:ect_participant_declaration,
-             participant_profile: ect_profile,
-             user: ect_profile.user,
-             cpd_lead_provider:)
+      create(:ect_participant_declaration, cpd_lead_provider:)
     end
 
     before do
@@ -378,11 +414,11 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
     end
 
     it "returns the correct CSV content type header" do
-      expect(response.headers["Content-Type"]).to eql("text/csv")
+      expect(response.headers["Content-Type"]).to eq("text/csv")
     end
 
     it "returns all declarations" do
-      expect(parsed_response.length).to eql 2
+      expect(parsed_response.length).to eq(2)
     end
 
     it "returns the correct headers" do
@@ -404,7 +440,7 @@ RSpec.describe "participant-declarations endpoint spec", type: :request do
 
     it "ignores pagination parameters" do
       get "/api/v2/participant-declarations.csv", params: { page: { per_page: 1, page: 1 } }
-      expect(parsed_response.length).to eql 2
+      expect(parsed_response.length).to eq(2)
     end
   end
 
@@ -450,16 +486,16 @@ private
   def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          [
-            single_json_declaration(declaration:, profile:, course_identifier:, state:),
-          ],
+      [
+        single_json_declaration(declaration:, profile:, course_identifier:, state:),
+      ],
     }
   end
 
   def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
     {
       "data" =>
-          single_json_declaration(declaration:, profile:, course_identifier:, state:),
+      single_json_declaration(declaration:, profile:, course_identifier:, state:),
     }
   end
 

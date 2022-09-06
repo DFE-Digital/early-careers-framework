@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class VoidParticipantDeclaration
-  def initialize(participant_declaration:)
-    @participant_declaration = participant_declaration
+  def initialize(participant_declaration)
+    self.participant_declaration = participant_declaration
   end
 
   def call
@@ -16,7 +16,7 @@ class VoidParticipantDeclaration
   end
 
   def make_awaiting_clawback
-    clawback = Finance::ClawbackDeclaration.new(participant_declaration:)
+    clawback = Finance::ClawbackDeclaration.new(participant_declaration)
     clawback.call
 
     if clawback.errors.any?
@@ -38,7 +38,7 @@ class VoidParticipantDeclaration
 
 private
 
-  attr_reader :participant_declaration
+  attr_accessor :participant_declaration
 
   def line_item
     participant_declaration.statement_line_items.find_by(state: %w[eligible payable submitted])

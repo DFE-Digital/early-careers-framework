@@ -64,8 +64,6 @@ module NPQ
     end
 
     def participant_profile
-      return @participant_profile if @participant_profile
-
       @participant_profile ||= ParticipantProfile::NPQ.create!(
         id: npq_application.id,
         schedule: NPQCourse.schedule_for(npq_course: npq_application.npq_course, cohort:),
@@ -74,13 +72,9 @@ module NPQ
         school_urn: npq_application.school_urn,
         school_ukprn: npq_application.school_ukprn,
         participant_identity: npq_application.participant_identity,
-      )
-
-      find_or_create_initial_profile_state
-    end
-
-    def find_or_create_initial_profile_state
-      ParticipantProfileState.find_or_create_by(participant_profile:)
+      ).tap do |pp|
+        ParticipantProfileState.find_or_create_by(participant_profile: pp)
+      end
     end
 
     def teacher_profile

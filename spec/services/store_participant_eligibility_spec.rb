@@ -2,16 +2,18 @@
 
 require "rails_helper"
 
-RSpec.describe StoreParticipantEligibility do
+RSpec.describe StoreParticipantEligibility, :with_default_schedules do
   describe ".call" do
     subject(:service) { described_class }
-    let(:school) { create(:school) }
-    let(:school_cohort) { create(:school_cohort, :fip, school:) }
-    let(:ect_teacher_profile) { create(:teacher_profile, school:, trn: nil) }
-    let(:mentor_teacher_profile) { create(:teacher_profile, school:, trn: nil) }
-    let(:ect_profile) { create(:ect_participant_profile, school_cohort:, teacher_profile: ect_teacher_profile) }
-    let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:, teacher_profile: mentor_teacher_profile) }
-    let!(:induction_tutor) { create(:user, :induction_coordinator, schools: [school]) }
+
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:school)                 { create(:school) }
+    let(:school_cohort)          { create(:school_cohort, :fip, :with_induction_programme, school:, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:ect_profile)            { create(:ect, school_cohort:) }
+    let(:ect_teacher_profile)    { ect_profile.teacher_profile }
+    let(:mentor_profile)         { create(:mentor, school_cohort:) }
+    let(:mentor_teacher_profile) { mentor_profile.teacher_profile }
+    let!(:induction_tutor)       { create(:user, :induction_coordinator, schools: [school]) }
 
     let(:eligibility_options) do
       {
@@ -190,7 +192,7 @@ RSpec.describe StoreParticipantEligibility do
           it "sends specific emails to the ect and sit when the reason is exempt_from_induction and they have declarations" do
             additional_induction_coordinator = create(:user, :induction_coordinator, schools: [school])
             create(:ecf_participant_eligibility, :eligible, participant_profile: ect_profile)
-            create(:ect_participant_declaration, user: ect_profile.user, participant_profile: ect_profile)
+            create(:ect_participant_declaration, participant_profile: ect_profile, cpd_lead_provider:)
             eligibility_options[:exempt_from_induction] = true
             eligibility_options[:status] = :ineligible
             eligibility_options[:reason] = :exempt_from_induction
@@ -198,17 +200,19 @@ RSpec.describe StoreParticipantEligibility do
             expect {
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
-              .with(
-                induction_tutor_email: induction_tutor.email,
-                participant_profile: ect_profile,
-              ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
-                  .with(
-                    induction_tutor_email: additional_induction_coordinator.email,
-                    participant_profile: ect_profile,
-                  ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
-                      .with(
-                        participant_profile: ect_profile,
-                      ).once
+             .with(
+               induction_tutor_email: induction_tutor.email,
+               participant_profile: ect_profile,
+             )
+             .and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
+             .with(
+               induction_tutor_email: additional_induction_coordinator.email,
+               participant_profile: ect_profile,
+             )
+             .and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
+             .with(
+               participant_profile: ect_profile,
+             ).once
           end
 
           it "doesn't send emails when the reason is exempt from induction, they were previously eligible but don't have declarations" do
@@ -328,6 +332,8 @@ RSpec.describe StoreParticipantEligibility do
 
     context "when eligible status is determined" do
       context "when no record existed previously" do
+        before { ect_profile }
+
         it "does not send an email" do
           expect {
             service.call(participant_profile: ect_profile, eligibility_options:)

@@ -2,9 +2,12 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfile::NPQ, type: :model do
-  let(:profile) { create(:npq_participant_profile) }
-
+RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
+  let(:npq_application) { create(:npq_application) }
+  let(:profile) do
+    NPQ::Accept.call(npq_application:)
+    npq_application.reload.profile
+  end
   describe "#push_profile_to_big_query" do
     context "on create" do
       it "pushes profile to BigQuery" do

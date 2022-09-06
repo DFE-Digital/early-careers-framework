@@ -2,21 +2,21 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Schools::Participants", type: :request do
-  let(:cohort_2021) { Cohort.find_or_create_by!(start_year: 2021) }
-  let(:cohort_2022) { Cohort.find_or_create_by!(start_year: 2022) }
-
+RSpec.describe "Admin::Schools::Participants", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" }, type: :request do
+  let(:cohort_2021) { Cohort.current }
+  let(:cohort_2022) { create(:cohort, :next) }
+  let!(:schedule_2022) { create(:ecf_schedule, cohort: cohort_2022) }
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
   let(:school_cohort) { create(:school_cohort, school:, cohort: cohort_2021) }
   let(:school_cohort_22) { create(:school_cohort, school:, cohort: cohort_2022) }
 
-  let!(:ect_profile) { create :ect_participant_profile, school_cohort: }
-  let!(:ect_profile_22) { create :ect_participant_profile, school_cohort: school_cohort_22 }
-  let!(:mentor_profile) { create :mentor_participant_profile, school_cohort: }
+  let!(:ect_profile) { create :ect, school_cohort: }
+  let!(:ect_profile_22) { create :ect, school_cohort: school_cohort_22 }
+  let!(:mentor_profile) { create :mentor, school_cohort: }
   let!(:npq_profile) { create(:npq_participant_profile, school:) }
-  let!(:unrelated_profile) { create :ecf_participant_profile }
-  let!(:withdrawn_profile_record) { create :mentor_participant_profile, :withdrawn_record, school_cohort: }
+  let!(:unrelated_profile) { create :ect }
+  let!(:withdrawn_profile_record) { create :mentor, :withdrawn_record, school_cohort: }
 
   before do
     sign_in admin_user

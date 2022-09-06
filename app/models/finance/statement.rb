@@ -53,7 +53,7 @@ class Finance::Statement < ApplicationRecord
     end
 
     def attach(participant_declaration)
-      Finance::DeclarationStatementAttacher.new(participant_declaration:).call
+      Finance::DeclarationStatementAttacher.new(participant_declaration).call
     end
   end
 

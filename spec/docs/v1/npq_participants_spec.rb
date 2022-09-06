@@ -97,11 +97,11 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
     let(:profile)     { npq_application.profile }
     let(:new_schedule) do
       if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_leadership_schedule, schedule_identifier: SecureRandom.alphanumeric)
+        Finance::Schedule::NPQLeadership.find_by(schedule_identifier: "npq-leadership-spring")
       elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_specialist_schedule, schedule_identifier: SecureRandom.alphanumeric)
+        Finance::Schedule::NPQSpecialist.find_by(schedule_identifier: "npq-specialist-spring")
       else
-        create(:npq_aso_schedule, schedule_identifier: SecureRandom.alphanumeric)
+        Finance::Schedule::NPQSupport.find_by(schedule_identifier: "npq-aso-december")
       end
     end
 
@@ -111,6 +111,14 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
         course_identifier: npq_application.npq_course.identifier,
         cohort: new_schedule.cohort.start_year,
       }
+    end
+
+    before do
+      declaration = profile.participant_declarations.first
+      new_schedule
+        .milestones
+        .find_by!(declaration_type: declaration.declaration_type)
+        .update!(start_date: declaration.declaration_date - 1.day)
     end
   end
 

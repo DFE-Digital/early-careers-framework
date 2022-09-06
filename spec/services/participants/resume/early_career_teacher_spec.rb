@@ -2,35 +2,15 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::Resume::EarlyCareerTeacher do
+RSpec.describe Participants::Resume::EarlyCareerTeacher, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:profile) { create(:ect_participant_profile, training_status: "deferred") }
-  let(:user) { profile.user }
-  let(:school) { profile.school_cohort.school }
-  let(:cohort) { profile.school_cohort.cohort }
-
-  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
-
-  let!(:induction_record) do
-    Induction::Enrol
-      .call(participant_profile: profile, induction_programme:)
-      .tap { |ir| ir.update!(training_status: "deferred") }
-  end
-
-  let!(:partnership) do
-    create(
-      :partnership,
-      school:,
-      lead_provider:,
-      cohort:,
-    )
-  end
+  let(:lead_provider)     { cpd_lead_provider.lead_provider }
+  let!(:profile)          { create(:ect, :deferred, lead_provider:) }
 
   subject do
     described_class.new(
       params: {
-        participant_id: user.id,
+        participant_id: profile.user_id,
         course_identifier: "ecf-induction",
         cpd_lead_provider:,
       },
@@ -43,18 +23,18 @@ RSpec.describe Participants::Resume::EarlyCareerTeacher do
     end
 
     it "updates induction_record training_status to active" do
-      expect { subject.call }.to change { induction_record.reload.training_status }.from("deferred").to("active")
+      expect { subject.call }.to change { profile.current_induction_record.reload.training_status }.from("deferred").to("active")
     end
 
     it "creates a ParticipantProfileState" do
-      expect { subject.call }.to change { ParticipantProfileState.count }.by(1)
+      expect { subject.call }.to change { profile.participant_profile_states.count }.by(1)
     end
 
     context "when already active" do
       before do
         described_class.new(
           params: {
-            participant_id: user.id,
+            participant_id: profile.user_id,
             course_identifier: "ecf-induction",
             cpd_lead_provider:,
             reason: "bereavement",

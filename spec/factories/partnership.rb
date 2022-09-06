@@ -2,10 +2,10 @@
 
 FactoryBot.define do
   factory :partnership do
-    school
-    lead_provider
-    delivery_partner
-    cohort { Cohort.current || create(:cohort, :current) }
+    school           { association :school }
+    lead_provider    { association :lead_provider }
+    delivery_partner { association :delivery_partner }
+    cohort           { Cohort.current || create(:cohort, :current) }
 
     challenge_deadline { rand(-21..21).days.from_now }
     report_id { Random.uuid }
