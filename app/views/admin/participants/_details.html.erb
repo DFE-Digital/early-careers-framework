@@ -20,13 +20,18 @@
   end
 
   sl.row do |row|
+    row.key(text: "Date of birth")
+    row.value(text: latest_induction_record.participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
+  end
+
+  sl.row do |row|
     row.key(text: "ID")
-    row.value(text: latest_induction_record.user.id)
+    row.value(text: tag.code(latest_induction_record.user.id))
   end
 
   sl.row do |row|
     row.key(text: "External ID")
-    row.value(text: latest_induction_record.participant_profile.participant_identity.external_identifier)
+    row.value(text: tag.code(latest_induction_record.participant_profile.participant_identity.external_identifier))
   end
 
   sl.row do |row|
