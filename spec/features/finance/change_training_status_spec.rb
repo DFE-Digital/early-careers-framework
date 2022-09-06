@@ -33,26 +33,9 @@ RSpec.feature "Finance users participant change training status", :with_default_
   end
 
   describe "ECF" do
-    let(:school_cohort) { participant_profile.school_cohort }
-    let!(:partnership) do
-      create(
-        :partnership,
-        school: school_cohort.school,
-        cohort: school_cohort.cohort,
-        challenged_at: nil,
-        challenge_reason: nil,
-        pending: false,
-      )
-    end
-    let(:induction_programme) { create(:induction_programme, partnership:, school_cohort:) }
-
     describe "EarlyCareerTeacher" do
       let!(:participant_profile)     { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
       let!(:participant_declaration) { create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:) }
-
-      before do
-        Induction::Enrol.call(participant_profile:, induction_programme:)
-      end
 
       scenario "Change training status to deferred" do
         then_table_value_is(label: "Training status", value: "active")
@@ -74,10 +57,6 @@ RSpec.feature "Finance users participant change training status", :with_default_
     describe "Mentor" do
       let!(:participant_profile)     { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
       let!(:participant_declaration) { create(:mentor_participant_declaration, participant_profile:, cpd_lead_provider:) }
-
-      before do
-        Induction::Enrol.call(participant_profile:, induction_programme:)
-      end
 
       scenario "Change training status to deferred" do
         then_table_value_is(label: "Training status", value: "active")
