@@ -11,7 +11,7 @@ FactoryBot.define do
           { name: "Output 3 - Retention Point 2", start_date: Date.new(start_year, 2, 1), milestone_date: Date.new(2022, 4, 30), payment_date: Date.new(2022, 5, 31), declaration_type: "retained-2" },
           { name: "Output 4 - Retention Point 3", start_date: Date.new(start_year, 5, 1), milestone_date: Date.new(2022, 9, 30), payment_date: Date.new(2022, 10, 31), declaration_type: "retained-3" },
           { name: "Output 5 - Retention Point 4", start_date: Date.new(start_year, 10, 1), milestone_date: Date.new(2023, 1, 31), payment_date: Date.new(2023, 2, 28), declaration_type: "retained-4" },
-          { name: "Output 6 - Participant Completion", start_date: Date.new(start_year + 1, 2, 1), milestone_date: Date.new(2023, 4, 30), payment_date: Date.new(2023, 5, 31), declaration_type: "completed" },
+          { name: "Output 6 - Participant Completion", start_date: Date.new(start_year + 1, 2, 1), milestone_date: Date.new(start_year + 1, 4, 30), payment_date: Date.new(start_year + 1, 5, 31), declaration_type: "completed" },
         ].each do |hash|
           Finance::Milestone.find_or_create_by!(
             schedule:,
