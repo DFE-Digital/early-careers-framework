@@ -1,5 +1,4 @@
 ![Tests](https://github.com/DFE-Digital/early-careers-framework/workflows/Test/badge.svg)
-[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/c72bbcf6/early-careers-framework)
 
 # Early careers framework
 
@@ -134,7 +133,7 @@ Please note: `--fail-fast` is recommended when running scenarios locally due to 
 
 ## End to end browser testing
 
-We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests, and Percy for snapshot testing.
+We use Cypress for end-to-end tests. This integrates with Axe for automated accessibility tests.
 
 We aim to have an accessibility and snapshot test for every page on the service.
 
