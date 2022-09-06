@@ -134,6 +134,14 @@ en:
       blank: "Select a reason why you think this confirmation is incorrect"
     delivery_partner:
       blank: "Choose a delivery partner"
+    cohort:
+      blank: "Cohort starting on %{year} not setup on %{where}"
+      excluded_start_year: "Invalid value. Must be different to %{year}"
+      invalid_start_year: "Invalid value. Must be an integer between %{start} and %{end}"
+    induction_record:
+      blank: "The participant is not enrolled on the cohort starting on %{year}"
+    participant_profile:
+      blank: "Not registered or not active"
     programme:
       blank: "Please select programme type"
     provider:
