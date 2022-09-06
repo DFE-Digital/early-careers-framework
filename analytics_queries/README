@@ -3,3 +3,18 @@ These queries select the data used for analysis by TAD/IES/BMG. They can be used
 cf conduit ecf-postgres-sandbox -- psql -c "\copy (SELECT pd.id, pd.user_id, pd.declaration_type, pd.declaration_date, (pd.state = 'voided') as voided, pd.evidence_held FROM participant_declarations pd WHERE course_identifier in ('ecf-induction', 'ecf-mentor')) to 'declarations.csv' csv header"
 
 Substitute the database name and query as appropriate. Nathan Easey is the point of contact for questions around this.
+
+Note, the above process has been streamlined by moving the `\copy` command into the SQL files. Now we can run the `Makefile` to build the queries and run them one by one:
+ * change to `$APP/analytics_queries`
+ * run `make`
+ * it creates a directory in /tmp/exports
+ * then copies each of the queries into /tmp/exports and removes any \n characters
+
+Now we can `cd /tmp/exports` and run the ones we need:
+
+cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/declarations.sql
+cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/participants.sql
+cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/partnerships.sql
+cf conduit ecf-postgres-sandbox -- psql < /tmp/exports/schools.sql
+
+The CSV files will be deposited in our `/tmp/exports` folder. We can zip, password and upload them as normal.
