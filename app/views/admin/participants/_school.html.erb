@@ -1,32 +1,31 @@
-<table class="govuk-table">
-  <tbody class="govuk-table__body admin-tabs">
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">School</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.school_cohort.school.name %></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <% if latest_induction_record.participant_profile.ect? %>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">Mentor</th>
-        <td class="govuk-table__cell"><%= latest_induction_record.mentor_profile&.user&.full_name || 'Not yet assigned' %></td>
-        <td class="govuk-table__cell"></td>
-      </tr>
-    <% end %>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Lead provider</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.school_cohort.lead_provider&.name %></td>
-      <td class="govuk-table__cell">
-      <% if latest_induction_record.school_cohort.lead_provider %>
-        <%= govuk_link_to "#" do %>
-          Challenge <span class="govuk-visually-hidden">lead provider</span>
-        <% end %>
-      <% end %>
-      </td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Delivery partner</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.school_cohort.delivery_partner&.name %></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-  </tbody>
-</table>
+<%= govuk_summary_list(actions: true) do |sl|
+  lead_provider = latest_induction_record.school_cohort.lead_provider
+
+  sl.row do |row|
+    row.key(text: "School name")
+    row.value(text: latest_induction_record.school_cohort.school.name)
+  end
+
+  sl.row do |row|
+    row.key(text: "School URN")
+    row.value(text: latest_induction_record.school_cohort.school.urn)
+  end
+
+  if latest_induction_record.participant_profile.ect?
+    sl.row do |row|
+      row.key(text: "Mentor")
+      row.value(text: latest_induction_record.mentor_profile&.user&.full_name || 'Not yet assigned')
+    end
+  end
+
+  sl.row do |row|
+    row.key(text: "Lead provider")
+    row.value(text: latest_induction_record.school_cohort.lead_provider&.name)
+    row.action(text: "Challenge", visually_hidden_text: "lead provider", href: "#") if lead_provider
+  end
+
+  sl.row do |row|
+    row.key(text: "Delivery partner")
+    row.value(text: latest_induction_record.school_cohort.delivery_partner&.name)
+  end
+end %>
