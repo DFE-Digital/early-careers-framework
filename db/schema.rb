@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_01_105322) do
+ActiveRecord::Schema.define(version: 2022_09_06_152545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -618,6 +618,7 @@ ActiveRecord::Schema.define(version: 2022_09_01_105322) do
     t.uuid "superseded_by_id"
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "user_id", "declaration_date", "declaration_type", "course_identifier"], name: "unique_declaration_index", unique: true
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
     t.index ["superseded_by_id"], name: "superseded_by_index"
