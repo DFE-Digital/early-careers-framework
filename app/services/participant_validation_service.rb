@@ -41,7 +41,8 @@ private
     return true if validation_data["induction"]["completion_date"].present?
     return false if validation_data["induction"]["start_date"].nil?
 
-    validation_data["induction"]["start_date"] < ActiveSupport::TimeZone["London"].local(Cohort.current.start_year, 9, 1)
+    # this should always be a check against 2021 not Cohort.current.start_year
+    validation_data["induction"]["start_date"] < ActiveSupport::TimeZone["London"].local(2021, 9, 1)
   end
 
   def check_first_name_only?
