@@ -78,54 +78,43 @@ RSpec.feature "Participant validation journey",
     given_i_sign_in_as_the_user_with_the_full_name ect_full_name
     and_i_am_on_the_participant_registration_wizard
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: trn"
 
     when_i_add_teacher_reference_number_to_the_participant_registration_wizard "1234567"
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: dob"
 
     when_i_add_date_of_birth_to_the_participant_registration_wizard Date.new(1983, 2, 28)
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: no-match after trn"
 
     when_i_choose_add_your_national_insurance_number_on_the_participant_registration_wizard
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: nino"
 
     when_i_add_national_insurance_number_to_the_participant_registration_wizard "AB123456C"
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: no-match after trn and nino"
 
     when_i_choose_confirm_your_name_on_the_participant_registration_wizard
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: name changed"
 
     when_i_choose_last_name_has_changed_on_the_participant_registration_wizard
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: name"
 
     when_i_add_full_name_to_the_participant_registration_wizard "Correct Name"
     then_i_am_on_the_participant_registration_no_match_page
     and_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: no-match after trn, nino and name change"
 
     when_i_continue_on_the_participant_registration_no_match_page
     then_i_am_on_the_participant_registration_manual_check_required_page
     and_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participant validation journey: manual check required"
   end
 
   scenario "Mentor validation journey without TRN is accessible" do
     given_i_sign_in_as_the_user_with_the_full_name mentor_full_name
     and_i_am_on_the_mentor_registration_wizard
     and_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Mentor validation journey: trn"
 
     when_i_confirm_do_not_have_trn_on_the_mentor_registration_wizard
 
     then_i_am_on_the_get_a_trn_page
     and_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Mentor validation journey: trn guidance"
   end
 
   scenario "Mentor validates their details with trn" do

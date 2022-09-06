@@ -8,12 +8,10 @@ RSpec.feature "Admin managing 2020 participants", js: true, rutabaga: false do
     and_i_am_signed_in_as_an_admin
     when_i_visit the_school_2020_cohort_page
     then_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Admin NQT+1 listing page")
 
     when_i_click_the_link_containing "Add new"
     then_i_should_be_on the_add_nqt_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Admin add new NQT+1 page")
 
     when_i_fill_the_form_in
     and_i_click_the_save_button

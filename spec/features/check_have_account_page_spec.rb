@@ -6,7 +6,6 @@ RSpec.feature "Check you have an account page", type: :feature, js: true, rutaba
   scenario "Check you have an account page is accessible" do
     given_i_am_on_the_check_account_page
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Check you have an account page"
   end
 
   scenario "Visiting the Check you have an account page" do

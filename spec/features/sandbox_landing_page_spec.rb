@@ -6,7 +6,6 @@ RSpec.feature "Sandbox landing page", type: :feature, js: true, rutabaga: false 
   scenario "Sandbox landing page is accessible" do
     given_i_am_on_the_sandbox_landing_page
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Sandbox landing page"
   end
 
   scenario "Continuing as a Lead Provider" do

@@ -12,14 +12,12 @@ RSpec.feature "Admin managing school provision", js: true, rutabaga: false do
 
     then_i_should_be_on the_challenge_partnership_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Admin challenge partnership page")
 
     when_i_select_mistake
     and_i_click_the_continue_button
     then_i_should_be_on the_confirm_page
     and_the_page_should_contain_lead_provider_name
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Admin confirm challenge partnership page")
 
     when_i_click_the_continue_button
     then_i_should_be_on the_school_cohorts_page

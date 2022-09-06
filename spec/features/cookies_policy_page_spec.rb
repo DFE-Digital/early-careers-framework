@@ -9,7 +9,6 @@ RSpec.feature "Cookie policy page", type: :feature, js: true do
     given_i_am_on_the_cookie_policy_page
 
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Cookie policy page"
   end
 
   scenario "Reading the cookie policy" do
@@ -38,7 +37,6 @@ RSpec.feature "Cookie policy page", type: :feature, js: true do
 
     then_i_confirm_cookie_consent_is_given_on_the_cookie_policy_page
     and_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Cookie consent page"
   end
 
   scenario "Not consenting to the cookie policy" do
@@ -48,7 +46,6 @@ RSpec.feature "Cookie policy page", type: :feature, js: true do
 
     then_i_confirm_cookie_consent_is_not_given_on_the_cookie_policy_page
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Cookie dissent page"
   end
 
   scenario "Changing consent to the cookie policy" do

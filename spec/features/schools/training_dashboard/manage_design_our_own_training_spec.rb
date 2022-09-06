@@ -11,7 +11,6 @@ RSpec.describe "Manage Design Our Own training", js: true do
     and_i_am_signed_in_as_an_induction_coordinator
     then_i_can_view_the_design_our_own_induction_dashboard
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Design Our Own dashboard"
   end
 
   scenario "Change induction programme to Design Your Own" do
@@ -21,8 +20,7 @@ RSpec.describe "Manage Design Our Own training", js: true do
     and_see_the_other_programs_before_choosing(labels: ["Use a training provider, funded by the DfE",
                                                         "Deliver your own programme using DfE accredited materials"],
 
-                                               choice: "Design and deliver your own programme based on the Early Career Framework (ECF)",
-                                               snapshot: "Design Your Own - change programme")
+                                               choice: "Design and deliver your own programme based on the Early Career Framework (ECF)")
 
     expect(page).to have_text "You’ve submitted your training information"
   end

@@ -12,7 +12,6 @@ RSpec.feature "Participant registration start page",
     given_i_am_on_the_participant_registration_start_page
 
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Participants start registration landing page"
   end
 
   scenario "Participant can begin registration" do

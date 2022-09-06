@@ -47,6 +47,5 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_click_on_continue
     then_i_am_taken_to_email_already_taken_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor receives the email taken page"
   end
 end

@@ -49,12 +49,10 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     and_voided_payable_declarations_are_submitted
     when_i_click_on_payment_breakdown_header
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named("Payment breakdown select programme")
 
     when_i_select_ecf
     and_i_click_the_continue_button
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named("Payment breakdown select ECF provider")
 
     when_i_select_a_provider
     and_i_click_the_continue_button
