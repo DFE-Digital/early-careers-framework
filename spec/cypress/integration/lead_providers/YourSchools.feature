@@ -18,7 +18,6 @@ Feature: Your schools flow
     And "page body" should contain "Middle School"
     And "page body" should contain "Small School"
     And the page should be accessible
-    And percy should be sent snapshot
 
     When I am on "dashboard" page
     And I click on "link" containing "Check your schools"
@@ -70,7 +69,6 @@ Feature: Your schools flow
     And "page body" should contain "Pupil premium above 40%"
     And "page body" should contain "induction.tutor_1@example.com"
     And the page should be accessible
-    And percy should be sent snapshot called "Lead providers school with pupil premium uplift details"
 
   Scenario: Viewing school with sparsity uplift
     When I click on "link" containing "Middle School"
@@ -81,7 +79,6 @@ Feature: Your schools flow
     And "page body" should contain "Remote school"
     And "page body" should contain "induction.tutor_2@example.com"
     And the page should be accessible
-    And percy should be sent snapshot called "Lead providers school with sparsity uplift details"
 
   Scenario: Viewing school with pupil premium and sparsity uplifts
     When I click on "link" containing "Small School"
@@ -92,4 +89,3 @@ Feature: Your schools flow
     And "page body" should contain "Pupil premium above 40% and Remote school"
     And "page body" should contain "induction.tutor_3@example.com"
     And the page should be accessible
-    And percy should be sent snapshot called "Lead providers school with pupil premium and sparsity uplift details"
