@@ -729,44 +729,31 @@ RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
 
     context "when there is a clawback followed by a declaration again" do
       let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
-
-      def setup_statement_one
+      let!(:participant_declaration) do
         travel_to first_statement.deadline_date do
           create(:ect_participant_declaration, :paid, participant_profile:, cpd_lead_provider:)
         end
       end
 
-      def setup_statement_two
-        clawback_line_items = first_statement
-          .billable_statement_line_items
-          .joins(:participant_declaration)
-          .where(participant_declarations: { state: "paid" })
-
-        clawback_line_items.each do |li|
-          li.participant_declaration.update!(state: "clawed_back")
-
-          Finance::StatementLineItem.create!(
-            statement: second_statement,
-            participant_declaration: li.participant_declaration,
-            state: "clawed_back",
-          )
+      before do
+        travel_to second_statement.deadline_date do
+          Finance::ClawbackDeclaration.new(participant_declaration.reload).call
         end
-      end
 
-      def setup_statement_three
-        travel_to third_statement.deadline_date do
+        participant_declaration.clawed_back!
+        participant_declaration
+          .statement_line_items
+          .awaiting_clawback
+          .first
+          .clawed_back!
+
+        travel_to second_statement.deadline_date do
           create(:ect_participant_declaration, :payable, participant_profile:, cpd_lead_provider:)
         end
       end
 
-      before do
-        setup_statement_one
-        setup_statement_two
-        setup_statement_three
-      end
-
       it "pays out the following declaration" do
-        fourth_statement_expectation = [
+        third_statement_expectation = [
           {
             band: :a,
             min: 1,
@@ -805,7 +792,7 @@ RSpec.describe Finance::ECF::OutputCalculator, :with_default_schedules do
           },
         ]
 
-        expect(fourth_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(fourth_statement_expectation)
+        expect(third_statement_calc.banding_breakdown.map { |e| e.slice(*relevant_started_keys) }).to eql(third_statement_expectation)
       end
     end
 

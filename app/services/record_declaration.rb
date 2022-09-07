@@ -111,16 +111,29 @@ private
   end
 
   def participant_declaration
-    @participant_declaration ||= participant_profile
-                                   .participant_declarations
-                                   .submitted
-                                   .or(
-                                     participant_profile
-                                       .participant_declarations
-                                       .billable,
-                                   )
-                                   .find_or_create_by!(declaration_parameters)
-                                   .tap { |pd| pd.update!(uplift_flags) }
+    @participant_declaration ||= find_participant_declaration.tap { |pd| pd.update!(uplift_flags) }
+  end
+
+  def find_participant_declaration
+    participant_profile
+      .participant_declarations
+      .submitted
+      .or(
+        participant_profile
+          .participant_declarations
+          .billable,
+      )
+      .find_or_create_by!(declaration_parameters)
+  rescue ActiveRecord::RecordNotUnique
+    participant_profile
+      .participant_declarations
+      .submitted
+      .or(
+        participant_profile
+          .participant_declarations
+          .billable,
+      )
+      .find_by!(declaration_parameters)
   end
 
   def uplift_flags
