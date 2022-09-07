@@ -305,6 +305,7 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
     let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
     let(:participant_profile) { create(:ect) }
     let(:nowish)              { Time.zone.now }
+    let(:state)               { "submitted" }
     let(:attributes)          do
       {
         cpd_lead_provider:,
@@ -313,6 +314,7 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
         declaration_date: nowish,
         declaration_type: "started",
         course_identifier: "ect-induction",
+        state:,
       }
     end
 
@@ -320,6 +322,22 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
 
     it "raises an not unique error" do
       expect { described_class.create!(attributes) }.to raise_error ActiveRecord::RecordNotUnique
+    end
+
+    context "when the declaration state id voided" do
+      let(:state) { :voided }
+
+      it "raises an not unique error" do
+        expect { described_class.create!(attributes) }.not_to raise_error
+      end
+    end
+
+    context "when the declaration state id voided" do
+      let(:state) { :ineligible }
+
+      it "raises an not unique error" do
+        expect { described_class.create!(attributes) }.not_to raise_error
+      end
     end
   end
 end

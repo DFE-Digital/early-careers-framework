@@ -618,7 +618,7 @@ ActiveRecord::Schema.define(version: 2022_09_06_152545) do
     t.uuid "superseded_by_id"
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "user_id", "declaration_date", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text <> ALL ((ARRAY['voided'::character varying, 'ineligible'::character varying])::text[]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
     t.index ["superseded_by_id"], name: "superseded_by_index"
