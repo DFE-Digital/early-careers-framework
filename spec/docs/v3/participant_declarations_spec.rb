@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
-require_relative "../../shared/context/service_record_declaration_params"
-require_relative "../../shared/context/lead_provider_profiles_and_courses"
 
-RSpec.describe "Participant Declarations", type: :request, swagger_doc: "v3/api_spec.json" do
-  include_context "lead provider profiles and courses"
-  include_context "service record declaration params"
-
+RSpec.describe "Participant Declarations", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json" do
+  let(:ect_profile) { create(:ect) }
+  let(:ect_declaration_date) { ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
   let(:user) { ect_profile.user }
+  let(:cpd_lead_provider) { ect_profile.current_induction_records.first.cpd_lead_provider }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
