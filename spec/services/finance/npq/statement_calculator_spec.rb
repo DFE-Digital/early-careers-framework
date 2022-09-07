@@ -197,20 +197,18 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
     let!(:statement_2022) { create(:npq_statement, cpd_lead_provider:, cohort: cohort_2022) }
 
     before do
-      declarations = create_list(
-        :npq_participant_declaration, 1,
+      declaration = create(
+        :npq_participant_declaration,
         state: "eligible",
         course_identifier: npq_course.identifier,
-        npq_course:
+        npq_course:,
       )
 
-      declarations.each do |dec|
-        Finance::StatementLineItem.create!(
-          statement: statement_2022,
-          participant_declaration: dec,
-          state: dec.state,
-        )
-      end
+      Finance::StatementLineItem.create!(
+        statement: statement_2022,
+        participant_declaration: declaration,
+        state: declaration.state,
+      )
     end
 
     it "only includes declarations for the related cohort" do
