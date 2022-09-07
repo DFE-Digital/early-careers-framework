@@ -24,6 +24,9 @@
         <% component.tab(label: 'History') do %>
           <%= render partial: 'history', locals: { historical_induction_records: @historical_induction_records, latest_induction_record: @latest_induction_record } %>
         <% end %>
+        <% component.tab(label: 'Induction records') do %>
+          <%= render partial: 'induction_records', locals: { induction_records: @induction_records } %>
+        <% end %>
       <% end %>
     <% end %>
 

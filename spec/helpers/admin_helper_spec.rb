@@ -59,4 +59,20 @@ RSpec.describe AdminHelper, type: :helper do
       it("renders nothing") { is_expected.to be_nil }
     end
   end
+
+  describe "#induction_programme_friendly_name" do
+    context("when short: false") do
+      it "returns human readable names for induction programmes" do
+        expect(induction_programme_friendly_name("full_induction_programme")).to eql("Full induction programme")
+        expect(induction_programme_friendly_name("school_funded_fip")).to eql("School funded full induction programme")
+      end
+    end
+
+    context("when short: false") do
+      it "returns shortened readable names for induction programmes" do
+        expect(induction_programme_friendly_name("full_induction_programme", short: true)).to eql("FIP")
+        expect(induction_programme_friendly_name("school_funded_fip", short: true)).to eql("School funded FIP")
+      end
+    end
+  end
 end
