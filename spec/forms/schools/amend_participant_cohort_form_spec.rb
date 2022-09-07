@@ -138,6 +138,19 @@ RSpec.describe Schools::AmendParticipantCohortForm do
         end
       end
 
+      context "when the participant has declarations" do
+        before do
+          allow_any_instance_of(ParticipantProfile).to receive(:participant_declarations)
+                                                         .and_return(double(exists?: true))
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors.first.attribute).to eq(:participant_declarations)
+          expect(form.errors.first.message).to eq("The participant must have no declarations")
+        end
+      end
+
       context "when the participant is not enrolled on the source school cohort" do
         it "returns false and set errors" do
           expect(form.save).to be_falsey

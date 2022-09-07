@@ -140,6 +140,8 @@ en:
       invalid_start_year: "Invalid value. Must be an integer between %{start} and %{end}"
     induction_record:
       blank: "The participant is not enrolled on the cohort starting on %{year}"
+    participant_declarations:
+      exist: "The participant must have no declarations"
     participant_profile:
       blank: "Not registered or not active"
     programme:

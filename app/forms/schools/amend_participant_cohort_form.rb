@@ -34,6 +34,7 @@ module Schools
                 end,
               }
     validates :participant_profile, presence: { message: I18n.t("errors.participant_profile.blank") }
+    validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.exist") }
     validates :induction_record,
               presence: {
                 message: lambda do |form, _|
@@ -67,6 +68,10 @@ module Schools
                                                .joins(induction_programme: { school_cohort: :cohort })
                                                .where(cohorts: { start_year: source_cohort_start_year })
                                                .latest
+    end
+
+    def participant_declarations
+      @participant_declarations ||= participant_profile&.participant_declarations&.exists?
     end
 
     def participant_identity
