@@ -336,7 +336,12 @@ Rails.application.routes.draw do
 
     resources :participants, only: %i[index show]
     resources :participant_profiles, only: [] do
-      resource :change_training_status, only: %i[new create]
+      namespace :ecf do
+        resource :change_training_status, only: %i[new create]
+      end
+      namespace :npq do
+        resource :change_training_status, only: %i[new create]
+      end
     end
     resources :npq_applications, only: [] do
       resource :change_lead_provider_approval_status, only: %i[new create]

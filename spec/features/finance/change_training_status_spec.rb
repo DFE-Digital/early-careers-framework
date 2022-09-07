@@ -18,10 +18,14 @@ RSpec.feature "Finance users participant change training status", :with_default_
     scenario "Change training status to deferred" do
       then_table_value_is(label: "Training status", value: "active")
       and_i_click_on("Change training status")
+      and_i_click_on("Continue")
+
+      expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-npq-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
+
       then_i_see("Change training status")
       and_i_see("Choose a different training status")
       when_i_choose("deferred")
-      and_i_select("bereavement", "finance-change-training-status-form-reason-field")
+      and_i_select("bereavement", "finance-npq-change-training-status-form-reason-field")
       and_i_click_on("Continue")
       then_i_see("Training status updated successfully")
       then_table_value_is(label: "Training status", value: "deferred")
@@ -36,10 +40,14 @@ RSpec.feature "Finance users participant change training status", :with_default_
       scenario "Change training status to deferred" do
         then_table_value_is(label: "Training status", value: "active")
         and_i_click_on("Change training status")
+        and_i_click_on("Continue")
+
+        expect(page).to have_css(".govuk-error-summary__body ul.govuk-error-summary__list li a[href='#finance-ecf-change-training-status-form-training-status-field-error']", text: "Choose a valid training status")
+
         then_i_see("Change training status")
         and_i_see("Choose a different training status")
         when_i_choose("deferred")
-        and_i_select("bereavement", "finance-change-training-status-form-reason-field")
+        and_i_select("bereavement", "finance-ecf-change-training-status-form-reason-field")
         and_i_click_on("Continue")
         then_i_see("Training status updated successfully")
         then_table_value_is(label: "Training status", value: "deferred")
@@ -56,7 +64,7 @@ RSpec.feature "Finance users participant change training status", :with_default_
         then_i_see("Change training status")
         and_i_see("Choose a different training status")
         when_i_choose("deferred")
-        and_i_select("bereavement", "finance-change-training-status-form-reason-field")
+        and_i_select("bereavement", "finance-ecf-change-training-status-form-reason-field")
         and_i_click_on("Continue")
         then_i_see("Training status updated successfully")
         then_table_value_is(label: "Training status", value: "deferred")

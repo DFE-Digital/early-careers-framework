@@ -308,10 +308,15 @@ en:
               blank: "Choose an appropriate body type"
             appropriate_body:
               blank: "Choose an appropriate body"
-        finance/change_training_status_form:
+        finance/ecf/change_training_status_form:
           attributes:
             training_status:
-              blank: Choose training status
+              inclusion: Choose a valid training status
+            reason:
+              inclusion: Choose a valid reason for training status
+        finance/npq/change_training_status_form:
+          attributes:
+            training_status:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
