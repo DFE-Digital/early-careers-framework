@@ -86,6 +86,8 @@ module Schools
         induction_record.update!(induction_programme:, start_date:, schedule:)
         participant_profile.update!(school_cohort: target_school_cohort, schedule:)
       rescue ActiveRecord::RecordInvalid
+        errors.add(:induction_record, induction_record.errors.full_messages.first) if induction_record.errors.any?
+        errors.add(:participant_profile, participant_profile.errors.full_messages.first) if participant_profile.errors.any?
         false
       end
     end

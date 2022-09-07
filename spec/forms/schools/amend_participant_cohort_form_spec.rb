@@ -171,6 +171,18 @@ RSpec.describe Schools::AmendParticipantCohortForm do
                                                       programme_choice: target_school_cohort.induction_programme_choice)
         end
 
+        context "when the transfer cannot be persisted" do
+          before do
+            allow(form).to receive(:start_date)
+          end
+
+          it "returns false and set errors" do
+            expect(form.save).to be_falsey
+            expect(form.errors.first.attribute).to eq(:induction_record)
+            expect(form.errors.first.message).to eq("Start date can't be blank")
+          end
+        end
+
         it "returns true and set no errors" do
           expect(form.save).to be_truthy
           expect(form.errors).to be_empty
