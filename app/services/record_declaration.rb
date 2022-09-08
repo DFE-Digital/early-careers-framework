@@ -107,6 +107,8 @@ private
   end
 
   def validate_milestone_exists
+    return unless participant_profile
+
     if milestone.blank?
       errors.add(:declaration_type, I18n.t(:mismatch_declaration_type_for_schedule))
     end
