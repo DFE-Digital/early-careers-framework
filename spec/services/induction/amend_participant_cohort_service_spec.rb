@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::AmendParticipantCohortForm do
+RSpec.describe Induction::AmendParticipantCohortService do
   describe "#save" do
     let(:email) { "participant@school.org" }
     let(:source_cohort_start_year) { 2021 }

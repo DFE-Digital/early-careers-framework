@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Schools
-  class AmendParticipantCohortForm
+module Induction
+  class AmendParticipantCohortService
     include ActiveModel::Model
 
     ECF_FIRST_YEAR = 2020
