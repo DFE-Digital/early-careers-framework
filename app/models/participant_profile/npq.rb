@@ -56,6 +56,10 @@ class ParticipantProfile < ApplicationRecord
       schedule
     end
 
+    def latest_induction_record_for(*)
+      nil
+    end
+
   private
 
     def push_profile_to_big_query

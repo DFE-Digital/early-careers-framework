@@ -142,8 +142,20 @@ private
       declaration_date:,
       declaration_type:,
       cpd_lead_provider:,
+      delivery_partner:,
       user: participant_identity.user,
     }
+  end
+
+  def delivery_partner
+    relevant_induction_record
+      &.induction_programme
+      &.partnership
+      &.delivery_partner
+  end
+
+  def relevant_induction_record
+    participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
 
   def validate_evidence_held?

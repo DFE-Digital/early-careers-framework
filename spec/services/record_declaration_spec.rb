@@ -196,9 +196,18 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     context "when the participant is an ECT" do
       let(:particpant_type)   { :ect }
       let(:course_identifier) { "ecf-induction" }
+      let(:delivery_partner) { participant_profile.induction_records[0].induction_programme.partnership.delivery_partner }
 
       it "creates a participant declaration" do
         expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+      end
+
+      it "stores the known delivery partner" do
+        service.call
+
+        declaration = ParticipantDeclaration.last
+
+        expect(declaration.delivery_partner).to eql(delivery_partner)
       end
 
       it_behaves_like "validates the declaration for a withdrawn participant"
