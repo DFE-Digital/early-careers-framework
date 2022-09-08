@@ -10,7 +10,6 @@ Feature: Admin user managing participants
     Then the table should have 7 rows
     And "page body" should contain "Enter the participant’s name, school’s name or URN"
     And the page should be accessible
-    And percy should be sent snapshot
 
     When I type "Test school" into "search box"
     And I press enter in "search box"
@@ -26,12 +25,10 @@ Feature: Admin user managing participants
     Then I should be on "admin participant" page
     And "page body" should contain "DOB entered"
     And the page should be accessible
-    And percy should be sent snapshot called "NPQ participant admin profile"
 
     When I click on "link" containing "View identity confirmation"
     Then I should be on "admin participant identity" page
     And the page should be accessible
-    And percy should be sent snapshot called "NPQ participant admin empty identity validation"
 
     When I click the submit button
     Then "page body" should contain "can't be blank"

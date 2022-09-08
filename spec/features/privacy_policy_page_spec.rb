@@ -11,7 +11,6 @@ RSpec.feature "Privacy policy page", type: :feature, js: true, rutabaga: false d
   scenario "Privacy policy is accessible" do
     given_i_am_on_the_privacy_policy_page
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Privacy policy page"
   end
 
   scenario "Visiting the Privacy policy" do

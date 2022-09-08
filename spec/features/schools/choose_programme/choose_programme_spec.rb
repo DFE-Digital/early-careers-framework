@@ -78,7 +78,6 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
 
     then_i_am_on_the_school_funded_fip_training_submitted_page
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "School funded fip training submitted"
     and_i_can_get_guidance_about_an_arrangement_with_a_training_provider_on_the_school_funded_fip_training_submitted_page
     and_i_can_email_cpd_for_help_on_the_school_funded_fip_training_submitted_page
 

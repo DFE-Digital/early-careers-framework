@@ -16,7 +16,6 @@ Feature: Admin user creating induction tutor
     When I click on "link" containing "Add induction tutor"
     Then I should be on "new admin school induction coordinator" page
     And the page should be accessible
-    And percy should be sent snapshot called "Admin add induction coordinator page"
 
     Given user was created as "induction_coordinator" with email "existing_induction_coordinator@example.com" and full_name "Existing User"
     When I type "John Smith" into "name input"
@@ -24,7 +23,6 @@ Feature: Admin user creating induction tutor
     And I click the submit button
     Then "page body" should contain "The name you entered does not match our records"
     And the page should be accessible
-    And percy should be sent snapshot called "Admin add induction coordinator name different"
 
     When I click on "link" containing "Change name"
     And I type "John Smith" into "name input"
@@ -50,7 +48,6 @@ Feature: Admin user creating induction tutor
     When I click on "link" containing "Change"
     Then I should be on "choose replace or update induction tutor" page
     And the page should be accessible
-    And percy should be sent snapshot called "choose replace or update induction tutor"
 
     When I click on "update induction tutor" 
     And I click the submit button
@@ -58,7 +55,6 @@ Feature: Admin user creating induction tutor
     And "name input" should have value "Brenda Walsh"
     And "email input" should have value "brenda.walsh@school.org"
     And the page should be accessible
-    And percy should be sent snapshot called "update induction tutor"
 
     When I clear "name input"
     And I type "Brenda Jones" into "name input"

@@ -9,7 +9,6 @@ RSpec.feature "Admin viewing participants", js: true, rutabaga: false do
     when_i_visit the_school_participants_page
     then_i_should_see_all_the_current_and_transferring_participants
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Admin school participants listing page")
   end
 
 private

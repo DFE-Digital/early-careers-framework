@@ -40,12 +40,10 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         then_i_should_be_taken_to_the_cannot_find_their_details
         then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - cannot find their details"
         click_on "Confirm and continue"
 
         then_i_should_be_taken_to_the_cannot_add_page
         then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - cannot add"
       end
 
       # given

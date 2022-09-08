@@ -11,7 +11,6 @@ Feature: Induction tutors choosing programmes - CIP only
     And I click the submit button
     Then I should be on "choose programme confirm" page
     And the page should be accessible
-    And percy should be sent snapshot called "Confirm school funded fip page"
 
     When I click the submit button
     Then I should be on "have you appointed an appropriate body" page
@@ -20,4 +19,3 @@ Feature: Induction tutors choosing programmes - CIP only
     And I click the submit button
     Then I should be on "choose programme success" page
     And the page should be accessible
-    And percy should be sent snapshot called "school funded fip success"

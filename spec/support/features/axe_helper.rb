@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AxeAndPercyHelper
+module AxeHelper
   extend RSpec::Matchers::DSL
 
   define :be_accessible do
@@ -13,24 +13,9 @@ module AxeAndPercyHelper
     expect(page).to be_accessible
   end
 
-  def and_percy_is_sent_a_snapshot_named(name)
-    page.percy_snapshot(name)
-  end
-
   alias_method :then_the_page_is_accessible, :and_the_page_is_accessible
-  alias_method :then_percy_is_sent_a_snapshot_named, :and_percy_is_sent_a_snapshot_named
 
   # TODO: old speculative syntax to be removed
   alias_method :and_the_page_should_be_accessible, :then_the_page_is_accessible
   alias_method :then_the_page_should_be_accessible, :then_the_page_is_accessible
-  alias_method :and_percy_should_be_sent_a_snapshot_named, :then_percy_is_sent_a_snapshot_named
-  alias_method :then_percy_should_be_sent_a_snapshot_named, :then_percy_is_sent_a_snapshot_named
-
-  module SilentPercy
-    def log(*)
-      super if ENV["PERCY_TOKEN"]
-    end
-
-    ::Capybara::Session.include(self)
-  end
 end

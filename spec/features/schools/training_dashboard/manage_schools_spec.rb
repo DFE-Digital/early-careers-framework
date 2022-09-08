@@ -12,7 +12,6 @@ RSpec.feature "School Tutors should be able to manage schools", type: :feature, 
     then_i_am_on_schools_page
     and_i_should_see_multiple_schools
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Induction Coordinator Select School"
 
     given_i_click_on_test_school_1
     then_i_should_be_on_school_cohorts_1_page
@@ -27,7 +26,6 @@ RSpec.feature "School Tutors should be able to manage schools", type: :feature, 
     then_i_should_be_on_school_cohorts_2_page
     and_i_should_see_school_2_data
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "School Cohorts with Breadcrumbs"
   end
 
   context "Multiple cohorts when the new cohort is open for registrations", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do

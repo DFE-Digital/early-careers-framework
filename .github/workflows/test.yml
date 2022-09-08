@@ -35,9 +35,6 @@ jobs:
       ANALYTICS_DB_PASSWORD: ''
       ANALYTICS_DB_HOSTNAME: 127.0.0.1
       ANALYTICS_DB_PORT: 5432
-      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
-      PERCY_PARALLEL_TOTAL: 12
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
 
@@ -74,7 +71,7 @@ jobs:
         run: bin/rails db:create db:schema:load
 
       - name: Run tests
-        run: yarn percy exec --parallel -- bundle exec bin/rspec_ci
+        run: bundle exec bin/rspec_ci
 
   e2e-scenarios:
     name: Run end to end scenarios
@@ -195,18 +192,12 @@ jobs:
       - name: Webpacker
         run: bin/webpacker
 
-      # Percy stuff is from https://dev.to/digitaledawn/github-action-cypress-and-percy-parallelisation-setup-484a
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
           start: bundle exec rails server -e test -p 5017
           wait-on: 'http://localhost:5017/'
-          command: npx percy exec --parallel -- ${{ github.workspace }}/bin/cypress_ci
-        env:
-          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-          COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-          PERCY_PARALLEL_NONCE: ${{ needs.create-nonce.outputs.nonce }}
-          PERCY_PARALLEL_TOTAL: 12
+          command: ${{ github.workspace }}/bin/cypress_ci
 
   rspec_and_cypress_success:
     name: Rspec and Cypress success

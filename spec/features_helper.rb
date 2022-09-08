@@ -4,7 +4,6 @@ require "capybara"
 require "capybara/rspec"
 require "axe-rspec"
 require "webdrivers/chromedriver"
-require "percy/capybara"
 require "site_prism"
 require "site_prism/all_there" # Optional but needed to perform more complex matching
 
@@ -23,7 +22,7 @@ Capybara.javascript_driver = :chrome_headless
 Capybara.automatic_label_click = true
 
 RSpec.configure do |config|
-  config.include AxeAndPercyHelper, type: :feature
+  config.include AxeHelper, type: :feature
   config.include FeatureFlagHelper, type: :feature
   config.include InteractionHelper, type: :feature
   config.include PageAssertionsHelper, type: :feature
@@ -31,7 +30,7 @@ RSpec.configure do |config|
 
   config.include Steps::GenericPageObjectSteps, type: :feature
 
-  # need this for percy and axe
+  # need this for axe
   config.before(:each, type: :feature) do
     WebMock.disable_net_connect!(allow_localhost: true,
                                  allow: "chromedriver.storage.googleapis.com")

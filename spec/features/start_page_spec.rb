@@ -6,7 +6,6 @@ RSpec.feature "Start user journey", type: :feature, js: true, rutabaga: false do
   scenario "Start page is accessible" do
     given_i_am_on_the_start_page
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Start page"
   end
 
   scenario "Root URL should be the Start page" do

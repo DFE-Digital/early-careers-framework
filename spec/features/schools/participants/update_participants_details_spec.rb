@@ -57,7 +57,6 @@ RSpec.describe "Update participants details", js: true do
     and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
     then_i_am_taken_to_add_mentor_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor chooses mentor for ECT"
 
     when_i_choose_a_mentor
     when_i_click_on_continue
@@ -80,13 +79,11 @@ RSpec.describe "Update participants details", js: true do
     click_on "Not training"
     then_it_should_show_the_withdrawn_participant
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Withdrawn participant shown on dashboard"
 
     when_i_click_on_the_participants_name "Sally Teacher"
     then_i_am_taken_to_view_details_page
     and_it_should_not_allow_a_sit_to_edit_the_participant_details
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named "Participant details without change links"
   end
 
   scenario "Induction tutor can't change ECT / mentor name or email for a participant contacted for info" do
@@ -98,18 +95,15 @@ RSpec.describe "Update participants details", js: true do
     given_the_ect_has_been_validated
     when_i_view_ects_from_the_school_participants_dashboard_page "Sally Teacher"
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor sees ECT profile"
 
     when_i_click_on_change_name
     then_i_am_on_the_reason_to_change_school_participant_name_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Why do you need to edit ect name"
     and_i_confirm_the_participant_on_the_reason_to_change_school_participant_name_page_with_name "Sally Teacher"
 
     when_i_choose_they_have_changed_their_name_from_the_reason_to_change_school_participant_name_page
     then_i_am_on_the_edit_school_participant_name_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor edits the name of a participant"
     and_i_confirm_the_participant_on_the_edit_school_participant_name_page_with_name "Sally Teacher"
 
     when_i_set_a_blank_name_on_the_edit_school_participant_name_page
@@ -118,7 +112,6 @@ RSpec.describe "Update participants details", js: true do
     when_i_set_the_name_on_the_edit_school_participant_name_page_with_new_name "Jane Teacher"
     then_i_see_a_confirmation_message_on_the_school_participant_name_updated_page_with_old_name_and_new_name "Sally Teacher", "Jane Teacher"
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor completed the change of a participant's name"
 
     when_i_return_to_the_participant_profile_from_the_school_participant_name_updated_page
     then_i_confirm_the_participant_on_the_school_participant_details_page_with_name "Sally Teacher"
@@ -146,7 +139,6 @@ RSpec.describe "Update participants details", js: true do
     when_i_choose_should_not_be_registered_from_the_reason_to_change_school_participant_name_page
     then_i_cant_edit_the_participant_name_on_the_school_participant_should_not_have_been_registered_page "Sally Teacher"
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor can't edit the name of a participant because they should not have been registered"
   end
 
   scenario "Induction tutor can't replace an ECT / mentor by changing their name in participant profile page" do
@@ -156,7 +148,6 @@ RSpec.describe "Update participants details", js: true do
     when_i_choose_replaced_by_a_different_person_from_the_reason_to_change_school_participant_name_page
     then_i_cant_edit_the_participant_name_on_the_school_participant_replaced_by_a_different_person_page "Sally Teacher"
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor can't replace a participant's name with that of a different person"
     then_i_can_add_a_participant_from_the_school_participant_replaced_by_a_different_person_page "ECT"
   end
 
@@ -166,7 +157,6 @@ RSpec.describe "Update participants details", js: true do
     when_i_click_on_change_email
     then_i_am_on_the_edit_school_participant_email_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor edits the email of a participant"
     and_i_confirm_the_participant_on_the_edit_school_participant_email_page_with_name "Sally Teacher"
 
     when_i_set_a_blank_email_on_the_edit_school_participant_email_page
@@ -178,7 +168,6 @@ RSpec.describe "Update participants details", js: true do
     when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email "jane@school.com"
     then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name "Sally Teacher"
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor completed the change of a participant's email"
 
     when_i_return_to_the_participant_profile_from_the_school_participant_email_updated_page
     then_i_confirm_the_participant_on_the_school_participant_details_page_with_name "Sally Teacher"

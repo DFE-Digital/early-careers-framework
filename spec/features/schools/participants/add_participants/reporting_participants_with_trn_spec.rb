@@ -112,43 +112,33 @@ RSpec.describe "Reporting participants with a known TRN",
     given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
     when_i_view_participant_details_on_the_school_dashboard_page
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "ECF roles information"
 
     when_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT and mentors"
 
     and_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT name"
 
     when_i_add_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT do you know teachers TRN"
 
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT date of birth"
 
     when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds ECT email"
 
     when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECT induction start date"
 
     when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor selects ECTs mentor"
 
     when_i_choose_a_mentor_from_the_school_add_participant_wizard "Billy Mentor"
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor checks ECT details"
 
     when_i_confirm_and_add_on_the_school_add_participant_wizard
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor receives add ECT Confirmation"
 
     then_i_am_on_the_school_add_participant_completed_page
     and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]
@@ -162,7 +152,6 @@ RSpec.describe "Reporting participants with a known TRN",
     when_i_choose_to_add_an_ect_or_mentor_from_the_school_participants_dashboard_page
     and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor adds mentor name"
 
     when_i_add_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
@@ -170,11 +159,9 @@ RSpec.describe "Reporting participants with a known TRN",
 
     when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor checks mentor details"
 
     when_i_confirm_and_add_on_the_school_add_participant_wizard
     then_the_page_is_accessible
-    then_percy_is_sent_a_snapshot_named "Induction tutor receives add mentor Confirmation"
 
     then_i_am_on_the_school_add_participant_completed_page
     and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]

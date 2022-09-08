@@ -10,7 +10,6 @@ Feature: Induction tutors viewing partnerships
     Then I should be on "2021 school partnerships" page
     And "page body" should contain "Signing up with a training provider"
     And the page should be accessible
-    And percy should be sent snapshot
 
   Scenario: View confirmed with provider page
     Given I am logged in as existing user with email "signed-up-provider@example.com"
@@ -20,4 +19,3 @@ Feature: Induction tutors viewing partnerships
     And "page body" should contain "Test delivery partner"
     And "page body" should contain "Test lead provider"
     And the page should be accessible
-    And percy should be sent snapshot
