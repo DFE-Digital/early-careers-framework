@@ -8,7 +8,6 @@ include ActiveSupport::Testing::TimeHelpers
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
 Cohort.find_or_create_by!(start_year: 2021)
-cohort_2022 = Cohort.find_or_create_by!(start_year: 2022)
 cohort_2023 = Cohort.find_or_create_by!(start_year: 2023)
 
 local_authority = LocalAuthority.find_or_create_by!(name: "ZZ Test Local Authority", code: "ZZTEST")
@@ -219,160 +218,6 @@ ProviderRelationship.find_or_create_by!(
 )
 
 Seeds::CallOffContracts.new.call
-
-npq_specifics = [
-  {
-    version: "0.0.1",
-    recruitment_target: 300,
-    course_identifier: "npq-additional-support-offer",
-    number_of_payment_periods: 4,
-    per_participant: 800.00,
-    service_fee_percentage: 0,
-    output_payment_percentage: 100,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.1",
-    recruitment_target: 1000,
-    course_identifier: "npq-leading-teaching",
-    number_of_payment_periods: 3,
-    per_participant: 902.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.1",
-    recruitment_target: 1000,
-    course_identifier: "npq-leading-behaviour-culture",
-    number_of_payment_periods: 3,
-    per_participant: 902.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.1",
-    recruitment_target: 1500,
-    course_identifier: "npq-leading-teaching-development",
-    number_of_payment_periods: 3,
-    per_participant: 902.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.1",
-    recruitment_target: 2000,
-    course_identifier: "npq-senior-leadership",
-    number_of_payment_periods: 4,
-    per_participant: 1149.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 24,
-  },
-  {
-    version: "0.0.1",
-    recruitment_target: 1000,
-    course_identifier: "npq-headship",
-    number_of_payment_periods: 4,
-    per_participant: 1985.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 30,
-  },
-  {
-    version: "0.0.1",
-    recruitment_target: 400,
-    course_identifier: "npq-executive-leadership",
-    number_of_payment_periods: 4,
-    per_participant: 4099.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 24,
-  },
-
-  # Version 0.0.2
-  {
-    version: "0.0.2",
-    recruitment_target: 100,
-    course_identifier: "npq-additional-support-offer",
-    number_of_payment_periods: 4,
-    per_participant: 800.00,
-    service_fee_percentage: 0,
-    output_payment_percentage: 100,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.2",
-    recruitment_target: 1500,
-    course_identifier: "npq-leading-teaching",
-    number_of_payment_periods: 3,
-    per_participant: 902.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.2",
-    recruitment_target: 750,
-    course_identifier: "npq-leading-behaviour-culture",
-    number_of_payment_periods: 3,
-    per_participant: 902.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.2",
-    recruitment_target: 1500,
-    course_identifier: "npq-leading-teaching-development",
-    number_of_payment_periods: 3,
-    per_participant: 902.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 18,
-  },
-  {
-    version: "0.0.2",
-    recruitment_target: 1250,
-    course_identifier: "npq-senior-leadership",
-    number_of_payment_periods: 4,
-    per_participant: 1149.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 24,
-  },
-  {
-    version: "0.0.2",
-    recruitment_target: 750,
-    course_identifier: "npq-headship",
-    number_of_payment_periods: 4,
-    per_participant: 1985.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 30,
-  },
-  {
-    version: "0.0.2",
-    recruitment_target: 100,
-    course_identifier: "npq-executive-leadership",
-    number_of_payment_periods: 4,
-    per_participant: 4099.00,
-    service_fee_percentage: 40,
-    output_payment_percentage: 60,
-    service_fee_installments: 24,
-  },
-]
-
-# NPQ contracts
-NPQLeadProvider.all.each do |npq_lead_provider|
-  npq_specifics.each do |npq_contract|
-    attributes = npq_contract.merge(npq_lead_provider:, cohort: cohort_2022)
-    attributes.merge!(raw: attributes.to_json)
-    NPQContract.create!(attributes)
-  end
-end
 
 # FIP ECT
 user = User.find_or_create_by!(email: "fip-ect@example.com") do |u|
@@ -919,6 +764,11 @@ create_npq_declarations = lambda {
     count: 10,
   ]
 end
+
+service = Importers::NPQContracts.new(
+  path_to_csv: Rails.root.join("db/seeds/npq_contracts/fake-2021.csv"),
+)
+service.call
 
 service = Importers::NPQContracts.new(
   path_to_csv: Rails.root.join("db/seeds/npq_contracts/fake-2022.csv"),
