@@ -1,3 +1,9 @@
+.govuk-header {
+  .govuk-header__container {
+    border-bottom: 2px solid white;
+  }
+}
+
 .emergency-banner {
   @include govuk-font(19);
   background-color: govuk-colour("mid-grey");
