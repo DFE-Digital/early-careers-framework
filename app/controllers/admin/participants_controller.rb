@@ -72,7 +72,9 @@ module Admin
   private
 
     def load_participant
-      @participant_profile = ParticipantProfile.find(params[:id])
+      @participant_profile = ParticipantProfile
+        .eager_load(:teacher_profile).find(params[:id])
+
       authorize @participant_profile, policy_class: @participant_profile.policy_class
     end
 
