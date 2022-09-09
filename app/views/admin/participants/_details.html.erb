@@ -24,10 +24,15 @@
     row.value(text: latest_induction_record.participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
   end
 
+  sl.row do |row|
+    row.key(text: "Induction start date")
+    row.value(text: latest_induction_record.participant_profile&.induction_start_date&.to_s(:govuk))
+  end
+
   if @participant_profile.teacher_profile
     sl.row do |row|
       row.key(text: "TRN")
-      row.value(text: participant_profile.teacher_profile.trn)
+      row.value(text: latest_induction_record.participant_profile.teacher_profile.trn)
     end
   end
 
