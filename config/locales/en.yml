@@ -375,6 +375,9 @@ en:
     npq-headship: Headship course breakdown
     npq-executive-leadership: Executive Leadership course breakdown
     npq-additional-support-offer: Additional Support Offer course breakdown
+    npq-early-headship-coaching-offer: Early Headship Coaching Offer
+    npq-early-years-leadership: Early Years Leadership
+    npq-leading-literacy: Leading Literacy
   courses:
     npq:
       npq-leading-teaching: Leading Teaching
