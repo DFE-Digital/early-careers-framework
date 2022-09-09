@@ -3,7 +3,12 @@
 
   sl.row do |row|
     row.key(text: "School name")
-    row.value(text: latest_induction_record.school_cohort.school.name)
+    row.value do
+      govuk_link_to(
+        latest_induction_record.school_cohort.school.name,
+        admin_school_path(latest_induction_record.school_cohort.school.friendly_id)
+      )
+    end
   end
 
   sl.row do |row|
