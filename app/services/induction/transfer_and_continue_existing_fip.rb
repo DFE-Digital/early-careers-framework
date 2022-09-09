@@ -10,6 +10,8 @@ class Induction::TransferAndContinueExistingFip < BaseService
         latest_induction_record.leaving!(end_date)
       end
 
+      old_school = latest_induction_record.school
+
       # create a special programme to support the transferring participant
       programme = InductionProgramme.create!(training_programme: :full_induction_programme,
                                              school_cohort:,
@@ -21,6 +23,14 @@ class Induction::TransferAndContinueExistingFip < BaseService
                             preferred_email: email,
                             mentor_profile:,
                             school_transfer: true)
+
+      if participant_profile.mentor?
+        Mentors::ChangeSchool.call(mentor_profile: participant_profile,
+                                   from_school: old_school,
+                                   to_school: school_cohort.school,
+                                   remove_on_date: start_date,
+                                   preferred_email: email)
+      end
     end
   end
 
