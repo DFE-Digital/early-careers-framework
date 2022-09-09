@@ -332,8 +332,16 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
       end
     end
 
-    context "when the declaration state id voided" do
+    context "when the declaration state id ineligible" do
       let(:state) { :ineligible }
+
+      it "raises an not unique error" do
+        expect { described_class.create!(attributes) }.not_to raise_error
+      end
+    end
+
+    context "when the declaration state id ineligible" do
+      let(:state) { :awaiting_clawback }
 
       it "raises an not unique error" do
         expect { described_class.create!(attributes) }.not_to raise_error
