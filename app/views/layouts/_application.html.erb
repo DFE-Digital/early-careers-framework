@@ -101,6 +101,24 @@
       </div>
     </header>
 
+    <% if request.path.in?([root_path, lead_providers_landing_page_path])  %>
+      <div class="emergency-banner emergency-banner--notable-death" aria-label="emergency banner" role="region" data-nosnippet="true">
+        <div class="govuk-width-container">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+              <h2 class="emergency-banner__heading">
+                Her Majesty Queen Elizabeth II
+              </h2>
+
+              <p class="emergency-banner__description">21 April 1926 to 8 September 2022</p>
+
+              <a href="https://www.gov.uk/government/topical-events/her-majesty-queen-elizabeth-ii" class="emergency-banner__link">Read about the arrangements following The Queen’s death</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
     <%= yield(:nav_bar) %>
 
     <% if wide_container_view? %>
