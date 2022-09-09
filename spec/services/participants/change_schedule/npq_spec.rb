@@ -61,6 +61,21 @@ RSpec.describe Participants::ChangeSchedule::NPQ, :with_default_schedules do
         expect { subject.call }.to raise_error(ActionController::ParameterMissing)
       end
     end
+
+    context "with incorrect course_identifier" do
+      subject do
+        described_class.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider:,
+        })
+      end
+
+      it "should not have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+      end
+    end
   end
 
   describe "changing to a soft schedules with previous declarations", :with_default_schedules do

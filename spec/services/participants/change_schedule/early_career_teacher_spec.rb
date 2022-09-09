@@ -71,6 +71,25 @@ RSpec.describe Participants::ChangeSchedule::ECF, :with_default_schedules do
         expect { subject.call }.to raise_error(ActionController::ParameterMissing)
       end
     end
+
+    context "with incorrect course_identifier" do
+      let!(:declaration) { create(:ect_participant_declaration, participant_profile: profile, cpd_lead_provider:) }
+      let(:schedule) { create(:schedule, :soft) }
+
+      subject do
+        described_class.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider:,
+          cohort: schedule.cohort.start_year,
+        })
+      end
+
+      it "should have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+      end
+    end
   end
 
   describe "changing to a soft schedules with previous declarations" do
