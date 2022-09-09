@@ -59,5 +59,13 @@ RSpec.describe Participants::Resume::EarlyCareerTeacher, :with_default_schedules
         # but throws an error as we scope to active profiles only and therefore never find the record
       end
     end
+
+    context "with incorrect course" do
+      let!(:profile) { create(:mentor, :deferred, lead_provider:) }
+
+      it "raises an error and does not create a ParticipantProfileState" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { ParticipantProfileState.count }
+      end
+    end
   end
 end

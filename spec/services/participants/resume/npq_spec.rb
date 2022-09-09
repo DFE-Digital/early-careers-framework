@@ -3,17 +3,17 @@
 require "rails_helper"
 
 RSpec.describe Participants::Resume::NPQ, :with_default_schedules do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider, :with_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let!(:profile)          { create(:npq_participant_profile, :deferred, npq_lead_provider:) }
   let(:user)              { profile.user }
-  let(:npq_course)        { profile.npq_course }
+  let(:course_identifier) { profile.npq_course.identifier }
 
   subject do
     described_class.new(
       params: {
         participant_id: user.id,
-        course_identifier: npq_course.identifier,
+        course_identifier:,
         cpd_lead_provider:,
       },
     )
@@ -33,7 +33,7 @@ RSpec.describe Participants::Resume::NPQ, :with_default_schedules do
         described_class.new(
           params: {
             participant_id: user.id,
-            course_identifier: npq_course.identifier,
+            course_identifier:,
             cpd_lead_provider:,
           },
         ).call # must be different instance from subject
@@ -54,6 +54,15 @@ RSpec.describe Participants::Resume::NPQ, :with_default_schedules do
         # TODO: there is a gap and bug here
         # it should return a useful error
         # but throws an error as we scope to active profiles only and therefore never find the record
+      end
+    end
+
+    context "with incorrect course" do
+      let!(:profile) { create(:ect, :deferred, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:course_identifier) { "ecf-induction" }
+
+      it "raises an error and does not create a ParticipantProfileState" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { ParticipantProfileState.count }
       end
     end
   end
