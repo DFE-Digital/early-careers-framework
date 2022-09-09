@@ -3,7 +3,6 @@
 module Admin
   module Participants
     class Table < BaseComponent
-      include PaginationHelper
       include Pagy::Backend
 
       def initialize(profiles:, page:)

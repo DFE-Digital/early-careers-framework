@@ -571,12 +571,6 @@ en:
         completed_with_errors: Completed With Errors
         failed: Failed
 
-  pagy:
-    nav:
-      prev: ← Previous
-      next: Next →
-      gap: ...
-
   components:
     finance:
       statements:

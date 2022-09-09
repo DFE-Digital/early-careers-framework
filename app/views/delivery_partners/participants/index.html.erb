@@ -57,4 +57,5 @@
     <% end %>
   </tbody>
 </table>
-<%== govuk_paginate @participant_profiles, @pagy %>
+
+<%== govuk_pagination(pagy: @pagy) %>
