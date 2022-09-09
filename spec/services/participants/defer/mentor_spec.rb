@@ -94,5 +94,13 @@ RSpec.describe Participants::Defer::Mentor, :with_default_schedules do
         expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { profile.reload.training_status }
       end
     end
+
+    context "with incorrect course" do
+      let!(:profile) { create(:ect, lead_provider:) }
+
+      it "raises an error and does not create a ParticipantProfileState" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { ParticipantProfileState.count }
+      end
+    end
   end
 end
