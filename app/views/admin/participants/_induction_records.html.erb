@@ -1,6 +1,6 @@
 <h2 class="govuk-heading-m">Induction records</h2>
 
-<% induction_records.each.with_index do |induction_record, i| %>
+<% presenter.all_induction_records.each do |induction_record| %>
   <%= tag.h3(induction_record.id, class: "govuk-heading-s") %>
 
   <%=
@@ -46,5 +46,4 @@
       end
     end
   %>
-
 <% end %>

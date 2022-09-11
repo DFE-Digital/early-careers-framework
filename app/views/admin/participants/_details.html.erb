@@ -1,78 +1,74 @@
 <%= govuk_summary_list do |sl|
-  participant_name = latest_induction_record.user.full_name
-
   sl.row do |row|
     row.key(text: "Full name")
-    row.value(text: participant_name)
+    row.value(text: presenter.full_name)
     row.action(
-      href: edit_name_admin_participant_path(latest_induction_record.participant_profile),
+      href: edit_name_admin_participant_path(presenter.participant_profile),
       visually_hidden_text: "name"
     )
   end
 
   sl.row do |row|
     row.key(text: "Email address")
-    row.value(text: latest_induction_record.user.email)
+    row.value(text: presenter.latest_induction_record.user.email)
     row.action(
-      href: edit_email_admin_participant_path(latest_induction_record.participant_profile),
+      href: edit_email_admin_participant_path(presenter.participant_profile),
       visually_hidden_text: "email"
     )
   end
 
   sl.row do |row|
     row.key(text: "Date of birth")
-    row.value(text: latest_induction_record.participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
+    row.value(text: presenter.date_of_birth)
   end
 
   sl.row do |row|
     row.key(text: "Induction start date")
-    row.value(text: latest_induction_record.participant_profile&.induction_start_date&.to_s(:govuk))
+    row.value(text: presenter.induction_start_date)
   end
 
-  if @participant_profile.teacher_profile
+  if presenter.participant_profile.teacher_profile
     sl.row do |row|
       row.key(text: "TRN")
-      row.value(text: latest_induction_record.participant_profile.teacher_profile.trn)
+      row.value(text: presenter.participant_profile.teacher_profile.trn)
     end
   end
 
   sl.row do |row|
     row.key(text: "ID")
-    row.value(text: tag.code(latest_induction_record.user.id))
+    row.value(text: tag.code(presenter.latest_induction_record.user.id))
   end
 
   sl.row do |row|
     row.key(text: "External ID")
-    row.value(text: tag.code(latest_induction_record.participant_profile.participant_identity.external_identifier))
+    row.value(text: tag.code(presenter.external_identifier))
   end
 
   sl.row do |row|
     row.key(text: "Associated email addresses")
-    row.value(text: html_list(all_emails_associated_with_a_user(latest_induction_record)))
+    row.value(text: html_list(presenter.associated_email_addresses))
   end
 
   sl.row do |row|
     row.key(text: "Validation status")
-    row.value(text: render(ParticipantStatusTagComponent.new(profile: latest_induction_record.participant_profile, induction_record: latest_induction_record)))
+    row.value(text: render(ParticipantStatusTagComponent.new(profile: presenter.participant_profile, induction_record: presenter.latest_induction_record)))
   end
 
   sl.row do |row|
     row.key(text: "Notes")
 
     row.value do
-      if latest_induction_record.participant_profile.notes?
-        simple_format(latest_induction_record.participant_profile.notes, class: "govuk-body")
+      if presenter.notes.present?
+        simple_format(presenter.notes, class: "govuk-body")
       else
         "No notes"
       end
     end
 
-    notes_present = latest_induction_record.participant_profile.notes.present?
-
     row.action(
-      text: notes_present ? "Change notes" : "Add notes",
-      href: edit_admin_note_path(latest_induction_record.participant_profile),
-      visually_hidden_text: notes_present ? "on #{participant_name}'s profile" : "to #{participant_name}'s profile",
+      text: presenter.has_notes? ? "Change notes" : "Add notes",
+      href: edit_admin_note_path(presenter.participant_profile),
+      visually_hidden_text: presenter.has_notes? ? "on #{presenter.full_name}'s profile" : "to #{presenter.full_name}'s profile",
     )
   end
 end %>

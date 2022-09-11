@@ -1,36 +1,34 @@
 <%= govuk_summary_list(actions: true) do |sl|
-  lead_provider = latest_induction_record.school_cohort.lead_provider
-
   sl.row do |row|
     row.key(text: "School name")
     row.value do
       govuk_link_to(
-        latest_induction_record.school_cohort.school.name,
-        admin_school_path(latest_induction_record.school_cohort.school.friendly_id)
+        presenter.latest_induction_record.school_cohort.school.name,
+        admin_school_path(presenter.school_friendly_id)
       )
     end
   end
 
   sl.row do |row|
     row.key(text: "School URN")
-    row.value(text: latest_induction_record.school_cohort.school.urn)
+    row.value(text: presenter.school_urn)
   end
 
-  if latest_induction_record.participant_profile.ect?
+  if presenter.ect?
     sl.row do |row|
       row.key(text: "Mentor")
-      row.value(text: latest_induction_record.mentor_profile&.user&.full_name || 'Not yet assigned')
+      row.value(text: presenter.mentor_full_name)
     end
   end
 
   sl.row do |row|
     row.key(text: "Lead provider")
-    row.value(text: latest_induction_record.school_cohort.lead_provider&.name)
-    row.action(text: "Challenge", visually_hidden_text: "lead provider", href: "#") if lead_provider
+    row.value(text: presenter.lead_provider.name)
+    row.action(text: "Challenge", visually_hidden_text: "lead provider", href: "#") if presenter.lead_provider.present?
   end
 
   sl.row do |row|
     row.key(text: "Delivery partner")
-    row.value(text: latest_induction_record.school_cohort.delivery_partner&.name)
+    row.value(text: presenter.delivery_partner_name)
   end
 end %>

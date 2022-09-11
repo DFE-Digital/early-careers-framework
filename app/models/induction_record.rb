@@ -74,6 +74,8 @@ class InductionRecord < ApplicationRecord
   scope :mentors, -> { joins(:participant_profile).merge(ParticipantProfile.mentors) }
   scope :ects, -> { joins(:participant_profile).merge(ParticipantProfile.ects) }
 
+  scope :newest_first, -> { order(created_at: :desc) }
+
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
   def self.latest

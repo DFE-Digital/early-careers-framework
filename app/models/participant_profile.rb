@@ -12,6 +12,7 @@ class ParticipantProfile < ApplicationRecord
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
 
   has_many :participant_declarations
+  has_many :ecf_participant_validation_data, class_name: "ECFParticipantValidationData"
 
   has_many :induction_records
   has_many :current_induction_records, -> { current }, class_name: "InductionRecord"

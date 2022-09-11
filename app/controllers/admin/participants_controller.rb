@@ -5,11 +5,25 @@ module Admin
     skip_after_action :verify_policy_scoped, except: :index
     skip_after_action :verify_authorized, only: :index
 
-    before_action :load_participant, except: :index
-    before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
+    before_action :load_participant, except: %i[index show]
 
-    def show; end
+    def show
+      # FIXME: move this to a service class, app/services/queries?
+      participant_profile = ParticipantProfile
+        .eager_load(
+          :teacher_profile,
+          :ecf_participant_validation_data,
+          :participant_identity,
+          user: %i[participant_identities teacher_profile],
+          induction_records: %i[schedule school user],
+        )
+        .merge(InductionRecord.newest_first)
+        .find(params[:id])
+
+      authorize(participant_profile, policy_class: participant_profile.policy_class)
+
+      @presenter = ParticipantPresenter.new(participant_profile:)
+    end
 
     def index
       if FeatureFlag.active?(:change_of_circumstances)
@@ -72,10 +86,9 @@ module Admin
   private
 
     def load_participant
-      @participant_profile = ParticipantProfile
-        .eager_load(:teacher_profile).find(params[:id])
-
-      authorize @participant_profile, policy_class: @participant_profile.policy_class
+      @participant_profile = ParticipantProfile.find(params[:id]).tap do |pp|
+        authorize(pp, policy_class: pp.policy_class)
+      end
     end
 
     def search
@@ -94,19 +107,11 @@ module Admin
       scope.order("DATE(users.created_at) ASC, users.full_name")
     end
 
-    def induction_records
-      @induction_records ||= @participant_profile
+    def induction_records(participant_profile)
+      @induction_records ||= participant_profile
         .induction_records
         .eager_load(:schedule)
         .order(created_at: :desc)
-    end
-
-    def historical_induction_records
-      @historical_induction_records ||= induction_records[1..]
-    end
-
-    def latest_induction_record
-      @latest_induction_record ||= induction_records.first
     end
   end
 end

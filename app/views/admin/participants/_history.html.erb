@@ -3,8 +3,8 @@
 <%= govuk_summary_list(
   rows: [
     {
-      key: { text: "Added to the service" },
-      value: { text: latest_induction_record.user.created_at.to_date.to_s(:govuk) }
+      key: { text: "Participant added to the service" },
+      value: { text: presenter.user_start_date }
     }
   ]
 ) %>
@@ -12,7 +12,7 @@
 <%= govuk_table(
   caption: "School transfers",
   head: ["School name", "Induction programme", "Start date", "End date"],
-  rows: historical_induction_records.map do |r|
+  rows: presenter.old_induction_records.map do |r|
     [
       r.school_cohort.school.name,
       r.induction_programme.training_programme.humanize,

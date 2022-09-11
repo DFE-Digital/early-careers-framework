@@ -105,5 +105,9 @@ FactoryBot.define do
         end
       end
     end
+
+    trait :with_notes do
+      notes { Faker::Lorem.sentence }
+    end
   end
 end
