@@ -47,7 +47,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
         it "returns all users" do
           get "/api/v2/participants/ecf"
-          expect(parsed_response["data"].size).to eql(5)
+          expect(parsed_response["data"].size).to eql(4)
         end
 
         it "only returns users for the current cohort" do
@@ -58,7 +58,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           create(:ect, school_cohort: school_cohort_2020)
 
           get "/api/v2/participants/ecf"
-          expect(parsed_response["data"].size).to eql(5)
+          expect(parsed_response["data"].size).to eql(4)
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
@@ -69,7 +69,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           create(:ect, school_cohort: school_cohort_2020, user: mentor_profile.user)
 
           get "/api/v2/participants/ecf"
-          expect(parsed_response["data"].size).to eql(5)
+          expect(parsed_response["data"].size).to eql(4)
 
           parsed_response["data"].each do |user|
             next unless user["id"] == mentor_profile.user.id
@@ -120,7 +120,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           ects = parsed_response["data"].count { |h| h["attributes"]["participant_type"] == "ect" }
 
           expect(mentors).to eql(1)
-          expect(ects).to eql(4)
+          expect(ects).to eql(3)
           expect(withdrawn).to eql(2)
         end
 
@@ -152,13 +152,13 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           it "returns users changed since the updated_since parameter" do
             get "/api/v2/participants/ecf", params: { filter: { updated_since: 1.day.ago.iso8601 } }
 
-            expect(parsed_response["data"].size).to eq(4)
+            expect(parsed_response["data"].size).to eql(3)
           end
 
           it "returns users changed since the updated_since parameter with other formats" do
             User.order(created_at: :asc).first.update!(updated_at: Date.new(1970, 1, 1))
             get "/api/v2/participants/ecf", params: { filter: { updated_since: "1980-01-01T00%3A00%3A00%2B01%3A00" } }
-            expect(parsed_response["data"].size).to eql(4)
+            expect(parsed_response["data"].size).to eql(3)
           end
 
           context "when updated_since parameter is encoded/escaped" do
@@ -166,7 +166,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
               since = URI.encode_www_form_component(1.day.ago.iso8601)
               get "/api/v2/participants/ecf", params: { filter: { updated_since: since } }
 
-              expect(parsed_response["data"].size).to eq(4)
+              expect(parsed_response["data"].size).to eql(3)
             end
           end
 
@@ -226,7 +226,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "returns all users" do
-          expect(parsed_response.length).to eql 5
+          expect(parsed_response.length).to eql(4)
         end
 
         it "returns the correct headers" do
@@ -278,7 +278,8 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
           expect(ect_row["full_name"]).to eql ect.full_name
-          expect(ect_row["mentor_id"]).to eql mentor.id
+
+          expect(ect_row["mentor_id"]).to be_blank
           expect(ect_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
@@ -307,13 +308,13 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
         it "ignores pagination parameters" do
           get "/api/v2/participants/ecf.csv", params: { page: { per_page: 2, page: 1 } }
-          expect(parsed_response.length).to eql 5
+          expect(parsed_response.length).to eql(4)
         end
 
         it "respects the updated_since parameter" do
           get "/api/v2/participants/ecf.csv", params: { filter: { updated_since: 1.day.ago.iso8601 } }
 
-          expect(parsed_response.length).to eq(4)
+          expect(parsed_response.length).to eql(3)
         end
       end
 
