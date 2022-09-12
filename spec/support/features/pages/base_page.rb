@@ -65,20 +65,16 @@ module Pages
       end
     end
 
-    def element_has_content?(elem, expectation)
-      if elem.has_content? expectation
-        true
-      else
-        raise RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectation}\" within\n===\n#{elem.text}\n==="
-      end
+    def element_has_content?(elem, *expectations)
+      return true if expectations.all? { |e| elem.has_content?(e) }
+
+      raise RSpec::Expectations::ExpectationNotMetError, "expected to find \"#{expectations}\" within\n===\n#{elem.text}\n==="
     end
 
-    def element_without_content?(elem, expectation)
-      if elem.has_content? expectation
-        raise RSpec::Expectations::ExpectationNotMetError, "expected to not find \"#{expectation}\" within\n===\n#{elem.text}\n==="
-      else
-        true
-      end
+    def element_without_content?(elem, *expectations)
+      return true unless expectations.any? { |e| elem.has_content?(e) }
+
+      raise RSpec::Expectations::ExpectationNotMetError, "expected to not find \"#{expectations}\" within\n===\n#{elem.text}\n==="
     end
 
     def accept_cookies

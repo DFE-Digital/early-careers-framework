@@ -72,7 +72,9 @@ module Admin
   private
 
     def load_participant
-      @participant_profile = ParticipantProfile.find(params[:id])
+      @participant_profile = ParticipantProfile
+        .eager_load(:teacher_profile).find(params[:id])
+
       authorize @participant_profile, policy_class: @participant_profile.policy_class
     end
 
@@ -92,12 +94,19 @@ module Admin
       scope.order("DATE(users.created_at) ASC, users.full_name")
     end
 
+    def induction_records
+      @induction_records ||= @participant_profile
+        .induction_records
+        .eager_load(:schedule)
+        .order(created_at: :desc)
+    end
+
     def historical_induction_records
-      @historical_induction_records ||= @participant_profile.induction_records.order(created_at: :desc).offset(1)
+      @historical_induction_records ||= induction_records[1..]
     end
 
     def latest_induction_record
-      @latest_induction_record ||= @participant_profile.current_induction_record || @participant_profile.induction_records&.latest
+      @latest_induction_record ||= induction_records.first
     end
   end
 end

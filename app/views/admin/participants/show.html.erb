@@ -10,7 +10,10 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <% unless @participant_profile.npq? %>
+    <% if @participant_profile.npq? %>
+      <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
+      <%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
+    <% else %>
       <%= govuk_tabs(title: 'Contents') do |component| %>
         <% component.tab(label: 'Details') do %>
           <%= render partial: 'details', locals: { latest_induction_record: @latest_induction_record } %>
@@ -21,10 +24,10 @@
         <% component.tab(label: 'History') do %>
           <%= render partial: 'history', locals: { historical_induction_records: @historical_induction_records, latest_induction_record: @latest_induction_record } %>
         <% end %>
+        <% component.tab(label: 'Induction records') do %>
+          <%= render partial: 'induction_records', locals: { induction_records: @induction_records } %>
+        <% end %>
       <% end %>
-    <% else %>
-       <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
-       <%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
     <% end %>
 
     <% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>

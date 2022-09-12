@@ -16,4 +16,28 @@ module AdminHelper
   def on_admin_npq_application_page?
     request.path.starts_with?("/admin/npq/applications")
   end
+
+  def html_list(values)
+    return nil if values.empty?
+
+    tag.ul(class: %w[govuk-list]) { safe_join(values.map { |v| tag.li(v) }) }
+  end
+
+  def induction_programme_friendly_name(name, short: false)
+    long_names = {
+      "full_induction_programme" => "Full induction programme",
+      "core_induction_programme" => "Core induction programme",
+      "design_our_own" => "Design our own",
+      "school_funded_fip" => "School funded full induction programme",
+    }.freeze
+
+    short_names = {
+      "full_induction_programme" => "FIP",
+      "core_induction_programme" => "CIP",
+      "design_our_own" => "Design our own",
+      "school_funded_fip" => "School funded FIP",
+    }.freeze
+
+    short ? short_names.fetch(name) : long_names.fetch(name)
+  end
 end
