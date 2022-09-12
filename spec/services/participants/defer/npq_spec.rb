@@ -97,7 +97,7 @@ RSpec.describe Participants::Defer::NPQ, :with_default_schedules do
     end
 
     context "with incorrect course" do
-      let!(:profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+      let!(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
       let(:course_identifier) { "ecf-induction" }
 
       it "raises an error and does not create a ParticipantProfileState" do
