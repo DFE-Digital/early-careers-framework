@@ -123,17 +123,7 @@ private
           .participant_declarations
           .billable,
       )
-      .find_or_create_by!(declaration_parameters)
-  rescue ActiveRecord::RecordNotUnique
-    participant_profile
-      .participant_declarations
-      .submitted
-      .or(
-        participant_profile
-          .participant_declarations
-          .billable,
-      )
-      .find_by!(declaration_parameters)
+      .create_or_find_by!(declaration_parameters)
   end
 
   def uplift_flags
