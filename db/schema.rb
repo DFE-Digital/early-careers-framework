@@ -692,8 +692,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "start_term", default: "autumn_2021", null: false
     t.string "notes"
+    t.string "start_term", default: "autumn_2021", null: false
     t.date "induction_start_date"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
@@ -1093,4 +1093,74 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
   add_foreign_key "schools", "networks"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"
+
+  create_view "ecf_duplicates", sql_definition: <<-SQL
+      SELECT participant_identities.external_identifier AS participant_id,
+      participant_profiles.id,
+      latest_induction_records.id AS latest_induction_record_id,
+      latest_induction_records.induction_status,
+      latest_induction_records.training_status,
+      latest_induction_records.start_date,
+      latest_induction_records.end_date,
+      latest_induction_records.school_transfer,
+      schedules.schedule_identifier,
+      cohorts.start_year AS cohort,
+      COALESCE(declarations.count, (0)::bigint) AS declaration_count,
+      lead_providers.name AS provider_name,
+      row_number() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY
+          CASE
+              WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
+              WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text <> 'active'::text)) THEN 2
+              WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
+              ELSE 4
+          END) AS participant_profile_status,
+      first_value(participant_profiles.id) OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY
+          CASE
+              WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
+              WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text <> 'active'::text)) THEN 2
+              WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
+              ELSE 4
+          END) AS master_participant_profile_id
+     FROM ((((((participant_profiles
+       JOIN ( SELECT induction_records.id,
+              induction_records.induction_programme_id,
+              induction_records.participant_profile_id,
+              induction_records.schedule_id,
+              induction_records.start_date,
+              induction_records.end_date,
+              induction_records.created_at,
+              induction_records.updated_at,
+              induction_records.training_status,
+              induction_records.preferred_identity_id,
+              induction_records.induction_status,
+              induction_records.mentor_profile_id,
+              induction_records.school_transfer,
+              induction_records.appropriate_body_id,
+              partnerships.lead_provider_id,
+              row_number() OVER (PARTITION BY induction_records.participant_profile_id, partnerships.lead_provider_id ORDER BY induction_records.created_at DESC) AS induction_record_sort_order
+             FROM ((induction_records
+               JOIN induction_programmes ON ((induction_programmes.id = induction_records.induction_programme_id)))
+               JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))) latest_induction_records ON ((latest_induction_records.participant_profile_id = participant_profiles.id)))
+       JOIN lead_providers ON ((lead_providers.id = latest_induction_records.lead_provider_id)))
+       JOIN participant_identities ON ((participant_identities.id = participant_profiles.participant_identity_id)))
+       JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
+       JOIN cohorts ON ((schedules.cohort_id = cohorts.id)))
+       LEFT JOIN ( SELECT participant_declarations.participant_profile_id,
+              participant_declarations.cpd_lead_provider_id,
+              count(*) AS count
+             FROM participant_declarations
+            GROUP BY participant_declarations.participant_profile_id, participant_declarations.cpd_lead_provider_id) declarations ON (((participant_profiles.id = declarations.participant_profile_id) AND (lead_providers.cpd_lead_provider_id = declarations.cpd_lead_provider_id))))
+    WHERE (participant_profiles.participant_identity_id IN ( SELECT participant_profiles_1.participant_identity_id
+             FROM participant_profiles participant_profiles_1
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+            GROUP BY participant_profiles_1.type, participant_profiles_1.participant_identity_id
+           HAVING (count(*) > 1)))
+    ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY
+          CASE
+              WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
+              WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text <> 'active'::text)) THEN 2
+              WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
+              ELSE 4
+          END)), participant_profiles.created_at DESC;
+  SQL
 end

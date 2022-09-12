@@ -1,0 +1,57 @@
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl"><%= @duplicate.participant_id %></h1>
+    </div>
+  </div>
+</div>
+
+<%= govuk_warning_text do %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <p class="govuk-body">
+        This is a duplicate profile of
+        <%= govuk_link_to @duplicate.master_participant_profile_id, finance_ecf_duplicate_profile_path(@duplicate.master_duplicate) %>
+      </p>
+    </div>
+  </div>
+<% end unless @duplicate.master_profile?  %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <% if @duplicate.master_profile? %>
+      <%= govuk_tag text: "master profile", colour: "green" %>
+    <% else %>
+      <%= govuk_tag text: "duplicate", colour: "red" do %>
+        <%= govuk_link_to finance_ecf_duplicate_profile_path(@duplicate.master_duplicate) do %>
+          duplicate of <%= @duplicate.master_participant_profile_id %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <div>
+      <span>Cohort: <%= @duplicate.cohort %></span>
+      <span>Schedule: <%= @duplicate.schedule_identifier %></span>
+    </div>
+    <div class="govuk-body">
+      Start on the <%= @duplicate.start_date.to_date.to_s(:govuk) %> at school <%= @duplicate.latest_induction_record.school.name %>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= govuk_summary_list do |summary_list|
+      summary_list.row do |row|
+        row.key    { "ID" }
+        row.value  { @duplicate.participant_id }
+        row.action {}
+      end
+      summary_list.row do |row|
+        row.key    { "Induction status" }
+        row.value  { @duplicate.induction_status }
+        row.action {}
+      end
+    end
+    %>
+  </div>
+</div>

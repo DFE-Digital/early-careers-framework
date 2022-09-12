@@ -385,8 +385,11 @@ Rails.application.routes.draw do
   end
 
   namespace :finance do
-    resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
+    namespace :ecf do
+      resources :duplicate_profiles, only: %i[index show delete]
+    end
 
+    resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"
     resources :participants, only: %i[index show]
     resources :participant_profiles, only: [] do
       namespace :ecf do

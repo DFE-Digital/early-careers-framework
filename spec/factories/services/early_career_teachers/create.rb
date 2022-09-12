@@ -117,8 +117,8 @@ FactoryBot.define do
       after(:create) do |participant_profile, evaluator|
         Participants::Withdraw::EarlyCareerTeacher.new(
           params: {
-            participant_id: participant_profile.teacher_profile.user_id,
-            cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
+            participant_id: participant_profile.participant_identity.external_identifier,
+            cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
             reason: evaluator.reason,
             course_identifier: "ecf-induction",
           },
