@@ -205,6 +205,26 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
+
+      context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+        let!(:schedule) { create(:ecf_schedule, cohort:) }
+        let!(:statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
+
+        let(:cohort) { Cohort.next || create(:cohort, :next) }
+        let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider:, cohort:) }
+        let(:lead_provider) { cpd_lead_provider.lead_provider }
+        let(:participant_profile) { create(:ect, :eligible_for_funding, school_cohort:, lead_provider:) }
+        let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
+
+        it "creates declaration to 2022 statement" do
+          expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+
+          declaration = ParticipantDeclaration.last
+
+          expect(declaration).to be_eligible
+          expect(declaration.statements).to include(statement)
+        end
+      end
     end
 
     context "when the participant is a Mentor" do
@@ -225,12 +245,13 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   context "when the participant is an NPQ" do
     let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
     let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
-    let(:npq_course) { create(:npq_leadship_course) }
+    let(:npq_course) { create(:npq_leadership_course) }
     let(:traits)     { [] }
     let(:participant_profile) do
       create(:npq_participant_profile, *traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
     end
     let(:course_identifier) { npq_course.identifier }
+
     before do
       create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
     end
@@ -243,6 +264,25 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
     it_behaves_like "validates the participant milestone"
+
+    context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+      let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
+      let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
+
+      let(:cohort) { Cohort.next || create(:cohort, :next) }
+      let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
+      let(:participant_profile) { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider:, npq_course:, schedule:) }
+      let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
+
+      it "creates declaration to 2022 statement" do
+        expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+
+        declaration = ParticipantDeclaration.last
+
+        expect(declaration).to be_eligible
+        expect(declaration.statements).to include(statement)
+      end
+    end
   end
 
   context "when user is for 2020 cohort" do

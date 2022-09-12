@@ -8,6 +8,15 @@
     form_group: { class: "govuk-form-group govuk-!-width-one-third" }
   %>
 
+  <%= f.govuk_collection_select :cohort_year,
+    cohorts,
+    :start_year,
+    :start_year,
+    label: { text: "View a different cohort" },
+    options: { selected: current_statement.cohort.start_year },
+    form_group: { class: "govuk-form-group" }
+  %>
+
   <%= f.govuk_collection_select :statement,
     statements,
     :id,

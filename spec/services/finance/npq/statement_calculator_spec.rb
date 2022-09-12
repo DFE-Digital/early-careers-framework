@@ -5,13 +5,12 @@ require "rails_helper"
 RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
-  let!(:npq_course)         { create(:npq_leadship_course, identifier: "npq-leading-teaching") }
+  let!(:npq_course)         { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
   let(:statement)           { create(:npq_statement, cpd_lead_provider:) }
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
   let(:milestone)           { participant_profile.schedule.milestones.find_by!(declaration_type:) }
   let(:declaration_type)    { "started" }
-
-  before { create(:npq_contract, npq_lead_provider:) }
+  let!(:contract) { create(:npq_contract, npq_lead_provider:) }
 
   subject { described_class.new(statement:) }
 
@@ -189,6 +188,32 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
       it "counts them" do
         expect(subject.total_voided).to eq(1)
       end
+    end
+  end
+
+  context "when there exists contracts over multiple cohorts", with_feature_flags: { multiple_cohorts: "active" } do
+    let!(:cohort_2022) { Cohort.next || create(:cohort, :next) }
+    let!(:contract_2022) { create(:npq_contract, npq_lead_provider:, cohort: cohort_2022) }
+    let!(:statement_2022) { create(:npq_statement, cpd_lead_provider:, cohort: cohort_2022) }
+
+    before do
+      declaration = create(
+        :npq_participant_declaration,
+        state: "eligible",
+        course_identifier: npq_course.identifier,
+        npq_course:,
+      )
+
+      Finance::StatementLineItem.create!(
+        statement: statement_2022,
+        participant_declaration: declaration,
+        state: declaration.state,
+      )
+    end
+
+    it "only includes declarations for the related cohort" do
+      expect(described_class.new(statement:).total_starts).to be_zero
+      expect(described_class.new(statement: statement_2022).total_starts).to eql(1)
     end
   end
 end

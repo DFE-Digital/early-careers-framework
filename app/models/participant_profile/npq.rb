@@ -52,6 +52,10 @@ class ParticipantProfile < ApplicationRecord
       npq_application&.eligible_for_dfe_funding
     end
 
+    def schedule_for(*)
+      schedule
+    end
+
   private
 
     def push_profile_to_big_query

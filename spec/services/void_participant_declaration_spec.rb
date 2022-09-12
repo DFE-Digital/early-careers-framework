@@ -5,9 +5,10 @@ require "rails_helper"
 RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
   let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
-  let(:another_cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let(:school) { participant_profile.school_cohort.school }
 
-  before do
+  let!(:statement) do
     create(
       :ecf_statement,
       cpd_lead_provider:,
@@ -55,7 +56,6 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
     end
 
     context "when declaration is paid" do
-      let!(:next_statement) { create(:ecf_statement, :output_fee, cpd_lead_provider:, deadline_date: 3.months.from_now) }
       let(:participant_declaration) do
         create(
           :ect_participant_declaration,
@@ -65,9 +65,16 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
         )
       end
 
-      it "transitions to awaiting_clawback" do
+      it "delegates to Finance::ClawbackDeclaration" do
+        mock_service = instance_double(Finance::ClawbackDeclaration)
+
+        allow(Finance::ClawbackDeclaration).to receive(:new).with(participant_declaration).and_return(mock_service)
+        allow(mock_service).to receive(:call)
+        allow(mock_service).to receive(:errors).and_return([])
+
         subject.call
-        expect(participant_declaration.reload).to be_awaiting_clawback
+
+        expect(mock_service).to have_received(:call)
       end
     end
 
@@ -98,7 +105,7 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
 
       let(:line_item) { participant_declaration.statement_line_items.first }
 
-      it "update line item state to voided" do
+      it "updates declaration and line item state to voided" do
         subject.call
         expect(participant_declaration.reload).to be_voided
         expect(line_item.reload).to be_voided

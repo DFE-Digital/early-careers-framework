@@ -7,8 +7,9 @@ RSpec.describe Finance::Statements::NPQStatementSelector, type: :component do
   let(:npq_lead_provider)    { cpd_lead_provider.npq_lead_provider }
   let!(:npq_statement)       { create(:npq_statement, cpd_lead_provider:) }
   let!(:other_npq_statement) { create(:npq_statement) }
+  let(:cohorts) { Cohort.where(start_year: 2021..) }
 
-  let(:rendered) { render_inline(described_class.new(current_statement: npq_statement)) }
+  let(:rendered) { render_inline(described_class.new(current_statement: npq_statement, cohorts:)) }
 
   it "has a form that PUTs to correct action" do
     expect(rendered).to have_selector("form[method=post][action='/finance/payment-breakdowns/choose-npq-statement']")

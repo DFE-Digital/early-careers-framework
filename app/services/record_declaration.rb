@@ -39,7 +39,9 @@ class RecordDeclaration
     ParticipantDeclaration.transaction do
       set_eligibility
 
-      Finance::Statement.attach(participant_declaration) unless participant_declaration.submitted?
+      unless participant_declaration.submitted?
+        Finance::DeclarationStatementAttacher.new(participant_declaration).call
+      end
 
       declaration_attempt.update!(participant_declaration:)
     end
