@@ -23,6 +23,9 @@ RSpec.describe Admin::ParticipantPresenter do
   it { is_expected.to delegate_method(:notes).to(:participant_profile) }
   it { is_expected.to delegate_method(:user).to(:participant_profile) }
   it { is_expected.to delegate_method(:full_name).to(:user) }
+  it { is_expected.to delegate_method(:name).to(:school).with_prefix("school").allow_nil }
+  it { is_expected.to delegate_method(:urn).to(:school).with_prefix("school").allow_nil }
+  it { is_expected.to delegate_method(:friendly_id).to(:school).with_prefix("school").allow_nil }
 
   describe "#date_of_birth" do
     let(:expected) { validation_data.fetch(:date_of_birth).to_s(:govuk) }
@@ -131,30 +134,6 @@ RSpec.describe Admin::ParticipantPresenter do
       participant_profile.induction_records << late_induction_record
 
       expect(subject.school_cohort).to eql(late_induction_record.school_cohort)
-    end
-  end
-
-  describe "school information" do
-    let(:induction_record) { build(:induction_record, start_date: 2.weeks.ago, school_cohort: build(:school_cohort)) }
-
-    before { participant_profile.induction_records << induction_record }
-
-    describe "#school_friendly_id" do
-      it "returns the friendly_id from the school attached to the latest induction record's school cohort" do
-        expect(subject.school_friendly_id).to eql(induction_record.school_cohort.school.friendly_id)
-      end
-    end
-
-    describe "#school_name" do
-      it "returns the name from the school attached to the latest induction record's school cohort" do
-        expect(subject.school_name).to eql(induction_record.school_cohort.school.name)
-      end
-    end
-
-    describe "#school_urn" do
-      it "returns the URN from the school attached to the latest induction record's school cohort" do
-        expect(subject.school_urn).to eql(induction_record.school_cohort.school.urn)
-      end
     end
   end
 

@@ -15,6 +15,10 @@ module Admin
     delegate :full_name, to: :user
     delegate :lead_provider, to: :school_cohort
 
+    delegate :name, to: :school, prefix: "school", allow_nil: true
+    delegate :urn, to: :school, prefix: "school", allow_nil: true
+    delegate :friendly_id, to: :school, prefix: "school", allow_nil: true
+
     def date_of_birth
       participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk)
     end
@@ -65,18 +69,6 @@ module Admin
 
     def lead_provider_name
       school_cohort.lead_provider.name
-    end
-
-    def school_friendly_id
-      school&.friendly_id
-    end
-
-    def school_name
-      school&.name
-    end
-
-    def school_urn
-      school&.urn
     end
 
     def mentor_full_name
