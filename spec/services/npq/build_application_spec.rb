@@ -23,6 +23,8 @@ RSpec.describe NPQ::BuildApplication do
       school_ukprn: npq_application_attributes[:school_ukprn],
       teacher_reference_number: npq_application_attributes[:teacher_reference_number],
       teacher_reference_number_verified: true,
+      teacher_catchment: "other",
+      teacher_catchment_country: "France",
     }
   end
 
@@ -45,6 +47,7 @@ RSpec.describe NPQ::BuildApplication do
           npq_application_params.merge(
             npq_course_id: npq_course.id,
             npq_lead_provider_id: npq_lead_provider.id,
+            teacher_catchment_iso_country_code: "FR"
           ),
         )
     end
