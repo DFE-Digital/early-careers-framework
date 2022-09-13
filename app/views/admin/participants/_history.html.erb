@@ -9,15 +9,22 @@
   ]
 ) %>
 
-<%= govuk_table(
-  caption: "School transfers",
-  head: ["School name", "Induction programme", "Start date", "End date"],
-  rows: presenter.old_induction_records.map do |r|
-    [
-      r.school_cohort.school.name,
-      r.induction_programme.training_programme.humanize,
-      r.start_date.to_date.to_s(:govuk),
-      r.end_date&.to_date&.to_s(:govuk),
-    ]
-  end,
-) %>
+<% if presenter.old_induction_records.any? %>
+  <%= govuk_table(
+    caption: "School transfers",
+    head: ["School name", "Induction programme", "Start date", "End date"],
+    rows: presenter.old_induction_records.map do |r|
+      [
+        r.school_cohort.school.name,
+        r.induction_programme.training_programme.humanize,
+        r.start_date.to_date.to_s(:govuk),
+        r.end_date&.to_date&.to_s(:govuk),
+      ]
+    end,
+  ) %>
+<% else %>
+  <h2 class="govuk-heading-m">School transfers</h2>
+  <p class="govuk-body">
+    <%= presenter.full_name %> has not been transferred.
+  </p>
+<% end %>
