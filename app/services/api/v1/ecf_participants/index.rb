@@ -97,7 +97,7 @@ module Api
                 },
               },
             )
-            .order("participant_profiles.id", start_date: :desc)
+            .order("participant_profiles.id", created_at: :desc)
             .to_sql
 
           ActiveRecord::Base.connection.query_values("SELECT id FROM (#{query}) AS inner_query")
