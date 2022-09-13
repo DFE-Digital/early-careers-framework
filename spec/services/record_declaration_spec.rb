@@ -244,7 +244,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
   context "when the participant is an NPQ" do
     let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
-    let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
+    let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date }
     let(:npq_course) { create(:npq_leadership_course) }
     let(:traits)     { [] }
     let(:participant_profile) do
@@ -258,6 +258,14 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
     it "creates a participant declaration" do
       expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
+    end
+
+    context "when submitting a retained-1" do
+      let(:declaration_type) { "retained-1" }
+
+      it "creates a declaration, no need to pass evidence_held" do
+        expect(service).to be_valid
+      end
     end
 
     it_behaves_like "validates the declaration for a withdrawn participant"
