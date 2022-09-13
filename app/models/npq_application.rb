@@ -13,6 +13,8 @@ class NPQApplication < ApplicationRecord
 
   after_commit :push_enrollment_to_big_query
 
+  UK_COUNTRIES = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales]
+
   enum headteacher_status: {
     no: "no",
     yes_when_course_starts: "yes_when_course_starts",
@@ -68,6 +70,9 @@ class NPQApplication < ApplicationRecord
     end
   end
 
+  def in_uk_catchment_area?
+    UK_COUNTRIES.include?(teacher_catchment)
+  end
 private
 
   def previously_funded?

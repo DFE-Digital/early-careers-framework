@@ -64,6 +64,10 @@ module Api
 
       attribute(:eligible_for_funding, &:eligible_for_dfe_funding)
       attribute(:targeted_delivery_funding_eligibility)
+
+      attribute :teacher_catchment, &:in_uk_catchment_area?
+      attribute :teacher_catchment_country, &:in_uk_catchment_area?
+
     end
   end
 end
