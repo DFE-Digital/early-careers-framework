@@ -4,24 +4,38 @@ class Induction::TransferAndContinueExistingFip < BaseService
   def call
     check_fip_induction_and_different_school!
 
+    induction_record = nil
+
     ActiveRecord::Base.transaction do
       # we haven't already been informed this person is leaving
       if latest_induction_record.active_induction_status?
         latest_induction_record.leaving!(end_date)
       end
 
+      old_school = latest_induction_record.school
+
       # create a special programme to support the transferring participant
       programme = InductionProgramme.create!(training_programme: :full_induction_programme,
                                              school_cohort:,
                                              partnership: create_relationship)
 
-      Induction::Enrol.call(participant_profile:,
-                            induction_programme: programme,
-                            start_date:,
-                            preferred_email: email,
-                            mentor_profile:,
-                            school_transfer: true)
+      induction_record = Induction::Enrol.call(participant_profile:,
+                                               induction_programme: programme,
+                                               start_date:,
+                                               preferred_email: email,
+                                               mentor_profile:,
+                                               school_transfer: true)
+
+      if participant_profile.mentor?
+        Mentors::ChangeSchool.call(mentor_profile: participant_profile,
+                                   from_school: old_school,
+                                   to_school: school_cohort.school,
+                                   remove_on_date: start_date,
+                                   preferred_email: email)
+      end
     end
+
+    induction_record
   end
 
 private
