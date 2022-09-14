@@ -3,17 +3,17 @@
 require "rails_helper"
 
 RSpec.describe Participants::Defer::NPQ, :with_default_schedules do
-  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider, :with_lead_provider) }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
   let!(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:) }
   let(:user)                { participant_profile.user }
-  let(:npq_course)          { participant_profile.npq_course }
+  let(:course_identifier) { participant_profile.npq_course.identifier }
 
   subject do
     described_class.new(
       params: {
         participant_id: user.id,
-        course_identifier: npq_course.identifier,
+        course_identifier:,
         cpd_lead_provider:,
         reason: "bereavement",
       },
@@ -34,7 +34,7 @@ RSpec.describe Participants::Defer::NPQ, :with_default_schedules do
         described_class.new(
           params: {
             participant_id: user.id,
-            course_identifier: npq_course.identifier,
+            course_identifier:,
             cpd_lead_provider:,
             reason: "bereavement",
           },
@@ -68,7 +68,7 @@ RSpec.describe Participants::Defer::NPQ, :with_default_schedules do
         described_class.new(
           params: {
             participant_id: user.id,
-            course_identifier: npq_course.identifier,
+            course_identifier:,
             cpd_lead_provider:,
           },
         )
@@ -84,7 +84,7 @@ RSpec.describe Participants::Defer::NPQ, :with_default_schedules do
         described_class.new(
           params: {
             participant_id: user.id,
-            course_identifier: npq_course.identifier,
+            course_identifier:,
             cpd_lead_provider:,
             reason: "foo",
           },
@@ -93,6 +93,15 @@ RSpec.describe Participants::Defer::NPQ, :with_default_schedules do
 
       it "returns an error and does not update training_status" do
         expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { participant_profile.reload.training_status }
+      end
+    end
+
+    context "with incorrect course" do
+      let!(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:course_identifier) { "ecf-induction" }
+
+      it "raises an error and does not create a ParticipantProfileState" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing).and not_change { ParticipantProfileState.count }
       end
     end
   end

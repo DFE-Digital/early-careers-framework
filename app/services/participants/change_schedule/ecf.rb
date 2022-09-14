@@ -9,7 +9,7 @@ module Participants
 
       delegate :school_cohort, to: :user_profile, allow_nil: true
 
-      validates :course_identifier, presence: { message: I18n.t(:missing_course_identifier) }
+      validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
       validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
       validates :cpd_lead_provider, presence: { message: I18n.t(:missing_cpd_lead_provider) }
       validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
@@ -58,6 +58,10 @@ module Participants
         user_profile
       end
 
+      def participant_identity
+        @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+      end
+
     private
 
       def validate_cannot_change_cohort
@@ -69,10 +73,6 @@ module Participants
 
       def participant_has_user_profile
         errors.add(:participant_id, I18n.t(:invalid_participant)) if user && user_profile.blank?
-      end
-
-      def participant_identity
-        @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
       end
 
       def user

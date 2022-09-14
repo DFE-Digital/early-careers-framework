@@ -106,6 +106,25 @@ RSpec.describe Participants::ChangeSchedule::ECF, :with_default_schedules do
         expect(subject.errors.full_messages.join(",")).to include("Participant The property '#/participant_id' must be a valid Participant ID")
       end
     end
+
+    context "with incorrect course_identifier" do
+      let(:schedule) { create(:schedule, :soft, cohort: Cohort.current) }
+      let(:profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+
+      subject do
+        described_class.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: profile.user_id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider:,
+        })
+      end
+
+      it "returns error with invalid course identifier" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+        expect(subject.errors.full_messages.join(",")).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
+      end
+    end
   end
 
   describe "changing to a soft schedules with previous declarations", :with_default_schedules do

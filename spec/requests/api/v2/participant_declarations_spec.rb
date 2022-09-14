@@ -197,8 +197,8 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         expect(response).to have_http_status(:unprocessable_entity)
         expect(parsed_response["errors"])
           .to include(
-            "title" => "declaration_type",
-            "detail" => "The property '#/declaration_type does not exist for this schedule",
+            "title" => "course_identifier",
+            "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'",
           )
       end
 
@@ -210,7 +210,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
           .to eq(
             [
               { "title" => "declaration_date", "detail" => "can't be blank" },
-              { "title" => "declaration_type", "detail" => "can't be blank, The property '#/declaration_type does not exist for this schedule" },
+              { "title" => "declaration_type", "detail" => "can't be blank" },
               { "title" => "participant_id", "detail" => "The property '#/participant_id' must be a valid Participant ID" },
               { "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" },
             ],
