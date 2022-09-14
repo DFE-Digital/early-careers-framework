@@ -332,7 +332,7 @@ module ManageTrainingSteps
     sign_in_as induction_coordinator
   end
 
-  def and_see_the_other_programs_before_choosing(labels:, choice:, snapshot:)
+  def and_see_the_other_programs_before_choosing(labels:, choice:)
     expect(page).to have_text "Change how you run your training programme"
     expect(page).to be_accessible
     click_on "Check the other options available"
@@ -340,7 +340,6 @@ module ManageTrainingSteps
     expect(page).to have_text "How do you want to run your training"
     labels.each { |label| expect(page).to have_selector(:label, text: label) }
     expect(page).to be_accessible
-    page.percy_snapshot(snapshot)
 
     choose choice
     click_on "Continue"

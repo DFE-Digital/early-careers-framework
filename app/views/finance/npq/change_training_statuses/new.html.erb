@@ -1,0 +1,36 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: finance_participant_path(@participant_profile.user)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Change training status</h1>
+
+    <div class="govuk-inset-text">
+      <p>
+        <strong>User ID / Participant ID</strong>
+        <br/>
+        <%= @participant_profile.user.id %>
+      </p>
+      <p>
+        <strong>Training status</strong>
+        <br/>
+        <%= @change_training_status_form.current_training_status %>
+      </p>
+    </div>
+
+    <%= form_for @change_training_status_form, url: finance_participant_profile_npq_change_training_status_path(@participant_profile) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :training_status, legend: { text: "Choose a different training status", tag: 'h1', size: 'm' } do %>
+        <% @change_training_status_form.training_status_options.values.each_with_index do |val, n| %>
+          <%= f.govuk_radio_button :training_status, val, label: { text: val }, link_errors: n.zero? %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_select(:reason, label: { text: "Reason for change", tag: 'h1', size: 'm' }, hint: { text: "Required for deferred or withdrawn" }, options: { include_blank: true }) do %>
+        <%= grouped_options_for_select @change_training_status_form.reason_options %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

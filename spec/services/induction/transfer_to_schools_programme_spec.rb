@@ -79,5 +79,25 @@ RSpec.describe Induction::TransferToSchoolsProgramme, :with_default_schedules do
         expect(original_induction.reload.end_date).to be_within(1.second).of Time.zone.now
       end
     end
+
+    context "when the participant is a mentor" do
+      before do
+        Mentors::AddToSchool.call(mentor_profile: mentor_profile_1, school: school_cohort_1.school)
+      end
+
+      it "calls the Mentors::ChangeSchool service" do
+        expect(Mentors::ChangeSchool).to receive(:call).with(mentor_profile: mentor_profile_1,
+                                                             from_school: school_cohort_1.school,
+                                                             to_school: school_cohort_2.school,
+                                                             remove_on_date: start_date,
+                                                             preferred_email: new_email_address)
+
+        service.call(participant_profile: mentor_profile_1,
+                     induction_programme: induction_programme_2,
+                     email: new_email_address,
+                     start_date:,
+                     end_date:)
+      end
+    end
   end
 end

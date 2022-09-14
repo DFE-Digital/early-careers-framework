@@ -37,6 +37,7 @@ FactoryBot.define do
 
     initialize_with do
       participant_id = participant_profile.ecf? ? participant_profile.participant_identity.user_id : participant_profile.npq_application.participant_identity.user_id
+
       params = {
         participant_id:,
         course_identifier:,

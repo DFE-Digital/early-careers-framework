@@ -69,7 +69,6 @@ Exceptions are for steps that aren't from the point of the user, such as:
 
 - `Given scenario "user_cip" has been run`
 - `Then the page should be accessible`
-- `Then percy should be sent snapshot`
 
 #### Reuse step definitions where possible
 
@@ -105,23 +104,14 @@ following in your spec:
 
 - `Given scenario "test_scenario" has been run`
 
-#### Visual and accessibility testing
+#### Accessibility testing
 
-We use [Percy] for visual testing and [cypress-axe] for basic automated
+We use [cypress-axe] for basic automated
 accessibility testing. Every time you add a test for a new page (or significant
 state change to an existing page), add the following lines to your spec:
 
 ```
 Then the page should be accessible
-And percy should be sent snapshot
-```
-
-Note that percy snapshot names should be unique. By default they take the name
-of the feature + scenario, but if you have more than one percy snapshot in the
-same test you'll need to give it a name manually:
-
-```
-And percy should be sent snapshot called "page name"
 ```
 
 When the accessibility tests fail, the error logged to the console won't say
@@ -169,5 +159,4 @@ the last scenario in a file, or comment out all the tests below it.
 [cypress-cucumber-preprocessor]: https://github.com/TheBrainFamily/cypress-cucumber-preprocessor
 [Gherkin syntax]: https://cucumber.io/docs/gherkin/reference/
 [Cypress best practices]: https://docs.cypress.io/guides/references/best-practices
-[Percy]: https://percy.io/
 [cypress-axe]: https://github.com/component-driven/cypress-axe

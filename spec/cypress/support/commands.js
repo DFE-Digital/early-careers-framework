@@ -1,4 +1,3 @@
-import "@percy/cypress";
 import OnRails from "./on-rails";
 import "cypress-file-upload";
 

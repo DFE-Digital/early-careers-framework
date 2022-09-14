@@ -20,7 +20,6 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     and_i_confirm_lead_provider_name_on_the_lead_provider_dashboard lead_provider_name
 
     then_the_page_is_accessible
-    and_percy_is_sent_a_snapshot_named "Lead Provider Dashboard"
   end
 
   scenario "Visiting the Lead provider dashboard" do

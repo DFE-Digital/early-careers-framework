@@ -25,7 +25,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_click_on_add_myself_as_mentor
     then_i_am_taken_to_are_you_sure_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor add yourself as mentor check"
 
     when_i_click_on_check_what_each_role_needs_to_do
     then_i_am_taken_to_roles_page
@@ -50,6 +49,5 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_sign_back_in
     then_i_should_be_asked_to_validate
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor add yourself as mentor confirmation"
   end
 end

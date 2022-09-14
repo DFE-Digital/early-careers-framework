@@ -43,7 +43,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     then_i_should_see_correct_service_fee_payment_breakdown
     then_i_should_see_the_correct_total
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Course overview per lead provider")
 
     when_i_click_on_view_within_statement_summary
     then_i_see_voided_declarations
@@ -51,7 +50,6 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     when_i_click_on_view_contract
     then_i_see_contract_information
     and_the_page_should_be_accessible
-    and_percy_should_be_sent_a_snapshot_named("Contract information per NPQ lead provider")
   end
 
   def create_accepted_application(user, npq_course, npq_lead_provider)

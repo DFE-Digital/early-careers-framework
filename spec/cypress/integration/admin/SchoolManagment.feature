@@ -25,13 +25,11 @@ Feature: Admin user managing schools
     And "page body" should contain "CIP Programme 1"
     And "page body" should contain "CIP Programme 2"
     And the page should be accessible
-    And percy should be sent snapshot
 
   Scenario: Viewing a list of schools
     Then the table should have 9 rows
     And "page body" should contain "Enter the school’s name, URN or tutor email"
     And the page should be accessible
-    And percy should be sent snapshot
 
     When I type "include" into "search box"
     And I press enter in "search box"

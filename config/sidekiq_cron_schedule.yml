@@ -29,3 +29,7 @@ transition_statements_to_payable:
   cron: "@daily"
   class: "Finance::Statements::MarkAsPayable"
   queue: default
+remove_school_mentor_job:
+  cron: "45 4 * * *"
+  class: "RemoveSchoolMentorJob"
+  queue: default

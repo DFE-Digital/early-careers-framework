@@ -60,7 +60,7 @@ class DeliveryPartnerForm
 
   def provider_relationships
     provider_relationship_hashes
-      &.filter { |hash| hash.present? }
+      &.filter(&:present?)
       &.map { |provider_relationship_hash| JSON.parse(provider_relationship_hash) }
   end
 

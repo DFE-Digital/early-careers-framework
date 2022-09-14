@@ -29,7 +29,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
     then_i_am_on_the_school_add_participant_still_cannot_find_their_details_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor still cannot validate a participant with their nino"
     then_i_cant_add_participant_on_the_school_add_participant_still_cannot_find_their_details_page
     then_i_can_view_my_etcs_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
   end
@@ -48,7 +47,6 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
     then_i_am_on_the_school_add_participant_still_cannot_find_their_details_page
     then_the_page_should_be_accessible
-    then_percy_should_be_sent_a_snapshot_named "Induction tutor still cannot validate a participant with their nino"
     then_i_cant_add_participant_on_the_school_add_participant_still_cannot_find_their_details_page
     then_i_can_view_my_etcs_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
   end

@@ -21,3 +21,8 @@ properties:
     description: "Whether the participant has failed or passed"
     type: boolean
     example: false
+  declaration_date:
+    description: The timestamp associated with when this outcome was achieved
+    type: string
+    format: date-time
+    example: "2021-05-31T02:21:32.000Z"

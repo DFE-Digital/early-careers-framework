@@ -134,6 +134,16 @@ en:
       blank: "Select a reason why you think this confirmation is incorrect"
     delivery_partner:
       blank: "Choose a delivery partner"
+    cohort:
+      blank: "Cohort starting on %{year} not setup on %{where}"
+      excluded_start_year: "Invalid value. Must be different to %{year}"
+      invalid_start_year: "Invalid value. Must be an integer between %{start} and %{end}"
+    induction_record:
+      blank: "The participant is not enrolled on the cohort starting on %{year}"
+    participant_declarations:
+      exist: "The participant must have no declarations"
+    participant_profile:
+      blank: "Not registered or not active"
     programme:
       blank: "Please select programme type"
     provider:
@@ -308,10 +318,15 @@ en:
               blank: "Choose an appropriate body type"
             appropriate_body:
               blank: "Choose an appropriate body"
-        finance/change_training_status_form:
+        finance/ecf/change_training_status_form:
           attributes:
             training_status:
-              blank: Choose training status
+              inclusion: Choose a valid training status
+            reason:
+              inclusion: Choose a valid reason for training status
+        finance/npq/change_training_status_form:
+          attributes:
+            training_status:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
@@ -375,6 +390,9 @@ en:
     npq-headship: Headship course breakdown
     npq-executive-leadership: Executive Leadership course breakdown
     npq-additional-support-offer: Additional Support Offer course breakdown
+    npq-early-headship-coaching-offer: Early Headship Coaching Offer
+    npq-early-years-leadership: Early Years Leadership
+    npq-leading-literacy: Leading Literacy
   courses:
     npq:
       npq-leading-teaching: Leading Teaching

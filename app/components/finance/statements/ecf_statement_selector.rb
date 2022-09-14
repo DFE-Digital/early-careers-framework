@@ -3,10 +3,11 @@
 module Finance
   module Statements
     class ECFStatementSelector < BaseComponent
-      attr_reader :current_statement
+      attr_reader :current_statement, :cohorts
 
-      def initialize(current_statement:)
+      def initialize(current_statement:, cohorts:)
         @current_statement = current_statement
+        @cohorts = cohorts
       end
 
       def lead_providers

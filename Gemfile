@@ -65,7 +65,7 @@ gem "view_component", require: "view_component/engine"
 # Fetching from APIs
 gem "httpclient", "~> 2.8", ">= 2.8.3"
 gem "rubyzip", "~> 2.3", ">= 2.3.0"
-gem "savon", "~> 2.12", ">= 2.12.1"
+gem "savon", "~> 2.13"
 
 # Strong migration checker for database migrations
 gem "strong_migrations", "~> 1.2"
@@ -167,7 +167,6 @@ group :test do
   gem "capybara", "~> 3.37"
   gem "jsonapi-rspec"
   gem "launchy"
-  gem "percy-capybara"
   gem "pundit-matchers", "~> 1.7.0"
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"

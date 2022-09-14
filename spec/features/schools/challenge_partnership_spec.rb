@@ -18,7 +18,6 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
       then_i_am_on_the_report_incorrect_partnership_page_with_token "abc1234"
       and_the_page_is_accessible
-      and_percy_is_sent_a_snapshot_named "challenge options"
     end
 
     scenario "Can challenge a partnership from an email link" do
@@ -29,7 +28,6 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
       then_i_am_on_the_report_incorrect_partnership_success_page
       and_the_page_is_accessible
-      and_percy_is_sent_a_snapshot_named "challenge success"
     end
 
     scenario "Cannot challenge a partnership twice from an email link" do
@@ -39,7 +37,6 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
       then_i_am_on_the_report_incorrect_partnership_already_challenged_page
       and_the_page_is_accessible
-      and_percy_is_sent_a_snapshot_named "already challenged"
     end
 
     scenario "Cannot challenge an expired challenge from an email link" do
@@ -49,7 +46,6 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
 
       then_i_am_on_the_report_incorrect_partnership_link_expired_page
       and_the_page_is_accessible
-      and_percy_is_sent_a_snapshot_named "challenge link expired"
     end
   end
 

@@ -102,12 +102,11 @@ module Finance
         contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract:) }.compact
       end
 
-      # WARNING: this does not scope to a cohort
-      # when cohorts are designed for scoping needs to be added here
       def contracts
         npq_lead_provider
           .npq_contracts
           .where(version: statement.contract_version)
+          .where(cohort: statement.cohort)
           .order(course_identifier: :asc)
       end
 

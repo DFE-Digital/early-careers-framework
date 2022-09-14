@@ -38,8 +38,6 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
       .to have_content("Confirm you want to remove #{mentor_profile.user.full_name}")
       .and be_accessible
 
-    page.percy_snapshot("Confirm participant removal")
-
     expect { click_on "Confirm and remove" }
       .to change { mentor_profile.reload.status }.from("active").to("withdrawn")
       .and change { ect_profile.reload.mentor_profile }.from(mentor_profile).to(nil)
@@ -47,8 +45,6 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     expect(page)
       .to have_content("#{mentor_profile.user.full_name} has been removed from this cohort")
       .and be_accessible
-
-    page.percy_snapshot("Induction coordinator removing participant")
 
     click_on "Return to your ECTs and mentors"
     expect(page).to have_no_content mentor_profile.user.full_name

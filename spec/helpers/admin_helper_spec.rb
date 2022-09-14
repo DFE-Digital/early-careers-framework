@@ -43,4 +43,36 @@ RSpec.describe AdminHelper, type: :helper do
       end
     end
   end
+
+  describe "#html_list" do
+    let(:values) { %w[aaa bbb ccc ddd] }
+    subject { html_list(values) }
+
+    it "formats the provided values in a ul.govuk-list" do
+      expect(subject).to have_css("ul.govuk-list > li", count: values.size)
+      expect(values).to all(be_in(subject))
+    end
+
+    context "when nothing is passed in" do
+      let(:values) { [] }
+
+      it("renders nothing") { is_expected.to be_nil }
+    end
+  end
+
+  describe "#induction_programme_friendly_name" do
+    context("when short: false") do
+      it "returns human readable names for induction programmes" do
+        expect(induction_programme_friendly_name("full_induction_programme")).to eql("Full induction programme")
+        expect(induction_programme_friendly_name("school_funded_fip")).to eql("School funded full induction programme")
+      end
+    end
+
+    context("when short: false") do
+      it "returns shortened readable names for induction programmes" do
+        expect(induction_programme_friendly_name("full_induction_programme", short: true)).to eql("FIP")
+        expect(induction_programme_friendly_name("school_funded_fip", short: true)).to eql("School funded FIP")
+      end
+    end
+  end
 end

@@ -11,3 +11,4 @@ example:
     attributes:
       course_identifier: npq-leading-teaching
       has_passed: false
+      declaration_date: "2021-05-31T02:21:32.000Z"

@@ -55,14 +55,12 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         then_i_should_be_taken_to_the_teachers_current_programme_page
         then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - teachers current programme"
 
         when_i_select "No"
         click_on "Continue"
 
         then_i_should_be_taken_to_the_schools_current_programme_page
         then_the_page_should_be_accessible
-        then_percy_should_be_sent_a_snapshot_named "Transfer journey - schools current programme"
 
         when_i_select "Yes"
         click_on "Continue"

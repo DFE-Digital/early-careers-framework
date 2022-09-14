@@ -13,31 +13,21 @@
       <p>
         <strong>Training status</strong>
         <br/>
-        <% if @participant_profile.npq? %>
-          <%= @participant_profile.state %>
-        <% else %>
-          <%= @participant_profile.training_status %>
-        <% end %>
+        <%= @change_training_status_form.current_training_status %>
       </p>
     </div>
 
-    <%= form_for @change_training_status_form, url: finance_participant_profile_change_training_status_path(@participant_profile) do |f| %>
+    <%= form_for @change_training_status_form, url: finance_participant_profile_ecf_change_training_status_path(@participant_profile) do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_radio_buttons_fieldset :training_status, legend: { text: "Choose a different training status", tag: 'h1', size: 'm' } do %>
-        <% @change_training_status_form.training_status_options.each do |val, text| %>
-          <%= f.govuk_radio_button :training_status, val, label: { text: text } %>
+        <% @change_training_status_form.training_status_options.values.each_with_index do |val, n| %>
+          <%= f.govuk_radio_button :training_status, val, label: { text: val }, link_errors: n.zero? %>
         <% end %>
       <% end %>
 
       <%= f.govuk_select(:reason, label: { text: "Reason for change", tag: 'h1', size: 'm' }, hint: { text: "Required for deferred or withdrawn" }, options: { include_blank: true }) do %>
-        <% @change_training_status_form.reason_options.each do |group, items| %>
-          <optgroup label="<%= group %>">
-            <% items.each do |item| %>
-              <option value="<%= item %>" data-tags="<%= item %>" <%= "selected" if item == @change_training_status_form.reason %>><%= item %></option>
-            <% end %>
-          </optgroup>
-        <% end %>
+        <%= grouped_options_for_select @change_training_status_form.reason_options %>
       <% end %>
 
       <%= f.govuk_submit "Continue" %>

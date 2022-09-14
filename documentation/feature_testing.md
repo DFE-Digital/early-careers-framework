@@ -6,7 +6,6 @@ The feature tests in this repository are written using the following gems:
 - [Page objects]
 - [Chromedriver]
 - [Axe]
-- [Percy]
 
 The feature tests are used to test service features and user journeys to avoid
 repetitive manual testing. They use Given-When-Then syntax so that they 
@@ -253,7 +252,6 @@ using active voice and first-person. for example;
 Exceptions are for steps that aren't from the point of the user, such as:
 
 - `and_the_page_is_accessible`
-- `and_percy_is_sent_a_snapshot_called "School Participant Dashboard"`
 
 The language of steps should be definite rather than speculative, so `Then I am on` 
 rather than `Then I should be on`.
@@ -274,29 +272,19 @@ definitions in the future.
 
 
 
-#### Visual and accessibility testing
+#### Accessibility testing
 
-We use [Percy] for visual testing and [Axe] for basic automated
+We use [Axe] for basic automated
 accessibility testing. Every time you add a test for a new page (or significant
 state change to an existing page), add the following lines to your spec:
 
 ```
 then_the_page_is_accessible
-and_percy_is_sent_a_snapshot
-```
-
-Note that percy snapshot names should be unique. By default they take the name
-of the feature, but if you have more than one percy snapshot in the
-same test you'll need to give it a name manually:
-
-```
-and_percy_is_sent_a_snapshot_called "unique screenshot description name"
 ```
 
 [Capybara]: http://teamcapybara.github.io/capybara/
 [Chromedriver]: https://github.com/titusfortner/webdrivers
 [Axe]: https://www.deque.com/axe/
-[Percy]: https://docs.percy.io/
 [Capybara cheatsheet]: https://devhints.io/capybara
 [Page objects]: https://github.com/site-prism/site_prism
 

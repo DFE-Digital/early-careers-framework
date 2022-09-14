@@ -8,7 +8,7 @@ FactoryBot.define do
     identifier { (Finance::Schedule::NPQLeadership::IDENTIFIERS + Finance::Schedule::NPQSpecialist::IDENTIFIERS).sample }
   end
 
-  factory :npq_leadship_course, class: "NPQCourse" do
+  factory :npq_leadership_course, class: "NPQCourse" do
     sequence(:name) { |n| "NPQ Leadership Course #{n}" }
     identifier { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
   end

@@ -9,23 +9,23 @@ module Pages
     set_primary_heading(/^.*$/)
 
     def has_validation_status?(validation_status)
-      element_has_content? self, "Validation status #{validation_status}".strip
+      element_has_content? self, "Validation status", validation_status
     end
 
     def has_full_name?(full_name)
-      element_has_content? self, "Full name #{full_name} Change name".strip
+      element_has_content? self, "Full name", full_name, "Change name"
     end
 
     def has_email_address?(email_address)
-      element_has_content? self, "Email address #{email_address} Change email".strip
+      element_has_content? self, "Email address", email_address, "Change email"
     end
 
     def has_school?(school_name)
-      element_has_content? self, "School #{school_name}".strip
+      element_has_content? self, "School", school_name
     end
 
     def has_lead_provider?(lead_provider_name)
-      element_has_content? self, "Lead provider #{lead_provider_name}".strip
+      element_has_content? self, "Lead provider", lead_provider_name
     end
 
     def has_school_transfer?(school_name)

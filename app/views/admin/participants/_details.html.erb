@@ -1,58 +1,78 @@
-<table class="govuk-table">
-  <tbody class="govuk-table__body admin-tabs">
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header ">Full name</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.user.full_name %></td>
-      <td class="govuk-table__cell">
-        <%= govuk_link_to edit_name_admin_participant_path(latest_induction_record.participant_profile) do %>
-          Change <span class="govuk-visually-hidden">name</span>
-        <% end %>
-      </td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Email address</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.user.email %></td>
-      <td class="govuk-table__cell">
-        <%= govuk_link_to edit_email_admin_participant_path(latest_induction_record.participant_profile) do %>
-          Change <span class="govuk-visually-hidden">email</span>
-        <% end %>
-      </td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">ID</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.user.id %></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">External ID</th>
-      <td class="govuk-table__cell"><%= latest_induction_record.participant_profile.participant_identity.external_identifier %></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Associated email addresses</th>
-      <td class="govuk-table__cell">
-      <ul>
-        <% all_emails_associated_with_a_user(latest_induction_record).each do |email| %>
-         <li><%= email %></li>
-        <% end %>
-      </ul>
-      </td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Validation status</th>
-      <td class="govuk-table__cell"><%= render ParticipantStatusTagComponent.new(profile: latest_induction_record.participant_profile, induction_record: latest_induction_record) %></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">Notes</th>
-       <td class="govuk-table__cell"><%= latest_induction_record.participant_profile.notes? ? simple_format(latest_induction_record.participant_profile.notes, class: "govuk-body") : "No notes" %></td>
+<%= govuk_summary_list do |sl|
+  participant_name = latest_induction_record.user.full_name
 
-       <td class="govuk-table__cell">
-         <%= govuk_link_to edit_admin_note_path(latest_induction_record.participant_profile) do %>
-           <span><%= latest_induction_record.participant_profile.notes.present? ? "Change notes" : "Add notes" %></span>
-         <% end %>
-       </td>
-    </tr>
-  </tbody>
-</table>
+  sl.row do |row|
+    row.key(text: "Full name")
+    row.value(text: participant_name)
+    row.action(
+      href: edit_name_admin_participant_path(latest_induction_record.participant_profile),
+      visually_hidden_text: "name"
+    )
+  end
+
+  sl.row do |row|
+    row.key(text: "Email address")
+    row.value(text: latest_induction_record.user.email)
+    row.action(
+      href: edit_email_admin_participant_path(latest_induction_record.participant_profile),
+      visually_hidden_text: "email"
+    )
+  end
+
+  sl.row do |row|
+    row.key(text: "Date of birth")
+    row.value(text: latest_induction_record.participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
+  end
+
+  sl.row do |row|
+    row.key(text: "Induction start date")
+    row.value(text: latest_induction_record.participant_profile&.induction_start_date&.to_s(:govuk))
+  end
+
+  if @participant_profile.teacher_profile
+    sl.row do |row|
+      row.key(text: "TRN")
+      row.value(text: latest_induction_record.participant_profile.teacher_profile.trn)
+    end
+  end
+
+  sl.row do |row|
+    row.key(text: "ID")
+    row.value(text: tag.code(latest_induction_record.user.id))
+  end
+
+  sl.row do |row|
+    row.key(text: "External ID")
+    row.value(text: tag.code(latest_induction_record.participant_profile.participant_identity.external_identifier))
+  end
+
+  sl.row do |row|
+    row.key(text: "Associated email addresses")
+    row.value(text: html_list(all_emails_associated_with_a_user(latest_induction_record)))
+  end
+
+  sl.row do |row|
+    row.key(text: "Validation status")
+    row.value(text: render(ParticipantStatusTagComponent.new(profile: latest_induction_record.participant_profile, induction_record: latest_induction_record)))
+  end
+
+  sl.row do |row|
+    row.key(text: "Notes")
+
+    row.value do
+      if latest_induction_record.participant_profile.notes?
+        simple_format(latest_induction_record.participant_profile.notes, class: "govuk-body")
+      else
+        "No notes"
+      end
+    end
+
+    notes_present = latest_induction_record.participant_profile.notes.present?
+
+    row.action(
+      text: notes_present ? "Change notes" : "Add notes",
+      href: edit_admin_note_path(latest_induction_record.participant_profile),
+      visually_hidden_text: notes_present ? "on #{participant_name}'s profile" : "to #{participant_name}'s profile",
+    )
+  end
+end %>

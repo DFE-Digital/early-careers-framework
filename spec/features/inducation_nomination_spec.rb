@@ -34,7 +34,6 @@ RSpec.feature "Nominating tutors", :with_default_schedules, :js do
       expect(page).to have_css("h1", text: "The name you entered does not match our records")
 
       and_the_page_should_be_accessible
-      and_percy_should_be_sent_a_snapshot_named "Start nominations name different"
 
       click_on "Change the name"
 
@@ -47,7 +46,6 @@ RSpec.feature "Nominating tutors", :with_default_schedules, :js do
       expect(page).to have_css("h1", text: "The email address is being used by another school")
 
       and_the_page_should_be_accessible
-      and_percy_should_be_sent_a_snapshot_named "Start nominations email already used"
 
       click_on "Change email address"
 
@@ -74,7 +72,6 @@ RSpec.feature "Nominating tutors", :with_default_schedules, :js do
       expect(page).to have_css(".govuk-panel--confirmation", text: "Induction tutor nominated")
 
       and_the_page_should_be_accessible
-      and_percy_should_be_sent_a_snapshot_named "Start nominations email already used again"
 
       expect(SchoolMailer)
         .to have_received(:nomination_confirmation_email)
