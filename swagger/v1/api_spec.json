@@ -1577,14 +1577,17 @@
             ]
           },
           "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "description": "The Teacher Reference Number (TRN) for this ECF participant",
             "type": "string",
-            "example": "1234567"
+            "example": "1234567",
+            "required": false,
+            "nullable": true
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "example": true
+            "example": true,
+            "nullable": true
           },
           "eligible_for_funding": {
             "description": "Indicates whether this participant is eligible to receive DfE funded induction",
@@ -3166,6 +3169,22 @@
             "nullable": false,
             "type": "boolean",
             "example": true
+          },
+          "teacher_catchment": {
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "teacher_catchment_country": {
+            "nullable": true,
+            "type": "string",
+            "example": "France"
+          },
+          "teacher_catchment_iso_country_code": {
+            "nullable": true,
+            "description": "The teacher catchment ISO 3666 alpha3 code",
+            "type": "string",
+            "example": "FRA"
           }
         }
       },
