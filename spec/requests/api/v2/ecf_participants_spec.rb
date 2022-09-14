@@ -17,13 +17,34 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     end
   end
 
+  let!(:ect_profile) do
+    create(
+      :ect,
+      mentor_profile_id: mentor_profile.id,
+      school_cohort:,
+      lead_provider: cpd_lead_provider.lead_provider,
+    )
+  end
+
+  let!(:ect_profile_with_one_active_and_one_withdrawn_profile) do
+    ect = create(
+      :ect,
+      mentor_profile_id: mentor_profile.id,
+      school_cohort:,
+      lead_provider: cpd_lead_provider.lead_provider,
+    )
+
+    create(
+      :ect,
+      :withdrawn_record,
+      user: ect.teacher_profile.user,
+      school_cohort:,
+    )
+
+    ect
+  end
+
   before :each do
-    create_list :ect, 2, mentor_profile_id: mentor_profile.id, school_cohort: school_cohort, lead_provider: cpd_lead_provider.lead_provider
-    ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
-    create(:ect,
-           :withdrawn_record,
-           user: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record.user,
-           school_cohort:)
     default_headers[:Authorization] = bearer_token
   end
 
@@ -33,10 +54,6 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
   describe "GET /api/v2/participants/ecf" do
     context "when authorized" do
-      before do
-        default_headers[:Authorization] = bearer_token
-      end
-
       describe "JSON Index API" do
         let(:parsed_response) { JSON.parse(response.body) }
 
@@ -253,6 +270,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         it "returns the correct values" do
           mentor = ParticipantProfile::Mentor.first.user
           mentor_row = parsed_response.find { |row| row["id"] == mentor.id && row["participant_type"] == "mentor" }
+
           expect(mentor_row).not_to be_nil
           expect(mentor_row["email"]).to eql mentor.email
           expect(mentor_row["full_name"]).to eql mentor.full_name
@@ -267,19 +285,13 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = InductionRecord
-                  .active_induction_status
-                  .joins(:participant_profile)
-                  .where(participant_profile: { type: "ParticipantProfile::ECT" })
-                  .first
-                  .participant_profile
-                  .user
+          ect = ect_profile.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
+
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
           expect(ect_row["full_name"]).to eql ect.full_name
-
-          expect(ect_row["mentor_id"]).to be_blank
+          expect(ect_row["mentor_id"]).to eql(mentor.id)
           expect(ect_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
@@ -291,6 +303,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(mentor_row["training_status"]).to eql "active"
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
+
           expect(withdrawn_record_row).not_to be_nil
           expect(withdrawn_record_row["email"]).to eql(withdrawn_ect_profile_record.user.email)
           expect(withdrawn_record_row["full_name"]).to eql(withdrawn_ect_profile_record.user.full_name)
