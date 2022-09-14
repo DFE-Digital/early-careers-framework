@@ -146,7 +146,7 @@ private
   end
 
   def validate_evidence_held?
-    return unless participant_profile
+    return unless participant_profile && participant_profile.is_a?(ParticipantProfile::ECF)
 
     declaration_type.present? && declaration_type != "started"
   end

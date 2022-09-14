@@ -742,7 +742,6 @@ create_npq_declarations = lambda {
       end
 
       ParticipantProfileState.find_or_create_by!({ participant_profile: npq_profile })
-
       travel_to npq_application.profile.schedule.milestones.first.start_date + 2.days do
         RecordDeclaration.new(
           participant_id: npq_application.user.id,

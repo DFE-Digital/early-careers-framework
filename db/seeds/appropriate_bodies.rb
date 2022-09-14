@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-Importers::AppropriateBodies.call
+ActiveRecord::Base.transaction { Importers::AppropriateBodies.call }
