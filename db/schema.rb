@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_09_081139) do
+ActiveRecord::Schema.define(version: 2022_09_14_150417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -538,6 +538,7 @@ ActiveRecord::Schema.define(version: 2022_09_09_081139) do
     t.text "teacher_catchment"
     t.text "teacher_catchment_country"
     t.string "employment_type"
+    t.string "teacher_catchment_iso_country_code", limit: 3
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"

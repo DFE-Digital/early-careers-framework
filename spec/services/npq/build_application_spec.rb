@@ -10,6 +10,7 @@ RSpec.describe NPQ::BuildApplication do
   let(:date_of_birth)              { Date.new(1980, 1, 1) }
   let(:npq_application_attributes) { attributes_for(:npq_application, npq_course:, npq_lead_provider:, date_of_birth:) }
   let(:nino)                       { SecureRandom.hex }
+  let(:teacher_catchment_country)  { "France" }
   let(:npq_application_params) do
     {
       active_alert: true,
@@ -24,7 +25,7 @@ RSpec.describe NPQ::BuildApplication do
       teacher_reference_number: npq_application_attributes[:teacher_reference_number],
       teacher_reference_number_verified: true,
       teacher_catchment: "other",
-      teacher_catchment_country: "France",
+      teacher_catchment_country: ,
     }
   end
 
@@ -44,14 +45,22 @@ RSpec.describe NPQ::BuildApplication do
       expect(npq_application.save).to be true
       expect(npq_application)
         .to have_attributes(
-          npq_application_params.merge(
-            npq_course_id: npq_course.id,
-            npq_lead_provider_id: npq_lead_provider.id,
-            teacher_catchment_iso_country_code: "FR"
-          ),
-        )
+              npq_application_params.merge(
+                npq_course_id: npq_course.id,
+                npq_lead_provider_id: npq_lead_provider.id,
+                teacher_catchment_iso_country_code: "FRA",
+              ),
+            )
     end
 
+    context "when the teacher catchment country is not present" do
+      let(:teacher_catchment_country)  { "" }
+
+      it "does not store the iso alpha3 country code is not " do
+        expect(npq_application.save).to be true
+        expect(npq_application.teacher_catchment_iso_country_code).to be nil
+      end
+    end
     it "adds a participant identity record" do
       expect { npq_application }.to change { ParticipantIdentity.count }.by(1)
     end

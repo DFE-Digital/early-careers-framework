@@ -39,7 +39,19 @@ module NPQ
         npq_lead_provider:,
         participant_identity:,
         cohort:,
+        teacher_catchment_iso_country_code:,
       )
+    end
+
+    def teacher_catchment_country
+      npq_application_params[:teacher_catchment_country]
+    end
+
+    def teacher_catchment_iso_country_code
+      return if teacher_catchment_country.blank?
+      return unless (country = ISO3166::Country.find_country_by_iso_short_name(teacher_catchment_country))
+
+      country.alpha3
     end
 
     def cohort

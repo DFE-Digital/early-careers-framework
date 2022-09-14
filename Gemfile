@@ -178,3 +178,5 @@ group :test do
   gem "webmock", "~> 3.14"
   gem "with_model"
 end
+
+gem "countries", "~> 5.1"
