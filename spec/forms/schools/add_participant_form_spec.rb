@@ -206,26 +206,6 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
         allow(ParticipantMailer).to receive(:sit_has_added_and_validated_participant).and_call_original
       end
 
-      context "When no DQT record has been returned" do
-        before do
-          form.dqt_record = nil
-        end
-
-        it "does not create a new participant record" do
-          expect { form.save! }.not_to change(ParticipantProfile::ECF, :count)
-        end
-
-        it "does not create ecf validation data" do
-          expect { form.save! }.not_to change(ECFParticipantValidationData, :count)
-        end
-
-        it "does not send a participant any email" do
-          form.save!
-          expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
-          expect(ParticipantMailer).not_to have_received(:participant_added)
-        end
-      end
-
       context "When participant details validated against the DQT" do
         it "creates new participant record" do
           expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
