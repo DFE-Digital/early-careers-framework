@@ -300,4 +300,52 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
       end
     end
   end
+
+  describe "unique index" do
+    let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:participant_profile) { create(:ect) }
+    let(:nowish)              { Time.zone.now }
+    let(:state)               { "submitted" }
+    let(:attributes)          do
+      {
+        cpd_lead_provider:,
+        participant_profile:,
+        user: participant_profile.participant_identity.user,
+        declaration_date: nowish,
+        declaration_type: "started",
+        course_identifier: "ect-induction",
+        state:,
+      }
+    end
+
+    before { described_class.create!(attributes) }
+
+    it "raises an not unique error" do
+      expect { described_class.create!(attributes) }.to raise_error ActiveRecord::RecordNotUnique
+    end
+
+    context "when the declaration state id voided" do
+      let(:state) { :voided }
+
+      it "raises an not unique error" do
+        expect { described_class.create!(attributes) }.not_to raise_error
+      end
+    end
+
+    context "when the declaration state id ineligible" do
+      let(:state) { :ineligible }
+
+      it "raises an not unique error" do
+        expect { described_class.create!(attributes) }.not_to raise_error
+      end
+    end
+
+    context "when the declaration state id ineligible" do
+      let(:state) { :awaiting_clawback }
+
+      it "raises an not unique error" do
+        expect { described_class.create!(attributes) }.not_to raise_error
+      end
+    end
+  end
 end
