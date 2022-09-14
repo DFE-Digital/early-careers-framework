@@ -40,9 +40,9 @@ module Api
           if updated_since.present?
             scope
               .where(users: { updated_at: updated_since.. })
-              .order("induction_records.updated_at, users.id")
+              .order("users.updated_at ASC, users.id")
           else
-            scope.order("induction_records.created_at")
+            scope.order("users.created_at ASC")
           end
         end
 
