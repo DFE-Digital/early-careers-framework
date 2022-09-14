@@ -1549,7 +1549,7 @@ accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
-accessible-autocomplete@^2.0.3, accessible-autocomplete@^2.0.4:
+accessible-autocomplete@^2.0.3:
   version "2.0.4"
   resolved "https://registry.npmjs.org/accessible-autocomplete/-/accessible-autocomplete-2.0.4.tgz"
   integrity sha512-2p0txrSpvs5wXFUeQJHMheDPTZVSEmiUHWlEPb7vJnv2Dd1xPfoLnBQQMfNbTSit2pL/9sSQYESuD2Yyohd4Yw==
@@ -2684,13 +2684,6 @@ core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
-
-corejs-typeahead@^1.1.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/corejs-typeahead/-/corejs-typeahead-1.3.1.tgz#26b9b158cba7f123556c74068bffce9356505bd3"
-  integrity sha512-fyNlBNWJNL6EQUnJyAunEzBzRcwR2cEHtZXBi2pndHPOJ/wpOf3wbS+/Oh+kYYS5sKowQcs0LFwMSl6Y2Xeqkw==
-  dependencies:
-    jquery ">=1.11"
 
 cosmiconfig@^4.0.0:
   version "4.0.0"
@@ -5381,14 +5374,6 @@ open@^8.0.9:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openregister-picker-engine@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/openregister-picker-engine/-/openregister-picker-engine-1.2.1.tgz#e7ab34dc34b9c4cb13915bf3fbfae65b0e281e34"
-  integrity sha512-8sbJY+iX6rW28seEri8tVTpAS2VBLNckbFDbVqNXy/kRn48Uii2IvaH6uJXKFJxXOOKB6RVcmnigIm1qA07v/Q==
-  dependencies:
-    corejs-typeahead "^1.1.1"
-    whatwg-fetch "^2.0.3"
-
 optionator@^0.9.1:
   version "0.9.1"
   resolved "https://registry.npmjs.org/optionator/-/optionator-0.9.1.tgz"
@@ -7330,11 +7315,6 @@ websocket-extensions@>=0.1.1:
   version "0.1.4"
   resolved "https://registry.npmjs.org/websocket-extensions/-/websocket-extensions-0.1.4.tgz"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
-
-whatwg-fetch@^2.0.3:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
-  integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
 whatwg-fetch@^3.6.1:
   version "3.6.2"

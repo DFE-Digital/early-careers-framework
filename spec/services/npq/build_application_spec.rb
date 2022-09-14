@@ -25,7 +25,7 @@ RSpec.describe NPQ::BuildApplication do
       teacher_reference_number: npq_application_attributes[:teacher_reference_number],
       teacher_reference_number_verified: true,
       teacher_catchment: "other",
-      teacher_catchment_country: ,
+      teacher_catchment_country:,
     }
   end
 
@@ -45,16 +45,16 @@ RSpec.describe NPQ::BuildApplication do
       expect(npq_application.save).to be true
       expect(npq_application)
         .to have_attributes(
-              npq_application_params.merge(
-                npq_course_id: npq_course.id,
-                npq_lead_provider_id: npq_lead_provider.id,
-                teacher_catchment_iso_country_code: "FRA",
-              ),
-            )
+          npq_application_params.merge(
+            npq_course_id: npq_course.id,
+            npq_lead_provider_id: npq_lead_provider.id,
+            teacher_catchment_iso_country_code: "FRA",
+          ),
+        )
     end
 
     context "when the teacher catchment country is not present" do
-      let(:teacher_catchment_country)  { "" }
+      let(:teacher_catchment_country) { "" }
 
       it "does not store the iso alpha3 country code is not " do
         expect(npq_application.save).to be true
