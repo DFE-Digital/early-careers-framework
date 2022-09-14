@@ -17,16 +17,20 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
       end
     end
 
-    before :each do
+    let!(:ect_profile) do
       travel_to 3.days.ago do
         create :ect, :eligible_for_funding, mentor_profile_id: mentor_profile.id, school_cohort:
       end
-      travel_to 3.days.ago + 1.minute do
+    end
+
+    let!(:ect_profile_with_one_active_and_one_withdrawn_profile) do
+      profile = travel_to 3.days.ago do
         create :ect, :eligible_for_funding, mentor_profile_id: mentor_profile.id, school_cohort:
       end
 
-      ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first
-      create(:ect, :withdrawn_record, user: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record.user, school_cohort:)
+      create(:ect, :withdrawn_record, user: profile.user, school_cohort:)
+
+      profile
     end
 
     let!(:withdrawn_ect_profile_record) do
@@ -193,6 +197,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         it "returns the correct values" do
           mentor = ParticipantProfile::Mentor.first.user
           mentor_row = parsed_response.find { |row| row["id"] == mentor.id }
+
           expect(mentor_row).not_to be_nil
           expect(mentor_row["email"]).to eql mentor.email
           expect(mentor_row["full_name"]).to eql mentor.full_name
@@ -207,18 +212,13 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = InductionRecord
-                  .joins(:participant_profile)
-                  .where(participant_profile: { type: "ParticipantProfile::ECT" })
-                  .order(created_at: :asc)
-                  .last
-                  .participant_profile
-                  .user
+          ect = ect_profile.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
+
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email
           expect(ect_row["full_name"]).to eql ect.full_name
-          expect(ect_row["mentor_id"]).to be_blank
+          expect(ect_row["mentor_id"]).to eql mentor.id
           expect(ect_row["school_urn"]).to eql ect.participant_profiles[0].induction_records.latest.school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql ect.participant_profiles[0].induction_records.latest.cohort.start_year.to_s
@@ -230,6 +230,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(ect_row["training_status"]).to eql "active"
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
+
           expect(withdrawn_record_row).not_to be_nil
           expect(withdrawn_record_row["email"]).to eql(withdrawn_ect_profile_record.user.email)
           expect(withdrawn_record_row["full_name"]).to eql(withdrawn_ect_profile_record.user.full_name)
