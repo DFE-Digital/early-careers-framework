@@ -29,7 +29,6 @@ class RecordDeclaration
 
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
-  validate :record_does_not_exists_with_different_declaration_date
 
   attr_reader :raw_declaration_date
 
@@ -175,37 +174,5 @@ private
     return ParticipantDeclaration::NPQ if participant_profile.is_a?(ParticipantProfile::NPQ)
 
     ParticipantDeclaration::ECF
-  end
-
-  def record_does_not_exists_with_different_declaration_date
-    return unless participant_profile
-
-    declaration = participant_profile
-                    .participant_declarations
-                    .not_voided
-                    .find_by(
-                      user: participant_identity.user,
-                      course_identifier:,
-                      declaration_type:,
-                    )
-
-    return unless declaration.present? && \
-      (similar_declaration_for_same_lead_provider?(declaration) || same_declaration_for_a_different_lead_provider?(declaration))
-
-    errors.add(
-      :declaration_date,
-      I18n.t(
-        :declaration_with_another_date_already_exists,
-        declaration_date: declaration.declaration_date.rfc3339,
-      ),
-    )
-  end
-
-  def similar_declaration_for_same_lead_provider?(declaration)
-    declaration.declaration_date != declaration_date && declaration.cpd_lead_provider == cpd_lead_provider
-  end
-
-  def same_declaration_for_a_different_lead_provider?(declaration)
-    declaration.cpd_lead_provider != cpd_lead_provider
   end
 end

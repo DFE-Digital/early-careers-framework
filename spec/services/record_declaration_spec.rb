@@ -68,7 +68,7 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
 end
 
 RSpec.shared_examples "validates existing declarations" do
-  context "when an exisiting declaration already exists" do
+  context "when an existing declaration already exists" do
     let!(:existing_declaration) do
       described_class.new(params).call
     end
@@ -80,8 +80,8 @@ RSpec.shared_examples "validates existing declarations" do
 
       it "does not create close duplicates and throws an error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date))
-          .to eq(["A declaration with the date of #{declaration_date.in_time_zone.rfc3339} already exists."])
+        expect(service.errors.messages_for(:base))
+          .to eql(["There already exists a declaration that will be or has been paid for this event"])
       end
     end
 
@@ -290,6 +290,36 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
         expect(declaration).to be_eligible
         expect(declaration.statements).to include(statement)
       end
+    end
+  end
+
+  context "when re-posting after a clawback" do
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider:) }
+    let(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+    let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
+    let(:course_identifier) { "ecf-induction" }
+
+    before do
+      create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+    end
+
+    it "creates the second declaration" do
+      participant_declaration = described_class.new(params).call
+
+      statement = participant_declaration.statements[0]
+
+      service = ParticipantDeclarations::MarkAsPayable.new(statement)
+      service.call(participant_declaration)
+
+      service = ParticipantDeclarations::MarkAsPaid.new(statement)
+      service.call(participant_declaration)
+
+      Finance::ClawbackDeclaration.new(participant_declaration).call
+
+      params[:declaration_date] = (declaration_date + 1.second).rfc3339
+
+      expect { subject.call }.to change(ParticipantDeclaration, :count).by(1)
     end
   end
 
