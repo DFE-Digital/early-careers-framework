@@ -289,8 +289,6 @@ module Schools
     end
 
     def save!
-      return if dqt_record.blank?
-
       profile = nil
       ActiveRecord::Base.transaction do
         profile = creators[participant_type].call(

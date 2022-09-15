@@ -41,7 +41,7 @@ private
   def process_emails
     setup
     emails.each do |email|
-      form = Induction::AmendParticipantCohortService.new(email:, source_cohort_start_year:, target_cohort_start_year:)
+      form = Induction::AmendParticipantCohort.new(email:, source_cohort_start_year:, target_cohort_start_year:)
       form.save ? success(email:) : failed(email:, error: form.errors.first)
     end
   end

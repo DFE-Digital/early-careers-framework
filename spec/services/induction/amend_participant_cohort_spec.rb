@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::AmendParticipantCohortService do
+RSpec.describe Induction::AmendParticipantCohort do
   describe "#save" do
     let(:email) { "participant@school.org" }
     let(:source_cohort_start_year) { 2021 }
@@ -140,8 +140,7 @@ RSpec.describe Induction::AmendParticipantCohortService do
 
       context "when the participant has declarations" do
         before do
-          allow_any_instance_of(ParticipantProfile).to receive(:participant_declarations)
-                                                         .and_return(double(exists?: true))
+          allow_any_instance_of(described_class).to receive(:participant_declarations).and_return(true)
         end
 
         it "returns false and set errors" do
