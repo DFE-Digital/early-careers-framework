@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Induction
-  class AmendParticipantCohortService
+  class AmendParticipantCohort
     include ActiveModel::Model
 
     ECF_FIRST_YEAR = 2020
@@ -71,7 +71,12 @@ module Induction
     end
 
     def participant_declarations
-      @participant_declarations ||= participant_profile&.participant_declarations&.exists?
+      return false unless participant_profile
+
+      @participant_declarations ||= participant_profile
+                                      .participant_declarations
+                                      .declared_as_between(source_cohort_start_date, source_cohort_end_date)
+                                      .exists?
     end
 
     def participant_identity
@@ -99,6 +104,18 @@ module Induction
 
     def schedule
       @schedule ||= Finance::Schedule::ECF.default_for(cohort: target_cohort)
+    end
+
+    def source_cohort
+      @source_cohort ||= Cohort.find_by(start_year: source_cohort_start_year)
+    end
+
+    def source_cohort_start_date
+      @source_cohort_start_date ||= source_cohort.academic_year_start_date
+    end
+
+    def source_cohort_end_date
+      @source_cohort_end_date ||= source_cohort_start_date + 1.year - 1.day
     end
 
     def start_date
