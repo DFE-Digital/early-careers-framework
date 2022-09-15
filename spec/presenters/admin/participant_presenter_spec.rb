@@ -178,4 +178,24 @@ RSpec.describe Admin::ParticipantPresenter do
       expect(subject.delivery_partner_name).to eql(delivery_partner.name)
     end
   end
+
+  describe "#school" do
+    before do
+      participant_profile.induction_records << build(:induction_record, start_date: 2.weeks.ago, school_cohort:)
+    end
+
+    it "returns the school via the school cohort" do
+      expect(subject.school).to eql(school_cohort.school)
+    end
+  end
+
+  describe "#school_name" do
+    before do
+      participant_profile.induction_records << build(:induction_record, start_date: 2.weeks.ago, school_cohort:)
+    end
+
+    it "returns the school_name from the school cohort's school" do
+      expect(subject.school_name).to eql(school_cohort.school.name)
+    end
+  end
 end

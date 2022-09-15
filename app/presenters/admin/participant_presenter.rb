@@ -67,8 +67,12 @@ module Admin
       school_cohort&.school
     end
 
+    def school_name
+      school&.name
+    end
+
     def lead_provider_name
-      school_cohort.lead_provider.name
+      school_cohort&.lead_provider&.name || "No lead provider"
     end
 
     def mentor_full_name
@@ -76,7 +80,7 @@ module Admin
     end
 
     def delivery_partner_name
-      school_cohort.delivery_partner&.name
+      school_cohort&.delivery_partner&.name || "No delivery partner"
     end
   end
 end

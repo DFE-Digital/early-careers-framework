@@ -3,7 +3,7 @@
     row.key(text: "School name")
     row.value do
       govuk_link_to(
-        presenter.latest_induction_record.school_cohort.school.name,
+        presenter.school_name,
         admin_school_path(presenter.school_friendly_id)
       )
     end
@@ -23,7 +23,7 @@
 
   sl.row do |row|
     row.key(text: "Lead provider")
-    row.value(text: presenter.lead_provider.name)
+    row.value(text: presenter.lead_provider_name)
     row.action(text: "Challenge", visually_hidden_text: "lead provider", href: "#") if presenter.lead_provider.present?
   end
 
