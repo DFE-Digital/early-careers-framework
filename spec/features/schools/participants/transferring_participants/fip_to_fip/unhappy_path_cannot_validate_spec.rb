@@ -92,7 +92,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def when_i_add_a_valid_trn
-        fill_in "Teacher reference number (TRN)", with: "1001000"
+        fill_in "Teacher reference number (TRN)", with: "2002000"
       end
 
       def when_i_add_a_valid_date_of_birth

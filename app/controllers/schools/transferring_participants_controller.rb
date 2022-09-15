@@ -267,13 +267,11 @@ module Schools
     end
 
     def participant_profile
-      first_name = @transferring_participant_form.full_name.split(" ").first
-
       @participant_profile ||= ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
-          .where("full_name ILIKE ? AND trn = ? AND date_of_birth = ?",
-                 "#{first_name} %",
-                 @transferring_participant_form.formatted_trn,
-                 @transferring_participant_form.date_of_birth).first
+                                                      .where(ecf_participant_validation_data: {
+                                                        trn: @transferring_participant_form.formatted_trn,
+                                                      })
+                                                      .first
     end
 
     def dqt_record
