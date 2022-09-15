@@ -7,6 +7,42 @@ RSpec.describe ChooseRoleForm, type: :model do
   let(:form_role) { "" }
 
   describe "Single role" do
+    describe "appropriate_body role" do
+      let(:user) { create(:user, :appropriate_body) }
+
+      it { is_expected.to validate_inclusion_of(:role).in_array(%w[appropriate_body]) }
+
+      it "only_one_role? should be true" do
+        expect(form.only_one_role?).to be true
+      end
+
+      it "has correct role_options" do
+        expect(form.role_options).to have_key("appropriate_body")
+      end
+
+      describe "param with appropriate_body role" do
+        let(:form_role) { "appropriate_body" }
+        let(:helpers) { Struct.new(:appropriate_bodies_path).new("/appropriate-bodies") }
+
+        it "should be valid" do
+          expect(form.valid?).to be true
+        end
+
+        it "returns correct redirect_path" do
+          expect(form.redirect_path(helpers:)).to be helpers.appropriate_bodies_path
+        end
+      end
+
+      describe "param with incorrect role" do
+        let(:form_role) { "does_not_exist" }
+
+        it "should be invalid" do
+          expect(form.valid?).to be false
+          expect(form.errors[:role]).to include "Choose a role"
+        end
+      end
+    end
+
     describe "delivery_partner role" do
       let(:user) { create(:user, :delivery_partner) }
 

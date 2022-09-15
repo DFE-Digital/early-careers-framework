@@ -12,6 +12,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:finance_profile) }
     it { is_expected.to have_one(:delivery_partner_profile) }
+    it { is_expected.to have_many(:appropriate_body_profiles) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
     it { is_expected.to have_one(:lead_provider_profile) }
@@ -366,6 +367,44 @@ RSpec.describe User, type: :model do
       it "returns Unknown" do
         expect(user.user_description).to eq("Unknown")
       end
+    end
+  end
+
+  describe "#user_roles" do
+    it "returns delivery_partner role" do
+      expect(build(:user, :delivery_partner).user_roles).to eq(%w[delivery_partner])
+    end
+
+    it "returns appropriate_body role" do
+      expect(create(:user, :appropriate_body).user_roles).to eq(%w[appropriate_body])
+    end
+
+    it "returns admin role" do
+      expect(build(:user, :admin).user_roles).to eq(%w[admin])
+    end
+
+    it "returns finance role" do
+      expect(build(:user, :finance).user_roles).to eq(%w[finance])
+    end
+
+    it "returns induction_coordinator role" do
+      expect(build(:user, :induction_coordinator).user_roles).to eq(%w[induction_coordinator])
+    end
+
+    it "returns teacher role" do
+      expect(build(:user, :teacher).user_roles).to eq(%w[teacher])
+    end
+
+    it "returns induction_coordinator_and_mentor role" do
+      expect(create(:user, :mentor, :induction_coordinator).user_roles.sort).to eq(%w[induction_coordinator_and_mentor induction_coordinator teacher].sort)
+    end
+
+    it "returns induction_coordinator and delivery_partner role" do
+      expect(build(:user, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator].sort)
+    end
+
+    it "returns teacher, induction_coordinator and delivery_partner role" do
+      expect(build(:user, :teacher, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator teacher].sort)
     end
   end
 end

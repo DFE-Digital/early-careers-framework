@@ -14,7 +14,18 @@ ActiveRecord::Base.transaction do
 
   User.find_or_create_by!(email: "delivery-partner@example.com") do |user|
     user.update!(full_name: "Delivery Partner User")
-    DeliveryPartnerProfile.find_or_create_by!(user:, delivery_partner: DeliveryPartner.first)
+    DeliveryPartner.first(2).each do |dp|
+      DeliveryPartnerProfile.find_or_create_by!(user:, delivery_partner: dp)
+    end
+  end
+
+  User.find_or_create_by!(email: "appropriate-body@example.com") do |user|
+    user.update!(full_name: "Appropriate Body User")
+
+    2.times do |n|
+      appropriate_body = AppropriateBody.create!(name: "Local Authority #{n + 1}", body_type: "local_authority")
+      AppropriateBodyProfile.find_or_create_by!(user:, appropriate_body:)
+    end
   end
 
   User.find_or_create_by!(email: "lead-provider@example.com") do |user|

@@ -2,19 +2,16 @@
 
 class ChooseRolesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_choose_role_form, only: [:show, :create]
 
   def show
-    @choose_role_form = ChooseRoleForm.new
-    @choose_role_form.user = current_user
-
-    if @choose_role_form.only_one_role? or @choose_role_form.has_no_role?
+    if @choose_role_form.only_one_role? || @choose_role_form.has_no_role?
       redirect_to @choose_role_form.redirect_path(helpers:)
     end
   end
 
   def create
-    @choose_role_form = ChooseRoleForm.new(choose_role_form_params)
-    @choose_role_form.user = current_user
+    @choose_role_form.assign_attributes(choose_role_form_params)
 
     if @choose_role_form.valid?
       redirect_to @choose_role_form.redirect_path(helpers:)
@@ -26,6 +23,10 @@ class ChooseRolesController < ApplicationController
   def contact_support; end
 
 private
+
+  def set_choose_role_form
+    @choose_role_form = ChooseRoleForm.new(user: current_user)
+  end
 
   def choose_role_form_params
     params.fetch(:choose_role_form, {}).permit(

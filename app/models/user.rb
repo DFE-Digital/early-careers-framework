@@ -18,6 +18,9 @@ class User < ApplicationRecord
 
   has_one :delivery_partner_profile, dependent: :destroy
 
+  has_many :appropriate_body_profiles, dependent: :destroy
+  has_many :appropriate_bodies, through: :appropriate_body_profiles
+
   has_many :npq_application_exports
 
   # TODO: Legacy associations, to be removed
@@ -54,6 +57,10 @@ class User < ApplicationRecord
 
   def delivery_partner?
     delivery_partner_profile.present?
+  end
+
+  def appropriate_body?
+    appropriate_body_profiles.any?
   end
 
   def supplier_name
@@ -110,6 +117,8 @@ class User < ApplicationRecord
       "DfE Finance"
     elsif delivery_partner?
       "Delivery partner"
+    elsif appropriate_body?
+      "Appropriate body"
     elsif lead_provider?
       "Lead provider"
     elsif early_career_teacher?
@@ -123,11 +132,12 @@ class User < ApplicationRecord
 
   def user_roles
     @user_roles ||= [
+      ("appropriate_body" if appropriate_body?),
+      ("delivery_partner" if delivery_partner?),
       ("admin" if admin?),
       ("finance" if finance?),
-      ("delivery_partner" if delivery_partner?),
-      ("induction_coordinator_and_mentor" if induction_coordinator_and_mentor?),
       ("induction_coordinator" if induction_coordinator?),
+      ("induction_coordinator_and_mentor" if induction_coordinator_and_mentor?),
       ("teacher" if teacher?),
     ].compact
   end

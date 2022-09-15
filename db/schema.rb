@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_14_150417) do
+ActiveRecord::Schema.define(version: 2022_09_15_142750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -105,6 +105,15 @@ ActiveRecord::Schema.define(version: 2022_09_14_150417) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["body_type", "name"], name: "index_appropriate_bodies_on_body_type_and_name", unique: true
+  end
+
+  create_table "appropriate_body_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "appropriate_body_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["appropriate_body_id"], name: "index_appropriate_body_profiles_on_appropriate_body_id"
+    t.index ["user_id"], name: "index_appropriate_body_profiles_on_user_id"
   end
 
   create_table "call_off_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -619,8 +628,8 @@ ActiveRecord::Schema.define(version: 2022_09_14_150417) do
     t.uuid "superseded_by_id"
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying, 'clawed_back'::character varying])::text[]))"
     t.uuid "delivery_partner_id"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying, 'clawed_back'::character varying])::text[]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
@@ -1000,6 +1009,8 @@ ActiveRecord::Schema.define(version: 2022_09_14_150417) do
   add_foreign_key "api_requests", "cpd_lead_providers"
   add_foreign_key "api_tokens", "cpd_lead_providers"
   add_foreign_key "api_tokens", "lead_providers", on_delete: :cascade
+  add_foreign_key "appropriate_body_profiles", "appropriate_bodies"
+  add_foreign_key "appropriate_body_profiles", "users"
   add_foreign_key "call_off_contracts", "lead_providers"
   add_foreign_key "cohorts_lead_providers", "cohorts"
   add_foreign_key "cohorts_lead_providers", "lead_providers"

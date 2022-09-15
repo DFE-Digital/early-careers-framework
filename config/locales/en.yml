@@ -337,6 +337,10 @@ en:
           attributes:
             role:
               inclusion: Choose a role
+        appropriate_bodies/choose_organisation_form:
+          attributes:
+            appropriate_body_id:
+              inclusion: Choose an organisation
 
   page_titles:
     lead_providers:

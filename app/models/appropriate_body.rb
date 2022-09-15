@@ -7,6 +7,8 @@ class AppropriateBody < ApplicationRecord
     national: "national",
   }
 
+  has_many :appropriate_body_profiles, dependent: :destroy
+
   validates :name, presence: true, uniqueness: { scope: :body_type }
 
   default_scope { order(:name) }

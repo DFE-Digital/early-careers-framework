@@ -575,6 +575,12 @@ Rails.application.routes.draw do
     resources :participants, only: %i[index]
   end
 
+  scope module: "appropriate_bodies" do
+    resources :appropriate_bodies, path: "appropriate-bodies", only: %i[index create] do
+      resources :participants, only: %i[index]
+    end
+  end
+
   resource :choose_role, path: "choose-role", only: %i[show create] do
     member do
       get :contact_support

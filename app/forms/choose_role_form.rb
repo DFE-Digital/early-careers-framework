@@ -5,6 +5,7 @@ class ChooseRoleForm
   include ActiveModel::Attributes
 
   USER_ROLES = {
+    "appropriate_body" => "Appropriate body",
     "delivery_partner" => "Delivery partner",
     "admin" => "DfE admin",
     "finance" => "DfE Finance",
@@ -32,6 +33,8 @@ class ChooseRoleForm
       helpers.finance_landing_page_path
     when "delivery_partner"
       helpers.delivery_partners_participants_path
+    when "appropriate_body"
+      helpers.appropriate_bodies_path
     when "induction_coordinator_and_mentor"
       helpers.induction_coordinator_mentor_path(user)
     when "induction_coordinator"
@@ -51,7 +54,7 @@ class ChooseRoleForm
   end
 
   def has_no_role?
-    return false unless user.user_roles.count == 0
+    return false unless user.user_roles.count.zero?
 
     self.role = "no_role"
     true
