@@ -333,6 +333,10 @@ en:
           attributes:
             confirmation:
               inclusion: Choose yes or no
+        choose_role_form:
+          attributes:
+            role:
+              inclusion: Choose a role
 
   page_titles:
     lead_providers:

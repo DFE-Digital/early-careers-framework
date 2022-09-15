@@ -20,17 +20,20 @@ RSpec.describe "Admin::Participants", type: :request do
 
     it "redirects to impersonated user start page" do
       when_i_impersonate(user)
+      follow_redirect!
       expect(response).to redirect_to(schools_choose_programme_path(user.school, cohort.start_year))
     end
 
     it "errors if you impersonate yourself" do
       when_i_impersonate(admin_user)
+      follow_redirect!
       expect(response).to redirect_to "/admin/schools"
       expect(flash[:warning]).to eql("You cannot impersonate yourself")
     end
 
     it "errors if you impersonate an admin" do
       when_i_impersonate(other_admin_user)
+      follow_redirect!
       expect(response).to redirect_to "/admin/schools"
       expect(flash[:warning]).to eql("You cannot impersonate another admin user")
     end
@@ -48,6 +51,7 @@ RSpec.describe "Admin::Participants", type: :request do
 
     it "redirects to support user start page" do
       when_i_stop_impersonating(user)
+      follow_redirect!
       expect(response).to redirect_to("/admin/schools")
     end
   end

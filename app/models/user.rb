@@ -121,6 +121,17 @@ class User < ApplicationRecord
     end
   end
 
+  def user_roles
+    @user_roles ||= [
+      ("admin" if admin?),
+      ("finance" if finance?),
+      ("delivery_partner" if delivery_partner?),
+      ("induction_coordinator_and_mentor" if induction_coordinator_and_mentor?),
+      ("induction_coordinator" if induction_coordinator?),
+      ("teacher" if teacher?),
+    ].compact
+  end
+
   def school
     return early_career_teacher_profile.school if early_career_teacher?
     return mentor_profile.school if mentor?

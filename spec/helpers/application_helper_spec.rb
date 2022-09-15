@@ -6,8 +6,6 @@ RSpec.describe ApplicationHelper, type: :helper do
   include Devise::Test::ControllerHelpers
 
   let(:admin_user) { create(:user, :admin) }
-  let(:finance_user) { create(:user, :finance) }
-  let(:delivery_partner_user) { create(:user, :delivery_partner) }
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let!(:cohort) { create(:cohort, :current) }
@@ -20,24 +18,10 @@ RSpec.describe ApplicationHelper, type: :helper do
            schedule: schedule_2020,
            school_cohort: build(:school_cohort, cohort: cohort_2020))
   end
-  let(:participant_school) { participant_profile.school }
-  let(:lead_provider) { create(:user, :lead_provider) }
 
-  describe "#profile_dashboard_path" do
-    it "returns the admin/schools path for admins" do
-      expect(helper.profile_dashboard_path(admin_user)).to eq("/admin/schools")
-    end
-
-    it "returns the finance path for finance" do
-      expect(helper.profile_dashboard_path(finance_user)).to eq("/finance/manage-cpd-contracts")
-    end
-
-    it "returns the correct path for delivery partner" do
-      expect(helper.profile_dashboard_path(delivery_partner_user)).to eq("/delivery-partners/participants")
-    end
-
+  describe "#induction_coordinator_dashboard_path" do
     it "returns schools/choose-programme for induction coordinators" do
-      expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme")
+      expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme")
     end
 
     context "when a school has chosen a programme" do
@@ -46,7 +30,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
 
       it "returns the school dashboard path (show)" do
-        expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
+        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
       end
 
       context "when a new registration cohort is active", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.now + 3.years do
@@ -57,7 +41,7 @@ RSpec.describe ApplicationHelper, type: :helper do
         end
 
         it "returns the school dashboard path with the active registration tab selected" do
-          expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}##{TabLabelDecorator.new(future_cohort.description).parameterize}")
+          expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}##{TabLabelDecorator.new(future_cohort.description).parameterize}")
         end
       end
     end
@@ -69,20 +53,18 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
 
       it "return the schools dashboard path (index)" do
-        expect(helper.profile_dashboard_path(induction_coordinator)).to eq("/schools")
+        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools")
       end
     end
+  end
 
+  describe "#participant_start_path" do
     it "returns the validation start path", :with_default_schedules do
-      expect(helper.profile_dashboard_path(participant_profile.user)).to eq("/participants/validation")
+      expect(helper.participant_start_path(participant_profile.user)).to eq("/participants/validation")
     end
 
     it "returns the no access path for NQT+1s" do
-      expect(helper.profile_dashboard_path(year_2020_participant_profile.user)).to eq("/participants/no_access")
-    end
-
-    it "returns the dashboard path for lead providers" do
-      expect(helper.profile_dashboard_path(lead_provider)).to eq("/dashboard")
+      expect(helper.participant_start_path(year_2020_participant_profile.user)).to eq("/participants/no_access")
     end
   end
 
