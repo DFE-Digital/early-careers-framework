@@ -15,6 +15,8 @@ module Admin
           early_years_outside_catchment
           not_on_early_years_register
           early_years_invalid_npq
+          marked_funded_by_policy
+          marked_ineligible_by_policy
         ].freeze
 
         attr_reader :application_updates, :user, :update_errors, :updated_records, :eligibility_import
