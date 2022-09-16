@@ -575,7 +575,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    stackprof (0.2.19)
+    stackprof (0.2.21)
     strong_migrations (1.2.0)
       activerecord (>= 5.2)
     strscan (3.0.3)
