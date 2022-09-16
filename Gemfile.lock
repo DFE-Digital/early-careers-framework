@@ -661,7 +661,6 @@ DEPENDENCIES
   nokogiri
   open_api-rswag-specs (~> 0.1.0)
   openapi3_parser (~> 0.9.2)
-  pagy (~> 5.10, >= 5.10.1)
   paper_trail
   parallel_tests
   pg (~> 1.4)

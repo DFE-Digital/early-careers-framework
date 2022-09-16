@@ -73,9 +73,6 @@ gem "strong_migrations", "~> 1.3"
 # Acts as State Machine for participant and declaration states
 gem "aasm"
 
-# Pagination
-gem "pagy", "~> 5.10", ">= 5.10.1"
-
 # Json Schema for api validation
 gem "json-schema", ">= 2.8.1"
 
