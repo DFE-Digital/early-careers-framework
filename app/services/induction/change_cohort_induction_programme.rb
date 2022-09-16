@@ -13,13 +13,6 @@ class Induction::ChangeCohortInductionProgramme < BaseService
                                                   programme_choice:,
                                                   opt_out_of_updates: programme_choice == "no_early_career_teachers",
                                                   core_induction_programme:)
-
-      new_programme = school_cohort.default_induction_programme
-
-      if previous_programme.present? && new_programme.present?
-        Induction::MigrateParticipantsToNewProgramme.call(from_programme: previous_programme,
-                                                          to_programme: new_programme)
-      end
     end
   end
 

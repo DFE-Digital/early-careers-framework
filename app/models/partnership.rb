@@ -33,23 +33,19 @@ class Partnership < ApplicationRecord
 
   scope :in_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
   scope :unchallenged, -> { where(challenged_at: nil, challenge_reason: nil) }
+  scope :active, -> { unchallenged.where(pending: false) }
   scope :relationships, -> { where(relationship: true) }
 
   delegate :name, to: :lead_provider, allow_nil: true, prefix: true
 
-  def challenge!(reason)
-    raise ArgumentError if reason.blank?
-
-    update!(challenge_reason: reason, challenged_at: Time.zone.now)
-  end
+  # NOTE: challenge! has been moved to a service Partnerships::Challenge as there
+  # are now many side affects that need to be considered.
 
   def in_challenge_window?
     return false if challenge_deadline.blank?
 
     challenge_deadline > Time.zone.now
   end
-
-  scope :active, -> { unchallenged.where(pending: false) }
 
   def active?
     challenged_at.nil? && challenge_reason.nil? && pending == false

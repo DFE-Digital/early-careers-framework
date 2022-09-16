@@ -15,7 +15,7 @@ RSpec.describe ChallengePartnershipForm, type: :model do
     subject { described_class.new(partnership_id: partnership.id, challenge_reason: reason) }
 
     it "calls Partnerships::Challenge" do
-      expect(Partnerships::Challenge).to receive(:call).with(partnership, reason)
+      expect(Partnerships::Challenge).to receive(:call).with(partnership:, challenge_reason: reason)
       subject.challenge!
     end
   end

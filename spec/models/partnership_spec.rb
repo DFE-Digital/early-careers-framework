@@ -56,28 +56,6 @@ RSpec.describe Partnership, type: :model do
     end
   end
 
-  describe "#challenge!" do
-    it "sets the challenge reason and challenged at time" do
-      freeze_time
-      partnership.challenge!("mistake")
-
-      expect(partnership.challenge_reason).to eql "mistake"
-      expect(partnership.challenged_at).to eql Time.zone.now
-    end
-
-    it "raises an error when given a bad argument" do
-      expect {
-        partnership.challenge!("bad_argument")
-      }.to raise_error ArgumentError
-    end
-
-    it "raises an error when given a blank argument" do
-      expect {
-        partnership.challenge!("")
-      }.to raise_error ArgumentError
-    end
-  end
-
   describe "#in_challenge_window?" do
     it "returns true when the challenge deadline is ahead" do
       partnership = create(:partnership, challenge_deadline: rand(1..100).days.from_now)

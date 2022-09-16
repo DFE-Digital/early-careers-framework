@@ -14,7 +14,7 @@ class ChallengePartnershipForm
   end
 
   def challenge!
-    Partnerships::Challenge.call(partnership, challenge_reason)
+    Partnerships::Challenge.call(partnership:, challenge_reason:)
   end
 
   def partnership
