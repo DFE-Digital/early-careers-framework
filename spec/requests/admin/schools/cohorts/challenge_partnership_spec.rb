@@ -47,7 +47,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
 
   describe "POST /admin/schools/:school_slug/cohorts/:id/challenge-partnership" do
     it "call Partnerships::Challenge with the correct arguments" do
-      expect(Partnerships::Challenge).to receive(:call).with(partnership, "mistake")
+      expect(Partnerships::Challenge).to receive(:call).with(partnership:, challenge_reason: "mistake")
 
       post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership", params: {
         challenge_partnership_form: {

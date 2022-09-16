@@ -12,9 +12,13 @@ class Induction::SetCohortInductionProgramme < BaseService
       programme = nil
 
       if InductionProgramme.training_programmes.keys.include? programme_choice
-        # NOTE: we could move any participants in the old default programme (if present)
-        # over to the new one here but not sure that would always be required?
         programme = InductionProgramme.create!(programme_attrs)
+
+        if school_cohort.default_induction_programme.present?
+          # move users to the new programme
+          Induction::MigrateParticipantsToNewProgramme.call(from_programme: school_cohort.default_induction_programme,
+                                                            to_programme: programme)
+        end
       end
 
       school_cohort.default_induction_programme = programme
@@ -30,6 +34,7 @@ private
                  opt_out_of_updates: false,
                  core_induction_programme: nil,
                  delivery_partner_to_be_confirmed: false)
+
     # NOTE: this is mainly called during addition of a school_cohort and the model may not
     # be persisted as yet
     @school_cohort = school_cohort

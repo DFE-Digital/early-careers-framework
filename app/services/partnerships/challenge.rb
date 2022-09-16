@@ -24,7 +24,7 @@ module Partnerships
     def challenge_partnership!
       raise ArgumentError if challenge_reason.blank?
 
-      partnership.update!(challenge_reason: challenge_reason, challenged_at: Time.zone.now)
+      partnership.update!(challenge_reason:, challenged_at: Time.zone.now)
       partnership.event_logs.create!(
         event: :challenged,
         data: {

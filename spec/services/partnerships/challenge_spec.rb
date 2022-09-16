@@ -14,18 +14,45 @@ RSpec.describe Partnerships::Challenge do
     subject(:service_call) { described_class.call(partnership:, challenge_reason:, notify_provider:) }
 
     it "marks given partnership as challenged" do
-      expect { service_call }.to change { partnership.reload.challenged? }.to true
+      service_call
+      expect(partnership).to be_challenged
     end
 
-    it "sets the correct challenge reason" do
-      expect { service_call }.to change { partnership.reload.challenge_reason }.to challenge_reason
+    it "sets the challenge reason" do
+      service_call
+      expect(partnership.challenge_reason).to eq challenge_reason
+    end
+
+    it "sets the challenged_at time" do
+      service_call
+      expect(partnership.challenged_at).to be_within(1.second).of(Time.zone.now)
+    end
+
+    context "when challenge reason is invalid" do
+      let(:challenge_reason) { "banana" }
+
+      it "raises an error" do
+        expect {
+          service_call
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context "when challenge reason is blank" do
+      let(:challenge_reason) { nil }
+
+      it "raises an error" do
+        expect {
+          service_call
+        }.to raise_error ArgumentError
+      end
+    end
+
+    it "sets the event log data" do
+      service_call
       created_event = partnership.event_logs.order(created_at: :desc).first
       expect(created_event.event).to eql "challenged"
       expect(created_event.data["reason"]).to eql challenge_reason
-    end
-
-    it "stores :challenged event in the partnership event log" do
-      expect { service_call }.to change { partnership.event_logs.map(&:event) }.by %w[challenged]
     end
 
     it "schedules partnership challenged emails" do

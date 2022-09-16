@@ -12,7 +12,7 @@
 
       sl.row do |row|
         row.key(text: "Lead provider")
-        row.value(text: induction_record&.lead_provider&.name || "No lead provider")
+        row.value(text: induction_record&.lead_provider_name || "No lead provider")
       end
 
       sl.row do |row|

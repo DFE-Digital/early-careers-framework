@@ -80,8 +80,9 @@ class InductionRecord < ApplicationRecord
     order(created_at: :asc).last
   end
 
-  delegate :lead_provider, to: :induction_programme, allow_nil: true
-  delegate :lead_provider_name, to: :induction_programme, allow_nil: true
+  # NOTE: these will return nil if the partnership is challenged
+  delegate :lead_provider_name, to: :induction_programme
+  delegate :delivery_partner_name, to: :induction_programme
 
   after_save :update_analytics
 
