@@ -9,7 +9,7 @@
     "@babel/core": "^7.19.1",
     "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/preset-env": "^7.16.11",
-    "@babel/runtime": "^7.18.9",
+    "@babel/runtime": "^7.19.0",
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "accessible-autocomplete": "^2.0.3",
