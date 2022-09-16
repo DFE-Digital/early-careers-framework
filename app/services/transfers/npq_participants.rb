@@ -2,9 +2,12 @@
 
 module Transfers
   class NPQParticipants
-    def initialize(external_identifier:, new_npq_lead_provider_id:)
+    attr_reader :external_identifier, :new_npq_lead_provider_id, :course_identifier
+
+    def initialize(external_identifier:, new_npq_lead_provider_id:, course_identifier:)
       @external_identifier = external_identifier
       @new_npq_lead_provider_id = new_npq_lead_provider_id
+      @course_identifier = course_identifier
     end
 
     def call
@@ -14,8 +17,6 @@ module Transfers
     end
 
   private
-
-    attr_reader :external_identifier, :new_npq_lead_provider_id
 
     def transfer_participant
       return unless participant_profile && npq_application
@@ -31,9 +32,9 @@ module Transfers
     def participant_profile
       @participant_profile ||=
         ParticipantProfile::NPQ
-          .npqs
           .active_record
-          .find_by(participant_identity:)
+          .joins(participant_identity: { npq_applications: :npq_course })
+          .find_by(participant_identity:, npq_courses: { identifier: course_identifier })
     end
 
     def participant_identity

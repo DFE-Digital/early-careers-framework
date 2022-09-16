@@ -12,11 +12,13 @@ RSpec.describe Transfers::NPQParticipants, :with_default_schedules do
 
   let(:external_identifier) { participant_profile.participant_identity.external_identifier }
   let(:npq_application) { participant_profile.npq_application }
+  let(:course_identifier) { participant_profile.npq_application.npq_course.identifier }
 
   subject do
     described_class.new(
       external_identifier:,
       new_npq_lead_provider_id:,
+      course_identifier:,
     )
   end
 
@@ -41,6 +43,13 @@ RSpec.describe Transfers::NPQParticipants, :with_default_schedules do
 
     context "when participant does not have an active NPQ profile" do
       let!(:participant_profile) { create(:npq_participant_profile, :withdrawn_record, npq_lead_provider:) }
+      it "does not update the NPQ lead provider on the participant application" do
+        expect { subject.call }.not_to change { npq_application.reload.npq_lead_provider_id }
+      end
+    end
+
+    context "when course_identifier is different than one attached to the profile" do
+      let(:course_identifier) { "some-other-identifier" }
       it "does not update the NPQ lead provider on the participant application" do
         expect { subject.call }.not_to change { npq_application.reload.npq_lead_provider_id }
       end
