@@ -26,7 +26,7 @@ module Transfers
     end
 
     def npq_lead_provider
-      @npq_lead_provider ||= NPQLeadProvider.find_by(id: new_npq_lead_provider_id)
+      @npq_lead_provider ||= NPQLeadProvider.find_by!(id: new_npq_lead_provider_id)
     end
 
     def participant_profile
@@ -34,11 +34,11 @@ module Transfers
         ParticipantProfile::NPQ
           .active_record
           .joins(participant_identity: { npq_applications: :npq_course })
-          .find_by(participant_identity:, npq_courses: { identifier: course_identifier })
+          .find_by!(participant_identity:, npq_courses: { identifier: course_identifier })
     end
 
     def participant_identity
-      @participant_identity ||= ParticipantIdentity.find_by(external_identifier:)
+      @participant_identity ||= ParticipantIdentity.find_by!(external_identifier:)
     end
 
     def npq_application
