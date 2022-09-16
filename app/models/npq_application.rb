@@ -13,7 +13,7 @@ class NPQApplication < ApplicationRecord
 
   after_commit :push_enrollment_to_big_query
 
-  UK_COUNTRIES = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
+  UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
 
   enum headteacher_status: {
     no: "no",
@@ -71,7 +71,7 @@ class NPQApplication < ApplicationRecord
   end
 
   def in_uk_catchment_area?
-    UK_COUNTRIES.include?(teacher_catchment)
+    UK_CATCHMENT_AREA.include?(teacher_catchment)
   end
 
 private

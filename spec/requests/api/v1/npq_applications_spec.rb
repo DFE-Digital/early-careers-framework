@@ -379,6 +379,7 @@ def single_json_application(npq_application:)
       "targeted_delivery_funding_eligibility" => npq_application.targeted_delivery_funding_eligibility,
       "teacher_catchment" => true,
       "teacher_catchment_country" => nil,
+      "teacher_catchment_iso_country_code" => nil,
     },
   }
 end

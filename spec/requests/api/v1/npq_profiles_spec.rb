@@ -235,6 +235,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           "funding_eligiblity_status_code" => "funded",
           "teacher_catchment" => "other",
           "teacher_catchment_country" => "United Kingdom",
+          "teacher_catchment_iso_country_code" => nil,
         })
       end
 
