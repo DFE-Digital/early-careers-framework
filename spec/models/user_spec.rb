@@ -246,27 +246,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#cohort" do
-    it "is expected to return mentor cohort for mentor users" do
-      cohort = create(:cohort)
-      user = create(:mentor_participant_profile, cohort:).user
-
-      expect(user.cohort).to eq cohort
-    end
-
-    it "is expected to return ect cohort for ect users" do
-      cohort = create(:cohort)
-      user = create(:ect_participant_profile, cohort:).user
-
-      expect(user.cohort).to eq cohort
-    end
-
-    it "is expected to return nil when no cohort" do
-      user = create(:user)
-      expect(user.cohort).to be_nil
-    end
-  end
-
   describe "#school" do
     it "is expected to return mentor school for mentor users" do
       school = create(:school)

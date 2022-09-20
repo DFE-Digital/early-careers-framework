@@ -121,11 +121,6 @@ class User < ApplicationRecord
     end
   end
 
-  def cohort
-    return early_career_teacher_profile.cohort if early_career_teacher?
-    return mentor_profile.cohort if mentor?
-  end
-
   def school
     return early_career_teacher_profile.school if early_career_teacher?
     return mentor_profile.school if mentor?
