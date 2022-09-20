@@ -126,7 +126,7 @@ group :development, :test do
   gem "cypress-on-rails", "~> 1.13"
   gem "database_cleaner-active_record"
 
-  gem "dotenv-rails", "~> 2.7.6"
+  gem "dotenv-rails", "~> 2.8.1"
 
   # Swagger generator
   gem "multi_json"
