@@ -135,7 +135,7 @@ RSpec.describe "Participants API", type: :request do
           end
         end
 
-        xcontext "multiple profiles", "Fix in later PR: the new query does not account yet for multiple profiles although this should not happen" do
+        context "multiple profiles" do
           let!(:induction_record2) { create(:induction_record, induction_programme:, participant_profile: profile2) }
           let(:profile2) { create(:ect_participant_profile, teacher_profile:) }
 
