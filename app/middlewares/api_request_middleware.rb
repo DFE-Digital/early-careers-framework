@@ -70,6 +70,6 @@ private
   end
 
   def vendor_api_path?
-    @request.path =~ /^\/api\/v1\/.*$/
+    @request.path =~ /^\/api\/v\d+\/.*$/
   end
 end

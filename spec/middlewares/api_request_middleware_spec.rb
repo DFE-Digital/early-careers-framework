@@ -40,6 +40,16 @@ RSpec.describe ApiRequestMiddleware do
     end
   end
 
+  describe "#call on a different version API path" do
+    it "fires an ApiRequestJob" do
+      request.get "/api/v3/participants/ecf", params: { foo: "bar" }
+
+      expect(ApiRequestJob).to have_received(:perform_async).with(
+        hash_including("path" => "/api/v3/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+      )
+    end
+  end
+
   describe "#call on an API path with POST data" do
     it "fires an ApiRequestJob including post data" do
       request.post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }.to_json
