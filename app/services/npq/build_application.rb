@@ -49,9 +49,12 @@ module NPQ
 
     def teacher_catchment_iso_country_code
       return if teacher_catchment_country.blank?
-      return unless (country = ISO3166::Country.find_country_by_iso_short_name(teacher_catchment_country))
 
-      country.alpha3
+      if (country = ISO3166::Country.find_country_by_iso_short_name(teacher_catchment_country))
+        country.alpha3
+      else
+        Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.")
+      end
     end
 
     def cohort

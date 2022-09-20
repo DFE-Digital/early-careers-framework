@@ -24,8 +24,6 @@ module Api
                  :school_urn,
                  :school_ukprn,
                  :status,
-                 :teacher_catchment_country,
-                 :teacher_catchment_iso_country_code,
                  :works_in_school
 
       attribute(:participant_id) do |object|
@@ -68,6 +66,8 @@ module Api
       attribute(:targeted_delivery_funding_eligibility)
 
       attribute :teacher_catchment, &:in_uk_catchment_area?
+      attribute :teacher_catchment_iso_country_code
+      attribute :teacher_catchment_country
     end
   end
 end

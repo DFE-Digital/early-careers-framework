@@ -53,14 +53,30 @@ RSpec.describe NPQ::BuildApplication do
         )
     end
 
-    context "when the teacher catchment country is not present" do
-      let(:teacher_catchment_country) { "" }
+    context "with the teacher catchment country" do
+      context "when not present" do
+        let(:teacher_catchment_country) { "" }
 
-      it "does not store the iso alpha3 country code is not " do
-        expect(npq_application.save).to be true
-        expect(npq_application.teacher_catchment_iso_country_code).to be nil
+        it "does not store the iso alpha3 country code", :aggregate_failures do
+          expect(npq_application.save).to be true
+          expect(npq_application.teacher_catchment_iso_country_code).to be nil
+        end
+      end
+
+      context "when not found" do
+        let(:teacher_catchment_country) { "wonderland" }
+        before do
+          allow(Sentry).to receive(:capture_message)
+        end
+
+        it "does not store the iso alpha3 country code", :aggregate_failures do
+          expect(npq_application.save).to be true
+          expect(npq_application.teacher_catchment_iso_country_code).to be nil
+          expect(Sentry).to have_received(:capture_message).with("Could not find the ISO3166 alpha3 code for wonderland.")
+        end
       end
     end
+
     it "adds a participant identity record" do
       expect { npq_application }.to change { ParticipantIdentity.count }.by(1)
     end
