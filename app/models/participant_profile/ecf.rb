@@ -51,6 +51,13 @@ class ParticipantProfile < ApplicationRecord
       induction_records.current&.latest&.induction_programme
     end
 
+    def latest_induction_record_for(cpd_lead_provider:)
+      induction_records
+        .joins(induction_programme: { partnership: { lead_provider: [:cpd_lead_provider] } })
+        .where(induction_programmes: { partnerships: { lead_providers: { cpd_lead_provider: } } })
+        .latest
+    end
+
     def ecf?
       true
     end
