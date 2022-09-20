@@ -253,6 +253,8 @@ Rails.application.routes.draw do
       resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
 
+      resource :change_induction_start_date, only: %i[edit update], controller: "participants/change_induction_start_date"
+
       resource :school_transfer, path: "school-transfer", only: [], controller: "participants/school_transfer" do
         member do
           get "select-school", action: :select_school, as: :select_school

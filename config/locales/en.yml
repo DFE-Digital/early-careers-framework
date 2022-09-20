@@ -362,6 +362,10 @@ en:
           attributes:
             delivery_partner_id:
               inclusion: Choose an organisation
+        admin/participants/change_induction_start_date_form:
+          attributes:
+            induction_start_date:
+              blank: Enter an induction start date
 
   page_titles:
     lead_providers:

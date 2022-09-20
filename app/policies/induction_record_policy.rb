@@ -5,6 +5,10 @@ class InductionRecordPolicy < ApplicationPolicy
     admin?
   end
 
+  def edit?
+    admin?
+  end
+
   def validate?
     admin?
   end

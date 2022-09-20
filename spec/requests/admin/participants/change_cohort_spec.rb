@@ -28,7 +28,7 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
     end
   end
 
-  describe "PUT /admin/participants/:participant_id/change_cohort/edit" do
+  describe "PUT /admin/participants/:participant_id/change_cohort" do
     let(:params) { { induction_amend_participant_cohort: { target_cohort_start_year: 2022 } } }
 
     it "initializes an Induction::AmendParticipantCohort" do
