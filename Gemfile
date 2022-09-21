@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(Pathname.new(__dir__).join(".ruby-version")).strip
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.6"
+gem "rails", "~> 6.1.7"
 
 # User management and rbac
 gem "devise", ">= 4.8.0"
@@ -68,7 +68,7 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.13"
 
 # Strong migration checker for database migrations
-gem "strong_migrations", "~> 1.2"
+gem "strong_migrations", "~> 1.3"
 
 # Acts as State Machine for participant and declaration states
 gem "aasm"
