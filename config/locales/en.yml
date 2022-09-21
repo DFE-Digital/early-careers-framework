@@ -488,7 +488,7 @@ en:
             description: "We need this to check their eligibility with the Teaching Regulation Agency."
           dfe_checking_eligibility:
             title: "DfE checking eligibility"
-            description: "We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon."
+            description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
           checking_qts:
             title: "Checking QTS"
             description: "These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training. We’ll keep checking their status and notify you if something changes."
