@@ -39,18 +39,34 @@ module NPQ
         npq_lead_provider:,
         participant_identity:,
         cohort:,
+        teacher_catchment_country:,
         teacher_catchment_iso_country_code:,
       )
     end
 
+    def uk_country
+      @uk_country ||= ISO3166::Country.find_country_by_any_name("United Kingdom")
+    end
+
     def teacher_catchment_country
+      return uk_country.iso_short_name if in_uk_catchement_area?
+
       npq_application_params[:teacher_catchment_country]
+    end
+
+    def teacher_catchment
+      npq_application_params[:teacher_catchment]
+    end
+
+    def in_uk_catchement_area?
+      NPQApplication::UK_CATCHMENT_AREA.include?(teacher_catchment)
     end
 
     def teacher_catchment_iso_country_code
       return if teacher_catchment_country.blank?
+      return uk_country.alpha3 if in_uk_catchement_area?
 
-      if (country = ISO3166::Country.find_country_by_iso_short_name(teacher_catchment_country))
+      if (country = ISO3166::Country.find_country_by_any_name(teacher_catchment_country))
         country.alpha3
       else
         Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.")

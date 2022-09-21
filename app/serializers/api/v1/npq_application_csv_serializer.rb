@@ -48,6 +48,9 @@ module Api
           cohort
           ineligible_for_funding_reason
           targeted_delivery_funding_eligibility
+          teacher_catchment
+          teacher_catchment_country
+          teacher_catchment_iso_country_code
         ]
       end
 
@@ -76,7 +79,14 @@ module Api
           record.cohort.start_year.to_s,
           record.ineligible_for_funding_reason,
           record.targeted_delivery_funding_eligibility,
+          teacher_catchment,
+          record.teacher_catchment_country,
+          record.teacher_catchment_iso_country_code,
         ]
+      end
+
+      def teacher_catchment
+        recorder.in_uk_catchment_area?
       end
     end
   end

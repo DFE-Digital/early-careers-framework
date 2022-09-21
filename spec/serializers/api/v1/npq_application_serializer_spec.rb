@@ -33,7 +33,7 @@ module Api
 
           expect(result[:data][:attributes][:teacher_catchment]).to eq(npq_application.teacher_catchment.present?)
           expect(result[:data][:attributes][:teacher_catchment_country]).to eq(npq_application.teacher_catchment_country)
-          expect(result[:data][:attributes][:teacher_catchment_iso_country_code]).to eq(npq_application.teacher_catchment_country)
+          expect(result[:data][:attributes][:teacher_catchment_iso_country_code]).to eq(npq_application.teacher_catchment_iso_country_code)
         end
       end
     end
