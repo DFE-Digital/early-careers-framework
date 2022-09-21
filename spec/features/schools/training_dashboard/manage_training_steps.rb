@@ -855,7 +855,7 @@ module ManageTrainingSteps
   end
 
   def then_i_can_view_details_being_checked_status
-    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency.")
+    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
   end
 
   def then_i_can_view_no_qts_status
@@ -863,7 +863,7 @@ module ManageTrainingSteps
   end
 
   def then_i_can_view_details_being_checked_mentor_status
-    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon.")
+    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
   end
 
   def then_i_can_view_eligible_cip_status
@@ -907,7 +907,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_details_being_checked_participants
     expect(page).to have_text("DfE checking eligibility")
-    expect(page).to have_text("We’re checking these people’s details with the Teaching Regulation Agency. We’ll confirm if they’re eligible for this programme soon.")
+    expect(page).to have_text("We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
   end
 
   def then_i_can_view_no_qts_ects
