@@ -68,7 +68,8 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     select("November 2021", from: "statement-field")
     click_button("View")
 
-    save_and_open_screenshot
+    click_link "Download declarations (CSV)"
+
     then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations
