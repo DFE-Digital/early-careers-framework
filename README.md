@@ -153,7 +153,7 @@ yarn cypress:open
 
 #### Moving to capybara
 
-Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using: 
+Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using:
 
 ```
 bundle exec bin/features_ci
@@ -324,7 +324,6 @@ We have a prometheus/grafana stack for metrics and alerting - [production metric
 Your DfE google account should work using SSO. See the [terraform](./terraform/monitoring) for details.
 ### Statuscake
 We use statuscake for uptime monitoring. Ask a team member for access - this is done with a service now ticket.
-
 
 ## Analytics
 In production, we use a separate postgres database for recording anonymous analytics information. The database is hosted in GCP.
