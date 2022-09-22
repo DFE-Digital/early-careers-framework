@@ -46,14 +46,14 @@ class ChooseRoleForm
     end
   end
 
-  def only_one_role?
+  def only_one_role
     return false unless user.user_roles.count == 1
 
     self.role = user.user_roles.first
     true
   end
 
-  def has_no_role?
+  def has_no_role
     return false unless user.user_roles.count.zero?
 
     self.role = "no_role"

@@ -2,10 +2,10 @@
 
 class ChooseRolesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_choose_role_form, only: [:show, :create]
+  before_action :set_choose_role_form, only: %i[show create]
 
   def show
-    if @choose_role_form.only_one_role? || @choose_role_form.has_no_role?
+    if @choose_role_form.only_one_role || @choose_role_form.has_no_role
       redirect_to @choose_role_form.redirect_path(helpers:)
     end
   end

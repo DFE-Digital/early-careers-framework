@@ -8,7 +8,7 @@ module AppropriateBodies
       @choose_organisation_form = ChooseOrganisationForm.new
       @choose_organisation_form.user = current_user
 
-      if @choose_organisation_form.only_one?
+      if @choose_organisation_form.only_one
         redirect_to appropriate_body_participants_path(@choose_organisation_form.appropriate_body)
       end
     end

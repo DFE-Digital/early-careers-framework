@@ -16,12 +16,12 @@ RSpec.describe AppropriateBodies::ChooseOrganisationForm, type: :model do
     end
   end
 
-  describe "#only_one?" do
+  describe "#only_one" do
     describe "one appropriate body" do
       let!(:appropriate_body_profile1) { create(:appropriate_body_profile, user:) }
 
       it "returns true" do
-        expect(form.only_one?).to be true
+        expect(form.only_one).to be true
         expect(form.appropriate_body).to eql(appropriate_body_profile1.appropriate_body)
       end
     end
@@ -32,7 +32,7 @@ RSpec.describe AppropriateBodies::ChooseOrganisationForm, type: :model do
       let!(:appropriate_body_profile3) { create(:appropriate_body_profile, user:) }
 
       it "returns false" do
-        expect(form.only_one?).to be false
+        expect(form.only_one).to be false
       end
     end
   end

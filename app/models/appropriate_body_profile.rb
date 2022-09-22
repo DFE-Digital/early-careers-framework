@@ -9,8 +9,8 @@ class AppropriateBodyProfile < ApplicationRecord
   def self.create_appropriate_body_user(full_name, email, appropriate_body)
     ActiveRecord::Base.transaction do
       user = User.find_or_create_by!(email:) do |u|
-          u.full_name = full_name
-        end
+        u.full_name = full_name
+      end
       AppropriateBodyProfile.create!(user:, appropriate_body:)
     end
   end

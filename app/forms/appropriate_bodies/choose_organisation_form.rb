@@ -22,7 +22,7 @@ module AppropriateBodies
       user.appropriate_bodies.find(appropriate_body_id)
     end
 
-    def only_one?
+    def only_one
       return false if user.appropriate_bodies.count > 1
 
       self.appropriate_body_id = user.appropriate_bodies.first.id

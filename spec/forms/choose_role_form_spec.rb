@@ -12,8 +12,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[appropriate_body]) }
 
-      it "only_one_role? should be true" do
-        expect(form.only_one_role?).to be true
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
@@ -48,8 +48,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[delivery_partner]) }
 
-      it "only_one_role? should be true" do
-        expect(form.only_one_role?).to be true
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
@@ -84,8 +84,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[admin]) }
 
-      it "only_one_role? should be true" do
-        expect(form.only_one_role?).to be true
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
@@ -120,8 +120,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[finance]) }
 
-      it "only_one_role? should be true" do
-        expect(form.only_one_role?).to be true
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
@@ -156,8 +156,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator]) }
 
-      it "only_one_role? should be true" do
-        expect(form.only_one_role?).to be true
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
@@ -198,8 +198,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[teacher]) }
 
-      it "only_one_role? should be true" do
-        expect(form.only_one_role?).to be true
+      it "only_one_role should be true" do
+        expect(form.only_one_role).to be true
       end
 
       it "has correct role_options" do
@@ -242,8 +242,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator_and_mentor]) }
 
-      it "only_one_role? should be false" do
-        expect(form.only_one_role?).to be false
+      it "only_one_role should be false" do
+        expect(form.only_one_role).to be false
       end
 
       it "has correct role_options" do
@@ -285,8 +285,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[induction_coordinator delivery_partner]) }
 
-      it "only_one_role? should be false" do
-        expect(form.only_one_role?).to be false
+      it "only_one_role should be false" do
+        expect(form.only_one_role).to be false
       end
 
       it "has correct role_options" do
@@ -300,8 +300,8 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       it { is_expected.to validate_inclusion_of(:role).in_array(%w[teacher induction_coordinator delivery_partner]) }
 
-      it "only_one_role? should be false" do
-        expect(form.only_one_role?).to be false
+      it "only_one_role should be false" do
+        expect(form.only_one_role).to be false
       end
 
       it "has correct role_options" do
@@ -331,8 +331,8 @@ RSpec.describe ChooseRoleForm, type: :model do
     let(:form_role) { "no_role" }
     let(:helpers) { Struct.new(:dashboard_path).new("/no_role") }
 
-    it "has_no_role? should be true" do
-      expect(form.has_no_role?).to be true
+    it "has_no_role should be true" do
+      expect(form.has_no_role).to be true
     end
 
     it "returns correct redirect_path" do
