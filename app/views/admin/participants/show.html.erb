@@ -27,11 +27,10 @@
         <% component.tab(label: 'Induction records') do %>
           <%= render partial: 'induction_records', locals: { induction_records: @induction_records } %>
         <% end %>
+        <% component.tab(label: 'Cohorts') do %>
+          <%= render partial: 'cohorts', locals: { latest_induction_record: @latest_induction_record } %>
+        <% end %>
       <% end %>
-    <% end %>
-
-    <% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
-      <%= govuk_link_to "Delete participant", remove_admin_participant_path %>
     <% end %>
   </div>
 </div>
