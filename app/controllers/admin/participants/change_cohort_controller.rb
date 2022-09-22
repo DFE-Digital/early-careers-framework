@@ -14,7 +14,7 @@ module Admin::Participants
       @latest_induction_record = retrieve_latest_induction_record(@participant_profile)
 
       @amend_participant_cohort = Induction::AmendParticipantCohort.new(
-        { **default_amend_participant_cohort_attributes, **amend_participant_cohort_params },
+        { **default_amend_participant_cohort_attributes, **amend_participant_cohort_params }.symbolize_keys,
       )
 
       if @amend_participant_cohort.save
