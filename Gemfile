@@ -68,7 +68,7 @@ gem "rubyzip", "~> 2.3", ">= 2.3.0"
 gem "savon", "~> 2.13"
 
 # Strong migration checker for database migrations
-gem "strong_migrations", "~> 1.2"
+gem "strong_migrations", "~> 1.3"
 
 # Acts as State Machine for participant and declaration states
 gem "aasm"
