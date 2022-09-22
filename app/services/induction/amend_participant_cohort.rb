@@ -50,7 +50,7 @@ module Induction
     delegate :school, to: :induction_record, allow_nil: true
 
     def save
-      valid? && persist
+      valid? && persisted?
     end
 
   private
@@ -75,6 +75,7 @@ module Induction
 
       @participant_declarations ||= participant_profile
                                       .participant_declarations
+                                      .not_voided
                                       .declared_as_between(source_cohort_start_date, source_cohort_end_date)
                                       .exists?
     end
@@ -91,7 +92,7 @@ module Induction
                                                       .find_by(participant_identity:)
     end
 
-    def persist
+    def persisted?
       ActiveRecord::Base.transaction do
         induction_record.update!(induction_programme:, start_date:, schedule:)
         participant_profile.update!(school_cohort: target_school_cohort, schedule:)
