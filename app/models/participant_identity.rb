@@ -3,6 +3,7 @@
 class ParticipantIdentity < ApplicationRecord
   belongs_to :user, touch: true
   has_many :participant_profiles
+  has_many :npq_participant_profiles, class_name: "ParticipantProfile::NPQ"
   has_many :npq_applications
   has_many :induction_records, through: :participant_profiles
 
