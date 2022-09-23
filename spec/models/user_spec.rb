@@ -11,7 +11,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:participant_profiles) }
     it { is_expected.to have_one(:admin_profile) }
     it { is_expected.to have_one(:finance_profile) }
-    it { is_expected.to have_one(:delivery_partner_profile) }
+    it { is_expected.to have_many(:delivery_partner_profiles) }
     it { is_expected.to have_many(:appropriate_body_profiles) }
     it { is_expected.to have_one(:induction_coordinator_profile) }
     it { is_expected.to have_many(:schools).through(:induction_coordinator_profile) }
@@ -372,7 +372,7 @@ RSpec.describe User, type: :model do
 
   describe "#user_roles" do
     it "returns delivery_partner role" do
-      expect(build(:user, :delivery_partner).user_roles).to eq(%w[delivery_partner])
+      expect(create(:user, :delivery_partner).user_roles).to eq(%w[delivery_partner])
     end
 
     it "returns appropriate_body role" do
@@ -400,11 +400,11 @@ RSpec.describe User, type: :model do
     end
 
     it "returns induction_coordinator and delivery_partner role" do
-      expect(build(:user, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator].sort)
+      expect(create(:user, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator].sort)
     end
 
     it "returns teacher, induction_coordinator and delivery_partner role" do
-      expect(build(:user, :teacher, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator teacher].sort)
+      expect(create(:user, :teacher, :induction_coordinator, :delivery_partner).user_roles.sort).to eq(%w[delivery_partner induction_coordinator teacher].sort)
     end
   end
 end

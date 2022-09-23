@@ -573,9 +573,11 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/delivery-partners", to: "start#delivery_partners", as: :delivery_partners
-  namespace :delivery_partners, path: "delivery-partners" do
-    resources :participants, only: %i[index]
+  get "/delivery-partners/start", to: "start#delivery_partners", as: :start_delivery_partners
+  scope module: "delivery_partners" do
+    resources :delivery_partners, path: "delivery-partners", only: %i[index create] do
+      resources :participants, only: %i[index]
+    end
   end
 
   scope module: "appropriate_bodies" do

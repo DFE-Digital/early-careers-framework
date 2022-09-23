@@ -8,11 +8,12 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   let(:participant_profile) { create(:ect_participant_profile, school_cohort:, training_status: "withdrawn") }
 
   let(:delivery_partner_user) { create(:user, :delivery_partner) }
+  let(:delivery_partner) { delivery_partner_user.delivery_partners.first }
   let(:partnership) do
     create(
       :partnership,
       school:,
-      delivery_partner: delivery_partner_user.delivery_partner_profile.delivery_partner,
+      delivery_partner:,
       challenged_at: nil,
       challenge_reason: nil,
       pending: false,
@@ -122,7 +123,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   end
 
   def when_i_visit_the_delivery_partners_participants_page
-    visit("/delivery-partners/participants")
+    visit("/delivery-partners/#{delivery_partner.id}/participants")
   end
 
   def then_i_see(string)

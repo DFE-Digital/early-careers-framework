@@ -343,6 +343,10 @@ en:
           attributes:
             appropriate_body_id:
               inclusion: Choose an organisation
+        delivery_partners/choose_organisation_form:
+          attributes:
+            delivery_partner_id:
+              inclusion: Choose an organisation
 
   page_titles:
     lead_providers:

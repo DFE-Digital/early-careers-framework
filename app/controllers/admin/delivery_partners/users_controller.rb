@@ -5,11 +5,10 @@ module Admin
     class UsersController < Admin::BaseController
       skip_after_action :verify_authorized
       skip_after_action :verify_policy_scoped
-      before_action :set_user, only: %i[edit update delete destroy]
+      before_action :set_delivery_partner_profile, only: %i[edit update delete destroy]
 
       def index
-        sorted_users = User.delivery_partner_users.name_order
-        @pagy, @users = pagy(sorted_users, page: params[:page], items: 20)
+        @pagy, @delivery_partner_profiles = pagy(DeliveryPartnerProfile.includes(:user), page: params[:page], items: 20)
       end
 
       def new
@@ -28,11 +27,11 @@ module Admin
       end
 
       def edit
-        @delivery_partners_user_form = ::DeliveryPartners::UpdateUserForm.new(@user)
+        @delivery_partners_user_form = ::DeliveryPartners::UpdateUserForm.new(delivery_partner_profile: @delivery_partner_profile)
       end
 
       def update
-        @delivery_partners_user_form = ::DeliveryPartners::UpdateUserForm.new(@user)
+        @delivery_partners_user_form = ::DeliveryPartners::UpdateUserForm.new(delivery_partner_profile: @delivery_partner_profile)
 
         if @delivery_partners_user_form.update(permitted_params)
           set_success_message(content: "Changes saved successfully.", title: "Success")
@@ -45,7 +44,7 @@ module Admin
       def delete; end
 
       def destroy
-        @user.delivery_partner_profile.destroy!
+        @delivery_partner_profile.destroy!
         set_success_message(content: "Delivery partner user deleted.", title: "Success")
         redirect_to admin_delivery_partners_users_path
       end
@@ -60,9 +59,9 @@ module Admin
         )
       end
 
-      def set_user
-        @user = User.delivery_partner_users.find(params[:id])
-        authorize @user
+      def set_delivery_partner_profile
+        @delivery_partner_profile = DeliveryPartnerProfile.find(params[:id])
+        authorize @delivery_partner_profile.user
       end
     end
   end

@@ -11,7 +11,7 @@ class DeliveryPartnerProfileMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         name: delivery_partner_profile.user.full_name,
-        delivery_partners_url: delivery_partners_url(**UTMService.email(:delivery_partner_profile_welcome)),
+        delivery_partners_url: start_delivery_partners_url(**UTMService.email(:delivery_partner_profile_welcome)),
       },
     ).tag(:delivery_partner_profile_welcome).associate_with(delivery_partner_profile, as: :delivery_partner_profile)
   end

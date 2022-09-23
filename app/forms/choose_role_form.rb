@@ -32,7 +32,7 @@ class ChooseRoleForm
     when "finance"
       helpers.finance_landing_page_path
     when "delivery_partner"
-      helpers.delivery_partners_participants_path
+      helpers.delivery_partners_path
     when "appropriate_body"
       helpers.appropriate_bodies_path
     when "induction_coordinator_and_mentor"

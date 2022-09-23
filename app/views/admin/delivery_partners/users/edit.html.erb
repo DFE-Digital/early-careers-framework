@@ -8,13 +8,13 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Edit user details</h1>
 
-    <%= form_with model: @delivery_partners_user_form, scope: :delivery_partners_user_form, url: admin_delivery_partners_user_path(@user) do |f| %>
+    <%= form_with model: @delivery_partners_user_form, scope: :delivery_partners_user_form, url: admin_delivery_partners_user_path(@delivery_partner_profile) do |f| %>
       <%= f.govuk_collection_select(:delivery_partner_id, DeliveryPartner.name_order, :id, :name, label: { text: "Delivery partner" }, options: { include_blank: true }, class: ["js-location-select"]) %>
       <%= f.govuk_text_field(:full_name, label: { text: "Full name" }) %>
       <%= f.govuk_email_field(:email, label: { text: "Email" }) %>
       <div class="govuk-button-group">
         <%= f.govuk_submit "Save" %>
-        <%= govuk_button_link_to "Delete", delete_admin_delivery_partners_user_path(@user), class: "govuk-button--warning", "data-test"=> "delete-button" %>
+        <%= govuk_button_link_to "Delete", delete_admin_delivery_partners_user_path(@delivery_partner_profile), class: "govuk-button--warning" %>
       </div>
     <% end %>
   </div>

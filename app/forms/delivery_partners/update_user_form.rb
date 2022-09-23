@@ -3,30 +3,31 @@
 module DeliveryPartners
   class UpdateUserForm
     include ActiveModel::Model
+    include ActiveModel::Attributes
 
-    attr_accessor :user, :full_name, :email, :delivery_partner_id
+    attribute :delivery_partner_profile
+    attribute :full_name
+    attribute :email
+    attribute :delivery_partner_id
 
-    validates :user, presence: true
+    validates :delivery_partner_profile, presence: true
     validates :delivery_partner_id, presence: { message: I18n.t("errors.delivery_partner.blank") }
     validates :full_name, presence: { message: I18n.t("errors.full_name.blank") }
     validates :email, presence: { message: I18n.t("errors.email.blank") }
     validates :email, notify_email: true, allow_blank: true
     validate :email_not_taken
 
-    def initialize(user)
-      @user = user
-      @full_name = user.full_name
-      @email = user.email
-      @delivery_partner_id = user.delivery_partner_profile&.delivery_partner_id
-    end
+    delegate :user, to: :delivery_partner_profile
 
-    def delivery_partner
-      @delivery_partner ||= DeliveryPartner.find(delivery_partner_id)
+    def initialize(*args)
+      super
+      self.full_name = user.full_name
+      self.email = user.email
+      self.delivery_partner_id = delivery_partner_profile.delivery_partner_id
     end
 
     def update(attrs)
-      self.attributes = attrs
-
+      assign_attributes(attrs)
       return false unless valid?
 
       user.update!(
@@ -34,16 +35,14 @@ module DeliveryPartners
         email:,
       )
 
-      user.delivery_partner_profile.update!(
-        delivery_partner:,
+      delivery_partner_profile.update!(
+        delivery_partner_id:,
       )
 
       true
     end
 
-    def id
-      user&.id
-    end
+    delegate :id, to: :delivery_partner_profile
 
     def persisted?
       true
