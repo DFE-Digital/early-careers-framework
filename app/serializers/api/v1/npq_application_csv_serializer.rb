@@ -79,14 +79,14 @@ module Api
           record.cohort.start_year.to_s,
           record.ineligible_for_funding_reason,
           record.targeted_delivery_funding_eligibility,
-          teacher_catchment,
+          teacher_catchment(record),
           record.teacher_catchment_country,
           record.teacher_catchment_iso_country_code,
         ]
       end
 
-      def teacher_catchment
-        recorder.in_uk_catchment_area?
+      def teacher_catchment(record)
+        record.in_uk_catchment_area?
       end
     end
   end

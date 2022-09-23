@@ -3171,19 +3171,20 @@
             "example": true
           },
           "teacher_catchment": {
-            "description": "This field will indicate whether or not the participant is UK-based. <ul><li>If <code>true</code> then the registration relates to a participant who is UK-based.</li><li>If <code>false</code> then the registration relates to a participant who is not UK-based.</li></ul>",
+            "description": "This field will indicate whether or not the participant is UK-based.\n<ul>\n  <li>If <code>true</code> then the registration relates to a participant who is UK-based.</li>\n  <li>If <code>false</code> then the registration relates to a participant who is not UK-based.</li>\n</ul>\n",
             "nullable": true,
             "type": "boolean",
             "example": true
           },
           "teacher_catchment_country": {
+            "description": "This field shows the text entered by the participant during their  NPQ online registration.\n",
             "nullable": true,
             "type": "string",
             "example": "France"
           },
           "teacher_catchment_iso_country_code": {
-            "nullable": true,
             "description": "The teacher catchment ISO 3666 alpha3 code",
+            "nullable": true,
             "type": "string",
             "example": "FRA"
           }

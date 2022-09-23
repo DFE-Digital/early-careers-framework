@@ -144,6 +144,9 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               cohort
               ineligible_for_funding_reason
               targeted_delivery_funding_eligibility
+              teacher_catchment
+              teacher_catchment_country
+              teacher_catchment_iso_country_code
             ],
           )
         end
@@ -378,8 +381,8 @@ def single_json_application(npq_application:)
       "eligible_for_funding" => npq_application.eligible_for_funding,
       "targeted_delivery_funding_eligibility" => npq_application.targeted_delivery_funding_eligibility,
       "teacher_catchment" => true,
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => npq_application.teacher_catchment_country,
+      "teacher_catchment_iso_country_code" => npq_application.teacher_catchment_iso_country_code,
     },
   }
 end

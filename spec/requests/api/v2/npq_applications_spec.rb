@@ -381,8 +381,8 @@ def single_json_v2_application(npq_application:)
       "eligible_for_funding" => npq_application.eligible_for_funding,
       "targeted_delivery_funding_eligibility" => npq_application.targeted_delivery_funding_eligibility,
       "teacher_catchment" => true,
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
     },
   }
 end
