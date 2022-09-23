@@ -26,7 +26,10 @@ module DeliveryPartners
   private
 
     def email_not_taken
-      if Identity.find_user_by(email:)&.delivery_partner?
+      return if delivery_partner_id.blank?
+      return unless (user = Identity.find_user_by(email:))
+
+      if DeliveryPartnerProfile.where(user:, delivery_partner:).exists?
         errors.add(:email, :unique, message: I18n.t("errors.email.taken"))
       end
     end

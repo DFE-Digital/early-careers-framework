@@ -58,14 +58,14 @@ RSpec.describe ChooseRoleForm, type: :model do
 
       describe "param with delivery_partner role" do
         let(:form_role) { "delivery_partner" }
-        let(:helpers) { Struct.new(:delivery_partners_participants_path).new("/delivery-partners") }
+        let(:helpers) { Struct.new(:delivery_partners_path).new("/delivery-partners") }
 
         it "should be valid" do
           expect(form.valid?).to be true
         end
 
         it "returns correct redirect_path" do
-          expect(form.redirect_path(helpers:)).to be helpers.delivery_partners_participants_path
+          expect(form.redirect_path(helpers:)).to be helpers.delivery_partners_path
         end
       end
 

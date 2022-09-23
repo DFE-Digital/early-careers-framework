@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module AppropriateBodies
-  class AppropriateBodiesController < BaseController
+module DeliveryPartners
+  class DeliveryPartnersController < BaseController
     layout "application"
 
     def index
       if choose_organisation_form.only_one
-        redirect_to appropriate_body_participants_path(choose_organisation_form.appropriate_body)
+        redirect_to delivery_partner_participants_path(choose_organisation_form.delivery_partner)
       end
     end
 
@@ -14,7 +14,7 @@ module AppropriateBodies
       choose_organisation_form.assign_attributes(choose_organisation_form_params)
 
       if choose_organisation_form.valid?
-        redirect_to appropriate_body_participants_path(choose_organisation_form.appropriate_body)
+        redirect_to delivery_partner_participants_path(choose_organisation_form.delivery_partner)
       else
         render :index
       end
@@ -27,8 +27,8 @@ module AppropriateBodies
     end
 
     def choose_organisation_form_params
-      params.fetch(:appropriate_bodies_choose_organisation_form, {}).permit(
-        :appropriate_body_id,
+      params.fetch(:delivery_partners_choose_organisation_form, {}).permit(
+        :delivery_partner_id,
       )
     end
   end

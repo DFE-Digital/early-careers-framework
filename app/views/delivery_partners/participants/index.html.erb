@@ -1,7 +1,8 @@
-<h1 class="govuk-heading-xl">Participants</h1>
+<span class="govuk-caption-xl">Delivery partner</span>
+<h1 class="govuk-heading-xl"><%= delivery_partner.name %> Participants</h1>
 
-<p class="govuk-body">
-  <%= govuk_link_to "Download (csv)", delivery_partners_participants_path(params.permit(:query, :role, :academic_year, :status).merge({format: :csv})) %>
+<p class="govuk-body govuk-!-text-align-right">
+  <%= govuk_link_to "Download (csv)", delivery_partner_participants_path(params.permit(:query, :role, :academic_year, :status).merge({format: :csv})) %>
 </p>
 
 <%= render SearchBox.new(
@@ -47,7 +48,7 @@
 
   <tbody class="govuk-table__body">
     <% if @participant_profiles.any? %>
-      <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles, delivery_partner: current_user.delivery_partner_profile.delivery_partner) %>
+      <%= render DeliveryPartners::Participants::TableRow.with_collection(@participant_profiles, delivery_partner: delivery_partner) %>
     <% else %>
       <tr class="govuk-table__row">
         <td colspan="10" class="govuk-table__cell">

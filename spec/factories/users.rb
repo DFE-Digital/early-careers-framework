@@ -53,7 +53,9 @@ FactoryBot.define do
     end
 
     trait :delivery_partner do
-      delivery_partner_profile
+      after(:create) do |u|
+        create(:delivery_partner_profile, user: u)
+      end
     end
 
     trait :appropriate_body do

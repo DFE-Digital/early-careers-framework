@@ -10,7 +10,7 @@ module DeliveryPartners
 
     let(:lead_provider) { create(:lead_provider) }
     let(:delivery_partner_user) { create(:user, :delivery_partner) }
-    let(:delivery_partner) { delivery_partner_user.delivery_partner_profile.delivery_partner }
+    let(:delivery_partner) { delivery_partner_user.delivery_partners.first }
     let(:partnership) do
       create(
         :partnership,

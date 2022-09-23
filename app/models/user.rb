@@ -16,7 +16,8 @@ class User < ApplicationRecord
 
   has_one :teacher_profile, dependent: :destroy
 
-  has_one :delivery_partner_profile, dependent: :destroy
+  has_many :delivery_partner_profiles, dependent: :destroy
+  has_many :delivery_partners, through: :delivery_partner_profiles
 
   has_many :appropriate_body_profiles, dependent: :destroy
   has_many :appropriate_bodies, through: :appropriate_body_profiles
@@ -56,7 +57,7 @@ class User < ApplicationRecord
   end
 
   def delivery_partner?
-    delivery_partner_profile.present?
+    delivery_partner_profiles.any?
   end
 
   def appropriate_body?
@@ -153,7 +154,6 @@ class User < ApplicationRecord
   scope :for_lead_provider, -> { includes(:lead_provider).joins(:lead_provider) }
   scope :admins, -> { joins(:admin_profile) }
   scope :finance_users, -> { joins(:finance_profile) }
-  scope :delivery_partner_users, -> { joins(:delivery_partner_profile) }
 
   scope :changed_since, lambda { |timestamp|
     if timestamp.present?

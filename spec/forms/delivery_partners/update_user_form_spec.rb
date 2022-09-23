@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DeliveryPartners::UpdateUserForm, type: :model do
-  let(:delivery_partner_user) { create(:user, :delivery_partner) }
-  let(:delivery_partner) { create(:delivery_partner) }
-  let(:params) { { full_name: "Test 1", email: "test@example.com", delivery_partner_id: delivery_partner.id } }
+  let(:user) { create(:user, full_name: "Example Name", email: "madeup@example.com") }
+  let(:delivery_partner_1) { create(:delivery_partner) }
+  let(:delivery_partner_2) { create(:delivery_partner) }
 
-  subject(:form) { described_class.new(delivery_partner_user) }
+  let(:delivery_partner_profile) { create(:delivery_partner_profile, user:, delivery_partner: delivery_partner_1) }
+
+  let(:params) { { full_name: "Test 1", email: "test@example.com", delivery_partner_id: delivery_partner_2.id } }
+
+  subject(:form) { described_class.new(delivery_partner_profile:) }
 
   it { is_expected.to validate_presence_of(:full_name).on(:name).with_message("Enter a full name") }
   it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email") }
@@ -13,19 +17,18 @@ RSpec.describe DeliveryPartners::UpdateUserForm, type: :model do
 
   describe ".update" do
     context "valid params" do
-      before do
-        expect(delivery_partner_user).to receive(:update!).with(
-          full_name: params[:full_name],
-          email: params[:email],
-        ).and_return(true)
+      it "should change delivery partner user details" do
+        delivery_partner_profile.reload
+        expect(delivery_partner_profile.user.full_name).to eql("Example Name")
+        expect(delivery_partner_profile.user.email).to eql("madeup@example.com")
+        expect(delivery_partner_profile.delivery_partner).to eql(delivery_partner_1)
 
-        expect(delivery_partner_user.delivery_partner_profile).to receive(:update!).with(
-          delivery_partner:,
-        ).and_return(true)
-      end
-
-      it "should create delivery partner user" do
         expect(form.update(params)).to be true
+
+        delivery_partner_profile.reload
+        expect(delivery_partner_profile.user.full_name).to eql("Test 1")
+        expect(delivery_partner_profile.user.email).to eql("test@example.com")
+        expect(delivery_partner_profile.delivery_partner).to eql(delivery_partner_2)
       end
     end
 

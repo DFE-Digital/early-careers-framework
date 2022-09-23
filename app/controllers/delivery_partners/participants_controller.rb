@@ -11,7 +11,7 @@ module DeliveryPartners
         induction_records: {
           induction_programme: {
             partnerships: {
-              delivery_partner: current_user.delivery_partner_profile.delivery_partner,
+              delivery_partner:,
               challenged_at: nil,
               challenge_reason: nil,
               pending: false,
@@ -35,7 +35,7 @@ module DeliveryPartners
           serializer = DeliveryPartners::ParticipantsSerializer.new(
             @filter.scope.order(updated_at: :desc),
             params: {
-              delivery_partner: current_user.delivery_partner_profile.delivery_partner,
+              delivery_partner:,
             },
           )
           render body: to_csv(serializer.serializable_hash)
@@ -44,6 +44,12 @@ module DeliveryPartners
     end
 
   private
+
+    def delivery_partner
+      @delivery_partner ||= current_user.delivery_partners.find(params[:delivery_partner_id])
+    end
+
+    helper_method :delivery_partner
 
     def to_csv(hash)
       return "" if hash[:data].empty?
