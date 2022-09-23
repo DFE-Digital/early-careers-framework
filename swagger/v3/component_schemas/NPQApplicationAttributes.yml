@@ -142,6 +142,7 @@ properties:
     type: boolean
     example: true
   teacher_catchment:
+    description: "This field will indicate whether or not the participant is UK-based. <ul><li>If <code>true</code> then the registration relates to a participant who is UK-based.</li><li>If <code>false</code> then the registration relates to a participant who is not UK-based.</li></ul>"
     nullable: true
     type: boolean
     example: true
