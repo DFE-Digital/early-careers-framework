@@ -242,6 +242,8 @@ Rails.application.routes.draw do
           post ":step", action: :update
         end
       end
+
+      resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"
     end
     resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]
