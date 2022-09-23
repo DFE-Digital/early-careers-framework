@@ -120,7 +120,8 @@ module DataStage
 
     def eligible_row?(row)
       english_district_code?(row.fetch("DistrictAdministrative (code)")) &&
-        eligible_establishment_code?(row.fetch("TypeOfEstablishment (code)").to_i)
+        (eligible_establishment_code?(row.fetch("TypeOfEstablishment (code)").to_i) ||
+          row.fetch("Section41Approved (name)") == "Approved")
     end
 
     def extract_values_from(changes_hash)
