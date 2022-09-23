@@ -14,9 +14,8 @@ module Api
         def induction_records
           scope = InductionRecord
             .where(id: induction_record_ids_with_deduped_profiles)
-            .joins(schedule: [:cohort], participant_profile: { school_cohort: [:cohort] })
+            .joins(schedule: [:cohort])
             .where(schedule: { cohort: with_cohorts })
-            .where(participant_profile: { school_cohorts: { cohort: with_cohorts } })
             .includes(
               :schedule,
               induction_programme: {
