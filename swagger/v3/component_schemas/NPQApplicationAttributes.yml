@@ -151,7 +151,9 @@ properties:
     type: string
     example: "France"
   teacher_catchment_iso_country_code:
+    description: |
+      This field identifies which non-UK country the participant has registered from.
+      The API uses <a href="https://www.iso.org/iso-3166-country-codes.html" class="govuk-link" rel="noreferrer noopener" target="_blank">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.
     nullable: true
-    description: "The teacher catchment ISO 3666 alpha3 code"
     type: string
     example: "FRA"
