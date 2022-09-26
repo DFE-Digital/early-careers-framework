@@ -175,7 +175,7 @@ group :test do
   gem "simplecov"
   gem "site_prism", "~> 3.7"
   gem "webdrivers", "~> 5.0"
-  gem "webmock", "~> 3.14"
+  gem "webmock", "~> 3.18"
   gem "with_model"
 end
 
