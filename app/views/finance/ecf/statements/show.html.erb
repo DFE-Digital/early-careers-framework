@@ -28,6 +28,10 @@
           </p>
 
           <p class="govuk-body-s govuk-!-margin-bottom-2">
+            Uplift fees <span><%= number_to_pounds(@calculator.total_for_uplift) %></span>
+          </p>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
             Adjustments <span><%= number_to_pounds(@calculator.adjustments_total) %></span>
           </p>
 
@@ -149,6 +153,28 @@
 
     <div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5">
       <%= govuk_table do |table| %>
+        <% table.caption(size: "m", text: "Uplift fees") %>
+
+        <% table.head do |head| %>
+          <% head.row do |row| %>
+            <% row.cell(header: true, text: "Number of participants") %>
+            <% row.cell(header: true, text: "Fee per participant") %>
+            <% row.cell(header: true, text: "Payments", numeric: true) %>
+          <% end %>
+
+          <% table.body do |body| %>
+            <% body.row do |row| %>
+              <% row.cell(text: @calculator.uplift_additions_count) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration)) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_additions_count * @calculator.uplift_fee_per_declaration), numeric: true) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="finance-panel finance-panel__adjustments govuk-!-margin-top-5 govuk-!-margin-bottom-5">
+      <%= govuk_table do |table| %>
         <% table.caption(size: "m", text: "Adjustments") %>
 
         <% table.head do |head| %>
@@ -160,13 +186,6 @@
           <% end %>
 
           <% table.body do |body| %>
-            <% body.row do |row| %>
-              <% row.cell(text: "Uplift fee") %>
-              <% row.cell(text: @calculator.uplift_additions_count) %>
-              <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration)) %>
-              <% row.cell(text: number_to_pounds(@calculator.uplift_additions_count * @calculator.uplift_fee_per_declaration), numeric: true) %>
-            <% end %>
-
             <% body.row do |row| %>
               <% row.cell(text: "Uplift clawbacks") %>
               <% row.cell(text: @calculator.uplift_deductions_count) %>
