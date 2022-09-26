@@ -30,6 +30,10 @@ module Api
           expect(result[:data][:attributes][:works_in_school]).to eql(npq_application.works_in_school)
           expect(result[:data][:attributes][:eligible_for_funding]).to eql(npq_application.eligible_for_dfe_funding)
           expect(result[:data][:attributes][:targeted_delivery_funding_eligibility]).to eql(npq_application.targeted_delivery_funding_eligibility)
+
+          expect(result[:data][:attributes][:teacher_catchment]).to eq(npq_application.teacher_catchment.present?)
+          expect(result[:data][:attributes][:teacher_catchment_country]).to eq(npq_application.teacher_catchment_country)
+          expect(result[:data][:attributes][:teacher_catchment_iso_country_code]).to eq(npq_application.teacher_catchment_iso_country_code)
         end
       end
     end

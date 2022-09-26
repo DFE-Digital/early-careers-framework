@@ -1577,14 +1577,17 @@
             ]
           },
           "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "description": "The Teacher Reference Number (TRN) for this ECF participant",
             "type": "string",
-            "example": "1234567"
+            "example": "1234567",
+            "required": false,
+            "nullable": true
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "example": true
+            "example": true,
+            "nullable": true
           },
           "eligible_for_funding": {
             "description": "Indicates whether this participant is eligible to receive DfE funded induction",
@@ -3166,6 +3169,24 @@
             "nullable": false,
             "type": "boolean",
             "example": true
+          },
+          "teacher_catchment": {
+            "description": "This field will indicate whether or not the participant is UK-based.\n<ul>\n  <li>If <code>true</code> then the registration relates to a participant who is UK-based.</li>\n  <li>If <code>false</code> then the registration relates to a participant who is not UK-based.</li>\n</ul>\n",
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "teacher_catchment_country": {
+            "description": "This field shows the text entered by the participant during their  NPQ online registration.",
+            "nullable": true,
+            "type": "string",
+            "example": "France"
+          },
+          "teacher_catchment_iso_country_code": {
+            "description": "This field identifies which non-UK country the participant has registered from.\nThe API uses <a href=\"https://www.iso.org/iso-3166-country-codes.html\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.\n",
+            "nullable": true,
+            "type": "string",
+            "example": "FRA"
           }
         }
       },

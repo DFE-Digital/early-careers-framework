@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
 namespace :one_offs do
-  desc "Extend ECF Standard April started milestone date"
-  task extend_ecf_standard_april_started_milestone_date: :environment do
-    schedule = Finance::Schedule.find_by(name: "ECF Standard April")
-    schedule.schedule_milestones.find_by(name: "Output 1.1 - Participant Start").destroy!
-    Finance::Milestone.find_by(name: "Output 1.1 - Participant Start").destroy!
-    schedule.milestones.find_by(declaration_type: "started").update!(milestone_date: Date.new(2022, 5, 31))
+  desc "backfill teacher catchement iso country code"
+  task backfill_teacher_catchment_iso_country_code: :environment do
+    uk_country = ISO3166::Country.find_country_by_any_name("United Kingdom")
+    NPQApplication.where.not(teacher_catchment_country: nil).find_each do |npq_application|
+      if (country = ISO3166::Country.find_country_by_iso_short_name(npq_application.teacher_catchment_country))
+        npq_application.update!(teacher_catchment_iso_country_code: country.alpha3)
+      elsif npq_application.in_uk_catchment_area?
+        npq_application.update!(
+          teacher_catchment_iso_country_code: uk_country.alpha3,
+          teacher_catchment_country: uk_country.iso_short_name,
+        )
+      else
+        Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{npq_application.teacher_catchment_country}.")
+      end
+    end
   end
 end
