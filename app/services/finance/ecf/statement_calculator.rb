@@ -132,7 +132,7 @@ module Finance
       end
 
       def adjustments_total
-        total_for_uplift - clawback_deductions
+        -clawback_deductions
       end
 
       def clawback_deductions
@@ -142,7 +142,7 @@ module Finance
       end
 
       def total(with_vat: false)
-        sum = service_fee + output_fee + adjustments_total + statement.reconcile_amount
+        sum = service_fee + output_fee + total_for_uplift + adjustments_total + statement.reconcile_amount
         sum += vat if with_vat
         sum
       end
