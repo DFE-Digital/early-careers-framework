@@ -47,6 +47,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
     sign_out
     when_i_sign_back_in
+    and_i_choose_induction_coordinator_and_mentor_role
     then_i_am_taken_to_fip_induction_dashboard
     then_the_page_should_be_accessible
   end

@@ -619,6 +619,11 @@ module ManageTrainingSteps
     choose(option)
   end
 
+  def and_i_choose_induction_coordinator_and_mentor_role
+    choose("Induction tutor and mentor")
+    click_on("Continue")
+  end
+
   # Then_steps
 
   def then_i_am_taken_to_roles_page

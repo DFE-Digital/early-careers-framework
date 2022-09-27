@@ -33,7 +33,7 @@ private
   end
 
   def after_sign_in_path_for(_user)
-    stored_location_for(current_user) || helpers.profile_dashboard_path(current_user)
+    stored_location_for(current_user) || helpers.choose_role_path
   end
 
   def after_sign_out_path_for(_user)

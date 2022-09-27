@@ -1,0 +1,18 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: choose_role_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @choose_organisation_form, url: appropriate_bodies_path do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_radio_buttons_fieldset :appropriate_body_id, legend: { text: "What organisation do you want to view?", tag: 'h1', size: 'xl' }, caption: { text: "Appropriate body", tag: "span", size: "xl" } do %>
+        <p>Choose an organisation to view its participants.</p>
+
+        <% @choose_organisation_form.appropriate_body_options.each_with_index do |(val, name), n| %>
+          <%= f.govuk_radio_button :appropriate_body_id, val, label: { text: name }, link_errors: n.zero? %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

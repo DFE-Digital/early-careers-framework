@@ -17,6 +17,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to the dashboard" do
         get "/users/sign_in"
+        follow_redirect!
 
         expect(response).to redirect_to "/dashboard"
       end
@@ -116,6 +117,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
         it "redirects to the dashboard" do
           post "/users/sign_in", params: { user: { email: test_email } }
+          follow_redirect!
           expect(response).to redirect_to "/dashboard"
         end
       end
@@ -200,6 +202,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to the dashboard" do
         get "/users/confirm_sign_in?login_token=aaaaaaaaaa"
+        follow_redirect!
 
         expect(response).to redirect_to "/dashboard"
       end
@@ -213,6 +216,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to participant validation on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        follow_redirect!
         expect(response).to redirect_to(participants_validation_path)
       end
     end
@@ -224,6 +228,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        follow_redirect!
         expect(response).to redirect_to(schools_choose_programme_path(school_id: school.slug, cohort_id: cohort.start_year))
       end
     end
@@ -236,7 +241,9 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
-        expect(response).to redirect_to participants_validation_path
+        # Choose teacher role
+        post "/choose-role", params: { choose_role_form: { role: "teacher" } }
+        expect(response).to redirect_to(participants_validation_path)
       end
     end
 
@@ -245,6 +252,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to dashboard on successful login" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        follow_redirect!
         expect(response).to redirect_to(dashboard_path)
       end
     end
@@ -254,6 +262,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        follow_redirect!
         expect(response).to redirect_to(admin_schools_path)
       end
     end
@@ -263,6 +272,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
       it "redirects to correct dashboard" do
         post "/users/sign_in_with_token", params: { login_token: user.login_token }
+        follow_redirect!
         expect(response).to redirect_to(finance_landing_page_path)
       end
     end

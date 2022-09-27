@@ -5,24 +5,6 @@ require "pagy"
 module ApplicationHelper
   include Pagy::Frontend
 
-  def profile_dashboard_path(user)
-    if user.admin?
-      admin_schools_path
-    elsif user.finance?
-      finance_landing_page_path
-    elsif user.delivery_partner?
-      delivery_partners_participants_path
-    elsif user.induction_coordinator_and_mentor?
-      induction_coordinator_mentor_path(user)
-    elsif user.induction_coordinator?
-      induction_coordinator_dashboard_path(user)
-    elsif user.teacher?
-      participant_start_path(user)
-    else
-      dashboard_path
-    end
-  end
-
   def data_layer
     @data_layer ||= build_data_layer
   end
@@ -49,6 +31,13 @@ module ApplicationHelper
     else
       schools_dashboard_path(school_id: school.slug)
     end
+  end
+
+  def induction_coordinator_mentor_path(user)
+    profile = user.participant_profiles.active_record.mentors.first
+    return participants_validation_path unless profile&.completed_validation_wizard?
+
+    induction_coordinator_dashboard_path(user)
   end
 
   def participant_start_path(user)
@@ -89,13 +78,6 @@ private
 
   def post_2020_ecf_participant?(user)
     user.teacher_profile.ecf_profiles.where.not(cohort: Cohort.find_by(start_year: 2020)).any?
-  end
-
-  def induction_coordinator_mentor_path(user)
-    profile = user.participant_profiles.active_record.mentors.first
-    return participants_validation_path unless profile&.completed_validation_wizard?
-
-    induction_coordinator_dashboard_path(user)
   end
 
   def school_dashboard_with_tab_path(school)

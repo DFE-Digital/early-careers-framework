@@ -1,0 +1,19 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @choose_role_form, url: choose_role_path do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_radio_buttons_fieldset :role, legend: { text: "What role do you want to view?", tag: 'h1', size: 'xl' } do %>
+        <p>Choose a role to view relevant organisations.</p>
+
+        <% @choose_role_form.role_options.each_with_index do |(val, name), n| %>
+          <%= f.govuk_radio_button :role, val, label: { text: name }, link_errors: n.zero? %>
+        <% end %>
+
+        <%= f.govuk_radio_divider %>
+        <%= f.govuk_radio_button :role, "change_role", label: { text: 'Add, remove or change my role' } %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

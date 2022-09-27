@@ -64,7 +64,7 @@ private
   def verify_can_choose_programme
     return if school_cohort.new_record? || school_cohort.can_change_programme?
 
-    redirect_to helpers.profile_dashboard_path(current_user)
+    redirect_to helpers.choose_role_path
   end
 
   def load_programme_form

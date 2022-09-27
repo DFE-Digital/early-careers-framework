@@ -62,7 +62,7 @@ class Users::SessionsController < Devise::SessionsController
 private
 
   def redirect_to_dashboard
-    redirect_to helpers.profile_dashboard_path(current_user) if current_user.present?
+    redirect_to helpers.choose_role_path if current_user.present?
   end
 
   def ensure_login_token_valid
@@ -84,6 +84,6 @@ private
     user = Identity.find_user_by(email:) || return
 
     sign_in(user, scope: :user)
-    redirect_to profile_dashboard_path(user)
+    redirect_to choose_role_path
   end
 end
