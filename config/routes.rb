@@ -399,6 +399,12 @@ Rails.application.routes.draw do
     resources :schedules, only: %i[index show]
 
     namespace :ecf do
+      resources :lead_providers, only: [] do
+        resources :statements, only: [] do
+          resource :assurance_report, path: "assurance-report", only: :show, format: :csv
+        end
+      end
+
       resources :payment_breakdowns, only: [] do
         resources :statements, only: %i[show] do
           resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]
