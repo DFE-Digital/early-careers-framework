@@ -76,7 +76,7 @@ GEM
     akami (1.3.1)
       gyoku (>= 0.4.0)
       nokogiri
-    ar-uuid (0.2.2)
+    ar-uuid (0.2.3)
       activerecord
     ast (2.4.2)
     aws-eventstream (1.2.0)
@@ -617,7 +617,7 @@ DEPENDENCIES
   aasm
   aasm-diagram
   activerecord-session_store (~> 2.0)
-  ar-uuid (~> 0.2.2)
+  ar-uuid (~> 0.2.3)
   aws-sdk-s3
   axe-core-rspec
   bootsnap (~> 1.13)
