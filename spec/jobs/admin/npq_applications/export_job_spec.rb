@@ -16,6 +16,7 @@ RSpec.describe Admin::NPQApplications::ExportJob do
     let!(:npq_application_created_within_date_range) { create(:npq_application, created_at: start_date + 1.day) }
     let!(:npq_application_created_before_date_range) { create(:npq_application, created_at: start_date - 1.day) }
     let!(:npq_application_created_after_date_range) { create(:npq_application, created_at: end_date + 1.day) }
+    let!(:npq_application_created_on_final_day) { create(:npq_application, created_at: end_date + 12.hours) }
 
     let(:expected_columns) do
       %i[
@@ -55,6 +56,7 @@ RSpec.describe Admin::NPQApplications::ExportJob do
       CSV.generate do |csv|
         csv << expected_columns
         csv << expected_columns.map { |csv_column| npq_application_created_within_date_range.send(csv_column) }
+        csv << expected_columns.map { |csv_column| npq_application_created_on_final_day.send(csv_column) }
       end
     end
 
