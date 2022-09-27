@@ -12,10 +12,13 @@ module Admin::Participants
     def update
       @participant_profile = retrieve_participant_profile
       @participant_profile_form = ChangeInductionStartDateForm.new(change_induction_start_date_params)
+      induction_start_date = @participant_profile_form.induction_start_date
 
-      if @participant_profile_form.valid?
-        induction_start_date = @participant_profile_form.induction_start_date
-        ChangeInductionStartDate.call(@participant_profile, induction_start_date:)
+      if @participant_profile_form.valid? && ChangeInductionStartDate.call(@participant_profile, induction_start_date:)
+        flash[:success] = {
+          title: "Induction start date changed successfully",
+          content: "#{@participant_profile.user.full_name}'s induction start date was changed to #{induction_start_date.to_formatted_s(:govuk)}",
+        }
 
         redirect_to(admin_participant_path(@participant_profile))
       else
