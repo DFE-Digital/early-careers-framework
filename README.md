@@ -153,7 +153,7 @@ yarn cypress:open
 
 #### Moving to capybara
 
-Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using: 
+Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using:
 
 ```
 bundle exec bin/features_ci
