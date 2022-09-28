@@ -8,6 +8,7 @@ module Admin
     before_action :load_participant, except: :index
     before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
     before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
+    before_action :participant_declarations, only: :show, unless: -> { @participant_profile.npq? }
 
     def show; end
 
@@ -107,6 +108,12 @@ module Admin
 
     def latest_induction_record
       @latest_induction_record ||= induction_records.first
+    end
+
+    def participant_declarations
+      @participant_declarations ||= @participant_profile.participant_declarations
+                                                        .includes(:cpd_lead_provider, :delivery_partner)
+                                                        .order(created_at: :desc)
     end
   end
 end
