@@ -60,6 +60,10 @@ class ParticipantProfile < ApplicationRecord
       nil
     end
 
+    def policy_class
+      ParticipantProfile::NPQPolicy
+    end
+
   private
 
     def push_profile_to_big_query
