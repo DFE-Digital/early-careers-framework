@@ -53,10 +53,16 @@ RSpec.describe Admin::NPQApplications::ExportJob do
     end
 
     let(:expected_csv) do
+      applications = [
+        npq_application_created_within_date_range,
+        npq_application_created_on_final_day,
+      ].sort_by(&:id)
+
       CSV.generate do |csv|
         csv << expected_columns
-        csv << expected_columns.map { |csv_column| npq_application_created_within_date_range.send(csv_column) }
-        csv << expected_columns.map { |csv_column| npq_application_created_on_final_day.send(csv_column) }
+        applications.each do |application|
+          csv << expected_columns.map { |csv_column| application.send(csv_column) }
+        end
       end
     end
 
