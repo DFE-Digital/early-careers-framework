@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
   let(:admin_user) { create(:user, :admin) }
-
-  let!(:mentor_profile)               { create :mentor }
+  let(:user)                          { create :user, full_name: "Elza Smith" }
+  let!(:mentor_profile)               { create :mentor, user: }
   let!(:ect_profile)                  { create :ect, mentor_profile_id: mentor_profile.id }
 
   before { sign_in(admin_user) }
