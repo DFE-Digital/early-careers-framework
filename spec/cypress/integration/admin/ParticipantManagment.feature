@@ -23,7 +23,7 @@ Feature: Admin user managing participants
   Scenario: Validating NPQ participants
     When I click on "link" containing "Natalie Portman Quebec"
     Then I should be on "admin participant" page
-    And "page body" should contain "DOB entered"
+    And "page body" should contain "Date of birth"
     And the page should be accessible
 
     When I click on "link" containing "View identity confirmation"

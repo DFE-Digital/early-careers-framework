@@ -1,0 +1,62 @@
+<h2 class="govuk-heading-m">
+  Details
+</h2>
+
+<%= govuk_summary_list do |sl|
+  sl.row do |row|
+    row.key(text: "Participant name")
+    row.value(text: full_name)
+  end
+
+  sl.row do |row|
+    row.key(text: "Participant email")
+    row.value(text: email)
+  end
+
+  if pending?
+    sl.row do |row|
+      row.key(text: "National Insurance number")
+      row.value(text: ni_number)
+    end
+
+    sl.row do |row|
+      row.key(text: "Date of birth")
+      row.value(text: ni_number)
+    end
+  end
+
+  sl.row do |row|
+    row.key(text: "Teacher reference number")
+    row.value(text: trn)
+  end
+
+  sl.row do |row|
+    row.key(text: "School name")
+    row.value(text: school_name)
+  end
+
+  sl.row do |row|
+    row.key(text: "School URN")
+    row.value(text: school_urn)
+  end
+
+  sl.row do |row|
+    row.key(text: "Participant type")
+    row.value(text: t(:npq, scope: "schools.participants.type"))
+  end
+
+  sl.row do |row|
+    row.key(text: "Provider")
+    row.value(text: lead_provider_name)
+  end
+
+  sl.row do |row|
+    row.key(text: "NPQ course")
+    row.value(text: npq_course_name)
+  end
+
+  sl.row do |row|
+    row.key(text: "Last updated")
+    row.value(text: last_updated)
+  end
+end %>
