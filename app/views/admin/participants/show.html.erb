@@ -30,6 +30,9 @@
         <% component.tab(label: 'Cohorts') do %>
           <%= render partial: 'cohorts', locals: { latest_induction_record: @latest_induction_record } %>
         <% end %>
+        <% component.tab(label: 'Declarations history') do %>
+          <%= render partial: 'declarations_history', locals: { participant_declarations: @participant_declarations } %>
+        <% end %>
       <% end %>
     <% end %>
   </div>
