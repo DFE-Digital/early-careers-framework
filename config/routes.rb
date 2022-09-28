@@ -244,6 +244,8 @@ Rails.application.routes.draw do
       end
 
       resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"
+
+      resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
     end
     resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]

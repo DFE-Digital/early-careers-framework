@@ -6,6 +6,7 @@
   sl.row do |row|
     row.key(text: "Participant name")
     row.value(text: full_name)
+    row.action(text: "Change", href: edit_admin_participant_npq_change_full_name_path(profile), visually_hidden_text: "participant name")
   end
 
   sl.row do |row|
