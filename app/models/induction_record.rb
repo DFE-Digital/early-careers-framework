@@ -83,6 +83,12 @@ class InductionRecord < ApplicationRecord
   # NOTE: these will return nil if the partnership is challenged
   delegate :lead_provider_name, to: :induction_programme
   delegate :delivery_partner_name, to: :induction_programme
+  delegate :full_name, to: :mentor, allow_nil: true, prefix: true
+  delegate :email, to: :preferred_identity, allow_nil: true, prefix: "participant"
+  delegate :name, :urn, to: :school, prefix: true
+  delegate :name, to: :appropriate_body, allow_nil: true, prefix: true
+  delegate :schedule_identifier, to: :schedule, allow_nil: true
+  delegate :training_programme, to: :induction_programme
 
   after_save :update_analytics
 

@@ -98,7 +98,16 @@ module Admin
     def induction_records
       @induction_records ||= @participant_profile
         .induction_records
-        .eager_load(:schedule)
+        .eager_load(
+          :appropriate_body,
+          :preferred_identity,
+          :schedule,
+          induction_programme: {
+            partnership: :lead_provider,
+            school_cohort: %i[cohort school],
+          },
+          mentor_profile: :user,
+        )
         .order(created_at: :desc)
     end
 
