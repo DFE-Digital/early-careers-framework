@@ -151,7 +151,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
       context "when the participant is also a mentor" do
         let(:user) { ect_profile.user }
-        let(:mentor_profile) { create(:mentor, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider, user:) }
+        let!(:mentor_profile) { create(:mentor, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider, user:) }
         let(:mentor_valid_params) do
           {
             participant_id: user.id,
