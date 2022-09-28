@@ -12,6 +12,7 @@
   sl.row do |row|
     row.key(text: "Participant email")
     row.value(text: email)
+    row.action(text: "Change", href: edit_admin_participant_npq_change_email_path(profile), visually_hidden_text: "participant email address")
   end
 
   if pending?
