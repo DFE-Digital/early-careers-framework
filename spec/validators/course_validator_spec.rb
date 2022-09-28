@@ -55,6 +55,56 @@ RSpec.describe CourseValidator, :with_default_schedules do
           expect(subject).to be_valid
         end
       end
+
+      context "with different course_identifier" do
+        let(:course_identifier) { "incorrect-course-identifier" }
+
+        it "is invalid" do
+          expect(subject).to be_invalid
+        end
+      end
+    end
+
+    context "ECF user" do
+      let(:declaration) { create(:ect_participant_declaration) }
+      let(:profile) { declaration.participant_profile }
+      let(:user) { profile.user }
+      let(:participant_identity) { profile.participant_identity }
+      let(:course_identifier) { declaration.course_identifier }
+
+      subject { klass.new(participant_identity:, course_identifier:) }
+
+      context "with one identity" do
+        it "is valid" do
+          expect(subject).to be_valid
+        end
+      end
+
+      context "with multiple identities" do
+        let(:second_email) { "#{rand(99_999)}@example.com" }
+        let(:second_external_identifier) { SecureRandom.uuid }
+
+        let(:participant_identity) do
+          create(
+            :participant_identity,
+            user:,
+            email: second_email,
+            external_identifier: second_external_identifier,
+          )
+        end
+
+        it "is valid" do
+          expect(subject).to be_valid
+        end
+      end
+
+      context "with different course_identifier" do
+        let(:course_identifier) { "incorrect-course-identifier" }
+
+        it "is invalid" do
+          expect(subject).to be_invalid
+        end
+      end
     end
   end
 end
