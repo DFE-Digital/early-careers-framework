@@ -1152,7 +1152,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
             GROUP BY participant_declarations.participant_profile_id, participant_declarations.cpd_lead_provider_id) declarations ON (((participant_profiles.id = declarations.participant_profile_id) AND (lead_providers.cpd_lead_provider_id = declarations.cpd_lead_provider_id))))
     WHERE (participant_profiles.participant_identity_id IN ( SELECT participant_profiles_1.participant_identity_id
              FROM participant_profiles participant_profiles_1
-            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_profiles_1.participant_identity_id
            HAVING (count(*) > 1)))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY
@@ -1187,6 +1187,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
       lp.name AS lead_provider_name,
       lp.id AS lead_provider_id,
       dp.name AS delivery_partner_name,
+      latest_induction_record.training_status,
+      pps.reason AS training_status_reason,
       sc.urn AS school_urn,
       sc.name AS school_name,
       pd.id AS declaration_id,
@@ -1196,12 +1198,13 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
       pd.created_at AS declaration_created_at,
       s.name AS statement_name,
       s.id AS statement_id
-     FROM (((((((((((((participant_declarations pd
+     FROM ((((((((((((((participant_declarations pd
        JOIN statement_line_items sli ON ((sli.participant_declaration_id = pd.id)))
        JOIN statements s ON ((s.id = sli.statement_id)))
        JOIN cpd_lead_providers clp ON ((clp.id = pd.cpd_lead_provider_id)))
        JOIN lead_providers lp ON ((lp.cpd_lead_provider_id = clp.id)))
        JOIN participant_profiles pp ON ((pd.participant_profile_id = pp.id)))
+       LEFT JOIN participant_profile_states pps ON (((pps.participant_profile_id = pp.id) AND (pps.cpd_lead_provider_id = clp.id) AND (pps.state = 'withdrawn'::text))))
        JOIN participant_identities pi ON ((pp.participant_identity_id = pi.id)))
        JOIN users u ON ((u.id = pi.external_identifier)))
        JOIN teacher_profiles tp ON ((tp.id = pp.teacher_profile_id)))
@@ -1220,7 +1223,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
        JOIN schools sc ON ((sc.id = latest_induction_record.school_id)))
        LEFT JOIN ecf_participant_eligibilities epe ON ((epe.participant_profile_id = pp.id)))
        JOIN delivery_partners dp ON ((dp.id = latest_induction_record.delivery_partner_id)))
-    WHERE ((pp.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+    WHERE ((pd.type)::text = 'ParticipantDeclaration::ECF'::text)
     ORDER BY u.full_name;
   SQL
   create_view "npq_assurance_reports", sql_definition: <<-SQL
@@ -1230,8 +1233,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
       c.identifier AS course_identifier,
       sch.schedule_identifier AS schedule,
       a.eligible_for_funding,
-      nlp.name AS lead_provider_name,
-      nlp.id AS lead_provider_id,
+      nlp.name AS npq_lead_provider_name,
+      nlp.id AS npq_lead_provider_id,
       a.school_urn,
       sc.name AS school_name,
       pp.status AS training_status,
@@ -1262,7 +1265,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
               participant_profile_states.reason
              FROM participant_profile_states
             ORDER BY participant_profile_states.cpd_lead_provider_id, participant_profile_states.created_at DESC) pps ON (((pps.participant_profile_id = pp.id) AND (pd.cpd_lead_provider_id = pps.cpd_lead_provider_id) AND (pps.state = 'withdrawn'::text))))
-    WHERE (((pd.type)::text = 'ParticipantDeclaration::NPQ'::text) AND (s.name = 'October 2022'::text))
+    WHERE ((pd.type)::text = 'ParticipantDeclaration::NPQ'::text)
     ORDER BY u.full_name;
   SQL
 end

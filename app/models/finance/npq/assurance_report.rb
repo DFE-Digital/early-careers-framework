@@ -1,25 +1,20 @@
 # frozen_string_literal: true
 
 module Finance
-  module ECF
+  module NPQ
     class AssuranceReport < ApplicationRecord
-      self.table_name = "ecf_assurance_reports"
+      self.table_name = "npq_assurance_reports"
 
       def to_csv
         [
           participant_id,
           participant_name,
           trn,
-          participant_type,
-          mentor_profile_id,
+          course_identifier,
           schedule,
           eligible_for_funding,
           eligible_for_funding_reason,
-          sparsity_uplift,
-          pupil_premium_uplift,
-          sparsity_and_pp,
-          lead_provider_name,
-          delivery_partner_name,
+          npq_lead_provider_name,
           school_urn,
           school_name,
           training_status,

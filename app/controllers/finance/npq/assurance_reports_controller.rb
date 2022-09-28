@@ -1,9 +1,8 @@
-# frozen_string_literal: true
-
 module Finance
-  module ECF
+  module NPQ
     class AssuranceReportsController < BaseController
       def show
+        byebug
         send_data(generate_csv, filename:)
       end
 
@@ -21,26 +20,21 @@ module Finance
       def assurance_report_rows
         @assurance_report_rows ||= AssuranceReport
                                      .where(
-                                       lead_provider_id: params[:lead_provider_id],
+                                       npq_lead_provider_id: params[:lead_provider_id],
                                        statement_id: params[:statement_id],
                                      )
       end
 
       def csv_headers
         [
-          "Participant ID",
           "Participant Name",
+          "Participant ID",
           "TRN",
-          "Type",
-          "Mentor Profile ID",
+          "Course Identifier",
           "Schedule",
           "Eligible For Funding",
           "Eligible For Funding Reason",
-          "Sparsity Uplift",
-          "Pupil Premium Uplift",
-          "Sparsity And Pp",
           "Lead Provider Name",
-          "Delivery Partner Name",
           "School Urn",
           "School Name",
           "Training Status",
@@ -56,15 +50,15 @@ module Finance
       end
 
       def filename
-        "ECF-Declarations-#{lead_provider.name.gsub(/\W/, '')}-Cohort#{statement.cohort.start_year}-#{statement.name.gsub(/\W/, '')}.csv"
+        "NPQ-Declarations-#{npq_lead_provider.name.gsub(/\W/, '')}-Cohort#{statement.cohort.start_year}-#{statement.name.gsub(/\W/, '')}.csv"
       end
 
-      def lead_provider
-        @lead_provider ||= LeadProvider.find(params[:lead_provider_id])
+      def npq_lead_provider
+        @npq_lead_provider ||= NPQLeadProvider.find(params[:lead_provider_id])
       end
 
       def statement
-        @statement ||= Finance::Statement::ECF.find(params[:statement_id])
+        @statement ||= Finance::Statement::NPQ.find(params[:statement_id])
       end
     end
   end

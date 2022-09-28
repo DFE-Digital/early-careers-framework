@@ -1,32 +1,32 @@
 SELECT
-  pi.external_identifier                                                    AS participant_id,
-  u.full_name                                                               AS participant_name,
-  tp.trn                                                                    AS trn,
-  pp.type                                                                   AS participant_type,
-  pp.mentor_profile_id                                                      AS mentor_profile_id,
-  sch.schedule_identifier                                                   AS schedule,
-  case epe.status WHEN 'eligible' THEN true ELSE false END                  AS eligible_for_funding,
-  case WHEN epe.status != 'eligible' THEN epe.reason ELSE NULL END          AS eligible_for_funding_reason,
-  pp.sparsity_uplift                                                        AS sparsity_uplift,
-  pp.pupil_premium_uplift                                                   AS pupil_premium_uplift,
+  pi.external_identifier                                           AS participant_id,
+  u.full_name                                                      AS participant_name,
+  tp.trn                                                           AS trn,
+  pp.type                                                          AS participant_type,
+  pp.mentor_profile_id                                             AS mentor_profile_id,
+  sch.schedule_identifier                                          AS schedule,
+  case epe.status WHEN 'eligible' THEN true ELSE false END         AS eligible_for_funding,
+  case WHEN epe.status != 'eligible' THEN epe.reason ELSE NULL END AS eligible_for_funding_reason,
+  pp.sparsity_uplift                                               AS sparsity_uplift,
+  pp.pupil_premium_uplift                                          AS pupil_premium_uplift,
   CASE
     WHEN pp.sparsity_uplift AND pp.pupil_premium_uplift THEN true
     ELSE false
-  END                                                                       AS sparsity_and_pp,
-  lp.name                                                                   AS lead_provider_name,
-  lp.id                                                                     AS lead_provider_id,
-  dp.name                                                                   AS delivery_partner_name,
-  latest_induction_record.training_status                                   AS training_status,
-  pps.reason                                                                AS training_status_reason,
-  sc.urn                                                                    AS school_urn,
-  sc.name                                                                   AS school_name,
-  pd.id                                                                     AS declaration_id,
-  pd.state                                                                  AS declaration_status,
-  pd.declaration_type                                                       AS declaration_type,
-  pd.declaration_date                                                       AS declaration_date,
-  pd.created_at                                                             AS declaration_created_at,
-  s.name                                                                    AS statement_name,
-  s.id                                                                      AS statement id
+  END                                                              AS sparsity_and_pp,
+  lp.name                                                          AS lead_provider_name,
+  lp.id                                                            AS lead_provider_id,
+  dp.name                                                          AS delivery_partner_name,
+  latest_induction_record.training_status                          AS training_status,
+  pps.reason                                                       AS training_status_reason,
+  sc.urn                                                           AS school_urn,
+  sc.name                                                          AS school_name,
+  pd.id                                                            AS declaration_id,
+  pd.state                                                         AS declaration_status,
+  pd.declaration_type                                              AS declaration_type,
+  pd.declaration_date                                              AS declaration_date,
+  pd.created_at                                                    AS declaration_created_at,
+  s.name                                                           AS statement_name,
+  s.id                                                             AS statement_id
 FROM participant_declarations pd
 JOIN statement_line_items sli  ON sli.participant_declaration_id = pd.id
 JOIN statements s              ON s.id = sli.statement_id
@@ -55,5 +55,5 @@ JOIN schedules sch ON sch.id = latest_induction_record.schedule_id
 JOIN schools sc ON sc.id = latest_induction_record.school_id
 LEFT OUTER JOIN ecf_participant_eligibilities epe ON epe.participant_profile_id = pp.id
 JOIN delivery_partners dp ON dp.id = latest_induction_record.delivery_partner_id
-WHERE pp.type IN ('ParticipantProfile::ECT', 'ParticipantProfile::Mentor')
+WHERE pd.type = 'ParticipantDeclaration::ECF'
 ORDER BY u.full_name ASC
