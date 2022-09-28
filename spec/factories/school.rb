@@ -13,15 +13,27 @@ FactoryBot.define do
     administrative_district_code { "E123" }
 
     trait :pupil_premium_uplift do
-      pupil_premiums { [build(:pupil_premium, :uplift)] }
+      transient do
+        start_year { 2021 }
+      end
+
+      pupil_premiums { [build(:pupil_premium, :uplift, start_year:)] }
     end
 
     trait :sparsity_uplift do
-      pupil_premiums { [build(:pupil_premium, :sparse)] }
+      transient do
+        start_year { 2021 }
+      end
+
+      pupil_premiums { [build(:pupil_premium, :sparse, start_year:)] }
     end
 
     trait :pupil_premium_and_sparsity_uplift do
-      pupil_premiums { [build(:pupil_premium, :uplift, :sparse)] }
+      transient do
+        start_year { 2021 }
+      end
+
+      pupil_premiums { [build(:pupil_premium, :uplift, :sparse, start_year:)] }
     end
 
     trait :with_local_authority do
