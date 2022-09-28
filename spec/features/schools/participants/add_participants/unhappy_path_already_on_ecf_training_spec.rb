@@ -105,7 +105,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
       when_i_select "No"
       when_i_click_on_continue
-      then_i_am_taken_to_the_cannot_add_page
+      then_i_am_taken_to_the_cannot_add_page_same_school
     end
   end
 
@@ -114,6 +114,38 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
       and_a_participant_from_a_different_school_is_already_on_ecf
     end
 
+    scenario "Induction tutor tries to add ppt that's already on ECF, does NOT continue onto transfer journey" do
+      when_i_click_on_add_your_early_career_teacher_and_mentor_details
+      then_i_am_taken_to_roles_page
 
+      when_i_click_on_continue
+      then_i_am_taken_to_your_ect_and_mentors_page
+
+      when_i_click_to_add_a_new_ect_or_mentor
+      then_i_should_be_on_the_who_to_add_page
+
+      when_i_select_to_add_a "A new ECT"
+      when_i_click_on_continue
+      then_i_am_taken_to_the_what_we_need_from_you_page
+
+      when_i_click_on_continue
+      then_i_am_taken_to_add_ect_name_page
+
+      when_i_add_ect_or_mentor_name
+      when_i_click_on_continue
+      then_i_am_taken_to_add_teachers_trn_page
+
+      when_i_add_the_trn
+      when_i_click_on_continue
+      then_i_am_taken_to_add_date_of_birth_page
+
+      when_i_add_a_date_of_birth
+      when_i_click_on_continue
+      then_i_am_taken_to_are_they_a_transfer_page
+
+      when_i_select "No"
+      when_i_click_on_continue
+      then_i_am_taken_to_the_cannot_add_page_different_school
+    end
   end
 end
