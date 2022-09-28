@@ -7,7 +7,11 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl"> You cannot add <%= add_participant_form.full_name.titleize %></h1>
 
-    <p class="govuk-body">Our records show this person is already registered on an ECF-based training programme at a different school</p>
+    <% if add_participant_form.existing_participant_profile_same_school? %>
+      <p class="govuk-body">Our records show this person is already registered on an ECF-based training programme at this school</p>
+    <% else %>
+      <p class="govuk-body">Our records show this person is already registered on an ECF-based training programme at a different school</p>
+    <% end %>
 
     <p class="govuk-body">Contact us for help to register this person at your school:
     <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %></p>

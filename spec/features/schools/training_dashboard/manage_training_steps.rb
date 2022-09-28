@@ -122,6 +122,15 @@ module ManageTrainingSteps
     set_updated_participant_data
   end
 
+  def given_i_am_signed_in_as_an_induction_coordinator_from_a_different_school
+    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort_two.school], user: create(:user, full_name: "Carl Coordinator Two"))
+    privacy_policy = create(:privacy_policy)
+    privacy_policy.accept!(@induction_coordinator_profile.user)
+    sign_in_as @induction_coordinator_profile.user
+    set_participant_data
+    set_updated_participant_data
+  end
+
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
     teacher_profile = create(:teacher_profile, user:)
@@ -229,6 +238,18 @@ module ManageTrainingSteps
     teacher_profile = create(:teacher_profile, user:)
     @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two)
+    create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
+  end
+
+  def and_a_participant_from_a_different_school_is_already_on_ecf
+    @school_three = create(:school, name: "Fip School 3")
+    @school_cohort_three = create(:school_cohort, school: @school_three, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @induction_programme_three = create(:induction_programme, :fip, school_cohort: @school_cohort_three)
+
+    user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
+    teacher_profile = create(:teacher_profile, user:)
+    @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort_three)
+    Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_three)
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
   end
 
@@ -992,7 +1013,7 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_cannot_add_page
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
-    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
+    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at this school")
   end
 
   def then_i_am_taken_choose_mentor_in_transfer_page
