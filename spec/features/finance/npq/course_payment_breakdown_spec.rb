@@ -46,6 +46,9 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     then_i_should_see_the_correct_total
     and_the_page_should_be_accessible
 
+    expect(page)
+      .to have_link("Download declarations (CSV)", href: finance_npq_lead_provider_statement_assurance_report_path(npq_lead_provider, statement, format: :csv))
+
     when_i_click_on_view_within_statement_summary
     then_i_see_voided_declarations
     when_i_click "Back"

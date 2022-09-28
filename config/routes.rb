@@ -414,6 +414,10 @@ Rails.application.routes.draw do
 
     namespace :npq do
       resources :lead_providers, path: "payment-overviews", controller: "payment_overviews", only: %i[show] do
+        resources :statements, only: [] do
+          resource :assurance_report, path: "assurance-report", only: :show, format: :csv
+        end
+
         resources :statements, only: %i[show] do
           resources :courses, only: %i[show], controller: "course_payment_breakdowns"
           resource :voided, controller: "participant_declarations/voided", path: "voided", only: %i[show]

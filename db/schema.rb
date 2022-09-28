@@ -1220,7 +1220,49 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
        JOIN schools sc ON ((sc.id = latest_induction_record.school_id)))
        LEFT JOIN ecf_participant_eligibilities epe ON ((epe.participant_profile_id = pp.id)))
        JOIN delivery_partners dp ON ((dp.id = latest_induction_record.delivery_partner_id)))
-    WHERE ((pp.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
+    WHERE ((pp.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+    ORDER BY u.full_name;
+  SQL
+  create_view "npq_assurance_reports", sql_definition: <<-SQL
+      SELECT pi.external_identifier AS participant_id,
+      u.full_name AS participant_name,
+      tp.trn,
+      c.identifier AS course_identifier,
+      sch.schedule_identifier AS schedule,
+      a.eligible_for_funding,
+      nlp.name AS lead_provider_name,
+      nlp.id AS lead_provider_id,
+      a.school_urn,
+      sc.name AS school_name,
+      pp.status AS training_status,
+      pps.reason AS training_status_reason,
+      pd.id AS declaration_id,
+      pd.state AS declaration_status,
+      pd.declaration_type,
+      pd.declaration_date,
+      pd.created_at AS declaration_created_at,
+      s.id AS statement_id,
+      s.name AS statement_name
+     FROM (((((((((((((participant_declarations pd
+       JOIN statement_line_items sli ON ((sli.participant_declaration_id = pd.id)))
+       JOIN statements s ON ((s.id = sli.statement_id)))
+       JOIN cpd_lead_providers clp ON ((clp.id = pd.cpd_lead_provider_id)))
+       JOIN npq_lead_providers nlp ON ((nlp.cpd_lead_provider_id = clp.id)))
+       JOIN participant_profiles pp ON ((pd.participant_profile_id = pp.id)))
+       JOIN npq_applications a ON ((a.id = pp.id)))
+       JOIN npq_courses c ON ((c.id = a.npq_course_id)))
+       JOIN participant_identities pi ON ((pp.participant_identity_id = pi.id)))
+       JOIN users u ON ((u.id = pi.external_identifier)))
+       JOIN teacher_profiles tp ON ((tp.id = pp.teacher_profile_id)))
+       JOIN schedules sch ON ((sch.id = pp.schedule_id)))
+       JOIN schools sc ON (((sc.urn)::text = pp.school_urn)))
+       LEFT JOIN ( SELECT DISTINCT ON (participant_profile_states.cpd_lead_provider_id) participant_profile_states.cpd_lead_provider_id,
+              participant_profile_states.participant_profile_id,
+              participant_profile_states.state,
+              participant_profile_states.reason
+             FROM participant_profile_states
+            ORDER BY participant_profile_states.cpd_lead_provider_id, participant_profile_states.created_at DESC) pps ON (((pps.participant_profile_id = pp.id) AND (pd.cpd_lead_provider_id = pps.cpd_lead_provider_id) AND (pps.state = 'withdrawn'::text))))
+    WHERE (((pd.type)::text = 'ParticipantDeclaration::NPQ'::text) AND (s.name = 'October 2022'::text))
     ORDER BY u.full_name;
   SQL
 end
