@@ -1,0 +1,14 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(@full_name_form, url: admin_participant_npq_change_full_name_path(@participant_profile), method: "put") do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_text_field(
+        :full_name,
+        label: { text: "Change #{@participant_profile.user.full_name}'s name", tag: "h1", size: "l" },
+      ) %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>
