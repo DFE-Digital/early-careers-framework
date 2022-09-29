@@ -66,8 +66,8 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
         allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
       end
 
-      it "includes uplift adjustments" do
-        expect(subject.adjustments_total).to eql(200)
+      it "does not include uplift adjustments" do
+        expect(subject.adjustments_total).to eql(0)
       end
     end
 

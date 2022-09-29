@@ -3,6 +3,7 @@
 require_relative "../../sections/statement_selector"
 require_relative "../../sections/summary_finance_panel"
 require_relative "../../sections/output_payments_finance_panel"
+require_relative "../../sections/uplifts_finance_panel"
 require_relative "../../sections/adjustments_finance_panel"
 require_relative "../../sections/contract_information_finance_panel"
 
@@ -14,6 +15,7 @@ module Pages
     section :statement_selector, Sections::StatementSelector
     section :summary_panel, Sections::SummaryFinancePanel
     section :output_payments_panel, Sections::OutputPaymentsFinancePanel
+    section :uplifts_panel, Sections::UpliftsFinancePanel
     section :adjustments_panel, Sections::AdjustmentsFinancePanel
     section :contract_information_panel, Sections::ContractInformationFinancePanel
 
@@ -51,7 +53,7 @@ module Pages
     end
 
     def has_other_fees_table?(num_ects: 0, num_mentors: 0)
-      adjustments_panel.has_uplift_payments? num_ects + num_mentors
+      uplifts_panel.has_uplift_payments? num_ects + num_mentors
     end
   end
 end
