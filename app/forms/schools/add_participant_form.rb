@@ -360,7 +360,7 @@ module Schools
     end
 
     def existing_participant_profile_same_school?
-      existing_participant_profile&.school == school_cohort.school
+      existing_participant_profile&.current_induction_record&.school == school_cohort.school
     end
   end
 end
