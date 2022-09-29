@@ -66,7 +66,7 @@ module Participants
 
       def validate_cannot_change_cohort
         if relevant_induction_record &&
-            relevant_induction_record.schedule.cohort.start_year != cohort.start_year
+            relevant_induction_record.schedule.cohort.start_year != cohort&.start_year
           errors.add(:cohort, I18n.t("cannot_change_cohort"))
         end
       end
@@ -159,6 +159,7 @@ module Participants
 
       def validate_new_schedule_valid_with_existing_declarations
         return if user.blank? || user_profile.blank?
+        return unless schedule
 
         user_profile.participant_declarations.each do |declaration|
           next unless %w[submitted eligible payable paid].include?(declaration.state)

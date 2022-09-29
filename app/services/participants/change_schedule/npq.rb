@@ -95,6 +95,8 @@ module Participants
       end
 
       def schedule_valid_with_pending_declarations
+        return unless schedule
+
         user_profile&.participant_declarations&.each do |declaration|
           if declaration.changeable?
             milestone = schedule.milestones.find_by(declaration_type: declaration.declaration_type)
