@@ -241,7 +241,7 @@ module ManageTrainingSteps
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
   end
 
-  def and_a_participant_from_a_different_school_is_already_on_ecf
+  def given_a_participant_from_a_different_school_is_already_on_ecf
     @school_three = create(:school, name: "Fip School 3")
     @school_cohort_three = create(:school_cohort, school: @school_three, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme_three = create(:induction_programme, :fip, school_cohort: @school_cohort_three)

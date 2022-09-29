@@ -111,7 +111,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
   context "When participant already on ECF from a different school" do
     before do
-      and_a_participant_from_a_different_school_is_already_on_ecf
+      given_a_participant_from_a_different_school_is_already_on_ecf
     end
 
     scenario "Induction tutor tries to add ppt that's already on ECF, does NOT continue onto transfer journey" do
