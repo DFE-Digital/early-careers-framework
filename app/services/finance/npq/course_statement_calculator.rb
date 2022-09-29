@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "payment_calculator/npq/service_fees"
+
 module Finance
   module NPQ
     class CourseStatementCalculator
@@ -102,11 +104,7 @@ module Finance
       end
 
       def monthly_service_fees
-        service_fees[:monthly]
-      end
-
-      def service_fees
-        @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract:)
+        contract.monthly_service_fee || calculated_service_fee
       end
 
       def course_total
@@ -114,6 +112,14 @@ module Finance
       end
 
     private
+
+      def calculated_service_fee
+        service_fees[:monthly]
+      end
+
+      def service_fees
+        @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract:)
+      end
 
       def course
         @course ||= contract.npq_course

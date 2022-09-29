@@ -201,4 +201,25 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
       end
     end
   end
+
+  describe "#monthly_service_fees" do
+    it "returns calculated service fee" do
+      expect(subject.monthly_service_fees).to eql(BigDecimal("0.1212631578947368421052631578947368421064e4"))
+    end
+
+    context "when monthly_service_fee present on contract" do
+      let(:contract) do
+        create(
+          :npq_contract,
+          :with_monthly_service_fee,
+          npq_lead_provider:,
+          course_identifier: npq_course.identifier,
+        )
+      end
+
+      it "returns monthly_service_fee from contract" do
+        expect(subject.monthly_service_fees).to eql(543.21)
+      end
+    end
+  end
 end
