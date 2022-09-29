@@ -158,6 +158,8 @@ en:
     teacher_reference_number_personalised:
       <<: *trn_error_messages
       blank: Enter your teacher reference number (TRN)
+    npq_application:
+      blank: Enter a valid NPQ application ID
 
   activerecord:
     attributes:
