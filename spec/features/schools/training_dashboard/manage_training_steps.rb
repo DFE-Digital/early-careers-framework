@@ -122,15 +122,6 @@ module ManageTrainingSteps
     set_updated_participant_data
   end
 
-  def given_i_am_signed_in_as_an_induction_coordinator_from_a_different_school
-    @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort_two.school], user: create(:user, full_name: "Carl Coordinator Two"))
-    privacy_policy = create(:privacy_policy)
-    privacy_policy.accept!(@induction_coordinator_profile.user)
-    sign_in_as @induction_coordinator_profile.user
-    set_participant_data
-    set_updated_participant_data
-  end
-
   def and_i_have_added_an_ect
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
     teacher_profile = create(:teacher_profile, user:)
