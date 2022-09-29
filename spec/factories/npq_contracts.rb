@@ -63,6 +63,6 @@ FactoryBot.define do
   end
 
   trait :with_monthly_service_fee do
-    monthly_service_fee { 543.21 }
+    monthly_service_fee { 5432.10 }
   end
 end
