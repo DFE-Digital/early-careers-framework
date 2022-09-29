@@ -72,7 +72,33 @@ RSpec.describe Participants::ChangeSchedule::NPQ, :with_default_schedules do
         })
       end
 
-      it "should not have an error" do
+      it "should have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing)
+      end
+    end
+
+    context "with incorrect cohort" do
+      let!(:declaration) do
+        create(
+          :npq_participant_declaration,
+          participant_profile: profile,
+          course_identifier: profile.npq_course.identifier,
+          declaration_date: schedule.milestones.find_by(declaration_type: "started").start_date + 1.day,
+          cpd_lead_provider:,
+        )
+      end
+
+      subject do
+        described_class.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: profile.npq_course.identifier,
+          cpd_lead_provider:,
+          cohort: 2018,
+        })
+      end
+
+      it "should have an error" do
         expect { subject.call }.to raise_error(ActionController::ParameterMissing)
       end
     end

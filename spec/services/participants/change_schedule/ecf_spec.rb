@@ -125,6 +125,33 @@ RSpec.describe Participants::ChangeSchedule::ECF, :with_default_schedules do
         expect(subject.errors.full_messages.join(",")).to include("The property '#/course_identifier' must be an available course to '#/participant_id'")
       end
     end
+
+    context "with incorrect cohort" do
+      let(:user)     { profile.user }
+      let(:profile)  { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+      let(:schedule) { Finance::Schedule::ECF.default_for(cohort: Cohort.current) }
+      let!(:participant_declaration) do
+        create(:participant_declaration,
+               user:,
+               cpd_lead_provider:,
+               participant_profile: profile,
+               course_identifier: "ecf-mentor")
+      end
+
+      subject do
+        Participants::ChangeSchedule::ECF.new(params: {
+          schedule_identifier: schedule.schedule_identifier,
+          participant_id: user.id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider:,
+          cohort: 2018,
+        })
+      end
+
+      it "should have an error" do
+        expect { subject.call }.to raise_error(ActionController::ParameterMissing, /must be present and correspond to a valid schedule/)
+      end
+    end
   end
 
   describe "changing to a soft schedules with previous declarations", :with_default_schedules do
