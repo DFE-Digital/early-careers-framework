@@ -631,4 +631,20 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
       end
     end
   end
+
+  describe "#service_fee" do
+    let(:contract) { create(:call_off_contract, lead_provider:) }
+
+    it "returns calculated calculated service fee" do
+      expect(subject.service_fee).to eql(BigDecimal("0.75943068965517241379310344827586206896551e5"))
+    end
+
+    context "when monthly_service_fee is set on contract" do
+      let(:contract) { create(:call_off_contract, :with_monthly_service_fee, lead_provider:) }
+
+      it "uses monthly_service_fee" do
+        expect(subject.service_fee).to eql(123.45)
+      end
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_15_142750) do
+ActiveRecord::Schema.define(version: 2022_09_29_104505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(version: 2022_09_15_142750) do
     t.uuid "lead_provider_id", default: -> { "gen_random_uuid()" }, null: false
     t.integer "revised_target"
     t.uuid "cohort_id", null: false
+    t.decimal "monthly_service_fee"
     t.index ["cohort_id"], name: "index_call_off_contracts_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_call_off_contracts_on_lead_provider_id"
   end
@@ -568,6 +569,7 @@ ActiveRecord::Schema.define(version: 2022_09_15_142750) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cohort_id", null: false
+    t.decimal "monthly_service_fee"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end

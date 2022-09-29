@@ -61,4 +61,8 @@ FactoryBot.define do
     per_participant { 850.00 }
     service_fee_installments { 25 }
   end
+
+  trait :with_monthly_service_fee do
+    monthly_service_fee { 5432.10 }
+  end
 end
