@@ -2,7 +2,6 @@ module Finance
   module NPQ
     class AssuranceReportsController < BaseController
       def show
-        byebug
         send_data(generate_csv, filename:)
       end
 
@@ -27,13 +26,12 @@ module Finance
 
       def csv_headers
         [
-          "Participant Name",
           "Participant ID",
+          "Participant Name",
           "TRN",
           "Course Identifier",
           "Schedule",
           "Eligible For Funding",
-          "Eligible For Funding Reason",
           "Lead Provider Name",
           "School Urn",
           "School Name",

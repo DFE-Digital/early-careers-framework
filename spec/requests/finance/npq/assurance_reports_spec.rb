@@ -6,10 +6,10 @@ RSpec.describe Finance::NPQ::AssuranceReportsController, :with_default_schedules
   let(:user)              { create(:user, :finance) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:statement)         { create(:npq_statement, cpd_lead_provider:) }
-
+  let(:school)            { create(:school, name: "A school") }
   before do
     travel_to statement.deadline_date do
-      create_list(:npq_participant_declaration, 2, :eligible, cpd_lead_provider:)
+      create_list(:npq_participant_declaration, 2, :eligible, cpd_lead_provider:, school_urn: school.urn)
     end
     sign_in user
   end
@@ -32,13 +32,14 @@ RSpec.describe Finance::NPQ::AssuranceReportsController, :with_default_schedules
       expect(row["Participant ID"]).to    eq(participant_profile.participant_identity.external_identifier)
       expect(row["Participant Name"]).to  eq(CGI.escapeHTML(participant_profile.participant_identity.user.full_name))
       expect(row["TRN"]).to               eq(participant_profile.teacher_profile.trn)
-      expect(row["Course Identifier"]).to eq(participant_profile.application.npq_course.identifier)
+
       expect(row["Schedule"]).to          eq(participant_profile.schedule.schedule_identifier)
-      expect(row["School Urn"]).to        eq(participant_profile.school.urn)
-      expect(row["School Name"]).to       eq(participant_profile.school.name)
+      npq_application = participant_profile.npq_application
+      expect(row["Course Identifier"]).to eq(npq_application.npq_course.identifier)
+      expect(row["School Urn"]).to        eq(npq_application.school_urn)
+      expect(row["School Name"]).to       eq(school.name)
 
       expect(row["Eligible For Funding"]).to eq("true")
-      expect(row["Eligible For Funding Reason"]).to be_blank
     end
   end
 end

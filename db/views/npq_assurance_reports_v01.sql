@@ -30,7 +30,7 @@ JOIN participant_identities pi      ON pp.participant_identity_id = pi.id
 JOIN users u                        ON u.id = pi.external_identifier
 JOIN teacher_profiles tp            ON tp.id = pp.teacher_profile_id
 JOIN schedules sch                  ON sch.id = pp.schedule_id
-JOIN schools sc                     ON sc.urn = pp.school_urn
+LEFT OUTER JOIN schools sc          ON sc.urn = pp.school_urn
 LEFT OUTER JOIN (
      SELECT DISTINCT ON (cpd_lead_provider_id) cpd_lead_provider_id, participant_profile_id, state, reason
      FROM participant_profile_states

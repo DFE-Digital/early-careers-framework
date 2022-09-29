@@ -1258,7 +1258,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
        JOIN users u ON ((u.id = pi.external_identifier)))
        JOIN teacher_profiles tp ON ((tp.id = pp.teacher_profile_id)))
        JOIN schedules sch ON ((sch.id = pp.schedule_id)))
-       JOIN schools sc ON (((sc.urn)::text = pp.school_urn)))
+       LEFT JOIN schools sc ON (((sc.urn)::text = pp.school_urn)))
        LEFT JOIN ( SELECT DISTINCT ON (participant_profile_states.cpd_lead_provider_id) participant_profile_states.cpd_lead_provider_id,
               participant_profile_states.participant_profile_id,
               participant_profile_states.state,

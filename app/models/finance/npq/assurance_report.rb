@@ -13,7 +13,6 @@ module Finance
           course_identifier,
           schedule,
           eligible_for_funding,
-          eligible_for_funding_reason,
           npq_lead_provider_name,
           school_urn,
           school_name,
