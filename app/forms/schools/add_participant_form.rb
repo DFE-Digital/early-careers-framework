@@ -358,5 +358,9 @@ module Schools
     rescue ActiveRecord::RecordNotFound
       nil
     end
+
+    def existing_participant_profile_same_school?
+      existing_participant_profile&.induction_records&.latest&.school == school_cohort.school
+    end
   end
 end
