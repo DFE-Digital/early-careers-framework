@@ -33,6 +33,10 @@ FactoryBot.define do
       }.to_json
     end
 
+    trait :with_monthly_service_fee do
+      monthly_service_fee { 123.45 }
+    end
+
     after(:build) do |contract, evaluator|
       contract.lead_provider = evaluator.lead_provider
     end

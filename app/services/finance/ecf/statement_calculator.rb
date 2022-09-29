@@ -148,7 +148,7 @@ module Finance
       end
 
       def service_fee
-        PaymentCalculator::ECF::ServiceFees.new(contract:).call.sum { |hash| hash[:monthly] }
+        contract.monthly_service_fee || calculated_service_fee
       end
 
       def output_fee
@@ -158,6 +158,10 @@ module Finance
       end
 
     private
+
+      def calculated_service_fee
+        PaymentCalculator::ECF::ServiceFees.new(contract:).call.sum { |hash| hash[:monthly] }
+      end
 
       def output_calculator
         @output_calculator ||= OutputCalculator.new(statement:)
