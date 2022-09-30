@@ -51,22 +51,25 @@ RSpec.feature "CIP to CIP - Transfer a participant",
       cohort
     end
     let!(:schedule) do
-      schedule = create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort:)
+      create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort:)
+    end
+    let!(:milestone_started) do
       create :milestone,
-             schedule: schedule,
+             schedule:,
              name: "Output 1 - Participant Start",
              start_date: Date.new(2021, 9, 1),
              milestone_date: Date.new(2021, 11, 30),
              payment_date: Date.new(2021, 11, 30),
              declaration_type: "started"
+    end
+    let!(:milestone_retained_1) do
       create :milestone,
-             schedule: schedule,
+             schedule:,
              name: "Output 2 - Retention Point 1",
              start_date: Date.new(2021, 11, 1),
              milestone_date: Date.new(2022, 1, 31),
              payment_date: Date.new(2022, 2, 28),
              declaration_type: "retained-1"
-      schedule
     end
     let!(:privacy_policy) do
       privacy_policy = create(:privacy_policy)
@@ -78,8 +81,10 @@ RSpec.feature "CIP to CIP - Transfer a participant",
       before do
         given_lead_providers_contracted_to_deliver_ecf "Another Lead Provider"
 
-        Seeds::CallOffContracts.new.call
-        Importers::SeedStatements.new.call
+        travel_to(milestone_started.milestone_date - 2.months) do
+          Seeds::CallOffContracts.new.call
+          Importers::SeedStatements.new.call
+        end
 
         and_sit_at_pupil_premium_school_reported_programme "Original SIT", "CIP"
 
