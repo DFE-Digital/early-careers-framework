@@ -9,10 +9,10 @@ RSpec.describe Induction::AmendParticipantsCohort do
     let!(:school_cohort_22) { create(:school_cohort, :fip, school: school_cohort_21.school, cohort: cohort_22) }
     let!(:successful_participant) { create(:ect_participant_profile, school_cohort: school_cohort_21) }
     let!(:failed_participant) { create(:ect_participant_profile, school_cohort: school_cohort_21) }
-    let!(:emails) { [successful_participant.user.email, failed_participant.user.email] }
+    let!(:participant_profile_ids) { [successful_participant.id, failed_participant.id] }
 
     subject(:service) do
-      described_class.new(*emails, source_cohort_start_year: 2021, target_cohort_start_year: 2022)
+      described_class.new(*participant_profile_ids, source_cohort_start_year: 2021, target_cohort_start_year: 2022)
     end
 
     before do
@@ -24,12 +24,12 @@ RSpec.describe Induction::AmendParticipantsCohort do
                             induction_programme: school_cohort_21.default_induction_programme)
     end
 
-    it "returns a list of successfully processed emails" do
-      expect(service.call[:success]).to match_array([successful_participant.user.email])
+    it "returns a list of successfully processed participants" do
+      expect(service.call[:success]).to match_array([successful_participant.id])
     end
 
-    it "returns a hash of emails failing and their error message" do
-      expect(service.call[:fail]).to match(failed_participant.user.email => {
+    it "returns a hash of ids failing and their error message" do
+      expect(service.call[:fail]).to match(failed_participant.id => {
         induction_record: "The participant is not enrolled on the cohort starting on 2021",
       })
     end

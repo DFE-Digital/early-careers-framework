@@ -2,22 +2,12 @@
 
 RSpec.describe Induction::AmendParticipantCohort do
   describe "#save" do
-    let(:email) { "participant@school.org" }
+    let(:participant_profile) {}
     let(:source_cohort_start_year) { 2021 }
     let(:target_cohort_start_year) { 2022 }
 
     subject(:form) do
-      described_class.new(email:, source_cohort_start_year:, target_cohort_start_year:)
-    end
-
-    context "when the email is not valid" do
-      let(:email) { "invalid_email_address" }
-
-      it "returns false and set errors" do
-        expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:email)
-        expect(form.errors.first.message).to eq("Enter an email address in the correct format, like name@example.com")
-      end
+      described_class.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
     end
 
     context "when the source_cohort_start_year is not an integer" do
@@ -109,20 +99,18 @@ RSpec.describe Induction::AmendParticipantCohort do
         create(:ect_participant_profile, training_status: :active, school_cohort: source_school_cohort)
       end
 
-      let(:email) { participant_profile.participant_identity.email }
-
       before do
         Induction::SetCohortInductionProgramme.call(school_cohort: source_school_cohort,
                                                     programme_choice: source_school_cohort.induction_programme_choice)
       end
 
-      context "when there is no participant with the provided email address" do
-        let(:email) { "no_participant@school.org" }
+      context "when their is no participant" do
+        let(:participant_profile) {}
 
         it "returns false and set errors" do
           expect(form.save).to be_falsey
           expect(form.errors.first.attribute).to eq(:participant_profile)
-          expect(form.errors.first.message).to eq("Not registered or not active")
+          expect(form.errors.first.message).to eq("Not registered")
         end
       end
 
@@ -134,7 +122,7 @@ RSpec.describe Induction::AmendParticipantCohort do
         it "returns false and set errors" do
           expect(form.save).to be_falsey
           expect(form.errors.first.attribute).to eq(:participant_profile)
-          expect(form.errors.first.message).to eq("Not registered or not active")
+          expect(form.errors.first.message).to eq("Not active")
         end
       end
 

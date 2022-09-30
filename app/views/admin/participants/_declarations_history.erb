@@ -36,6 +36,11 @@
       end
 
       sl.row do |row|
+        row.key(text: "Delivery parner")
+        row.value(text: participant_declaration.delivery_partner&.name)
+      end
+
+      sl.row do |row|
         row.key(text: "State")
         row.value(text: participant_declaration.state)
       end
@@ -54,12 +59,6 @@
         row.key(text: "Pupil premium uplift")
         row.value(text: participant_declaration.pupil_premium_uplift)
       end
-
-      sl.row do |row|
-        row.key(text: "Delivery parner")
-        row.value(text: participant_declaration.delivery_partner&.name)
-      end
     end
   %>
-
 <% end %>
