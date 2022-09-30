@@ -303,13 +303,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :delivery_partners, path: "delivery-partners" do
-      resources :users, only: %i[index new create edit update destroy] do
-        member do
-          get "delete", action: :delete
-        end
-      end
-    end
+    resources :delivery_partner_profiles, path: "delivery-partner-profiles"
 
     scope :administrators, module: "administrators" do
       resources :administrators, only: %i[index new create edit update destroy], path: "/" do

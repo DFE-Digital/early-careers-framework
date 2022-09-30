@@ -3,102 +3,88 @@
 require "rails_helper"
 
 RSpec.feature "Admin delivery partner users" do
+  let!(:delivery_partner)     { create(:delivery_partner, name: "First Partner") }
+
   before do
-    given_a_delivery_partner_exists
     and_i_am_signed_in_as_an_admin
   end
 
   scenario "Add new user" do
-    when_i_visit_admin_delivery_partner_users_page
+    visit("/admin/delivery-partner-profiles")
     then_i_see("Delivery partners")
 
-    when_i_click_on_add_a_new_user
+    click_on("Add a new user")
+
     then_i_see("Add a new delivery partner user")
-    and_i_choose("Delivery partner", with: @delivery_partner.name)
-    and_i_fill_in("Full name", with: "Joe Blogs")
-    and_i_fill_in("Email", with: "joe@example.com")
-    and_i_click_on("Add user")
+
+    click_on("Add user")
+
+    within "ul.govuk-error-summary__list" do
+      expect(page).to have_link("Enter a full name", href: "#delivery-partner-profile-user-full-name-field-error")
+      expect(page).to have_link("Enter an email", href: "#delivery-partner-profile-user-email-field-error")
+      expect(page).to have_link("You must select a delivery partner.", href: "#delivery-partner-profile-delivery-partner-id-field-error")
+    end
+
+    select(delivery_partner.name, from: "Delivery partner")
+    fill_in "Full name", with: "Joe Blogs"
+    fill_in "Email", with: "joe@example.com"
+    click_on "Add user"
 
     then_i_see("Delivery partners")
     and_i_see("Delivery partner user successfully added")
     and_i_see("Joe Blogs")
     and_i_see("joe@example.com")
-    and_i_see(@delivery_partner.name)
+    and_i_see(delivery_partner.name)
   end
 
-  scenario "Edit a user" do
-    given_a_delivery_partner_user_exists
-    and_a_second_delivery_partner_exists
-    when_i_visit_admin_delivery_partner_users_page
-    then_i_see("Delivery partners")
-    and_i_see(@delivery_partner_user.full_name)
-    and_i_see(@delivery_partner_user.email)
+  context "when a delivery partner user exist" do
+    let!(:delivery_partner_user) { create(:user, :delivery_partner) }
+    let!(:second_delivery_partner) { create(:delivery_partner, name: "Second Partner") }
 
-    when_i_click_on(@delivery_partner_user.full_name)
-    then_i_see("Edit user details")
-    and_i_choose("Delivery partner", with: @delivery_partner2.name)
-    and_i_fill_in("Full name", with: "Joe Blogs")
-    and_i_fill_in("Email", with: "joe@example.com")
-    and_i_click_on("Save")
+    scenario "Edit a user" do
+      visit("/admin/delivery-partner-profiles")
+      then_i_see("Delivery partners")
+      and_i_see(delivery_partner_user.full_name)
+      and_i_see(delivery_partner_user.email)
 
-    then_i_see("Delivery partners")
-    and_i_see("Changes saved successfully")
-    and_i_see("Joe Blogs")
-    and_i_see("joe@example.com")
-    and_i_see(@delivery_partner2.name)
-  end
+      click_on(delivery_partner_user.full_name)
+      then_i_see("Edit user details")
+      select second_delivery_partner.name, from: "Delivery partner"
+      fill_in "Full name", with: "Joe Blogs"
+      fill_in "Email", with: "joe@example.com"
+      click_on "Save"
 
-  scenario "Delete a user" do
-    given_a_delivery_partner_user_exists
-    when_i_visit_admin_delivery_partner_users_page
-    then_i_see("Delivery partners")
-    and_i_see(@delivery_partner_user.full_name)
-    and_i_see(@delivery_partner_user.email)
+      then_i_see("Delivery partners")
+      and_i_see("Changes saved successfully")
+      and_i_see("Joe Blogs")
+      and_i_see("joe@example.com")
+      and_i_see(second_delivery_partner.name)
+    end
 
-    when_i_click_on(@delivery_partner_user.full_name)
-    then_i_see("Edit user details")
-    and_i_click_on("Delete")
+    scenario "Delete a user" do
+      visit("/admin/delivery-partner-profiles")
 
-    then_i_see("Do you want to delete this user?")
-    and_i_see(@delivery_partner_user.full_name)
-    and_i_click_on("Delete")
+      then_i_see("Delivery partners")
+      and_i_see(delivery_partner_user.full_name)
+      and_i_see(delivery_partner_user.email)
 
-    then_i_see("Delivery partners")
-    and_i_see("Delivery partner user deleted")
-    and_i_should_not_see("Joe Blogs")
-    and_i_should_not_see("joe@example.com")
-  end
+      click_on(delivery_partner_user.full_name)
+      then_i_see("Edit user details")
+      click_on("Delete")
 
-  def given_a_delivery_partner_exists
-    @delivery_partner = create(:delivery_partner, name: "First Partner")
-  end
+      then_i_see("Do you want to delete this user?")
+      and_i_see(delivery_partner_user.full_name)
+      click_on("Delete")
 
-  def and_a_second_delivery_partner_exists
-    @delivery_partner2 = create(:delivery_partner, name: "Second Partner")
-  end
-
-  def when_i_visit_admin_delivery_partner_users_page
-    visit("/admin/delivery-partners/users")
-  end
-
-  def when_i_click_on_add_a_new_user
-    click_on("Add a new user")
+      then_i_see("Delivery partners")
+      and_i_see("Delivery partner user deleted")
+      and_i_should_not_see("Joe Blogs")
+      and_i_should_not_see("joe@example.com")
+    end
   end
 
   def and_i_choose(selector, with:)
-    page.select with, from: selector
-  end
-
-  def and_i_fill_in(selector, with:)
-    page.fill_in selector, with:
-  end
-
-  def when_i_click_on(string)
-    page.click_on(string)
-  end
-
-  def and_i_click_on(string)
-    page.click_on(string)
+    select with, from: selector
   end
 
   def then_i_see(string)
@@ -111,9 +97,5 @@ RSpec.feature "Admin delivery partner users" do
 
   def and_i_should_not_see(string)
     expect(page).not_to have_content(string)
-  end
-
-  def given_a_delivery_partner_user_exists
-    @delivery_partner_user = create(:user, :delivery_partner)
   end
 end

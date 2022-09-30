@@ -1,0 +1,25 @@
+<% content_for :title, "Edit user" %>
+<% content_for :before_content, govuk_back_link(
+  text: "Back",
+  href: admin_delivery_partner_profiles_path)
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Edit user details</h1>
+
+    <%= form_for [:admin, @delivery_partner_profile] do |f| %>
+
+      <%= f.govuk_select :delivery_partner_id, options_from_collection_for_select(DeliveryPartner.name_order, :id, :name, f.object.delivery_partner_id), label: { text: "Delivery partner" }, options: { include_blank: true }, class: ["js-location-select"]
+      %>
+      <%= f.fields_for :user_attributes, @delivery_partner_profile.user do |user_form| %>
+        <%= user_form.govuk_text_field(:full_name, label: { text: "Full name" }) %>
+        <%= user_form.govuk_email_field(:email, label: { text: "Email" }) %>
+      <% end %>
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Save" %>
+        <%= govuk_button_link_to "Delete", admin_delivery_partner_profile_path(@delivery_partner_profile), class: "govuk-button--warning" %>
+      </div>
+    <% end %>
+  </div>
+</div>

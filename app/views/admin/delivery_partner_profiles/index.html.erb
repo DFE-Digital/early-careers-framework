@@ -2,7 +2,7 @@
 
 <%= render "admin/delivery_partners/heading" %>
 
-<%= govuk_button_link_to "Add a new user", new_admin_delivery_partners_user_path %>
+<%= govuk_button_link_to "Add a new user", new_admin_delivery_partner_profile_path %>
 <table class="govuk-table">
   <thead>
     <tr class="govuk-table__row">
@@ -15,7 +15,7 @@
     <% @delivery_partner_profiles.each do |delivery_partner_profile| %>
       <% user = delivery_partner_profile.user %>
       <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= govuk_link_to user.full_name, edit_admin_delivery_partners_user_path(delivery_partner_profile) %></td>
+        <td class="govuk-table__cell"><%= govuk_link_to user.full_name, edit_admin_delivery_partner_profile_path(delivery_partner_profile) %></td>
         <td class="govuk-table__cell"><%= user.email %></td>
         <td class="govuk-table__cell"><%= delivery_partner_profile.delivery_partner.name %></td>
       </tr>

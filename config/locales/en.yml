@@ -167,6 +167,10 @@ en:
         lead_provider_approval_status: Status
     errors:
       models:
+        delivery_partner_profile:
+          attributes:
+            delivery_partner_id:
+              blank: "You must select a delivery partner."
         participant_identity:
           attributes:
             email:
