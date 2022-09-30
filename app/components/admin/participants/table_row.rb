@@ -20,7 +20,7 @@ module Admin
       def induction_record
         return unless @profile.ect? || @profile.mentor?
 
-        @induction_record ||= @profile.current_induction_record || @profile.induction_records.latest
+        @induction_record ||= @profile.latest_current_induction_record
       end
 
       def school

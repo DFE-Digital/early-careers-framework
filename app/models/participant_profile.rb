@@ -118,6 +118,10 @@ class ParticipantProfile < ApplicationRecord
   def role
     raise "Not implemented"
   end
+
+  def latest_current_induction_record
+    current_induction_records.first
+  end
 end
 
 require "participant_profile/npq"
