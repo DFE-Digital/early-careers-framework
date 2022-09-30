@@ -126,6 +126,9 @@ Rails.application.routes.draw do
         get "/school-rollout", to: "school_rollout#index"
       end
     end
+
+    namespace :v3, constraints: ->(_request) { FeatureFlag.active?(:api_v3) } do
+    end
   end
 
   scope :nominations, module: :nominations do
