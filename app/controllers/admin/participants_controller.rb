@@ -82,6 +82,7 @@ module Admin
     def search
       scope = policy_scope(ParticipantProfile)
         .eager_load(
+          :participant_identity,
           :ecf_participant_eligibility,
           :ecf_participant_validation_data,
           :validation_decisions,
@@ -96,7 +97,14 @@ module Admin
       if params[:query].present?
         query = "%#{params.fetch(:query).downcase}%"
         profile_ids = InductionRecord.current.ransack(induction_programme_school_cohort_school_name_or_induction_programme_school_cohort_school_urn_i_cont: params[:query]).result.pluck(:participant_profile_id)
-        scope = scope.where("participant_profiles.id IN (?) OR users.full_name ILIKE ?", profile_ids, query)
+        scope = scope.where(
+          <<~CONDITIONS, profile_ids, query, query, query
+            participant_profiles.id IN (?)
+            OR users.full_name ILIKE ?
+            OR users.email ILIKE ?
+            OR participant_identities.email ILIKE ?
+          CONDITIONS
+        )
       end
 
       scope.order("DATE(users.created_at) ASC, users.full_name")
