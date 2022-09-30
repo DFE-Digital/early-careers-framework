@@ -4,11 +4,20 @@ module Induction
   class AmendParticipantCohort
     include ActiveModel::Model
 
+    class ActiveValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        record.errors.add(attribute, I18n.t("errors.participant_profile.not_active")) unless active?(value)
+      end
+
+      def active?(participant_profile)
+        participant_profile && participant_profile.active_record? && participant_profile.training_status_active?
+      end
+    end
+
     ECF_FIRST_YEAR = 2020
 
-    attr_accessor :email, :source_cohort_start_year, :target_cohort_start_year
+    attr_accessor :participant_profile, :source_cohort_start_year, :target_cohort_start_year
 
-    validates :email, notify_email: true
     validates :source_cohort_start_year,
               numericality: {
                 only_integer: true,
@@ -33,7 +42,7 @@ module Induction
                   I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service")
                 end,
               }
-    validates :participant_profile, presence: { message: I18n.t("errors.participant_profile.blank") }
+    validates :participant_profile, active: true
     validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.exist") }
     validates :induction_record,
               presence: {
@@ -78,18 +87,6 @@ module Induction
                                       .not_voided
                                       .declared_as_between(source_cohort_start_date, source_cohort_end_date)
                                       .exists?
-    end
-
-    def participant_identity
-      @participant_identity ||= ParticipantIdentity.find_by_email(email)
-    end
-
-    def participant_profile
-      return unless participant_identity
-
-      @participant_profile ||= ParticipantProfile::ECF.training_status_active
-                                                      .active_record
-                                                      .find_by(participant_identity:)
     end
 
     def persisted?

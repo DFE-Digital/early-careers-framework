@@ -142,7 +142,7 @@ en:
     participant_declarations:
       exist: "The participant must have no declarations"
     participant_profile:
-      blank: "Not registered or not active"
+      not_active: "Not active"
     programme:
       blank: "Please select programme type"
     provider:

@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
-  let(:admin_user) { create(:user, :admin) }
-  let(:user)                          { create :user, full_name: "Elza Smith" }
-  let!(:mentor_profile)               { create :mentor, user: }
-  let!(:ect_profile)                  { create :ect, mentor_profile_id: mentor_profile.id }
+  let(:admin_user)            { create(:user, :admin) }
+  let(:user)                  { create :user, full_name: "Elza Smith" }
+  let!(:mentor_profile) { create :mentor, user: }
+  let!(:ect_profile)    { create :ect, mentor_profile_id: mentor_profile.id }
 
   before { sign_in(admin_user) }
 
@@ -40,7 +40,7 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
       expect(Induction::AmendParticipantCohort).to have_received(:new).with(
         source_cohort_start_year: 2021,
         target_cohort_start_year: "2022", # string because this one is passed in from the form
-        email: mentor_profile.user.email,
+        participant_profile: mentor_profile,
       )
 
       expect(response).to redirect_to(admin_participant_path(mentor_profile))
