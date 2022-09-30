@@ -80,7 +80,14 @@ module Admin
     end
 
     def search
-      scope = policy_scope(ParticipantProfile).joins(participant_identity: :user)
+      scope = policy_scope(ParticipantProfile)
+        .eager_load(
+          :ecf_participant_eligibility,
+          :ecf_participant_validation_data,
+          :validation_decisions,
+          current_induction_records: :school,
+          participant_identity: :user,
+        )
 
       if params[:type].present?
         scope = scope.where(type: params[:type])
