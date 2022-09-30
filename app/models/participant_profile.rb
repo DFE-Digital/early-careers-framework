@@ -49,6 +49,10 @@ class ParticipantProfile < ApplicationRecord
 
   delegate :full_name, :user_description, to: :user
 
+  def latest_induction_record
+    induction_records.latest
+  end
+
   def state
     participant_profile_state&.state
   end
