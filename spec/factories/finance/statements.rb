@@ -21,6 +21,10 @@ FactoryBot.define do
 
     factory :ecf_statement, class: "Finance::Statement::ECF" do
       cpd_lead_provider { association :cpd_lead_provider, :with_lead_provider }
+
+      factory :ecf_paid_statement, class: "Finance::Statement::ECF::Paid" do
+        paid
+      end
     end
 
     trait :output_fee do

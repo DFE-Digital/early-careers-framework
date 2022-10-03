@@ -53,6 +53,10 @@ class Finance::Statement < ApplicationRecord
     true
   end
 
+  def paid?
+    false
+  end
+
   def past_deadline_date?
     participant_declarations.any?
   end
