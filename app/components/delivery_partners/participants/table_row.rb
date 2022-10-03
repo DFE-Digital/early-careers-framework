@@ -25,8 +25,8 @@ module DeliveryPartners
       end
 
       def status_tag
-        title = t(".status.#{status_name}.title")
-        description = t(".status.#{status_name}.description")
+        title = t("participant_profile_status.status.#{status_name}.title")
+        description = t("participant_profile_status.status.#{status_name}.description")
 
         if description.present?
           content_tag(:strong, title) +
@@ -62,7 +62,7 @@ module DeliveryPartners
       end
 
       def status_name
-        @status_name ||= DeliveryPartners::ParticipantProfileStatus.new(
+        @status_name ||= ParticipantProfileStatus.new(
           participant_profile:,
         ).status_name
       end

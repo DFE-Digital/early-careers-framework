@@ -1,2 +1,62 @@
-<h1 class="govuk-heading-xl">Participants</h1>
-<h1 class="govuk-heading-xl"><%= @appropriate_body.name %></h1>
+<span class="govuk-caption-xl">Appropriate body</span>
+<h1 class="govuk-heading-xl"><%= @appropriate_body.name %> Participants</h1>
+
+<p class="govuk-body govuk-!-text-align-right">
+  <%= govuk_link_to "Download (csv)", appropriate_body_participants_path(params.permit(:query, :role, :academic_year, :status).merge({format: :csv})) %>
+</p>
+
+<%= render SearchBox.new(
+  query: params[:query],
+  title: "Search",
+  hint: "For example, school, participant name or teacher reference number (TRN)",
+  filters: [
+    {
+      field: :role,
+      value: params[:role],
+      options: @filter.role_options,
+    },
+    {
+      field: :academic_year,
+      value: params[:academic_year],
+      label: "academic year",
+      options: @filter.academic_year_options,
+    },
+    {
+      field: :status,
+      value: params[:status],
+      label: "status",
+      options: @filter.status_options,
+    },
+  ],
+) %>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Full name</th>
+      <th scope="col" class="govuk-table__header">Email address</th>
+      <th scope="col" class="govuk-table__header">TRN</th>
+      <th scope="col" class="govuk-table__header">Role</th>
+      <th scope="col" class="govuk-table__header">Lead provider</th>
+      <th scope="col" class="govuk-table__header">Delivery partner</th>
+      <th scope="col" class="govuk-table__header">School</th>
+      <th scope="col" class="govuk-table__header">School unique reference number</th>
+      <th scope="col" class="govuk-table__header">Academic year</th>
+      <th scope="col" class="govuk-table__header">Training status</th>
+      <th scope="col" class="govuk-table__header">Status</th>
+    </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% if @induction_records.any? %>
+      <%= render AppropriateBodies::Participants::TableRow.with_collection(@induction_records) %>
+    <% else %>
+      <tr class="govuk-table__row">
+        <td colspan="11" class="govuk-table__cell">
+          No results found
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= govuk_paginate @induction_records, @pagy %>
