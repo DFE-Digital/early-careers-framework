@@ -70,9 +70,6 @@ gem "savon", "~> 2.13"
 # Strong migration checker for database migrations
 gem "strong_migrations", "~> 1.3"
 
-# Acts as State Machine for participant and declaration states
-gem "aasm"
-
 # Pagination
 gem "pagy", "~> 5.10", ">= 5.10.1"
 
@@ -150,9 +147,6 @@ group :development do
 
   # autocompletion backend for development
   gem "solargraph"
-
-  # State machine diagrams - https://github.com/Katee/aasm-diagram
-  gem "aasm-diagram"
 
   # Profiling
   gem "memory_profiler"
