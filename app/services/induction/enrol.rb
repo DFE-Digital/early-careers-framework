@@ -10,7 +10,7 @@ class Induction::Enrol < BaseService
         start_date:,
         training_status: :active,
         induction_status: :active,
-        schedule: participant_profile.schedule,
+        schedule:,
         preferred_identity:,
         mentor_profile:,
         school_transfer:,
@@ -36,6 +36,14 @@ private
     @appropriate_body_id = appropriate_body_id
   end
 
+  def default_programme_cohort_schedule
+    Finance::Schedule::ECF.default_for(cohort: induction_programme.cohort)
+  end
+
+  def participant_schedule_in_programme_cohort?
+    participant_profile.schedule.cohort == induction_programme.cohort
+  end
+
   def preferred_identity
     if preferred_email.present?
       Identity::Create.call(user: participant_profile.participant_identity.user,
@@ -43,6 +51,10 @@ private
     else
       participant_profile.participant_identity
     end
+  end
+
+  def schedule
+    participant_schedule_in_programme_cohort? ? participant_profile.schedule : default_programme_cohort_schedule
   end
 
   def schedule_start_date
