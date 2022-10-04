@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Participants::ValidationTasks, :with_default_schedules, type: :view_component do
+RSpec.describe Admin::NPQ::Participants::ValidationTasks, :with_default_schedules, type: :view_component do
   component { described_class.new profile: }
 
   context "for NPQ profile" do
