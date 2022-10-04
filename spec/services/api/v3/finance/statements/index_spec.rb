@@ -15,7 +15,7 @@ RSpec.describe Api::V3::Finance::Statements::Index do
         :ecf_statement,
         cpd_lead_provider:,
         cohort: cohort_2022,
-        created_at: 4.days.ago,
+        payment_date: 4.days.ago,
       )
     end
     let!(:ecf_statement_cohort_2021) do
@@ -23,7 +23,7 @@ RSpec.describe Api::V3::Finance::Statements::Index do
         :ecf_statement,
         cpd_lead_provider:,
         cohort: cohort_2021,
-        created_at: 3.days.ago,
+        payment_date: 3.days.ago,
       )
     end
     let!(:npq_statement_cohort_2022) do
@@ -31,7 +31,7 @@ RSpec.describe Api::V3::Finance::Statements::Index do
         :npq_statement,
         cpd_lead_provider:,
         cohort: cohort_2022,
-        created_at: 2.days.ago,
+        payment_date: 2.days.ago,
       )
     end
     let!(:npq_statement_cohort_2021) do
@@ -39,7 +39,7 @@ RSpec.describe Api::V3::Finance::Statements::Index do
         :npq_statement,
         cpd_lead_provider:,
         cohort: cohort_2021,
-        created_at: 1.day.ago,
+        payment_date: 1.day.ago,
       )
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Api::V3::Finance::Statements::Index do
 
     subject { described_class.new(cpd_lead_provider:, params:) }
 
-    it "returns all statements for the cpd provider ordered by created_at" do
+    it "returns all statements for the cpd provider ordered by payment_date" do
       expect(subject.statements).to eq([
         ecf_statement_cohort_2022,
         ecf_statement_cohort_2021,

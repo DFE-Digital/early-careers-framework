@@ -18,7 +18,7 @@ module Api
               .where(
                 cpd_lead_provider:,
                 cohort_id: with_cohorts.map(&:id),
-              ).order(created_at: :asc)
+              ).order(payment_date: :asc)
           end
 
         private
@@ -35,12 +35,9 @@ module Api
 
           def statement_class
             return ::Finance::Statement if filter[:type].blank?
+            return ::Finance::Statement.none unless ::Finance::Statement::STATEMENT_TYPES.include?(filter[:type])
 
-            if ::Finance::Statement::STATEMENT_TYPES.include?(filter[:type])
-              "::Finance::Statement::#{filter[:type].classify}".constantize
-            else
-              ::Finance::Statement.none
-            end
+            "::Finance::Statement::#{filter[:type].classify}".constantize
           end
         end
       end
