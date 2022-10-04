@@ -36,11 +36,8 @@ module Api
           def statement_class
             return ::Finance::Statement if filter[:type].blank?
 
-            case filter[:type]
-            when "ecf"
-              ::Finance::Statement::ECF
-            when "npq"
-              ::Finance::Statement::NPQ
+            if ::Finance::Statement::STATEMENT_TYPES.include?(filter[:type])
+              "::Finance::Statement::#{filter[:type].classify}".constantize
             else
               ::Finance::Statement.none
             end

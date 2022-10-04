@@ -21,12 +21,7 @@ module Api
         end
 
         attribute :type do |statement|
-          case statement
-          when ::Finance::Statement::ECF
-            "ecf"
-          when ::Finance::Statement::NPQ
-            "npq"
-          end
+          statement.class::STATEMENT_TYPE
         end
 
         attribute :cohort do |statement|

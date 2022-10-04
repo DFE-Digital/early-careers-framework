@@ -3,6 +3,8 @@
 class Finance::Statement::ECF < Finance::Statement
   has_one :lead_provider, through: :cpd_lead_provider
 
+  STATEMENT_TYPE = "ecf"
+
   def contract
     CallOffContract.find_by!(
       version: contract_version,
