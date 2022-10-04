@@ -11,6 +11,8 @@ RSpec.describe Incentives::UpdateSchoolParticipants do
     let(:inactive_ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort_22) }
     let(:mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort_22) }
     let(:leaving_mentor_profile) { create(:mentor_participant_profile, school_cohort: school_cohort_21) }
+    let!(:schedule) { create(:ecf_schedule, cohort: school_cohort_22.cohort) }
+
     let!(:ect_induction_record) do
       Induction::Enrol.call(induction_programme: induction_programme_21, participant_profile: ect_profile, start_date: 6.months.ago)
     end

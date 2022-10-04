@@ -16,6 +16,8 @@ class Induction::Enrol < BaseService
         school_transfer:,
         appropriate_body_id:,
       )
+
+      participant_profile.update!(schedule:)
     end
   end
 

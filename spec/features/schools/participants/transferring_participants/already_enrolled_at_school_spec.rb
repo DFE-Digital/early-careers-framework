@@ -89,8 +89,10 @@ RSpec.describe "Transferring participants", with_feature_flags: { change_of_circ
 
   def given_a_school_has_chosen_fip_for_2021_and_partnered
     @cohort = create(:cohort, start_year: 2021)
+    cohort_2022 = Cohort.find_by_start_year(2022) || create(:cohort, start_year: 2022)
+    create(:ecf_schedule, cohort: cohort_2022)
     @school_one = create(:school, name: "Fip School 1")
-    create(:school_cohort, school: @school_one, cohort: create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
+    create(:school_cohort, school: @school_one, cohort: cohort_2022, induction_programme_choice: "full_induction_programme")
     @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
     @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_one)

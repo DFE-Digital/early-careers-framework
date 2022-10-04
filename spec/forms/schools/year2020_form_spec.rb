@@ -25,6 +25,10 @@ RSpec.describe Schools::Year2020Form, type: :model do
   end
 
   describe "save!" do
+    before do
+      create(:ecf_schedule, cohort:)
+    end
+
     it "creates a school cohort and user when given all details" do
       subject.core_induction_programme_id = core_induction_programme.id
       add_new_participant(subject)
