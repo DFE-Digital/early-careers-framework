@@ -4,6 +4,8 @@ module Admin
   module NPQ
     module Participants
       class Details < BaseComponent
+        attr_reader :profile
+
         def initialize(profile:)
           @profile = profile
         end
@@ -40,14 +42,6 @@ module Admin
         def last_updated
           updated_at.to_formatted_s(:govuk)
         end
-
-      private
-
-        attr_reader :profile
-
-        class NPQPending < Details; end
-
-        class NPQ < Details; end
       end
     end
   end
