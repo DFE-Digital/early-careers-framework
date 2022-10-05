@@ -17,14 +17,14 @@ RSpec.describe Api::V3::DeliveryPartners::Index do
     subject { described_class.new(lead_provider:, params:) }
 
     it "returns all delivery partners" do
-      expect(subject.delivery_partners).to eq([delivery_partner, another_delivery_partner])
+      expect(subject.delivery_partners).to match_array([delivery_partner, another_delivery_partner])
     end
 
     context "with correct cohort filter" do
       let(:params) { { filter: { cohort: "2021" } } }
 
       it "returns all delivery partners for the specific cohort" do
-        expect(subject.delivery_partners).to eq([delivery_partner])
+        expect(subject.delivery_partners).to match_array([delivery_partner])
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Api::V3::DeliveryPartners::Index do
       let(:params) { { filter: { cohort: "2021,2050" } } }
 
       it "returns all delivery partners for the specific cohort" do
-        expect(subject.delivery_partners).to eq([delivery_partner, another_delivery_partner])
+        expect(subject.delivery_partners).to match_array([delivery_partner, another_delivery_partner])
       end
     end
 
