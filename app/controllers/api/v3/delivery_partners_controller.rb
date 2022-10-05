@@ -35,7 +35,7 @@ module Api
       end
 
       def delivery_partner_params
-        params.permit(filter: %i[cohort])
+        params.permit(:sort, filter: %i[cohort])
       end
 
       def access_scope
