@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DeliveryPartners
+module AppropriateBodies
   class ParticipantsFilter
     attr_reader :collection, :params
 
@@ -36,27 +36,25 @@ module DeliveryPartners
         user_full_name
         user_email
         user_teacher_profile_trn
-        induction_records_induction_programme_partnership_lead_provider_name
-        induction_records_school_cohort_school_name
-        induction_records_school_cohort_school_urn
+        induction_programme_partnership_lead_provider_name
+        school_cohort_school_name
+        school_cohort_school_urn
       ].join("_or_")
 
       scoped.includes(
         user: [
           :teacher_profile,
         ],
-        induction_records: {
-          induction_programme: { partnership: [:lead_provider] },
-        },
+        induction_programme: { partnership: [:lead_provider] },
       ).ransack("#{fields}_cont": query).result.distinct
     end
 
     def filter_role(scoped, role)
       case role
       when "ect"
-        scoped.where(type: "ParticipantProfile::ECT")
+        scoped.includes(:participant_profile).where(participant_profile: { type: "ParticipantProfile::ECT" })
       when "mentor"
-        scoped.where(type: "ParticipantProfile::Mentor")
+        scoped.includes(:participant_profile).where(participant_profile: { type: "ParticipantProfile::Mentor" })
       else
         scoped
       end
@@ -70,10 +68,13 @@ module DeliveryPartners
 
     def filter_status(scoped, status)
       ids = []
-      scoped.each do |pp|
+      scoped.each do |ir|
+        pp = ir.participant_profile
+        next unless pp
+
         pps = ParticipantProfileStatus.new(participant_profile: pp)
         if pps.is_status?(status)
-          ids << pp.id
+          ids << ir.id
         end
       end
 

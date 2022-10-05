@@ -22,7 +22,7 @@ module DeliveryPartners
       end
 
       def status_name(participant_profile)
-        DeliveryPartners::ParticipantProfileStatus.new(
+        ParticipantProfileStatus.new(
           participant_profile:,
         ).status_name
       end
@@ -66,7 +66,7 @@ module DeliveryPartners
     end
 
     attribute :status do |participant_profile|
-      I18n.t("delivery_partners.participants.table_row.status.#{status_name(participant_profile)}.title")
+      I18n.t("participant_profile_status.status.#{status_name(participant_profile)}.title")
     end
   end
 end
