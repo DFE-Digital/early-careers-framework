@@ -12,6 +12,7 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
     let(:another_delivery_partner) { create(:delivery_partner, name: "Second Delivery Partner") }
     let(:another_cohort) { create(:cohort, start_year: "2050") }
     let!(:another_provider_relationship) { create(:provider_relationship, cohort: another_cohort, delivery_partner: another_delivery_partner, lead_provider:) }
+
     let(:params) { {} }
 
     subject { described_class.new(lead_provider:, params:) }
