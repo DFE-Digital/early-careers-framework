@@ -16,32 +16,33 @@ RSpec.describe "statements endpoint spec", type: :request do
       cohort: cohort_2022,
     )
   end
-  let!(:ecf_statement_cohort_2021) do
-    create(
-      :ecf_statement,
-      cpd_lead_provider:,
-      cohort: cohort_2021,
-    )
-  end
-  let!(:npq_statement_cohort_2022) do
-    create(
-      :npq_statement,
-      cpd_lead_provider:,
-      cohort: cohort_2022,
-    )
-  end
-  let!(:npq_statement_cohort_2021) do
-    create(
-      :npq_statement,
-      cpd_lead_provider:,
-      cohort: cohort_2021,
-    )
-  end
 
   let(:parsed_response) { JSON.parse(response.body) }
   let(:params) { {} }
 
   describe "GET /statements" do
+    let!(:ecf_statement_cohort_2021) do
+      create(
+        :ecf_statement,
+        cpd_lead_provider:,
+        cohort: cohort_2021,
+      )
+    end
+    let!(:npq_statement_cohort_2022) do
+      create(
+        :npq_statement,
+        cpd_lead_provider:,
+        cohort: cohort_2022,
+      )
+    end
+    let!(:npq_statement_cohort_2021) do
+      create(
+        :npq_statement,
+        cpd_lead_provider:,
+        cohort: cohort_2021,
+      )
+    end
+
     before do
       default_headers[:Authorization] = bearer_token
       default_headers[:CONTENT_TYPE] = "application/json"
@@ -125,6 +126,72 @@ RSpec.describe "statements endpoint spec", type: :request do
         let(:token) { "incorrect-token" }
         it "returns 401" do
           get("/api/v3/statements", params:)
+
+          expect(response.status).to eq 401
+        end
+      end
+    end
+  end
+
+  describe "GET /statements/:id" do
+    let(:statement_id) { ecf_statement_cohort_2022.id }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers[:CONTENT_TYPE] = "application/json"
+    end
+
+    context "with API V3 flag disabled" do
+      it "returns a 404" do
+        expect { get "/api/v3/statements/#{statement_id}", params: }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context "with API V3 flag active", with_feature_flags: { api_v3: "active" } do
+      it "returns correct jsonapi content type header" do
+        get("/api/v3/statements/#{statement_id}", params:)
+
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "returns statement with the corresponding id" do
+        get("/api/v3/statements/#{statement_id}", params:)
+        expect(parsed_response["data"]["id"]).to eq(statement_id)
+      end
+
+      it "returns correct type" do
+        get("/api/v3/statements/#{statement_id}", params:)
+
+        expect(parsed_response["data"]).to have_type("statement")
+      end
+
+      it "has correct attributes" do
+        get("/api/v3/statements/#{statement_id}", params:)
+
+        expect(parsed_response["data"]).to have_jsonapi_attributes(
+          :month,
+          :year,
+          :type,
+          :cohort,
+          :cut_off_date,
+          :payment_date,
+          :paid,
+        ).exactly
+      end
+
+      context "when statement id is incorrect", exceptions_app: true do
+        let(:statement_id) { "incorrect-id" }
+        it "returns 404" do
+          get("/api/v3/statements/#{statement_id}", params:)
+
+          expect(response.status).to eq 404
+        end
+      end
+
+      context "when unauthorized" do
+        let(:token) { "incorrect-token" }
+        it "returns 401" do
+          get("/api/v3/statements/#{statement_id}", params:)
 
           expect(response.status).to eq 401
         end

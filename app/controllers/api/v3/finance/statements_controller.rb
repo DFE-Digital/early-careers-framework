@@ -11,10 +11,18 @@ module Api
         render json: Finance::StatementSerializer.new(paginate(finance_statements)).serializable_hash.to_json
       end
 
+      def show
+        render json: Finance::StatementSerializer.new(finance_statement).serializable_hash.to_json
+      end
+
     private
 
       def finance_statements
         @finance_statements ||= finance_statements_query.statements
+      end
+
+      def finance_statement
+        finance_statements_query.statement
       end
 
       def finance_statements_query
@@ -25,7 +33,7 @@ module Api
       end
 
       def statement_params
-        params.permit(filter: %i[cohort type])
+        params.permit(:id, filter: %i[cohort type])
       end
     end
   end
