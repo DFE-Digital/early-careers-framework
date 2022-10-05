@@ -17,6 +17,15 @@ module Api
         render json: serializer_class.new(paginate(delivery_partners), params: { lead_provider: }).serializable_hash.to_json
       end
 
+      # Returns a specific delivery partner given its ID
+      # Providers can see a specific delivery partner and which cohorts it applies to via this endpoint
+      #
+      # GET /api/v3/delivery-partners/:id
+      #
+      def show
+        render json: serializer_class.new(delivery_partner).serializable_hash.to_json
+      end
+
     private
 
       def lead_provider
@@ -27,6 +36,17 @@ module Api
         @delivery_partners ||= delivery_partners_query.delivery_partners.order(sort_params(params))
       end
 
+      def delivery_partner
+        @delivery_partner ||= delivery_partner_query.delivery_partner
+      end
+
+      def delivery_partner_query
+        Api::V3::DeliveryPartners::Show.new(
+          lead_provider:,
+          params: delivery_partner_params,
+        )
+      end
+
       def delivery_partners_query
         Api::V3::DeliveryPartnersQuery.new(
           lead_provider:,
@@ -35,7 +55,7 @@ module Api
       end
 
       def delivery_partner_params
-        params.permit(:sort, filter: %i[cohort])
+        params.permit(:id, :sort, filter: %i[cohort])
       end
 
       def access_scope

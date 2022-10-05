@@ -120,9 +120,67 @@ RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request,
     context "when using a engage and learn token" do
       let(:token) { EngageAndLearnApiToken.create_with_random_token! }
 
-      it "returns 401 for invalid bearer token" do
+      it "returns 403 for invalid bearer token" do
         default_headers[:Authorization] = bearer_token
         get "/api/v3/delivery-partners"
+
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "#show" do
+    context "when authorized" do
+      before do
+        default_headers[:Authorization] = bearer_token
+      end
+
+      it "returns correct jsonapi content type header" do
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
+
+        expect(response.headers["Content-Type"]).to eq("application/vnd.api+json")
+      end
+
+      it "returns a specific delivery partner" do
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
+
+        expect(parsed_response["data"]["id"]).to be_in(DeliveryPartner.pluck(:id))
+      end
+
+      it "returns correct type" do
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
+
+        expect(parsed_response["data"]).to have_type("delivery-partner")
+      end
+
+      it "returns ID" do
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
+
+        expect(parsed_response["data"]["id"]).to be_in(DeliveryPartner.pluck(:id))
+      end
+
+      it "has correct attributes" do
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
+
+        expect(parsed_response["data"]).to have_jsonapi_attributes(:name, :updated_at, :cohort).exactly
+      end
+    end
+
+    context "when unauthorized" do
+      it "returns 401 for invalid bearer token" do
+        default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
+
+        expect(response.status).to eq(401)
+      end
+    end
+
+    context "when using a engage and learn token" do
+      let(:token) { EngageAndLearnApiToken.create_with_random_token! }
+
+      it "returns 403 for invalid bearer token" do
+        default_headers[:Authorization] = bearer_token
+        get "/api/v3/delivery-partners/#{delivery_partner.id}"
 
         expect(response.status).to eq(403)
       end
