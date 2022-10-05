@@ -1,5 +1,5 @@
 <% content_for :title, "Participant detail" %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: :back) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participants_path) %>
 
 <% unless @participant_profile.npq? %>
   <span class="govuk-caption-l"><%= @latest_induction_record&.user&.user_description %></span>

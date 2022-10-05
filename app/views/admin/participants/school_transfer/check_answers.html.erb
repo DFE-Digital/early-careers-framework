@@ -1,0 +1,61 @@
+<% title = "Check your answers" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: @school_transfer_form.previous_step }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <%= govuk_summary_list do |summary_list| %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Current school" } %>
+        <% row.value { @school_transfer_form.current_school.name } %>
+        <% row.action(text: :none) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Current programme" } %>
+        <% row.value { @school_transfer_form.current_programme_description } %>
+        <% row.action(text: :none) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Transfer to" } %>
+        <% row.value { @school_transfer_form.new_school.name } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "destination school",
+                      href: url_for({ action: :select_school})) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Training choice" } %>
+        <% row.value { @school_transfer_form.transfer_choice_description } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "programme to join",
+                      href: url_for({ action: :transfer_options})) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Start date" } %>
+        <% row.value { @school_transfer_form.start_date.to_date.to_s(:govuk) } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "start date at new school",
+                      href: url_for({ action: :start_date})) %>
+      <% end %>
+
+      <% summary_list.row do |row| %>
+        <% row.key { "Email" } %>
+        <% row.value { @school_transfer_form.email } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "email address",
+                      href: url_for({ action: :email})) %>
+      <% end %>
+
+    <% end %>
+    <%= form_for @school_transfer_form, url: { action: :check_answers }, method: :put do |f| %>
+      <%= f.govuk_submit "Confirm and transfer" %>
+    <% end %>
+  </div>
+</div>

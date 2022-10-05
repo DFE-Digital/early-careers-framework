@@ -199,6 +199,19 @@ en:
   activemodel:
     errors:
       models:
+        school_transfer_form:
+          attributes:
+            new_school_urn:
+              blank: "Enter the URN of the school the participant will transfer to"
+              invalid: "Cannot find a school with the URN ‘%{urn}’"
+            transfer_choice:
+              blank: "Select which programme the participant will join"
+            start_date:
+              blank: "Please enter a start date"
+              invalid: "Please enter a valid start date"
+              before_start: "Start date cannot be before the current induction record start (%{date})"
+            email:
+              <<: *email_error_messages
         admin/application_exports_form:
           attributes:
             start_date:
