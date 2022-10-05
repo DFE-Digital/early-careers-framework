@@ -101,10 +101,10 @@ module Steps
       milestone = participant_profile.schedule.milestones
                                      .where(declaration_type: declaration_type.to_s.gsub("_", "-"))
                                      .first
-
-      next_ideal_time milestone.milestone_date - 2.days
+      before_milestone_timestamp = milestone.milestone_date - 2.months
+      next_ideal_time before_milestone_timestamp
       travel_to(@timestamp) do
-        event_date = milestone.milestone_date - 4.days
+        event_date = before_milestone_timestamp - 4.days
         declarations_endpoint = APIs::PostParticipantDeclarationsEndpoint.load(tokens[lead_provider_name])
         declarations_endpoint.post_training_declaration participant_profile.user.id, course_identifier, declaration_type, event_date
 

@@ -30,7 +30,7 @@ class ChangesOfCircumstanceScenario
     scenario = fixture_data.to_h.with_indifferent_access.freeze
 
     @number = num
-    @statement_name = "February 2023"
+    @statement_name = "November 2021"
     @participant_email = "the-participant-#{num}@example.com"
     @participant_trn = rand(1..9_999_999).to_s.rjust(7, "0")
     @participant_dob = Date.new(1972, 2, 10)
