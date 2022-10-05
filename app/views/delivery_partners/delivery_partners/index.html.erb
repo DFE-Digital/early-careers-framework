@@ -1,0 +1,18 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: choose_role_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @choose_organisation_form, url: delivery_partners_path do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_radio_buttons_fieldset :delivery_partner_id, legend: { text: "What organisation do you want to view?", tag: 'h1', size: 'xl' }, caption: { text: "Delivery partner", tag: "span", size: "xl" } do %>
+        <p>Choose an organisation to view its participants.</p>
+
+        <% @choose_organisation_form.delivery_partner_options.each_with_index do |(val, name), n| %>
+          <%= f.govuk_radio_button :delivery_partner_id, val, label: { text: name }, link_errors: n.zero? %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>
