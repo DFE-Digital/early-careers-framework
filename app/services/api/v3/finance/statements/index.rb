@@ -22,6 +22,10 @@ module Api
               ).order(payment_date: :asc)
           end
 
+          def statement
+            cpd_lead_provider.statements.find(params[:id])
+          end
+
         private
 
           def filter
