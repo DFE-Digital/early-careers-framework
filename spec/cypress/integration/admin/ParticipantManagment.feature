@@ -8,7 +8,7 @@ Feature: Admin user managing participants
 
   Scenario: Viewing a list of participants
     Then the table should have 7 rows
-    And "page body" should contain "Enter the participant’s name, school’s name, email address or URN"
+    And "page body" should contain "Enter the participant’s name, email address or TRN"
     And the page should be accessible
 
     When I type "Test school" into "search box"
