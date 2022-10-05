@@ -19,18 +19,23 @@ module Api
 
     private
 
-      def delivery_partners
-        DeliveryPartner.where(provider_relationships:).order(sort_params(params))
-      end
-
-      def provider_relationships
-        scope = lead_provider.provider_relationships
-        scope = scope.where(cohort: with_cohorts) if filter[:cohort].present?
-        scope
-      end
-
       def lead_provider
-        current_api_token.cpd_lead_provider.lead_provider
+        @lead_provider ||= current_api_token.cpd_lead_provider.lead_provider
+      end
+
+      def delivery_partners
+        @delivery_partners ||= delivery_partners_query.delivery_partners.order(sort_params(params))
+      end
+
+      def delivery_partners_query
+        Api::V3::DeliveryPartners::Index.new(
+          lead_provider:,
+          params: delivery_partner_params,
+        )
+      end
+
+      def delivery_partner_params
+        params.permit(filter: %i[cohort])
       end
 
       def access_scope
