@@ -25,4 +25,14 @@ RSpec.describe ParticipantIdentity, type: :model do
       expect(participant_identity.user.reload.updated_at).to be_within(1.second).of participant_identity.updated_at
     end
   end
+
+  describe "scopes" do
+    describe "#email_matches" do
+      it "adds a wildcarded condition on email" do
+        # we don't need to worry about case sensitivity here because the email
+        # address column is citext
+        expect(described_class.email_matches("xyz").to_sql).to include("participant_identities.email like '%xyz%'")
+      end
+    end
+  end
 end
