@@ -199,7 +199,7 @@ en:
   activemodel:
     errors:
       models:
-        school_transfer_form:
+        admin/school_transfer_form:
           attributes:
             new_school_urn:
               blank: "Enter the URN of the school the participant will transfer to"

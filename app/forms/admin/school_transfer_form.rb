@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SchoolTransferForm
+class Admin::SchoolTransferForm
   include ActiveModel::Model
   include ActiveRecord::AttributeAssignment
   include ActiveModel::Serialization

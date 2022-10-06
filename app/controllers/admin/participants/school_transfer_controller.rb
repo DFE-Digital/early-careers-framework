@@ -37,9 +37,9 @@ module Admin::Participants
 
     def load_school_transfer_form
       @school_transfer_form = if session_data.blank?
-                                ::SchoolTransferForm.new(participant_profile_id: @participant_profile.id)
+                                Admin::SchoolTransferForm.new(participant_profile_id: @participant_profile.id)
                               else
-                                ::SchoolTransferForm.new(session_data)
+                                Admin::SchoolTransferForm.new(session_data)
                               end
 
       @school_transfer_form.assign_attributes(school_transfer_form_params)
@@ -57,9 +57,9 @@ module Admin::Participants
     end
 
     def school_transfer_form_params
-      return {} unless params.key?(:school_transfer_form)
+      return {} unless params.key?(:admin_school_transfer_form)
 
-      params.require(:school_transfer_form).permit(:participant_profile_id, :new_school_urn, :transfer_choice, :start_date, :email)
+      params.require(:admin_school_transfer_form).permit(:participant_profile_id, :new_school_urn, :transfer_choice, :start_date, :email)
     end
 
     def load_participant_profile

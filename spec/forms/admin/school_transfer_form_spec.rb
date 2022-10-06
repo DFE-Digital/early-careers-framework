@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe SchoolTransferForm, type: :model do
+RSpec.describe Admin::SchoolTransferForm, type: :model do
   subject(:form) { described_class.new(participant_profile_id: participant_profile.id) }
   let(:participant_profile) { create :ect_participant_profile }
   let(:induction_programme) { create(:induction_programme, :cip) }
