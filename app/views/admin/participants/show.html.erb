@@ -11,8 +11,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <% if @participant_profile.npq? %>
-      <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
-      <%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
+      <%= render Admin::NPQ::Participants::Details.new(profile: @participant_profile) %>
+      <%= render Admin::NPQ::Participants::ValidationTasks.new(profile: @participant_profile) %>
     <% else %>
       <%= govuk_tabs(title: 'Contents') do |component| %>
         <% component.tab(label: 'Details') do %>
