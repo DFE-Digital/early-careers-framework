@@ -63,7 +63,7 @@ module ApplicationHelper
   end
 
   def wide_container_view?
-    params[:controller].start_with?("finance")
+    params[:controller].split("/").first.in?(%w[finance admin])
   end
 
   def bool_to_tag(bool)
