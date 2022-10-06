@@ -28,23 +28,13 @@ class Admin::SchoolTransferForm
   end
 
   def next_step
-    return if current_step == STEPS.last
-
-    step = nil
-    STEPS.each_with_index do |step_name, i|
-      step = STEPS[i + 1] and break if step_name == current_step
-    end
-    step
+    current_step_index = STEPS.index(current_step)
+    STEPS[current_step_index + 1] if current_step_index
   end
 
   def previous_step
-    return if current_step == STEPS.first
-
-    step = nil
-    STEPS.each_with_index do |step_name, i|
-      step = STEPS[i - 1] and break if step_name == current_step
-    end
-    step
+    current_step_index = STEPS.index(current_step)
+    STEPS[current_step_index - 1] if current_step_index&.positive?
   end
 
   def current_school
