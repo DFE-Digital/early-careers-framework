@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::Participants::Search < BaseService
-  class NoScopeError < StandardError; end
   attr_reader :scope, :search_term, :type
 
   def initialize(scope = ParticipantProfile, search_term: nil, type: nil)
