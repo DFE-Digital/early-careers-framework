@@ -30,6 +30,8 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     )
   end
 
+  let(:cohort_2022) { create(:cohort, start_year: 2022) }
+
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
     and_those_courses_have_submitted_declarations
@@ -50,6 +52,38 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     when_i_click_on_view_contract
     then_i_see_contract_information
     and_the_page_should_be_accessible
+  end
+
+  scenario "Duplicate NPQ contract with cohort 2022" do
+    given_i_am_logged_in_as_a_finance_user
+    and_those_courses_have_submitted_declarations
+    and_a_duplicate_npq_contract_exists
+    when_i_visit_the_payment_breakdown_page
+    and_choose_to_see_npq_payment_breakdown
+    and_i_select_an_npq_lead_provider
+
+    then_we_should_not_see_duplicate_courses
+  end
+
+  def and_a_duplicate_npq_contract_exists
+    contract1 = statement.npq_lead_provider.npq_contracts.first
+    statement.npq_lead_provider.npq_contracts.create!(
+      cohort: cohort_2022,
+      version: contract1.version,
+      recruitment_target: contract1.recruitment_target,
+      course_identifier: contract1.course_identifier,
+      service_fee_installments: contract1.service_fee_installments,
+      service_fee_percentage: contract1.service_fee_percentage,
+      per_participant: contract1.per_participant,
+      number_of_payment_periods: contract1.number_of_payment_periods,
+      output_payment_percentage: contract1.output_payment_percentage,
+      monthly_service_fee: contract1.monthly_service_fee,
+    )
+  end
+
+  def then_we_should_not_see_duplicate_courses
+    course_titles = page.all("section.app-application__card h2").map(&:text)
+    expect(course_titles.count).to eql(course_titles.uniq.count)
   end
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
