@@ -74,6 +74,12 @@ module ApplicationHelper
     end.html_safe
   end
 
+  def possessive_name(name)
+    return name if name.blank?
+
+    "#{name}#{name[-1] == 's' ? '’' : '’s'}"
+  end
+
 private
 
   def post_2020_ecf_participant?(user)

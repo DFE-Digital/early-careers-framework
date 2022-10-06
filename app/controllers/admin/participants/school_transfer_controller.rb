@@ -59,7 +59,7 @@ module Admin::Participants
     def school_transfer_form_params
       return {} unless params.key?(:school_transfer_form)
 
-      params.require(:school_transfer_form).permit(:participant_profile_id, :current_school_urn, :new_school_urn, :transfer_choice, :start_date, :email)
+      params.require(:school_transfer_form).permit(:participant_profile_id, :new_school_urn, :transfer_choice, :start_date, :email)
     end
 
     def load_participant_profile
@@ -67,14 +67,6 @@ module Admin::Participants
         authorize participant_profile, :update?, policy_class: participant_profile.policy_class
       end
     end
-
-    # def latest_induction_record
-    #   @participant_profile.induction_records.latest
-    # end
-
-    # def current_school
-    #   @current_school ||= latest_induction_record.school
-    # end
 
     def step_valid?
       @school_transfer_form.valid? action_name.to_sym
