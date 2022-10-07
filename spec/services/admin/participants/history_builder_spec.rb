@@ -2,7 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantEventHistory, type: :model do
+RSpec.describe Admin::Participants::HistoryBuilder do
+  subject { Admin::Participants::HistoryBuilder }
   let!(:profile) do
     induction_record = create(:induction_record)
     induction_record.participant_profile

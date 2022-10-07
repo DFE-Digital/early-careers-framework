@@ -87,7 +87,7 @@ module Admin
     end
 
     def event_list
-      @event_list ||= ParticipantEventHistory.from_profile(@participant_profile).events
+      @event_list ||= Admin::Participants::HistoryBuilder.from_profile(@participant_profile).events
     end
 
     def historical_induction_records

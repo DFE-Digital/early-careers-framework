@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParticipantEventHistory
+class Admin::Participants::HistoryBuilder
   class ParticipantEvent
     attr_reader :date, :description, :reporter
 
