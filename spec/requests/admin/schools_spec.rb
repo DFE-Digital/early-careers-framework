@@ -70,7 +70,7 @@ RSpec.describe "Admin::Schools", type: :request do
 
         expect(response).to render_template("admin/schools/show")
         expect(response.body).to include(CGI.escapeHTML(school.name))
-        expect(response.body).to include("Add induction tutor")
+        expect(response.body).to include(%(Add <span class="govuk-visually-hidden">induction tutor</span>))
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe "Admin::Schools", type: :request do
 
         expect(response).to render_template("admin/schools/show")
         expect(response.body).to include(CGI.escapeHTML(school.name))
-        expect(response.body).to include("Add induction tutor")
+        expect(response.body).to include(%(Add <span class="govuk-visually-hidden">induction tutor</span>))
       end
     end
 
