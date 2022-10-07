@@ -15,6 +15,8 @@ class ParticipantProfile < ApplicationRecord
 
   has_many :induction_records
   has_many :current_induction_records, -> { current }, class_name: "InductionRecord"
+  has_one :ecf_participant_eligibility
+  has_one :ecf_participant_validation_data
 
   has_many :participant_profile_states
   has_one :participant_profile_state, lambda {
@@ -117,6 +119,10 @@ class ParticipantProfile < ApplicationRecord
 
   def role
     raise "Not implemented"
+  end
+
+  def latest_current_induction_record
+    current_induction_records.first
   end
 end
 

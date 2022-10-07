@@ -8,12 +8,12 @@ Feature: Admin user managing participants
 
   Scenario: Viewing a list of participants
     Then the table should have 7 rows
-    And "page body" should contain "Enter the participant’s name, school’s name or URN"
+    And "page body" should contain "Enter the participant’s name, email address or TRN"
     And the page should be accessible
 
-    When I type "Test school" into "search box"
+    When I type "example" into "search box"
     And I press enter in "search box"
-    Then the table should have 4 rows
+    Then the table should have 5 rows
 
     When I clear "search box"
     And I type "Unrelated" into "search box"

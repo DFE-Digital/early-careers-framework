@@ -17,4 +17,10 @@ class ParticipantIdentity < ApplicationRecord
 
   scope :original, -> { where("participant_identities.external_identifier = participant_identities.user_id") }
   scope :transferred, -> { where("participant_identities.external_identifier != participant_identities.user_id") }
+
+  def self.email_matches(search_term)
+    return none if search_term.blank?
+
+    where("participant_identities.email like ?", "%#{search_term}%")
+  end
 end

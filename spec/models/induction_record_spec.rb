@@ -264,6 +264,20 @@ RSpec.describe InductionRecord, :with_default_schedules, type: :model do
         end
       end
     end
+
+    describe "ordering" do
+      describe ".oldest_first" do
+        it "orders by created_at asc" do
+          expect(described_class.oldest_first.to_sql).to match(%(ORDER BY "induction_records"."created_at" ASC))
+        end
+      end
+
+      describe ".newest_first" do
+        it "orders by created_at desc" do
+          expect(described_class.newest_first.to_sql).to match(%(ORDER BY "induction_records"."created_at" DESC))
+        end
+      end
+    end
   end
 
   describe "enums" do

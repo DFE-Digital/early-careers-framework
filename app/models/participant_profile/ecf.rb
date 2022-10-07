@@ -11,8 +11,6 @@ class ParticipantProfile < ApplicationRecord
 
     has_one :school, through: :school_cohort
     has_one :cohort, through: :school_cohort
-    has_one :ecf_participant_eligibility, foreign_key: :participant_profile_id
-    has_one :ecf_participant_validation_data, foreign_key: :participant_profile_id
 
     belongs_to :mentor_profile, -> { where(id: 0) }, class_name: "Mentor", optional: true
     has_one :mentor, through: :mentor_profile, source: :user

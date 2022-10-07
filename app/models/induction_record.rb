@@ -76,8 +76,11 @@ class InductionRecord < ApplicationRecord
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
+  scope :oldest_first, -> { order(created_at: :asc) }
+  scope :newest_first, -> { order(created_at: :desc) }
+
   def self.latest
-    order(created_at: :asc).last
+    newest_first.first
   end
 
   # NOTE: these will return nil if the partnership is challenged

@@ -17,4 +17,10 @@ class TeacherProfile < ApplicationRecord
 
   has_many :npq_profiles, class_name: "ParticipantProfile::NPQ"
   # end: TODO
+
+  def self.trn_matches(search_term)
+    return none if search_term.blank?
+
+    where("teacher_profiles.trn like ?", "%#{search_term}%")
+  end
 end

@@ -13,21 +13,11 @@ module Admin
     def show; end
 
     def index
-      if FeatureFlag.active?(:change_of_circumstances)
-        @participant_profiles = search
-      else
-        school_cohort_ids = SchoolCohort.ransack(school_name_or_school_urn_cont: params[:query]).result.pluck(:id)
-        query = "%#{(params[:query] || '').downcase}%"
-        @participant_profiles = policy_scope(ParticipantProfile).joins(:user)
-                                                                .active_record
-                                                                .includes(:validation_decisions)
-                                                                .where("lower(users.full_name) LIKE ? OR school_cohort_id IN (?)", query, school_cohort_ids)
-                                                                .order("DATE(users.created_at) asc, users.full_name")
+      search_term = params[:query]
+      type        = params[:type]
 
-        if params[:type].present?
-          @participant_profiles = @participant_profiles.where(type: params[:type])
-        end
-      end
+      @participant_profiles = Admin::Participants::Search
+        .call(policy_scope(ParticipantProfile), search_term:, type:)
     end
 
     def edit_name; end
@@ -77,22 +67,6 @@ module Admin
         .eager_load(:teacher_profile).find(params[:id])
 
       authorize @participant_profile, policy_class: @participant_profile.policy_class
-    end
-
-    def search
-      scope = policy_scope(ParticipantProfile).joins(participant_identity: :user)
-
-      if params[:type].present?
-        scope = scope.where(type: params[:type])
-      end
-
-      if params[:query].present?
-        query = "%#{params.fetch(:query).downcase}%"
-        profile_ids = InductionRecord.current.ransack(induction_programme_school_cohort_school_name_or_induction_programme_school_cohort_school_urn_i_cont: params[:query]).result.pluck(:participant_profile_id)
-        scope = scope.where("participant_profiles.id IN (?) OR users.full_name ILIKE ?", profile_ids, query)
-      end
-
-      scope.order("DATE(users.created_at) ASC, users.full_name")
     end
 
     def induction_records

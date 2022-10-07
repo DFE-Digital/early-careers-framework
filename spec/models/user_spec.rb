@@ -45,6 +45,22 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "scopes" do
+    describe "#full_name_matches" do
+      it "adds a case-insensitive wildcarded condition on full name" do
+        expect(described_class.full_name_matches("xyz").to_sql).to include("users.full_name ilike '%xyz%'")
+      end
+    end
+
+    describe "#email_matches" do
+      it "adds a wildcarded condition on email" do
+        # we don't need to worry about case sensitivity here because the email
+        # address column is citext
+        expect(described_class.email_matches("xyz").to_sql).to include("users.email like '%xyz%'")
+      end
+    end
+  end
+
   describe "before_validation" do
     let(:user) { build(:user, full_name: "\t  Gordon \tBanks \n", email: " \tgordo@example.com \n ") }
 

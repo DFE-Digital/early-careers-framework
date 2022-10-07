@@ -171,6 +171,18 @@ class User < ApplicationRecord
     joins(:participant_profiles).merge(ParticipantProfile.active_record)
   }
 
+  def self.full_name_matches(search_term)
+    return none if search_term.blank?
+
+    where("users.full_name ilike ?", "%#{search_term}%")
+  end
+
+  def self.email_matches(search_term)
+    return none if search_term.blank?
+
+    where("users.email like ?", "%#{search_term}%")
+  end
+
 private
 
   def strip_whitespace
