@@ -28,7 +28,7 @@ module Api
       end
 
       def delivery_partners_query
-        Api::V3::DeliveryPartners::Index.new(
+        Api::V3::DeliveryPartnersQuery.new(
           lead_provider:,
           params: delivery_partner_params,
         )
