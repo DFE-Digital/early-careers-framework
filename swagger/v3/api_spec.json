@@ -50,6 +50,18 @@
             "required": false,
             "description": "Refine delivery partners to return.",
             "example": "filter[cohort]=2021"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/DeliveryPartnersSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort delivery partners being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -1961,6 +1973,19 @@
           }
         }
       },
+      "DeliveryPartnersSort": {
+        "description": "Sort delivery partners being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "-created_at",
+            "updated_at",
+            "-updated_at"
+          ]
+        }
+      },
       "ECFParticipant": {
         "description": "The details of a participant",
         "type": "object",
@@ -3351,8 +3376,8 @@
             "example": "France"
           },
           "teacher_catchment_iso_country_code": {
+            "description": "This field identifies which non-UK country the participant has registered from.\nThe API uses <a href=\"https://www.iso.org/iso-3166-country-codes.html\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.\n",
             "nullable": true,
-            "description": "The teacher catchment ISO 3666 alpha3 code",
             "type": "string",
             "example": "FRA"
           }
