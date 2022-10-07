@@ -17,6 +17,10 @@ module Api
         scope
       end
 
+      def delivery_partner
+        lead_provider.delivery_partners.find(params[:id])
+      end
+
     private
 
       def filter
