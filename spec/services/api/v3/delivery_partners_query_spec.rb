@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::DeliveryPartners::Index do
+RSpec.describe Api::V3::DeliveryPartnersQuery do
   describe "#delivery_partners" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider) { cpd_lead_provider.lead_provider }
