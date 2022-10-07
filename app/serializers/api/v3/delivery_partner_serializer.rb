@@ -16,8 +16,8 @@ module Api
         delivery_partner.updated_at.rfc3339
       end
 
-      attribute :cohort do |delivery_partner|
-        delivery_partner.lead_providers.map { |lead_provider| delivery_partner.cohorts_with_provider(lead_provider).map(&:start_year) }.flatten
+      attribute :cohort do |delivery_partner, params|
+        delivery_partner.cohorts_with_provider(params[:lead_provider]).map(&:start_year)
       end
     end
   end

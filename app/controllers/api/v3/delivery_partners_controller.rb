@@ -14,13 +14,13 @@ module Api
       # GET /api/v3/delivery-partners?filter[cohort]=2021,2022&sort=name,-updated_at
       #
       def index
-        render json: serializer_class.new(paginate(delivery_partners)).serializable_hash.to_json
+        render json: serializer_class.new(paginate(delivery_partners), params: { lead_provider: }).serializable_hash.to_json
       end
 
     private
 
       def lead_provider
-        @lead_provider ||= current_api_token.cpd_lead_provider.lead_provider
+        @lead_provider ||= current_user.lead_provider
       end
 
       def delivery_partners
