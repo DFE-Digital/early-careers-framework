@@ -26,7 +26,7 @@ module Api
       end
 
       def finance_statements_query
-        Finance::Statements::Index.new(
+        Finance::StatementsQuery.new(
           cpd_lead_provider: current_user,
           params: statement_params,
         )

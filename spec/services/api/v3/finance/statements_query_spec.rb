@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V3::Finance::Statements::Index do
+RSpec.describe Api::V3::Finance::StatementsQuery do
   describe "#statements" do
     let(:cohort_2021) { create(:cohort, :current) }
     let(:cohort_2022) { create(:cohort, :next) }
