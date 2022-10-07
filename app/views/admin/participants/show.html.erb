@@ -13,8 +13,8 @@
     <% if @participant_profile.npq? %>
       <%= govuk_tabs(title: 'Contents') do |component| %>
         <% component.tab(label: 'Details') do %>
-          <%= render Admin::Participants::Details.new(profile: @participant_profile) %>
-          <%= render Admin::Participants::ValidationTasks.new(profile: @participant_profile) %>
+          <%= render Admin::NPQ::Participants::Details.new(profile: @participant_profile) %>
+          <%= render Admin::NPQ::Participants::ValidationTasks.new(profile: @participant_profile) %>
         <% end %>
         <% component.tab(label: 'Events') do %>
           <%= render partial: 'events', locals: { event_list: @event_list } %>
