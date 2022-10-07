@@ -9,7 +9,6 @@ module Admin
     before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
     before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
     before_action :participant_declarations, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :event_list, only: :show
 
     def show; end
 
@@ -84,10 +83,6 @@ module Admin
           mentor_profile: :user,
         )
         .ordered_historically
-    end
-
-    def event_list
-      @event_list ||= Admin::Participants::HistoryBuilder.from_profile(@participant_profile).events
     end
 
     def historical_induction_records
