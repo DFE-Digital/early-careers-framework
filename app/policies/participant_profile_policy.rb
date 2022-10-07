@@ -9,6 +9,10 @@ class ParticipantProfilePolicy < ApplicationPolicy
     admin?
   end
 
+  def events?
+    admin?
+  end
+
   alias_method :withdraw_record?, :destroy?
   alias_method :remove?, :destroy?
 

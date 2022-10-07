@@ -1,5 +1,7 @@
 <h2 class="govuk-heading-m">Key events</h2>
 
+<%= govuk_button_link_to("View full history", events_admin_participant_path(@participant_profile), secondary: true) %>
+
 <%= govuk_summary_list(
   rows: [
     {
@@ -21,5 +23,3 @@
     ]
   end,
 ) %>
-
-
