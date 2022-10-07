@@ -40,4 +40,10 @@ module AdminHelper
 
     short ? short_names.fetch(name) : long_names.fetch(name)
   end
+
+  def format_address(*parts)
+    return if parts.blank?
+
+    safe_join(parts.compact_blank, tag.br)
+  end
 end
