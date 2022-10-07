@@ -44,7 +44,7 @@ module Induction
               }
     validates :participant_profile, presence: { message: I18n.t("errors.participant_profile.blank") },
                                     active: true
-    validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.exist") }
+    validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.billable_or_submitted") }
     validates :induction_record,
               presence: {
                 message: lambda do |form, _|
