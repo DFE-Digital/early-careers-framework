@@ -4,7 +4,7 @@ module Identity
   class Create < BaseService
     def call
       ActiveRecord::Base.transaction do
-        find_or_create_identity
+        find_or_create_identity!
         add_participant_profiles_to_identity
       end
       identity
@@ -20,7 +20,10 @@ module Identity
       @email = email || user.email
     end
 
-    def find_or_create_identity
+    def find_or_create_identity!
+      email_user = Identity.find_user_by(email:)
+      raise "Email already taken" if email_user.present? && email_user != user
+
       @identity = ParticipantIdentity.find_or_create_by!(email:) do |identity|
         identity.user = user
         identity.external_identifier = external_id

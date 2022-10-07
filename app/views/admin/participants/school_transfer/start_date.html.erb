@@ -1,0 +1,21 @@
+<% title = "When will #{@school_transfer_form.participant_name} start at #{@school_transfer_form.new_school.name}?" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: @school_transfer_form.previous_step }) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
+        <h1 class="govuk-heading-xl"><%= title %></h1>
+
+        <%= form_for @school_transfer_form, url: { action: :start_date }, method: :put do |f| %>
+          <%= f.govuk_error_summary %>
+          <%= f.govuk_date_field :start_date,
+              start_date: true,
+              width: "two-thirds",
+              legend: { text: "#{@school_transfer_form.participant_name} start date", class: "govuk-visually-hidden" },
+              hint: { text: "For example, 14 7 2023"}
+          %>
+          <%= f.govuk_submit "Continue" %>
+        <% end %>
+    </div>
+</div>

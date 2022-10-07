@@ -1,0 +1,20 @@
+<% title = "Choose a programme to join at #{@school_transfer_form.new_school.name}" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: { action: @school_transfer_form.previous_step }) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
+    <%= form_for @school_transfer_form, url: { action: :transfer_options }, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_radio_buttons_fieldset :transfer_choice, legend: { text: title, tag: "h1", size: "xl" } do %>
+          <% @school_transfer_form.transfer_options.each do |option| %>
+            <%= f.govuk_radio_button :transfer_choice, option.id, label: { text: option.description } %>
+          <% end %>
+          <%= f.govuk_radio_divider %>
+          <%= f.govuk_radio_button :transfer_choice, "continue", label: { text: "Current #{@school_transfer_form.current_programme_description}" } %>
+      <% end %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

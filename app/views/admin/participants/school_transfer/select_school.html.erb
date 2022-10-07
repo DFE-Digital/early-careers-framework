@@ -1,0 +1,14 @@
+<% title = "What’s the URN of the new school" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_path(id: @participant_profile)) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <%= form_for @school_transfer_form, url: { action: :select_school }, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_number_field :new_school_urn, label: { text: "School URN" }, hint: { text: "Enter the 6-digit URN of the new school, for example 123456" } %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

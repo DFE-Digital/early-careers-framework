@@ -1,0 +1,15 @@
+<% title = "Cannot transfer to #{@school_transfer_form.new_school.name}" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link( text: "Back", href: { action: :select_school }) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+        
+    <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <p class="govuk-body">We cannot transfer to this school because <%= @school_transfer_form.cannot_transfer_reason %></p>
+
+  </div>
+</div>

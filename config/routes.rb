@@ -251,6 +251,22 @@ Rails.application.routes.draw do
 
       resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
+
+      resource :school_transfer, path: "school-transfer", only: [], controller: "participants/school_transfer" do
+        member do
+          get "select-school", action: :select_school, as: :select_school
+          put "select-school", action: :select_school
+          get "transfer-options", action: :transfer_options, as: :transfer_options
+          put "transfer-options", action: :transfer_options
+          get "start-date", action: :start_date, as: :start_date
+          put "start-date", action: :start_date
+          get "email", action: :email, as: :email
+          put "email", action: :email
+          get "check-answers", action: :check_answers, as: :check_answers
+          put "check-answers", action: :check_answers
+          get "cannot-transfer", action: :cannot_transfer, as: :cannot_transfer
+        end
+      end
     end
     resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]

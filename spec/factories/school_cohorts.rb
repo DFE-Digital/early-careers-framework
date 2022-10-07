@@ -40,10 +40,15 @@ FactoryBot.define do
     end
 
     trait :with_induction_programme do
-      after(:create) do |school_cohort|
+      transient do
+        core_induction_programme { nil }
+      end
+
+      after(:create) do |school_cohort, evaluator|
         Induction::SetCohortInductionProgramme.call(
           school_cohort:,
           programme_choice: school_cohort.induction_programme_choice,
+          core_induction_programme: evaluator.core_induction_programme,
         )
       end
     end

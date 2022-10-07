@@ -34,3 +34,4 @@
     row.value(text: latest_induction_record.school_cohort.delivery_partner&.name)
   end
 end %>
+<%= govuk_link_to "Transfer to another school", select_school_admin_participant_school_transfer_path(@participant_profile) %>
