@@ -103,6 +103,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :paid_uplift_for_lead_provider, ->(lead_provider) { paid_for_lead_provider(lead_provider).uplift }
 
   scope :billable, -> { where(state: %w[eligible payable paid]) }
+  scope :billable_or_changeable, -> { billable.or(changeable) }
 
   before_create :build_initial_declaration_state
 

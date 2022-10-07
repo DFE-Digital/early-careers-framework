@@ -141,6 +141,7 @@ en:
       blank: "The participant is not enrolled on the cohort starting on %{year}"
     participant_declarations:
       exist: "The participant must have no declarations"
+      billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
     participant_profile:
       blank: "Not registered"
       not_active: "Not active"
