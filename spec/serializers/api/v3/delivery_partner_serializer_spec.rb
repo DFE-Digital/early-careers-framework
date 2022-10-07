@@ -11,7 +11,7 @@ module Api
         let(:cohort) { create(:cohort) }
         let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider:) }
 
-        subject { described_class.new([delivery_partner]) }
+        subject { described_class.new([delivery_partner], params: { lead_provider: }) }
 
         it "returns the expected data" do
           result = subject.serializable_hash
