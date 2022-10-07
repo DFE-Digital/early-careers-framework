@@ -23,7 +23,7 @@ module Api
       # GET /api/v3/delivery-partners/:id
       #
       def show
-        render json: serializer_class.new(delivery_partner).serializable_hash.to_json
+        render json: serializer_class.new(delivery_partner, params: { lead_provider: }).serializable_hash.to_json
       end
 
     private
@@ -37,14 +37,7 @@ module Api
       end
 
       def delivery_partner
-        @delivery_partner ||= delivery_partner_query.delivery_partner
-      end
-
-      def delivery_partner_query
-        Api::V3::DeliveryPartners::Show.new(
-          lead_provider:,
-          params: delivery_partner_params,
-        )
+        @delivery_partner ||= delivery_partners_query.delivery_partner
       end
 
       def delivery_partners_query
