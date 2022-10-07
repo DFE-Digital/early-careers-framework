@@ -126,15 +126,22 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when the participant has declarations" do
-        before do
-          allow_any_instance_of(described_class).to receive(:participant_declarations).and_return(true)
-        end
+      %i[submitted eligible payable paid].each do |declaration_state|
+        context "when the participant has #{declaration_state} declarations for the current cohort" do
+          before do
+            participant_profile.participant_declarations.create!(declaration_date: Date.new(2021, 10, 10),
+                                                                 declaration_type: :started,
+                                                                 state: declaration_state,
+                                                                 course_identifier: "ecf-induction",
+                                                                 cpd_lead_provider: create(:cpd_lead_provider),
+                                                                 user: participant_profile.user)
+          end
 
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:participant_declarations)
-          expect(form.errors.first.message).to eq("The participant must have no declarations")
+          it "returns false and set errors" do
+            expect(form.save).to be_falsey
+            expect(form.errors.first.attribute).to eq(:participant_declarations)
+            expect(form.errors.first.message).to eq("The participant has billable or submitted declarations in the current cohort")
+          end
         end
       end
 
