@@ -11,6 +11,8 @@ RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type:
       expect(rendered).to have_contents(
         profile.user.full_name,
         profile.user.email,
+        profile.npq_application.nino,
+        profile.npq_application.date_of_birth.to_formatted_s(:govuk),
         profile.npq_application.teacher_reference_number,
         profile.npq_application.school_urn,
         t(:npq, scope: "schools.participants.type"),
