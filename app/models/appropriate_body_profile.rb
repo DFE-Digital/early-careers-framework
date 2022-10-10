@@ -11,7 +11,8 @@ class AppropriateBodyProfile < ApplicationRecord
       user = User.find_or_create_by!(email:) do |u|
         u.full_name = full_name
       end
-      AppropriateBodyProfile.create!(user:, appropriate_body:)
+      abp = AppropriateBodyProfile.create!(user:, appropriate_body:)
+      AppropriateBodyProfileMailer.welcome(appropriate_body_profile: abp).deliver_now
     end
   end
 end

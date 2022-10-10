@@ -1,0 +1,24 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">Check data about early career teachers and mentors</h1>
+
+    <h2 class="govuk-heading-m">Sign in as an Appropriate Body (AB)</h2>
+
+    <p class="govuk-body">Sign in to search DfE’s data for:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>early career teacher and mentor records</li>
+      <li>training statuses and funding eligibility</li>
+      <li>information provided by school induction tutors about ABs and delivery partners.</li>
+    </ul>
+    <p class="govuk-body">Note, this service shows live data which has been submitted to DfE by school induction tutors and lead providers. There may be differences between the data available here from what has been shared with you elsewhere.</p>
+
+    <%= govuk_start_button text: "Start now", href: new_user_session_path %>
+
+    <h2 class="govuk-heading-m">Before you start</h2>
+    <p class="govuk-body">You will be asked to enter your registered email address (the one DfE sends emails to).</p>
+
+    <h2 class="govuk-heading-m">If you need help using this service</h2>
+    <p class="govuk-body">If you need help registering or updating your details, contact DfE at <%= mail_to Rails.application.config.support_email, Rails.application.config.support_email, class: "govuk-link--no-visited-state" %></p>
+  </div>
+</div>

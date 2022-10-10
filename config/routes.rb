@@ -601,6 +601,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get "/appropriate-bodies/start", to: "start#appropriate_bodies", as: :start_appropriate_bodies
   scope module: "appropriate_bodies" do
     resources :appropriate_bodies, path: "appropriate-bodies", only: %i[index create] do
       resources :participants, only: %i[index]
