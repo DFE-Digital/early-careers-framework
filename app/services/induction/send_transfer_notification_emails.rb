@@ -27,8 +27,8 @@ module Induction
                 :same_delivery_partner,
                 :same_provider,
                 :switch_to_schools_programme,
-                :current_lead_provider_profiles,
-                :target_lead_provider_profiles
+                :lead_provider_profiles_in,
+                :lead_provider_profiles_out
 
     alias_method :was_withdrawn_participant?, :was_withdrawn_participant
     alias_method :same_delivery_partner?, :same_delivery_partner
@@ -41,16 +41,16 @@ module Induction
       same_delivery_partner:,
       same_provider:,
       switch_to_schools_programme:,
-      current_lead_provider_profiles: [],
-      target_lead_provider_profiles: []
+      lead_provider_profiles_in: [],
+      lead_provider_profiles_out: []
     )
-      @induction_record               = induction_record
-      @was_withdrawn_participant      = was_withdrawn_participant
-      @same_delivery_partner          = same_delivery_partner
-      @same_provider                  = same_provider
-      @switch_to_schools_programme    = switch_to_schools_programme
-      @current_lead_provider_profiles = current_lead_provider_profiles
-      @target_lead_provider_profiles  = target_lead_provider_profiles
+      @induction_record            = induction_record
+      @was_withdrawn_participant   = was_withdrawn_participant
+      @same_delivery_partner       = same_delivery_partner
+      @same_provider               = same_provider
+      @switch_to_schools_programme = switch_to_schools_programme
+      @lead_provider_profiles_in   = lead_provider_profiles_in
+      @lead_provider_profiles_out  = lead_provider_profiles_out
     end
 
     def call
@@ -84,13 +84,13 @@ module Induction
     # emails to current lead provider profiles
 
     def send_provider_transfer_in_notifications
-      current_lead_provider_profiles.each do |lead_provider_profile|
+      lead_provider_profiles_in.each do |lead_provider_profile|
         ParticipantTransferMailer.provider_transfer_in_notification(induction_record:, lead_provider_profile:).deliver_later
       end
     end
 
     def send_provider_existing_school_transfer_notifications
-      current_lead_provider_profiles.each do |lead_provider_profile|
+      lead_provider_profiles_in.each do |lead_provider_profile|
         ParticipantTransferMailer.provider_existing_school_transfer_notification(induction_record:, lead_provider_profile:).deliver_later
       end
     end
@@ -98,13 +98,13 @@ module Induction
     # emails to target lead provider profiles
 
     def send_provider_transfer_out_notifications
-      target_lead_provider_profiles.each do |lead_provider_profile|
+      lead_provider_profiles_out.each do |lead_provider_profile|
         ParticipantTransferMailer.provider_transfer_out_notification(induction_record:, lead_provider_profile:).deliver_later
       end
     end
 
     def send_provider_new_school_transfer_notifications
-      target_lead_provider_profiles.each do |lead_provider_profile|
+      lead_provider_profiles_out.each do |lead_provider_profile|
         ParticipantTransferMailer.provider_new_school_transfer_notification(induction_record:, lead_provider_profile:).deliver_later
       end
     end

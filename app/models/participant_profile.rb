@@ -58,6 +58,9 @@ class ParticipantProfile < ApplicationRecord
   self.ignored_columns = %w[user_id]
 
   delegate :full_name, :user_description, to: :user
+  delegate :cohort_start_year, to: :latest_induction_record, allow_nil: true
+  delegate :lead_provider, to: :latest_induction_record, allow_nil: true
+  delegate :delivery_partner, to: :latest_induction_record, allow_nil: true
 
   def latest_induction_record
     induction_records.latest

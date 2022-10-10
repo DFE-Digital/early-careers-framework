@@ -19,10 +19,10 @@
                 legend: { text: title, tag: 'h1', size: 'xl' }) do %>
 
                 <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Lead provider</h2>
-                <p class="govuk-body govuk-!-margin-bottom-1"><%= @school_cohort.default_induction_programme&.lead_provider&.name %></p>
+                <p class="govuk-body govuk-!-margin-bottom-1"><%= lead_provider_in&.name %></p>
                 <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery partner</h2>
-                <p class="govuk-body"><%= @school_cohort.default_induction_programme&.delivery_partner&.name %></p>
-            <% end %>            
+                <p class="govuk-body"><%= delivery_partner_in&.name %></p>
+            <% end %>
 
             <%= f.govuk_submit "Continue" %>
 

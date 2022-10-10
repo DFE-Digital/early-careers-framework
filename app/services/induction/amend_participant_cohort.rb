@@ -42,8 +42,9 @@ module Induction
                   I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service")
                 end,
               }
-    validates :participant_profile, presence: { message: I18n.t("errors.participant_profile.blank") },
-                                    active: true
+    validates :participant_profile,
+              presence: { message: I18n.t("errors.participant_profile.blank") },
+              participant_profile_active: true
     validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.billable_or_submitted") }
     validates :induction_record,
               presence: {

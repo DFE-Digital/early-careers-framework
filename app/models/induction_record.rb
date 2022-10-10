@@ -18,6 +18,7 @@ class InductionRecord < ApplicationRecord
   has_one :user, through: :participant_profile
   has_one :partnership, through: :induction_programme
   has_one :lead_provider, through: :partnership
+  has_one :delivery_partner, through: :partnership
   has_one :cpd_lead_provider, through: :induction_programme
 
   # optional while the data is setup
@@ -93,6 +94,7 @@ class InductionRecord < ApplicationRecord
   delegate :name, to: :appropriate_body, allow_nil: true, prefix: true
   delegate :schedule_identifier, to: :schedule, allow_nil: true
   delegate :training_programme, to: :induction_programme
+  delegate :start_year, to: :cohort, prefix: true
 
   after_save :update_analytics
 

@@ -56,8 +56,8 @@
         <% row.key { "Training with" } %>
         <% if @transferring_participant_form.using_schools_programme? %>
           <% row.value do %>
-            <div><%= @school_cohort.default_induction_programme.lead_provider&.name %></div>
-            <div><%= @school_cohort.default_induction_programme.delivery_partner&.name %></div>
+            <div><%= lead_provider_in&.name %></div>
+            <div><%= delivery_partner_in&.name %></div>
           <% end %>
           <% if @transferring_participant_form.switch_to_schools_programme? %>
             <% row.action(text: "Change",
@@ -68,8 +68,8 @@
           <% end %>
         <% else %>
           <% row.value do %>
-            <div><%= @latest_induction_record.induction_programme.lead_provider&.name %></div>
-            <div><%= @latest_induction_record.induction_programme.delivery_partner&.name %></div>
+            <div><%= lead_provider_out&.name %></div>
+            <div><%= delivery_partner_out&.name %></div>
           <% end %>
           <% row.action(text: "Change",
                         visually_hidden_text: "training programme",

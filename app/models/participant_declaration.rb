@@ -65,6 +65,7 @@ class ParticipantDeclaration < ApplicationRecord
   scope :unique_id, -> { select(:user_id).distinct }
 
   # Time dependent Range scopes
+  scope :not_declared_as_between, ->(start_date, end_date) { where.not(declaration_date: start_date..end_date) }
   scope :declared_as_between, ->(start_date, end_date) { where(declaration_date: start_date..end_date) }
   scope :submitted_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 

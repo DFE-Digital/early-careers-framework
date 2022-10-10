@@ -126,12 +126,27 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     context "when form has been set up in the session" do
       let(:email) { Faker::Internet.email }
       let!(:other_user) { create :user, email: }
+
       context "when participant is a transfer" do
+        let(:induction_programme) { create(:induction_programme, :fip, school_cohort: create(:school_cohort, cohort: participant_cohort)) }
+        let(:ecf_participant_validation_data) { create(:ecf_participant_validation_data, trn: "3333333") }
+        let(:participant_profile) { create(:ecf_participant_profile, ecf_participant_validation_data:) }
+
         before do
+          Induction::Enrol.call(participant_profile:, induction_programme:)
+          participant_profile.participant_declarations
+                             .create!(declaration_date: Date.new(participant_profile.cohort_start_year, 10, 10),
+                                      declaration_type: :started,
+                                      state: :paid,
+                                      course_identifier: "ecf-induction",
+                                      cpd_lead_provider: create(:cpd_lead_provider),
+                                      user: participant_profile.user)
+
           set_session(:schools_add_participant_form,
                       type: :ect,
                       full_name: Faker::Name.name,
                       email:,
+                      trn: "3333333",
                       date_of_birth: Date.new(1990, 1, 1),
                       mentor_id: "later",
                       school_cohort_id: school_cohort.id,
@@ -140,7 +155,17 @@ RSpec.describe "Schools::AddParticipant", type: :request do
           put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/transfer", params: { step: :transfer }
         end
 
-        it { is_expected.to redirect_to teacher_start_date_schools_transferring_participant_path }
+        context "when the target school cohort has not been set by the school yet" do
+          let(:participant_cohort) { create(:cohort, start_year: cohort.start_year - 1) }
+
+          it { is_expected.to render_template :target_school_cohort_not_set }
+        end
+
+        context "when the target school cohort has already been set by the school" do
+          let(:participant_cohort) { cohort }
+
+          it { is_expected.to redirect_to teacher_start_date_schools_transferring_participant_path }
+        end
       end
 
       context "when participant is not a transfer" do
