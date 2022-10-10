@@ -2,8 +2,33 @@
 
 module Finance
   module ECF
-    class AssuranceReport < ApplicationRecord
-      self.table_name = "ecf_assurance_reports"
+    class AssuranceReport
+      include ActiveModel::Attributes
+
+      attribute :participant_id
+      attribute :participant_name
+      attribute :trn
+      attribute :participant_type
+      attribute :mentor_profile_id
+      attribute :schedule
+      attribute :eligible_for_funding, :bolean
+      attribute :eligible_for_funding_reason
+      attribute :sparsity_uplift, :bolean
+      attribute :pupil_premium_uplift, :bolean
+      attribute :sparsity_and_pp, :bolean
+      attribute :lead_provider_name
+      attribute :delivery_partner_name
+      attribute :school_urn
+      attribute :school_name
+      attribute :training_status
+      attribute :training_status_reason
+      attribute :declaration_id
+      attribute :declaration_status
+      attribute :declaration_type
+      attribute :declaration_date, :datetime
+      attribute :declaration_created_at, :datetime
+      attribute :statement_name
+      attribute :statement_id
 
       def to_csv
         [
