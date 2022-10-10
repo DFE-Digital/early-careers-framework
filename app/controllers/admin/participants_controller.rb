@@ -42,6 +42,7 @@ module Admin
     end
 
     def events
+      latest_induction_record
       event_list
     end
 

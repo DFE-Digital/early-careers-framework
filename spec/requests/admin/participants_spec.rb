@@ -73,7 +73,6 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
     it "shows the correct participant" do
       get "/admin/participants/#{ect_profile.id}"
       expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
-      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
       expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
     end
 
@@ -85,7 +84,6 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
       it "shows the correct participant" do
         get "/admin/participants/#{ect_profile.id}"
         expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
-        expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
         expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
         expect(assigns(:latest_induction_record)).not_to be_nil
       end
@@ -122,6 +120,146 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
       expect {
         delete "/admin/participants/#{ect_profile.id}"
       }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob).with(participant_profile: ect_profile)
+    end
+  end
+
+  describe "GET /admin/participants/:id/school" do
+    it "renders the school template" do
+      get "/admin/participants/#{mentor_profile.id}/school"
+      expect(response).to render_template("admin/participants/school")
+    end
+
+    it "shows the correct participant" do
+      get "/admin/participants/#{ect_profile.id}/school"
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+    end
+
+    context "when the participant has a withdrawn induction record" do
+      before do
+        ect_profile.current_induction_record.withdrawing!
+      end
+
+      it "shows the correct participant" do
+        get "/admin/participants/#{ect_profile.id}/school"
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+        expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+        expect(assigns(:latest_induction_record)).not_to be_nil
+      end
+    end
+  end
+
+  describe "GET /admin/participants/:id/events" do
+    it "renders the events template" do
+      get "/admin/participants/#{mentor_profile.id}/events"
+      expect(response).to render_template("admin/participants/events")
+    end
+
+    it "shows the correct participant" do
+      get "/admin/participants/#{ect_profile.id}/events"
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+    end
+
+    context "when the participant has a withdrawn induction record" do
+      before do
+        ect_profile.current_induction_record.withdrawing!
+      end
+
+      it "shows the correct participant" do
+        get "/admin/participants/#{ect_profile.id}/events"
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(mentor_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+        expect(assigns(:event_list)).not_to be_nil
+      end
+    end
+  end
+
+  describe "GET /admin/participants/:id/records" do
+    it "renders the records template" do
+      get "/admin/participants/#{mentor_profile.id}/records"
+      expect(response).to render_template("admin/participants/records")
+    end
+
+    it "shows the correct participant" do
+      get "/admin/participants/#{ect_profile.id}/records"
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+    end
+
+    context "when the participant has a withdrawn induction record" do
+      before do
+        ect_profile.current_induction_record.withdrawing!
+      end
+
+      it "shows the correct participant" do
+        get "/admin/participants/#{ect_profile.id}/records"
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+        expect(response.body).to include(CGI.escapeHTML(mentor_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+        expect(assigns(:induction_records)).not_to be_nil
+      end
+    end
+  end
+
+  describe "GET /admin/participants/:id/cohorts" do
+    it "renders the cohort template" do
+      get "/admin/participants/#{mentor_profile.id}/cohorts"
+      expect(response).to render_template("admin/participants/cohorts")
+    end
+
+    it "shows the correct participant" do
+      get "/admin/participants/#{ect_profile.id}/cohorts"
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+    end
+
+    context "when the participant has a withdrawn induction record" do
+      before do
+        ect_profile.current_induction_record.withdrawing!
+      end
+
+      it "shows the correct participant" do
+        get "/admin/participants/#{ect_profile.id}/cohorts"
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(mentor_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+        expect(assigns(:induction_records)).not_to be_nil
+      end
+    end
+  end
+
+  describe "GET /admin/participants/:id/declarations" do
+    it "renders the declarations template" do
+      get "/admin/participants/#{mentor_profile.id}/declarations"
+      expect(response).to render_template("admin/participants/declarations")
+    end
+
+    it "shows the correct participant" do
+      get "/admin/participants/#{ect_profile.id}/declarations"
+      expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(mentor_profile.user.full_name))
+      expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+    end
+
+    context "when the participant has a withdrawn induction record" do
+      before do
+        ect_profile.current_induction_record.withdrawing!
+      end
+
+      it "shows the correct participant" do
+        get "/admin/participants/#{ect_profile.id}/declarations"
+        expect(response.body).to include(CGI.escapeHTML(ect_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(mentor_profile.user.full_name))
+        expect(response.body).not_to include(CGI.escapeHTML(npq_profile.user.full_name))
+        expect(assigns(:induction_records)).not_to be_nil
+      end
     end
   end
 end
