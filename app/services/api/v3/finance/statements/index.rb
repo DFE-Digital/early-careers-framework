@@ -15,6 +15,7 @@ module Api
           def statements
             statement_class
               .includes(:cohort)
+              .output
               .where(
                 cpd_lead_provider:,
                 cohort_id: with_cohorts.map(&:id),
