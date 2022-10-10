@@ -86,7 +86,7 @@ module Finance
       end
 
       def where_values
-        ParticipantDeclaration::NPQ.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
+        ParticipantDeclaration::ECF.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
       end
     end
   end
