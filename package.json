@@ -2,7 +2,7 @@
   "name": "early-careers-framework",
   "private": true,
   "engines": {
-    "node": "16.16.x",
+    "node": "16.17.x",
     "yarn": "^1.22.0"
   },
   "dependencies": {
