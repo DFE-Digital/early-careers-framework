@@ -3,20 +3,25 @@
 require "rails_helper"
 
 RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules do
-  let(:user)              { create(:user, :finance) }
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:lead_provider)     { cpd_lead_provider.lead_provider }
-  let(:statement)         { create(:ecf_statement, cpd_lead_provider:) }
+  let(:user)                    { create(:user, :finance) }
+  let(:cpd_lead_provider)       { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider)           { cpd_lead_provider.lead_provider }
+  let(:statement)               { create(:ecf_statement, cpd_lead_provider:) }
+  let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:other_statement)         { create(:npq_statement, cpd_lead_provider: other_cpd_lead_provider) }
 
   before do
     travel_to statement.deadline_date do
       create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider:)
     end
+    travel_to other_statement.deadline_date do
+      create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider: other_cpd_lead_provider)
+    end
     sign_in user
   end
 
   it "allows to download a CSV of the assurance report", :aggregate_failures do
-    get finance_ecf_lead_provider_statement_assurance_report_path(cpd_lead_provider.lead_provider, statement, format: "csv")
+    get finance_ecf_statement_assurance_report_path(statement, format: "csv")
 
     content_disposition_cookie_header = Rack::Utils.parse_cookies_header(response.headers["Content-Disposition"])
     expect(content_disposition_cookie_header)
@@ -27,9 +32,9 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
       expect(row["Statement ID"]).to eq(statement.id)
 
       participant_declaration = ParticipantDeclaration.find(row["Declaration ID"])
-      expect(row["Declaration Status"]).to eq(participant_declaration.state)
-      expect(row["Declaration Type"]).to eq(participant_declaration.declaration_type)
-      expect(row["Declaration Date"]).to eq(participant_declaration.declaration_date.iso8601)
+      expect(row["Declaration Status"]).to     eq(participant_declaration.state)
+      expect(row["Declaration Type"]).to       eq(participant_declaration.declaration_type)
+      expect(row["Declaration Date"]).to       eq(participant_declaration.declaration_date.iso8601)
       expect(row["Declaration Created At"]).to eq(participant_declaration.created_at.iso8601)
 
       participant_profile     = participant_declaration.participant_profile
@@ -42,10 +47,10 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
       expect(row["Sparsity And Pp"]).to      eq("false")
 
       induction_record = participant_profile.latest_induction_record_for(cpd_lead_provider:)
-      expect(row["Schedule"]).to           eq(induction_record.schedule.schedule_identifier)
-      expect(row["Lead Provider Name"]).to eq(induction_record.lead_provider.name)
-      expect(row["Delivery Partner Name"]).to eq(induction_record.delivery_partner.name)
-      expect(row["Eligible For Funding"]).to eq("true")
+      expect(row["Schedule"]).to                    eq(induction_record.schedule.schedule_identifier)
+      expect(row["Lead Provider Name"]).to          eq(induction_record.lead_provider.name)
+      expect(row["Delivery Partner Name"]).to       eq(induction_record.delivery_partner.name)
+      expect(row["Eligible For Funding"]).to        eq("true")
       expect(row["Eligible For Funding Reason"]).to be_blank
 
       school = induction_record.school

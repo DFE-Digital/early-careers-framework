@@ -3,9 +3,8 @@
 module Finance
   module ECF
     class AssuranceReportQuery
-      def initialize(lead_provider_id, statement_id)
-        self.lead_provider_id = lead_provider_id
-        self.statement_id     = statement_id
+      def initialize(statement)
+        self.statement = statement
       end
 
       def rows
@@ -16,12 +15,10 @@ module Finance
 
     private
 
-      attr_accessor :lead_provider_id, :statement_id
+      attr_accessor :statement
 
       def participant_declarations
-        ParticipantDeclaration::ECF
-          .where(lead_provider_id:, statement_id:)
-          .find_by_sql(sql)
+        ParticipantDeclaration::ECF.find_by_sql(sql)
       end
 
       def sql
@@ -83,9 +80,13 @@ module Finance
           JOIN schools sc ON sc.id = latest_induction_record.school_id
           LEFT OUTER JOIN ecf_participant_eligibilities epe ON epe.participant_profile_id = pp.id
           JOIN delivery_partners dp ON dp.id = latest_induction_record.delivery_partner_id
-          WHERE pd.type = 'ParticipantDeclaration::ECF'
+          WHERE pd.type = 'ParticipantDeclaration::ECF' AND #{where_values}
           ORDER BY u.full_name ASC
         EOSQL
+      end
+
+      def where_values
+        ParticipantDeclaration::NPQ.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
       end
     end
   end

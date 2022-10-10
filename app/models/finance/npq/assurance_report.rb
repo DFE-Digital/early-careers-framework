@@ -2,8 +2,28 @@
 
 module Finance
   module NPQ
-    class AssuranceReport < ApplicationRecord
-      self.table_name = "npq_assurance_reports"
+    class AssuranceReport
+      include ActiveModel::Model
+      include ActiveModel::Attributes
+
+      attribute :participant_id
+      attribute :participant_name
+      attribute :trn
+      attribute :course_identifier
+      attribute :schedule
+      attribute :eligible_for_funding, :boolean
+      attribute :npq_lead_provider_name
+      attribute :school_urn
+      attribute :school_name
+      attribute :training_status
+      attribute :training_status_reason
+      attribute :declaration_id
+      attribute :declaration_status
+      attribute :declaration_type
+      attribute :declaration_date, :datetime
+      attribute :declaration_created_at, :datetime
+      attribute :statement_name
+      attribute :statement_id
 
       def to_csv
         [

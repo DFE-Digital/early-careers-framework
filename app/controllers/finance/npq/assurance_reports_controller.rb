@@ -19,11 +19,7 @@ module Finance
       end
 
       def assurance_report_rows
-        @assurance_report_rows ||= AssuranceReport
-                                     .where(
-                                       npq_lead_provider_id: params[:lead_provider_id],
-                                       statement_id: params[:statement_id],
-                                     )
+        @assurance_report_rows ||= AssuranceReportQuery.new(statement).rows
       end
 
       def csv_headers
@@ -54,7 +50,7 @@ module Finance
       end
 
       def npq_lead_provider
-        @npq_lead_provider ||= NPQLeadProvider.find(params[:lead_provider_id])
+        statement.npq_lead_provider
       end
 
       def statement

@@ -19,7 +19,7 @@ module Finance
       end
 
       def assurance_report_rows
-        @assurance_report_rows ||= AssuranceReportQuery.new(params[:lead_provider_id], params[:statement_id]).rows
+        @assurance_report_rows ||= AssuranceReportQuery.new(statement).rows
       end
 
       def csv_headers
@@ -56,7 +56,7 @@ module Finance
       end
 
       def lead_provider
-        @lead_provider ||= LeadProvider.find(params[:lead_provider_id])
+        @statement.lead_provider
       end
 
       def statement
