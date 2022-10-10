@@ -69,7 +69,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     click_button("View")
 
     expect(page)
-      .to have_link("Download declarations (CSV)", href: finance_ecf_lead_provider_statement_assurance_report_path(lead_provider, november_statement, format: :csv))
+      .to have_link("Download declarations (CSV)", href: finance_ecf_statement_assurance_report_path(november_statement, format: :csv))
 
     then_i_should_see_the_total_voided
     click_link("View voided declarations")

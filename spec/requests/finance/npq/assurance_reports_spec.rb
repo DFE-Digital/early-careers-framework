@@ -21,7 +21,7 @@ RSpec.describe Finance::NPQ::AssuranceReportsController, :with_default_schedules
   end
 
   it "allows to download a CSV of the assurance report" do
-    get finance_statement_assurance_report_path(statement, format: "csv")
+    get finance_npq_statement_assurance_report_path(statement, format: "csv")
 
     content_disposition_cookie_header = Rack::Utils.parse_cookies_header(response.headers["Content-Disposition"])
     expect(content_disposition_cookie_header)
