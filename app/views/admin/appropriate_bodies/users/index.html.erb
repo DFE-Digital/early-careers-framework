@@ -1,24 +1,24 @@
-<% content_for :title, "Delivery partner users" %>
+<% content_for :title, "Appropriate body users" %>
 
-<%= render "admin/delivery_partners/heading" %>
+<%= render "admin/appropriate_bodies/heading" %>
 
-<%= govuk_button_link_to "Add a new user", new_admin_delivery_partners_user_path %>
+<%= govuk_button_link_to "Add a new user", new_admin_appropriate_bodies_user_path %>
 <table class="govuk-table">
   <thead>
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">Full name</th>
       <th scope="col" class="govuk-table__header">Email address</th>
-      <th scope="col" class="govuk-table__header">Delivery partner</th>
+      <th scope="col" class="govuk-table__header">Appropriate body</th>
     </tr>
   </thead>
   <tbody class="govuk-table__body">
-    <% @delivery_partner_profiles.group_by(&:user).each do |user, profiles| %>
+    <% @appropriate_body_profiles.group_by(&:user).each do |user, profiles| %>
       <tr class="govuk-table__row">
         <td class="govuk-table__cell"><%= user.full_name %></td>
         <td class="govuk-table__cell"><%= user.email %></td>
         <td class="govuk-table__cell">
           <% profiles.each do |profile| %>
-            <%= govuk_link_to profile.delivery_partner.name, edit_admin_delivery_partners_user_path(profile) %>
+            <%= govuk_link_to profile.appropriate_body.name, edit_admin_appropriate_bodies_user_path(profile) %>
             <br>
           <% end %>
         </td>

@@ -18,9 +18,22 @@
     <%= component.nav_item(path: admin_delivery_partners_users_path) do %>
       Delivery partners
     <% end %>
+    <% if FeatureFlag.active?(:appropriate_bodies) %>
+      <%= component.nav_item(path: admin_appropriate_bodies_users_path) do %>
+        Appropriate bodies
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
 
 <%= render layout: 'layouts/width_container_wide' do %>
+  <style>
+    .primary-nav-container .primary-nav .nav-item {
+      font-size: 1.1rem;
+    }
+    .primary-nav-container .primary-nav .nav-item:not(:last-child) {
+      margin-right: 25px;
+    }
+  </style>
   <%= yield %>
 <% end %>

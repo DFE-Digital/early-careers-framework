@@ -34,7 +34,7 @@ RSpec.feature "Admin delivery partner users" do
     and_i_see(@delivery_partner_user.full_name)
     and_i_see(@delivery_partner_user.email)
 
-    when_i_click_on(@delivery_partner_user.full_name)
+    when_i_click_on(@delivery_partner_user.delivery_partners.first.name)
     then_i_see("Edit user details")
     and_i_choose("Delivery partner", with: @delivery_partner2.name)
     and_i_fill_in("Full name", with: "Joe Blogs")
@@ -55,7 +55,7 @@ RSpec.feature "Admin delivery partner users" do
     and_i_see(@delivery_partner_user.full_name)
     and_i_see(@delivery_partner_user.email)
 
-    when_i_click_on(@delivery_partner_user.full_name)
+    when_i_click_on(@delivery_partner_user.delivery_partners.first.name)
     then_i_see("Edit user details")
     and_i_click_on("Delete")
 

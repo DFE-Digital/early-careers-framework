@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DeliveryPartnerProfilePolicy < ApplicationPolicy
+class AppropriateBodyProfilePolicy < ApplicationPolicy
   def index?
     admin_only
   end
@@ -22,7 +22,7 @@ class DeliveryPartnerProfilePolicy < ApplicationPolicy
   end
 
   def admin_only
-    !!user&.admin?
+    FeatureFlag.active?(:appropriate_bodies) && !!user&.admin?
   end
 
   class Scope < Scope

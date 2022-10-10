@@ -133,6 +133,8 @@ en:
       blank: "Select a reason why you think this confirmation is incorrect"
     delivery_partner:
       blank: "Choose a delivery partner"
+    appropriate_body:
+      blank: "Choose an appropriate body"
     cohort:
       blank: "Cohort starting on %{year} not setup on %{where}"
       excluded_start_year: "Invalid value. Must be different to %{year}"

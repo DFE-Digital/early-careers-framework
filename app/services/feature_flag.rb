@@ -21,6 +21,7 @@ class FeatureFlag
     change_of_circumstances
     multiple_cohorts
     api_v3
+    appropriate_bodies
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
