@@ -33,5 +33,18 @@
     row.key(text: "Delivery partner")
     row.value(text: latest_induction_record.school_cohort.delivery_partner&.name)
   end
+
+  if latest_induction_record.participant_profile.mentor?
+    sl.row do |row|
+      row.key(text: "Mentoring at")
+      row.value do
+        ["<ul class='govuk-list govuk-list--bullet'>",
+        latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
+          "<li>#{govuk_link_to(school_mentor.school.name, admin_school_path(school_mentor.school.friendly_id))}</li>"
+        end,
+        "</ul>"].flatten.join.html_safe
+      end
+    end
+  end
 end %>
 <%= govuk_link_to "Transfer to another school", select_school_admin_participant_school_transfer_path(@participant_profile) %>
