@@ -1,4 +1,20 @@
 <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
   <%= cohort.display_name %> cohort
 </h3>
+
 <%= render cohort_info %>
+
+<% if partnerships.present? %>
+  <h4>Partnerships</h4>
+
+  <ul>
+    <% partnerships.each do |p| %>
+      <li class="govuk-!-padding-bottom-5">
+        <%= "#{p.delivery_partner.name} (#{p.lead_provider.name})" %><br>
+        <%= govuk_link_to(new_admin_school_partnership_challenge_partnership_path(school_cohort.school, p)) do %>
+          Challenge <%= tag.span("partnership", class: "govuk-visually-hidden") %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

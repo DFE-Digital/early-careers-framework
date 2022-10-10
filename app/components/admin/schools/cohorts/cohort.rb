@@ -4,9 +4,12 @@ module Admin
   module Schools
     module Cohorts
       class Cohort < BaseComponent
-        def initialize(cohort:, school_cohort:)
+        attr_reader :partnerships
+
+        def initialize(cohort:, school_cohort:, partnerships: [])
           @cohort = cohort
           @school_cohort = school_cohort
+          @partnerships = partnerships
         end
 
       private

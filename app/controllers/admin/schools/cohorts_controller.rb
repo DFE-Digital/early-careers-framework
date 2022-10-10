@@ -18,7 +18,8 @@ module Admin
     private
 
       def set_school
-        @school = School.friendly.find params[:school_id]
+        @school = School.eager_load(:active_partnerships).friendly.find(params[:school_id])
+        @partnerships_by_cohort = @school.active_partnerships.group_by(&:cohort_id)
       end
     end
   end
