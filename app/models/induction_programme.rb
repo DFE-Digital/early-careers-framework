@@ -26,8 +26,7 @@ class InductionProgramme < ApplicationRecord
   has_one :delivery_partner, through: :partnership
   has_one :cpd_lead_provider, through: :lead_provider
   has_one :school, through: :school_cohort
-
-  delegate :cohort_id, to: :school_cohort
+  has_one :cohort, through: :school_cohort
 
   after_commit :touch_induction_records
 

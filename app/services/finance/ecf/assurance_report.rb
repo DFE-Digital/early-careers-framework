@@ -6,6 +6,8 @@ module Finance
       include ActiveModel::Model
       include ActiveModel::Attributes
 
+      attribute :id
+      attribute :lead_provider_id
       attribute :participant_id
       attribute :participant_name
       attribute :trn
