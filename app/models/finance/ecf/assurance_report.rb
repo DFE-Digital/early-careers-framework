@@ -3,6 +3,7 @@
 module Finance
   module ECF
     class AssuranceReport
+      include ActiveModel::Model
       include ActiveModel::Attributes
 
       attribute :participant_id
@@ -11,11 +12,11 @@ module Finance
       attribute :participant_type
       attribute :mentor_profile_id
       attribute :schedule
-      attribute :eligible_for_funding, :bolean
+      attribute :eligible_for_funding, :boolean
       attribute :eligible_for_funding_reason
-      attribute :sparsity_uplift, :bolean
-      attribute :pupil_premium_uplift, :bolean
-      attribute :sparsity_and_pp, :bolean
+      attribute :sparsity_uplift, :boolean
+      attribute :pupil_premium_uplift, :boolean
+      attribute :sparsity_and_pp, :boolean
       attribute :lead_provider_name
       attribute :delivery_partner_name
       attribute :school_urn

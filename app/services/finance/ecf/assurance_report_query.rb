@@ -1,24 +1,27 @@
+# frozen_string_literal: true
+
 module Finance
   module ECF
-    class AssuranceReport
+    class AssuranceReportQuery
       def initialize(lead_provider_id, statement_id)
         self.lead_provider_id = lead_provider_id
         self.statement_id     = statement_id
       end
 
       def rows
-        participant_declaration
+        participant_declarations.map do |participant_declaration|
+          AssuranceReport.new(**participant_declaration.serializable_hash(except: %i[id lead_provider_id]))
+        end
       end
 
     private
 
       attr_accessor :lead_provider_id, :statement_id
 
-      def participant_declaration
+      def participant_declarations
         ParticipantDeclaration::ECF
           .where(lead_provider_id:, statement_id:)
           .find_by_sql(sql)
-          .
       end
 
       def sql

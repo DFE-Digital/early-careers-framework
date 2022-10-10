@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules do
   let(:user)              { create(:user, :finance) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider)     { cpd_lead_provider.lead_provider }
   let(:statement)         { create(:ecf_statement, cpd_lead_provider:) }
 
   before do
@@ -14,8 +15,12 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
     sign_in user
   end
 
-  it "allows to download a CSV of the assurance report" do
+  it "allows to download a CSV of the assurance report", :aggregate_failures do
     get finance_ecf_lead_provider_statement_assurance_report_path(cpd_lead_provider.lead_provider, statement, format: "csv")
+
+    content_disposition_cookie_header = Rack::Utils.parse_cookies_header(response.headers["Content-Disposition"])
+    expect(content_disposition_cookie_header)
+      .to include({ "filename" => "\"ECF-Declarations-#{lead_provider.name.gsub(/\W/, '')}-Cohort#{statement.cohort.start_year}-#{statement.name.gsub(/\W/, '')}.csv\"" })
 
     CSV.parse(response.body.force_encoding("utf-8"), headers: true, encoding: "utf-8", col_sep: ",") do |row|
       expect(row["Statement Name"]).to eq(statement.name)
