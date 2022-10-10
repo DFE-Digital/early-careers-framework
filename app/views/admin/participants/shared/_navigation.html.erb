@@ -1,0 +1,25 @@
+<%= render SubnavComponent.new do |component| %>
+  <% component.nav_item(path: admin_participant_path(@participant_profile)) do %>
+    Details
+  <% end %>
+  <% if @participant_profile.ecf? %>
+    <% component.nav_item(path: school_admin_participant_path(@participant_profile)) do %>
+      School
+    <% end %>
+    <% component.nav_item(path: history_admin_participant_path(@participant_profile)) do %>
+      Transfer History
+    <% end %>
+    <% component.nav_item(path: records_admin_participant_path(@participant_profile)) do %>
+      Induction Record
+    <% end %>
+    <% component.nav_item(path: cohorts_admin_participant_path(@participant_profile)) do %>
+      Cohorts
+    <% end %>
+    <% component.nav_item(path: declarations_admin_participant_path(@participant_profile)) do %>
+      Declarations
+    <% end %>
+    <% component.nav_item(path: events_admin_participant_path(@participant_profile)) do %>
+      Events
+    <% end %>
+  <% end %>
+<% end %>

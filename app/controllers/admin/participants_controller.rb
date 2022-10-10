@@ -6,18 +6,43 @@ module Admin
     skip_after_action :verify_authorized, only: :index
 
     before_action :load_participant, except: :index
-    before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :participant_declarations, only: :show, unless: -> { @participant_profile.npq? }
-
-    def show; end
 
     def index
       search_term = params[:query]
       type        = params[:type]
 
       @participant_profiles = Admin::Participants::Search
-        .call(policy_scope(ParticipantProfile), search_term:, type:)
+                                .call(policy_scope(ParticipantProfile), search_term:, type:)
+    end
+
+    def show
+      latest_induction_record
+    end
+
+    def school
+      latest_induction_record
+    end
+
+    def history
+      latest_induction_record
+      historical_induction_records
+    end
+
+    def records
+      latest_induction_record
+    end
+
+    def cohorts
+      latest_induction_record
+    end
+
+    def declarations
+      latest_induction_record
+      participant_declarations
+    end
+
+    def events
+      event_list
     end
 
     def edit_name; end
@@ -97,6 +122,10 @@ module Admin
       @participant_declarations ||= @participant_profile.participant_declarations
                                                         .includes(:cpd_lead_provider, :delivery_partner)
                                                         .order(created_at: :desc)
+    end
+
+    def event_list
+      @event_list ||= Admin::Participants::HistoryBuilder.from_profile(@participant_profile).events
     end
   end
 end

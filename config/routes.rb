@@ -246,7 +246,12 @@ Rails.application.routes.draw do
           get ":step", action: :show, as: :validation_step
           post ":step", action: :update
         end
-        get :events, path: "events"
+        get :school
+        get :history
+        get :records
+        get :cohorts
+        get :declarations
+        get :events
       end
 
       resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"

@@ -1,6 +1,14 @@
-<h2 class="govuk-heading-m">Induction records</h2>
+<% content_for :title, "Participant detail: induction records" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participants_path) %>
 
-<% induction_records.each do |induction_record| %>
+<% if @participant_profile.ecf? %>
+  <span class="govuk-caption-l"><%= @latest_induction_record&.user&.user_description %></span>
+<% end %>
+<h1 class="govuk-heading-xl"><%= @participant_profile.user.full_name %></h1>
+<%= render partial: "admin/participants/shared/navigation" %>
+<h2 class="govuk-heading-m">Induction record</h2>
+
+<% @induction_records.each do |induction_record| %>
   <%= tag.h3(induction_record.id, class: "govuk-heading-s") %>
 
   <%=

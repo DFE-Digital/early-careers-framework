@@ -9,6 +9,26 @@ class ParticipantProfilePolicy < ApplicationPolicy
     admin?
   end
 
+  def school?
+    admin?
+  end
+
+  def history?
+    admin?
+  end
+
+  def records?
+    admin?
+  end
+
+  def cohorts?
+    admin?
+  end
+
+  def declarations?
+    admin?
+  end
+
   def events?
     admin?
   end

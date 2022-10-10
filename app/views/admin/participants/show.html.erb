@@ -1,43 +1,97 @@
-<% content_for :title, "Participant detail" %>
+<% content_for :title, "Participant detail: overview" %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_participants_path) %>
 
-<% unless @participant_profile.npq? %>
+<% if @participant_profile.ecf? %>
   <span class="govuk-caption-l"><%= @latest_induction_record&.user&.user_description %></span>
 <% end %>
-<h1 class="govuk-heading-xl">
-  <%= @participant_profile.user.full_name %>
-</h1>
+<h1 class="govuk-heading-xl"><%= @participant_profile.user.full_name %></h1>
+<%= render partial: "admin/participants/shared/navigation" %>
+<h2 class="govuk-heading-l">Details</h2>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <% if @participant_profile.npq? %>
-      <%= govuk_tabs(title: 'Contents') do |component| %>
-        <% component.tab(label: 'Details') do %>
-          <%= render Admin::NPQ::Participants::Details.new(profile: @participant_profile) %>
-          <%= render Admin::NPQ::Participants::ValidationTasks.new(profile: @participant_profile) %>
-        <% end %>
-      <% end %>
-    <% else %>
-      <%= govuk_tabs(title: 'Contents') do |component| %>
-        <% component.tab(label: 'Details') do %>
-          <%= render partial: 'details', locals: { participant_profile: @participant_profile, latest_induction_record: @latest_induction_record } %>
-        <% end %>
-        <% component.tab(label: 'School') do %>
-          <%= render partial: 'school', locals: { latest_induction_record: @latest_induction_record } %>
-        <% end %>
-        <% component.tab(label: 'History') do %>
-          <%= render partial: 'history', locals: { historical_induction_records: @historical_induction_records, latest_induction_record: @latest_induction_record } %>
-        <% end %>
-        <% component.tab(label: 'Induction records') do %>
-          <%= render partial: 'induction_records', locals: { participant_profile: @participant_profile, induction_records: @induction_records } %>
-        <% end %>
-        <% component.tab(label: 'Cohorts') do %>
-          <%= render partial: 'cohorts', locals: { latest_induction_record: @latest_induction_record } %>
-        <% end %>
-        <% component.tab(label: 'Declarations history') do %>
-          <%= render partial: 'declarations_history', locals: { participant_declarations: @participant_declarations } %>
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
-</div>
+<%= govuk_summary_list do |sl|
+  participant_name = @latest_induction_record.user.full_name
+
+  sl.row do |row|
+    row.key(text: "Full name")
+    row.value(text: participant_name)
+    row.action(
+      href: edit_name_admin_participant_path(@latest_induction_record.participant_profile),
+      visually_hidden_text: "name"
+    )
+  end
+
+  sl.row do |row|
+    row.key(text: "Email address")
+    row.value(text: @latest_induction_record.user.email)
+    row.action(
+      href: edit_email_admin_participant_path(@latest_induction_record.participant_profile),
+      visually_hidden_text: "email"
+    )
+  end
+
+  sl.row do |row|
+    row.key(text: "Date of birth")
+    row.value(text: @latest_induction_record.participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
+  end
+
+  sl.row do |row|
+    row.key(text: "Induction start date")
+    row.value(text: @latest_induction_record.participant_profile&.induction_start_date&.to_s(:govuk))
+    row.action(
+      href: edit_admin_participant_change_induction_start_date_path(@participant_profile),
+      visually_hidden_text: "induction start date"
+    )
+  end
+
+  if @participant_profile.teacher_profile
+    sl.row do |row|
+      row.key(text: "TRN")
+      row.value(text: @latest_induction_record.participant_profile.teacher_profile.trn)
+    end
+  end
+
+  sl.row do |row|
+    row.key(text: "ID")
+    row.value(text: tag.code(@latest_induction_record.user.id))
+  end
+
+  sl.row do |row|
+    row.key(text: "External ID")
+    row.value(text: tag.code(@latest_induction_record.participant_profile.participant_identity.external_identifier))
+  end
+
+  sl.row do |row|
+    row.key(text: "Associated email addresses")
+    row.value(text: html_list(all_emails_associated_with_a_user(@latest_induction_record)))
+  end
+
+  sl.row do |row|
+    row.key(text: "Validation status")
+    row.value(text: render(ParticipantStatusTagComponent.new(profile: @latest_induction_record.participant_profile, induction_record: @latest_induction_record)))
+  end
+
+  sl.row do |row|
+    row.key(text: "Notes")
+
+    row.value do
+      if @latest_induction_record.participant_profile.notes?
+        simple_format(@latest_induction_record.participant_profile.notes, class: "govuk-body")
+      else
+        "No notes"
+      end
+    end
+
+    notes_present = @latest_induction_record.participant_profile.notes.present?
+
+    row.action(
+      text: notes_present ? "Change notes" : "Add notes",
+      href: edit_admin_note_path(@latest_induction_record.participant_profile),
+      visually_hidden_text: notes_present ? "on #{participant_name}'s profile" : "to #{participant_name}'s profile",
+      )
+  end
+end %>
+
+<% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
+  <%= govuk_button_link_to "Delete participant", remove_admin_participant_path, warning: true %>
+<% end %>
+
