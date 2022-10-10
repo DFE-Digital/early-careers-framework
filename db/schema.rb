@@ -631,7 +631,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text, ('clawed_back'::character varying)::text]))"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying, 'clawed_back'::character varying])::text[]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
@@ -692,8 +692,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
     t.string "training_status", default: "active", null: false
     t.string "profile_duplicity", default: "single", null: false
     t.uuid "participant_identity_id"
-    t.string "notes"
     t.string "start_term", default: "autumn_2021", null: false
+    t.string "notes"
     t.date "induction_start_date"
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
