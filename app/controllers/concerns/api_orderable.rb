@@ -3,7 +3,15 @@
 module ApiOrderable
   extend ActiveSupport::Concern
 
-private
+  module ClassMethods
+    attr_reader :model_klass
+
+  private
+
+    def orderable(model_klass: nil)
+      @model_klass = model_klass
+    end
+  end
 
   def sort_params(params)
     sort = {}
@@ -13,7 +21,8 @@ private
       sorted_params = params[:sort].split(",")
       sorted_params.each do |attr|
         sort_sign = attr =~ /\A[+-]/ ? attr.slice!(0) : "+"
-        model = controller_name.classify.constantize
+
+        model = self.class.model_klass.presence || controller_name.classify.constantize
         if model.attribute_names.include?(attr)
           sort[attr] = sort_order[sort_sign]
         end
