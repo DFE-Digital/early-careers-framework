@@ -11,7 +11,9 @@
           <% @school_transfer_form.transfer_options.each do |option| %>
             <%= f.govuk_radio_button :transfer_choice, option.id, label: { text: option.description } %>
           <% end %>
-          <%= f.govuk_radio_divider %>
+          <% if @school_transfer_form.transfer_options.any? %>
+            <%= f.govuk_radio_divider %>
+          <% end %>
           <%= f.govuk_radio_button :transfer_choice, "continue", label: { text: "Current #{@school_transfer_form.current_programme_description}" } %>
       <% end %>
       <%= f.govuk_submit %>

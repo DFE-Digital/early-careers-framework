@@ -11,6 +11,8 @@ module Admin::Participants
     def select_school
       step = if @school_transfer_form.cannot_transfer_to_new_school?
                :cannot_transfer
+             elsif @school_transfer_form.skip_transfer_options?
+               :start_date
              else
                :transfer_options
              end

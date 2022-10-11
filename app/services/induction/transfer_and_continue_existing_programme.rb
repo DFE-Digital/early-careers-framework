@@ -14,8 +14,13 @@ class Induction::TransferAndContinueExistingProgramme < BaseService
 
       old_school = latest_induction_record.school
 
+      # check/adjust school cohort for programme
+      update_school_cohort_for_programme!
+
       # create a special programme to support the transferring participant
       programme = create_programme!
+
+      school_cohort.update!(default_induction_programme: programme) if @make_default_programme
 
       induction_record = Induction::Enrol.call(participant_profile:,
                                                induction_programme: programme,
@@ -48,6 +53,17 @@ private
     @end_date = end_date || start_date
     @mentor_profile = mentor_profile
     @latest_induction_record = participant_profile.induction_records.latest
+    @make_default_programme = false
+  end
+
+  def update_school_cohort_for_programme!
+    if school_cohort.blank?
+      @school_cohort = school.school_cohorts.create!(cohort:, induction_programme_choice: latest_induction_record.induction_programme.training_programme)
+      @make_default_programme = true
+    elsif school_cohort.no_early_career_teachers?
+      school_cohort.update!(induction_programme_choice: current_induction_programme.training_programme, opt_out_of_updates: false)
+      @make_default_programme = true
+    end
   end
 
   def create_programme!
@@ -78,7 +94,7 @@ private
   end
 
   def current_induction_programme
-    latest_induction_record&.induction_programme
+    latest_induction_record.induction_programme
   end
 
   def lead_provider
