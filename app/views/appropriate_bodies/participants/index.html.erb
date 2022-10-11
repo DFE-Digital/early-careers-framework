@@ -59,4 +59,5 @@
     <% end %>
   </tbody>
 </table>
-<%= govuk_paginate @induction_records, @pagy %>
+
+<%= govuk_pagination(pagy: @pagy) %>

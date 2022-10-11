@@ -22,4 +22,5 @@
     <% end %>
   </tbody>
 </table>
-<%== govuk_paginate @delivery_partner_profiles, @pagy %>
+
+<%== govuk_pagination(pagy: @pagy) %>

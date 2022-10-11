@@ -39,4 +39,5 @@
     <% end %>
   </tbody>
 </table>
-<%== govuk_paginate @eligibility_imports, @pagy %>
+
+<%== govuk_pagination(pagy: @pagy) %>

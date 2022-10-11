@@ -3,7 +3,6 @@
 module LeadProviders
   module YourSchools
     class Table < BaseComponent
-      include PaginationHelper
       include Pagy::Backend
 
       def initialize(partnerships:, page:)
