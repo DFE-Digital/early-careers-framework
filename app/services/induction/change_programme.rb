@@ -23,14 +23,21 @@ private
     @start_date = start_date
     @end_date = end_date
     @mentor_profile = mentor_profile
+    check_cohorts!
+  end
+
+  def check_cohorts!
+    raise("Given induction programme is not in the cohort of the participant!") unless compatible_cohorts?
+  end
+
+  def compatible_cohorts?
+    return true if participant_profile.schedule.nil?
+
+    new_induction_programme.cohort_id == participant_profile.schedule.cohort_id
   end
 
   def current_induction_record
     participant_profile.current_induction_record
-  end
-
-  def current_induction_programme
-    participant_profile.current_induction_record&.induction_programme
   end
 
   def preferred_email

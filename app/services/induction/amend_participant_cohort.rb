@@ -10,7 +10,7 @@ module Induction
       end
 
       def active?(participant_profile)
-        participant_profile && participant_profile.active_record? && participant_profile.training_status_active?
+        participant_profile&.active_record? && participant_profile&.training_status_active?
       end
     end
 
@@ -33,7 +33,7 @@ module Induction
                 message: I18n.t("errors.cohort.invalid_start_year", start: ECF_FIRST_YEAR, end: Date.current.year),
               },
               exclusion: {
-                within: ->(form) { [form.source_cohort_start_year] },
+                within: ->(form) { [form.source_cohort_start_year.to_s, form.source_cohort_start_year.to_i] },
                 message: ->(form, _) { I18n.t("errors.cohort.excluded_start_year", year: form.source_cohort_start_year) },
               }
     validates :target_cohort,
@@ -44,7 +44,7 @@ module Induction
               }
     validates :participant_profile, presence: { message: I18n.t("errors.participant_profile.blank") },
                                     active: true
-    validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.exist") }
+    validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.billable_or_submitted") }
     validates :induction_record,
               presence: {
                 message: lambda do |form, _|
@@ -85,7 +85,7 @@ module Induction
 
       @participant_declarations ||= participant_profile
                                       .participant_declarations
-                                      .not_voided
+                                      .billable_or_changeable
                                       .declared_as_between(source_cohort_start_date, source_cohort_end_date)
                                       .exists?
     end

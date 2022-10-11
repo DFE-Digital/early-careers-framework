@@ -5,42 +5,58 @@
 <h2 class="govuk-heading-l">Overview</h2>
 
 <% if @induction_coordinator && ImpersonationPolicy.new(current_user, @induction_coordinator).create? %>
-  <%= govuk_button_to(admin_impersonate_path,
+  <%= govuk_button_to("Impersonate induction tutor", admin_impersonate_path,
                       params: {
                         impersonated_user_id: @induction_coordinator.id,
                       },
-                      "data-test": "impersonate-button") { 'Impersonate induction tutor' } %>
+                      "data-test": "impersonate-button") %>
 <% end %>
 
-<table class="govuk-table">
-  <tbody class="govuk-table__body">
-    <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Induction tutor</td>
-      <td class="govuk-table__cell">
-        <% if @induction_coordinator %>
-          <%= @induction_coordinator.full_name %><br>
-          <%= govuk_mail_to @induction_coordinator.email, @induction_coordinator.email  %>
-        <% end %>
-      </td>
-      <td class="govuk-table__cell">
-        <% if @induction_coordinator %>
-          <%= govuk_link_to "Change", admin_school_replace_or_update_induction_tutor_path(@school) %>
-        <% else %>
-          <%= govuk_link_to "Add induction tutor", new_admin_school_induction_coordinator_path(@school) %>
-        <% end %>
-      </td>
-    </tr>
-    <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Local authority</td>
-      <td class="govuk-table__cell"><%=@school.local_authority&.name%></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-    <tr class="govuk-table__row">
-      <td class="govuk-table__cell">Establishment group</td>
-      <td class="govuk-table__cell"></td>
-      <td class="govuk-table__cell"></td>
-    </tr>
-  </tbody>
-</table>
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: "URN")
+      row.value(text: @school.urn)
+      if @school.urn.present?
+        row.action(
+          text: "Open in GIAS",
+          href: "https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/#{@school.urn}",
+        )
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: "Induction tutor")
+      row.value do
+        if @induction_coordinator.present?
+          safe_join([@induction_coordinator.full_name, tag.br, govuk_mail_to(@induction_coordinator.email, @induction_coordinator.email)])
+        end
+      end
+
+      if @induction_coordinator.present?
+        row.action(text: "Change", visually_hidden_text: "induction tutor", href: admin_school_replace_or_update_induction_tutor_path(@school))
+      else
+        row.action(text: "Add", visually_hidden_text: "induction tutor", href: new_admin_school_induction_coordinator_path(@school))
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: "Local authority")
+      row.value(text: @school.local_authority&.name)
+    end
+
+    sl.row do |row|
+      row.key(text: "Address")
+      row.value(
+        text: format_address(
+          @school.address_line1,
+          @school.address_line2,
+          @school.address_line3,
+          @school.postcode,
+        )
+      )
+    end
+  end
+%>
 
 <%= govuk_link_to @link_text_2020, @link_2020 %>

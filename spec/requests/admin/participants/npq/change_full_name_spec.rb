@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe "Admin::Participants::NPQ::ChangeFullNameController", :with_default_schedules do
   let(:admin_user) { create(:user, :admin) }
 
-  let(:npq_profile) { create(:npq_participant_profile) }
+  let(:user) { create :user, full_name: "Roland Reilly" }
+  let(:npq_profile) { create(:npq_participant_profile, user:) }
 
   before { sign_in(admin_user) }
 

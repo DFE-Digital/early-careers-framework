@@ -27,7 +27,7 @@ RSpec.describe "Admin::Schools", type: :request do
     end
 
     context "filtering the school list" do
-      let!(:included_school) { create(:school, name: "Include Me", urn: "090120") }
+      let!(:included_school) { create(:school, name: "Include Me", urn: "090120", postcode: "M1 2WD") }
       let!(:excluded_school) { create(:school, name: "Exclude Me", urn: "333333") }
 
       it "filters the list of schools by name" do
@@ -44,6 +44,11 @@ RSpec.describe "Admin::Schools", type: :request do
         create(:user, :induction_coordinator, email: "mary@schools.org", schools: [included_school])
 
         get "/admin/schools", params: { query: "mary" }
+        expect(assigns(:schools)).to match_array [included_school]
+      end
+
+      it "filters the list by postcode" do
+        get "/admin/schools", params: { query: "M1" }
         expect(assigns(:schools)).to match_array [included_school]
       end
 
@@ -70,7 +75,7 @@ RSpec.describe "Admin::Schools", type: :request do
 
         expect(response).to render_template("admin/schools/show")
         expect(response.body).to include(CGI.escapeHTML(school.name))
-        expect(response.body).to include("Add induction tutor")
+        expect(response.body).to include(%(Add <span class="govuk-visually-hidden">induction tutor</span>))
       end
     end
 
@@ -82,7 +87,7 @@ RSpec.describe "Admin::Schools", type: :request do
 
         expect(response).to render_template("admin/schools/show")
         expect(response.body).to include(CGI.escapeHTML(school.name))
-        expect(response.body).to include("Add induction tutor")
+        expect(response.body).to include(%(Add <span class="govuk-visually-hidden">induction tutor</span>))
       end
     end
 

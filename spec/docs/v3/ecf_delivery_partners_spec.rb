@@ -25,6 +25,18 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                   },
                 }.to_param)
 
+      parameter name: :sort,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/DeliveryPartnersSort",
+                },
+                type: :array,
+                style: :form,
+                explode: false,
+                required: false,
+                description: "Sort delivery partners being returned.",
+                example: "sort=-updated_at"
+
       response "200", "Successfully return a list of delivery partners" do
         schema({ "$ref": "#/components/schemas/DeliveryPartnersResponse" })
 

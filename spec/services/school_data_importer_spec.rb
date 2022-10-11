@@ -23,7 +23,7 @@ RSpec.describe SchoolDataImporter do
 
   describe "#run" do
     it "imports each row as a school with associated Local Authority" do
-      expect { school_data_importer.run }.to change { School.count }.by 4
+      expect { school_data_importer.run }.to change { School.count }.by 5
 
       imported_school = School.find_by(urn: 20_001)
       expect(imported_school.name).to eql("The Starship Children's Centre")

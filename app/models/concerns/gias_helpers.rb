@@ -7,7 +7,7 @@ module GiasHelpers
   included do
     scope :currently_open, -> { where(school_status_code: GiasTypes::ELIGIBLE_STATUS_CODES) }
     scope :eligible_establishment_type, -> { where(school_type_code: GiasTypes::ELIGIBLE_TYPE_CODES) }
-    scope :in_england, -> { where("administrative_district_code ILIKE 'E%'") }
+    scope :in_england, -> { where("administrative_district_code ILIKE 'E%' OR administrative_district_code = '9999'") }
     scope :section_41, -> { where(section_41_approved: true) }
     scope :eligible, -> { currently_open.eligible_establishment_type.in_england.or(currently_open.in_england.section_41) }
     scope :eligible_or_cip_only, -> { eligible.or(currently_open.where(school_type_code: GiasTypes::CIP_ONLY_TYPE_CODES)) }

@@ -1,5 +1,5 @@
 <h1 class="govuk-heading-l">Schools</h1>
-<%= render SearchBox.new(query: @query, title: "Search schools", hint: "Enter the school’s name, URN or tutor email") %>
+<%= render SearchBox.new(query: @query, title: "Search schools", hint: "Enter the school’s name, postcode, URN or tutor email") %>
 
 
 <div class="nhsuk-table-container">
@@ -41,4 +41,5 @@
     </tbody>
   </table>
 </div>
-<%== govuk_paginate @schools, @pagy %>
+
+<%== govuk_pagination(pagy: @pagy) %>

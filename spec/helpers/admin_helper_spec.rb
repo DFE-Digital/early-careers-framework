@@ -75,4 +75,16 @@ RSpec.describe AdminHelper, type: :helper do
       end
     end
   end
+
+  describe "#format_address" do
+    it "returns nil when nothing is passed in" do
+      expect(format_address).to be_nil
+    end
+
+    it "joins the elements with <br> when multiple are passed in" do
+      expect(format_address("a")).to eql("a")
+      expect(format_address("a", "b")).to eql("a<br>b")
+      expect(format_address("a", "b", "c")).to eql("a<br>b<br>c")
+    end
+  end
 end

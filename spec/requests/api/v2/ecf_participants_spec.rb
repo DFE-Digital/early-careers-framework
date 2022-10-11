@@ -17,19 +17,27 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     end
   end
 
-  before :each do
-    create_list :ect, 2, mentor_profile_id: mentor_profile.id, school_cohort: school_cohort, lead_provider: cpd_lead_provider.lead_provider
-    ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first.teacher_profile
-    create(:ect,
-           :withdrawn_record,
-           user: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record.user,
-           school_cohort:)
-    default_headers[:Authorization] = bearer_token
+  let!(:ect_profile) { create :ect, mentor_profile_id: mentor_profile.id, school_cohort:, lead_provider: cpd_lead_provider.lead_provider }
+  let!(:withdrawn_ect_profile) do
+    withdrawn_ect = create :ect, mentor_profile_id: mentor_profile.id, school_cohort: school_cohort, lead_provider: cpd_lead_provider.lead_provider
+
+    create(
+      :ect,
+      :withdrawn_record,
+      user: withdrawn_ect.user,
+      school_cohort:,
+    )
+
+    withdrawn_ect
   end
 
   let!(:withdrawn_ect_profile_record) { create(:ect, :eligible_for_funding, :withdrawn_record, school_cohort:, lead_provider: cpd_lead_provider.lead_provider) }
   let(:user) { create(:user) }
   let(:early_career_teacher_profile) { create(:ect, :eligible_for_funding, school_cohort:, user:, lead_provider: cpd_lead_provider.lead_provider) }
+
+  before :each do
+    default_headers[:Authorization] = bearer_token
+  end
 
   describe "GET /api/v2/participants/ecf" do
     context "when authorized" do
@@ -267,13 +275,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
 
-          ect = InductionRecord
-                  .active_induction_status
-                  .joins(:participant_profile)
-                  .where(participant_profile: { type: "ParticipantProfile::ECT" })
-                  .first
-                  .participant_profile
-                  .user
+          ect = ect_profile.user
           ect_row = parsed_response.find { |row| row["id"] == ect.id }
           expect(ect_row).not_to be_nil
           expect(ect_row["email"]).to eql ect.email

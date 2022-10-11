@@ -126,15 +126,22 @@ RSpec.describe Induction::AmendParticipantCohort do
         end
       end
 
-      context "when the participant has declarations" do
-        before do
-          allow_any_instance_of(described_class).to receive(:participant_declarations).and_return(true)
-        end
+      %i[submitted eligible payable paid].each do |declaration_state|
+        context "when the participant has #{declaration_state} declarations for the current cohort" do
+          before do
+            participant_profile.participant_declarations.create!(declaration_date: Date.new(2021, 10, 10),
+                                                                 declaration_type: :started,
+                                                                 state: declaration_state,
+                                                                 course_identifier: "ecf-induction",
+                                                                 cpd_lead_provider: create(:cpd_lead_provider),
+                                                                 user: participant_profile.user)
+          end
 
-        it "returns false and set errors" do
-          expect(form.save).to be_falsey
-          expect(form.errors.first.attribute).to eq(:participant_declarations)
-          expect(form.errors.first.message).to eq("The participant must have no declarations")
+          it "returns false and set errors" do
+            expect(form.save).to be_falsey
+            expect(form.errors.first.attribute).to eq(:participant_declarations)
+            expect(form.errors.first.message).to eq("The participant has billable or submitted declarations in the current cohort")
+          end
         end
       end
 
@@ -183,21 +190,41 @@ RSpec.describe Induction::AmendParticipantCohort do
           end
         end
 
-        it "returns true and set no errors" do
-          expect(form.save).to be_truthy
-          expect(form.errors).to be_empty
+        context "when the participant has no declarations" do
+          it "returns true and set no errors" do
+            expect(form.save).to be_truthy
+            expect(form.errors).to be_empty
+          end
+
+          it "enrolls the participant in the target programme" do
+            expect(form.save).to be_truthy
+
+            induction_record = participant_profile.reload.induction_records.latest
+
+            expect(induction_record.induction_programme).to eq(target_school_cohort.default_induction_programme)
+            expect(induction_record.start_date).to eq(target_cohort.academic_year_start_date)
+            expect(induction_record.schedule).to eq(Finance::Schedule::ECF.default_for(cohort: target_cohort))
+            expect(participant_profile.school_cohort).to eq(target_school_cohort)
+            expect(participant_profile.schedule).to eq(Finance::Schedule::ECF.default_for(cohort: target_cohort))
+          end
         end
 
-        it "enrolls the participant in the target programme" do
-          expect(form.save).to be_truthy
+        %i[voided ineligible awaiting_clawback clawed_back].each do |declaration_state|
+          context "when the participant has #{declaration_state} declarations and no billable or changeable declarations" do
+            before do
+              participant_profile.participant_declarations.create!(declaration_date: Date.new(2021, 10, 10),
+                                                                   declaration_type: :started,
+                                                                   state: declaration_state,
+                                                                   course_identifier: "ecf-induction",
+                                                                   cpd_lead_provider: create(:cpd_lead_provider),
+                                                                   user: participant_profile.user)
+            end
 
-          induction_record = participant_profile.reload.induction_records.latest
-
-          expect(induction_record.induction_programme).to eq(target_school_cohort.default_induction_programme)
-          expect(induction_record.start_date).to eq(target_cohort.academic_year_start_date)
-          expect(induction_record.schedule).to eq(Finance::Schedule::ECF.default_for(cohort: target_cohort))
-          expect(participant_profile.school_cohort).to eq(target_school_cohort)
-          expect(participant_profile.schedule).to eq(Finance::Schedule::ECF.default_for(cohort: target_cohort))
+            it "executes the transfer, returns true and set no errors" do
+              expect(form.save).to be_truthy
+              expect(form.errors).to be_empty
+            end
+          end
         end
       end
     end
