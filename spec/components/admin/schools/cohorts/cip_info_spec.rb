@@ -1,26 +1,36 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :view_component do
-  let(:school) { create(:school, slug: "test-school") }
-  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, school:, core_induction_programme: programme }
+RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :component do
+  let(:school) { FactoryBot.create :school }
   let(:programme) { FactoryBot.create :core_induction_programme }
+  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, school:, core_induction_programme: programme }
 
-  component { described_class.new school_cohort: }
-
-  it "has the correct content" do
+  subject! do
     with_request_url "/schools/test-school" do
-      expect(rendered).to have_content "Use the DfE accredited materials"
-      expect(rendered).to have_content programme.name
+      render_inline(described_class.new(school_cohort:))
     end
   end
 
-  context "when no programme is selected" do
-    let(:programme) { nil }
+  it "has the correct content" do
+    with_request_url "/schools/test-school" do
+      expect(rendered_component).to have_content "Use the DfE accredited materials"
+      expect(rendered_component).to have_content programme.name
+    end
+  end
 
-    it "renders" do
+  context "when a block is passed in" do
+    let(:block_content) { "extra content" }
+
+    subject! do
       with_request_url "/schools/test-school" do
-        expect(rendered).to render
+        render_inline(described_class.new(school_cohort:)) do
+          block_content
+        end
       end
+    end
+
+    it "renders the block" do
+      expect(rendered_component).to have_content(block_content)
     end
   end
 end
