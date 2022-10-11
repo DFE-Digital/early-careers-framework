@@ -481,7 +481,7 @@ module Steps
       str
     end
 
-    def then_admin_user_can_see_participant(scenario)
+    def then_admin_user_can_see_participant(_scenario)
       given_i_am_on_the_admin_support_portal
       and_i_view_participant_list_from_the_admin_support_portal
       and_i_view_participant_from_the_admin_support_participant_list "the Participant"
@@ -503,8 +503,6 @@ module Steps
     end
 
     def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, validation_status)
-      school = find_school_for_sit sit_name
-
       participant_detail = Pages::AdminSupportParticipantDetail.loaded
 
       # primary heading needs checking participant_name
