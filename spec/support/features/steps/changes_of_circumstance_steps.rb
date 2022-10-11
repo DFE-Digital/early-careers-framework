@@ -487,7 +487,6 @@ module Steps
       and_i_view_participant_from_the_admin_support_participant_list "the Participant"
 
       then_the_admin_portal_shows_the_current_participant_record "the Participant",
-                                                                 "New SIT",
                                                                  "Eligible to start"
     end
 
@@ -502,7 +501,7 @@ module Steps
                                                                  scenario.new_lead_provider_name
     end
 
-    def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, validation_status)
+    def then_the_admin_portal_shows_the_current_participant_record(participant_name, validation_status)
       participant_detail = Pages::AdminSupportParticipantDetail.loaded
 
       # primary heading needs checking participant_name
