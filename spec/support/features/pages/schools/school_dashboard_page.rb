@@ -28,6 +28,12 @@ module Pages
       element_has_content? self, "Add your early career teacher and mentor details"
     end
 
+    def confirm_participant_is_not_training(participant_name)
+      participant_dashboard = view_participant_details
+      participant_details = participant_dashboard.view_not_training(participant_name)
+      participant_details.confirm_the_participant(name: participant_name)
+    end
+
     def confirm_will_use_dfe_funded_training_provider
       element_has_content? self, "Programme Use a training provider funded by the DfE"
     end

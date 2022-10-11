@@ -20,12 +20,10 @@ module Pages
       element_has_content? self, "Email address", email_address, "Change email"
     end
 
-    def has_school?(school_name)
-      element_has_content? self, "School", school_name
-    end
+    def view_school_details
+      click_on "School"
 
-    def has_lead_provider?(lead_provider_name)
-      element_has_content? self, "Lead provider", lead_provider_name
+      Pages::AdminSupportParticipantSchool.loaded
     end
 
     def has_school_transfer?(school_name)

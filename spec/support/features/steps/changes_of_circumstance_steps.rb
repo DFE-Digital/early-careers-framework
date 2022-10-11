@@ -180,7 +180,6 @@ module Steps
                                                 .add_participant_details
                                                 .continue
                                                 .choose_to_transfer_an_ect_or_mentor
-
         if participant_profile.ect?
           page_object.transfer_ect participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob
         else
@@ -439,9 +438,9 @@ module Steps
 
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
-      and_i_am_on_the_finance_portal
+      when_i_am_on_the_finance_portal
       and_i_view_participant_drilldown_from_the_finance_portal
-      when_i_find_from_the_finance_participant_drilldown_search participant_name
+      and_i_find_from_the_finance_participant_drilldown_search participant_name
 
       drilldown = Pages::FinanceParticipantDrilldown.loaded
 
@@ -483,21 +482,27 @@ module Steps
     end
 
     def then_admin_user_can_see_participant(scenario)
-      given_i_sign_in_as_an_admin_user
-
-      and_i_am_on_the_admin_support_portal
+      given_i_am_on_the_admin_support_portal
       and_i_view_participant_list_from_the_admin_support_portal
       and_i_view_participant_from_the_admin_support_participant_list "the Participant"
 
       then_the_admin_portal_shows_the_current_participant_record "the Participant",
                                                                  "New SIT",
-                                                                 scenario.new_lead_provider_name,
                                                                  "Eligible to start"
-
-      sign_out
     end
 
-    def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, lead_provider_name, validation_status)
+    def then_admin_user_can_see_participant_school(scenario)
+      given_i_am_on_the_admin_support_portal
+      and_i_view_participant_list_from_the_admin_support_portal
+      and_i_view_participant_from_the_admin_support_participant_list "the Participant"
+      and_i_view_school_details_from_the_admin_support_participant_detail
+
+      then_the_admin_portal_shows_the_current_participant_school "the Participant",
+                                                                 "New SIT",
+                                                                 scenario.new_lead_provider_name
+    end
+
+    def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, validation_status)
       school = find_school_for_sit sit_name
 
       participant_detail = Pages::AdminSupportParticipantDetail.loaded
@@ -506,9 +511,18 @@ module Steps
       participant_detail.has_primary_heading? participant_name
 
       participant_detail.has_full_name? participant_name
-      participant_detail.has_school? school.name
       participant_detail.has_validation_status? validation_status
-      participant_detail.has_lead_provider? lead_provider_name
+    end
+
+    def then_the_admin_portal_shows_the_current_participant_school(participant_name, sit_name, lead_provider_name)
+      school = find_school_for_sit sit_name
+
+      participant_school = Pages::AdminSupportParticipantSchool.loaded
+
+      # primary heading needs checking participant_name
+      participant_school.has_primary_heading? participant_name
+      participant_school.has_school? school.name
+      participant_school.has_lead_provider? lead_provider_name
     end
 
     def self.then_support_service_context(scenario)

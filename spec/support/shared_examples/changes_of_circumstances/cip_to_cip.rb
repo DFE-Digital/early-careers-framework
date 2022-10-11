@@ -71,7 +71,12 @@ RSpec.shared_examples "CIP to CIP" do |scenario|
 
     it Steps::ChangesOfCircumstanceSteps.then_admin_user_context(scenario),
        :aggregate_failures do
+      given_i_sign_in_as_an_admin_user
+
       then_admin_user_can_see_participant scenario
+      then_admin_user_can_see_participant_school scenario
+
+      sign_out
     end
   end
 

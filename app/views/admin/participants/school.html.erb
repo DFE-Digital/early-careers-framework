@@ -35,7 +35,7 @@
 
   sl.row do |row|
     row.key(text: "Lead provider")
-    row.value(text: @latest_induction_record.school_cohort.lead_provider&.name)
+    row.value(text: lead_provider&.name)
     row.action(text: "Challenge", visually_hidden_text: "lead provider", href: "#") if lead_provider
   end
 

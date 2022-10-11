@@ -80,8 +80,8 @@ class InductionRecord < ApplicationRecord
   scope :newest_first, -> { order(created_at: :desc) }
   def self.ordered_historically
     order(
-      arel_table[:start_date].asc,
-      arel_table[:end_date].asc.nulls_first,
+      arel_table[:start_date].desc,
+      arel_table[:end_date].desc.nulls_first,
     )
   end
 
