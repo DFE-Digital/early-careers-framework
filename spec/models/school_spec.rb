@@ -128,9 +128,11 @@ RSpec.describe School, type: :model do
     let!(:eligible_school_type) { create(:school, school_type_code: 1) }
     let!(:ineligible_school_type) { create(:school, school_type_code: 56) }
     let!(:english_school) { create(:school, administrative_district_code: "E123") }
+    let!(:no_district_english_school) { create(:school, administrative_district_code: "9999") }
     let!(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
     let!(:s41_school) { create(:school, section_41_approved: true, school_type_code: 30) }
     let!(:closed_s41_school) { create(:school, school_status_code: 2, section_41_approved: true) }
+
     describe "#eligible?" do
       it "should be true for open schools" do
         expect(open_school.eligible?).to be true
@@ -150,6 +152,10 @@ RSpec.describe School, type: :model do
 
       it "should be true for schools in England" do
         expect(english_school.eligible?).to be true
+      end
+
+      it "should be true for schools without a district code" do
+        expect(no_district_english_school.eligible?).to be true
       end
 
       it "should be false for schools not in England" do

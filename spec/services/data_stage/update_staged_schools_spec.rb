@@ -15,7 +15,7 @@ RSpec.describe DataStage::UpdateStagedSchools do
 
   describe ".call" do
     it "imports each school_data_file row as a DataStage::School" do
-      expect { service.call(**files) }.to change { DataStage::School.count }.by 4
+      expect { service.call(**files) }.to change { DataStage::School.count }.by 5
 
       imported_school = DataStage::School.find_by(urn: 20_001)
       expect(imported_school.name).to eql("The Starship Children's Centre")
@@ -41,11 +41,11 @@ RSpec.describe DataStage::UpdateStagedSchools do
     end
 
     it "ensures the local authority is created" do
-      expect { service.call(**files) }.to change { LocalAuthority.count }.by 4
+      expect { service.call(**files) }.to change { LocalAuthority.count }.by 5
     end
 
     it "ensures the local authority district is created" do
-      expect { service.call(**files) }.to change { LocalAuthorityDistrict.count }.by 4
+      expect { service.call(**files) }.to change { LocalAuthorityDistrict.count }.by 5
     end
 
     context "when the school already exists" do

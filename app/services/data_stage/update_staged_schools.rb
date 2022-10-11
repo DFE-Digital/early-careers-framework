@@ -98,8 +98,9 @@ module DataStage
           Rails.logger.info "LA name changed in school import. Old name: #{local_authority.name}, New name: #{la_name}"
         end
         local_authority.name = la_name
-        local_authority.save!
       end
+      local_authority.save!
+
       @la_cache[la_code] = local_authority
     end
 
@@ -113,8 +114,9 @@ module DataStage
           logger.info "LAD name changed in school import. Old name: #{local_authority_district.name}, New name: #{lad_name}"
         end
         local_authority_district.name = lad_name
-        local_authority_district.save!
       end
+      local_authority_district.save!
+
       @lad_cache[lad_code] = local_authority_district
     end
 
