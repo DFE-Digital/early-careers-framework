@@ -12,7 +12,7 @@
 
   sl.row do |row|
     row.key(text: "Email address")
-    row.value(text: latest_induction_record.preferred_identity.email)
+    row.value(text: latest_induction_record.user.email)
     row.action(
       href: edit_email_admin_participant_path(latest_induction_record.participant_profile),
       visually_hidden_text: "email"
