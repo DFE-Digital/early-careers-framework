@@ -2,7 +2,7 @@
 
 module Finance
   module ECF
-    class AssuranceReport
+    module AssuranceReport
       class Query
         def initialize(statement)
           self.statement = statement

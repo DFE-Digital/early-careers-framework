@@ -4,18 +4,14 @@ module Finance
   class AssuranceReportsController < BaseController
     def show
       respond_to do |format|
-        format.csv { send_data(generate_csv, filename: assurance_report_presenter.filename) }
+        format.csv { send_data(csv_serializer.call, filename:) }
       end
     end
 
   private
 
     def filename
-      assurance_report_presenter.filename
-    end
-
-    def generate_csv
-      CSVSerialiser.serialise(assurance_report_presenter)
+      csv_serializer.filename
     end
   end
 end

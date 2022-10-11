@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
-require "csv_serialiser"
-
 module Finance
   module NPQ
     class AssuranceReportsController < Finance::AssuranceReportsController
     private
 
-      def assurance_report_presenter
-        @assurance_report_presenter ||= AssuranceReport::Presenter.new(params[:statement_id])
+      def csv_serializer
+        @csv_serializer ||= AssuranceReportSerializer.new(query.participant_declarations, statement)
+      end
+
+      def query
+        @query ||= AssuranceReport::Query.new(statement)
+      end
+
+      def statement
+        @statement ||= Finance::Statement::NPQ.find(params[:statement_id])
       end
     end
   end

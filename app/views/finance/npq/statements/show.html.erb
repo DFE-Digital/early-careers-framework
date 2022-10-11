@@ -1,90 +1,82 @@
 <% content_for :title, t("finance.npq.payment_breakdown") %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: select_provider_npq_finance_payment_breakdowns_path) %>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-xl">National professional qualifications (NPQs)</h1>
-      <span class="govuk-caption-l"><%= @statement.cpd_lead_provider.name %></span>
-      <h2 class="govuk-heading-l"><%= @statement.name %></h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">National professional qualifications (NPQs)</h1>
+    <span class="govuk-caption-l"><%= @statement.cpd_lead_provider.name %></span>
+    <h2 class="govuk-heading-l"><%= @statement.name %></h2>
 
-      <%= render Finance::Statements::NPQStatementSelector.new(current_statement: @statement, cohorts: Cohort.where(start_year: 2021..)) %>
+    <%= render Finance::Statements::NPQStatementSelector.new(current_statement: @statement, cohorts: Cohort.where(start_year: 2021..)) %>
 
-      <div class="app-application__panel__summary">
-        <div class="govuk-!-margin-right-4">
-          <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(@calculator.total_with_vat) %></h4>
+    <div class="app-application__panel__summary">
+      <div class="govuk-!-margin-right-4">
+        <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("finance.total") %> <%= number_to_pounds(@calculator.total_with_vat) %></h4>
 
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t("finance.output_payment.label") %>
-            <span><%= number_to_pounds(@calculator.total_output_payment) %></span>
-          </p>
+        <p class="govuk-body-s govuk-!-margin-bottom-2">
+          <%= t("finance.output_payment.label") %>
+          <span><%= number_to_pounds(@calculator.total_output_payment) %></span>
+        </p>
 
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            Clawback deductions
-            <span><%= number_to_pounds(-@calculator.total_clawbacks) %></span>
-          </p>
+        <p class="govuk-body-s govuk-!-margin-bottom-2">
+          Clawback deductions
+          <span><%= number_to_pounds(-@calculator.total_clawbacks) %></span>
+        </p>
 
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t("finance.service_fee.caption") %>
-            <span><%= number_to_pounds(@calculator.total_service_fees) %></span>
-          </p>
+        <p class="govuk-body-s govuk-!-margin-bottom-2">
+          <%= t("finance.service_fee.caption") %>
+          <span><%= number_to_pounds(@calculator.total_service_fees) %></span>
+        </p>
 
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t("finance.vat") %>
-            <span><%= number_to_pounds(@calculator.vat) %></span>
-          </p>
-        </div>
+        <p class="govuk-body-s govuk-!-margin-bottom-2">
+          <%= t("finance.vat") %>
+          <span><%= number_to_pounds(@calculator.vat) %></span>
+        </p>
+      </div>
 
-        <ul class="first govuk-list govuk-!-margin-bottom-0">
-          <li>
-            <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.cut_off_date.caption") %></strong>
-            <div class="number-group">
-              <div class="number-container govuk-!-padding-right-4">
-                <div class="float tooltip">
-                  <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-                    <span><%= @statement.deadline_date.to_s(:govuk) %></span>
-                  </div>
+      <ul class="first govuk-list govuk-!-margin-bottom-0">
+        <li>
+          <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.cut_off_date.caption") %></strong>
+          <div class="number-group">
+            <div class="number-container govuk-!-padding-right-4">
+              <div class="float tooltip">
+                <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+                  <span><%= @statement.deadline_date.to_s(:govuk) %></span>
                 </div>
               </div>
             </div>
-          </li>
-          <li>
-            <div class="finance-panel__summary__downloads">
-              <div class="second govuk-list govuk-!-margin-bottom-0">
-                <p>
-                  <%= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) %>
-                </p>
-              </div>
-          </li>
-        </ul>
-        <ul class="second govuk-list govuk-!-margin-bottom-0">
-          <li>
-            <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_starts") %></strong>
-            <div class="number-group">
-              <div class="number-container govuk-!-padding-right-4">
-                <div class="float tooltip">
-                  <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-                    <span><%= @calculator.total_starts %></span>
-                  </div>
+          </div>
+        </li>
+      </ul>
+      <ul class="second govuk-list govuk-!-margin-bottom-0">
+        <li>
+          <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_starts") %></strong>
+          <div class="number-group">
+            <div class="number-container govuk-!-padding-right-4">
+              <div class="float tooltip">
+                <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+                  <span><%= @calculator.total_starts %></span>
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
-        <ul class="booster govuk-list govuk-!-margin-bottom-0">
-          <li>
-            <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_retained") %></strong>
-            <div class="number-group">
-              <div class="number-container govuk-!-padding-right-4">
-                <div class="float tooltip">
-                  <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-                    <span><%= @calculator.total_retained %></span>
-                  </div>
+          </div>
+        </li>
+      </ul>
+      <ul class="booster govuk-list govuk-!-margin-bottom-0">
+        <li>
+          <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_retained") %></strong>
+          <div class="number-group">
+            <div class="number-container govuk-!-padding-right-4">
+              <div class="float tooltip">
+                <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+                  <span><%= @calculator.total_retained %></span>
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
-        <ul class="fourth govuk-list govuk-!-margin-bottom-0">
+          </div>
+        </li>
+      </ul>
+      <ul class="fourth govuk-list govuk-!-margin-bottom-0">
           <li class="empty">
             <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_completed") %></strong>
             <div class="number-group">
@@ -97,42 +89,47 @@
               </div>
             </div>
           </li>
-        </ul>
+      </ul>
 
-        <ul class="fifth govuk-list govuk-!-margin-bottom-0">
-          <li class="empty">
-            <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_voids") %></strong>
-            <div class="number-group">
-              <div class="number-container govuk-!-padding-right-4">
-                <div class="float tooltip">
-                  <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-                    <span><%= @calculator.total_voided %></span>
-                    <br>
-                    <p class="govuk-body-s"><%= govuk_link_to( t("finance.view") , finance_npq_lead_provider_statement_voided_path(@npq_lead_provider.id, @statement)) %></p>
-                  </div>
+      <ul class="fifth govuk-list govuk-!-margin-bottom-0">
+        <li class="empty">
+          <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("finance.total_voids") %></strong>
+          <div class="number-group">
+            <div class="number-container govuk-!-padding-right-4">
+              <div class="float tooltip">
+                <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
+                  <span><%= @calculator.total_voided %></span>
+                  <br>
+                  <p class="govuk-body-s"><%= govuk_link_to( t("finance.view") , finance_npq_lead_provider_statement_voided_path(@npq_lead_provider.id, @statement)) %></p>
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
-      </div>
-
-      <br>
+          </div>
+        </li>
+      </ul>
     </div>
-
-    <div class="govuk-grid-column-full">
-      <div class="app-application__panel">
-        <div class="moj-filter-layout__content">
-          <% @npq_contracts.each do |npq_contract| %>
-            <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
-
-            <br>
-          <% end %>
-        </div>
+    <div class="finance-panel__summary__downloads">
+      <div class="second govuk-list govuk-!-margin-bottom-0">
+        <p>
+          <%= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) %>
+        </p>
       </div>
-
-      <br>
-
-      <%= render Finance::NPQ::PaymentOverviews::ContractInfo.new(@npq_contracts, @npq_lead_provider) %>
     </div>
   </div>
+</div>
+<br />
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="app-application__panel">
+      <div class="moj-filter-layout__content">
+        <% @npq_contracts.each do |npq_contract| %>
+          <%= render Finance::NPQ::PaymentOverviews::Course.new(statement: @statement, contract: npq_contract) %>
+
+          <br>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= render Finance::NPQ::PaymentOverviews::ContractInfo.new(@npq_contracts, @npq_lead_provider) %>
+</div>

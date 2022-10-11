@@ -93,15 +93,14 @@
 
             <%= govuk_link_to 'View<span class="govuk-visually-hidden"> voided declarations</span>'.html_safe, finance_ecf_payment_breakdown_statement_voided_path(@ecf_lead_provider.id, @statement), class: "govuk-body-s" %>
           </div>
-
-          <div class="finance-panel__summary__downloads">
-            <div class="second govuk-list govuk-!-margin-bottom-0">
-              <p>
-                <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
-              </p>
-            </div>
-          </div>
         </div>
+      </div>
+    </div>
+    <div class="finance-panel__summary__downloads">
+      <div class="duvet">
+        <p class="govuk-body-s">
+          <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
+        </p>
       </div>
     </div>
   </div>
