@@ -26,7 +26,7 @@ module Admin
         def create
           authorize @challenge_partnership_form.partnership, :update?
           @challenge_partnership_form.challenge!
-          set_success_message heading: "Induction programme has been changed"
+          set_success_message heading: "Induction programme has been challenged"
           redirect_to admin_school_cohorts_path
         end
 

@@ -66,7 +66,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
 
       expect(response).to redirect_to "/admin/schools/#{school.slug}/cohorts"
       follow_redirect!
-      expect(response.body).to include "Induction programme has been changed"
+      expect(response.body).to include "Induction programme has been challenged"
     end
   end
 end
