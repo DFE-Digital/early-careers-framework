@@ -22,8 +22,8 @@ FactoryBot.define do
       uplifts { %i[pupil_premium_uplift] }
     end
 
-    trait :with_uplifts do
-      uplifts { %i[pupil_premium_uplift sparsity_uplift] }
+    trait :pupil_premium_and_sparsity_uplift do
+      uplifts { %i[pupil_premium_and_sparsity_uplift] }
     end
 
     initialize_with do

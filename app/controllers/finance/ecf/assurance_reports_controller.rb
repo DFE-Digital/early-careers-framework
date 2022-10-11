@@ -6,7 +6,7 @@ module Finance
     private
 
       def csv_serializer
-        @csv_serializer ||= AssuranceReportSerializer.new(query.participant_declarations, statement)
+        @csv_serializer ||= AssuranceReport::CSVSerializer.new(query.participant_declarations, statement)
       end
 
       def query
