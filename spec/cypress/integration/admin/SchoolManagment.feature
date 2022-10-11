@@ -28,7 +28,7 @@ Feature: Admin user managing schools
 
   Scenario: Viewing a list of schools
     Then the table should have 9 rows
-    And "page body" should contain "Enter the school’s name, URN or tutor email"
+    And "page body" should contain "Enter the school’s name, postcode, URN or tutor email"
     And the page should be accessible
 
     When I type "include" into "search box"

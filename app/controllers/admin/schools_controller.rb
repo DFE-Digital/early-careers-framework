@@ -13,7 +13,7 @@ module Admin
       @pagy, @schools = pagy(policy_scope(School)
                                .distinct
                                .includes(:induction_coordinators, :local_authority)
-                               .ransack(induction_coordinators_email_or_urn_or_name_cont: @query)
+                               .ransack(induction_coordinators_email_or_urn_or_name_or_postcode_cont: @query)
                                .result
                                .order(:name), page: params[:page], items: 10)
     end
