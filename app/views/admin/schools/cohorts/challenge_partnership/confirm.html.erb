@@ -4,6 +4,8 @@
       You are reporting an incorrect partnership
     </h1>
 
+    <%= govuk_warning_text(text: "Has this been authorised by the Policy Engagement Team?") %>
+
     <%= govuk_summary_list do |sl|
       sl.row do |row|
         row.key(text: "Cohort")
