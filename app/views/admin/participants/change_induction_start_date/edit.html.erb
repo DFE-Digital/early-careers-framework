@@ -1,0 +1,20 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(@participant_profile_form, url: admin_participant_change_induction_start_date_path(@participant_profile), method: "put") do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_date_field(
+        :induction_start_date,
+        legend: { text: "What is #{@participant_profile.user.full_name}'s new induction start date?" },
+        hint: { text: "For example, 14 9 #{Date.today.year}" }
+      ) do %>
+        <p class="govuk-body">
+          This is the date when the ECT's induction programme
+          formally starts. It may be different to their contract start date.
+        </p>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

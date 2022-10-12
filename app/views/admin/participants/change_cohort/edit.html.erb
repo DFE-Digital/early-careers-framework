@@ -1,14 +1,18 @@
-<%= form_for(@amend_participant_cohort, url: admin_participant_change_cohort_path(@participant_profile), method: "put") do |f| %>
-  <%= f.govuk_error_summary %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(@amend_participant_cohort, url: admin_participant_change_cohort_path(@participant_profile), method: "put") do |f| %>
+      <%= f.govuk_error_summary %>
 
-  <%= f.govuk_collection_select(
-    :target_cohort_start_year,
-    Cohort.where(start_year: 2021..),
-    :start_year,
-    :start_year,
-    label: { text: "Change #{@participant_profile.user.full_name}'s cohort", tag: "h1", size: "l" },
-    hint: { text: "Their current cohort is: #{@latest_induction_record.cohort.start_year}" },
-  ) %>
+      <%= f.govuk_collection_select(
+        :target_cohort_start_year,
+        Cohort.where(start_year: 2021..),
+        :start_year,
+        :start_year,
+        label: { text: "Change #{@participant_profile.user.full_name}'s cohort", tag: "h1", size: "l" },
+        hint: { text: "Their current cohort is: #{@latest_induction_record.cohort.start_year}" },
+      ) %>
 
-  <%= f.govuk_submit %>
-<% end %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

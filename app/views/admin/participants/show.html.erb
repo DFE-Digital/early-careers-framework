@@ -16,7 +16,7 @@
     <% else %>
       <%= govuk_tabs(title: 'Contents') do |component| %>
         <% component.tab(label: 'Details') do %>
-          <%= render partial: 'details', locals: { latest_induction_record: @latest_induction_record } %>
+          <%= render partial: 'details', locals: { participant_profile: @participant_profile, latest_induction_record: @latest_induction_record } %>
         <% end %>
         <% component.tab(label: 'School') do %>
           <%= render partial: 'school', locals: { latest_induction_record: @latest_induction_record } %>
@@ -25,7 +25,7 @@
           <%= render partial: 'history', locals: { historical_induction_records: @historical_induction_records, latest_induction_record: @latest_induction_record } %>
         <% end %>
         <% component.tab(label: 'Induction records') do %>
-          <%= render partial: 'induction_records', locals: { induction_records: @induction_records } %>
+          <%= render partial: 'induction_records', locals: { participant_profile: @participant_profile, induction_records: @induction_records } %>
         <% end %>
         <% component.tab(label: 'Cohorts') do %>
           <%= render partial: 'cohorts', locals: { latest_induction_record: @latest_induction_record } %>
