@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_29_104505) do
+ActiveRecord::Schema.define(version: 2022_10_12_103024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -847,6 +847,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["default_induction_programme_id"], name: "index_school_cohorts_on_default_induction_programme_id"
+    t.index ["school_id", "cohort_id"], name: "index_school_cohorts_on_school_id_and_cohort_id", unique: true
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
   end
 

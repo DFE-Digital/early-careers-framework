@@ -200,6 +200,10 @@ en:
               cannot_change_from_accepted: Once accepted an application cannot change state
               cannot_change_from_rejected: Once rejected an application cannot change state
               declarations_exist: There are already declarations for this participant on this course, please ask provider to void and/or clawback any declarations they have made before attempting to reset the application.
+        school_cohort:
+          attributes:
+            school_id:
+              taken: The school is already linked to this cohort
 
   activemodel:
     errors:

@@ -37,6 +37,8 @@ class SchoolCohort < ApplicationRecord
   has_many :transferred_induction_records, through: :induction_programmes, class_name: "InductionRecord"
   has_many :current_participant_profiles, through: :induction_programmes, class_name: "ParticipantProfile::ECF"
 
+  validates :school_id, uniqueness: { scope: :cohort_id }
+
   scope :for_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
 
   delegate :description, :academic_year, :start_year, to: :cohort
