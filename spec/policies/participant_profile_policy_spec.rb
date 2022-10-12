@@ -34,17 +34,17 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
     end
 
     context "for an induction coordinator" do
-      let(:schools) { create_list :school, rand(2..3) }
+      let(:schools) { create_list :school, 3 }
       let(:user) { create(:induction_coordinator_profile, schools:).user }
-      let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :ect, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :mentor, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :npq_participant_profile, school: schools.sample } }
+      let(:ect_profiles_for_stis_schools) { create :ect, school_cohort: create(:school_cohort, school: schools.first) }
+      let(:mentor_profiles_for_stis_schools) { create :mentor, school_cohort: create(:school_cohort, school: schools.second) }
+      let(:npq_profiles_for_stis_schools) { create :npq_participant_profile, school: schools.third }
       let(:other_participant_profiles) { create_list :ect, rand(2..3) }
 
-      it { is_expected.to include(*ect_profiles_for_stis_schools) }
-      it { is_expected.to include(*mentor_profiles_for_stis_schools) }
-      it { is_expected.not_to include(*npq_profiles_for_stis_schools) }
-      it { is_expected.not_to include(*other_participant_profiles) }
+      it { is_expected.to include(ect_profiles_for_stis_schools) }
+      it { is_expected.to include(mentor_profiles_for_stis_schools) }
+      it { is_expected.not_to include(npq_profiles_for_stis_schools) }
+      it { is_expected.not_to include(other_participant_profiles) }
     end
 
     context "for a regular user" do
