@@ -85,7 +85,8 @@ private
     if lead_provider.present?
       Induction::CreateRelationship.call(school_cohort:,
                                          lead_provider:,
-                                         delivery_partner:)
+                                         delivery_partner:,
+                                         treat_as_partnership: @make_default_programme)
     end
   end
 
