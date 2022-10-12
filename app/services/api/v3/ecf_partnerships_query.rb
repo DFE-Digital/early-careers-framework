@@ -14,6 +14,7 @@ module Api
         scope = lead_provider.partnerships.includes(:school, :cohort, :delivery_partner)
         scope = scope.where("partnerships.cohort_id IN (?)", with_cohorts.map(&:id)) if filter[:cohort].present?
         scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since.present?
+        scope = scope.where("partnerships.delivery_partner_id IN (?)", delivery_partner_id_filter) if delivery_partner_id_filter.present?
         scope = scope.order("partnerships.updated_at DESC") if params[:sort].blank?
         scope
       end
@@ -22,6 +23,10 @@ module Api
 
       def filter
         params[:filter] ||= {}
+      end
+
+      def delivery_partner_id_filter
+        filter[:delivery_partner_id]&.split(",")
       end
 
       def updated_since

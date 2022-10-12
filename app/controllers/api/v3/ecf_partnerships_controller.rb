@@ -36,7 +36,7 @@ module Api
       end
 
       def ecf_partnership_params
-        params.permit(:sort, filter: %i[cohort updated_since])
+        params.permit(:sort, filter: %i[cohort updated_since delivery_partner_id])
       end
 
       def access_scope
