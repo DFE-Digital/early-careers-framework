@@ -1103,6 +1103,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
       latest_induction_records.start_date,
       latest_induction_records.end_date,
       latest_induction_records.school_transfer,
+      latest_induction_records.school_id,
+      latest_induction_records.school_name,
       schedules.schedule_identifier,
       cohorts.start_year AS cohort,
       COALESCE(declarations.count, (0)::bigint) AS declaration_count,
@@ -1137,10 +1139,15 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
               induction_records.school_transfer,
               induction_records.appropriate_body_id,
               partnerships.lead_provider_id,
+              schools.id AS school_id,
+              schools.name AS school_name,
+              lead_providers_1.name AS lead_provider_name,
               row_number() OVER (PARTITION BY induction_records.participant_profile_id, partnerships.lead_provider_id ORDER BY induction_records.created_at DESC) AS induction_record_sort_order
-             FROM ((induction_records
+             FROM ((((induction_records
                JOIN induction_programmes ON ((induction_programmes.id = induction_records.induction_programme_id)))
-               JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))) latest_induction_records ON ((latest_induction_records.participant_profile_id = participant_profiles.id)))
+               JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))
+               JOIN lead_providers lead_providers_1 ON ((lead_providers_1.id = partnerships.lead_provider_id)))
+               JOIN schools ON ((schools.id = partnerships.school_id)))) latest_induction_records ON ((latest_induction_records.participant_profile_id = participant_profiles.id)))
        JOIN lead_providers ON ((lead_providers.id = latest_induction_records.lead_provider_id)))
        JOIN participant_identities ON ((participant_identities.id = participant_profiles.participant_identity_id)))
        JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))

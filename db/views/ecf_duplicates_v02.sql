@@ -7,6 +7,8 @@ SELECT
   latest_induction_records.start_date,
   latest_induction_records.end_date,
   latest_induction_records.school_transfer,
+  latest_induction_records.school_id,
+  latest_induction_records.school_name,
   schedules.schedule_identifier,
   cohorts.start_year AS cohort,
   COALESCE(declarations.count, 0) AS declaration_count,
@@ -32,10 +34,15 @@ JOIN (
      SELECT
        induction_records.*,
        partnerships.lead_provider_id,
+       schools.id AS school_id,
+       schools.name AS school_name,
+       lead_providers.name AS lead_provider_name,
        ROW_NUMBER() OVER (PARTITION BY participant_profile_id, partnerships.lead_provider_id ORDER BY induction_records.created_at DESC) AS induction_record_sort_order
      FROM induction_records
      JOIN induction_programmes ON induction_programmes.id = induction_records.induction_programme_id
-     JOIN partnerships ON partnerships.id = induction_programmes.partnership_id
+     JOIN partnerships         ON partnerships.id = induction_programmes.partnership_id
+     JOIN lead_providers       ON lead_providers.id = partnerships.lead_provider_id
+     JOIN schools              ON schools.id = partnerships.school_id
 ) AS latest_induction_records ON latest_induction_records.participant_profile_id = participant_profiles.id
 JOIN lead_providers ON lead_providers.id = latest_induction_records.lead_provider_id
 JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id

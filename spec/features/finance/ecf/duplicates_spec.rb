@@ -19,6 +19,10 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
   end
 
   before do
+    create(:ect_participant_declaration, duplicate_ect_profiles[0])
+  end
+
+  before do
     given_i_am_logged_in_as_a_finance_user
 
     duplicate_ect_profiles.each { |pp| pp.update!(participant_identity: ect_participant_profile.participant_identity) }
@@ -47,11 +51,11 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
     expect(page.all("tbody tr td:nth-child(2)").map(&:text)).to all(eq("withdrawn"))
     expect(page.all("tbody tr td:nth-child(3)").map(&:text)).to all(eq("withdrawn"))
 
-    save_and_open_page
+    save_and_open_screenshot
     within page.find("tbody tr:last-child") do
       click_link "Delete"
     end
-    click_link
-    save_and_open_page
+    # click_link ""
+    save_and_open_screenshot
   end
 end

@@ -29,11 +29,23 @@
       <% end %>
     <% end %>
     <div>
-      <span>Cohort: <%= @duplicate.cohort %></span>
-      <span>Schedule: <%= @duplicate.schedule_identifier %></span>
+      <%= govuk_summary_list do |summary_list| %>
+        <% summary_list.row do |row| %>
+          <% row.key { "Cohort:" } %>
+          <% row.value { @duplicate.cohort } %>
+        <% end %>
+        <% summary_list.row do |row| %>
+          <% row.key { "Schedule:" } %>
+          <% row.value { @duplicate.schedule_identifier } %>
+        <% end%>
+      <% end %>
     </div>
     <div class="govuk-body">
-      Start on the <%= @duplicate.start_date.to_date.to_s(:govuk) %> at school <%= @duplicate.latest_induction_record.school.name %>
+      Starts at school <strong><%= @duplicate.school_name %></strong>
+      with lead provider <strong><%= @duplicate.provider_name %></strong> %> from <%= @duplicate.start_date.to_date.to_s(:govuk) %>
+      <% if @duplicate.end_date.present?%>
+        to <%= @duplicate.end_date.to_date.to_s(:govuk) %>
+      <% end %>
     </div>
   </div>
 </div>
