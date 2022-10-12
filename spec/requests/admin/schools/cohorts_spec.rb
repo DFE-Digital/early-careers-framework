@@ -6,15 +6,18 @@ RSpec.describe "Admin::Schools::Cohorts", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
   let(:cip) { create(:core_induction_programme, name: "CIP Programme") }
+  let(:cohorts) { create_list(:cohort, 5) }
+
   let!(:school_cohorts) do
     [
-      create(:school_cohort, school:, core_induction_programme: cip),
-      create(:school_cohort, school:),
-      create(:school_cohort, school:, induction_programme_choice: "full_induction_programme"),
-      create(:school_cohort, school:, induction_programme_choice: "no_early_career_teachers"),
-      create(:school_cohort, school:, induction_programme_choice: "design_our_own"),
+      create(:school_cohort, school:, cohort: cohorts[0], core_induction_programme: cip),
+      create(:school_cohort, school:, cohort: cohorts[1]),
+      create(:school_cohort, school:, cohort: cohorts[2], induction_programme_choice: "full_induction_programme"),
+      create(:school_cohort, school:, cohort: cohorts[3], induction_programme_choice: "no_early_career_teachers"),
+      create(:school_cohort, school:, cohort: cohorts[4], induction_programme_choice: "design_our_own"),
     ]
   end
+
   let!(:cohort_without_programme_chosen) { create(:cohort) }
 
   before do
