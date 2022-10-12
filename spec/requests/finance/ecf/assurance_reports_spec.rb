@@ -49,7 +49,7 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
       induction_record = participant_profile.latest_induction_record_for(cpd_lead_provider:)
       expect(row["Schedule"]).to                    eq(induction_record.schedule.schedule_identifier)
       expect(row["Lead Provider Name"]).to          eq(induction_record.lead_provider.name)
-      expect(row["Delivery Partner Name"]).to       eq(induction_record.delivery_partner.name)
+      expect(row["Delivery Partner Name"]).to       eq(induction_record.induction_programme.delivery_partner.name)
       expect(row["Eligible For Funding"]).to        eq("true")
       expect(row["Eligible For Funding Reason"]).to be_blank
 
