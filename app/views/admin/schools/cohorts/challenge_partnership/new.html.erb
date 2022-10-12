@@ -2,16 +2,35 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Report that <%= @challenge_partnership_form.school_name %> has been signed up incorrectly</h1>
+    <h1 class="govuk-heading-xl">
+      Report an incorrect partnership
+    </h1>
 
-    <%= form_for @challenge_partnership_form, url: confirm_admin_school_challenge_partnership_path do |f| %>
-      <%= f.hidden_field :partnership_id %>
+    <%= govuk_summary_list do |sl|
+      sl.row do |row|
+        row.key(text: "Cohort")
+        row.value(text: @challenge_partnership_form.partnership.cohort.start_year)
+      end
+
+      sl.row do |row|
+        row.key(text: "Lead Provider")
+        row.value(text: @challenge_partnership_form.partnership.lead_provider.name)
+      end
+
+      sl.row do |row|
+        row.key(text: "Delivery partner")
+        row.value(text: @challenge_partnership_form.partnership.delivery_partner.name)
+      end
+    end %>
+
+    <%= form_for @challenge_partnership_form, url: confirm_admin_school_partnership_challenge_partnership_path do |f| %>
+      <%= f.hidden_field :partnership_id, value: @challenge_partnership_form.partnership_id %>
       <%= f.govuk_collection_radio_buttons(
             :challenge_reason,
             @challenge_partnership_form.challenge_reason_options,
             :id,
             :name,
-            legend: { text: "Tell us why", size: "m" }) %>
+            legend: { text: "Tell us why this is not the right partnership", size: "m" }) %>
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>

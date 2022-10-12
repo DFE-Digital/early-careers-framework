@@ -13,17 +13,16 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
 
   describe "GET /admin/schools/:school_slug/cohorts/:id/challenge-partnership/new" do
     it "renders the new template" do
-      get "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership/new"
+      get "/admin/schools/#{school.slug}/partnerships/#{partnership.id}/challenge-partnership/new"
       expect(response).to render_template "admin/schools/cohorts/challenge_partnership/new"
     end
   end
 
   describe "POST /admin/schools/:school_slug/cohorts/:id/challenge-partnership/confirm" do
     it "shows an error message if no reason is selected" do
-      post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership/confirm", params: {
+      post "/admin/schools/#{school.slug}/partnerships/#{partnership.id}/challenge-partnership/confirm", params: {
         challenge_partnership_form: {
           partnership_id: partnership.id,
-          lead_provider_name: partnership.lead_provider.name,
           challenge_reason: "",
         },
       }
@@ -33,7 +32,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
     end
 
     it "shows a confirmation message" do
-      post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership/confirm", params: {
+      post "/admin/schools/#{school.slug}/partnerships/#{partnership.id}/challenge-partnership/confirm", params: {
         challenge_partnership_form: {
           partnership_id: partnership.id,
           lead_provider_name: partnership.lead_provider.name,
@@ -49,7 +48,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
     it "call Partnerships::Challenge with the correct arguments" do
       expect(Partnerships::Challenge).to receive(:call).with(partnership:, challenge_reason: "mistake")
 
-      post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership", params: {
+      post "/admin/schools/#{school.slug}/partnerships/#{partnership.id}/challenge-partnership", params: {
         challenge_partnership_form: {
           partnership_id: partnership.id,
           challenge_reason: "mistake",
@@ -58,7 +57,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
     end
 
     it "redirects to the cohorts page and shows a success message" do
-      post "/admin/schools/#{school.slug}/cohorts/#{cohort.start_year}/challenge-partnership", params: {
+      post "/admin/schools/#{school.slug}/partnerships/#{partnership.id}/challenge-partnership", params: {
         challenge_partnership_form: {
           partnership_id: partnership.id,
           challenge_reason: "mistake",
@@ -67,7 +66,7 @@ RSpec.describe "Admin::Schools::Cohorts::ChangeProgramme", type: :request do
 
       expect(response).to redirect_to "/admin/schools/#{school.slug}/cohorts"
       follow_redirect!
-      expect(response.body).to include "Induction programme has been changed"
+      expect(response.body).to include "Induction programme has been challenged"
     end
   end
 end

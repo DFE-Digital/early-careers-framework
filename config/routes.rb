@@ -223,12 +223,14 @@ Rails.application.routes.draw do
           resource :change_programme, only: %i[show update], path: "change-programme", controller: "schools/cohorts/change_programme" do
             post :confirm
           end
-          resource :challenge_partnership, only: %i[new create], path: "challenge-partnership", controller: "schools/cohorts/challenge_partnership" do
-            post :confirm
-          end
           resource :change_training_materials, only: %i[show update], path: "change-training-materials", controller: "schools/cohorts/change_training_materials" do
             post :confirm
           end
+        end
+      end
+      resources :partnerships, only: [] do
+        resource :challenge_partnership, only: %i[new create], path: "challenge-partnership", controller: "schools/cohorts/challenge_partnership" do
+          post :confirm
         end
       end
       resources :participants, controller: "schools/participants", only: :index

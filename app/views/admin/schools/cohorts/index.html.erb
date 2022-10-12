@@ -6,7 +6,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <% @cohorts.each do |cohort| %>
-      <%= render Admin::Schools::Cohorts::Cohort.new(school_cohort: @school_cohorts.find_by(cohort: cohort), cohort: cohort) %>
+      <%= render Admin::Schools::Cohorts::Cohort.new(
+        school_cohort: @school_cohorts.find_by(cohort: cohort),
+        cohort: cohort,
+        partnerships: @partnerships_by_cohort[cohort.id],
+      ) %>
     <% end %>
   </div>
 </div>

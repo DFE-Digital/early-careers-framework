@@ -1,12 +1,31 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
     <h1 class="govuk-heading-xl">
-      You are choosing to change course report and remove: <%= @challenge_partnership_form.lead_provider_name %>
+      You are reporting an incorrect partnership
     </h1>
-    <%= form_for @challenge_partnership_form, url: admin_school_challenge_partnership_path do |f| %>
+
+    <%= govuk_warning_text(text: "Has this been authorised by the Policy Engagement Team?") %>
+
+    <%= govuk_summary_list do |sl|
+      sl.row do |row|
+        row.key(text: "Cohort")
+        row.value(text: @challenge_partnership_form.partnership.cohort.start_year)
+      end
+
+      sl.row do |row|
+        row.key(text: "Lead Provider")
+        row.value(text: @challenge_partnership_form.partnership.lead_provider.name)
+      end
+
+      sl.row do |row|
+        row.key(text: "Delivery partner")
+        row.value(text: @challenge_partnership_form.partnership.delivery_partner.name)
+      end
+    end %>
+    <%= form_for @challenge_partnership_form, url: admin_school_partnership_challenge_partnership_path do |f| %>
       <%= f.hidden_field :partnership_id %>
       <%= f.hidden_field :challenge_reason %>
-      <%= f.govuk_submit "Continue" %>
+      <%= f.govuk_submit "Challenge" %>
     <% end %>
   </div>
 </div>
