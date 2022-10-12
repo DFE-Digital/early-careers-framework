@@ -3,7 +3,7 @@
 module Finance
   module NPQ
     module AssuranceReport
-      class CSVSerializer
+      class CsvSerializer
         CSV_HEADERS = [
           "Participant ID",
           "Participant Name",
