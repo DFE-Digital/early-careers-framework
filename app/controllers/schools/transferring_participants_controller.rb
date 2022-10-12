@@ -4,7 +4,7 @@ module Schools
   class TransferringParticipantsController < ::Schools::BaseController
     before_action :load_joining_participant_form, except: %i[what_we_need]
     before_action :set_current_steps, except: %i[what_we_need]
-    before_action :set_school_cohort
+    before_action :set_cohort_to_transfer
     before_action :existing_induction_record, only: %i[teacher_start_date email choose_mentor teachers_current_programme schools_current_programme check_answers complete]
     before_action :already_enrolled_at_school?, only: %i[teacher_start_date email choose_mentor teachers_current_programme schools_current_programme check_answers]
     before_action :validate_request_or_render, except: %i[what_we_need]
@@ -162,11 +162,17 @@ module Schools
     end
 
     def participant_profile
+      return if @transferring_participant_form&.formatted_trn.blank?
+
       @participant_profile ||= ParticipantProfile::ECF.joins(:ecf_participant_validation_data)
                                                       .where(ecf_participant_validation_data: {
                                                         trn: @transferring_participant_form.formatted_trn,
                                                       })
                                                       .first
+    end
+
+    def participant_cohort
+      @participant_cohort ||= Cohort.find_by_start_year(participant_profile.cohort_start_year)
     end
 
     def reset_form_data
@@ -208,6 +214,11 @@ module Schools
       )
     end
 
+    def set_cohort_to_transfer
+      cohort = participant_profile && !transferable_to_cohort_chosen? ? participant_cohort : active_cohort
+      set_school_cohort(cohort:)
+    end
+
     def set_current_steps
       @transferring_participant_form.current_step = action_name
       @transferring_participant_form.update_steps
@@ -228,6 +239,13 @@ module Schools
       else
         participant_profile.ect? && @school_cohort.active_mentors.any?
       end
+    end
+
+    def transferable_to_cohort_chosen?
+      Schools::ParticipantTransferableToSchoolForm.new(participant_profile:,
+                                                       start_year: params[:cohort_id].to_i,
+                                                       skip_school_cohort_validation: true)
+                                                  .valid?
     end
 
     def transfer_fip_participant_to_schools_programme

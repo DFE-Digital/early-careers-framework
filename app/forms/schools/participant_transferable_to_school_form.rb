@@ -6,7 +6,7 @@ module Schools
 
     ECF_FIRST_YEAR = 2020
 
-    attr_accessor :participant_profile, :school, :start_year
+    attr_accessor :participant_profile, :school, :start_year, :skip_school_cohort_validation
 
     validates :start_year,
               numericality: {
@@ -28,6 +28,7 @@ module Schools
     validates :induction_record, presence: true
     validates :school_cohort,
               presence: {
+                unless: :skip_school_cohort_validation,
                 message: lambda do |form, _|
                   I18n.t("errors.cohort.blank", year: form.start_year, where: form.school&.name)
                 end,

@@ -31,9 +31,9 @@ private
     FeatureFlag.active?(:multiple_cohorts)
   end
 
-  def set_school_cohort
+  def set_school_cohort(cohort: active_cohort)
+    @cohort = cohort
     @school = active_school
-    @cohort = active_cohort
     @school_cohort = policy_scope(SchoolCohort).find_by(cohort: @cohort, school: @school)
 
     redirect_to schools_choose_programme_path(cohort_id: start_year) unless @school_cohort
