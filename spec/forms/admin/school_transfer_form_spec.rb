@@ -5,11 +5,12 @@ require "rails_helper"
 RSpec.describe Admin::SchoolTransferForm, type: :model do
   subject(:form) { described_class.new(participant_profile_id: participant_profile.id) }
   let(:participant_profile) { create :ect_participant_profile }
+  let(:cohort) { participant_profile.schedule.cohort }
   let(:induction_programme) { create(:induction_programme, :cip) }
   let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:, start_date: 1.day.ago) }
 
   describe "#perform_transfer!" do
-    let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort: participant_profile.schedule.cohort) }
+    let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, cohort:) }
     let(:school) { school_cohort.school }
     let(:induction_programme_2) { school_cohort.induction_programmes.first }
     let(:transfer_choice) { induction_programme_2.id }
@@ -59,6 +60,24 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
         it "enrols the participant in the matching programme" do
           form.perform_transfer!
           expect(participant_profile.induction_records.latest.induction_programme).to eq matching_programme
+        end
+      end
+
+      context "when there is no school cohort at the school" do
+        let(:school) { create(:school) }
+
+        it "creates a new school cohort" do
+          expect { form.perform_transfer! }.to change { school.school_cohorts.count }.by(1)
+        end
+
+        it "sets the induction programme choice on the school cohort" do
+          form.perform_transfer!
+          expect(school.school_cohorts.first).to be_core_induction_programme
+        end
+
+        it "sets the default induction programme on the school cohort to be the new programme" do
+          form.perform_transfer!
+          expect(school.school_cohorts.first.default_induction_programme).to eq school.school_cohorts.first.induction_programmes.first
         end
       end
     end

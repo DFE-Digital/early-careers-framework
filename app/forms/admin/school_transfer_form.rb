@@ -76,7 +76,7 @@ class Admin::SchoolTransferForm
   end
 
   def cannot_transfer_to_new_school?
-    cannot_transfer_reason.present?
+    no_programmes_to_transfer_into_or_continue?
   end
 
   def cannot_transfer_reason
@@ -90,7 +90,7 @@ class Admin::SchoolTransferForm
     programme_count = new_school_cohort&.induction_programmes&.count || 0
 
     choice = if latest_induction_record.present?
-               if programme_count == 0
+               if programme_count.zero?
                  "continue"
                elsif programme_count == 1 && latest_induction_record.induction_programme.same_induction_as?(new_school_cohort.induction_programmes.first)
                  new_school_cohort.induction_programmes.first.id
