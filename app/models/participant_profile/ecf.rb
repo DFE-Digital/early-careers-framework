@@ -94,7 +94,7 @@ class ParticipantProfile < ApplicationRecord
         .joins(induction_programme: { partnership: [:lead_provider] })
         .where(induction_programmes: { partnerships: { lead_provider: } })
         .latest
-        .schedule
+        &.schedule
     end
 
     def withdrawn_for?(cpd_lead_provider:)
