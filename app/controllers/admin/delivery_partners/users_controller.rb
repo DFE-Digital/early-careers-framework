@@ -3,20 +3,23 @@
 module Admin
   module DeliveryPartners
     class UsersController < Admin::BaseController
-      skip_after_action :verify_authorized
-      skip_after_action :verify_policy_scoped
+      skip_after_action :verify_authorized, only: :index
+      skip_after_action :verify_policy_scoped, except: :index
       before_action :set_delivery_partner_profile_and_authorize, only: %i[edit update delete destroy]
 
       def index
-        scoped = DeliveryPartnerProfile.includes(:user).order("users.full_name asc")
+        authorize DeliveryPartnerProfile
+        scoped = policy_scope(DeliveryPartnerProfile).includes(:user).order("users.full_name asc")
         @pagy, @delivery_partner_profiles = pagy(scoped, page: params[:page], items: 20)
       end
 
       def new
+        authorize DeliveryPartnerProfile
         @delivery_partners_user_form = ::DeliveryPartners::CreateUserForm.new
       end
 
       def create
+        authorize DeliveryPartnerProfile
         @delivery_partners_user_form = ::DeliveryPartners::CreateUserForm.new(permitted_params)
 
         if @delivery_partners_user_form.save

@@ -336,6 +336,14 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :appropriate_bodies, path: "appropriate-bodies" do
+      resources :users, only: %i[index new create edit update destroy] do
+        member do
+          get "delete", action: :delete
+        end
+      end
+    end
+
     scope :administrators, module: "administrators" do
       resources :administrators, only: %i[index new create edit update destroy], path: "/" do
         collection do

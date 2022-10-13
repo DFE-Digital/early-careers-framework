@@ -2,12 +2,12 @@
 
 require "rails_helper"
 
-RSpec.describe DeliveryPartnerProfilePolicy, type: :policy do
-  subject { described_class.new(user, delivery_partner_profile) }
+RSpec.describe AppropriateBodyProfilePolicy, type: :policy, with_feature_flags: { appropriate_bodies: "active" } do
+  subject { described_class.new(user, appropriate_body_profile) }
 
-  let(:delivery_partner_profile) { create(:delivery_partner_profile) }
+  let(:appropriate_body_profile) { create(:appropriate_body_profile) }
 
-  context "being a admin" do
+  context "being an admin" do
     let(:user) { create(:user, :admin) }
 
     it { is_expected.to permit_action(:index) }
