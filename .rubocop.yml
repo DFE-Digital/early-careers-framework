@@ -42,6 +42,7 @@ Rails/Output:
   Exclude:
     - "app/services/importers/*"
     - "app/services/finance/extract_report.rb"
+    - "lib/api_smoke_test.rb"
 
 Lint/MissingSuper:
   Enabled: false
