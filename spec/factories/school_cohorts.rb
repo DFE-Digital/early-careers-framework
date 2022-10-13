@@ -35,6 +35,10 @@ FactoryBot.define do
       school { create(:school, :pupil_premium_uplift) }
     end
 
+    trait :pupil_premium_and_sparsity_uplift do
+      school { create(:school, :pupil_premium_and_sparsity_uplift) }
+    end
+
     trait :fip do
       induction_programme_choice { "full_induction_programme" }
     end

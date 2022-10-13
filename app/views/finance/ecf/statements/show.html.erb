@@ -96,6 +96,13 @@
         </div>
       </div>
     </div>
+    <div class="finance-panel__summary__downloads">
+      <div class="duvet">
+        <p class="govuk-body-s">
+          <%= govuk_link_to "Download declarations (CSV)", finance_ecf_statement_assurance_report_path(@statement, format: :csv) %>
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 

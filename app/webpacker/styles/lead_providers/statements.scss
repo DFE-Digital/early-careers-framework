@@ -143,3 +143,17 @@
     }
   }
 }
+
+.finance-panel__summary__downloads {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  background: #f8f8f8;
+  padding: 0 20px;
+  .duvet {
+    border-top: 1px solid #b1b4b6;
+    padding-top: 20px;
+  }
+}

@@ -68,6 +68,9 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     select("November 2021", from: "statement-field")
     click_button("View")
 
+    expect(page)
+      .to have_link("Download declarations (CSV)", href: finance_ecf_statement_assurance_report_path(november_statement, format: :csv))
+
     then_i_should_see_the_total_voided
     click_link("View voided declarations")
     then_i_see_voided_declarations

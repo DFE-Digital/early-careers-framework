@@ -19,6 +19,7 @@ class InductionRecord < ApplicationRecord
   has_one :partnership, through: :induction_programme
   has_one :lead_provider, through: :partnership
   has_one :cpd_lead_provider, through: :induction_programme
+
   # optional while the data is setup
   # enables a different identity/email to be used for this induction
   # rather that the one tied to the participant_profile
