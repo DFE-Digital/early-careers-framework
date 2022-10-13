@@ -40,7 +40,7 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
       it "returns correct type" do
         get "/api/v3/partnerships/ecf"
 
-        expect(parsed_response["data"][0]).to have_type("partnership")
+        expect(parsed_response["data"][0]).to have_type("partnership-confirmation")
       end
 
       it "returns IDs" do

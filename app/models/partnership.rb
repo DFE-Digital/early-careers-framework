@@ -51,11 +51,6 @@ class Partnership < ApplicationRecord
     challenged_at.nil? && challenge_reason.nil? && pending == false
   end
 
-  def status
-    return "active" if active?
-    return "challenged" if challenged?
-  end
-
 private
 
   def update_analytics

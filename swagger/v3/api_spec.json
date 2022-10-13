@@ -175,6 +175,18 @@
             "required": false,
             "description": "Refine partnerships to return.",
             "example": "filter[cohort]=2021,2022"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/PartnershipsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort partnerships being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -4905,6 +4917,19 @@
             "type": "string",
             "example": "42a9ef2f-9059-400a-92ff-4830a629d0c5,92f6e54b-57fe-4a62-89cc-e83d6b0f734b"
           }
+        }
+      },
+      "PartnershipsSort": {
+        "description": "Sort partnerships being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "-created_at",
+            "updated_at",
+            "-updated_at"
+          ]
         }
       },
       "SchoolFundingError": {
