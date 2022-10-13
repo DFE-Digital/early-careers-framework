@@ -3,6 +3,15 @@
 require "swagger_helper"
 
 RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token)      { "Bearer #{token}" }
+  let(:Authorization)     { bearer_token }
+
+  before do
+    allow(FeatureFlag).to receive(:active?).with(:api_v3).and_return(true)
+  end
+
   path "/api/v3/partnerships/ecf" do
     get "Retrieve multiple ECF partnerships" do
       operationId :partnerships_ecf_get
