@@ -4,15 +4,19 @@ require "net/http"
 require "uri"
 require "json"
 
-def get_data(uri)
+api_token = "HAPPY FEET"
+domain = "ecf-review-pr-2604.london.cloudapps.digital"
+
+def get_data(uri, api_token)
   url = URI.parse(uri)
 
   request = Net::HTTP::Get.new(url.request_uri)
   request["User-Agent"] = "CPD API Smoke Tester"
   request["Accept"] = "application/json"
-  request["Authorization"] = "Bearer HAPPY FEET"
+  request["Authorization"] = "Bearer #{api_token}"
 
   http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
   response = http.request(request)
 
   data = JSON.parse(response.body, symbolize_names: true)[:data]
@@ -21,8 +25,8 @@ def get_data(uri)
   data
 end
 
-users_data = get_data("http://localhost:3000/api/v1/ecf-users")
-ir_data = get_data("http://localhost:3000/api/v1/ecf-induction-records")
+users_data = get_data("https://#{domain}/api/v1/ecf-users", api_token)
+ir_data = get_data("https://#{domain}/api/v1/ecf-induction-records", api_token)
 
 ir_deduped = []
 ir_data.each do |ir_record|
@@ -49,15 +53,15 @@ lost_records = users_data.filter do |user_record|
   found.count.zero?
 end
 
-puts "user_records"
-puts users_data.count
-puts "ir_records"
-puts ir_data.count
-puts "ir_deduped"
-puts ir_deduped.count
-puts "same"
-puts same_records.count
-puts "new"
-puts new_records.count
-puts "lost"
-puts lost_records.count
+Rails.logger.debug "user_records"
+Rails.logger.debug users_data.count
+Rails.logger.debug "ir_records"
+Rails.logger.debug ir_data.count
+Rails.logger.debug "ir_deduped"
+Rails.logger.debug ir_deduped.count
+Rails.logger.debug "same"
+Rails.logger.debug same_records.count
+Rails.logger.debug "new"
+Rails.logger.debug new_records.count
+Rails.logger.debug "lost"
+Rails.logger.debug lost_records.count
