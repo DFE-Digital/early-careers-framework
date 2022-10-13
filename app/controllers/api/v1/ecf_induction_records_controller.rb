@@ -8,7 +8,7 @@ module Api
       include ApiFilter
 
       def index
-        render json: ECFInductionRecordSerializer.new(paginate(induction_records)).serializable_hash.to_json
+        render json: ECFInductionRecordSerializer.new(paginate_array(induction_records)).serializable_hash.to_json
       end
 
       def create
@@ -55,7 +55,7 @@ module Api
         induction_records = induction_records.where("induction_records.updated_at > ?", updated_since) if updated_since.present?
         induction_records = induction_records.where(preferred_identity: { email: }) if email.present?
 
-        induction_records
+        induction_records.group_by(&:preferred_identity_id).transform_values(&:first).values
       end
     end
   end
