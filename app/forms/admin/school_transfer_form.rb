@@ -87,16 +87,20 @@ class Admin::SchoolTransferForm
 
   def skip_transfer_options?
     # are there any options to select for the transfer
-    programme_count = new_school_cohort&.induction_programmes&.count || 0
+    programme_count = new_school_programmes&.count || 0
 
     choice = if latest_induction_record.present?
                if programme_count.zero?
+                 # no programmes at the new school so we'll treat this as continuing existing programme
                  "continue"
-               elsif programme_count == 1 && latest_induction_record.induction_programme.same_induction_as?(new_school_cohort.induction_programmes.first)
-                 new_school_cohort.induction_programmes.first.id
+               elsif programme_count == 1 && latest_induction_record.induction_programme.same_induction_as?(new_school_programme)
+                 # the only programme at the school is the same as the current programme so transfer to that one
+                 new_school_programme.id
                end
              elsif programme_count == 1
-               new_school_cohort.induction_programmes.first.id
+               # not sure we can get here currently via the UI but if the participant does not have any induction records
+               # then choose the only one available at the school
+               new_school_programme.id
              end
     @transfer_choice = choice
     choice.present?
@@ -116,7 +120,7 @@ class Admin::SchoolTransferForm
     if new_school_cohort.present?
       programmes << new_school_cohort.default_induction_programme if new_school_cohort.default_induction_programme.present?
 
-      new_school_cohort.induction_programmes.where.not(id: new_school_cohort.default_induction_programme).each { |ip| programmes << ip }
+      new_school_programmes.where.not(id: new_school_cohort.default_induction_programme).each { |ip| programmes << ip }
     end
 
     programmes.select { |ip| ip.full_induction_programme? || ip.core_induction_programme? }.map do |induction_programme|
@@ -163,7 +167,7 @@ private
   end
 
   def no_programmes_to_transfer_into_or_continue?
-    latest_induction_record.blank? && (new_school_cohort.blank? || new_school_cohort.induction_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?)
+    latest_induction_record.blank? && (new_school_cohort.blank? || new_school_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?)
   end
 
   def make_programme_description(induction_programme)
@@ -178,6 +182,14 @@ private
 
   def new_school_exists
     errors.add(:new_school_urn, :invalid, urn: new_school_urn) if new_school.nil?
+  end
+
+  def new_school_programmes
+    new_school_cohort&.induction_programmes
+  end
+
+  def new_school_programme
+    new_school_programmes&.first
   end
 
   def start_date_is_valid

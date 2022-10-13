@@ -83,6 +83,55 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
     end
   end
 
+  describe "#skip_transfer_options?" do
+    let(:school) { create(:school) }
+
+    before do
+      form.new_school_urn = school.urn
+    end
+
+    context "when the destination school has more than one programme in the cohort" do
+      let(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme, core_induction_programme: induction_programme.core_induction_programme, school:, cohort:) }
+      let!(:induction_programme_2) { create(:induction_programme, :fip, school_cohort:) }
+
+      it "returns false" do
+        expect(form.skip_transfer_options?).to be false
+      end
+    end
+
+    context "when the destination school has a different programme in the cohort" do
+      let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, school:, cohort:) }
+
+      it "returns false" do
+        expect(form.skip_transfer_options?).to be false
+      end
+    end
+
+    context "when there is no school cohort at the destination school" do
+      it "returns true" do
+        expect(form.skip_transfer_options?).to be true
+      end
+    end
+
+    context "when there is a single programme at the destination school" do
+      let!(:school_cohort) { create(:school_cohort, :cip, :with_induction_programme, core_induction_programme: induction_programme.core_induction_programme, school:, cohort:) }
+
+      context "when the programme matches the participants induction programme" do
+        it "returns true" do
+          expect(form.skip_transfer_options?).to be true
+        end
+      end
+
+      context "when the participant does not have an induction record" do
+        let!(:induction_record) { nil }
+
+        it "returns true" do
+          expect(form.skip_transfer_options?).to be true
+        end
+      end
+    end
+  end
+
   describe "attributes" do
     let(:attributes) do
       {
