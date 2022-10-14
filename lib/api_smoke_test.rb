@@ -4,9 +4,9 @@ require "net/http"
 require "uri"
 require "json"
 
-api_token = ARGV[0] || "HAPPY FEET"
-url_blue = ARGV[1] || "https://ecf-review-pr-2604.london.cloudapps.digital/api/v1/ecf-users"  # current
-url_green = ARGV[2] || "https://ecf-review-pr-2604.london.cloudapps.digital/api/v1/ecf-users" # new
+api_token = ARGV[0] || "API-TOKEN"
+url_blue = ARGV[1] || "https://localhost:3000/api/v1/ecf-users" # current
+url_green = ARGV[2] || "https://localhost:3000/api/v1/ecf-induction-records" # new
 
 def get_data(uri, api_token)
   url = URI.parse(uri)
@@ -48,9 +48,15 @@ lost_records = blue_data.filter do |record|
   green_data.filter { |r| r[:id] == record[:id] }.count.zero?
 end
 
-console.log "blue_records: #{blue_data.count}"
-console.log "green_records: #{green_data.count}"
-console.log "duplicates_found: #{green_data.count - deduped_records.count}"
-console.log "matches: #{same_records.count}"
-console.log "new: #{new_records.count}"
-console.log "lost: #{lost_records.count}"
+if new_records.count.zero? && lost_records.count.zero?
+  puts "The API responses are the same"
+else
+  puts "ERROR: The API responses are different"
+  puts "blue_records: #{blue_data.count}"
+  puts "green_records: #{green_data.count}"
+  puts "duplicates_found: #{green_data.count - deduped_records.count}"
+  puts "matches: #{same_records.count}"
+  puts "new: #{new_records.count}"
+  puts "lost: #{lost_records.count}"
+  exit 1
+end
