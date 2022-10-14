@@ -228,4 +228,28 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       end
     end
   end
+
+  describe "#relevant_induction_record" do
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:cohort) { create(:cohort, :next) }
+    let(:partnership) { create(:partnership, lead_provider:, cohort:) }
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:) }
+    let(:induction_programme) { create(:induction_programme, school_cohort:, partnership:) }
+    let(:profile) { create(:ecf_participant_profile, school_cohort:) }
+    let!(:induction_record_older) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 2.days.ago) }
+    let!(:induction_record_latest) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 1.day.ago) }
+
+    it "finds the most recent induction record" do
+      expect(profile.relevant_induction_record(lead_provider:)).to eq(induction_record_latest)
+    end
+
+    context "when participant is in an older cohort" do
+      let(:cohort) { create(:cohort, :current) }
+
+      it "finds the most recent induction record" do
+        expect(profile.relevant_induction_record(lead_provider:)).to eq(induction_record_latest)
+      end
+    end
+  end
 end

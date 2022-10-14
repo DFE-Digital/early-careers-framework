@@ -81,7 +81,7 @@ class ParticipantProfile < ApplicationRecord
       induction_records
         .joins(induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
         .where(induction_programme: { partnerships: { lead_provider: } })
-        .where(induction_programme: { school_cohorts: { cohort: Cohort.current } })
+        .where(induction_programme: { school_cohorts: { cohort: Cohort.where(start_year: 2021..) } })
         .order(start_date: :desc)
         .first
     end
