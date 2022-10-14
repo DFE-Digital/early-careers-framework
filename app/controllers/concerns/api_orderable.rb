@@ -5,7 +5,7 @@ module ApiOrderable
 
 private
 
-  def sort_params(params)
+  def sort_params(params, model: controller_name.classify.constantize)
     sort = {}
     if params[:sort]
       sort_order = { "+" => :asc, "-" => :desc }
@@ -13,7 +13,7 @@ private
       sorted_params = params[:sort].split(",")
       sorted_params.each do |attr|
         sort_sign = attr =~ /\A[+-]/ ? attr.slice!(0) : "+"
-        model = controller_name.classify.constantize
+
         if model.attribute_names.include?(attr)
           sort[attr] = sort_order[sort_sign]
         end
