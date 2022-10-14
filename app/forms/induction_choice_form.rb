@@ -4,15 +4,22 @@ class InductionChoiceForm
   include ActiveModel::Model
   include ActiveModel::Serialization
 
-  attr_reader :programme_choice
+  PROGRAMME_OPTIONS = %i[full_induction_programme core_induction_programme design_our_own school_funded_fip no_early_career_teachers].freeze
+
+  attr_reader :add_participant_after_complete, :programme_choice
   attr_accessor :school_cohort
 
   delegate :school, :cohort, to: :school_cohort
 
-  PROGRAMME_OPTIONS = %i[full_induction_programme core_induction_programme design_our_own school_funded_fip no_early_career_teachers].freeze
+  def add_participant_after_complete=(value)
+    @add_participant_after_complete = ActiveModel::Type::Boolean.new.cast(value).present?
+  end
 
   def attributes
-    { programme_choice: nil }
+    {
+      add_participant_after_complete: false,
+      programme_choice: nil,
+    }
   end
 
   validates :programme_choice, presence: { message: I18n.t("errors.programme_choice.blank") }, inclusion: { in: PROGRAMME_OPTIONS }
