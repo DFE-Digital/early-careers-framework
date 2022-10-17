@@ -89,7 +89,7 @@ en:
       blank: "Select whether to add or transfer a teacher"
     start_term:
       blank: "Enter a start term"
-    date_of_birth:
+    date_of_birth: &date_of_birth_error_messages
       blank: "Enter date of birth"
       invalid: "Invalid date of birth"
       in_future: "Date is in the future"
@@ -215,6 +215,14 @@ en:
               before_start: "Start date cannot be before the current induction record start (%{date})"
             email:
               <<: *email_error_messages
+        admin/validation_data_form:
+          attributes:
+            full_name:
+              <<: *full_name_error_messages
+            trn:
+              <<: *trn_error_messages
+            date_of_birth:
+              <<: *date_of_birth_error_messages
         admin/application_exports_form:
           attributes:
             start_date:

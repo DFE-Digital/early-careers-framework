@@ -1,0 +1,14 @@
+<% title = "What is #{possessive_name(@validation_data_form.participant_name)} full name as registered with the TRA?" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_path(id: @participant_profile)) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl">Validation data - <%= @validation_data_form.participant_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+    <%= form_for @validation_data_form, url: { action: :full_name }, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field :full_name, label: { text: "Full name" } %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

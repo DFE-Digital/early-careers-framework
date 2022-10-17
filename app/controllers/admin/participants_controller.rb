@@ -9,6 +9,8 @@ module Admin
     before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
     before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
     before_action :participant_declarations, only: :show, unless: -> { @participant_profile.npq? }
+    before_action :validation_data, only: :show, unless: -> { @participant_profile.npq? }
+    before_action :eligibility_data, only: :show, unless: -> { @participant_profile.npq? }
 
     def show; end
 
@@ -64,7 +66,7 @@ module Admin
 
     def load_participant
       @participant_profile = ParticipantProfile
-        .eager_load(:teacher_profile).find(params[:id])
+        .eager_load(:teacher_profile, :ecf_participant_validation_data).find(params[:id])
 
       authorize @participant_profile, policy_class: @participant_profile.policy_class
     end
@@ -97,6 +99,14 @@ module Admin
       @participant_declarations ||= @participant_profile.participant_declarations
                                                         .includes(:cpd_lead_provider, :delivery_partner)
                                                         .order(created_at: :desc)
+    end
+
+    def validation_data
+      @validation_data ||= @participant_profile.ecf_participant_validation_data || ECFParticipantValidationData.new(participant_profile: @participant_profile)
+    end
+
+    def eligibility_data
+      @eligibility_data ||= ::EligibilityPresenter.new(@participant_profile.ecf_participant_eligibility)
     end
   end
 end
