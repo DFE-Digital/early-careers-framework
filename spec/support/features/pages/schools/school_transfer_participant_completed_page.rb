@@ -8,7 +8,7 @@ module Pages
     set_primary_heading(/^.* has been registered at your school$/)
 
     def confirm_has_full_name(full_name)
-      element_has_content? header, "#{full_name.titleize} has been added"
+      element_has_content? header, "#{full_name} has been added"
       self
     end
 

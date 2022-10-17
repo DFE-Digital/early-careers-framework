@@ -45,7 +45,7 @@
       <% if show_mentor? %>
         <% summary_list.row do |row| %>
           <% row.key { "Mentor" } %>
-          <% row.value { @transferring_participant_form.mentor_id.present? ? @transferring_participant_form.mentor.full_name.titleize : "Assign a mentor later" } %>
+          <% row.value { @transferring_participant_form.mentor_id.present? ? @transferring_participant_form.mentor.full_name : "Assign a mentor later" } %>
           <% row.action(text: "Change",
                         visually_hidden_text: "mentor",
                         href: url_for({ action: :choose_mentor})) %>

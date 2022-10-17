@@ -1,7 +1,7 @@
 <%= govuk_summary_list do |summary_list| %>
   <% summary_list.row do |row| %>
     <% row.key { "Name" } %>
-    <% row.value { add_participant_form.full_name.titleize } %>
+    <% row.value { add_participant_form.full_name } %>
     <% unless add_participant_form.dqt_record %>
       <% row.action text: "Change",
                     visually_hidden_text: "name",
