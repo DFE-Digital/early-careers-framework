@@ -26,7 +26,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
       end
 
       ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record = ParticipantProfile::ECT.first
-      create(:ect, :withdrawn_record, user: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record.user, school_cohort:)
+      create(:ect, :withdrawn_record, school_cohort:).tap do |pp|
+        pp.update!(teacher_profile: ect_teacher_profile_with_one_active_and_one_withdrawn_profile_record.teacher_profile)
+      end
     end
 
     let!(:withdrawn_ect_profile_record) do
