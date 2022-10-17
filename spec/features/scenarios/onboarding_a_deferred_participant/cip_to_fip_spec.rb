@@ -93,7 +93,7 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
         and_lead_provider_reported_partnership "New Lead Provider", "New SIT"
 
         and_sit_reported_participant "Original SIT",
-                                     "the Participant",
+                                     "The Participant",
                                      scenario.participant_trn,
                                      scenario.participant_dob,
                                      scenario.participant_email,
@@ -103,12 +103,12 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
       context when_context(scenario) do
         before do
           when_developers_transfer_the_deferred_participant "New SIT",
-                                                            "the Participant"
+                                                            "The Participant"
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "New Lead Provider",
                                                             scenario.participant_type,
-                                                            "the Participant",
+                                                            "The Participant",
                                                             declaration_type
           end
 
