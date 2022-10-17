@@ -18,8 +18,8 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         mentor_profile_id: mentor_profile.id,
       )
     }.to change { ParticipantProfile::ECT.count }.by(1)
-           .and not_change { User.count }
-                  .and change { TeacherProfile.count }.by(1)
+     .and not_change { User.count }
+     .and change { TeacherProfile.count }.by(1)
   end
 
   it "uses the existing teacher profile record" do
@@ -30,8 +30,8 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         school_cohort:,
       )
     }.to change { ParticipantProfile::ECT.count }.by(1)
-           .and not_change { User.count }
-                  .and not_change { TeacherProfile.count }
+     .and not_change { User.count }
+     .and not_change { TeacherProfile.count }
   end
 
   it "creates a new user and teacher profile" do
@@ -42,8 +42,8 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         school_cohort:,
       )
     }.to change { ParticipantProfile::ECT.count }.by(1)
-           .and change { User.count }.by(1)
-                  .and change { TeacherProfile.count }.by(1)
+     .and change { User.count }.by(1)
+     .and change { TeacherProfile.count }.by(1)
   end
 
   it "updates the users name" do
@@ -234,6 +234,6 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         mentor_profile_id: mentor_profile.id,
       )
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
-           .with(participant_profile: instance_of(ParticipantProfile::ECT))
+     .with(participant_profile: instance_of(ParticipantProfile::ECT))
   end
 end
