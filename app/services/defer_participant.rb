@@ -31,7 +31,7 @@ class DeferParticipant
       participant_profile.training_status_deferred!
     end
 
-    participant_profile
+    participant_profile.record_to_serialize_for(lead_provider: cpd_lead_provider.lead_provider)
   end
 
   def participant_identity
