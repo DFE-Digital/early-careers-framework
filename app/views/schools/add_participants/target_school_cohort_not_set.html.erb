@@ -1,4 +1,4 @@
-<% content_for :title, "You need to setup #{@target_cohort_start_year}/#{@target_cohort_start_year + 1} cohort at your school to transfer #{add_participant_form.full_name.titleize} into it." %>
+<% content_for :title, "You need to set up #{@target_cohort_start_year}/#{@target_cohort_start_year + 1} cohort at your school to transfer #{add_participant_form.full_name} into it." %>
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: back_link_path) %>
 
@@ -10,16 +10,11 @@
     </h1>
 
     <p class="govuk-body">
-      Before you can setup ECF-based training for <%= add_participant_form.full_name.titleize %>, you will need
-      to create the <%= @target_cohort_start_year %> to <%= @target_cohort_start_year + 1 %> year in your
-      dashboard. This is because <%= add_participant_form.full_name.titleize %> has already started training in a
+      Before you can register <%= add_participant_form.full_name %> for ECF-based training at your school,
+      you need to set up training for the <%= @target_cohort_start_year %> to <%= @target_cohort_start_year + 1 %> year.
+      This is because <%= add_participant_form.full_name %> has already started training at a
       previous school so cannot be added to the <%= Cohort.current.start_year %> to <%= Cohort.current.start_year + 1 %>
       year.
-    </p>
-
-    <p class="govuk-body">
-      You can then transfer <%= add_participant_form.full_name.titleize %>, into the
-      <%= @target_cohort_start_year %> to <%= @target_cohort_start_year + 1 %> year to continue training.
     </p>
 
     <div class="govuk-inset-text">
