@@ -13,6 +13,8 @@ module EarlyCareerTeachers
 
         create_teacher_profile
 
+        raise ParticipantProfileExistsError if participant_profile_exists?
+
         profile = if year_2020
                     ParticipantProfile::ECT.create!({
                       teacher_profile:,
@@ -20,8 +22,6 @@ module EarlyCareerTeachers
                       participant_identity: Identity::Create.call(user:),
                     }.merge(ect_attributes))
                   else
-                    raise ParticipantProfileExistsError if participant_profile_exists?
-
                     ParticipantProfile::ECT.create!({
                       teacher_profile:,
                       schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),

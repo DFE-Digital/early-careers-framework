@@ -152,18 +152,36 @@ RSpec.describe Mentors::Create, :with_default_schedules do
   end
 
   context "when the user has an active participant profile" do
-    before do
-      create(:ecf_participant_profile, teacher_profile: create(:teacher_profile, user:))
+    context "when the profile is attached to teacher_profile" do
+      before do
+        create(:mentor_participant_profile, teacher_profile: create(:teacher_profile, user:))
+      end
+
+      it "raises an error" do
+        expect {
+          described_class.call(
+            email: user.email,
+            full_name: Faker::Name.name,
+            school_cohort:,
+          )
+        }.to raise_error(described_class::ParticipantProfileExistsError)
+      end
     end
 
-    it "does not update the users name" do
-      expect {
-        described_class.call(
-          email: user.email,
-          full_name: Faker::Name.name,
-          school_cohort:,
-        )
-      }.not_to change { user.reload.full_name }
+    context "when the profile is attached to participant identities" do
+      before do
+        create(:mentor_participant_profile).update!(participant_identity: create(:participant_identity, user:))
+      end
+
+      it "raises an error" do
+        expect {
+          described_class.call(
+            email: user.email,
+            full_name: Faker::Name.name,
+            school_cohort:,
+          )
+        }.to raise_error(described_class::ParticipantProfileExistsError)
+      end
     end
   end
 
