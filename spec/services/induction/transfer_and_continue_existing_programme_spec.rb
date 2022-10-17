@@ -44,6 +44,26 @@ RSpec.describe Induction::TransferAndContinueExistingProgramme, :with_default_sc
       expect { service_call }.to change { participant_profile.induction_records.count }.by 1
     end
 
+    context "when there is no school cohort at the new school" do
+      let(:school_2) { create(:school) }
+      let!(:school_cohort_2) { nil }
+      let!(:mentor_profile_2) { nil }
+
+      it "creates a new school cohort" do
+        expect { service_call }.to change { school_2.school_cohorts.count }.by(1)
+      end
+
+      it "sets the induction programme choice on the school cohort" do
+        service_call
+        expect(school_2.school_cohorts.first).to be_full_induction_programme
+      end
+
+      it "sets the default induction programme on the school cohort to be the new programme" do
+        service_call
+        expect(school_2.school_cohorts.first.default_induction_programme).to eq school_2.school_cohorts.first.induction_programmes.first
+      end
+    end
+
     context "when the original programme is a FIP" do
       it "creates a relationship partnership at the transferring in school" do
         expect { service_call }.to change { school_2.partnerships.relationships.count }.by 1

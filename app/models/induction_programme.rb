@@ -38,6 +38,14 @@ class InductionProgramme < ApplicationRecord
     delivery_partner&.name unless partnership&.challenged?
   end
 
+  def same_induction_as?(other)
+    school_cohort.cohort == other.school_cohort.cohort &&
+      training_programme == other.training_programme &&
+      lead_provider == other.lead_provider &&
+      delivery_partner == other.delivery_partner &&
+      core_induction_programme == other.core_induction_programme
+  end
+
 private
 
   def touch_induction_records

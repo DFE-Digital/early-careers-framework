@@ -76,15 +76,34 @@ class Admin::SchoolTransferForm
   end
 
   def cannot_transfer_to_new_school?
-    cannot_transfer_reason.present?
+    no_programmes_to_transfer_into_or_continue?
   end
 
   def cannot_transfer_reason
-    if new_school_cohort.blank?
-      "they have not chosen a programme for #{participant_cohort.start_year}"
-    elsif new_school_cohort.induction_programmes.full_induction_programme.empty? && new_school_cohort.induction_programmes.core_induction_programmes.empty?
-      "they do not have any FIP or CIP induction programmes for #{participant_cohort.start_year}"
+    if no_programmes_to_transfer_into_or_continue?
+      "they have no programmes available for #{participant_cohort.start_year} and there is no existing programme to continue"
     end
+  end
+
+  def skip_transfer_options?
+    # are there any options to select for the transfer
+    programme_count = new_school_programmes&.count || 0
+
+    choice = if latest_induction_record.present?
+               if programme_count.zero?
+                 # no programmes at the new school so we'll treat this as continuing existing programme
+                 "continue"
+               elsif programme_count == 1 && latest_induction_record.induction_programme.same_induction_as?(new_school_programme)
+                 # the only programme at the school is the same as the current programme so transfer to that one
+                 new_school_programme.id
+               end
+             elsif programme_count == 1
+               # not sure we can get here currently via the UI but if the participant does not have any induction records
+               # then choose the only one available at the school
+               new_school_programme.id
+             end
+    @transfer_choice = choice
+    choice.present?
   end
 
   def transfer_choice_description
@@ -97,9 +116,12 @@ class Admin::SchoolTransferForm
 
   def transfer_options
     programmes = []
-    programmes << new_school_cohort.default_induction_programme if new_school_cohort.default_induction_programme.present?
 
-    new_school_cohort.induction_programmes.where.not(id: new_school_cohort.default_induction_programme).each { |ip| programmes << ip }
+    if new_school_cohort.present?
+      programmes << new_school_cohort.default_induction_programme if new_school_cohort.default_induction_programme.present?
+
+      new_school_programmes.where.not(id: new_school_cohort.default_induction_programme).each { |ip| programmes << ip }
+    end
 
     programmes.select { |ip| ip.full_induction_programme? || ip.core_induction_programme? }.map do |induction_programme|
       OpenStruct.new(id: induction_programme.id, description: make_programme_description(induction_programme))
@@ -144,8 +166,12 @@ private
     end
   end
 
+  def no_programmes_to_transfer_into_or_continue?
+    latest_induction_record.blank? && (new_school_cohort.blank? || new_school_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?)
+  end
+
   def make_programme_description(induction_programme)
-    is_default = induction_programme.id == new_school_cohort.default_induction_programme&.id
+    is_default = induction_programme.id == new_school_cohort&.default_induction_programme&.id
 
     if induction_programme.full_induction_programme?
       "FIP #{partnership_details(induction_programme)} #{is_default ? '(cohort default)' : ''}"
@@ -156,6 +182,14 @@ private
 
   def new_school_exists
     errors.add(:new_school_urn, :invalid, urn: new_school_urn) if new_school.nil?
+  end
+
+  def new_school_programmes
+    new_school_cohort&.induction_programmes
+  end
+
+  def new_school_programme
+    new_school_programmes&.first
   end
 
   def start_date_is_valid

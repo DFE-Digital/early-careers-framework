@@ -12,18 +12,27 @@ class Induction::CreateRelationship < BaseService
                                    cohort: school_cohort.cohort,
                                    lead_provider:,
                                    delivery_partner:) do |partnership|
-      partnership.relationship = true
-      partnership.challenge_deadline = Time.zone.now
+      partnership.relationship = !treat_as_partnership
+      partnership.challenge_deadline = challenge_deadline
     end
   end
 
 private
 
-  attr_reader :school_cohort, :lead_provider, :delivery_partner
+  attr_reader :school_cohort, :lead_provider, :delivery_partner, :treat_as_partnership
 
-  def initialize(school_cohort:, lead_provider:, delivery_partner: nil)
+  def initialize(school_cohort:, lead_provider:, delivery_partner: nil, treat_as_partnership: false)
     @school_cohort = school_cohort
     @lead_provider = lead_provider
     @delivery_partner = delivery_partner
+    @treat_as_partnership = treat_as_partnership
+  end
+
+  def challenge_deadline
+    if treat_as_partnership
+      Partnerships::Report::CHALLENGE_WINDOW.from_now
+    else
+      Time.zone.now
+    end
   end
 end
