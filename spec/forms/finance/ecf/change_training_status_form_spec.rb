@@ -11,7 +11,7 @@ RSpec.describe Finance::ECF::ChangeTrainingStatusForm, :with_default_schedules, 
     let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
 
     it { is_expected.to validate_inclusion_of(:training_status).in_array(ParticipantProfile.training_statuses.values) }
-    it { is_expected.to validate_inclusion_of(:reason).in_array(Participants::Defer::ECF.reasons) }
+    it { is_expected.to validate_inclusion_of(:reason).in_array(ParticipantProfile::DEFERRAL_REASONS) }
 
     describe ".save" do
       context "valid params" do
@@ -37,7 +37,7 @@ RSpec.describe Finance::ECF::ChangeTrainingStatusForm, :with_default_schedules, 
     let(:participant_profile)      { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
 
     it { is_expected.to validate_inclusion_of(:training_status).in_array(ParticipantProfile.training_statuses.values) }
-    it { is_expected.to validate_inclusion_of(:reason).in_array(Participants::Defer::ECF.reasons) }
+    it { is_expected.to validate_inclusion_of(:reason).in_array(ParticipantProfile::DEFERRAL_REASONS) }
 
     describe ".save" do
       context "valid params" do

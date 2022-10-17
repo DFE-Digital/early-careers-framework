@@ -130,7 +130,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
     let(:participant) { npq_application }
     let(:attributes) do
       {
-        reason: Participants::Defer::NPQ.reasons.sample,
+        reason: ParticipantProfile::DEFERRAL_REASONS.sample,
         course_identifier: npq_application.npq_course.identifier,
       }
     end
@@ -144,14 +144,12 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
     let(:participant) { npq_application }
     let(:attributes) { { course_identifier: npq_application.npq_course.identifier } }
     before do
-      Participants::Defer::NPQ.call(
-        params: {
-          participant_id: npq_application.participant_identity.external_identifier,
-          reason: Participants::Defer::NPQ.reasons.sample,
-          course_identifier: npq_application.npq_course.identifier,
-          cpd_lead_provider:,
-        },
-      )
+      DeferParticipant.new(
+        participant_id: npq_application.participant_identity.external_identifier,
+        reason: ParticipantProfile::DEFERRAL_REASONS.sample,
+        course_identifier: npq_application.npq_course.identifier,
+        cpd_lead_provider:,
+      ).call
     end
   end
 

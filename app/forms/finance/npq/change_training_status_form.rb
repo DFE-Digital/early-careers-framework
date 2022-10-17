@@ -7,7 +7,7 @@ module Finance
       include ActiveModel::Attributes
 
       REASON_OPTIONS = {
-        "deferred" => Participants::Defer::NPQ.reasons,
+        "deferred" => ParticipantProfile::DEFERRAL_REASONS,
         "withdrawn" => Participants::Withdraw::NPQ.reasons,
       }.freeze
 
@@ -34,16 +34,21 @@ module Finance
         return false unless valid?
         return true if status_unchanged?
 
-        klass = "Participants::#{action_class_name}::NPQ".constantize
-        klass.call(
-          params: {
-            cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
-            course_identifier: participant_profile.npq_application.npq_course.identifier,
-            participant_id: participant_profile.participant_identity.external_identifier,
-            reason:,
-            force_training_status_change: true,
-          },
-        )
+        params = {
+          cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
+          course_identifier: participant_profile.npq_application.npq_course.identifier,
+          participant_id: participant_profile.participant_identity.external_identifier,
+          reason:,
+        }
+
+        if training_status == "deferred"
+          DeferParticipant.new(params).call
+        else
+          klass = "Participants::#{action_class_name}::NPQ".constantize
+          klass.call(
+            params: params.merge(force_training_status_change: true),
+          )
+        end
 
         true
       end
@@ -62,8 +67,6 @@ module Finance
         case training_status
         when "active"
           "Resume"
-        when "deferred"
-          "Defer"
         when "withdrawn"
           "Withdraw"
         else

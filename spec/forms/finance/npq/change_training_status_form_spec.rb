@@ -8,7 +8,7 @@ RSpec.describe Finance::NPQ::ChangeTrainingStatusForm, :with_default_schedules, 
     let(:params) { { participant_profile:, training_status: "deferred", reason: "bereavement" } }
 
     it { is_expected.to validate_inclusion_of(:training_status).in_array(ParticipantProfile.training_statuses.values) }
-    it { is_expected.to validate_inclusion_of(:reason).in_array(Participants::Defer::NPQ.reasons) }
+    it { is_expected.to validate_inclusion_of(:reason).in_array(ParticipantProfile::DEFERRAL_REASONS) }
 
     describe ".save" do
       context "valid params" do
