@@ -56,21 +56,13 @@ private
   def not_already_deferred
     return unless participant_profile
 
-    if participant_profile.ecf?
-      errors.add(:participant_profile, I18n.t(:invalid_deferral)) if relevant_induction_record&.training_status_deferred?
-    elsif participant_profile.training_status_deferred?
-      errors.add(:participant_profile, I18n.t(:invalid_deferral))
-    end
+    errors.add(:participant_profile, I18n.t(:invalid_deferral)) if participant_profile.deferred_for?(cpd_lead_provider:)
   end
 
   def not_already_withdrawn
     return unless participant_profile
 
-    if participant_profile.ecf?
-      errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if relevant_induction_record&.training_status_withdrawn?
-    elsif participant_profile.training_status_withdrawn?
-      errors.add(:participant_profile, I18n.t(:invalid_withdrawal))
-    end
+    errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
   end
 
   def relevant_induction_record
