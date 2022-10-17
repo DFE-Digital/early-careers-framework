@@ -26,4 +26,44 @@ RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
       end
     end
   end
+
+  describe "#withdrawn_for", :with_default_schedules do
+    let(:cpd_lead_provider) { subject.npq_application.npq_lead_provider.cpd_lead_provider }
+
+    context "when participant is withdrawn" do
+      subject { create(:npq_participant_profile, :withdrawn) }
+
+      it "returns true" do
+        expect(subject.reload.withdrawn_for?(cpd_lead_provider:)).to be true
+      end
+    end
+
+    context "when participant is not withdrawn" do
+      subject { create(:npq_participant_profile) }
+
+      it "returns false" do
+        expect(subject.reload.withdrawn_for?(cpd_lead_provider:)).to be false
+      end
+    end
+  end
+
+  describe "#deferred_for", :with_default_schedules do
+    let(:cpd_lead_provider) { subject.npq_application.npq_lead_provider.cpd_lead_provider }
+
+    context "when participant is deferred" do
+      subject { create(:npq_participant_profile, :deferred) }
+
+      it "returns true" do
+        expect(subject.reload.deferred_for?(cpd_lead_provider:)).to be true
+      end
+    end
+
+    context "when participant is not deferred" do
+      subject { create(:npq_participant_profile) }
+
+      it "returns false" do
+        expect(subject.reload.deferred_for?(cpd_lead_provider:)).to be false
+      end
+    end
+  end
 end

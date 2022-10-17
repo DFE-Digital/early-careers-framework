@@ -96,6 +96,14 @@ class ParticipantProfile < ApplicationRecord
         .schedule
     end
 
+    def withdrawn_for?(cpd_lead_provider:)
+      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_withdrawn?
+    end
+
+    def deferred_for?(cpd_lead_provider:)
+      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_deferred?
+    end
+
   private
 
     def update_analytics
