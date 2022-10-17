@@ -3,19 +3,15 @@
 module EarlyCareerTeachers
   class Create < BaseService
     include SchoolCohortDelegator
+    ParticipantProfileExistsError = Class.new(RuntimeError)
 
     def call
       profile = nil
       ActiveRecord::Base.transaction do
         # Retain the original name if the user already exists
-        user = User.find_or_create_by!(email:) do |ect|
-          ect.full_name = full_name
-        end
         user.update!(full_name:) unless user.participant_profiles&.active_record&.any? || user.npq_registered?
 
-        teacher_profile = TeacherProfile.find_or_create_by!(user:) do |teacher|
-          teacher.school = school_cohort.school
-        end
+        create_teacher_profile
 
         profile = if year_2020
                     ParticipantProfile::ECT.create!({
@@ -24,6 +20,8 @@ module EarlyCareerTeachers
                       participant_identity: Identity::Create.call(user:),
                     }.merge(ect_attributes))
                   else
+                    raise ParticipantProfileExistsError if participant_profile_exists?
+
                     ParticipantProfile::ECT.create!({
                       teacher_profile:,
                       schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
@@ -76,8 +74,25 @@ module EarlyCareerTeachers
       }
     end
 
+    def teacher_profile
+      @teacher_profile ||= TeacherProfile.find_or_create_by!(user:) do |teacher|
+        teacher.school = school_cohort.school
+      end
+    end
+    alias_method :create_teacher_profile, :teacher_profile
+
+    def user
+      @user ||= User.find_or_create_by!(email:) do |ect|
+        ect.full_name = full_name
+      end
+    end
+
     def mentor_profile
       ParticipantProfile::Mentor.find(mentor_profile_id) if mentor_profile_id.present?
+    end
+
+    def participant_profile_exists?
+      teacher_profile.participant_profiles.ects.exists? || user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::ECT" }).exists?
     end
   end
 end

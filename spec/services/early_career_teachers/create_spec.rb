@@ -18,8 +18,8 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         mentor_profile_id: mentor_profile.id,
       )
     }.to change { ParticipantProfile::ECT.count }.by(1)
-     .and not_change { User.count }
-     .and change { TeacherProfile.count }.by(1)
+           .and not_change { User.count }
+                  .and change { TeacherProfile.count }.by(1)
   end
 
   it "uses the existing teacher profile record" do
@@ -30,8 +30,8 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         school_cohort:,
       )
     }.to change { ParticipantProfile::ECT.count }.by(1)
-     .and not_change { User.count }
-     .and not_change { TeacherProfile.count }
+           .and not_change { User.count }
+                  .and not_change { TeacherProfile.count }
   end
 
   it "creates a new user and teacher profile" do
@@ -42,8 +42,8 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         school_cohort:,
       )
     }.to change { ParticipantProfile::ECT.count }.by(1)
-    .and change { User.count }.by(1)
-    .and change { TeacherProfile.count }.by(1)
+           .and change { User.count }.by(1)
+                  .and change { TeacherProfile.count }.by(1)
   end
 
   it "updates the users name" do
@@ -160,18 +160,36 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
   end
 
   context "when the user has an active participant profile" do
-    before do
-      create(:ect_participant_profile, teacher_profile: create(:teacher_profile, user:))
+    context "when the profile is attached to teacher_profile" do
+      before do
+        create(:ect_participant_profile, teacher_profile: create(:teacher_profile, user:))
+      end
+
+      it "raises an error" do
+        expect {
+          described_class.call(
+            email: user.email,
+            full_name: Faker::Name.name,
+            school_cohort:,
+          )
+        }.to raise_error(described_class::ParticipantProfileExistsError)
+      end
     end
 
-    it "does not update the users name" do
-      expect {
-        described_class.call(
-          email: user.email,
-          full_name: Faker::Name.name,
-          school_cohort:,
-        )
-      }.not_to change { user.reload.full_name }
+    context "when the profile is attached to teacher_profile" do
+      before do
+        create(:ect_participant_profile).update!(participant_identity: create(:participant_identity, user:))
+      end
+
+      it "raises an error" do
+        expect {
+          described_class.call(
+            email: user.email,
+            full_name: Faker::Name.name,
+            school_cohort:,
+          )
+        }.to raise_error(described_class::ParticipantProfileExistsError)
+      end
     end
   end
 
@@ -216,6 +234,6 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
         mentor_profile_id: mentor_profile.id,
       )
     }.to have_enqueued_job(Analytics::UpsertECFParticipantProfileJob)
-      .with(participant_profile: instance_of(ParticipantProfile::ECT))
+           .with(participant_profile: instance_of(ParticipantProfile::ECT))
   end
 end
