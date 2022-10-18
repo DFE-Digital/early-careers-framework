@@ -7,6 +7,7 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules do
   let(:statement)         { create(:npq_statement, cpd_lead_provider:) }
 
   let(:participant_profile)       { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
+  let(:participant_identity)      { participant_profile.participant_identity }
   let!(:participant_declaration)  { travel_to(statement.deadline_date) { create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:) } }
 
   let(:other_statement)                { create(:npq_statement, cpd_lead_provider:, deadline_date: statement.deadline_date + 1.day) }
@@ -23,6 +24,37 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules do
   describe "#participant_declarations" do
     it "includes the declaration" do
       expect(query.participant_declarations).to eq([participant_declaration])
+    end
+
+    it "surfaces the preferred external identifier" do
+      participant_declarations = query.participant_declarations
+      expect(participant_declarations.first.participant_id).to eq(participant_identity.external_identifier)
+    end
+
+    context "with multiple participant identities" do
+      let(:new_participant_identity) do
+        create(
+          :participant_identity,
+          :npq_origin,
+          user: participant_profile.user,
+          external_identifier: SecureRandom.uuid,
+          email: "second_email@example.com",
+        )
+      end
+      before do
+        # We ideally should not update the existing participant identity on a profile when a new one is added
+        # however, some of the data has this incorrect shape, so we should account for it.
+        participant_profile.update!(participant_identity: new_participant_identity)
+      end
+
+      it "includes the declaration" do
+        expect(query.participant_declarations).to eq([participant_declaration])
+      end
+
+      it "surfaces the preferred external identifier" do
+        participant_declarations = query.participant_declarations
+        expect(participant_declarations.first.participant_id).to eq(participant_identity.external_identifier)
+      end
     end
   end
 end
