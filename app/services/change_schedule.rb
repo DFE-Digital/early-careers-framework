@@ -4,7 +4,6 @@ class ChangeSchedule
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Validations::Callbacks
-  include Participants::ProfileAttributes
 
   attribute :cpd_lead_provider
   attribute :participant_id
@@ -17,6 +16,11 @@ class ChangeSchedule
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
 
+  validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
+  validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
+  validates :participant_id, format: { with: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, message: I18n.t("errors.participant_id.invalid") }, allow_blank: true
+  validates :cpd_lead_provider, presence: { message: I18n.t(:missing_cpd_lead_provider) }
+  validate :participant_has_user_profile
   validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
@@ -42,7 +46,11 @@ class ChangeSchedule
       end
     end
 
-    relevant_induction_record_for_profile(participant_profile)
+    participant_profile.record_to_serialize_for(lead_provider: cpd_lead_provider.lead_provider)
+  end
+
+  def participant_identity
+    @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
   end
 
   def participant_profile
@@ -52,6 +60,10 @@ class ChangeSchedule
                                  course_identifier:,
                                  cpd_lead_provider:,
                                )
+  end
+
+  def schedule
+    participant_profile&.schedule_for(cpd_lead_provider:)
   end
 
   def alias_search_query
@@ -67,13 +79,11 @@ class ChangeSchedule
       .first
   end
 
-  def valid_courses
-    ValidCoursesResolver.call(
-      course_identifier:,
-    )
-  end
-
 private
+
+  def user
+    @user ||= participant_identity&.user
+  end
 
   def cohort
     @cohort ||= if super
@@ -86,20 +96,13 @@ private
   def relevant_induction_record
     return if user.blank? || participant_profile.blank?
 
-    participant_profile
-      .induction_records
-      .joins(induction_programme: { partnership: [:lead_provider] })
-      .where(induction_programme: { partnerships: { lead_provider: } })
-      .order(created_at: :asc)
-      .last
+    @relevant_induction_record ||= participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
 
   def not_already_withdrawn
-    if ParticipantProfile::ECF::COURSE_IDENTIFIERS.include?(course_identifier)
-      errors.add(:participant_id, I18n.t(:withdrawn_participant)) if relevant_induction_record&.training_status_withdrawn?
-    elsif ParticipantProfile::NPQ::COURSE_IDENTIFIERS.include?(course_identifier)
-      errors.add(:participant_id, I18n.t(:withdrawn_participant)) if participant_profile_state&.withdrawn?
-    end
+    return unless participant_profile
+
+    errors.add(:participant_id, I18n.t(:withdrawn_participant)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
   end
 
   def validate_new_schedule_valid_with_existing_declarations
@@ -170,5 +173,15 @@ private
         end
       end
     end
+  end
+
+  def participant_has_user_profile
+    return if errors.any?
+
+    errors.add(:participant_id, I18n.t(:invalid_participant)) if user_profile.blank?
+  end
+
+  def relevant_induction_record_for_profile(participant_profile)
+    participant_profile.relevant_induction_record(lead_provider:)
   end
 end

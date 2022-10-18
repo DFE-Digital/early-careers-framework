@@ -49,18 +49,5 @@ module Api
     def invalid_transition(exception)
       render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:invalid_transition), params: exception).call }, status: :unprocessable_entity
     end
-
-    def log_schema_validation_results
-      errors = SchemaValidator.call(raw_event: request.raw_post)
-
-      if errors.blank?
-        Rails.logger.info "Passed schema validation"
-      else
-        Rails.logger.info "Failed schema validation for #{request.raw_post}"
-        Rails.logger.info errors
-      end
-    rescue StandardError => e
-      Rails.logger.info "Error on schema validation, #{e}"
-    end
   end
 end

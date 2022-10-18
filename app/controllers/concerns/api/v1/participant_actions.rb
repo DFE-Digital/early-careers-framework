@@ -23,9 +23,7 @@ module Api
       def change_schedule
         service = ChangeSchedule.new(params_for_recorder)
 
-        log_schema_validation_results
-
-        render_from_service(service, ParticipantFromInductionRecordSerializer)
+        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
       end
 
     private

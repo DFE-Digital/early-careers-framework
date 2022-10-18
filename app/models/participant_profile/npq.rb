@@ -101,8 +101,12 @@ class ParticipantProfile < ApplicationRecord
       ParticipantProfile::NPQPolicy
     end
 
-    def relevant_induction_record(*)
-      nil
+    def withdrawn_for?(*)
+      training_status_withdrawn?
+    end
+
+    def record_to_serialize_for(*)
+      user
     end
 
   private

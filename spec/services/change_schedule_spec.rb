@@ -107,7 +107,7 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
       cpd_lead_provider:,
       participant_id:,
       course_identifier:,
-      schedule_identifier:
+      schedule_identifier:,
     }
   end
 
