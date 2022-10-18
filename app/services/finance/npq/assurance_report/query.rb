@@ -48,7 +48,7 @@ module Finance
             JOIN npq_applications a             ON a.id = pp.id
             JOIN npq_courses c                  ON c.id = a.npq_course_id
             JOIN participant_identities pi      ON pp.participant_identity_id = pi.id
-            JOIN users u                        ON u.id = pi.external_identifier
+            JOIN users u                        ON u.id = pi.user_id
             JOIN teacher_profiles tp            ON tp.id = pp.teacher_profile_id
             JOIN schedules sch                  ON sch.id = pp.schedule_id
             LEFT OUTER JOIN schools sc          ON sc.urn = pp.school_urn
