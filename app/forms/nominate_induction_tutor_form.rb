@@ -45,7 +45,7 @@ class NominateInductionTutorForm
   end
 
   def full_name_to_display
-    full_name.split("-").map(&:titleize).join("-") << (full_name[-1..].downcase == "s" ? "’" : "’s")
+    full_name + (full_name[-1..].downcase == "s" ? "’" : "’s")
   end
 
 private

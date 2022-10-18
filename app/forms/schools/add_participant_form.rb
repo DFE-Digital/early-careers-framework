@@ -322,7 +322,7 @@ module Schools
     end
 
     def display_name
-      type == :self ? "your" : "#{full_name&.titleize}’s"
+      type == :self ? "your" : "#{full_name}’s"
     end
 
     def formatted_nino
