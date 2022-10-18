@@ -17,6 +17,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
     it { is_expected.to permit_action(:update_name) }
     it { is_expected.to permit_action(:edit_email) }
     it { is_expected.to permit_action(:update_email) }
+    it { is_expected.to permit_action(:update_validation_data) }
 
     context "after the participant has provided validation data" do
       let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
@@ -28,6 +29,7 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
+      it { is_expected.to forbid_action(:update_validation_data) }
     end
 
     context "when the participant is found to be ineligible" do
@@ -40,6 +42,31 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_email) }
       it { is_expected.to permit_action(:edit_start_term) }
       it { is_expected.to permit_action(:update_start_term) }
+      it { is_expected.to permit_action(:update_validation_data) }
+    end
+
+    context "when the participant has been withdrawn by the provider" do
+      let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
+
+      before do
+        Participants::Withdraw::EarlyCareerTeacher.new(
+          params: {
+            participant_id: participant_profile.teacher_profile.user_id,
+            cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
+            reason: "other",
+            course_identifier: "ecf-induction",
+          },
+        ).call
+      end
+
+      it { is_expected.to forbid_action(:withdraw_record) }
+      it { is_expected.to permit_action(:edit_name) }
+      it { is_expected.to permit_action(:update_name) }
+      it { is_expected.to permit_action(:edit_email) }
+      it { is_expected.to permit_action(:update_email) }
+      it { is_expected.to permit_action(:edit_start_term) }
+      it { is_expected.to permit_action(:update_start_term) }
+      it { is_expected.to forbid_action(:update_validation_data) }
     end
 
     context "with a declaration" do

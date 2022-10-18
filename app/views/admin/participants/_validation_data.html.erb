@@ -1,38 +1,49 @@
+<% can_be_updated = policy(validation_data.participant_profile).update_validation_data? %>
+
 <%= govuk_summary_list(actions: true) do |sl|
   sl.row do |row|
     row.key(text: "Full name")
     row.value(text: validation_data.full_name)
-    row.action(
-      href: full_name_admin_participant_validation_data_path(validation_data.participant_profile),
-      visually_hidden_text: "name"
-    )
+
+    if can_be_updated
+      row.action(
+        href: full_name_admin_participant_validation_data_path(validation_data.participant_profile),
+        visually_hidden_text: "name"
+      )
+    end
   end
 
   sl.row do |row|
     row.key(text: "Teacher Reference Number (TRN)")
     row.value(text: validation_data.trn)
-    row.action(
-      href: trn_admin_participant_validation_data_path(validation_data.participant_profile),
-      visually_hidden_text: "teacher reference number"
-    )
+    if can_be_updated
+      row.action(
+        href: trn_admin_participant_validation_data_path(validation_data.participant_profile),
+        visually_hidden_text: "teacher reference number"
+      )
+    end
   end
 
   sl.row do |row|
     row.key(text: "Date of birth")
     row.value(text: validation_data.date_of_birth&.to_s(:govuk))
-    row.action(
-      href: date_of_birth_admin_participant_validation_data_path(validation_data.participant_profile),
-      visually_hidden_text: "date of birth"
-    )
+    if can_be_updated
+      row.action(
+        href: date_of_birth_admin_participant_validation_data_path(validation_data.participant_profile),
+        visually_hidden_text: "date of birth"
+      )
+    end
   end
 
   sl.row do |row|
     row.key(text: "National Insurance Number")
     row.value(text: validation_data.nino)
-    row.action(
-      href: nino_admin_participant_validation_data_path(validation_data.participant_profile),
-      visually_hidden_text: "National Insurance number"
-    )
+    if can_be_updated
+      row.action(
+        href: nino_admin_participant_validation_data_path(validation_data.participant_profile),
+        visually_hidden_text: "National Insurance number"
+      )
+    end
   end
 end %>
 
@@ -102,4 +113,4 @@ end %>
   <% button_label = "Validate details" %>
 <% end %>
 
-<%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(validation_data.participant_profile) %>
+<%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(validation_data.participant_profile) if can_be_updated %>

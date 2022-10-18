@@ -32,6 +32,10 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
     user.induction_coordinator? && same_school?
   end
 
+  def update_validation_data?
+    admin? && record.training_status_active? && (record.ecf_participant_eligibility.blank? || !record.ecf_participant_eligibility.eligible_status?)
+  end
+
   alias_method :edit_start_term?, :update_start_term?
 
   def withdraw_record?

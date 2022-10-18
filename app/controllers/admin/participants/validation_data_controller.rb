@@ -4,6 +4,7 @@ module Admin::Participants
   class ValidationDataController < Admin::BaseController
     before_action :load_participant_profile
     before_action :load_validation_data_form, except: :validate_details
+    before_action :check_can_update_validation_data, if: -> { request.put? || request.post? }
     before_action :validate_save_and_redirect, except: :validate_details
 
     def full_name; end
@@ -82,6 +83,13 @@ module Admin::Participants
 
     def current_action
       action_name.to_sym
+    end
+
+    def check_can_update_validation_data
+      unless policy(@participant_profile).update_validation_data?
+        set_important_message(content: "You cannot update the validation data for this participant")
+        redirect_to validation_page
+      end
     end
 
     def step_valid?
