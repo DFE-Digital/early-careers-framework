@@ -82,25 +82,39 @@ RSpec.describe Induction::ChangePartnership do
     context "when the default induction programme is not a FIP" do
       let(:induction_programme) { create(:induction_programme, :cip, school_cohort:) }
 
-      it "does not create a new induction_programme" do
+      it "creates a new induction_programme" do
         expect {
           service.call(school_cohort:,
                        partnership: new_partnership)
-        }.not_to change { InductionProgramme.count }
+        }.to change { InductionProgramme.count }
       end
 
-      it "does not set the partnership on the existing programme" do
+      it "sets the partnership on the new programme" do
         service.call(school_cohort:,
                      partnership: new_partnership)
 
-        expect(induction_programme.partnership).to be_nil
+        expect(school_cohort.default_induction_programme.partnership).to eq new_partnership
       end
 
-      it "does not change the default induction programme for the school cohort" do
+      it "changes the default induction programme for the school cohort" do
         service.call(school_cohort:,
                      partnership: new_partnership)
 
-        expect(school_cohort.default_induction_programme).to eq induction_programme
+        expect(school_cohort.default_induction_programme).to eq school_cohort.induction_programmes.full_induction_programme.first
+      end
+
+      it "sets the school cohort choice to FIP" do
+        service.call(school_cohort:,
+                     partnership: new_partnership)
+
+        expect(school_cohort.reload).to be_full_induction_programme
+      end
+
+      it "migrates the participants to the new programme" do
+        service.call(school_cohort:,
+                     partnership: new_partnership)
+
+        expect(school_cohort.default_induction_programme.induction_records).to match_array [ect_profile.current_induction_record, mentor_profile.current_induction_record]
       end
     end
 

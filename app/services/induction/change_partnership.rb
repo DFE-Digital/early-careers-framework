@@ -28,6 +28,8 @@ class Induction::ChangePartnership < BaseService
           school_cohort.update!(default_induction_programme: programme)
         end
       end
+    else
+      Induction::SetCohortInductionProgramme.call(school_cohort:, programme_choice: "full_induction_programme")
     end
   end
 

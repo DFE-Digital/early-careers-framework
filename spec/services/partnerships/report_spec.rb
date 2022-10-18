@@ -91,8 +91,22 @@ RSpec.describe Partnerships::Report do
       school_cohort.update!(default_induction_programme: induction_programme)
     end
 
-    it "does not add the partnership to the induction programme" do
-      expect(induction_programme.reload.partnership).to be_blank
+    it "adds a new induction programme" do
+      expect { result }.to change { school_cohort.induction_programmes.count }.by(1)
+    end
+
+    it "sets the school cohort choice to FIP" do
+      result
+      expect(school_cohort.reload).to be_full_induction_programme
+    end
+
+    it "sets the new induction programme as the default" do
+      result
+      expect(school_cohort.reload.default_induction_programme).to be_full_induction_programme
+    end
+
+    it "adds the partnership to the new induction programme" do
+      expect(result).to eq school_cohort.reload.default_induction_programme.partnership
     end
   end
 
@@ -140,66 +154,6 @@ RSpec.describe Partnerships::Report do
 
     it "does not create a school cohort" do
       expect { result }.not_to change { school.school_cohorts.count }
-    end
-  end
-
-  context "when the school has already signed up for CIP" do
-    before do
-      create(:school_cohort,
-             school:,
-             cohort:,
-             induction_programme_choice: "core_induction_programme")
-    end
-
-    it "marks partnership as pending" do
-      expect(result).to be_pending
-    end
-
-    it "schedules an activation job" do
-      expect { result }.to have_enqueued_job(
-        PartnershipActivationJob,
-      ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
-        .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
-    end
-  end
-
-  context "when the school has said they have no ECTs" do
-    before do
-      create(:school_cohort,
-             school:,
-             cohort:,
-             induction_programme_choice: "no_early_career_teachers")
-    end
-
-    it "marks partnership as pending" do
-      expect(result).to be_pending
-    end
-
-    it "schedules an activation job" do
-      expect { result }.to have_enqueued_job(
-        PartnershipActivationJob,
-      ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
-        .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
-    end
-  end
-
-  context "when the school has said they will design their own programme" do
-    before do
-      create(:school_cohort,
-             school:,
-             cohort:,
-             induction_programme_choice: "design_our_own")
-    end
-
-    it "marks partnership as pending" do
-      expect(result).to be_pending
-    end
-
-    it "schedules an activation job" do
-      expect { result }.to have_enqueued_job(
-        PartnershipActivationJob,
-      ).with(partnership: instance_of(Partnership), report_id: instance_of(String))
-        .at(Partnerships::Report::CHALLENGE_WINDOW.from_now)
     end
   end
 end
