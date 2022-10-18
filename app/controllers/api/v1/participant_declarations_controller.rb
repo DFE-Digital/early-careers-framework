@@ -80,19 +80,6 @@ module Api
           raise
         end
       end
-
-      def log_schema_validation_results
-        errors = SchemaValidator.call(raw_event: request.raw_post)
-
-        if errors.blank?
-          Rails.logger.info "Passed schema validation"
-        else
-          Rails.logger.info "Failed schema validation for #{request.raw_post}"
-          Rails.logger.info errors
-        end
-      rescue StandardError => e
-        Rails.logger.info "Error on schema validation, #{e}"
-      end
     end
   end
 end

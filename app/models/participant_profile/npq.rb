@@ -101,6 +101,10 @@ class ParticipantProfile < ApplicationRecord
       ParticipantProfile::NPQPolicy
     end
 
+    def relevant_induction_record(*)
+      nil
+    end
+
   private
 
     def push_profile_to_big_query
