@@ -4,17 +4,20 @@ RSpec.describe ParticipantDeclarations::FixNPQDeclaration, :with_default_schedul
   let(:cpd_lead_provider)       { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:ecf_statement)           { create(:ecf_statement, cpd_lead_provider:) }
   let(:npq_statement)           { create(:npq_statement, cpd_lead_provider:) }
-  let(:participant_declaration) { create(:ect_participant_declaration, :payable, cpd_lead_provider:) }
+  let(:participant_declaration) { create(:ect_participant_declaration, :eligible, cpd_lead_provider:) }
 
   before do
     travel_to ecf_statement.deadline_date { participant_declaration }
+
+    Statements::MarkAsPayable.new(ecf_statement).call
   end
 
   describe "#call" do
     it "moves the declaration to the NPQ statement and flip the type to NPQ" do
+      byebug
       pp ecf_statement
       pp npq_statement
-      pp participant_declaration.statement_line_items
+      pp participant_declaration.statement_line_items.first.statement.reload
       expect do
         described_class.new(ecf_statement, npq_statement).call(participant_declaration)
         pp Finance::StatementLineItem.all

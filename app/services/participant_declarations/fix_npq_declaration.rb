@@ -10,7 +10,6 @@ module ParticipantDeclarations
         participant_declaration.statement_line_items.first.update!(statement: npq_statement)
         participant_declaration.update!(type: "ParticipantDeclaration::NPQ")
       end
-      byebug
     end
 
   private
