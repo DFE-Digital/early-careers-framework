@@ -38,10 +38,6 @@ module Schools
       TeacherReferenceNumber.new(trn).formatted_trn
     end
 
-    def full_name_to_display
-      full_name << (full_name[-1..].downcase == "s" ? "’" : "’s")
-    end
-
     def schools_current_programme_choices
       [
         OpenStruct.new(id: "yes", name: "Yes"),

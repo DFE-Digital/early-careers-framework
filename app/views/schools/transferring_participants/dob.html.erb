@@ -1,4 +1,4 @@
-<% title = "What’s #{@transferring_participant_form.full_name_to_display } date of birth?" %>
+<% title = "What’s #{possessive_name(@transferring_participant_form.full_name) } date of birth?" %>
 
 <% content_for :title, title %>
 
@@ -6,7 +6,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <span class="govuk-caption-xl"><%= @school.name %></span>
         <h1 class="govuk-heading-xl"><%= title %></h1>
 

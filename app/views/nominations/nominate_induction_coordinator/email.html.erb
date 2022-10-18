@@ -12,7 +12,9 @@
         <%= form_for @nominate_induction_tutor_form, url: { action: :check_email }, method: :put do |f| %>
         <%= f.govuk_error_summary %>
             <div class="govuk-form-group">
-                <%= f.govuk_text_field(:email, label: { text: "What’s #{@nominate_induction_tutor_form.full_name_to_display} email address?",
+              <%= f.govuk_text_field(
+                :email,
+                label: { text: "What’s #{possessive_name(@nominate_induction_tutor_form.full_name)} email address?",
                 tag: "h1",
                 size: "xl" },
                 width: "two-thirds") do %>

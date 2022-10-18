@@ -1,10 +1,10 @@
-<% title = "What’s #{@transferring_participant_form.full_name_to_display} start date at your school?" %>
+<% title = "What’s #{possessive_name(@transferring_participant_form.full_name)} start date at your school?" %>
 <% content_for :title, title %>
 <% content_for :before_content, govuk_back_link(text: "Back", href: { action:  @transferring_participant_form.previous_step }) %>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <span class="govuk-caption-xl"><%= @school.name %></span>
         <h1 class="govuk-heading-xl"><%= title %></h1>
 
@@ -12,7 +12,7 @@
             <%= f.govuk_date_field :start_date,
                 start_date: true,
                 width: "two-thirds",
-                legend: { text: "#{@transferring_participant_form.full_name_to_display} start date", class: "govuk-visually-hidden" },
+                legend: { text: "#{possessive_name(@transferring_participant_form.full_name)} start date", class: "govuk-visually-hidden" },
                 hint: { text: "For example, 14 7 2023"}
             %>
             <%= f.govuk_submit "Continue" %>
