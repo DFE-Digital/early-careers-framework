@@ -93,7 +93,7 @@ RSpec.feature "FIP to FIP with same provider - Transfer a participant",
         and_lead_provider_reported_partnership "Original Lead Provider", "New SIT"
 
         and_sit_reported_participant "Original SIT",
-                                     "the Participant",
+                                     "The Participant",
                                      scenario.participant_trn,
                                      scenario.participant_dob,
                                      scenario.participant_email,
@@ -105,12 +105,12 @@ RSpec.feature "FIP to FIP with same provider - Transfer a participant",
           scenario.prior_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "Original Lead Provider",
                                                             scenario.participant_type,
-                                                            "the Participant",
+                                                            "The Participant",
                                                             declaration_type
           end
 
           when_school_uses_the_transfer_participant_wizard "New SIT",
-                                                           "the Participant",
+                                                           "The Participant",
                                                            scenario.participant_email,
                                                            scenario.participant_trn,
                                                            scenario.participant_dob,
@@ -119,7 +119,7 @@ RSpec.feature "FIP to FIP with same provider - Transfer a participant",
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "Original Lead Provider",
                                                             scenario.participant_type,
-                                                            "the Participant",
+                                                            "The Participant",
                                                             declaration_type
           end
 

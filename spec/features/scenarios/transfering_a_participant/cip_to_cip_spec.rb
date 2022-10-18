@@ -91,7 +91,7 @@ RSpec.feature "CIP to CIP - Transfer a participant",
         and_sit_at_pupil_premium_school_reported_programme "New SIT", "CIP"
 
         and_sit_reported_participant "Original SIT",
-                                     "the Participant",
+                                     "The Participant",
                                      scenario.participant_trn,
                                      scenario.participant_dob,
                                      scenario.participant_email,
@@ -101,7 +101,7 @@ RSpec.feature "CIP to CIP - Transfer a participant",
       context when_context(scenario) do
         before do
           when_developers_transfer_the_active_participant "New SIT",
-                                                          "the Participant"
+                                                          "The Participant"
 
           and_eligible_training_declarations_are_made_payable
         end

@@ -61,7 +61,7 @@ RSpec.shared_examples "FIP to CIP" do |scenario, participant_status|
        :aggregate_failures do
       given_i_sign_in_as_a_finance_user
 
-      then_the_finance_portal_shows_the_current_participant_record "the Participant",
+      then_the_finance_portal_shows_the_current_participant_record "The Participant",
                                                                    scenario.participant_type,
                                                                    "New SIT",
                                                                    "",
@@ -97,10 +97,10 @@ RSpec.shared_examples "FIP to CIP" do |scenario, participant_status|
   context "Then the Analytics Dashboards" do
     subject(:analytics_user) { "Analysts" }
 
-    it "is expected to report the correct participant details for \"the Participant\"",
+    it "is expected to report the correct participant details for \"The Participant\"",
        :aggregate_failures,
        skip: "Not yet implemented" do
-      is_expected.to report_correct_participant_details "the Participant"
+      is_expected.to report_correct_participant_details "The Participant"
     end
   end
 end

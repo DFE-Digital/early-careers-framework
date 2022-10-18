@@ -172,7 +172,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
     it "returns the name of the participant who's being added" do
       form.assign_attributes(type: :mentor, full_name: user.full_name)
-      expect(form.display_name).to eql("#{user.full_name.titleize}’s")
+      expect(form.display_name).to eql("#{user.full_name}’s")
     end
   end
 

@@ -5,7 +5,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl"> You cannot add <%= add_participant_form.full_name.titleize %></h1>
+    <h1 class="govuk-heading-xl"> You cannot add <%= add_participant_form.full_name %></h1>
 
     <% which_school = add_participant_form.existing_participant_profile_same_school? ? "this" : "a different" %>
     <p class="govuk-body">Our records show this person is already registered on an ECF-based training programme at <%= which_school %> school</p>

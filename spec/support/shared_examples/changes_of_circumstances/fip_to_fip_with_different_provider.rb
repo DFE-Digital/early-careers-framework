@@ -52,7 +52,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
 
       if scenario.duplicate_declarations.any?
         scenario.duplicate_declarations.each do |declaration_type|
-          expect(subject).to_not make_duplicate_training_declaration "the Participant",
+          expect(subject).to_not make_duplicate_training_declaration "The Participant",
                                                                      scenario.participant_type,
                                                                      declaration_type
         end
@@ -85,7 +85,7 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
        :aggregate_failures do
       given_i_sign_in_as_a_finance_user
 
-      then_the_finance_portal_shows_the_current_participant_record "the Participant",
+      then_the_finance_portal_shows_the_current_participant_record "The Participant",
                                                                    scenario.participant_type,
                                                                    "New SIT",
                                                                    "New Lead Provider",
@@ -130,10 +130,10 @@ RSpec.shared_examples "FIP to FIP with different provider" do |scenario, partici
   context "Then the Analytics Dashboards" do
     subject(:analytics_user) { "Analysts" }
 
-    it "is expected to report the correct participant details for \"the Participant\"",
+    it "is expected to report the correct participant details for \"The Participant\"",
        :aggregate_failures,
        skip: "Not yet implemented" do
-      is_expected.to report_correct_participant_details "the Participant"
+      is_expected.to report_correct_participant_details "The Participant"
     end
   end
 end

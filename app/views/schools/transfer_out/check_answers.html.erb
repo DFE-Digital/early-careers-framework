@@ -10,7 +10,7 @@
     <%= govuk_summary_list do |summary_list| %>
       <% summary_list.row do |row| %>
         <% row.key { "Name" } %>
-        <% row.value { @profile.user.full_name.titleize } %>
+        <% row.value { @profile.user.full_name } %>
         <% row.action(text: :none) %>
       <% end %>
 
