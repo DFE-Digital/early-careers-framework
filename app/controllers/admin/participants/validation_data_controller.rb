@@ -23,8 +23,9 @@ module Admin::Participants
 
     def validate_participant!
       return unless validation_data.present? && validation_data.can_validate_participant?
+
       ActiveRecord::Base.transaction do
-        @participant_profile.ecf_participant_eligibility&.destroy
+        @participant_profile.ecf_participant_eligibility&.destroy!
         # this returns either nil, false on failure or an ECFParticipantEligibility record on success
         Participants::ParticipantValidationForm.call(@participant_profile)
       end
@@ -42,7 +43,7 @@ module Admin::Participants
     def save_validation_data!
       if current_action == :nino
         nino = @validation_data_form.formatted_nino
-        validation_data.nino = nino.blank? ? nil : nino
+        validation_data.nino = nino.presence
       else
         validation_data[current_action] = @validation_data_form.send(current_action)
       end

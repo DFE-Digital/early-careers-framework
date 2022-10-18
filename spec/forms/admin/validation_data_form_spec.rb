@@ -38,7 +38,7 @@ RSpec.describe Admin::ValidationDataForm, type: :model do
       end
 
       it "checks that the date_of_birth is not before 1900" do
-        form.date_of_birth = Date.new(1899,12,31)
+        form.date_of_birth = Date.new(1899, 12, 31)
         expect(form.valid?(:date_of_birth)).to be false
         expect(form.errors[:date_of_birth]).to be_present
       end
