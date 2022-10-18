@@ -3,7 +3,6 @@ module Finance
     class Duplicate < ApplicationRecord
       self.table_name = "ecf_duplicates"
       self.primary_key = "id"
-      belongs_to :master_participant_profile, class_name: "ParticipantProfile::ECF"
       belongs_to :master_duplicate, class_name: "Finance::ECF::Duplicate", foreign_key: :master_participant_profile_id
       belongs_to :latest_induction_record, class_name: "InductionRecord"
 

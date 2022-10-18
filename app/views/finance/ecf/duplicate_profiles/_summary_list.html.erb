@@ -1,0 +1,40 @@
+<%= govuk_summary_list do |summary_list| %>
+  <% summary_list.row do |row| %>
+    <% row.key { "Cohort:" } %>
+    <% row.value { duplicate.cohort } %>
+  <% end %>
+  <% summary_list.row do |row| %>
+    <% row.key { "Schedule:" } %>
+    <% row.value { duplicate.schedule_identifier } %>
+  <% end%>
+  <% summary_list.row do |row| %>
+    <% row.key { "ID" } %>
+    <% row.value  { duplicate.participant_id } %>
+    <% row.action {} %>
+  <% end %>
+  <% summary_list.row do |row| %>
+    <% row.key    { "Induction status" } %>
+    <% row.value  { duplicate.induction_status } %>
+    <% row.action {} %>
+  <% end %>
+  <% summary_list.row do |row| %>
+    <% row.key    { "School" } %>
+    <% row.value  { duplicate.school_name } %>
+    <% row.action {} %>
+  <% end %>
+  <% summary_list.row do |row| %>
+    <% row.key    { "With lead provider school" } %>
+    <% row.value  { duplicate.provider_name } %>
+    <% row.action {} %>
+  <% end %>
+  <% summary_list.row do |row| %>
+    <% row.key    { "Starts on" } %>
+    <% row.value  { duplicate.start_date.to_date.to_s(:govuk) } %>
+    <% row.action {} %>
+  <% end %>
+  <% summary_list.row do |row| %>
+    <% row.key    { "Ends on" } %>
+    <% row.value  { duplicate.end_date&.to_date&.to_s(:govuk) } %>
+    <% row.action {} %>
+  <% end %>
+<% end %>
