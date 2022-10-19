@@ -1,5 +1,5 @@
 <% @participant_identities.each_with_index do |identity, i| %>
-  <h3><%= "Identity #{i + 1} (#{identity_label(identity)})" %></h3>
+  <h3><%= "Identity #{i + 1} (#{identity_transferred_label(identity)})" %></h3>
 
   <%= govuk_summary_list do |summary_list| %>
     <% summary_list.row do |row| %>
