@@ -1,0 +1,29 @@
+<h2 class="govuk-heading-m govuk-!-margin-top-9">
+  Identities
+</h2>
+
+<% identities.each_with_index do |identity, i| %>
+  <h3><%= "Identity #{i + 1} (#{identity_transferred_label(identity)})" %></h3>
+
+  <%= govuk_summary_list do |summary_list| %>
+    <% summary_list.row do |row| %>
+      <% row.key(text: "User ID / Participant ID" ) %>
+      <% row.value(text: tag.code(identity.user_id) ) %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key(text: "External ID" ) %>
+      <% row.value(text: tag.code(identity.external_identifier) ) %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key(text: "Email" ) %>
+      <% row.value(text: identity.email ) %>
+    <% end %>
+
+    <% summary_list.row do |row| %>
+      <% row.key(text: "Origin" ) %>
+      <% row.value(text: identity.origin ) %>
+    <% end %>
+  <% end %>
+<% end %>

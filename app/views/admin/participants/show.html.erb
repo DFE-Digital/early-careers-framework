@@ -13,6 +13,7 @@
     <% if @participant_profile.npq? %>
       <%= render Admin::NPQ::Participants::Details.new(profile: @participant_profile) %>
       <%= render Admin::NPQ::Participants::ValidationTasks.new(profile: @participant_profile) %>
+      <%= render Admin::NPQ::Participants::Identities.new(identities: @participant_identities) %>
     <% else %>
       <%= govuk_tabs(title: 'Contents') do |component| %>
         <% component.tab(label: 'Details') do %>
