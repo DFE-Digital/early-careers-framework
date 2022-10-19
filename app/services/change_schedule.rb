@@ -7,12 +7,10 @@ class ChangeSchedule
 
   attribute :cpd_lead_provider
   attribute :participant_id
-  attribute :reason
   attribute :course_identifier
   attribute :schedule_identifier
   attribute :cohort
 
-  alias_attribute :user_profile, :participant_profile
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
 
@@ -20,7 +18,7 @@ class ChangeSchedule
   validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
   validates :participant_id, format: { with: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, message: I18n.t("errors.participant_id.invalid") }, allow_blank: true
   validates :cpd_lead_provider, presence: { message: I18n.t(:missing_cpd_lead_provider) }
-  validate :participant_has_user_profile
+  validate :participant_has_participant_profile
   validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
@@ -60,10 +58,6 @@ class ChangeSchedule
                                  course_identifier:,
                                  cpd_lead_provider:,
                                )
-  end
-
-  def schedule
-    participant_profile&.schedule_for(cpd_lead_provider:)
   end
 
   def alias_search_query
@@ -127,18 +121,8 @@ private
   def validate_provider
     return if user.blank? || participant_profile.blank?
 
-    unless participant_profile && matches_lead_provider?
+    unless participant_profile && participant_profile.matches_lead_provider?(cpd_lead_provider:)
       errors.add(:participant_id, I18n.t(:invalid_participant))
-    end
-  end
-
-  def matches_lead_provider?
-    return unless course_identifier
-
-    if ParticipantProfile::ECF::COURSE_IDENTIFIERS.include?(course_identifier)
-      relevant_induction_record.present?
-    elsif ParticipantProfile::NPQ::COURSE_IDENTIFIERS.include?(course_identifier)
-      cpd_lead_provider == participant_profile&.npq_application&.npq_lead_provider&.cpd_lead_provider
     end
   end
 
@@ -175,13 +159,9 @@ private
     end
   end
 
-  def participant_has_user_profile
+  def participant_has_participant_profile
     return if errors.any?
 
-    errors.add(:participant_id, I18n.t(:invalid_participant)) if user_profile.blank?
-  end
-
-  def relevant_induction_record_for_profile(participant_profile)
-    participant_profile.relevant_induction_record(lead_provider:)
+    errors.add(:participant_id, I18n.t(:invalid_participant)) if participant_profile.blank?
   end
 end

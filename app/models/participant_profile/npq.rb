@@ -101,12 +101,8 @@ class ParticipantProfile < ApplicationRecord
       ParticipantProfile::NPQPolicy
     end
 
-    def withdrawn_for?(*)
-      training_status_withdrawn?
-    end
-
-    def record_to_serialize_for(*)
-      user
+    def matches_lead_provider?(cpd_lead_provider:)
+      cpd_lead_provider == npq_application&.npq_lead_provider&.cpd_lead_provider
     end
 
   private

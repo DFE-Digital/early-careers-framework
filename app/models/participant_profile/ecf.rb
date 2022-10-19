@@ -118,6 +118,10 @@ class ParticipantProfile < ApplicationRecord
       !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
     end
 
+    def matches_lead_provider?(cpd_lead_provider:)
+      relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider).present?
+    end
+
   private
 
     def update_analytics
