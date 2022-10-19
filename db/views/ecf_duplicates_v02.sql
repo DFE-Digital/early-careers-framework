@@ -1,6 +1,8 @@
 SELECT
   participant_identities.external_identifier AS participant_id,
   participant_profiles.id,
+  CASE participant_profiles.type WHEN 'ParticipantProfile::Mentor' THEN 'mentor' ELSE 'ect' END AS profile_type,
+  duplicates.count AS duplicate_profile_count,
   latest_induction_records.id as latest_induction_record_id,
   latest_induction_records.induction_status,
   latest_induction_records.training_status,
@@ -14,7 +16,7 @@ SELECT
   COALESCE(declarations.count, 0) AS declaration_count,
   lead_providers.name AS provider_name,
   ROW_NUMBER() OVER (
-               PARTITION BY participant_identity_id
+               PARTITION BY participant_profiles.participant_identity_id
                ORDER BY CASE
                WHEN latest_induction_records.training_status = 'active' AND latest_induction_records.induction_status = 'active' THEN 1
                WHEN latest_induction_records.training_status = 'active' AND latest_induction_records.induction_status != 'active' THEN 2
@@ -22,7 +24,7 @@ SELECT
                ELSE 4 END
   ) AS participant_profile_status,
   FIRST_VALUE(participant_profiles.id) OVER (
-               PARTITION BY participant_identity_id
+               PARTITION BY participant_profiles.participant_identity_id
                ORDER BY CASE
                WHEN latest_induction_records.training_status = 'active' AND latest_induction_records.induction_status = 'active' THEN 1
                WHEN latest_induction_records.training_status = 'active' AND latest_induction_records.induction_status != 'active' THEN 2
@@ -45,6 +47,10 @@ JOIN (
      JOIN schools              ON schools.id = partnerships.school_id
 ) AS latest_induction_records ON latest_induction_records.participant_profile_id = participant_profiles.id
 JOIN lead_providers ON lead_providers.id = latest_induction_records.lead_provider_id
+JOIN (
+     SELECT COUNT(*) AS count, participant_identity_id
+     FROM participant_profiles WHERE type IN ('ParticipantProfile::ECT', 'ParticipantProfile::Mentor') GROUP BY participant_identity_id
+) AS duplicates ON duplicates.participant_identity_id = participant_profiles.participant_identity_id
 JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id
 JOIN schedules ON latest_induction_records.schedule_id = schedules.id
 JOIN cohorts ON schedules.cohort_id = cohorts.id

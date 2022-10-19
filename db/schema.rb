@@ -1097,6 +1097,11 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
   create_view "ecf_duplicates", sql_definition: <<-SQL
       SELECT participant_identities.external_identifier AS participant_id,
       participant_profiles.id,
+          CASE participant_profiles.type
+              WHEN 'ParticipantProfile::Mentor'::text THEN 'mentor'::text
+              ELSE 'ect'::text
+          END AS profile_type,
+      duplicates.count AS duplicate_profile_count,
       latest_induction_records.id AS latest_induction_record_id,
       latest_induction_records.induction_status,
       latest_induction_records.training_status,
@@ -1123,7 +1128,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
               WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
               ELSE 4
           END) AS master_participant_profile_id
-     FROM ((((((participant_profiles
+     FROM (((((((participant_profiles
        JOIN ( SELECT induction_records.id,
               induction_records.induction_programme_id,
               induction_records.participant_profile_id,
@@ -1149,6 +1154,11 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
                JOIN lead_providers lead_providers_1 ON ((lead_providers_1.id = partnerships.lead_provider_id)))
                JOIN schools ON ((schools.id = partnerships.school_id)))) latest_induction_records ON ((latest_induction_records.participant_profile_id = participant_profiles.id)))
        JOIN lead_providers ON ((lead_providers.id = latest_induction_records.lead_provider_id)))
+       JOIN ( SELECT count(*) AS count,
+              participant_profiles_1.participant_identity_id
+             FROM participant_profiles participant_profiles_1
+            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+            GROUP BY participant_profiles_1.participant_identity_id) duplicates ON ((duplicates.participant_identity_id = participant_profiles.participant_identity_id)))
        JOIN participant_identities ON ((participant_identities.id = participant_profiles.participant_identity_id)))
        JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
        JOIN cohorts ON ((schedules.cohort_id = cohorts.id)))

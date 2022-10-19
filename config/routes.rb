@@ -386,7 +386,9 @@ Rails.application.routes.draw do
 
   namespace :finance do
     namespace :ecf do
-      resources :duplicate_profiles, only: %i[index show delete]
+      resources :duplicate_profiles, only: %i[index show destroy edit], path_names: { edit: "delete"} do
+        resources :compare, module: "duplicates", only: %i[show]
+      end
     end
 
     resource :landing_page, only: :show, path: "manage-cpd-contracts", controller: "landing_page"

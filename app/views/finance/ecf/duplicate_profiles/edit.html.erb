@@ -1,16 +1,7 @@
 <% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
 
 <span class="govuk-caption-l"><%= @participant_profile.profile_type %></span>
-<h1 class="govuk-heading-xl"><%= @participant_profile.user.full_name %></h1>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-half">
-    <%= render 'finance/ecf/duplicate_profiles/summary_list', duplicate: @participant_profile %>
-  </div>
-  <div class="govuk-grid-column-one-half">
-    <%#= govuk_link_to "Delete #{pluralize @participant_profile.duplicate_profile_count - 1, "duplicate" }", edit_finance_ecf_duplicate_profile_path(@participant_profile) %>
-  </div>
-</div>
+<h1 class="govuk-heading-xl">Delete duplicate profiles for <%= @participant_profile.user.full_name %></h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
@@ -43,3 +34,5 @@
     end %>
   </div>
 </div>
+
+<%= govuk_button_to "Confirm and delete", finance_ecf_duplicate_profile_path(@participant_profile), method: :delete %>

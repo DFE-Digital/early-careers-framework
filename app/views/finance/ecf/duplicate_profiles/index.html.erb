@@ -1,19 +1,8 @@
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl"> Duplicate profile sniper</h1>
-    </div>
-  </div>
-</div>
+<% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-
-    <%= form_for @search_form, as: :duplicate_search_form, url: finance_ecf_duplicate_profiles_path, html: { method: :get} do |form| %>
-      <%= form.govuk_text_field :participant_id_eq, label: { text: "Participant ID" } %>
-      <%= form.govuk_collection_select :training_status_eq, @training_statuses, :training_status, :training_status, options: { prompt: true }, label: { text: "Training status" } %>
-      <%= form.govuk_collection_select :induction_status_eq, @induction_statuses, :induction_status, :induction_status, options: { prompt: true }, label: { text: "Induction status" } %>
-      <%= form.govuk_submit "Refine search" %>
-    <% end %>
+    <h1 class="govuk-heading-xl">Participant profiles with duplicates</h1>
   </div>
 </div>
 <div class="govuk-grid-row">
@@ -25,30 +14,29 @@
           row.cell(header: true, text: "Induction status")
           row.cell(header: true, text: "Training status")
           row.cell(header: true, text: "Provider")
-          row.cell(header: true, text: "Duplicate status")
+          row.cell(header: true, text: "Duplicate count")
           row.cell(header: true, text: "Declaration count")
           row.cell(header: true, text: "Actions")
         end
 
         table.body do |body|
-          @duplicates.each do |duplicate|
+          @participant_profiles.each do |participant_profile|
             body.row do |row|
               row.cell do
-                govuk_link_to duplicate.participant_id, finance_participant_path(duplicate.participant_id)
+                govuk_link_to participant_profile.participant_id, finance_participant_path(participant_profile.participant_id)
               end
-              row.cell(text: duplicate.induction_status)
-              row.cell(text: duplicate.training_status)
-              row.cell(text: duplicate.provider_name)
-              row.cell(text: duplicate.master_profile? ? "master" : "duplicate")
-              row.cell(text: duplicate.declaration_count)
+              row.cell(text: participant_profile.induction_status)
+              row.cell(text: participant_profile.training_status)
+              row.cell(text: participant_profile.provider_name)
+              row.cell(text: participant_profile.duplicate_profile_count)
+              row.cell(text: participant_profile.declaration_count)
               row.cell do
-                link_to_unless duplicate.master_profile?, "Delete", finance_ecf_duplicate_profile_path(duplicate.id), { class: govuk_link_classes } do
+                govuk_link_to "View duplicates", finance_ecf_duplicate_profile_path(participant_profile), { class: govuk_link_classes }
               end
             end
           end
         end
       end
-    end
     end
     %>
   </div>

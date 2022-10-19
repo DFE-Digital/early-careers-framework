@@ -5,21 +5,74 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
   let(:mentor_participant_profile) { create(:mentor) }
   let(:duplicate_ect_profiles) do
     [
-      create(:ect, :withdrawn, :withdrawn_record),
-      create(:ect, :withdrawn_record),
-      create(:ect, :withdrawn),
+      create(:ect) do |ect|
+        cpd_lead_provider = ect.induction_records.latest.cpd_lead_provider
+        create(:ect_participant_declaration, participant_profile: ect, cpd_lead_provider:)
+        Participants::Withdraw::EarlyCareerTeacher.new(
+          params: {
+            participant_id: ect.user_id,
+            course_identifier: "ecf-induction",
+            cpd_lead_provider:,
+            reason: "left-teaching-profession",
+          },
+        ).call
+        ect.withdrawn_record!
+      end,
+      create(:ect) do |ect|
+        cpd_lead_provider = ect.induction_records.latest.cpd_lead_provider
+        create(:ect_participant_declaration, participant_profile: ect, cpd_lead_provider:)
+        ect.withdrawn_record!
+      end,
+      create(:ect) do |ect|
+        cpd_lead_provider = ect.induction_records.latest.cpd_lead_provider
+        create(:ect_participant_declaration, participant_profile: ect, cpd_lead_provider:)
+        Participants::Withdraw::EarlyCareerTeacher.new(
+          params: {
+            participant_id: ect.user_id,
+            course_identifier: "ecf-induction",
+            cpd_lead_provider:,
+            reason: "left-teaching-profession",
+          },
+        ).call
+      end,
     ]
   end
   let(:duplicate_mentor_profiles) do
     [
-      create(:mentor, :withdrawn, :withdrawn_record),
-      create(:mentor, :withdrawn_record),
-      create(:mentor, :withdrawn),
+      create(:mentor) do |mentor|
+        cpd_lead_provider = mentor.induction_records.latest.cpd_lead_provider
+        create(:mentor_participant_declaration, participant_profile: mentor, cpd_lead_provider:)
+        Participants::Withdraw::Mentor.new(
+          params: {
+            participant_id: mentor.user_id,
+            course_identifier: "ecf-mentor",
+            cpd_lead_provider:,
+            reason: "left-teaching-profession",
+          },
+        ).call
+        mentor.withdrawn_record!
+      end,
+      create(:mentor) do |mentor|
+        cpd_lead_provider = mentor.induction_records.latest.cpd_lead_provider
+        create(:mentor_participant_declaration, participant_profile: mentor, cpd_lead_provider:)
+        mentor.withdrawn_record!
+      end,
+      create(:mentor) do |mentor|
+        cpd_lead_provider = mentor.induction_records.latest.cpd_lead_provider
+        create(:mentor_participant_declaration, participant_profile: mentor, cpd_lead_provider:)
+        Participants::Withdraw::Mentor.new(
+          params: {
+            participant_id: mentor.user_id,
+            course_identifier: "ecf-mentor",
+            cpd_lead_provider:,
+            reason: "left-teaching-profession",
+          },
+        ).call
+      end,
     ]
   end
 
   before do
-    create(:ect_participant_declaration, duplicate_ect_profiles[0])
   end
 
   before do
@@ -32,30 +85,17 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
   it "helps managing duplicate profiles" do
     click_on "ECF Duplicate profiles"
 
-    participant_id = ect_participant_profile.participant_identity.external_identifier
-    fill_in "Participant ID", with: participant_id
-    click_on "Refine search"
+    expect(page).to have_css("tbody tr td:nth-child(1)", text: ect_participant_profile.user_id)
+    expect(page).to have_css("tbody tr td:nth-child(1)", text: mentor_participant_profile.user_id)
 
-    expect(page.all("tbody tr td:nth-child(1) a").map(&:text)).to all(eq(participant_id))
+    page.find_link("View duplicates", href: finance_ecf_duplicate_profile_path(ect_participant_profile)).click
 
-    select "withdrawn", from: "Training status"
-    click_on "Refine search"
-
-    expect(page.all("tbody tr td:nth-child(1)").map(&:text)).to all(eq(participant_id))
-    expect(page.all("tbody tr td:nth-child(3)").map(&:text)).to all(eq("withdrawn"))
-
-    select "withdrawn", from: "Induction status"
-    click_on "Refine search"
-
-    expect(page.all("tbody tr td:nth-child(1)").map(&:text)).to all(eq(participant_id))
-    expect(page.all("tbody tr td:nth-child(2)").map(&:text)).to all(eq("withdrawn"))
-    expect(page.all("tbody tr td:nth-child(3)").map(&:text)).to all(eq("withdrawn"))
-
-    save_and_open_screenshot
-    within page.find("tbody tr:last-child") do
-      click_link "Delete"
+    within "tbody tr:nth-child(1) td:nth-child(6)" do
+      click_on "compare"
     end
-    # click_link ""
-    save_and_open_screenshot
+
+    click_on ect_participant_profile.user.full_name
+
+    click_on "Delete 3 duplicates"
   end
 end
