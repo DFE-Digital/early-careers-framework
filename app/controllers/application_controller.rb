@@ -44,6 +44,10 @@ private
     flash[:success] = { title:, heading:, content: }
   end
 
+  def set_important_message(title: "Important", heading: "", content: "")
+    flash[:notice] = { title:, heading:, content: }
+  end
+
 protected
 
   def release_version

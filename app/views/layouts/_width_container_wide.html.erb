@@ -19,6 +19,14 @@
             <% banner.heading(text: msg[:heading]) %>
             <% msg[:content] %>
           <% end %>
+        <% elsif type == "notice" %>
+          <%= govuk_notification_banner(
+                title_text: msg[:title],
+                html_attributes: { data: { test: "notification-banner" } }
+              ) do |banner| %>
+            <% banner.heading(text: msg[:heading]) %>
+            <% msg[:content] %>
+          <% end %>
         <% else %>
           <div class="govuk-success-summary" aria-labelledby="success-message" tabindex="-1" role="alert">
             <div class="govuk-success-summary__title">

@@ -33,6 +33,9 @@
         <% component.tab(label: 'Declarations history') do %>
           <%= render partial: 'declarations_history', locals: { participant_declarations: @participant_declarations } %>
         <% end %>
+        <% component.tab(label: 'Validation data') do %>
+          <%= render partial: 'validation_data', locals: { validation_data: @validation_data, eligibility_data: @eligibility_data } %>
+        <% end %>
       <% end %>
     <% end %>
   </div>

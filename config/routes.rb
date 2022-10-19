@@ -273,6 +273,20 @@ Rails.application.routes.draw do
           get "cannot-transfer", action: :cannot_transfer, as: :cannot_transfer
         end
       end
+
+      resource :validation_data, path: "validation-data", only: [], controller: "participants/validation_data" do
+        member do
+          get "full-name", action: :full_name, as: :full_name
+          put "full-name", action: :full_name
+          get "teacher-reference-number", action: :trn, as: :trn
+          put "teacher-reference-number", action: :trn
+          get "date-of-birth", action: :date_of_birth, as: :date_of_birth
+          put "date-of-birth", action: :date_of_birth
+          get "national-insurance-number", action: :nino, as: :nino
+          put "national-insurance-number", action: :nino
+          post "validate-details", action: :validate_details, as: :validate_details
+        end
+      end
     end
     resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]
