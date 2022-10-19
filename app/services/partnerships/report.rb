@@ -22,7 +22,7 @@ module Partnerships
 
         partnership.challenge_reason = partnership.challenged_at = nil
         partnership.delivery_partner_id = delivery_partner_id
-        partnership.pending = delay_partnership?
+        partnership.pending = false
         partnership.challenge_deadline = CHALLENGE_WINDOW.from_now
         partnership.report_id = SecureRandom.uuid
         partnership.save!
@@ -42,22 +42,11 @@ module Partnerships
           report_id: partnership.report_id,
         )
 
-        if partnership.pending?
-          PartnershipActivationJob.set(wait_until: partnership.challenge_deadline).perform_later(
-            partnership:,
-            report_id: partnership.report_id,
-          )
-        end
-
         partnership
       end
     end
 
   private
-
-    def delay_partnership?
-      !school_cohort.full_induction_programme?
-    end
 
     attr_reader :cohort_id, :school_id, :lead_provider_id, :delivery_partner_id
 
