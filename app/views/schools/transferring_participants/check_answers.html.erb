@@ -10,7 +10,7 @@
     <%= govuk_summary_list do |summary_list| %>
       <% summary_list.row do |row| %>
         <% row.key { "Name" } %>
-        <% row.value { @transferring_participant_form.formatted_full_name } %>
+        <% row.value { @transferring_participant_form.full_name } %>
         <% row.action(text: :none) %>
       <% end %>
 

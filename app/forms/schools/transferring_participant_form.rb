@@ -34,16 +34,8 @@ module Schools
       }
     end
 
-    def formatted_full_name
-      full_name.split("-").map(&:titleize).join("-")
-    end
-
     def formatted_trn
       TeacherReferenceNumber.new(trn).formatted_trn
-    end
-
-    def full_name_to_display
-      formatted_full_name << (full_name[-1..].downcase == "s" ? "’" : "’s")
     end
 
     def schools_current_programme_choices

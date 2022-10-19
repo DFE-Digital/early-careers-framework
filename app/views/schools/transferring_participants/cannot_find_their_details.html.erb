@@ -1,4 +1,4 @@
-<% content_for :title, "We cannot find #{@transferring_participant_form.full_name_to_display}" %>
+<% content_for :title, "We cannot find #{possessive_name(@transferring_participant_form.full_name)}" %>
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: { action: @transferring_participant_form.previous_step }) %>
 
@@ -6,8 +6,8 @@
 	<div class="govuk-grid-column-two-thirds">
 
     	<span class="govuk-caption-xl"><%= @school.name %></span>
-    	<h1 class="govuk-heading-xl">We cannot find <%= @transferring_participant_form.full_name_to_display %> record</h1>
-    	
+    	<h1 class="govuk-heading-xl">We cannot find <%= possessive_name(@transferring_participant_form.full_name) %> record</h1>
+
 		<p class="govuk-body">Check the information you’ve entered is correct.</p>
     	<p class="govuk-body">We need to find <%= @transferring_participant_form.full_name %> in the Teaching Regulation Agency records so we can transfer their record to your school.</p>
 
@@ -43,7 +43,7 @@
             		<%= govuk_link_to dob_schools_transferring_participant_path do %>
               		Change <span class="govuk-visually-hidden">date of birth</span>
             		<% end %>
-        		</dd>				
+        		</dd>
       		</div>
     	</dl>
 
