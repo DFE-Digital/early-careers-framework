@@ -31,6 +31,10 @@ module GiasTypes
     ELIGIBLE_TYPE_CODES.include?(establishment_type)
   end
 
+  def cip_only_establishment_code?(establishment_type)
+    CIP_ONLY_EXCEPT_WELSH_CODES.include?(establishment_type)
+  end
+
   def english_district_code?(district_code)
     # expanded to include the 9999 code which seems to have crept in and is preventing a couple of schools onboarding
     # the establishment codes should filter out any that should not come in that are 9999 district
