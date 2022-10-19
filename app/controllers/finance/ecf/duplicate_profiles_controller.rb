@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Finance
   module ECF
     class DuplicateProfilesController < BaseController
@@ -31,7 +33,7 @@ module Finance
       end
 
       def destroy
-        # TODO:
+        # TODO: Service class to soft delete participant declarations
         # master_participant_profile = Duplicate.find(params[:id])
         # ParticipantPropfile::ECF.find(master_participant_profile.duplicate_participant_profile_ids).each do |participant_profile|
         #   participant_profile.update!(type: participant_profile.ect? ? "ParticipantProfile::Deleted::ECF" : "ParticipantProfile::Deleted::Mentor")
