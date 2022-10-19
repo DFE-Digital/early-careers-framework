@@ -252,4 +252,64 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       end
     end
   end
+
+  describe "#withdrawn_for", :with_default_schedules do
+    let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
+
+    context "when participant is withdrawn" do
+      subject { create(:ect, :withdrawn) }
+
+      it { is_expected.to be_withdrawn_for(cpd_lead_provider:) }
+    end
+
+    context "when participant is not withdrawn" do
+      subject { create(:ect) }
+
+      it { is_expected.not_to be_withdrawn_for(cpd_lead_provider:) }
+    end
+
+    context "when participant has no induction records" do
+      subject { create(:ecf_participant_profile) }
+
+      it { is_expected.not_to be_withdrawn_for(cpd_lead_provider:) }
+    end
+  end
+
+  describe "#deferred_for", :with_default_schedules do
+    let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
+
+    context "when participant is deferred" do
+      subject { create(:ect, :deferred) }
+
+      it { is_expected.to be_deferred_for(cpd_lead_provider:) }
+    end
+
+    context "when participant is not deferred" do
+      subject { create(:ect) }
+
+      it { is_expected.not_to be_deferred_for(cpd_lead_provider:) }
+    end
+
+    context "when participant has no induction records" do
+      subject { create(:ecf_participant_profile) }
+
+      it { is_expected.not_to be_deferred_for(cpd_lead_provider:) }
+    end
+  end
+
+  describe "#record_to_serialize_for", :with_default_schedules do
+    let(:lead_provider) do
+      subject
+        .induction_records
+        .latest
+        .cpd_lead_provider
+        .lead_provider
+    end
+
+    subject { create(:ect) }
+
+    it "returns the relevant induction record for that profile" do
+      expect(subject.record_to_serialize_for(lead_provider:)).to eq(subject.induction_records.latest.reload)
+    end
+  end
 end

@@ -56,6 +56,18 @@ class ParticipantProfile < ApplicationRecord
       schedule
     end
 
+    def withdrawn_for?(*)
+      training_status_withdrawn?
+    end
+
+    def deferred_for?(*)
+      training_status_deferred?
+    end
+
+    def record_to_serialize_for(*)
+      user
+    end
+
     def latest_induction_record_for(*)
       nil
     end
