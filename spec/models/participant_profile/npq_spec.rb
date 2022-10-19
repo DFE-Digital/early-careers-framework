@@ -27,7 +27,7 @@ RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
     end
   end
 
-  describe "#withdrawn_for", :with_default_schedules do
+  describe "#withdrawn_for" do
     let(:cpd_lead_provider) { subject.npq_application.npq_lead_provider.cpd_lead_provider }
 
     context "when participant is withdrawn" do
@@ -47,7 +47,7 @@ RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
     end
   end
 
-  describe "#deferred_for", :with_default_schedules do
+  describe "#deferred_for" do
     let(:cpd_lead_provider) { subject.npq_application.npq_lead_provider.cpd_lead_provider }
 
     context "when participant is deferred" do
@@ -64,6 +64,18 @@ RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
       it "returns false" do
         expect(subject.reload.deferred_for?(cpd_lead_provider:)).to be false
       end
+    end
+  end
+
+  describe "#record_to_serialize_for" do
+    let(:lead_provider) do
+      subject.npq_application.npq_lead_provider
+    end
+
+    subject { create(:npq_participant_profile) }
+
+    it "returns the relevant induction record for that profile" do
+      expect(subject.record_to_serialize_for(lead_provider:)).to eq(subject.user)
     end
   end
 end

@@ -85,6 +85,7 @@ class ParticipantProfile < ApplicationRecord
         .order(start_date: :desc)
         .first
     end
+    alias_method :record_to_serialize_for, :relevant_induction_record
 
     def schedule_for(cpd_lead_provider:)
       lead_provider = cpd_lead_provider.lead_provider

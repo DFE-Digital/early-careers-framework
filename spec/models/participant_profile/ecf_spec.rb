@@ -296,4 +296,20 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       it { is_expected.not_to be_deferred_for(cpd_lead_provider:) }
     end
   end
+
+  describe "#record_to_serialize_for", :with_default_schedules do
+    let(:lead_provider) do
+      subject
+        .induction_records
+        .latest
+        .cpd_lead_provider
+        .lead_provider
+    end
+
+    subject { create(:ect) }
+
+    it "returns the relevant induction record for that profile" do
+      expect(subject.record_to_serialize_for(lead_provider:)).to eq(subject.induction_records.latest.reload)
+    end
+  end
 end

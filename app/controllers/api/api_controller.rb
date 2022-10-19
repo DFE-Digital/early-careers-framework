@@ -21,9 +21,9 @@ module Api
 
   private
 
-    def render_from_service(service, serializer)
+    def render_from_service(service, serializer, params: {})
       if service.valid?
-        render json: serializer.new(service.call).serializable_hash
+        render json: serializer.new(service.call, params:).serializable_hash
       else
         render json: Api::V1::ActiveModelErrorsSerializer.from(service), status: :unprocessable_entity
       end
