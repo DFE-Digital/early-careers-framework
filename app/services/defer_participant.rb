@@ -23,8 +23,6 @@ class DeferParticipant
   validate :not_already_withdrawn
 
   def call
-    return if invalid?
-
     ActiveRecord::Base.transaction do
       create_deferred_participant_profile_state!
       create_deferred_induction_record!

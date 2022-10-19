@@ -91,21 +91,6 @@ RSpec.shared_examples "validating a participant is not withdrawn" do
 end
 
 RSpec.shared_examples "deferring a participant" do
-  context "when invalid" do
-    let(:params) {}
-    it "does not create a new participant profile state" do
-      expect { service.call }.not_to change { ParticipantProfileState.count }
-    end
-
-    it "does not create a new induction record" do
-      expect { service.call }.not_to change { InductionRecord.count }
-    end
-
-    it "does not update the participant profile training status" do
-      expect { service.call }.not_to change { participant_profile.reload.training_status }
-    end
-  end
-
   it "creates a deferred participant profile state" do
     expect { service.call }.to change { ParticipantProfileState.count }
   end
