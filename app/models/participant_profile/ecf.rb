@@ -34,7 +34,7 @@ class ParticipantProfile < ApplicationRecord
     after_update :sync_status_with_induction_record
 
     def completed_validation_wizard?
-      ecf_participant_eligibility.present? || ecf_participant_validation_data.present?
+      ecf_participant_eligibility.present? || (ecf_participant_validation_data.present? && ecf_participant_validation_data.persisted?)
     end
 
     def contacted_for_info?
