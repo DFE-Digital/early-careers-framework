@@ -3,22 +3,16 @@
 module Mentors
   class Create < BaseService
     include SchoolCohortDelegator
+    ParticipantProfileExistsError = Class.new(RuntimeError)
 
     def call
       mentor_profile = nil
       ActiveRecord::Base.transaction do
-        # NOTE: This will not update the full_name if the user has an active participant profile,
-        # the scenario I am working on is enabling a NPQ user to be added as a mentor
-        # Not matching on full_name means this works more smoothly for the end user
-        # and they don't get "email already in use" errors if they spell the name differently
-        user = User.find_or_create_by!(email:) do |mentor|
-          mentor.full_name = full_name
-        end
         user.update!(full_name:) unless user.teacher_profile&.participant_profiles&.active_record&.any?
 
-        teacher_profile = TeacherProfile.find_or_create_by!(user:) do |profile|
-          profile.school = school_cohort.school
-        end
+        create_teacher_profile
+
+        raise ParticipantProfileExistsError if participant_profile_exists?
 
         mentor_profile = ParticipantProfile::Mentor.create!({
           teacher_profile:,
@@ -66,6 +60,27 @@ module Mentors
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),
       }
+    end
+
+    def user
+      # NOTE: This will not update the full_name if the user has an active participant profile,
+      # the scenario I am working on is enabling a NPQ user to be added as a mentor
+      # Not matching on full_name means this works more smoothly for the end user
+      # and they don't get "email already in use" errors if they spell the name differently
+      @user ||= User.find_or_create_by!(email:) do |mentor|
+        mentor.full_name = full_name
+      end
+    end
+
+    def teacher_profile
+      @teacher_profile ||= TeacherProfile.find_or_create_by!(user:) do |profile|
+        profile.school = school_cohort.school
+      end
+    end
+    alias_method :create_teacher_profile, :teacher_profile
+
+    def participant_profile_exists?
+      teacher_profile.participant_profiles.mentors.exists? || user.participant_identities.joins(:participant_profiles).where(participant_profiles: { type: "ParticipantProfile::Mentor" }).exists?
     end
   end
 end

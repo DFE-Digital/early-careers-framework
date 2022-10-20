@@ -19,16 +19,9 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
   let!(:ect_profile) { create :ect, mentor_profile_id: mentor_profile.id, school_cohort:, lead_provider: cpd_lead_provider.lead_provider }
   let!(:withdrawn_ect_profile) do
-    withdrawn_ect = create :ect, mentor_profile_id: mentor_profile.id, school_cohort: school_cohort, lead_provider: cpd_lead_provider.lead_provider
-
-    create(
-      :ect,
-      :withdrawn_record,
-      user: withdrawn_ect.user,
-      school_cohort:,
-    )
-
-    withdrawn_ect
+    create(:ect, mentor_profile_id: mentor_profile.id, school_cohort:, lead_provider: cpd_lead_provider.lead_provider).tap do |withdrawn_ect|
+      create(:ect, :withdrawn_record, school_cohort:).update!(teacher_profile: withdrawn_ect.teacher_profile)
+    end
   end
 
   let!(:withdrawn_ect_profile_record) { create(:ect, :eligible_for_funding, :withdrawn_record, school_cohort:, lead_provider: cpd_lead_provider.lead_provider) }

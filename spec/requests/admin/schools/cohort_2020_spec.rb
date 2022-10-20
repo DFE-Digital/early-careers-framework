@@ -84,37 +84,11 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
       let(:email) { participant_profile.user.email }
 
       it "adds an NQT+1 profile to the user" do
-        expect(EarlyCareerTeachers::Create).to receive(:call).with({
-          full_name: name,
-          email:,
-          school_cohort:,
-          mentor_profile_id: nil,
-          year_2020: true,
-        }).and_call_original
-
-        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: name, email: },
-        }
-
-        expect(User.find_by(email:).participant_profiles.count).to eql 2
-      end
-
-      it "changes the name on the user" do
-        other_name = "Other Name"
-
-        expect(EarlyCareerTeachers::Create).to receive(:call).with({
-          full_name: other_name,
-          email:,
-          school_cohort:,
-          mentor_profile_id: nil,
-          year_2020: true,
-        }).and_call_original
-
-        post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
-          user: { full_name: other_name, email: },
-        }
-
-        expect(User.find_by(email:).full_name).to eql other_name
+        expect {
+          post "/admin/schools/#{school_cohort.school.slug}/cohort2020", params: {
+            user: { full_name: name, email: },
+          }
+        }.to raise_error EarlyCareerTeachers::Create::ParticipantProfileExistsError
       end
     end
 

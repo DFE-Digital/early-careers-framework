@@ -47,7 +47,7 @@ RSpec.describe Identity::Create do
       context "when the existing profiles belong to another identity" do
         let(:ect)                { create(:mentor, :eligible_for_funding, user:) }
         let(:exisiting_identity) { ect.participant_identities.first }
-        let!(:mentor_profile)    { create(:mentor, :eligible_for_funding, trn: ect.teacher_profile.trn, user:) }
+        let!(:mentor_profile)    { create(:mentor, :eligible_for_funding, trn: ect.teacher_profile.trn).tap { |pp| pp.update!(teacher_profile: ect.teacher_profile) } }
         let(:npq_profile)        { create(:npq_participant_profile,       trn: ect.teacher_profile.trn, user:) }
 
         it "does not add the profiles to the new identity" do
