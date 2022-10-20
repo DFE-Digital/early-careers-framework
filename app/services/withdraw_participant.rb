@@ -78,7 +78,7 @@ private
       participant_profile:,
       state: ParticipantProfileState.states[:withdrawn],
       cpd_lead_provider:,
-      reason:
+      reason:,
     )
   end
 
@@ -87,7 +87,7 @@ private
 
     relevant_induction_record.update!(
       training_status: ParticipantProfileState.states[:withdrawn],
-      force_training_status_change:
+      force_training_status_change:,
     )
   end
 end

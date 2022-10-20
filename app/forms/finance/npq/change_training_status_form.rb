@@ -45,6 +45,8 @@ module Finance
           DeferParticipant.new(params.merge(reason:)).call
         when "active"
           ResumeParticipant.new(params).call
+        when "withdrawn"
+          WithdrawParticipant.new(params.merge(reason:)).call
         else
           klass = "Participants::#{action_class_name}::NPQ".constantize
           klass.call(
