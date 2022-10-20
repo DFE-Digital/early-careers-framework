@@ -64,6 +64,10 @@ class ParticipantProfile < ApplicationRecord
       training_status_deferred?
     end
 
+    def active_for?(*)
+      training_status_active?
+    end
+
     def record_to_serialize_for(*)
       user
     end

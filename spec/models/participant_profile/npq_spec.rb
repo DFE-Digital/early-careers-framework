@@ -47,6 +47,26 @@ RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
     end
   end
 
+  describe "#active_for" do
+    let(:cpd_lead_provider) { subject.npq_application.npq_lead_provider.cpd_lead_provider }
+
+    context "when participant is active" do
+      subject { create(:npq_participant_profile) }
+
+      it "returns true" do
+        expect(subject.reload.active_for?(cpd_lead_provider:)).to be true
+      end
+    end
+
+    context "when participant is not active" do
+      subject { create(:npq_participant_profile, :withdrawn) }
+
+      it "returns false" do
+        expect(subject.reload.active_for?(cpd_lead_provider:)).to be false
+      end
+    end
+  end
+
   describe "#deferred_for" do
     let(:cpd_lead_provider) { subject.npq_application.npq_lead_provider.cpd_lead_provider }
 

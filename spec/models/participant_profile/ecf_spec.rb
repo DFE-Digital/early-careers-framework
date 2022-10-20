@@ -275,6 +275,28 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
   end
 
+  describe "#active_for", :with_default_schedules do
+    let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
+
+    context "when participant is active" do
+      subject { create(:ect) }
+
+      it { is_expected.to be_active_for(cpd_lead_provider:) }
+    end
+
+    context "when participant is not active" do
+      subject { create(:ect, :withdrawn) }
+
+      it { is_expected.not_to be_active_for(cpd_lead_provider:) }
+    end
+
+    context "when participant has no induction records" do
+      subject { create(:ecf_participant_profile) }
+
+      it { is_expected.not_to be_active_for(cpd_lead_provider:) }
+    end
+  end
+
   describe "#deferred_for", :with_default_schedules do
     let(:cpd_lead_provider) { subject.induction_records.latest&.cpd_lead_provider }
 
