@@ -13,7 +13,7 @@
     <% if @participant_profile.npq? %>
       <%= render Admin::NPQ::Participants::Details.new(profile: @participant_profile) %>
       <%= render Admin::NPQ::Participants::ValidationTasks.new(profile: @participant_profile) %>
-      <%= render Admin::NPQ::Participants::Identities.new(identities: @participant_identities) %>
+      <%= render Admin::Participants::Identities.new(identities: @participant_identities) %>
     <% else %>
       <%= govuk_tabs(title: 'Contents') do |component| %>
         <% component.tab(label: 'Details') do %>
@@ -38,7 +38,7 @@
           <%= render partial: 'validation_data', locals: { validation_data: @validation_data, eligibility_data: @eligibility_data } %>
         <% end %>
         <% component.tab(label: 'Identities') do %>
-          <%= render Admin::NPQ::Participants::Identities.new(identities: @participant_identities) %>
+          <%= render Admin::Participants::Identities.new(identities: @participant_identities) %>
         <% end %>
       <% end %>
     <% end %>
