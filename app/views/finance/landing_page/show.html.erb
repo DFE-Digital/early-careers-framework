@@ -1,49 +1,23 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl">Manage CPD contracts</h1>
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Payment Breakdown", finance_payment_breakdowns_url %></h2>
-        <p>Review upcoming payments to providers</p>
-      </div>
+      <div class="govuk-grid-column-full">
 
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Contract Summary", "#" %></h2>
-        <p>View all current contract details</p>
+        <h2 class="govuk-heading-m"><%= govuk_link_to "View financial statements", finance_payment_breakdowns_url %></h2>
+        <p class="govuk-body">View, download and update financial statements for lead providers.</p>
+
+        <h2 class="govuk-heading-m"><%= govuk_link_to "View payment schedules", finance_schedules_path %></h2>
+        <p class="govuk-body">View cohort milestone dates and payment schedules.</p>
+
+        <h2 class="govuk-heading-m"><%= govuk_link_to "Search participant data", finance_participants_path %></h2>
+        <p class="govuk-body">Search, view and edit participant records, training histories and funding eligibility.</p>
+
+        <h2 class="govuk-heading-m"><%= govuk_link_to "Search duplicate profiles", finance_ecf_duplicates_path %></h2>
+        <p class="govuk-body">Search and compare master participant profiles with any ECF duplicate errors.</p>
       </div>
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Provider dashboard", "#" %></h2>
-        <p>Overview of all course providers</p>
-      </div>
-
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Programme dashboard", "#" %></h2>
-        <p>Overview of all programme participants</p>
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Schedules", finance_schedules_path %></h2>
-        <p>Overview of all schedules</p>
-      </div>
-
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Participant drilldown", finance_participants_path %></h2>
-        <p>See participants and their declarations</p>
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m"><%= govuk_link_to "ECF Duplicate profiles", finance_ecf_duplicates_path %></h2>
-        <p>Manage duplicate profiles</p>
-      </div>
-    </div>
   </div>
-</div>
 </div>
