@@ -75,9 +75,6 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
   end
 
   before do
-  end
-
-  before do
     given_i_am_logged_in_as_a_finance_user
 
     duplicate_ect_profiles.each { |pp| pp.update!(participant_identity: ect_participant_profile.participant_identity) }
@@ -90,14 +87,12 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
     expect(page).to have_css("tbody tr td:nth-child(1)", text: ect_participant_profile.user_id)
     expect(page).to have_css("tbody tr td:nth-child(1)", text: mentor_participant_profile.user_id)
 
-    page.find_link("View duplicates", href: finance_ecf_duplicate_profile_path(ect_participant_profile)).click
+    page.find_link("View duplicates", href: finance_ecf_duplicate_path(ect_participant_profile)).click
 
     within "tbody tr:nth-child(1) td:nth-child(6)" do
       click_on "compare"
     end
 
     click_on ect_participant_profile.user.full_name
-
-    click_on "Delete 3 duplicates"
   end
 end

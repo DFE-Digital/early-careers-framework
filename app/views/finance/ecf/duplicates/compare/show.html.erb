@@ -10,14 +10,14 @@
       <%= govuk_tag text: "duplicate profile", colour: "red" %>
     </div>
     <br />
-    <%= render 'finance/ecf/duplicate_profiles/summary_list', duplicate: @duplicate %>
+    <%= render 'finance/ecf/duplicates/summary_list', duplicate: @duplicate %>
   </div>
   <div class="govuk-grid-column-one-half">
     <div>
       <%= govuk_tag text: "master profile", colour: "green" %>
     </div>
     <br />
-    <%= render 'finance/ecf/duplicate_profiles/summary_list', duplicate: @participant_profile %>
+    <%= render 'finance/ecf/duplicates/summary_list', duplicate: @participant_profile %>
   </div>
 </div>
 

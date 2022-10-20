@@ -386,7 +386,7 @@ Rails.application.routes.draw do
 
   namespace :finance do
     namespace :ecf do
-      resources :duplicate_profiles, only: %i[index show destroy edit], path_names: { edit: "delete" } do
+      resources :duplicates, only: %i[index show destroy edit], path_names: { edit: "delete" } do
         resources :compare, module: "duplicates", only: %i[show]
       end
     end
