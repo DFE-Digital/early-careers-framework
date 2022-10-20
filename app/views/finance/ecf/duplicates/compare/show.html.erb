@@ -27,26 +27,26 @@
       table.head do |head|
         head.row do |row|
           row.cell(header: true, text: "Lead provider")
+          row.cell(header: true, text: "Cohort")
           row.cell(header: true, text: "Schedule")
           row.cell(header: true, text: "Start date")
           row.cell(header: true, text: "End date")
           row.cell(header: true, text: "Preferred email")
           row.cell(header: true, text: "Induction status")
           row.cell(header: true, text: "Training status")
-          row.cell(header: true, text: "Cohort")
         end
 
         table.body do |body|
           @induction_records.each do |induction_record|
             body.row do |row|
               row.cell(text: induction_record.lead_provider.name)
+              row.cell(text: induction_record.cohort.start_year)
               row.cell(text: induction_record.schedule.schedule_identifier)
               row.cell(text: induction_record.start_date.to_s(:govuk))
               row.cell(text: induction_record.end_date&.to_s(:govuk))
               row.cell(text: induction_record.preferred_identity.email)
               row.cell(text: induction_record.induction_status)
               row.cell(text: induction_record.training_status)
-              row.cell(text: induction_record.cohort.start_year)
             end
           end
         end

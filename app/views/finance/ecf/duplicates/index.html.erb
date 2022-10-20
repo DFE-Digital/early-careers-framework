@@ -11,6 +11,8 @@
       table.head do |head|
         head.row do |row|
           row.cell(header: true, text: "Participant ID")
+          row.cell(header: true, text: "Cohort")
+          row.cell(header: true, text: "Schedule")
           row.cell(header: true, text: "Induction status")
           row.cell(header: true, text: "Training status")
           row.cell(header: true, text: "Provider")
@@ -25,10 +27,12 @@
               row.cell do
                 govuk_link_to participant_profile.participant_id, finance_participant_path(participant_profile.participant_id)
               end
+              row.cell(text: participant_profile.cohort)
+              row.cell(text: participant_profile.schedule_identifier)
               row.cell(text: participant_profile.induction_status)
               row.cell(text: participant_profile.training_status)
               row.cell(text: participant_profile.provider_name)
-              row.cell(text: participant_profile.duplicate_profile_count)
+              row.cell(text: participant_profile.duplicate_profile_count - 1)
               row.cell(text: participant_profile.declaration_count)
               row.cell do
                 govuk_link_to "View duplicates", finance_ecf_duplicate_path(participant_profile), { class: govuk_link_classes }
