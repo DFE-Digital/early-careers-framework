@@ -46,12 +46,6 @@ RSpec.describe Partnerships::Report do
       .at(described_class::REMINDER_EMAIL_DELAY.from_now)
   end
 
-  it "does not schedule activation job" do
-    expect { result }.to_not have_enqueued_job(
-      PartnershipActivationJob,
-    )
-  end
-
   it "produces correct event log" do
     expect(result.event_logs.map(&:event)).to eq %w[reported]
   end
