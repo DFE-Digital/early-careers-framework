@@ -21,7 +21,6 @@ class ChangeSchedule
   validate :validate_new_schedule_valid_with_existing_declarations
   validate :validate_permitted_schedule_for_course
   validate :validate_cannot_change_cohort
-  validate :schedule_valid_with_pending_declarations
 
   def call
     return if invalid?
@@ -58,7 +57,7 @@ class ChangeSchedule
 
   def alias_search_query
     Finance::Schedule
-      .where("identifier_alias IS NOT NULL")
+      .where.not(identifier_alias: nil)
       .where(identifier_alias: schedule_identifier, cohort:)
   end
 
@@ -130,24 +129,6 @@ private
     if relevant_induction_record &&
         relevant_induction_record.schedule.cohort.start_year != cohort&.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
-    end
-  end
-
-  def schedule_valid_with_pending_declarations
-    return unless new_schedule
-
-    participant_profile&.participant_declarations&.each do |declaration|
-      if declaration.changeable?
-        milestone = new_schedule.milestones.find_by(declaration_type: declaration.declaration_type)
-
-        if declaration.declaration_date <= milestone.start_date.beginning_of_day
-          errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
-        end
-
-        if milestone.milestone_date && (milestone.milestone_date.end_of_day < declaration.declaration_date)
-          errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
-        end
-      end
     end
   end
 end

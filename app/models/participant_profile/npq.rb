@@ -101,10 +101,6 @@ class ParticipantProfile < ApplicationRecord
       ParticipantProfile::NPQPolicy
     end
 
-    def matches_lead_provider?(cpd_lead_provider:)
-      cpd_lead_provider == npq_application&.npq_lead_provider&.cpd_lead_provider
-    end
-
   private
 
     def push_profile_to_big_query
