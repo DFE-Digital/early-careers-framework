@@ -173,4 +173,5 @@ group :test do
   gem "with_model"
 end
 
+gem "countries", "~> 5.1"
 gem "scenic", "~> 1.6"
