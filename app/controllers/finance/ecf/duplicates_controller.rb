@@ -11,7 +11,7 @@ module Finance
         @induction_statuses          = Duplicate.select(:induction_status).distinct
         @breadcrumbs                 = [
           helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),
-          helpers.govuk_breadcrumb_link_to("Master profiles", finance_ecf_duplicates_path),
+          helpers.govuk_breadcrumb_link_to("Search profiles", finance_ecf_duplicates_path),
         ]
       end
 
@@ -19,7 +19,7 @@ module Finance
         @participant_profile = Duplicate.find(params[:id])
         @breadcrumbs         = [
           helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),
-          helpers.govuk_breadcrumb_link_to("Master profiles", finance_ecf_duplicates_path),
+          helpers.govuk_breadcrumb_link_to("Search profiles", finance_ecf_duplicates_path),
           helpers.govuk_breadcrumb_link_to(@participant_profile.user.full_name, finance_ecf_duplicate_path(@participant_profile)),
         ]
       end
@@ -28,7 +28,7 @@ module Finance
         @participant_profile = Duplicate.find(params[:id])
         @breadcrumbs         = [
           helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),
-          helpers.govuk_breadcrumb_link_to("Master profiles", finance_ecf_duplicates_path),
+          helpers.govuk_breadcrumb_link_to("Search profiles", finance_ecf_duplicates_path),
           helpers.govuk_breadcrumb_link_to(@participant_profile.user.full_name, finance_ecf_duplicate_path(@participant_profile)),
           helpers.govuk_breadcrumb_link_to(@participant_profile.user.full_name, edit_finance_ecf_duplicate_path(@participant_profile)),
         ]

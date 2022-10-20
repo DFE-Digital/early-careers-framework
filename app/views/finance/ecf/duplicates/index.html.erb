@@ -2,15 +2,18 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Participant profiles with duplicates</h1>
+    <h1 class="govuk-heading-xl">Search duplicate profiles</h1>
   </div>
 </div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <%= govuk_table do |table|
       table.head do |head|
         head.row do |row|
+          row.cell(header: true, text: "Profile type")
           row.cell(header: true, text: "Participant ID")
+          row.cell(header: true, text: "Profile ID")
           row.cell(header: true, text: "Cohort")
           row.cell(header: true, text: "Schedule")
           row.cell(header: true, text: "Induction status")
@@ -24,9 +27,9 @@
         table.body do |body|
           @participant_profiles.each do |participant_profile|
             body.row do |row|
-              row.cell do
-                govuk_link_to participant_profile.participant_id, finance_participant_path(participant_profile.participant_id)
-              end
+              row.cell { tag_for(participant_profile) }
+              row.cell(text: participant_profile.participant_id)
+              row.cell(text: participant_profile.id)
               row.cell(text: participant_profile.cohort)
               row.cell(text: participant_profile.schedule_identifier)
               row.cell(text: participant_profile.induction_status)

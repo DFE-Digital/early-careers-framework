@@ -1,56 +1,14 @@
 <% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
 
-<span class="govuk-caption-l"><%= @participant_profile.profile_type %></span>
-<h1 class="govuk-heading-xl"><%= @participant_profile.user.full_name %></h1>
-
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-half">
-    <div>
-      <%= govuk_tag text: "duplicate profile", colour: "red" %>
-    </div>
-    <br />
-    <%= render 'finance/ecf/duplicates/summary_list', duplicate: @duplicate %>
-  </div>
-  <div class="govuk-grid-column-one-half">
-    <div>
-      <%= govuk_tag text: "master profile", colour: "green" %>
-    </div>
-    <br />
-    <%= render 'finance/ecf/duplicates/summary_list', duplicate: @participant_profile %>
-  </div>
-</div>
-
+<h2 class="govuk-heading-m">Master profile</h2>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <%= govuk_table do |table|
-      table.head do |head|
-        head.row do |row|
-          row.cell(header: true, text: "Lead provider")
-          row.cell(header: true, text: "Cohort")
-          row.cell(header: true, text: "Schedule")
-          row.cell(header: true, text: "Start date")
-          row.cell(header: true, text: "End date")
-          row.cell(header: true, text: "Preferred email")
-          row.cell(header: true, text: "Induction status")
-          row.cell(header: true, text: "Training status")
-        end
-
-        table.body do |body|
-          @induction_records.each do |induction_record|
-            body.row do |row|
-              row.cell(text: induction_record.lead_provider.name)
-              row.cell(text: induction_record.cohort.start_year)
-              row.cell(text: induction_record.schedule.schedule_identifier)
-              row.cell(text: induction_record.start_date.to_s(:govuk))
-              row.cell(text: induction_record.end_date&.to_s(:govuk))
-              row.cell(text: induction_record.preferred_identity.email)
-              row.cell(text: induction_record.induction_status)
-              row.cell(text: induction_record.training_status)
-            end
-          end
-        end
-      end
-    end %>
+    <%= render 'finance/ecf/duplicates/compare/details', participant_profile: @participant_profile %>
+  </div>
+</div>
+<h2 class="govuk-heading-m">Duplicate profile</h2>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render 'finance/ecf/duplicates/compare/details', participant_profile: @duplicate %>
   </div>
 </div>
