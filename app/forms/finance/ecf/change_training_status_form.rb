@@ -38,15 +38,17 @@ module Finance
           cpd_lead_provider:,
           course_identifier:,
           participant_id: participant_profile.participant_identity.external_identifier,
-          reason:,
         }
 
-        if training_status == "deferred"
-          DeferParticipant.new(params).call
+        case training_status
+        when "deferred"
+          DeferParticipant.new(params.merge(reason:)).call
+        when "active"
+          ResumeParticipant.new(params).call
         else
           klass = "Participants::#{action_class_name}::#{participant_class_name}".constantize
           klass.call(
-            params: params.merge(force_training_status_change: true),
+            params: params.merge(reason:, force_training_status_change: true),
           )
         end
 
@@ -75,10 +77,7 @@ module Finance
       end
 
       def action_class_name
-        case training_status
-        when "active"
-          "Resume"
-        when "withdrawn"
+        if training_status == "withdrawn"
           "Withdraw"
         else
           raise "training_status type not recognised"
