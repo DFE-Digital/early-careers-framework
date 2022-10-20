@@ -6,3 +6,6 @@ class ParticipantProfile < ApplicationRecord
     end
   end
 end
+
+require "participant_profile/deleted/ect"
+require "participant_profile/deleted/mentor"

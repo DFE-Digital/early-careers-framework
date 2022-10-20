@@ -2,7 +2,7 @@
 
 class ParticipantProfile < ApplicationRecord
   module Deleted
-    class Mentor < ParticipantProfile
+    class Mentor < ECF
     end
   end
 end
