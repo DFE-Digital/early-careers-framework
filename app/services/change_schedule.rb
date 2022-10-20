@@ -27,14 +27,14 @@ class ChangeSchedule
     return if invalid?
 
     ActiveRecord::Base.transaction do
-      ParticipantProfileSchedule.create!(participant_profile:, schedule:)
-      participant_profile.update_schedule!(schedule)
+      ParticipantProfileSchedule.create!(participant_profile:, schedule: new_schedule)
+      participant_profile.update_schedule!(new_schedule)
 
       if relevant_induction_record
         Induction::ChangeInductionRecord.call(
           induction_record: relevant_induction_record,
           changes: {
-            schedule:,
+            schedule: new_schedule,
           },
         )
       end
@@ -54,6 +54,19 @@ class ChangeSchedule
                                  course_identifier:,
                                  cpd_lead_provider:,
                                )
+  end
+
+  def alias_search_query
+    Finance::Schedule
+      .where("identifier_alias IS NOT NULL")
+      .where(identifier_alias: schedule_identifier, cohort:)
+  end
+
+  def new_schedule
+    @new_schedule ||= Finance::Schedule
+      .where(schedule_identifier:, cohort:)
+      .or(alias_search_query)
+      .first
   end
 
   def schedule
@@ -88,12 +101,12 @@ private
 
   def validate_new_schedule_valid_with_existing_declarations
     return if user.blank? || participant_profile.blank?
-    return unless schedule
+    return unless new_schedule
 
     participant_profile.participant_declarations.each do |declaration|
       next unless %w[submitted eligible payable paid].include?(declaration.state)
 
-      milestone = schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
+      milestone = new_schedule.milestones.find_by!(declaration_type: declaration.declaration_type)
 
       if declaration.declaration_date <= milestone.start_date.beginning_of_day
         errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
@@ -106,9 +119,9 @@ private
   end
 
   def validate_permitted_schedule_for_course
-    return unless schedule
+    return unless new_schedule
 
-    unless schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(course_identifier)
+    unless new_schedule.class::PERMITTED_COURSE_IDENTIFIERS.include?(course_identifier)
       errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
     end
   end
@@ -121,11 +134,11 @@ private
   end
 
   def schedule_valid_with_pending_declarations
-    return unless schedule
+    return unless new_schedule
 
     participant_profile&.participant_declarations&.each do |declaration|
       if declaration.changeable?
-        milestone = schedule.milestones.find_by(declaration_type: declaration.declaration_type)
+        milestone = new_schedule.milestones.find_by(declaration_type: declaration.declaration_type)
 
         if declaration.declaration_date <= milestone.start_date.beginning_of_day
           errors.add(:schedule_identifier, I18n.t(:schedule_invalidates_declaration))
