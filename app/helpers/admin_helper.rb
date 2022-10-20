@@ -46,12 +46,4 @@ module AdminHelper
 
     safe_join(parts.compact_blank, tag.br)
   end
-
-  def identity_transferred_label(identity)
-    if identity.user_id == identity.external_identifier
-      "Original"
-    else
-      "Transferred"
-    end
-  end
 end

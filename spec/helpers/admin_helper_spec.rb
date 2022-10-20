@@ -87,22 +87,4 @@ RSpec.describe AdminHelper, type: :helper do
       expect(format_address("a", "b", "c")).to eql("a<br>b<br>c")
     end
   end
-
-  describe "#identity_transferred_label" do
-    context "when it's the original identity" do
-      let(:identity) { create(:participant_identity) }
-
-      it "returns Original" do
-        expect(identity_transferred_label(identity)).to be "Original"
-      end
-    end
-
-    context "when it's a transferred identity" do
-      let(:identity) { create(:participant_identity, :transferred) }
-
-      it "returns Transferred" do
-        expect(identity_transferred_label(identity)).to be "Transferred"
-      end
-    end
-  end
 end
