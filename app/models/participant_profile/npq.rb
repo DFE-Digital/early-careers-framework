@@ -14,7 +14,28 @@ class ParticipantProfile < ApplicationRecord
       npq-early-headship-coaching-offer
       npq-leading-literacy
     ].freeze
+
     VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
+
+    WITHDRAW_REASONS = %w[
+      insufficient-capacity-to-undertake-programme
+      personal-reason-health-or-pregnancy-related
+      personal-reason-moving-school
+      personal-reason-other
+      insufficient-capacity
+      change-in-developmental-or-personal-priorities
+      change-in-school-circumstances
+      change-in-school-leadership
+      quality-of-programme-structure-not-suitable.
+      quality-of-programme-content-not-suitable
+      quality-of-programme-facilitation-not-effective
+      quality-of-programme-accessibility
+      quality-of-programme-other
+      programme-not-appropriate-for-role-and-cpd-needs
+      started-in-error
+      other
+    ].freeze
+
     self.ignored_columns = %i[mentor_profile_id school_cohort_id start_term]
     belongs_to :school, optional: true
     belongs_to :npq_course, optional: true

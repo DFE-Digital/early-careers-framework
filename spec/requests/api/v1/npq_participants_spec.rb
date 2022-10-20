@@ -108,7 +108,7 @@ RSpec.describe "NPQ Participants API", type: :request do
       describe "JSON Participant Withdrawal" do
         let(:url) { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params) do
-          { data: { attributes: { course_identifier: npq_course.identifier, reason: Participants::Withdraw::NPQ.reasons.sample } } }
+          { data: { attributes: { course_identifier: npq_course.identifier, reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample } } }
         end
 
         context "when there is a started declaration" do
@@ -138,7 +138,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/defer" }
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier:, reason: ParticipantProfile::DEFERRAL_REASONS.sample } } } }
-        let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample } } } }
       end
 
       it_behaves_like "JSON Participant Resume endpoint", "npq-participant" do
@@ -146,7 +146,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/resume" }
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
         let(:params)            { { data: { attributes: { course_identifier: } } } }
-        let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
+        let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample } } } }
         before do
           put "/api/v1/participants/npq/#{npq_application.user.id}/defer",
               params: { data: { attributes: { course_identifier:, reason: ParticipantProfile::DEFERRAL_REASONS.sample } } }

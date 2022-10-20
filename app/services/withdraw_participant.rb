@@ -1,0 +1,93 @@
+# frozen_string_literal: true
+
+class WithdrawParticipant
+  include ActiveModel::Model
+  include ActiveModel::Attributes
+  include ActiveModel::Validations::Callbacks
+
+  attribute :cpd_lead_provider
+  attribute :participant_id
+  attribute :reason
+  attribute :course_identifier
+  attribute :force_training_status_change
+
+  validate :participant_has_participant_profile
+  validates :cpd_lead_provider, induction_record: true
+  validates :reason,
+            presence: { message: I18n.t(:missing_reason) },
+            inclusion: {
+              in: ->(klass) { klass.participant_profile.class::WITHDRAW_REASONS },
+              message: I18n.t(:invalid_reason),
+            }, if: ->(klass) { klass.participant_profile.present? }
+  validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
+  validate :not_already_withdrawn
+
+  def call
+    ActiveRecord::Base.transaction do
+      create_withdrawn_participant_profile_state!
+      update_withdrawn_induction_record!
+
+      participant_profile.training_status_withdrawn!
+    end
+
+    unless participant_profile.npq?
+      induction_coordinator = participant_profile.school.induction_coordinator_profiles.first
+      SchoolMailer.fip_provider_has_withdrawn_a_participant(withdrawn_participant: participant_profile, induction_coordinator:).deliver_later
+    end
+
+    participant_profile.record_to_serialize_for(lead_provider: cpd_lead_provider.lead_provider)
+  end
+
+  def participant_identity
+    @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+  end
+
+  def participant_profile
+    @participant_profile ||=
+      ParticipantProfileResolver.call(
+        participant_identity:,
+        course_identifier:,
+        cpd_lead_provider:,
+      )
+  end
+
+  def schedule
+    @schedule ||= participant_profile&.schedule_for(cpd_lead_provider:)
+  end
+
+private
+
+  def not_already_withdrawn
+    return unless participant_profile
+
+    errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
+  end
+
+  def participant_has_participant_profile
+    return if errors.any?
+
+    errors.add(:participant_profile, I18n.t(:invalid_participant)) if participant_profile.blank?
+  end
+
+  def relevant_induction_record
+    @relevant_induction_record ||= participant_profile.latest_induction_record_for(cpd_lead_provider:)
+  end
+
+  def create_withdrawn_participant_profile_state!
+    ParticipantProfileState.create!(
+      participant_profile:,
+      state: ParticipantProfileState.states[:withdrawn],
+      cpd_lead_provider:,
+      reason:
+    )
+  end
+
+  def update_withdrawn_induction_record!
+    return unless relevant_induction_record
+
+    relevant_induction_record.update!(
+      training_status: ParticipantProfileState.states[:withdrawn],
+      force_training_status_change:
+    )
+  end
+end

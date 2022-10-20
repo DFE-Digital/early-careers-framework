@@ -8,7 +8,7 @@ module Finance
 
       REASON_OPTIONS = {
         "deferred" => ParticipantProfile::DEFERRAL_REASONS,
-        "withdrawn" => Participants::Withdraw::ECF.reasons,
+        "withdrawn" => ParticipantProfile::ECF::WITHDRAW_REASONS,
       }.freeze
 
       attribute :participant_profile
@@ -77,8 +77,9 @@ module Finance
       end
 
       def action_class_name
-        if training_status == "withdrawn"
-          "Withdraw"
+        case training_status
+        when "active"
+          "Resume"
         else
           raise "training_status type not recognised"
         end
