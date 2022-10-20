@@ -10,5 +10,9 @@ FactoryBot.define do
     trait :npq_origin do
       origin { "npq" }
     end
+
+    trait :transferred do
+      external_identifier { SecureRandom.uuid }
+    end
   end
 end

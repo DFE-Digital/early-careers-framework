@@ -11,6 +11,7 @@ module Admin
     before_action :participant_declarations, only: :show, unless: -> { @participant_profile.npq? }
     before_action :validation_data, only: :show, unless: -> { @participant_profile.npq? }
     before_action :eligibility_data, only: :show, unless: -> { @participant_profile.npq? }
+    before_action :participant_identities, only: :show
 
     def show; end
 
@@ -107,6 +108,10 @@ module Admin
 
     def eligibility_data
       @eligibility_data ||= ::EligibilityPresenter.new(@participant_profile.ecf_participant_eligibility)
+    end
+
+    def participant_identities
+      @participant_identities ||= @participant_profile.user.participant_identities
     end
   end
 end
