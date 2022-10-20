@@ -15,14 +15,10 @@ class ChangeSchedule
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
 
   validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
-  validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
-  validates :participant_id, format: { with: /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\Z/, message: I18n.t("errors.participant_id.invalid") }, allow_blank: true
-  validates :cpd_lead_provider, presence: { message: I18n.t(:missing_cpd_lead_provider) }
-  validate :participant_has_participant_profile
-  validates :schedule, presence: { message: I18n.t(:invalid_schedule) }
+  validates :cpd_lead_provider, induction_record: true
+  validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
-  validate :validate_provider
   validate :validate_permitted_schedule_for_course
   validate :validate_cannot_change_cohort
   validate :schedule_valid_with_pending_declarations
@@ -60,17 +56,8 @@ class ChangeSchedule
                                )
   end
 
-  def alias_search_query
-    Finance::Schedule
-      .where("identifier_alias IS NOT NULL")
-      .where(identifier_alias: schedule_identifier, cohort:)
-  end
-
   def schedule
-    @schedule ||= Finance::Schedule
-      .where(schedule_identifier:, cohort:)
-      .or(alias_search_query)
-      .first
+    @schedule ||= participant_profile&.schedule_for(cpd_lead_provider:)
   end
 
 private
@@ -118,14 +105,6 @@ private
     end
   end
 
-  def validate_provider
-    return if user.blank? || participant_profile.blank?
-
-    unless participant_profile && participant_profile.matches_lead_provider?(cpd_lead_provider:)
-      errors.add(:participant_id, I18n.t(:invalid_participant))
-    end
-  end
-
   def validate_permitted_schedule_for_course
     return unless schedule
 
@@ -157,11 +136,5 @@ private
         end
       end
     end
-  end
-
-  def participant_has_participant_profile
-    return if errors.any?
-
-    errors.add(:participant_id, I18n.t(:invalid_participant)) if participant_profile.blank?
   end
 end

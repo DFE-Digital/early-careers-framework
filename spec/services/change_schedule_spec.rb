@@ -9,7 +9,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:schedule)).to include("The property '#/schedule_identifier' must be present and correspond to a valid schedule")
+      expect(service.errors.messages_for(:schedule_identifier)).to include("The property '#/schedule_identifier' must be present and correspond to a valid schedule")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be present")
+      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must have a valid UUID format")
+      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
     end
   end
 
