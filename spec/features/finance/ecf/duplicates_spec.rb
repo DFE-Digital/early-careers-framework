@@ -89,11 +89,10 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
 
     page.find_link("View duplicates", href: finance_ecf_duplicate_path(ect_participant_profile)).click
 
-    within "tbody tr:nth-child(1) td:nth-child(6)" do
-      click_on "View induction records"
+    within "tbody tr:nth-child(2) td:nth-child(14)" do
+      click_on "View details"
     end
-
-    click_on ect_participant_profile.user.full_name
-    save_and_open_screenshot
+    expect(page).to have_css("h1", text: "Compare profile")
+    expect(page).to have_css("span", text: "Participant ID: #{ect_participant_profile.user_id}")
   end
 end
