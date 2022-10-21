@@ -2,8 +2,9 @@
 
 RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, :with_default_schedules, type: :view_component do
   let(:npq_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
+  let(:user) { create(:user, full_name: "John Doe") }
   let(:npq_application) do
-    create(:npq_application, :funded, :accepted, npq_lead_provider:)
+    create(:npq_application, :funded, :accepted, npq_lead_provider:, user:)
   end
 
   before do
