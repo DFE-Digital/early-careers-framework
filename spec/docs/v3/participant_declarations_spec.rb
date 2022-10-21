@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "Participant Declarations", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json" do
+RSpec.describe "Participant Declarations", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   let(:ect_profile) { create(:ect) }
   let(:ect_declaration_date) { ect_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
   let(:user) { ect_profile.user }

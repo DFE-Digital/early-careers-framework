@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   path "/api/v3/participants/npq/{id}/outcomes" do
     get "Retrieve NPQ outcomes for the specified participant" do
       operationId :npq_outcome_get
