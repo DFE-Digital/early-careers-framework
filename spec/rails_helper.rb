@@ -136,4 +136,6 @@ RSpec.configure do |config|
       example.run
     end
   end
+
+  config.exclude_pattern = "spec/docs/v3/**/*_spec.rb" unless ENV["WITH_V3_DOC_SPECS"]
 end
