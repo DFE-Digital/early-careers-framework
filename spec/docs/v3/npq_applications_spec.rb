@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json" do
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }

@@ -5,7 +5,6 @@ ci_node_index = ENV["CI_NODE_INDEX"] || "0"
 github_sha = ENV['GITHUB_SHA'] || "fake-sha-123"
 
 tests = Dir["spec/**/*_spec.rb"]
-  .reject { |path| path.match?(/spec\/docs\/v3/) }
   .sort
   # Add randomization seed based on SHA of each commit
   .shuffle(random: Random.new(github_sha.to_i(16)))

@@ -23,7 +23,6 @@ RSpec.configure do |config|
   # order to prevent clashes with cypress features and confusion with capybara
   # conventions.
   config.pattern += ",**/turnip_features/**/*.feature"
-
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
@@ -107,6 +106,8 @@ RSpec.configure do |config|
   config.extend WithModel
 
   config.bisect_runner = :shell
+
+  config.filter_run_excluding api_v3: true
 end
 
 RSpec::Matchers.define_negated_matcher :not_change, :change

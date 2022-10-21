@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   path "/api/v3/partnerships/ecf" do
     get "Retrieve multiple ECF partnerships" do
       operationId :partnerships_ecf_get
