@@ -2,7 +2,28 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token) { "Bearer #{token}" }
+  let(:Authorization) { bearer_token }
+  let(:cohort_2021) { create(:cohort, :current) }
+  let(:cohort_2022) { create(:cohort, :next) }
+  let!(:ecf_statement_cohort_2022) do
+    create(
+      :ecf_statement,
+      cpd_lead_provider:,
+      cohort: cohort_2022,
+    )
+  end
+  let!(:ecf_statement_cohort_2021) do
+    create(
+      :ecf_statement,
+      cpd_lead_provider:,
+      cohort: cohort_2021,
+    )
+  end
+
   path "/api/v3/statements" do
     get "Retrieve financial statements" do
       operationId :statements_get
@@ -59,6 +80,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
                 example: "fe82db5d-a7ff-42b4-9eb7-19a87bf0ce5f"
 
       response "200", "A specific financial statement" do
+        let(:id) { ecf_statement_cohort_2022.id }
+
         schema({ "$ref": "#/components/schemas/StatementResponse" })
 
         run_test!
@@ -66,13 +89,16 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+        let(:id) { ecf_statement_cohort_2022.id }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
 
-      response "404", "Not Found" do
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "unknown-id" }
+
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
