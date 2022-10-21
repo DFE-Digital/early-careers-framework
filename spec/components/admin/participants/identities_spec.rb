@@ -21,10 +21,10 @@ RSpec.describe Admin::Participants::Identities, :with_default_schedules, type: :
   context "with transferred identities" do
     let(:identities) { build_list(:participant_identity, 2, :npq_origin, :transferred) }
 
-    it "renders info for all the identities and labels them as 'Transferred'" do
+    it "renders info for all the identities and labels them as 'Additional'" do
       identities.each do |identity|
         expect(rendered).to have_contents(
-          "Transferred",
+          "Additional",
           identity.user_id,
           identity.external_identifier,
           identity.email,

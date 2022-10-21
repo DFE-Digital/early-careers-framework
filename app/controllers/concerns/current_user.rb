@@ -9,7 +9,7 @@ module CurrentUser
     original = super
     return if original.nil?
 
-    transferred_identity = ParticipantIdentity.transferred.find_by(external_identifier: original.id)
+    transferred_identity = ParticipantIdentity.secondary.find_by(external_identifier: original.id)
 
     @deduped_current_user = transferred_identity&.user || original
   end
@@ -20,7 +20,7 @@ module CurrentUser
     original = super
     return if original.nil?
 
-    transferred_identity = ParticipantIdentity.transferred.find_by(external_identifier: original.id)
+    transferred_identity = ParticipantIdentity.secondary.find_by(external_identifier: original.id)
 
     @deduped_true_user = transferred_identity&.user || original
   end
