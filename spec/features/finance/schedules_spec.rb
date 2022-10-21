@@ -8,7 +8,7 @@ RSpec.feature "Finance users payment breakdowns", type: :feature do
   scenario "viewing a schedule" do
     given_i_am_logged_in_as_a_finance_user
     and_there_is_a_schedule
-    when_i_click("Schedules")
+    when_i_click("View payment schedules")
     then_i_see("Schedules")
     and_see_table_with_schedule
 

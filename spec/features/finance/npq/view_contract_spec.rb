@@ -36,7 +36,7 @@ RSpec.feature "NPQ view contract" do
   end
 
   def when_i_visit_the_payment_breakdown_page
-    click_on "Payment Breakdown"
+    click_on "View financial statements"
   end
 
   def and_choose_to_see_npq_payment_breakdown
