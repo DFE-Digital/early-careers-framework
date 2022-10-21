@@ -17,7 +17,7 @@ module Api
       end
 
       attribute :cohort do |delivery_partner, params|
-        delivery_partner.cohorts_with_provider(params[:lead_provider]).map(&:start_year)
+        delivery_partner.cohorts_with_provider(params[:lead_provider]).map(&:display_name)
       end
     end
   end

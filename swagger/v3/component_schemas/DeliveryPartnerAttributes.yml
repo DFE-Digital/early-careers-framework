@@ -1,7 +1,5 @@
 description: "The data attributes associated with a delivery partner"
 type: object
-required:
-  - name
 properties:
   name:
     description: The name of the delivery partner you are working with
