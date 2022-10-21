@@ -33,8 +33,8 @@ module Api
                 challenged_reason: partnership.challenge_reason,
                 induction_tutor_name: school.induction_tutor.full_name,
                 induction_tutor_email: school.contact_email,
-                updated_at: delivery_partner.updated_at.rfc3339,
-                created_at: delivery_partner.created_at.rfc3339,
+                updated_at: partnership.updated_at.rfc3339,
+                created_at: partnership.created_at.rfc3339,
               },
             ])
           end
