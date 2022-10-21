@@ -9,10 +9,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <%= govuk_table do |table|
-      table.head do |head|
+      table.head(classes: ["govuk-body-s"]) do |head|
         head.row do |row|
           row.cell(header: true, text: "Profile type")
-          row.cell(header: true, text: "Participant ID")
+          row.cell(header: true, text: "External identifier")
           row.cell(header: true, text: "Profile ID")
           row.cell(header: true, text: "Cohort")
           row.cell(header: true, text: "Schedule")
@@ -24,11 +24,11 @@
           row.cell(header: true, text: "Actions")
         end
 
-        table.body do |body|
+        table.body(classes: ["govuk-body-s"]) do |body|
           @participant_profiles.each do |participant_profile|
             body.row do |row|
-              row.cell { tag_for(participant_profile) }
-              row.cell(text: participant_profile.participant_id)
+              row.cell(text: participant_profile.profile_type)
+              row.cell(text: participant_profile.external_identifier)
               row.cell(text: participant_profile.id)
               row.cell(text: participant_profile.cohort)
               row.cell(text: participant_profile.schedule_identifier)

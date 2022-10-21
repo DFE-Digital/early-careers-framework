@@ -1095,7 +1095,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
   add_foreign_key "teacher_profiles", "users"
 
   create_view "ecf_duplicates", sql_definition: <<-SQL
-      SELECT participant_identities.external_identifier AS participant_id,
+      SELECT participant_identities.user_id,
+      participant_identities.external_identifier,
       participant_profiles.id,
           CASE participant_profiles.type
               WHEN 'ParticipantProfile::Mentor'::text THEN 'mentor'::text
@@ -1112,8 +1113,10 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
       latest_induction_records.school_name,
       schedules.schedule_identifier,
       cohorts.start_year AS cohort,
-      COALESCE(declarations.count, (0)::bigint) AS declaration_count,
       lead_providers.name AS provider_name,
+      teacher_profiles.trn AS teacher_profile_trn,
+      teacher_profiles.id AS teacher_profile_id,
+      COALESCE(declarations.count, (0)::bigint) AS declaration_count,
       row_number() OVER (PARTITION BY participant_profiles.participant_identity_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
@@ -1127,8 +1130,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text <> 'active'::text)) THEN 2
               WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
               ELSE 4
-          END) AS master_participant_profile_id
-     FROM (((((((participant_profiles
+          END) AS primary_participant_profile_id
+     FROM ((((((((participant_profiles
        JOIN ( SELECT induction_records.id,
               induction_records.induction_programme_id,
               induction_records.participant_profile_id,
@@ -1152,7 +1155,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
                JOIN induction_programmes ON ((induction_programmes.id = induction_records.induction_programme_id)))
                JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))
                JOIN lead_providers lead_providers_1 ON ((lead_providers_1.id = partnerships.lead_provider_id)))
-               JOIN schools ON ((schools.id = partnerships.school_id)))) latest_induction_records ON ((latest_induction_records.participant_profile_id = participant_profiles.id)))
+               JOIN schools ON ((schools.id = partnerships.school_id)))) latest_induction_records ON (((latest_induction_records.participant_profile_id = participant_profiles.id) AND (latest_induction_records.induction_record_sort_order = 1))))
        JOIN lead_providers ON ((lead_providers.id = latest_induction_records.lead_provider_id)))
        JOIN ( SELECT count(*) AS count,
               participant_profiles_1.participant_identity_id
@@ -1160,6 +1163,7 @@ ActiveRecord::Schema.define(version: 2022_09_29_104505) do
             WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.participant_identity_id) duplicates ON ((duplicates.participant_identity_id = participant_profiles.participant_identity_id)))
        JOIN participant_identities ON ((participant_identities.id = participant_profiles.participant_identity_id)))
+       JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
        JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
        JOIN cohorts ON ((schedules.cohort_id = cohorts.id)))
        LEFT JOIN ( SELECT participant_declarations.participant_profile_id,

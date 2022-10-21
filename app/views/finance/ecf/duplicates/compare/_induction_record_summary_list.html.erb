@@ -1,0 +1,38 @@
+<%= govuk_summary_list do |summary_list|
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "ID" }
+    row.value  { induction_record.id }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Lead provider" }
+    row.value  { induction_record.lead_provider.name }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Cohort" }
+    row.value { induction_record.cohort.start_year.to_s }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Schedule" }
+    row.value { induction_record.schedule.schedule_identifier }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Starts on" }
+    row.value { induction_record.start_date.to_s(:short) }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key    { "Ends on" }
+    row.value  { induction_record.end_date&.to_s(:short) }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key    { "Preferred email" }
+    row.value  { induction_record.preferred_identity.email }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key    { "Induction status" }
+    row.value  { induction_record.induction_status }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key    { "Training status" }
+    row.value  { induction_record.training_status }
+  end
+end %>

@@ -1,69 +1,39 @@
 <%= govuk_table do |table|
-  table.head do |head|
-    head.row do |row|
-      row.cell(header: true, text: "Profile type")
-      row.cell(header: true, text: "Participant ID")
-      row.cell(header: true, text: "Profile ID")
-      row.cell(header: true, text: "Cohort")
-      row.cell(header: true, text: "Schedule")
-      row.cell(header: true, text: "Induction status")
-      row.cell(header: true, text: "Training status")
-      row.cell(header: true, text: "Lead Provider")
-      row.cell(header: true, text: "School")
-      row.cell(header: true, text: "Starts on")
-      row.cell(header: true, text: "Ends on")
-      row.cell(header: true, text: "Declaration count")
-    end
-
-    table.body do |body|
+  table.head(classes: ["govuk-body-s"]) do |head|
+    table.body(classes: ["govuk-body-s"]) do |body|
       body.row do |row|
-        row.cell { tag_for(participant_profile) }
-        row.cell(text: participant_profile.participant_id)
-        row.cell(text: participant_profile.id)
-        row.cell(text: participant_profile.cohort)
-        row.cell(text: participant_profile.schedule_identifier)
-        row.cell(text: participant_profile.induction_status)
-        row.cell(text: participant_profile.training_status)
-        row.cell(text: participant_profile.provider_name)
-        row.cell(text: participant_profile.school_name)
-        row.cell(text: participant_profile.start_date.to_s(:govuk))
-        row.cell(text: participant_profile.end_date&.to_s(:govuk))
-        row.cell(text: participant_profile.declaration_count)
+        row.cell(header: true, text: "Record type")
+        row.cell { |row| tag_for(primary_profile)}
+        row.cell { |row| tag_for(duplicate_profile)}
       end
+      body.row { |row| comparative_table_row_for(row: row, header: "Profile type", method: :profile_type, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "User ID", method: :user_id, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "External identifier", method: :external_identifier, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Profile ID", method: :id, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "TRN", method: :teacher_profile_trn, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Teacher Profile ID", method: :teacher_profile_id, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Cohort", method: :cohort, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Schedule", method: :schedule_identifier, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Induction status", method: :induction_status, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Training status", method: :training_status, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Lead Provider", method: :provider_name, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "School", method: :school_name, primary_profile:, duplicate_profile:) }
+      body.row do |row|
+        row.cell(header: true, text: "Starts on")
+        row.cell(text: primary_profile.start_date.to_s(:short))
+        row.cell(text: duplicate_profile.start_date.to_s(:short))
+      end
+      body.row do |row|
+        row.cell(header: true, text: "Ends on")
+        row.cell(text: primary_profile.end_date&.to_s(:short))
+        row.cell(text: duplicate_profile.end_date&.to_s(:short))
+      end
+      body.row { |row| comparative_table_row_for(row: row, header: "Declaration count", method: :declaration_count, primary_profile:, duplicate_profile:) }
     end
   end
 end %>
 
-<%= govuk_accordion do |accordion|
-  accordion.section(heading_text: "Views induction records") do
-    govuk_table do |table|
-      table.head do |head|
-        head.row do |row|
-          row.cell(header: true, text: "Lead provider")
-          row.cell(header: true, text: "Cohort")
-          row.cell(header: true, text: "Schedule")
-          row.cell(header: true, text: "Start date")
-          row.cell(header: true, text: "End date")
-          row.cell(header: true, text: "Preferred email")
-          row.cell(header: true, text: "Induction status")
-          row.cell(header: true, text: "Training status")
-        end
-
-        table.body do |body|
-          participant_profile.induction_records.each do |induction_record|
-            body.row do |row|
-              row.cell(text: induction_record.lead_provider.name)
-              row.cell(text: induction_record.cohort.start_year)
-              row.cell(text: induction_record.schedule.schedule_identifier)
-              row.cell(text: induction_record.start_date.to_s(:govuk))
-              row.cell(text: induction_record.end_date&.to_s(:govuk))
-              row.cell(text: induction_record.preferred_identity.email)
-              row.cell(text: induction_record.induction_status)
-              row.cell(text: induction_record.training_status)
-            end
-          end
-        end
-      end
-    end
-  end
-end %>
+<%=  govuk_tabs(title: "Induction records and declarations") do |c|
+  c.tab(label: "Induction records") { render 'finance/ecf/duplicates/compare/induction_records', primary_profile:, duplicate_profile: }
+  c.tab(label: "Declarations") { render 'finance/ecf/duplicates/compare/declarations', primary_profile:, duplicate_profile: }
+end%>

@@ -6,7 +6,7 @@ module Finance
       include Pagy::Backend
 
       def index
-        @pagy, @participant_profiles = pagy(Duplicate.where("id = master_participant_profile_id"))
+        @pagy, @participant_profiles = pagy(Duplicate.primary_profiles)
         @training_statuses           = Duplicate.select(:training_status).distinct
         @induction_statuses          = Duplicate.select(:induction_status).distinct
         @breadcrumbs                 = [

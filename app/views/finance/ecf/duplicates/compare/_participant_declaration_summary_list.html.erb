@@ -1,0 +1,46 @@
+<%= govuk_summary_list do |summary_list|
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "ID" }
+    row.value  { participant_declaration.id }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Type" }
+    row.value  { participant_declaration.declaration_type }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "State" }
+    row.value  { participant_declaration.state }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Lead provider" }
+    row.value  { participant_declaration.cpd_lead_provider.name }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Declaration date" }
+    row.value { participant_declaration.declaration_date.to_s(:short) }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Course" }
+    row.value { participant_declaration.course_identifier }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Sparsity uplift" }
+    row.value { participant_declaration.course_identifier }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Pupil premium uplift" }
+    row.value { participant_declaration.course_identifier }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Delivery Partner" }
+    row.value { participant_declaration.delivery_partner&.name }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Updated at" }
+    row.value { participant_declaration.updated_at.to_s(:short) }
+  end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key { "Created at" }
+    row.value { participant_declaration.created_at.to_s(:short) }
+  end
+end %>

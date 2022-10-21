@@ -1,14 +1,9 @@
 <% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
 
-<h2 class="govuk-heading-m">Master profile</h2>
+<span class="govuk-caption-m">Participant ID: <%= @primary_profile.user_id %></span></span>
+<h2 class="govuk-heading-m">Compare profiles</h2>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <%= render 'finance/ecf/duplicates/compare/details', participant_profile: @participant_profile %>
-  </div>
-</div>
-<h2 class="govuk-heading-m">Duplicate profile</h2>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <%= render 'finance/ecf/duplicates/compare/details', participant_profile: @duplicate %>
+    <%= render 'finance/ecf/duplicates/compare/details', primary_profile: @primary_profile, duplicate_profile: @duplicate_profile %>
   </div>
 </div>
