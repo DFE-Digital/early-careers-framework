@@ -6,7 +6,7 @@ on:
 
 jobs:
   destroy:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies')) }}
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
