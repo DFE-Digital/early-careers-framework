@@ -70,6 +70,7 @@ module NPQ
         country.alpha3
       else
         Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.")
+        nil
       end
     end
 
