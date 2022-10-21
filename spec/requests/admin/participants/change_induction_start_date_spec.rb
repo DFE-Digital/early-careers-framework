@@ -6,7 +6,8 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:old_date) { 2.weeks.ago.to_date }
 
-  let!(:ect_profile) { create(:ect, induction_start_date: old_date) }
+  let(:user) { create(:user, full_name: "John Doe") }
+  let!(:ect_profile) { create(:ect, induction_start_date: old_date, user:) }
 
   before { sign_in(admin_user) }
 
