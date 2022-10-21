@@ -121,9 +121,12 @@ module DataStage
     end
 
     def eligible_row?(row)
+      establishment_type = row.fetch("TypeOfEstablishment (code)").to_i
+
       english_district_code?(row.fetch("DistrictAdministrative (code)")) &&
-        (eligible_establishment_code?(row.fetch("TypeOfEstablishment (code)").to_i) ||
-          row.fetch("Section41Approved (name)") == "Approved")
+        (eligible_establishment_code?(establishment_type) ||
+         cip_only_establishment_code?(establishment_type) ||
+         row.fetch("Section41Approved (name)") == "Approved")
     end
 
     def extract_values_from(changes_hash)
