@@ -105,6 +105,10 @@ class ParticipantProfile < ApplicationRecord
       !!latest_induction_record_for(cpd_lead_provider:)&.training_status_deferred?
     end
 
+    def active_for?(cpd_lead_provider:)
+      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
+    end
+
   private
 
     def update_analytics

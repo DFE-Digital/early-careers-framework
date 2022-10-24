@@ -14,7 +14,9 @@ module Api
       end
 
       def resume
-        perform_action(service_namespace: ::Participants::Resume)
+        service = ResumeParticipant.new(params_for_recorder)
+
+        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
       end
 
       def change_schedule

@@ -16,6 +16,12 @@ module Api
         render json: serializer_class.new(npq_participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
+      def resume
+        service = ResumeParticipant.new(params_for_recorder)
+
+        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
+      end
+
       def withdraw
         if any_participant_declarations_started?
           perform_action(service_namespace: ::Participants::Withdraw)
