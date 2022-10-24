@@ -7,7 +7,7 @@
       Use the DfE accredited materials
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
+      <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year, school_id: school.slug) %>
       <span class="govuk-visually-hidden"> induction programme</span>
     </dd>
   </div>
@@ -20,7 +20,7 @@
     </dd>
     <dd class="govuk-summary-list__actions">
       <%= govuk_link_to "Change",
-                        admin_school_change_training_materials_path(id: school_cohort.cohort.start_year),
+                        admin_school_change_training_materials_path(id: school_cohort.cohort.start_year, school_id: school.slug),
                         "data-test": "change-materials"
       %>
       <span class="govuk-visually-hidden"> training materials</span>

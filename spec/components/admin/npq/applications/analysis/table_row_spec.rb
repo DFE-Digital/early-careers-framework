@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, :with_default_schedules, type: :view_component do
+RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, :with_default_schedules, type: :component do
   let(:npq_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
   let(:user) { create(:user, full_name: "John Doe") }
   let(:npq_application) do
@@ -14,7 +14,8 @@ RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, :with_default_sched
            cpd_lead_provider: npq_lead_provider.cpd_lead_provider)
   end
 
-  component { described_class.new application: npq_application }
+  let(:component) { described_class.new application: npq_application }
+  subject { render_inline(component) }
 
   it { is_expected.to have_content "Full name\n    #{npq_application.user.full_name}" }
   it { is_expected.to have_link npq_application.user.full_name, href: admin_participant_path(npq_application.profile) }

@@ -1,11 +1,11 @@
 <tr class="govuk-table__row">
   <% if ineligible_participant? && !mentor_in_early_rollout? %>
-    <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+    <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile, **path_ids) %></td>
     <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
 
   <% else %>
 
-    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile) %></td>
+    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to profile.user.full_name, schools_participant_path(id: profile, **path_ids) %></td>
 
     <% if participant_is_on_a_cip? %>
       <td class="govuk-table__cell govuk-!-width-one-half"><%= profile.school_cohort&.core_induction_programme&.name %></td>

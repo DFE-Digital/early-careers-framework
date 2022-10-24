@@ -21,9 +21,9 @@ RSpec.describe Admin::Schools::Cohorts::FipInfo, type: :component do
   end
 
   it "has the correct content" do
-    expect(rendered_component).to have_content "Use an approved training provider"
-    expect(rendered_component).to have_content lead_provider.name
-    expect(rendered_component).to have_content school_cohort.delivery_partner.name
+    expect(rendered_content).to have_content "Use an approved training provider"
+    expect(rendered_content).to have_content lead_provider.name
+    expect(rendered_content).to have_content school_cohort.delivery_partner.name
   end
 
   context "when a block is passed in" do
@@ -38,7 +38,7 @@ RSpec.describe Admin::Schools::Cohorts::FipInfo, type: :component do
     end
 
     it "renders the block" do
-      expect(rendered_component).to have_content(block_content)
+      expect(rendered_content).to have_content(block_content)
     end
   end
 end

@@ -1,27 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe LeadProviders::YourSchools::Table, type: :view_component do
+RSpec.describe LeadProviders::YourSchools::Table, type: :component do
   include Pagy::Backend
 
   let(:items) { 10 }
-  let(:partnerships) { Array.new(rand(21..30)) { |i| double "Partnership #{i}" } }
+  let(:partnerships) { create_list(:partnership, 21) }
   let(:page) { rand(1..2) }
 
-  component { described_class.new partnerships:, page: }
-  request_path "/lead-providers/your-schools"
-
-  stub_component LeadProviders::YourSchools::TableRow
+  let(:component) { described_class.new partnerships:, page: }
+  subject! { render_inline(component) }
 
   it "renders table row for each school" do
     expected_partnerships = partnerships.each_slice(items).to_a[page - 1]
+    unexpected_partnerships = partnerships - expected_partnerships
 
-    expected_partnerships.each do |partnership|
-      expect(rendered).to have_rendered(LeadProviders::YourSchools::TableRow).with(partnership:)
-    end
-
-    (partnerships - expected_partnerships).each do |other_page_partnership|
-      expect(rendered).not_to have_rendered(LeadProviders::YourSchools::TableRow)
-        .with(hash_including(partnership: other_page_partnership))
-    end
+    expect(rendered_content).to have_css(".govuk-table__body > .govuk-table__row", count: expected_partnerships.size)
+    expect(rendered_content).to include(*expected_partnerships.map(&:school).map(&:urn))
+    expect(rendered_content).not_to include(*unexpected_partnerships.map(&:school).map(&:urn))
   end
 end

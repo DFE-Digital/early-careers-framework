@@ -1,21 +1,22 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type: :view_component do
-  component { described_class.new profile: }
-
+RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type: :component do
+  let(:component) { described_class.new profile: }
   context "for unvalidated npq profile" do
     let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:profile) { npq_application.profile }
 
+    subject! { render_inline(component) }
+
     it "renders all the required information" do
-      expect(rendered).to have_contents(
+      expect(rendered_content).to include(
         profile.user.full_name,
         profile.user.email,
         profile.npq_application.nino,
         profile.npq_application.date_of_birth.to_formatted_s(:govuk),
         profile.npq_application.teacher_reference_number,
         profile.npq_application.school_urn,
-        t(:npq, scope: "schools.participants.type"),
+        I18n.t(:npq, scope: "schools.participants.type"),
         profile.npq_application.npq_lead_provider.name,
         profile.npq_application.npq_course.name,
       )
@@ -31,18 +32,20 @@ RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type:
       allow(profile).to receive(:pending?).and_return false
     end
 
+    subject! { render_inline(component) }
+
     it "renders all the required information" do
-      expect(rendered).to have_contents(
+      expect(rendered_content).to include(
         profile.user.full_name,
         profile.user.email,
         profile.npq_application.teacher_reference_number,
         profile.npq_application.school_urn,
-        t(:npq, scope: "schools.participants.type"),
+        I18n.t(:npq, scope: "schools.participants.type"),
         profile.npq_application.npq_lead_provider.name,
         profile.npq_application.npq_course.name,
       )
 
-      expect(rendered).not_to have_content(profile.npq_application.date_of_birth.to_s(:govuk))
+      expect(rendered_content).not_to have_content(profile.npq_application.date_of_birth.to_s(:govuk))
     end
   end
 end

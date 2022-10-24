@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::CocStatusTable, type: :view_component do
+RSpec.describe Schools::Participants::CocStatusTable, type: :component do
   let(:participant_profile) { create(:ecf_participant_profile, :ecf_participant_eligibility, school_cohort:) }
   let(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme: programme) }
 
-  component { described_class.new induction_records: [induction_record] }
+  let(:component) { described_class.new induction_records: [induction_record] }
 
-  stub_component Schools::Participants::CocStatusTableRow
+  # stub_component Schools::Participants::CocStatusTableRow
 
   context "participant is on fip" do
     let(:school_cohort) { create(:school_cohort, :fip) }
@@ -15,10 +15,10 @@ RSpec.describe Schools::Participants::CocStatusTable, type: :view_component do
 
     context "eligible" do
       it "renders table row" do
-        expect(rendered).to have_rendered(Schools::Participants::CocStatusTableRow).with(induction_record:)
-        expect(rendered).to have_css("th", text: "Name")
-        expect(rendered).to have_css("th", text: "Lead provider")
-        expect(rendered).to have_css("th", text: "Delivery partner")
+        render_inline(component)
+        expect(rendered_content).to have_css("th", text: "Name")
+        expect(rendered_content).to have_css("th", text: "Lead provider")
+        expect(rendered_content).to have_css("th", text: "Delivery partner")
       end
     end
 
@@ -26,9 +26,10 @@ RSpec.describe Schools::Participants::CocStatusTable, type: :view_component do
       it "renders table row" do
         participant_profile.ecf_participant_eligibility.update!(status: "ineligible", previous_induction: true)
 
-        expect(rendered).to have_rendered(Schools::Participants::CocStatusTableRow).with(induction_record:)
-        expect(rendered).to have_css("th", text: "Name")
-        expect(rendered).to have_css("th", text: "Action required")
+        render_inline(component)
+
+        expect(rendered_content).to have_css("th", text: "Name")
+        expect(rendered_content).to have_css("th", text: "Action required")
       end
     end
   end
@@ -40,9 +41,10 @@ RSpec.describe Schools::Participants::CocStatusTable, type: :view_component do
 
     context "eligible" do
       it "renders table row" do
-        expect(rendered).to have_rendered(Schools::Participants::CocStatusTableRow).with(induction_record:)
-        expect(rendered).to have_css("th", text: "Name")
-        expect(rendered).to have_css("th", text: "Materials supplier")
+        render_inline(component)
+
+        expect(rendered_content).to have_css("th", text: "Name")
+        expect(rendered_content).to have_css("th", text: "Materials supplier")
       end
     end
   end

@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe LeadProviders::YourSchools::TableRow, :with_default_schedules, type: :view_component do
+RSpec.describe LeadProviders::YourSchools::TableRow, :with_default_schedules, type: :component do
   let(:partnership)   { create :partnership }
   let(:school)        { partnership.school }
   let(:cohort)        { partnership.cohort }
   let(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
-  component { described_class.new partnership: }
+  let(:component) { described_class.new partnership: }
+  subject { render_inline(component) }
 
   it { is_expected.to have_link school.name, href: lead_providers_partnership_path(partnership) }
   it { is_expected.to have_content school.urn }
