@@ -36,8 +36,8 @@ module Finance
 
       def destroy
         # TODO: Service class to soft delete participant declarations
-        # master_participant_profile = Duplicate.find(params[:id])
-        # ParticipantPropfile::ECF.find(master_participant_profile.duplicate_participant_profile_ids).each do |participant_profile|
+        # primary_participant_profile = Duplicate.find(params[:id])
+        # ParticipantPropfile::ECF.find(primary_participant_profile.duplicate_participant_profile_ids).each do |participant_profile|
         #   participant_profile.update!(type: participant_profile.ect? ? "ParticipantProfile::Deleted::ECF" : "ParticipantProfile::Deleted::Mentor")
         # end
         redirect_to finance_ecf_duplicates_path
