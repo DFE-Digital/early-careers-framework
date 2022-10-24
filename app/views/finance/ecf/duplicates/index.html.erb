@@ -1,0 +1,51 @@
+<% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Search duplicate records</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= govuk_table do |table|
+      table.head(classes: ["govuk-body-s"]) do |head|
+        head.row do |row|
+          row.cell(header: true, text: "Profile type")
+          row.cell(header: true, text: "External identifier")
+          row.cell(header: true, text: "Profile ID")
+          row.cell(header: true, text: "Cohort")
+          row.cell(header: true, text: "Schedule")
+          row.cell(header: true, text: "Induction status")
+          row.cell(header: true, text: "Training status")
+          row.cell(header: true, text: "Provider")
+          row.cell(header: true, text: "Duplicate count")
+          row.cell(header: true, text: "Declaration count")
+          row.cell(header: true, text: "Actions")
+        end
+
+        table.body(classes: ["govuk-body-s"]) do |body|
+          @participant_profiles.each do |participant_profile|
+            body.row do |row|
+              row.cell(text: participant_profile.profile_type)
+              row.cell(text: participant_profile.external_identifier)
+              row.cell(text: participant_profile.id)
+              row.cell(text: participant_profile.cohort)
+              row.cell(text: participant_profile.schedule_identifier)
+              row.cell(text: participant_profile.induction_status)
+              row.cell(text: participant_profile.training_status)
+              row.cell(text: participant_profile.provider_name)
+              row.cell(text: participant_profile.duplicate_profile_count - 1)
+              row.cell(text: participant_profile.declaration_count)
+              row.cell do
+                govuk_link_to "View duplicates", finance_ecf_duplicate_path(participant_profile), { class: govuk_link_classes }
+              end
+            end
+          end
+        end
+      end
+    end
+    %>
+    <%= govuk_pagination(pagy: @pagy) %>
+  </div>
+</div>

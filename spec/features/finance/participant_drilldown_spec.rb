@@ -13,7 +13,7 @@ RSpec.feature "Finance users participant drilldown", :with_default_schedules, ty
       given_i_am_logged_in_as_a_finance_user
       and_an_ect_user_with_profile_and_declarations
       when_i_visit_the_finance_homepage
-      and_i_click_on("Participant drilldown")
+      and_i_click_on("Search participant data")
       then_i_see("Search records")
     end
 
@@ -51,7 +51,7 @@ RSpec.feature "Finance users participant drilldown", :with_default_schedules, ty
       given_i_am_logged_in_as_a_finance_user
       and_an_npq_user_with_application_and_profile_and_declarations
       when_i_visit_the_finance_homepage
-      and_i_click_on("Participant drilldown")
+      and_i_click_on("Search participant data")
       then_i_see("Search records")
     end
 

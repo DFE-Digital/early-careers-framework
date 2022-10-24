@@ -200,7 +200,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def when_i_visit_the_payment_breakdown_page
-    click_on "Payment Breakdown"
+    click_on "View financial statements"
   end
 
   def and_choose_to_see_npq_payment_breakdown

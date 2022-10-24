@@ -1,0 +1,38 @@
+<% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
+
+<span class="govuk-caption-l"><%= @participant_profile.profile_type %></span>
+<h1 class="govuk-heading-xl">Delete duplicate profiles for <%= @participant_profile.user.full_name %></h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= govuk_table do |table|
+      table.head do |head|
+        head.row do |row|
+          row.cell(header: true, text: "Profile ID")
+          row.cell(header: true, text: "Induction status")
+          row.cell(header: true, text: "Training status")
+          row.cell(header: true, text: "Provider")
+          row.cell(header: true, text: "Declaration count")
+          row.cell(header: true, text: "Actions")
+        end
+
+        table.body do |body|
+          @participant_profile.duplicate_participant_profiles.each do |participant_profile|
+            body.row do |row|
+              row.cell(text: participant_profile.id)
+              row.cell(text: participant_profile.induction_status)
+              row.cell(text: participant_profile.training_status)
+              row.cell(text: participant_profile.provider_name)
+              row.cell(text: participant_profile.declaration_count)
+              row.cell do
+                govuk_link_to "compare", finance_ecf_duplicate_profile_compare_path(participant_profile, @participant_profile)
+              end
+            end
+          end
+        end
+      end
+    end %>
+  </div>
+</div>
+
+<%= govuk_button_to "Confirm and delete", finance_ecf_duplicate_profile_path(@participant_profile), method: :delete %>

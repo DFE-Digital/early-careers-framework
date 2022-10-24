@@ -1,0 +1,9 @@
+<% content_for :before_content,  govuk_breadcrumbs(breadcrumbs: @breadcrumbs) %>
+
+<span class="govuk-caption-m">Participant ID: <%= @primary_profile.user_id %></span></span>
+<h1 class="govuk-heading-l">Compare records</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render 'finance/ecf/duplicates/compare/details', primary_profile: @primary_profile, duplicate_profile: @duplicate_profile %>
+  </div>
+</div>

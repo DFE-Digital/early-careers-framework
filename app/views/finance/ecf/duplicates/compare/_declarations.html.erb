@@ -1,0 +1,26 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-headding-s">Primary profile declarations</h2>
+    <% if primary_profile.declaration_count.positive? %>
+      <% primary_profile.participant_declarations.includes(:cpd_lead_provider).order(declaration_date: :desc).each do |participant_declaration| %>
+        <%= govuk_details(summary_text: "View \"#{participant_declaration.declaration_type}\" declaration") do
+          render "participant_declaration_summary_list", participant_declaration:
+        end %>
+      <% end %>
+    <% else %>
+      No declarations.
+    <% end %>
+  </div>
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-headding-s">Duplicate profile declarations</h2>
+    <% if duplicate_profile.declaration_count.positive? %>
+      <% duplicate_profile.participant_declarations.includes(:cpd_lead_provider).order(declaration_date: :desc).each do |participant_declaration| %>
+        <%= govuk_details(summary_text: "View \"#{participant_declaration.declaration_type}\" declaration") do
+          render "participant_declaration_summary_list", participant_declaration:
+        end %>
+      <% end %>
+    <% else %>
+      No declarations.
+    <% end %>
+  </div>
+</div>

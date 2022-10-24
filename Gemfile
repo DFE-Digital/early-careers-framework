@@ -174,3 +174,4 @@ group :test do
 end
 
 gem "countries", "~> 5.1"
+gem "scenic", "~> 1.6"

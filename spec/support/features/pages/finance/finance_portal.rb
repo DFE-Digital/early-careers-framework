@@ -8,19 +8,19 @@ module Pages
     set_primary_heading "Manage CPD contracts"
 
     def view_payment_breakdown
-      click_on "Payment Breakdown"
+      click_on "View financial statements"
 
       Pages::FinancePaymentBreakdownReportWizard.loaded
     end
 
     def view_schedules
-      click_on "Schedules"
+      click_on "View payment schedules"
 
       full_stop
     end
 
     def view_participant_drilldown
-      click_on "Participant drilldown"
+      click_on "Search participant data"
 
       Pages::FinanceParticipantDrilldownSearch.loaded
     end

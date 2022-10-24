@@ -1,0 +1,39 @@
+<%= govuk_table do |table|
+  table.head(classes: ["govuk-body-s"]) do |head|
+    table.body(classes: ["govuk-body-s"]) do |body|
+      body.row do |row|
+        row.cell(header: true, text: "Record type")
+        row.cell { |row| tag_for(primary_profile)}
+        row.cell { |row| tag_for(duplicate_profile)}
+      end
+      body.row { |row| comparative_table_row_for(row: row, header: "Profile type", method: :profile_type, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "User ID", method: :user_id, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "External identifier", method: :external_identifier, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Profile ID", method: :id, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "TRN", method: :teacher_profile_trn, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Teacher Profile ID", method: :teacher_profile_id, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Cohort", method: :cohort, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Schedule", method: :schedule_identifier, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Induction status", method: :induction_status, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Training status", method: :training_status, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "Lead Provider", method: :provider_name, primary_profile:, duplicate_profile:) }
+      body.row { |row| comparative_table_row_for(row: row, header: "School", method: :school_name, primary_profile:, duplicate_profile:) }
+      body.row do |row|
+        row.cell(header: true, text: "Starts on")
+        row.cell(text: primary_profile.start_date.to_s(:short))
+        row.cell(text: duplicate_profile.start_date.to_s(:short))
+      end
+      body.row do |row|
+        row.cell(header: true, text: "Ends on")
+        row.cell(text: primary_profile.end_date&.to_s(:short))
+        row.cell(text: duplicate_profile.end_date&.to_s(:short))
+      end
+      body.row { |row| comparative_table_row_for(row: row, header: "Declaration count", method: :declaration_count, primary_profile:, duplicate_profile:) }
+    end
+  end
+end %>
+
+<%=  govuk_tabs(title: "Induction records and declarations") do |c|
+  c.tab(label: "Induction records") { render 'finance/ecf/duplicates/compare/induction_records', primary_profile:, duplicate_profile: }
+  c.tab(label: "Declarations") { render 'finance/ecf/duplicates/compare/declarations', primary_profile:, duplicate_profile: }
+end%>

@@ -254,7 +254,7 @@ private
   end
 
   def when_i_click_on_payment_breakdown_header
-    find("h2", text: "Payment Breakdown").click
+    click_on "View financial statements"
   end
 
   def when_i_select_ecf
