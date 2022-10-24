@@ -9,7 +9,7 @@
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Cohort" }
-    row.value { induction_record.cohort.start_year.to_s }
+    row.value { induction_record.cohort.display_name }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Schedule" }

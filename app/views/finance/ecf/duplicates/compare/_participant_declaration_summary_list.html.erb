@@ -25,11 +25,11 @@
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Sparsity uplift" }
-    row.value { participant_declaration.course_identifier }
+    row.value { participant_declaration.sparsity_uplift.to_s }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Pupil premium uplift" }
-    row.value { participant_declaration.course_identifier }
+    row.value { participant_declaration.pupil_premium_uplift.to_s }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Delivery Partner" }
