@@ -44,6 +44,7 @@ module paas {
   }
   app_env_values                            = local.paas_app_env_values
   app_start_timeout                         = var.paas_app_start_timeout
+  health_check_timeout                      = var.paas_health_check_timeout
   app_stopped                               = var.paas_app_stopped
   service_name                              = local.service_name
   postgres_service_plan                     = var.paas_postgres_service_plan

@@ -24,6 +24,10 @@ variable paas_app_start_timeout {
   default = 300
 }
 
+variable paas_health_check_timeout {
+  default = 60
+}
+
 variable paas_app_stopped {
   default = false
 }

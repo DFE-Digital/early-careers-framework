@@ -14,6 +14,10 @@ variable app_start_timeout {
   default = 300
 }
 
+variable health_check_timeout {
+  default = 60
+}
+
 variable app_stopped {
   default = false
 }
