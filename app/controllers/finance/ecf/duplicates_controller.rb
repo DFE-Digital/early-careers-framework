@@ -7,9 +7,9 @@ module Finance
 
       def index
         @pagy, @participant_profiles = pagy(Duplicate.primary_profiles)
-        @training_statuses           = Duplicate.select(:training_status).distinct
-        @induction_statuses          = Duplicate.select(:induction_status).distinct
-        @breadcrumbs                 = [
+        @training_statuses          = Duplicate.select(:training_status).distinct
+        @induction_statuses         = Duplicate.select(:induction_status).distinct
+        @breadcrumbs = [
           helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),
           helpers.govuk_breadcrumb_link_to("Search profiles", finance_ecf_duplicates_path),
         ]
@@ -17,7 +17,7 @@ module Finance
 
       def show
         @participant_profile = Duplicate.find(params[:id])
-        @breadcrumbs         = [
+        @breadcrumbs = [
           helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),
           helpers.govuk_breadcrumb_link_to("Search profiles", finance_ecf_duplicates_path),
           helpers.govuk_breadcrumb_link_to(@participant_profile.user.full_name, finance_ecf_duplicate_path(@participant_profile)),
@@ -26,7 +26,7 @@ module Finance
 
       def edit
         @participant_profile = Duplicate.find(params[:id])
-        @breadcrumbs         = [
+        @breadcrumbs = [
           helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),
           helpers.govuk_breadcrumb_link_to("Search profiles", finance_ecf_duplicates_path),
           helpers.govuk_breadcrumb_link_to(@participant_profile.user.full_name, finance_ecf_duplicate_path(@participant_profile)),

@@ -5,7 +5,7 @@ module Finance
     module Duplicates
       class CompareController < BaseController
         def show
-          @primary_profile    = Duplicate.find(params[:id])
+          @primary_profile = Duplicate.find(params[:id])
           @duplicate_profile = Duplicate.find(params[:duplicate_id])
           @breadcrumbs = [
             helpers.govuk_breadcrumb_link_to("Finance dashboard", finance_landing_page_path),

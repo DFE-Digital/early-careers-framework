@@ -92,7 +92,8 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
     within "tbody tr:nth-child(2) td:nth-child(14)" do
       click_on "View details"
     end
-    expect(page).to have_css("h1", text: "Compare profile")
+
+    expect(page).to have_css("h2", text: "Compare profile")
     expect(page).to have_css("span", text: "Participant ID: #{ect_participant_profile.user_id}")
   end
 end
