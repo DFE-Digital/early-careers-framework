@@ -22,7 +22,7 @@ module Api
             attributes: {
               name: delivery_partner.name,
               updated_at: delivery_partner.updated_at.rfc3339,
-              cohort: [cohort.start_year],
+              cohort: [cohort.display_name],
             },
           ])
         end

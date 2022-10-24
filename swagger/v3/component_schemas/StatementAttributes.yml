@@ -1,7 +1,5 @@
 description: "The data attributes associated with a financial statement"
 type: object
-required:
-  - name
 properties:
   month:
     description: "The month which appears on the statement in the DfE portal"

@@ -2,7 +2,17 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token) { "Bearer #{token}" }
+  let(:Authorization) { bearer_token }
+
+  let(:cohort) { create(:cohort, :current) }
+  let(:delivery_partner) { create(:delivery_partner, name: "First Delivery Partner") }
+  let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider:) }
+
   path "/api/v3/delivery-partners" do
     get "Retrieve delivery partners" do
       operationId :delivery_patrners_get
@@ -70,6 +80,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
                 example: "00acafd3-e6f6-41e7-a770-3207be94f755"
 
       response "200", "Successfully return a specific delivery partner" do
+        let(:id) { delivery_partner.id }
         schema({ "$ref": "#/components/schemas/DeliveryPartnerResponse" })
 
         run_test!
@@ -77,13 +88,16 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
 
       response "401", "Unauthorized" do
         let(:Authorization) { "Bearer invalid" }
+        let(:id) { delivery_partner.id }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
       end
 
-      response "404", "Not Found" do
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "unknown-id" }
+
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
