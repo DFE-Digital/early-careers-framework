@@ -94,13 +94,11 @@ FactoryBot.define do
 
     trait :deferred do
       after(:create) do |participant_profile|
-        Participants::Defer::EarlyCareerTeacher.new(
-          params: {
-            participant_id: participant_profile.teacher_profile.user_id,
-            course_identifier: "ecf-induction",
-            cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
-            reason: "bereavement",
-          },
+        DeferParticipant.new(
+          participant_id: participant_profile.teacher_profile.user_id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
+          reason: "bereavement",
         ).call
       end
     end

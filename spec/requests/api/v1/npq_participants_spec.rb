@@ -137,7 +137,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:course_identifier) { npq_course.identifier }
         let(:url)               { "/api/v1/participants/npq/#{npq_application.user.id}/defer" }
         let(:withdrawal_url)    { "/api/v1/participants/npq/#{npq_application.user.id}/withdraw" }
-        let(:params)            { { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } } }
+        let(:params)            { { data: { attributes: { course_identifier:, reason: ParticipantProfile::DEFERRAL_REASONS.sample } } } }
         let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
       end
 
@@ -149,7 +149,7 @@ RSpec.describe "NPQ Participants API", type: :request do
         let(:withdrawal_params) { { data: { attributes: { course_identifier:, reason: Participants::Withdraw::NPQ.reasons.sample } } } }
         before do
           put "/api/v1/participants/npq/#{npq_application.user.id}/defer",
-              params: { data: { attributes: { course_identifier:, reason: Participants::Defer::NPQ.reasons.sample } } }
+              params: { data: { attributes: { course_identifier:, reason: ParticipantProfile::DEFERRAL_REASONS.sample } } }
         end
       end
     end

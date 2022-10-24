@@ -29,6 +29,12 @@ module Api
         end
       end
 
+      def defer
+        service = DeferParticipant.new(params_for_recorder)
+
+        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
+      end
+
     private
 
       def serializer_class

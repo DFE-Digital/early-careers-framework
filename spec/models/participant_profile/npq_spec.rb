@@ -74,7 +74,7 @@ RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
 
     subject { create(:npq_participant_profile) }
 
-    it "returns the relevant induction record for that profile" do
+    it "returns the profile user" do
       expect(subject.record_to_serialize_for(lead_provider:)).to eq(subject.user)
     end
   end

@@ -8,7 +8,9 @@ module Api
       end
 
       def defer
-        perform_action(service_namespace: ::Participants::Defer)
+        service = DeferParticipant.new(params_for_recorder)
+
+        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
       end
 
       def resume
