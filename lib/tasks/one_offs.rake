@@ -18,7 +18,7 @@ namespace :one_offs do
       if (country = ISO3166::Country.find_country_by_any_name(npq_application.teacher_catchment_country))
         npq_application.update!(teacher_catchment_iso_country_code: country.alpha3)
       else
-        Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{npq_application.teacher_catchment_country}.")
+        Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{npq_application.teacher_catchment_country}.", level: :warning)
       end
     end
   end

@@ -69,7 +69,7 @@ module NPQ
       if (country = ISO3166::Country.find_country_by_any_name(teacher_catchment_country))
         country.alpha3
       else
-        Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.")
+        Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.", level: :warning)
         nil
       end
     end
