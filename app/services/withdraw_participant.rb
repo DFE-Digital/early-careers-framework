@@ -9,9 +9,7 @@ class WithdrawParticipant
   attribute :participant_id
   attribute :reason
   attribute :course_identifier
-  attribute :force_training_status_change
 
-  validate :participant_has_participant_profile
   validates :cpd_lead_provider, induction_record: true
   validates :reason,
             presence: { message: I18n.t(:missing_reason) },
@@ -63,12 +61,6 @@ private
     errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
   end
 
-  def participant_has_participant_profile
-    return if errors.any?
-
-    errors.add(:participant_profile, I18n.t(:invalid_participant)) if participant_profile.blank?
-  end
-
   def relevant_induction_record
     @relevant_induction_record ||= participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
@@ -85,9 +77,11 @@ private
   def update_withdrawn_induction_record!
     return unless relevant_induction_record
 
-    relevant_induction_record.update!(
-      training_status: ParticipantProfileState.states[:withdrawn],
-      force_training_status_change:,
+    Induction::ChangeInductionRecord.call(
+      induction_record: relevant_induction_record,
+      changes: {
+        training_status: ParticipantProfileState.states[:withdrawn],
+      },
     )
   end
 end

@@ -3,6 +3,14 @@
 class ParticipantProfile < ApplicationRecord
   has_paper_trail
 
+  DEFERRAL_REASONS = %w[
+    bereavement
+    long-term-sickness
+    parental-leave
+    career-break
+    other
+  ].freeze
+
   belongs_to :teacher_profile, touch: true
   belongs_to :schedule, class_name: "Finance::Schedule"
   belongs_to :participant_identity

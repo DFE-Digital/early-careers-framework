@@ -49,7 +49,7 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_profile)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
     end
   end
 
@@ -59,7 +59,7 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
-      expect(service.errors.messages_for(:participant_profile)).to include("The property '#/participant_id' must be a valid Participant ID")
+      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
     end
   end
 
@@ -102,6 +102,42 @@ RSpec.shared_examples "withdrawing a participant" do
   end
 end
 
+RSpec.shared_examples "withdrawing an ECF participant" do
+  let(:induction_coordinator) { participant_profile.school.induction_coordinator_profiles.first }
+
+  it_behaves_like "withdrawing a participant"
+
+  it "sends an alert email to the provider" do
+    expect {
+      service.call
+    }.to have_enqueued_mail(SchoolMailer, :fip_provider_has_withdrawn_a_participant)
+      .with(
+        withdrawn_participant: participant_profile,
+        induction_coordinator:,
+      ).once
+  end
+
+  it "creates a new withdrawn induction record" do
+    expect { service.call }.to change { InductionRecord.count }
+  end
+
+  it "adds the correct attributes to the new induction_record" do
+    service.call
+
+    expect(participant_profile.induction_records.latest.training_status).to eq("withdrawn")
+  end
+end
+
+RSpec.shared_examples "withdrawing a NPQ participant" do
+  it_behaves_like "withdrawing a participant"
+
+  it "does not send an alert email to the provider" do
+    expect {
+      service.call
+    }.not_to have_enqueued_mail(SchoolMailer, :fip_provider_has_withdrawn_a_participant)
+  end
+end
+
 RSpec.describe WithdrawParticipant, :with_default_schedules do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:induction_record) { participant_profile.induction_records.first }
@@ -133,7 +169,7 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
     end
 
     describe ".call" do
-      it_behaves_like "withdrawing a participant"
+      it_behaves_like "withdrawing an ECF participant"
     end
   end
 
@@ -151,15 +187,17 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
     end
 
     describe ".call" do
-      it_behaves_like "withdrawing a participant"
+      it_behaves_like "withdrawing an ECF participant"
     end
   end
 
   context "NPQ participant profile" do
     let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
+    let(:school) { create(:school) }
     let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
-    let(:participant_profile) { npq_application.profile }
+    let(:participant_profile) { create(:npq_participant_profile, npq_application:, school:) }
     let(:course_identifier) { npq_application.npq_course.identifier }
+    let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
 
     describe "validations" do
       it_behaves_like "validating a participant to be withdrawn"
@@ -170,7 +208,7 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
     end
 
     describe ".call" do
-      it_behaves_like "withdrawing a participant"
+      it_behaves_like "withdrawing a NPQ participant"
     end
   end
 end
