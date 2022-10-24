@@ -82,18 +82,17 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
   end
 
   it "helps managing duplicate profiles" do
-    click_on "Search duplicate profiles"
+    click_on "Search duplicate records"
 
     expect(page).to have_css("tbody tr td:nth-child(2)", text: ect_participant_profile.user_id)
     expect(page).to have_css("tbody tr td:nth-child(2)", text: mentor_participant_profile.user_id)
 
     page.find_link("View duplicates", href: finance_ecf_duplicate_path(ect_participant_profile)).click
-
     within "tbody tr:nth-child(2) td:nth-child(14)" do
       click_on "View details"
     end
 
-    expect(page).to have_css("h2", text: "Compare profile")
+    expect(page).to have_css("h1", text: "Compare records")
     expect(page).to have_css("span", text: "Participant ID: #{ect_participant_profile.user_id}")
   end
 end
