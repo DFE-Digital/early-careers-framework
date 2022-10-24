@@ -42,7 +42,10 @@ module Admin
           end
         end
       rescue StandardError => e
-        Sentry.capture_exception(e, hint: { eligibility_import_id: eligibility_import.id })
+        Sentry.with_scope do |scope|
+          scope.set_context("NPQ Eligibility Import Record", id: eligibility_import.id)
+          Sentry.capture_exception(e)
+        end
 
         eligibility_import.import_errors.append("Processing Failed, contact an administrator for details")
         eligibility_import.fail!

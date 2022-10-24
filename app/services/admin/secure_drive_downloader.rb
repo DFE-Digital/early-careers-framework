@@ -25,13 +25,10 @@ module Admin
 
       stringio.tap(&:rewind).read
     rescue StandardError => e
-      Sentry.capture_exception(
-        e,
-        hint: {
-          filename:,
-          folder:,
-        },
-      )
+      Sentry.with_scope do |scope|
+        scope.set_context("File Details", { filename:, folder: })
+        Sentry.capture_exception(e)
+      end
 
       errors.append("Error downloading file, contact an administrator for details")
       false
