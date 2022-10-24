@@ -54,7 +54,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         click_on "Continue"
         then_i_should_see_enter_date_of_birth_error_message
 
-        when_i_add_an_invalid_date
+        when_i_add_an_invalid_date_of_birth
         click_on "Continue"
         then_i_should_see_invalid_date_of_birth_error_message
 
@@ -66,7 +66,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
         click_on "Continue"
         then_i_should_see_enter_start_date_error_message
-        when_i_add_an_invalid_date
+        when_i_add_an_invalid_start_date
         click_on "Continue"
         then_i_should_see_invalid_start_date_error_message
 
@@ -168,27 +168,33 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def when_i_add_a_valid_date_of_birth
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "1990"
+        legend = "What’s #{@participant_data[:full_name]}’s date of birth?"
+
+        fill_in_date(legend, with: "1990-10-24")
       end
 
-      def when_i_add_an_invalid_date
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "23"
+      def when_i_add_an_invalid_date_of_birth
+        legend = "What’s #{@participant_data[:full_name]}’s date of birth?"
+
+        fill_in_date(legend, with: "23-10-24")
       end
 
       def when_i_add_a_date_prior_to_the_participants_induction_start
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "1998"
+        legend = "#{@participant_data[:full_name]}’s start date"
+
+        fill_in_date(legend, with: "1998-10-24")
+      end
+
+      def when_i_add_an_invalid_start_date
+        legend = "#{@participant_data[:full_name]}’s start date"
+
+        fill_in_date(legend, with: "23-10-24")
       end
 
       def when_i_add_a_valid_start_date
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "2023"
+        legend = "#{@participant_data[:full_name]}’s start date"
+
+        fill_in_date(legend, with: "2023-10-24")
       end
 
       def when_i_assign_a_mentor
