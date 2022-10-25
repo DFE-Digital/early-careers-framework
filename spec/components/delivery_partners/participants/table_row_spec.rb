@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe DeliveryPartners::Participants::TableRow, type: :view_component do
-  component { described_class.new participant_profile:, delivery_partner: }
+RSpec.describe DeliveryPartners::Participants::TableRow, type: :component do
+  let(:component) { described_class.new participant_profile:, delivery_partner: }
 
   let(:school) { create(:school) }
   let(:school_cohort) { create(:school_cohort, school:) }
@@ -18,6 +18,8 @@ RSpec.describe DeliveryPartners::Participants::TableRow, type: :view_component d
   end
   let!(:participant_profile) { create :ecf_participant_profile }
   let!(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+
+  subject { render_inline(component) }
 
   context "when the request for details has not been sent yet" do
     it { is_expected.to have_text("Contacted for information") }

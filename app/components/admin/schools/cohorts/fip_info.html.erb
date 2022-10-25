@@ -8,7 +8,7 @@
     </dd>
     <dd class="govuk-summary-list__actions">
       <% if school_cohort.lead_provider.nil? %>
-        <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year) %>
+        <%= govuk_link_to "Change", admin_school_change_programme_path(id: school_cohort.cohort.start_year, school_id: school_cohort.school) %>
         <span class="govuk-visually-hidden"> induction programme</span>
       <% end %>
     </dd>

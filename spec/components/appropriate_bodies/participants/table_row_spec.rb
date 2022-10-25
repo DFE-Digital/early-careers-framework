@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe AppropriateBodies::Participants::TableRow, type: :view_component do
-  component { described_class.new induction_record: }
+RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
+  let(:component) { described_class.new induction_record: }
+  subject { render_inline(component) }
 
   let(:appropriate_body) { create(:appropriate_body_local_authority) }
   let(:participant_profile) { create :ect_participant_profile }

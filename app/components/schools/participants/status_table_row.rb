@@ -26,6 +26,10 @@ module Schools
         profile.school_cohort.school_chose_cip?
       end
 
+      def path_ids
+        { school_id: profile.school_cohort.school, cohort_id: profile.school_cohort.cohort }
+      end
+
     private
 
       attr_reader :profile

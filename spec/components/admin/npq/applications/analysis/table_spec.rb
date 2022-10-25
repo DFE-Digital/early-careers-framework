@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::NPQ::Applications::Analysis::Table, :with_default_schedules, type: :view_component do
+RSpec.describe Admin::NPQ::Applications::Analysis::Table, :with_default_schedules, type: :component do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
 
@@ -17,14 +17,10 @@ RSpec.describe Admin::NPQ::Applications::Analysis::Table, :with_default_schedule
     rejected_application_with_payable.update_column(:lead_provider_approval_status, :rejected)
   end
 
-  component { described_class.new applications: }
-  request_path "/admin/npq/applications/analysis"
-
-  stub_component Admin::NPQ::Applications::Analysis::TableRow
+  let(:component) { described_class.new applications: }
+  subject! { render_inline(component) }
 
   it "renders table row for each application" do
-    applications.each do |application|
-      expect(rendered).to have_rendered(Admin::NPQ::Applications::Analysis::TableRow).with(application:)
-    end
+    expect(rendered_content).to have_css(".govuk-table__body > .govuk-table__row", count: applications.size)
   end
 end

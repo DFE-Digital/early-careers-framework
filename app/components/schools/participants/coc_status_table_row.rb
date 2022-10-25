@@ -37,6 +37,10 @@ module Schools
         end
       end
 
+      def path_ids
+        { school_id: induction_record.school, cohort_id: induction_record.cohort.start_year }
+      end
+
     private
 
       attr_reader :induction_record

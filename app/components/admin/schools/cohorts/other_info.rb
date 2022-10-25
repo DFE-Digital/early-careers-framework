@@ -4,7 +4,10 @@ module Admin
   module Schools
     module Cohorts
       class OtherInfo < BaseComponent
-        def initialize(cohort:, school_cohort:)
+        attr_accessor :school
+
+        def initialize(school:, cohort:, school_cohort:)
+          @school = school
           @cohort = cohort
           @school_cohort = school_cohort
         end
