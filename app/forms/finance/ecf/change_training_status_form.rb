@@ -47,11 +47,6 @@ module Finance
           ResumeParticipant.new(params).call
         when "withdrawn"
           WithdrawParticipant.new(params.merge(reason:)).call
-        else
-          klass = "Participants::#{action_class_name}::#{participant_class_name}".constantize
-          klass.call(
-            params: params.merge(reason:, force_training_status_change: true),
-          )
         end
 
         true
@@ -65,26 +60,6 @@ module Finance
 
       def valid_training_status_reasons
         reason_options[training_status] || []
-      end
-
-      def participant_class_name
-        case participant_profile.participant_type
-        when :ect
-          "EarlyCareerTeacher"
-        when :mentor
-          "Mentor"
-        else
-          raise "Participant type not recognised"
-        end
-      end
-
-      def action_class_name
-        case training_status
-        when "active"
-          "Resume"
-        else
-          raise "training_status type not recognised"
-        end
       end
 
       # this is not correct because a participant may changeable induction records
