@@ -365,7 +365,7 @@ module ValidTestDataGenerator
     end
 
     def accept_application(npq_application)
-      NPQ::Accept.call(npq_application:)
+      AcceptNPQApplication.new(npq_application:).call
       npq_application.reload
     end
 

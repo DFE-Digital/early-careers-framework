@@ -50,6 +50,7 @@ en:
   missing_participant_id: "The property '#/participant_id' must be present"
   missing_cpd_lead_provider: "The property '#/cpd_lead_provider' must be present"
   missing_reason: "The property '#/reason' must be present"
+  missing_npq_application: "The property '#/npq_application' must be present"
   declaration_already_exists: There already exists a declaration that will be or has been paid for this event
   already_active: The participant is already active
   invalid_withdrawal: The participant is already withdrawn

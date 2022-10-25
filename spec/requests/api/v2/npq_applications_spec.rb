@@ -22,7 +22,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
       list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:, cohort:)
 
       list.flatten.each do |npq_application|
-        NPQ::Accept.new(npq_application:).call
+        AcceptNPQApplication.new(npq_application:).call
       end
     end
 
@@ -267,20 +267,17 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     context "application has been accepted" do
       let(:npq_profile) { create(:npq_application, npq_lead_provider:, lead_provider_approval_status: "accepted") }
 
-      it "return 400 bad request " do
+      it "returns 422" do
         post "/api/v2/npq-applications/#{npq_profile.id}/reject"
-        expect(response.status).to eql(400)
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns error in repsonse" do
         post "/api/v2/npq-applications/#{npq_profile.id}/reject"
 
         expect(parsed_response.key?("errors")).to be_truthy
-
-        expect(parsed_response["errors"][0].key?("title")).to be_truthy
-        expect(parsed_response["errors"][0].key?("detail")).to be_truthy
-        expect(parsed_response["errors"][0]["title"]).to eql("Status cannot change from accepted")
-        expect(parsed_response["errors"][0]["detail"]).to eql("Once accepted an application cannot change state")
+        expect(parsed_response.dig("errors", 0, "detail")).to eql("Once accepted an application cannot change state")
       end
     end
   end
@@ -327,20 +324,17 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     context "application has been rejected" do
       let(:npq_profile) { create(:npq_application, npq_lead_provider:, lead_provider_approval_status: "rejected", npq_course:) }
 
-      it "return 400 bad request " do
+      it "returns 422" do
         post "/api/v2/npq-applications/#{npq_profile.id}/accept"
-        expect(response.status).to eql(400)
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns error in response" do
         post "/api/v2/npq-applications/#{npq_profile.id}/accept"
 
         expect(parsed_response.key?("errors")).to be_truthy
-
-        expect(parsed_response["errors"][0].key?("title")).to be_truthy
-        expect(parsed_response["errors"][0].key?("detail")).to be_truthy
-        expect(parsed_response["errors"][0]["title"]).to eql("Status cannot change from rejected")
-        expect(parsed_response["errors"][0]["detail"]).to eql("Once rejected an application cannot change state")
+        expect(parsed_response.dig("errors", 0, "detail")).to eql("Once rejected an application cannot change state")
       end
     end
   end
