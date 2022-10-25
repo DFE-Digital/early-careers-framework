@@ -10,10 +10,12 @@ module Admin
       end
 
       def identity_transferred_label(identity)
-        if identity.user_id == identity.external_identifier
+        if identity.original_identity?
           "Original"
-        else
+        elsif identity.transferred_identity?
           "Transferred"
+        elsif identity.additional_identity?
+          "Additional"
         end
       end
     end

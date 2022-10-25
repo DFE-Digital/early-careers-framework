@@ -11,7 +11,7 @@ FactoryBot.define do
       origin { "npq" }
     end
 
-    trait :transferred do
+    trait :secondary do
       external_identifier { SecureRandom.uuid }
     end
   end
