@@ -28,6 +28,16 @@
         row.cell(text: primary_profile.end_date&.to_s(:short))
         row.cell(text: duplicate_profile.end_date&.to_s(:short))
       end
+      body.row do |row|
+        row.cell(header: true, text: "Created at")
+        row.cell(text: primary_profile.created_at&.to_s(:short))
+        row.cell(text: duplicate_profile.created_at&.to_s(:short))
+      end
+      body.row do |row|
+        row.cell(header: true, text: "Updated at")
+        row.cell(text: primary_profile.updated_at&.to_s(:short))
+        row.cell(text: duplicate_profile.updated_at&.to_s(:short))
+      end
       body.row { |row| comparative_table_row_for(row: row, header: "Declaration count", method: :declaration_count, primary_profile:, duplicate_profile:) }
     end
   end

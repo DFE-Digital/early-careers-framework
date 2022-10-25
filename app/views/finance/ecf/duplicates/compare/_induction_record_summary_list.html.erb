@@ -35,4 +35,8 @@
     row.key    { "Training status" }
     row.value  { induction_record.training_status }
   end
+  summary_list.row(classes: "govuk-body-s") do |row|
+    row.key    { "Induction Programme Type" }
+    row.value  { induction_record.induction_programme.training_programme }
+  end
 end %>
