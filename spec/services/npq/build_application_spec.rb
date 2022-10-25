@@ -87,7 +87,7 @@ RSpec.describe NPQ::BuildApplication do
         it "does not store the iso alpha3 country code", :aggregate_failures do
           expect(npq_application.save).to be true
           expect(npq_application.teacher_catchment_iso_country_code).to be nil
-          expect(Sentry).to have_received(:capture_message).with("Could not find the ISO3166 alpha3 code for wonderland.")
+          expect(Sentry).to have_received(:capture_message).with("Could not find the ISO3166 alpha3 code for wonderland.", level: :warning)
         end
       end
     end
