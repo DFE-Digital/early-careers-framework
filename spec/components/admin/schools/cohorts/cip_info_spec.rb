@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :component do
-  let(:school) { FactoryBot.create :school }
   let(:programme) { FactoryBot.create :core_induction_programme }
-  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, school:, core_induction_programme: programme }
+  let(:school_cohort) { FactoryBot.create :school_cohort, :cip, core_induction_programme: programme }
 
   subject! do
     with_request_url "/schools/test-school" do
-      render_inline(described_class.new(school_cohort:, school:))
+      render_inline(described_class.new(school_cohort:))
     end
   end
 
@@ -23,7 +22,7 @@ RSpec.describe Admin::Schools::Cohorts::CipInfo, type: :component do
 
     subject! do
       with_request_url "/schools/test-school" do
-        render_inline(described_class.new(school_cohort:, school:)) do
+        render_inline(described_class.new(school_cohort:)) do
           block_content
         end
       end

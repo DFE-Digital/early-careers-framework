@@ -6,8 +6,6 @@ RSpec.describe Schools::Participants::CocStatusTable, type: :component do
 
   let(:component) { described_class.new induction_records: [induction_record] }
 
-  # stub_component Schools::Participants::CocStatusTableRow
-
   context "participant is on fip" do
     let(:school_cohort) { create(:school_cohort, :fip) }
     let(:partnership) { create :partnership, school: school_cohort.school, cohort: school_cohort.cohort }
