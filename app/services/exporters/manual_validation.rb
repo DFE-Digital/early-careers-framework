@@ -46,10 +46,10 @@ private
       puts [profile.participant_identity.user.id,
             profile.participant_identity.user.email,
             profile.type,
-            profile.ecf_participant_validation_data.full_name,
-            profile.ecf_participant_validation_data.date_of_birth,
-            profile.ecf_participant_validation_data.trn,
-            profile.ecf_participant_validation_data.nino].join(",")
+            profile.ecf_participant_validation_data&.full_name,
+            profile.ecf_participant_validation_data&.date_of_birth,
+            profile.ecf_participant_validation_data&.trn,
+            profile.ecf_participant_validation_data&.nino].join(",")
     end
   end
 end
