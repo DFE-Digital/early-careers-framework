@@ -32,10 +32,6 @@ class InductionRecord < ApplicationRecord
 
   validates :start_date, presence: true
 
-  attr_accessor :force_training_status_change
-
-  validate :cannot_resume_from_withdrawn, unless: :force_training_status_change
-
   enum induction_status: {
     active: "active",
     withdrawn: "withdrawn",
@@ -132,11 +128,6 @@ class InductionRecord < ApplicationRecord
   end
 
 private
-
-  def cannot_resume_from_withdrawn
-    errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "active")
-    errors.add(:base, I18n.t(:invalid_resume)) if training_status_changed?(from: "withdrawn", to: "deferred")
-  end
 
   def update_analytics
     Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
