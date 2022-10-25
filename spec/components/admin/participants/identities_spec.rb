@@ -18,8 +18,8 @@ RSpec.describe Admin::Participants::Identities, :with_default_schedules, type: :
     end
   end
 
-  context "with transferred identities" do
-    let(:identities) { build_list(:participant_identity, 2, :npq_origin, :transferred) }
+  context "with secondary identities" do
+    let(:identities) { build_list(:participant_identity, 2, :npq_origin, :secondary) }
 
     it "renders info for all the identities and labels them as 'Additional'" do
       identities.each do |identity|
