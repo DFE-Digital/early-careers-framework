@@ -36,8 +36,8 @@
             row.cell(text: @participant_profile.training_status)
             row.cell(text: @participant_profile.provider_name)
             row.cell(text: @participant_profile.school_name)
-            row.cell(text: @participant_profile.start_date.to_date.to_s(:govuk_short))
-            row.cell(text: @participant_profile.end_date&.to_date&.to_s(:govuk_short))
+            row.cell(text: @participant_profile.start_date.to_date.to_s(:govuk))
+            row.cell(text: @participant_profile.end_date&.to_date&.to_s(:govuk))
             row.cell(text: @participant_profile.declaration_count)
             row.cell {}
           end
@@ -53,8 +53,8 @@
               row.cell(text: participant_profile.training_status)
               row.cell(text: participant_profile.provider_name)
               row.cell(text: participant_profile.school_name)
-              row.cell(text: participant_profile.start_date&.to_date&.to_s(:govuk_short))
-              row.cell(text: participant_profile.end_date&.to_date&.to_s(:govuk_short))
+              row.cell(text: participant_profile.start_date&.to_date&.to_s(:govuk))
+              row.cell(text: participant_profile.end_date&.to_date&.to_s(:govuk))
               row.cell(text: participant_profile.declaration_count)
               row.cell do
                 govuk_link_to "View details", finance_ecf_duplicate_compare_path(participant_profile, @participant_profile)

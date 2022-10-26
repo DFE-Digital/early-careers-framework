@@ -3,7 +3,7 @@
     <h2 class="govuk-headding-s">Primary profile induction records</h2>
     <% if primary_profile.induction_records.any? %>
       <% primary_profile.induction_records.includes(:cpd_lead_provider).order(created_at: :desc).each do |induction_record| %>
-        <%= govuk_details(summary_text: "View induction record created at #{induction_record.created_at.to_s(:govuk_short)}") do
+        <%= govuk_details(summary_text: "View induction record created at #{induction_record.created_at.to_s(:govuk)}") do
           render "induction_record_summary_list", induction_record: induction_record
         end %>
       <% end %>
@@ -15,7 +15,7 @@
     <h2 class="govuk-headding-s">Duplicate profile induction records</h2>
     <% if duplicate_profile.induction_records.any? %>
       <% duplicate_profile.induction_records.includes(:cpd_lead_provider).order(created_at: :desc).each do |induction_record| %>
-        <%= govuk_details(summary_text: "View induction record created at #{induction_record.created_at.to_s(:govuk_short)}") do
+        <%= govuk_details(summary_text: "View induction record created at #{induction_record.created_at.to_s(:govuk)}") do
           render "induction_record_summary_list", induction_record: induction_record
         end %>
       <% end %>
