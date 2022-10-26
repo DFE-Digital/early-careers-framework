@@ -148,6 +148,15 @@ module Schools
     def send_fip_programme_changed_email!
       previous_partnership = previous_school_cohort.default_induction_programme.partnership
 
+      if previous_partnership.blank?
+        msg = "no previous partnership found for cohort #{previous_school_cohort.id}"
+
+        Sentry.capture_message(msg, level: :warning)
+        Rails.logger.warning(msg)
+
+        return
+      end
+
       previous_partnership.lead_provider.users.each do |lead_provider_user|
         LeadProviderMailer.programme_changed_email(
           partnership: previous_partnership,
