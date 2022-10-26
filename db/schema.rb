@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_25_074937) do
+ActiveRecord::Schema.define(version: 2022_10_26_073938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -1174,13 +1174,12 @@ ActiveRecord::Schema.define(version: 2022_10_25_074937) do
               count(*) AS count
              FROM participant_declarations
             GROUP BY participant_declarations.participant_profile_id) declarations ON ((participant_profiles.id = declarations.participant_profile_id)))
-    WHERE (participant_identities.user_id IN ( SELECT participant_identities_1.user_id
-             FROM ((participant_profiles participant_profiles_1
+    WHERE ((participant_identities.user_id IN ( SELECT participant_identities_1.user_id
+             FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-               JOIN users ON ((users.id = participant_identities_1.user_id)))
             WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id
-           HAVING (count(*) > 1)))
+           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[])))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_identities.user_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
