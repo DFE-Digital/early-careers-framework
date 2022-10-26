@@ -91,8 +91,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         {
           data: {
             type: "npq_profiles",
-            attributes: {
-            },
+            attributes: {},
           },
         }
       end

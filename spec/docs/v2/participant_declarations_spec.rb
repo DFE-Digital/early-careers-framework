@@ -62,8 +62,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
           {
             "data": {
               "type": "participant-declaration",
-              "attributes": {
-              },
+              "attributes": {},
             },
           }
         end
