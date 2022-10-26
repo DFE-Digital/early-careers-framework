@@ -13,7 +13,10 @@ RSpec.describe Importers::ECFManualValidation do
       before do
         users = []
         CSV.read(example_csv_file, headers: true).each { |row| users << create(:user, id: row["id"], full_name: row["name"]) }
-        users.each { |user| tp = create(:teacher_profile, user:); create(:ect_participant_profile, teacher_profile: tp) }
+        users.each do |user|
+          tp = create(:teacher_profile, user:)
+          create(:ect_participant_profile, teacher_profile: tp)
+        end
       end
 
       it "calls the validation service for each participant" do
@@ -23,7 +26,8 @@ RSpec.describe Importers::ECFManualValidation do
 
       it "does handles bad or empty dates" do
         expect(Participants::ParticipantValidationForm).to receive(:call).exactly(6).times
-        expect { 
+
+        expect {
           importer.call(path_to_csv: example_csv_file)
         }.not_to raise_error
       end

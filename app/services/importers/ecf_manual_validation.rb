@@ -61,16 +61,17 @@ private
     # reset TRN if present on teacher profile to avoid "different trn" errors
     # unless already set via NPQ
     teacher_profile = participant_profile.teacher_profile
-    if teacher_profile.trn.present?
-      teacher_profile.update!(trn: nil) unless teacher_profile.participant_profiles.npqs.any?
+    if teacher_profile.trn.present? && teacher_profile.participant_profiles.npqs.none?
+      teacher_profile.update!(trn: nil)
     end
 
     # remove any existing eligibilty
-    participant_profile.ecf_participant_eligibility&.destroy
+    participant_profile.ecf_participant_eligibility&.destroy!
   end
 
   def safe_parse(date)
     return if date.blank?
+
     Date.parse(date)
   rescue Date::Error
     logger.warn "Error parsing date"
