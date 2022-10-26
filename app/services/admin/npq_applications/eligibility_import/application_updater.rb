@@ -75,13 +75,11 @@ module Admin
 
           update_errors.append(build_error_message(csv_row:, message: error_message)) if error_message.present?
         rescue StandardError => e
-          Sentry.capture_exception(
-            e,
-            hint: {
-              application_id: application_update.ecf_id,
-              eligibility_import_id: eligibility_import.id,
-            },
-          )
+          Sentry.with_scope do |scope|
+            scope.set_context("NPQ Eligibility Import Record", id: eligibility_import.id)
+            scope.set_context("NPQ Application Record", id: application_update.ecf_id)
+            Sentry.capture_exception(e)
+          end
 
           error_message = build_error_message(
             csv_row:,

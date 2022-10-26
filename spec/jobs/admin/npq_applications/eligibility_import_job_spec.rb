@@ -19,16 +19,24 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
 
     let(:csv_headers) { %w[ecf_id eligible_for_funding funding_eligiblity_status_code] }
 
+    let(:csv_rows) do
+      [
+        [npq_application_to_mark_funded.id, ["TRUE", "true", "TRue", " TRUE"].sample, "funded"],
+        [npq_application_to_mark_unfunded.id, "FALSE", "ineligible_establishment_type  "],
+        ["#{npq_application_to_mark_other.id} ", " false", "previously_funded"],
+        [npq_application_to_mark_invalid_status_code.id, "false", "not funded"],
+        [fake_ecf_id, "TRUE", "funded"],
+      ]
+    end
+
     let(:csv_file_contents) do
       CSV.generate do |csv|
         csv << csv_headers
         # The array sample is to check that different cases of true all resolve to the boolean value true
         # We also in various other values add padding to check that whitespace is being stripped out
-        csv << [npq_application_to_mark_funded.id, ["TRUE", "true", "TRue", " TRUE"].sample, "funded"]
-        csv << [npq_application_to_mark_unfunded.id, "FALSE", "ineligible_establishment_type  "]
-        csv << ["#{npq_application_to_mark_other.id} ", " no", "previously_funded"]
-        csv << [npq_application_to_mark_invalid_status_code.id, "false", "not funded"]
-        csv << [fake_ecf_id, "TRUE", "funded"]
+        csv_rows.each do |row|
+          csv << row
+        end
       end
     end
 
@@ -174,13 +182,7 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
       let(:io_error) { IOError.new("Error downloading file") }
 
       it "cancels the import, sends an error to sentry, and directs the user to an admin", :aggregate_failures do
-        expect(Sentry).to receive(:capture_exception).with(
-          io_error,
-          hint: {
-            filename:,
-            folder: parent_folder_id,
-          },
-        )
+        expect(Sentry).to receive(:capture_exception).with(io_error)
 
         expect {
           travel_to Time.zone.parse("2022-7-1 11:31") do
@@ -213,14 +215,8 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
           npq_application_to_mark_funded,
           npq_application_to_mark_unfunded,
           npq_application_to_mark_other,
-        ].each do |application|
-          expect(Sentry).to receive(:capture_exception).with(
-            update_error,
-            hint: {
-              application_id: application.id,
-              eligibility_import_id: npq_application_eligibility_import.id,
-            },
-          )
+        ].each do |_application|
+          expect(Sentry).to receive(:capture_exception).with(update_error)
         end
 
         expect {
@@ -256,12 +252,7 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
       let(:update_error) { ActiveRecord::ActiveRecordError.new("Error updating record!") }
 
       it "cancels the import, sends an error to sentry, and directs the user to an admin", :aggregate_failures do
-        expect(Sentry).to receive(:capture_exception).with(
-          update_error,
-          hint: {
-            eligibility_import_id: npq_application_eligibility_import.id,
-          },
-        )
+        expect(Sentry).to receive(:capture_exception).with(update_error)
 
         expect {
           travel_to Time.zone.parse("2022-7-1 11:31") do
@@ -315,10 +306,45 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
       end
     end
 
+    context "when the file has rows with invalid or missing data" do
+      let(:csv_rows) do
+        [
+          [npq_application_to_mark_funded.id, ["TRUE", "true", "TRue", " TRUE"].sample, "funded"],
+          ["#{npq_application_to_fail_on_eligible_value.id} ", " no", "previously_funded"],
+          ["", "TRUE", ""],
+          [nil, "TRUE", "funded"],
+        ]
+      end
+
+      let(:npq_application_to_fail_on_eligible_value) { create(:npq_application, :funded) }
+
+      it "raises an error during parsing", :aggregate_failures do
+        expect {
+          travel_to Time.zone.parse("2022-7-1 11:31") do
+            subject
+          end
+        }.to_not change {
+          [
+            slice_data(npq_application_to_mark_funded.reload),
+            slice_data(npq_application_to_fail_on_eligible_value.reload),
+          ]
+        }
+
+        expect(npq_application_eligibility_import.updated_records).to eq(nil)
+        expect(npq_application_eligibility_import.import_errors).to match([
+          "Row 3: eligible_for_funding must be either TRUE or FALSE",
+          "Row 4: ecf_id is blank",
+          "Row 4: funding_eligiblity_status_code is blank",
+          "Row 5: ecf_id is blank",
+        ])
+        expect(npq_application_eligibility_import.status).to eq("failed")
+      end
+    end
+
     context "when the file has too many columns" do
       let(:csv_headers) { %w[ecf_id eligible_for_funding funding_eligiblity_status_code foo] }
 
-      it "downloads file and updates records", :aggregate_failures do
+      it "raises an error during parsing", :aggregate_failures do
         expect {
           travel_to Time.zone.parse("2022-7-1 11:31") do
             subject
@@ -346,7 +372,7 @@ RSpec.describe Admin::NPQApplications::EligibilityImportJob do
         end
       end
 
-      it "downloads file and updates records", :aggregate_failures do
+      it "raises an error during parsing", :aggregate_failures do
         expect {
           travel_to Time.zone.parse("2022-7-1 11:31") do
             subject

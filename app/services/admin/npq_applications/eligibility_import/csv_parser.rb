@@ -15,7 +15,7 @@ module Admin
         end
 
         def data
-          @data ||= valid? ? extract_data : []
+          @data ||= valid? ? parsed_csv_rows : []
         end
 
         def valid?
@@ -30,22 +30,38 @@ module Admin
         end
 
         def validate_file
-          return if csv_file.headers == REQUIRED_CSV_HEADERS
+          if csv_file.headers != REQUIRED_CSV_HEADERS
+            errors.append(INVALID_HEADERS_ERROR).uniq!
+            return
+          end
 
-          errors.append(INVALID_HEADERS_ERROR).uniq!
+          parsed_csv_rows.each(&method(:validate_row))
         end
 
-        def extract_data
+        def parsed_csv_rows
           csv_file.each_with_index.map do |row, index|
             csv_row = index + 2
 
+            # We don't want to coerce unclear values into false
+            # We need an *explicit* value that is either TRUE or FALSE (case insensitively)
+            cleaned_eligible_for_funding = row["eligible_for_funding"]&.strip&.upcase
+            eligible_for_funding_value = if %w[TRUE FALSE].include?(cleaned_eligible_for_funding)
+                                           cleaned_eligible_for_funding == "TRUE"
+                                         end
+
             OpenStruct.new(
               csv_row:,
-              ecf_id: row["ecf_id"].strip,
-              eligible_for_funding: row["eligible_for_funding"].strip.upcase == "TRUE",
-              funding_eligiblity_status_code: row["funding_eligiblity_status_code"].strip,
+              ecf_id: row["ecf_id"]&.strip,
+              eligible_for_funding: eligible_for_funding_value,
+              funding_eligiblity_status_code: row["funding_eligiblity_status_code"]&.strip,
             )
           end
+        end
+
+        def validate_row(csv_row)
+          errors.append("Row #{csv_row.csv_row}: ecf_id is blank") if csv_row.ecf_id.blank?
+          errors.append("Row #{csv_row.csv_row}: funding_eligiblity_status_code is blank") if csv_row.funding_eligiblity_status_code.blank?
+          errors.append("Row #{csv_row.csv_row}: eligible_for_funding must be either TRUE or FALSE") if csv_row.eligible_for_funding.nil?
         end
       end
     end
