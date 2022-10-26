@@ -17,16 +17,15 @@ RSpec.describe Importers::ECFManualValidation do
           tp = create(:teacher_profile, user:)
           create(:ect_participant_profile, teacher_profile: tp)
         end
+
+        allow(Participants::ParticipantValidationForm).to receive(:call).exactly(6).times
       end
 
       it "calls the validation service for each participant" do
-        expect(Participants::ParticipantValidationForm).to receive(:call).exactly(6).times
         importer.call(path_to_csv: example_csv_file)
       end
 
-      it "does handles bad or empty dates" do
-        expect(Participants::ParticipantValidationForm).to receive(:call).exactly(6).times
-
+      it "handles bad or empty dates" do
         expect {
           importer.call(path_to_csv: example_csv_file)
         }.not_to raise_error
