@@ -61,7 +61,7 @@ module Api
       end
 
       attributes :induction_programme_choice do |induction_record|
-        induction_record.school_cohort.induction_programme_choice
+        induction_record.induction_programme.training_programme
       end
 
       attributes :registration_completed do |induction_record|
