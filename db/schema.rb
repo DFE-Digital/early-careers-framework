@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_26_073938) do
+ActiveRecord::Schema.define(version: 2022_10_27_113219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -1106,7 +1106,7 @@ ActiveRecord::Schema.define(version: 2022_10_26_073938) do
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text <> 'active'::text)) THEN 2
               WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
               ELSE 4
-          END) AS primary_participant_profile_id,
+          END, COALESCE(declarations.count, (0)::bigint) DESC, participant_profiles.created_at DESC) AS primary_participant_profile_id,
           CASE participant_profiles.type
               WHEN 'ParticipantProfile::Mentor'::text THEN 'mentor'::text
               ELSE 'ect'::text
