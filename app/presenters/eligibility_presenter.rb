@@ -32,11 +32,11 @@ class EligibilityPresenter < SimpleDelegator
   end
 
   def exempt_from_induction
-    yes_no !eligibility_record.exempt_from_induction?
+    yes_no eligibility_record.exempt_from_induction?
   end
 
   def duplicate_profile
-    yes_no !eligibility_record.duplicate_profile?
+    yes_no eligibility_record.duplicate_profile?
   end
 
   def previous_participation
