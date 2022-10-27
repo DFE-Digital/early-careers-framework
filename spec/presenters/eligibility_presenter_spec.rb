@@ -8,7 +8,7 @@ RSpec.describe EligibilityPresenter, type: :model do
 
   describe "#eligibility" do
     it "returns a friendlier status text" do
-      ECFParticipantEligibility.statuses.keys.each do |status|
+      ECFParticipantEligibility.statuses.each_key do |status|
         eligibility.status = status
         expect(presenter.eligibility).to eq status.humanize.capitalize
       end
@@ -17,7 +17,7 @@ RSpec.describe EligibilityPresenter, type: :model do
 
   describe "#reason" do
     it "returns a friendlier reason text" do
-      ECFParticipantEligibility.reasons.keys.each do |reason|
+      ECFParticipantEligibility.reasons.each_key do |reason|
         eligibility.reason = reason
         expect(presenter.reason).to eq reason.humanize.capitalize
       end
