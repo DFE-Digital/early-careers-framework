@@ -10,8 +10,7 @@ SELECT
                WHEN latest_induction_records.training_status = 'active' AND latest_induction_records.induction_status = 'active' THEN 1
                WHEN latest_induction_records.training_status = 'active' AND latest_induction_records.induction_status != 'active' THEN 2
                WHEN latest_induction_records.training_status != 'active' AND latest_induction_records.induction_status = 'active' THEN 3
-               ELSE 4 END,
-               declarations.count DESC, participant_profiles.created_at DESC
+               ELSE 4 END
   ) AS primary_participant_profile_id,
   CASE participant_profiles.type WHEN 'ParticipantProfile::Mentor' THEN 'mentor' ELSE 'ect' END AS profile_type,
   duplicates.count            AS duplicate_profile_count,
