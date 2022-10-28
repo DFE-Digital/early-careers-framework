@@ -34,17 +34,19 @@ class Schools::ChooseProgrammeController < Schools::BaseController
   end
 
   def success
-    render locals: { school_cohort: }
+    render locals: { school_cohort:, continue: add_participant_after_complete }
   end
 
 private
+
+  delegate :add_participant_after_complete, to: :@induction_choice_form
 
   def save_programme
     save_school_choice!
 
     session.delete(:induction_choice_form)
 
-    redirect_to success_schools_choose_programme_path
+    redirect_to success_schools_choose_programme_path(induction_choice_form: { add_participant_after_complete: })
   end
 
   def save_induction_choice_form
@@ -88,7 +90,7 @@ private
   def programme_choice_form_params
     return {} unless params.key?(:induction_choice_form)
 
-    params.require(:induction_choice_form).permit(:programme_choice)
+    params.require(:induction_choice_form).permit(:programme_choice, :add_participant_after_complete)
   end
 
   def school

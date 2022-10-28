@@ -20,6 +20,10 @@
         <li>use this service to tell us which mentor has been assigned to each ECT</li>
       </ul>
 
-      <%= govuk_link_to("Continue to manage your training", schools_dashboard_path)  %>
+      <% if continue %>
+        <%= govuk_link_to("Continue to transfer ECT/Mentor", what_we_need_schools_transferring_participant_path)  %>
+      <% else %>
+        <%= govuk_link_to("Continue to manage your training", schools_dashboard_path)  %>
+      <% end %>
     </div>
 </div>

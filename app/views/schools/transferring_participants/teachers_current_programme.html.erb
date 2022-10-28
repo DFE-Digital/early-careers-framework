@@ -23,11 +23,10 @@
           			<p class="govuk-body">This is a different programme to other ECT’s and mentors at your school.</p>
         		<% end %>
 
-        		<h2 class="govuk-heading-s govuk-!-margin-bottom-1">Lead provider</h2>
-        		<p class="govuk-body govuk-!-margin-bottom-1"><%= @latest_induction_record.induction_programme.lead_provider&.name %></p>
-        		<h2 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery partner</h2>
-        		<p class="govuk-body"><%= @latest_induction_record.induction_programme.delivery_partner&.name %></p>
-
+						<h2 class="govuk-heading-s govuk-!-margin-bottom-1">Lead provider</h2>
+						<p class="govuk-body govuk-!-margin-bottom-1"><%= lead_provider_out&.name %></p>
+						<h2 class="govuk-heading-s govuk-!-margin-bottom-1">Delivery partner</h2>
+						<p class="govuk-body"><%= delivery_partner_out&.name %></p>
       		<% end %>
 
       		<%= f.govuk_submit "Continue" %>
