@@ -13,7 +13,7 @@ class Email < ApplicationRecord
 
   FAILED_STATUSES = %w[permanent-failure temporary-failure technical-failure].freeze
 
-  def create_association_with(*objects, as: nil) # rubocop:disable Naming/MethodParameterName
+  def create_association_with(*objects, as: nil)
     objects.each do |object|
       Association.create!(
         email: self,

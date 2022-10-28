@@ -5,7 +5,7 @@ module Multistep
     extend ActiveSupport::Concern
 
     class_methods do
-      def form(value = nil, as: nil) # rubocop:disable Naming/MethodParameterName
+      def form(value = nil, as: nil)
         if value
           @form = value
           if as
@@ -49,7 +49,7 @@ module Multistep
         end
       end
 
-      def result(as: name) # rubocop:disable Naming/MethodParameterName
+      def result(as: name)
         alias_method as, :result
         helper_method as
       end
