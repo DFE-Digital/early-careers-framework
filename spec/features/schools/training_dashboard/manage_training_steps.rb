@@ -572,24 +572,28 @@ module ManageTrainingSteps
   end
 
   def when_i_add_a_date_of_birth
+    legend = "What’s #{@participant_data[:full_name]}’s date of birth?"
     date = @participant_data[:date_of_birth]
-    fill_in "Day", with: date.day
-    fill_in "Month", with: date.month
-    fill_in "Year", with: date.year
+
+    fill_in_date(legend, with: date)
   end
 
   def when_i_add_my_date_of_birth
     date = @sit_data[:date_of_birth]
-    fill_in "Day", with: date.day
-    fill_in "Month", with: date.month
-    fill_in "Year", with: date.year
+    legend = "What’s your date of birth?"
+
+    fill_in_date(legend, with: date)
   end
 
   def when_i_add_a_start_date
     date = @participant_data[:start_date]
-    fill_in "Day", with: date.day
-    fill_in "Month", with: date.month
-    fill_in "Year", with: date.year
+
+    # this method is used in several contexts (start at school, induction
+    # start) so checking for the exact text is problematic. Just make sure
+    # it contains 'start'
+    legend = /start/
+
+    fill_in_date(legend, with: date)
   end
 
   def when_i_choose_materials

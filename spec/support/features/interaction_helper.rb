@@ -71,4 +71,22 @@ module InteractionHelper
   end
 
   alias_method :and_i_click_on_summary_row_action, :when_i_click_on_summary_row_action
+
+  # with can be either a Date object or date in yyyy-mm-dd format
+  def fill_in_date(legend, with: date)
+    parts = case with
+            when Date
+              [with.year, with.month, with.day]
+            when String
+              with.split("-")
+            end
+
+    fieldset = page.find("legend", text: legend).ancestor("fieldset.govuk-fieldset")
+
+    within(fieldset) do
+      Hash[%w[Year Month Day].zip(parts)].each do |label, value|
+        fill_in label, with: value
+      end
+    end
+  end
 end

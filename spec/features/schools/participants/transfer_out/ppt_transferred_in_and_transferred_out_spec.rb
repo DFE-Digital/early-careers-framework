@@ -88,9 +88,9 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
     end
 
     def when_i_add_a_valid_end_date
-      fill_in "Day", with: "24"
-      fill_in "Month", with: "10"
-      fill_in "Year", with: "2022"
+      legend = "When is #{@participant_data[:full_name]} leaving your school?"
+
+      fill_in_date(legend, with: "2022-10-24")
     end
 
     def when_i_select(option)

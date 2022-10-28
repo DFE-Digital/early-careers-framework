@@ -119,15 +119,11 @@ private
     click_on "Continue"
     fill_in "schools_add_participant_form[trn]", with: "AB123445A"
     click_on "Continue"
-    fill_in "Day", with: "22"
-    fill_in "Month", with: "11"
-    fill_in "Year", with: "1998"
+    fill_in_date("What’s George ECT’s date of birth?", with: "1998-11-22")
     click_on "Continue"
     fill_in "schools_add_participant_form[email]", with: "ect@email.gov.uk"
     click_on "Continue"
-    fill_in "schools_add_participant_form[start_date(3i)]", with: "1"
-    fill_in "schools_add_participant_form[start_date(2i)]", with: "1"
-    fill_in "schools_add_participant_form[start_date(1i)]", with: Time.zone.today.year + 1
+    fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
     click_on "Continue"
   end
 

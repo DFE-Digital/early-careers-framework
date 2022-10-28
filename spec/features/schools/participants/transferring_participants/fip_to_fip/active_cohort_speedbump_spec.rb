@@ -119,30 +119,20 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         fill_in "Email", with: email
       end
 
-      def when_i_add_an_invalid_trn
-        fill_in "Teacher reference number (TRN)", with: "1234"
-      end
-
       def when_i_add_a_valid_trn
         fill_in "Teacher reference number (TRN)", with: "1001000"
       end
 
       def when_i_add_a_valid_date_of_birth
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "1990"
-      end
+        legend = "What’s #{@participant_data[:full_name]}’s date of birth?"
 
-      def when_i_add_an_invalid_date
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "23"
+        fill_in_date(legend, with: "1990-10-24")
       end
 
       def when_i_add_a_valid_start_date
-        fill_in "Day", with: "24"
-        fill_in "Month", with: "10"
-        fill_in "Year", with: "2023"
+        legend = "#{@participant_data[:full_name]}’s start date"
+
+        fill_in_date(legend, with: "2023-10-24")
       end
 
       def when_i_assign_a_mentor
