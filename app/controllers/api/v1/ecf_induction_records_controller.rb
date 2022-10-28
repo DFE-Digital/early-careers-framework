@@ -48,14 +48,7 @@ module Api
       end
 
       def induction_records
-        induction_records = InductionRecord.current
-                                           .joins(:induction_programme, :preferred_identity, :participant_profile)
-                                           .merge(ParticipantProfile.ecf)
-
-        induction_records = induction_records.where("induction_records.updated_at > ?", updated_since) if updated_since.present?
-        induction_records = induction_records.where(preferred_identity: { email: }) if email.present?
-
-        induction_records.group_by(&:preferred_identity_id).transform_values(&:first).values
+        Api::V1::ECF::InductionRecordsQuery.new(updated_since:, email:).all
       end
     end
   end

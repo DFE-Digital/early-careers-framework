@@ -34,5 +34,9 @@ FactoryBot.define do
 
     trait(:school_transfer) { school_transfer { true } }
     trait(:not_school_transfer) { school_transfer { false } }
+
+    trait :preferred_identity do
+      preferred_identity { create(:participant_identity) }
+    end
   end
 end
