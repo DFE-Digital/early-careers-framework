@@ -19,7 +19,7 @@ namespace :compare do
       lost_records      = blue_data - same_records
 
       if new_records.count.zero? && lost_records.count.zero?
-        puts "The API responses are the same"
+        puts "The API responses are both empty"
       else
         puts "ERROR: The API responses are different"
         puts "Blue records: #{blue_data.count}"
