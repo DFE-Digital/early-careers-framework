@@ -11,27 +11,37 @@ module Api
       include ApiFilter
       include ParticipantActions
 
+      # Returns a list of ECF participants
+      # Providers can see their ECF participants and which cohorts they apply to via this endpoint
+      #
+      # GET /api/v1/participants/ecf?filter[cohort]=2021,2022
+      #
       def index
         respond_to do |format|
           format.json do
-            participant_hash = ParticipantFromInductionRecordSerializer.new(paginate(induction_records)).serializable_hash
-            render json: participant_hash.to_json
+            render json: serializer_class.new(paginate(induction_records)).serializable_hash.to_json
           end
 
           format.csv do
-            participant_hash = ParticipantFromInductionRecordSerializer.new(induction_records).serializable_hash
-            render body: to_csv(participant_hash)
+            render body: to_csv(serializer_class.new(induction_records).serializable_hash)
           end
         end
       end
 
+      # Returns a specific ECF participant given its ID
+      # Providers can see a specific ECF participant and which cohorts it applies to via this endpoint
+      #
+      # GET /api/v1/participants/ecf/:id
+      #
       def show
-        participant_hash = ParticipantFromInductionRecordSerializer.new(induction_record).serializable_hash
-
-        render json: participant_hash.to_json
+        render json: serializer_class.new(induction_record).serializable_hash.to_json
       end
 
     private
+
+      def serializer_class
+        ParticipantFromInductionRecordSerializer
+      end
 
       def induction_records
         @induction_records ||= ecf_participant_query.induction_records
@@ -39,6 +49,10 @@ module Api
 
       def induction_record
         @induction_record ||= ecf_participant_query.induction_record
+      end
+
+      def ecf_participant_params
+        params.permit(:id, filter: %i[cohort updated_since])
       end
 
       def access_scope
@@ -51,7 +65,10 @@ module Api
       end
 
       def ecf_participant_query
-        ECFParticipants::Index.new(lead_provider, params)
+        Api::V3::ECF::ParticipantsQuery.new(
+          lead_provider:,
+          params: ecf_participant_params,
+        )
       end
     end
   end
