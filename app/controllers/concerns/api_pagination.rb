@@ -12,12 +12,6 @@ private
     paginated_records
   end
 
-  def paginate_array(array)
-    _pagy, paginated_records = pagy_array(array, items: per_page, page:)
-
-    paginated_records
-  end
-
   def per_page
     params[:page] ||= {}
 

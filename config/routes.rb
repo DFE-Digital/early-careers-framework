@@ -78,7 +78,6 @@ Rails.application.routes.draw do
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
-      resources :ecf_induction_records, only: %i[index create], path: "ecf-induction-records"
       resources :participant_validation, only: %i[create], path: "participant-validation"
       resources :npq_applications, only: %i[index show], path: "npq-applications" do
         member do
@@ -113,7 +112,6 @@ Rails.application.routes.draw do
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
-      resources :ecf_induction_records, only: %i[index create], path: "ecf-induction-records"
       resources :participant_validation, only: %i[create], path: "participant-validation"
       resources :npq_applications, only: %i[index show], path: "npq-applications" do
         member do
