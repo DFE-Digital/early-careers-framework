@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe ParticipantProfile::NPQ, :with_default_schedules, type: :model do
   let(:npq_application) { create(:npq_application) }
   let(:profile) do
-    AcceptNPQApplication.new(npq_application:).call
+    NPQ::AcceptApplication.new(npq_application:).call
     npq_application.reload.profile
   end
   describe "#push_profile_to_big_query" do

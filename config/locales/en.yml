@@ -50,7 +50,6 @@ en:
   missing_participant_id: "The property '#/participant_id' must be present"
   missing_cpd_lead_provider: "The property '#/cpd_lead_provider' must be present"
   missing_reason: "The property '#/reason' must be present"
-  missing_npq_application: "The property '#/npq_application' must be present"
   declaration_already_exists: There already exists a declaration that will be or has been paid for this event
   already_active: The participant is already active
   invalid_withdrawal: The participant is already withdrawn
@@ -79,6 +78,13 @@ en:
     not_a_number: *default_message
     less_than: *default_message
     greater_than_or_equal_to: *default_message
+  npq_application:
+    missing_npq_application: "The property '#/npq_application' must be present"
+    has_another_accepted_application: The participant already has an accepted application for this course
+    has_already_been_accepted: This NPQ application has already been accepted
+    has_already_been_rejected: This NPQ application has already been rejected
+    cannot_change_from_accepted: Once accepted an application cannot change state
+    cannot_change_from_rejected: Once rejected an application cannot change state
   errors:
     email: &email_error_messages
       blank: "Enter an email"
