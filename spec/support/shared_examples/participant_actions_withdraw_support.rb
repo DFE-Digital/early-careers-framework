@@ -18,7 +18,7 @@ RSpec.shared_examples "a participant withdraw action endpoint" do
           put url, params: params
 
           expect(response).not_to be_successful
-          expect(parsed_response.dig("errors", 0, "detail")).to eq("The property '#/reason' must be present and in the list")
+          expect(parsed_response.dig("errors", 0, "detail")).to include("The property '#/reason' must be a valid reason")
         end
       end
     end
@@ -30,7 +30,7 @@ RSpec.shared_examples "a participant withdraw action endpoint" do
         put url, params: params
 
         expect(response).not_to be_successful
-        expect(parsed_response.dig("errors", 0, "detail")).to eq("The property '#/reason' must be present and in the list")
+        expect(parsed_response.dig("errors", 0, "detail")).to include("The property '#/reason' must be a valid reason")
       end
     end
   end

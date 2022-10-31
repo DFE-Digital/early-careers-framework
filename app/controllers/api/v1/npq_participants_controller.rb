@@ -24,7 +24,8 @@ module Api
 
       def withdraw
         if any_participant_declarations_started?
-          perform_action(service_namespace: ::Participants::Withdraw)
+          service = WithdrawParticipant.new(params_for_recorder)
+          render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
         else
           render json: {
             error: [{

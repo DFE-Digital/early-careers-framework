@@ -8,7 +8,7 @@ module Finance
 
       REASON_OPTIONS = {
         "deferred" => ParticipantProfile::DEFERRAL_REASONS,
-        "withdrawn" => Participants::Withdraw::NPQ.reasons,
+        "withdrawn" => ParticipantProfile::NPQ::WITHDRAW_REASONS,
       }.freeze
 
       attribute :participant_profile
@@ -45,11 +45,8 @@ module Finance
           DeferParticipant.new(params.merge(reason:)).call
         when "active"
           ResumeParticipant.new(params).call
-        else
-          klass = "Participants::#{action_class_name}::NPQ".constantize
-          klass.call(
-            params: params.merge(reason:, force_training_status_change: true),
-          )
+        when "withdrawn"
+          WithdrawParticipant.new(params.merge(reason:)).call
         end
 
         true
@@ -63,14 +60,6 @@ module Finance
 
       def valid_training_status_reasons
         reason_options[training_status] || []
-      end
-
-      def action_class_name
-        if training_status == "withdrawn"
-          "Withdraw"
-        else
-          raise "training_status type not recognised"
-        end
       end
 
       def status_unchanged?

@@ -186,7 +186,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:id) { npq_application.participant_identity.external_identifier }
         let(:attributes) do
           {
-            reason: Participants::Withdraw::NPQ.reasons.sample,
+            reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample,
             course_identifier: npq_application.npq_course.identifier,
           }
         end
@@ -217,7 +217,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:id) { npq_application.participant_identity.external_identifier }
         let(:attributes) do
           {
-            reason: Participants::Withdraw::NPQ.reasons.sample,
+            reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample,
             course_identifier: "bogus-course-identifier",
           }
         end

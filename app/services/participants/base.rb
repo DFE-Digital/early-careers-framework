@@ -8,7 +8,6 @@ module Participants
     include ProfileAttributes
     include AbstractInterface
     implement_class_method :valid_courses
-    attr_accessor :force_training_status_change
 
     class << self
       def call(params:)
@@ -33,7 +32,6 @@ module Participants
       self.participant_id = params[:participant_id]
       self.course_identifier = params[:course_identifier]
       self.cpd_lead_provider = params[:cpd_lead_provider]
-      self.force_training_status_change = params[:force_training_status_change]
     end
 
     def validate_provider!

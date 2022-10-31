@@ -6,6 +6,15 @@ class ParticipantProfile < ApplicationRecord
     VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
     COURSE_IDENTIFIERS = %w[ecf-mentor ecf-induction].freeze
 
+    WITHDRAW_REASONS = %w[
+      left-teaching-profession
+      moved-school
+      mentor-no-longer-being-mentor
+      school-left-fip
+      started-in-error
+      other
+    ].freeze
+
     belongs_to :school_cohort
     belongs_to :core_induction_programme, optional: true
 

@@ -49,13 +49,11 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
 
       before do
-        Participants::Withdraw::EarlyCareerTeacher.new(
-          params: {
-            participant_id: participant_profile.teacher_profile.user_id,
-            cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
-            reason: "other",
-            course_identifier: "ecf-induction",
-          },
+        WithdrawParticipant.new(
+          participant_id: participant_profile.teacher_profile.user_id,
+          cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
+          reason: "other",
+          course_identifier: "ecf-induction",
         ).call
       end
 

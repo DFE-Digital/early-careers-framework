@@ -4,7 +4,8 @@ module Api
   module V2
     module ParticipantActions
       def withdraw
-        perform_action(service_namespace: ::Participants::Withdraw)
+        service = WithdrawParticipant.new(params_for_recorder)
+        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
       end
 
       def defer
@@ -25,10 +26,6 @@ module Api
       end
 
     private
-
-      def relevant_induction_record_for_profile(profile)
-        profile.relevant_induction_record(lead_provider:)
-      end
 
       def perform_action(service_namespace:)
         render json: serialized_response(participant_profile_for(service_namespace))

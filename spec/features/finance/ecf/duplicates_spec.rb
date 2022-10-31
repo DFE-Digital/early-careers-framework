@@ -10,13 +10,11 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
       create(:ect) do |ect|
         cpd_lead_provider = ect.induction_records.latest.cpd_lead_provider
         create(:ect_participant_declaration, participant_profile: ect, cpd_lead_provider:)
-        Participants::Withdraw::EarlyCareerTeacher.new(
-          params: {
-            participant_id: ect.user_id,
-            course_identifier: "ecf-induction",
-            cpd_lead_provider:,
-            reason: "left-teaching-profession",
-          },
+        WithdrawParticipant.new(
+          participant_id: ect.user_id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider:,
+          reason: "left-teaching-profession",
         ).call
         ect.withdrawn_record!
       end,
@@ -28,13 +26,11 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
       create(:ect) do |ect|
         cpd_lead_provider = ect.induction_records.latest.cpd_lead_provider
         create(:ect_participant_declaration, participant_profile: ect, cpd_lead_provider:)
-        Participants::Withdraw::EarlyCareerTeacher.new(
-          params: {
-            participant_id: ect.user_id,
-            course_identifier: "ecf-induction",
-            cpd_lead_provider:,
-            reason: "left-teaching-profession",
-          },
+        WithdrawParticipant.new(
+          participant_id: ect.user_id,
+          course_identifier: "ecf-induction",
+          cpd_lead_provider:,
+          reason: "left-teaching-profession",
         ).call
       end,
     ]
@@ -44,13 +40,11 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
       create(:mentor) do |mentor|
         cpd_lead_provider = mentor.induction_records.latest.cpd_lead_provider
         create(:mentor_participant_declaration, participant_profile: mentor, cpd_lead_provider:)
-        Participants::Withdraw::Mentor.new(
-          params: {
-            participant_id: mentor.user_id,
-            course_identifier: "ecf-mentor",
-            cpd_lead_provider:,
-            reason: "left-teaching-profession",
-          },
+        WithdrawParticipant.new(
+          participant_id: mentor.user_id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider:,
+          reason: "left-teaching-profession",
         ).call
         mentor.withdrawn_record!
       end,
@@ -62,13 +56,11 @@ RSpec.describe "Duplicate profile tooling", :with_default_schedules, :js do
       create(:mentor) do |mentor|
         cpd_lead_provider = mentor.induction_records.latest.cpd_lead_provider
         create(:mentor_participant_declaration, participant_profile: mentor, cpd_lead_provider:)
-        Participants::Withdraw::Mentor.new(
-          params: {
-            participant_id: mentor.user_id,
-            course_identifier: "ecf-mentor",
-            cpd_lead_provider:,
-            reason: "left-teaching-profession",
-          },
+        WithdrawParticipant.new(
+          participant_id: mentor.user_id,
+          course_identifier: "ecf-mentor",
+          cpd_lead_provider:,
+          reason: "left-teaching-profession",
         ).call
       end,
     ]

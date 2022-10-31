@@ -370,52 +370,24 @@ RSpec.describe InductionRecord, :with_default_schedules, type: :model do
     end
   end
 
-  describe "withdrawal" do
-    let(:participant_profile) { create :ect_participant_profile }
-    let(:lead_provider) { create(:lead_provider) }
-    let(:partnership) { create(:partnership, lead_provider:) }
-    let(:induction_programme) { create(:induction_programme, partnership:) }
-    let(:induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
+  describe "callbacks" do
+    it "updates analytics when an induction record is created", :with_default_schedules do
+      induction_programme = create(:induction_programme)
+      participant_profile = create(:ecf_participant_profile)
 
-    let(:update_training_status_to_active) do
-      induction_record.update!(training_status: "active")
+      expect {
+        Induction::Enrol.call(participant_profile:, induction_programme:)
+      }.to change { InductionRecord.count }.by(1).and have_enqueued_job(Analytics::UpsertECFInductionJob)
     end
 
-    let(:update_training_status_to_deferred) do
-      induction_record.update!(training_status: "deferred")
+    it "updates analytics when any attributes changes", :with_default_schedules do
+      induction_record = create(:induction_record)
+
+      expect {
+        induction_record.leaving!(1.week.from_now)
+      }.to have_enqueued_job(Analytics::UpsertECFInductionJob).with(
+        induction_record:,
+      )
     end
-
-    before do
-      induction_record.update!(training_status: "withdrawn")
-    end
-
-    it "returns an error if the training_status change is from withdrawn to active" do
-      expect { update_training_status_to_active }
-        .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
-    end
-
-    it "returns an error if the training_status change is from withdrawn to deferred" do
-      expect { update_training_status_to_deferred }
-        .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Cannot resume a withdrawn participant")
-    end
-  end
-
-  it "updates analytics when an induction record is created", :with_default_schedules do
-    induction_programme = create(:induction_programme)
-    participant_profile = create(:ecf_participant_profile)
-
-    expect {
-      Induction::Enrol.call(participant_profile:, induction_programme:)
-    }.to change { InductionRecord.count }.by(1).and have_enqueued_job(Analytics::UpsertECFInductionJob)
-  end
-
-  it "updates analytics when any attributes changes", :with_default_schedules do
-    induction_record = create(:induction_record)
-
-    expect {
-      induction_record.leaving!(1.week.from_now)
-    }.to have_enqueued_job(Analytics::UpsertECFInductionJob).with(
-      induction_record:,
-    )
   end
 end

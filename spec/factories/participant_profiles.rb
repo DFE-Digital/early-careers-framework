@@ -46,13 +46,11 @@ FactoryBot.define do
         end
 
         after(:create) do |participant_profile, evaluator|
-          Participants::Withdraw::NPQ.new(
-            params: {
-              participant_id: participant_profile.teacher_profile.user_id,
-              cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
-              reason: evaluator.reason,
-              course_identifier: participant_profile.npq_application.npq_course.identifier,
-            },
+          WithdrawParticipant.new(
+            participant_id: participant_profile.teacher_profile.user_id,
+            cpd_lead_provider: participant_profile.npq_application.npq_lead_provider.cpd_lead_provider,
+            reason: evaluator.reason,
+            course_identifier: participant_profile.npq_application.npq_course.identifier,
           ).call
         end
       end

@@ -70,13 +70,11 @@ FactoryBot.define do
       end
 
       after(:create) do |participant_profile, evaluator|
-        Participants::Withdraw::Mentor.new(
-          params: {
-            participant_id: participant_profile.teacher_profile.user_id,
-            cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
-            reason: evaluator.reason,
-            course_identifier: "ecf-mentor",
-          },
+        WithdrawParticipant.new(
+          participant_id: participant_profile.teacher_profile.user_id,
+          cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
+          reason: evaluator.reason,
+          course_identifier: "ecf-mentor",
         ).call
         participant_profile.reload
       end
