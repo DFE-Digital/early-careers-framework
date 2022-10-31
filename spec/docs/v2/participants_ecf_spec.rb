@@ -8,6 +8,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
   let(:bearer_token)      { "Bearer #{token}" }
   let(:Authorization)     { bearer_token }
   let(:mentor_profile)    { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+  let!(:schedule)         { create(:ecf_schedule, schedule_identifier: "ecf-standard-january") }
 
   path "/api/v2/participants/ecf" do
     get "Retrieve multiple participants, replaces <code>/api/v2/participants</code>" do
@@ -207,7 +208,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
     let(:participant) { mentor_profile }
     let(:attributes) do
       {
-        schedule_identifier: "ecf-standard-september",
+        schedule_identifier: "ecf-standard-january",
         course_identifier: "ecf-mentor",
       }
     end

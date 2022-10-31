@@ -19,6 +19,7 @@ class ChangeSchedule
   validates :schedule_identifier, presence: { message: I18n.t(:invalid_schedule) }
   validate :not_already_withdrawn
   validate :validate_new_schedule_valid_with_existing_declarations
+  validate :change_with_a_different_schedule
   validate :validate_permitted_schedule_for_course
   validate :validate_cannot_change_cohort
 
@@ -130,5 +131,11 @@ private
         relevant_induction_record.schedule.cohort.start_year != cohort&.start_year
       errors.add(:cohort, I18n.t("cannot_change_cohort"))
     end
+  end
+
+  def change_with_a_different_schedule
+    return unless new_schedule && participant_profile && new_schedule == participant_profile.schedule
+
+    errors.add(:schedule_identifier, I18n.t(:invalid_schedule))
   end
 end

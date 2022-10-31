@@ -9,6 +9,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
   let(:token)                   { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)            { "Bearer #{token}" }
   let(:Authorization)           { bearer_token }
+  let!(:schedule)               { create(:ecf_schedule, schedule_identifier: "ecf-standard-january") }
 
   it_behaves_like "JSON Participant Deferral documentation",
                   "/api/v1/participants/{id}/defer",
@@ -98,7 +99,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
     let(:participant) { mentor_profile }
     let(:attributes) do
       {
-        schedule_identifier: "ecf-standard-september",
+        schedule_identifier: "ecf-standard-january",
         course_identifier: "ecf-mentor",
       }
     end

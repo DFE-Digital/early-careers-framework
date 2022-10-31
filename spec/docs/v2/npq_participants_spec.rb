@@ -7,7 +7,8 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:) }
+  let!(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+  let!(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-aso-june", name: "NPQ ASO June") }
 
   path "/api/v2/participants/npq" do
     get "Retrieve multiple NPQ participants" do
@@ -95,27 +96,18 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                   :with_default_schedules do
     let(:participant) { npq_application }
     let(:profile)     { npq_application.profile }
-    let(:new_schedule) do
-      if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
-        Finance::Schedule::NPQLeadership.find_by(schedule_identifier: "npq-leadership-spring")
-      elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
-        Finance::Schedule::NPQSpecialist.find_by(schedule_identifier: "npq-specialist-spring")
-      else
-        Finance::Schedule::NPQSupport.find_by(schedule_identifier: "npq-aso-december")
-      end
-    end
 
     let(:attributes) do
       {
-        schedule_identifier: new_schedule.schedule_identifier,
+        schedule_identifier: schedule.schedule_identifier,
         course_identifier: npq_application.npq_course.identifier,
-        cohort: new_schedule.cohort.start_year,
+        cohort: schedule.cohort.start_year,
       }
     end
 
     before do
       declaration = profile.participant_declarations.first
-      new_schedule
+      schedule
         .milestones
         .find_by!(declaration_type: declaration.declaration_type)
         .update!(start_date: declaration.declaration_date - 1.day)

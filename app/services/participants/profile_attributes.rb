@@ -7,7 +7,6 @@ module Participants
 
     included do
       attr_accessor :course_identifier, :participant_id, :cpd_lead_provider
-      attr_accessor :force_training_status_change
 
       validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
       validates :participant_id, presence: { message: I18n.t(:missing_participant_id) }
