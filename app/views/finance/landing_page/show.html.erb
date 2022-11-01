@@ -1,23 +1,18 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Manage CPD contracts</h1>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-m"><%= govuk_link_to "View financial statements", finance_payment_breakdowns_url %></h2>
+    <p class="govuk-body">View, download and update financial statements for lead providers.</p>
 
-        <h2 class="govuk-heading-m"><%= govuk_link_to "View financial statements", finance_payment_breakdowns_url %></h2>
-        <p class="govuk-body">View, download and update financial statements for lead providers.</p>
+    <h2 class="govuk-heading-m"><%= govuk_link_to "View payment schedules", finance_schedules_path %></h2>
+    <p class="govuk-body">View cohort milestone dates and payment schedules.</p>
 
-        <h2 class="govuk-heading-m"><%= govuk_link_to "View payment schedules", finance_schedules_path %></h2>
-        <p class="govuk-body">View cohort milestone dates and payment schedules.</p>
+    <h2 class="govuk-heading-m"><%= govuk_link_to "Search participant data", finance_participants_path %></h2>
+    <p class="govuk-body">Search, view and edit participant records, training histories and funding eligibility.</p>
 
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Search participant data", finance_participants_path %></h2>
-        <p class="govuk-body">Search, view and edit participant records, training histories and funding eligibility.</p>
-
-        <h2 class="govuk-heading-m"><%= govuk_link_to "Search duplicate records", finance_ecf_duplicates_path %></h2>
-        <p class="govuk-body">Search and compare participant records with any ECF duplicate errors.</p>
-      </div>
-    </div>
+    <h2 class="govuk-heading-m"><%= govuk_link_to "Search duplicate records", finance_ecf_duplicates_path %></h2>
+    <p class="govuk-body">Search and compare participant records with any ECF duplicate errors.</p>
 
   </div>
 </div>
