@@ -10,32 +10,53 @@ namespace :compare do
       induction_records = Api::V1::ECF::InductionRecordsQuery.new.all
       serialized_induction_records = Api::V1::ECFInductionRecordSerializer.new(induction_records).serializable_hash
 
-      blue_data = serialized_users[:data].map { |u| u[:id] }
-      green_data = serialized_induction_records[:data].map { |u| u[:id] }
+      ids_from_serialized_users = serialized_users[:data].map { |u| u[:id] }
+      ids_from_serialized_induction_records = serialized_induction_records[:data].map { |u| u[:id] }
 
-      duplicate_records = green_data.tally.filter { |_, v| v > 1 } # assuming we're counting the number of duplications rather than duplicated records
-      same_records      = (blue_data & green_data)
-      new_records       = green_data - same_records
-      lost_records      = blue_data - same_records
+      duplicate_records = ids_from_serialized_induction_records.tally.filter { |_, v| v > 1 } # assuming we're counting the number of duplications rather than duplicated records
+      same_records      = (ids_from_serialized_users & ids_from_serialized_induction_records)
+      ir_but_not_users  = ids_from_serialized_induction_records - ids_from_serialized_users
+      users_but_not_ir  = ids_from_serialized_users - ids_from_serialized_induction_records
 
-      if new_records.count.zero? && lost_records.count.zero?
+      if ids_from_serialized_users.count.zero? && ids_from_serialized_induction_records.count.zero?
         puts "The API responses are both empty"
       else
         puts "ERROR: The API responses are different"
-        puts "Blue records: #{blue_data.count}"
-        puts "Green records: #{green_data.count}"
-        puts "Duplicates found: #{duplicate_records.count}"
-        puts "Matches: #{same_records.count}"
-        puts "Changed: #{(new_records - lost_records).count}"
-        puts "New: #{(new_records - (new_records - lost_records)).count}"
-        puts "Lost: #{(lost_records - (lost_records - new_records)).count}"
 
-        new_records.each do |before|
-          id = before[:id]
-          after = lost_records.filter { |record| record[:id] == id }.first
-          puts "\n\nExpected to find\n"
-          puts JsonDiff.diff(before, after, include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
-          puts "\nwithin:\n===\n#{JSON.pretty_generate(after)}"
+        puts "Records returned by the users query:            #{ids_from_serialized_users.count}"
+        puts "Records returned by the induction record query: #{ids_from_serialized_induction_records.count}"
+        puts "Duplicates found in induction record query:     #{duplicate_records.count}"
+        puts "Records found in both queries:                  #{same_records.count}"
+        puts "Records found users query but not IR:           #{users_but_not_ir.count}"
+        puts "Records found IR query but not users:           #{ir_but_not_users.count}"
+
+        indexed_serialized_users = serialized_users[:data].index_by { |x| x[:id] }
+        indexed_serialized_induction_records = serialized_induction_records[:data].index_by { |x| x[:id] }
+
+        filename = "/tmp/ecf_users_and_induction_records-#{SecureRandom.hex}.txt"
+
+        puts "writing detailed report to file '#{filename}'"
+
+        File.open(filename, "w") do |r|
+          [*ids_from_serialized_users, *ids_from_serialized_induction_records].uniq.sort.each do |id|
+            record_from_users_query = indexed_serialized_users[id]
+            record_from_ir_query = indexed_serialized_induction_records[id]
+
+            next if record_from_users_query == record_from_ir_query
+
+            r.puts "####################"
+            r.puts "ID: #{id}"
+
+            if record_from_users_query.blank?
+              r.puts "record_from_users_query is empty"
+            elsif record_from_ir_query.blank?
+              r.puts "record_from_ir_query is empty"
+            else
+              r.puts "Difference detected"
+              r.puts JsonDiff.diff(record_from_users_query, record_from_ir_query, include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
+              r.puts "\nwithin:\n===\n#{JSON.pretty_generate(record_from_ir_query)}"
+            end
+          end
         end
       end
     end
