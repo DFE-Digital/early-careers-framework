@@ -165,9 +165,9 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
 
   def then_i_should_see_correct_overall_payments
     within(".app-application__panel__summary") do
-      expect(page).to have_content("Output payment #{number_to_pounds total_output_payment}")
-      expect(page).to have_content("Service fee #{number_to_pounds total_service_fees_monthly}")
-      expect(page).to have_content("VAT #{number_to_pounds overall_vat}")
+      expect(page).to have_content("Output payment\n#{number_to_pounds total_output_payment}")
+      expect(page).to have_content("Service fee\n#{number_to_pounds total_service_fees_monthly}")
+      expect(page).to have_content("VAT\n#{number_to_pounds overall_vat}")
     end
   end
 
