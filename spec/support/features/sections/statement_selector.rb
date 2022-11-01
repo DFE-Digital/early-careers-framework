@@ -20,6 +20,7 @@ module Sections
     end
 
     def view_statement(statement_name)
+      puts("END_TO_END_SCENARIO: #{statement_name}")
       statement.select statement_name
       click_on "View"
     end
