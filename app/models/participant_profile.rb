@@ -32,6 +32,7 @@ class ParticipantProfile < ApplicationRecord
   }, class_name: "ParticipantProfileState"
 
   has_many :participant_profile_schedules
+  has_many :deleted_duplicates, class_name: "Finance::ECF::DeletedDuplicate", foreign_key: :primary_participant_profile_id
 
   enum status: {
     active: "active",

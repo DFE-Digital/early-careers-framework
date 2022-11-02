@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_27_113219) do
+ActiveRecord::Schema.define(version: 2022_11_02_132300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -217,6 +217,14 @@ ActiveRecord::Schema.define(version: 2022_10_27_113219) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "state_reason"
     t.index ["participant_declaration_id"], name: "index_declaration_states_on_participant_declaration_id"
+  end
+
+  create_table "deleted_duplicates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.jsonb "data"
+    t.uuid "primary_participant_profile_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["primary_participant_profile_id"], name: "index_deleted_duplicates_on_primary_participant_profile_id"
   end
 
   create_table "delivery_partner_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1018,6 +1026,7 @@ ActiveRecord::Schema.define(version: 2022_10_27_113219) do
   add_foreign_key "cohorts_lead_providers", "lead_providers"
   add_foreign_key "data_stage_school_changes", "data_stage_schools"
   add_foreign_key "data_stage_school_links", "data_stage_schools"
+  add_foreign_key "deleted_duplicates", "participant_profiles", column: "primary_participant_profile_id"
   add_foreign_key "delivery_partner_profiles", "delivery_partners"
   add_foreign_key "delivery_partner_profiles", "users"
   add_foreign_key "district_sparsities", "local_authority_districts"
