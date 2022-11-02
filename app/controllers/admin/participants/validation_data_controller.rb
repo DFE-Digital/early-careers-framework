@@ -26,6 +26,7 @@ module Admin::Participants
       return unless validation_data.present? && validation_data.can_validate_participant?
 
       ActiveRecord::Base.transaction do
+        @participant_profile.teacher_profile.update!(trn: nil) unless has_npq_profile?
         @participant_profile.ecf_participant_eligibility&.destroy!
         # this returns either nil, false on failure or an ECFParticipantEligibility record on success
         Participants::ParticipantValidationForm.call(@participant_profile)
@@ -75,6 +76,10 @@ module Admin::Participants
       @participant_profile = policy_scope(ParticipantProfile).find(params[:participant_id]).tap do |participant_profile|
         authorize participant_profile, :update?, policy_class: participant_profile.policy_class
       end
+    end
+
+    def has_npq_profile?
+      @participant_profile.teacher_profile.npq_profiles.any?
     end
 
     def validation_data
