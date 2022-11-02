@@ -457,6 +457,8 @@ module Steps
     end
 
     def then_the_finance_portal_shows_the_lead_provider_payment_breakdown(lead_provider_name, statement_name, total_ects, total_mentors, started, retained, completed, voided, uplift: true)
+      allow(Finance::Statement::ECF).to receive(:current).and_return(Finance::Statement::ECF.find_by(cohort: Cohort.current, cpd_lead_provider: CpdLeadProvider.find_by(name: lead_provider_name), name: statement_name))
+
       when_i_am_on_the_finance_portal
       and_i_view_payment_breakdown_from_the_finance_portal
       and_i_complete_from_the_finance_payment_breakdown_report_wizard lead_provider_name
