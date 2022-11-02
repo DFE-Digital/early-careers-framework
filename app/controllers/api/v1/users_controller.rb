@@ -48,10 +48,7 @@ module Api
       end
 
       def users
-        users = User.all
-        users = users.changed_since(updated_since) if updated_since.present?
-        users = users.joins(:participant_identities).where(participant_identities: { email: }).or(users.where(email:)) if email.present?
-        users.distinct
+        Api::V1::UsersQuery.new(updated_since:, email:).all
       end
     end
   end
