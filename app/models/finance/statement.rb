@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Finance::Statement < ApplicationRecord
-  include Finance::ECFPaymentsHelper
-
   self.table_name = "statements"
 
   belongs_to :cpd_lead_provider
