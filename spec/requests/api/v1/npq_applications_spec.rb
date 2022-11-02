@@ -22,7 +22,7 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
       list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:, cohort:)
 
       list.flatten.each do |npq_application|
-        NPQ::AcceptApplication.new(npq_application:).call
+        NPQ::Application::Accept.new(npq_application:).call
       end
     end
 
@@ -269,13 +269,15 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
       it "return 422" do
         post "/api/v1/npq-applications/#{npq_profile.id}/reject"
-        expect(response.status).to eql(422)
+
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns error in repsonse" do
         post "/api/v1/npq-applications/#{npq_profile.id}/reject"
 
         expect(parsed_response.key?("errors")).to be_truthy
+        expect(parsed_response["errors"][0]["title"]).to eql("npq_application")
         expect(parsed_response.dig("errors", 0, "detail")).to eql("Once accepted an application cannot change state")
       end
     end

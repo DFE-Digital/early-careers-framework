@@ -98,7 +98,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       user_id: user.id,
     )
     npq_application.save!
-    NPQ::AcceptApplication.new(npq_application:).call
+    NPQ::Application::Accept.new(npq_application:).call
     npq_application
   end
 

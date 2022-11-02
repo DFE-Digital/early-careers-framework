@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::RejectApplication, :with_default_schedules do
+RSpec.describe NPQ::Application::Reject, :with_default_schedules do
   let(:npq_application) { create(:npq_application, :accepted) }
   let(:params) do
     {

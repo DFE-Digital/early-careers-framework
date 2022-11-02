@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::AcceptApplication, :with_default_schedules do
+RSpec.describe NPQ::Application::Accept, :with_default_schedules do
   before { create(:npq_leadership_schedule) }
 
   let(:cohort_2021) { Cohort.current }

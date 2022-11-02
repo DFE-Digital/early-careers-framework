@@ -43,7 +43,7 @@ module ParticipantDeclarationSteps
     @npq_application = create(:npq_application, npq_lead_provider:, npq_course:, cohort:)
     @npq_id = @npq_application.user.id
 
-    NPQ::AcceptApplication.new(npq_application: @npq_application).call
+    NPQ::Application::Accept.new(npq_application: @npq_application).call
     @declaration_date = @npq_application.reload.profile.schedule.milestones.first.start_date + 1.day
     @submission_date = @npq_application.profile.schedule.milestones.first.start_date + 2.days
   end

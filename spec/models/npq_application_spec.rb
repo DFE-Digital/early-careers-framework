@@ -153,7 +153,7 @@ RSpec.describe NPQApplication, type: :model do
       before do
         create(:npq_leadership_schedule)
 
-        NPQ::AcceptApplication.new(npq_application: subject).call
+        NPQ::Application::Accept.new(npq_application: subject).call
       end
 
       it "returns eligible for funding" do

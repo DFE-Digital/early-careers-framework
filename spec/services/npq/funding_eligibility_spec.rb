@@ -34,7 +34,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       let(:npq_course) { application.npq_course }
 
       before do
-        NPQ::AcceptApplication.new(npq_application: application).call
+        NPQ::Application::Accept.new(npq_application: application).call
       end
 
       it "returns truthy" do
@@ -57,7 +57,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
 
       before do
-        NPQ::AcceptApplication.new(npq_application: application).call
+        NPQ::Application::Accept.new(npq_application: application).call
       end
 
       subject { described_class.new(trn:, npq_course_identifier: "npq-early-headship-coaching-offer") }
@@ -80,7 +80,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       before do
         create(:teacher_profile, trn:)
-        NPQ::AcceptApplication.new(npq_application: application).call
+        NPQ::Application::Accept.new(npq_application: application).call
       end
 
       it "returns truthy" do

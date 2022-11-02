@@ -26,13 +26,13 @@ module Api
       end
 
       def reject
-        service = NPQ::RejectApplication.new(npq_application:)
+        service = NPQ::Application::Reject.new(npq_application:)
 
         render_from_service(service, json_serializer_class)
       end
 
       def accept
-        service = NPQ::AcceptApplication.new(npq_application:)
+        service = NPQ::Application::Accept.new(npq_application:)
 
         render_from_service(service, json_serializer_class)
       end
