@@ -65,7 +65,7 @@ RSpec.feature "CIP to FIP - Transfer a participant",
       create :milestone,
              schedule:,
              name: "Output 2 - Retention Point 1",
-             start_date: Date.new(2021, 11, 1),
+             start_date: Date.new(2021, 12, 1),
              milestone_date: Date.new(2022, 1, 31),
              payment_date: Date.new(2022, 2, 28),
              declaration_type: "retained-1"
