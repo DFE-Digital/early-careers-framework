@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  module V3
+  module V1
     module ECF
       class ParticipantsQuery
         def initialize(lead_provider:, params:)

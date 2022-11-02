@@ -65,7 +65,7 @@ module Api
       end
 
       def ecf_participant_query
-        Api::V3::ECF::ParticipantsQuery.new(
+        Api::V1::ECF::ParticipantsQuery.new(
           lead_provider:,
           params: ecf_participant_params,
         )
