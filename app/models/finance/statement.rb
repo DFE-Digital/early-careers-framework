@@ -27,12 +27,12 @@ class Finance::Statement < ApplicationRecord
            through: :refundable_statement_line_items,
            source: :participant_declaration
 
-  scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
-  scope :closed,                    -> { where("payment_date < ?", Date.current) }
-  scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
+  scope :payable,                   -> { where(deadline_date: ...Date.current, payment_date: Date.current...) }
+  scope :closed,                    -> { where(payment_date: ...Date.current) }
+  scope :with_future_deadline_date, -> { where(deadline_date: Date.current...) }
   scope :upto_current,              -> { payable.or(closed) }
   scope :latest,                    -> { order(deadline_date: :asc).last }
-  scope :upto,                      ->(statement) { where("deadline_date < ?", statement.deadline_date) }
+  scope :upto,                      ->(statement) { where(deadline_date: ...statement.deadline_date) }
   scope :output,                    -> { where(output_fee: true) }
   scope :next_output_fee_statements, lambda {
     output
