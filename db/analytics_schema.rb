@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_19_102312) do
+ActiveRecord::Schema.define(version: 2022_11_03_153412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2022_08_19_102312) do
     t.boolean "school_transfer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "cohort_id"
     t.index ["induction_record_id"], name: "index_ecf_inductions_on_induction_record_id", unique: true
   end
 
