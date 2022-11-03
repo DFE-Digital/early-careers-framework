@@ -36,6 +36,7 @@ class User < ApplicationRecord
   has_many :npq_application_exports
 
   before_validation :strip_whitespace
+  after_update :sync_email_with_identity
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true
@@ -183,6 +184,12 @@ class User < ApplicationRecord
   end
 
 private
+
+  def sync_email_with_identity
+    if saved_change_to_email? && participant_identities.count == 1
+      participant_identities.original.first&.update!(email:)
+    end
+  end
 
   def strip_whitespace
     full_name&.squish!

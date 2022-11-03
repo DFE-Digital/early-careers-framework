@@ -112,6 +112,23 @@ RSpec.describe User, type: :model do
           before do
             user.update!(email: "mary.jones@example.com")
           end
+
+          it "updates the original identity email" do
+            expect(user.participant_identities.original.first.email).to eq user.email
+          end
+
+          context "when more than 1 identity exists" do
+            let!(:identity2) { create(:participant_identity, email: "mjones@somemail.com") }
+
+            before do
+              identity2.update!(user:)
+              user.participant_identities.original.first.update!(email: "m.jones@example.com")
+            end
+
+            it "does not update the original identity email" do
+              expect(user.participant_identities.original.first.email).not_to eq user.email
+            end
+          end
         end
 
         context "when there are transferred identity records" do
