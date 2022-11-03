@@ -21,14 +21,9 @@ module Api
       end
 
       def change_schedule
-        service = case course_identifier
-                  when "ecf-induction", "ecf-mentor"
-                    ::Participants::ChangeSchedule::ECF.new(params: params_for_recorder)
-                  else
-                    ::Participants::ChangeSchedule::NPQ.new(params: params_for_recorder)
-                  end
+        service = ChangeSchedule.new(params_for_recorder)
 
-        render json: serialized_response(service.call)
+        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
       end
 
     private

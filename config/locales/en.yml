@@ -60,6 +60,7 @@ en:
   invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
   invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
   invalid_reason: "The property '#/reason' must be a valid reason"
+  schedule_already_on_the_profile: Selected schedule is already on the profile
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
   schedule_invalid_for_course: Selected schedule is not valid for the course
   withdrawn_participant: Cannot perform actions on a withdrawn participant
