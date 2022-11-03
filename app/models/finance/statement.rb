@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Finance::Statement < ApplicationRecord
-  include Finance::ECFPaymentsHelper
-
   self.table_name = "statements"
 
   belongs_to :cpd_lead_provider
@@ -29,12 +27,12 @@ class Finance::Statement < ApplicationRecord
            through: :refundable_statement_line_items,
            source: :participant_declaration
 
-  scope :payable,                   -> { where("deadline_date < DATE(NOW()) AND payment_date >= DATE(NOW())") }
-  scope :closed,                    -> { where("payment_date < ?", Date.current) }
-  scope :with_future_deadline_date, -> { where("deadline_date >= DATE(NOW())") }
+  scope :payable,                   -> { where(arel_table[:deadline_date].lt(Date.current).and(arel_table[:payment_date].gteq(Date.current))) }
+  scope :closed,                    -> { where(arel_table[:payment_date].lt(Date.current)) }
+  scope :with_future_deadline_date, -> { where(arel_table[:deadline_date].gteq(Date.current)) }
   scope :upto_current,              -> { payable.or(closed) }
   scope :latest,                    -> { order(deadline_date: :asc).last }
-  scope :upto,                      ->(statement) { where("deadline_date < ?", statement.deadline_date) }
+  scope :upto,                      ->(statement) { where(arel_table[:deadline_date].lt(statement.deadline_date)) }
   scope :output,                    -> { where(output_fee: true) }
   scope :next_output_fee_statements, lambda {
     output
