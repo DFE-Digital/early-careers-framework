@@ -78,7 +78,7 @@ RSpec.describe "NPQ Participants API", type: :request do
             list = create_list(:npq_application, 3, npq_lead_provider:, school_urn: "123456", npq_course:)
 
             list.each do |npq_application|
-              NPQ::Accept.new(npq_application:).call
+              NPQ::Application::Accept.new(npq_application:).call
             end
             travel_to current_time
           end

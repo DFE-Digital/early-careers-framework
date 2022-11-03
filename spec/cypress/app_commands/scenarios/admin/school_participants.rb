@@ -62,5 +62,5 @@ Timecop.freeze(Date.parse("19/09/2019")) do
                                       school_urn: school.urn,
                                       npq_course: npq_course
 
-  NPQ::Accept.new(npq_application:).call
+  NPQ::Application::Accept.new(npq_application:).call
 end

@@ -26,19 +26,15 @@ module Api
       end
 
       def reject
-        if NPQ::Reject.call(npq_application:)
-          render json: json_serializer_class.new(npq_application).serializable_hash
-        else
-          render json: { errors: Api::ErrorFactory.new(model: npq_application).call }, status: :bad_request
-        end
+        service = NPQ::Application::Reject.new(npq_application:)
+
+        render_from_service(service, json_serializer_class)
       end
 
       def accept
-        if NPQ::Accept.call(npq_application:)
-          render json: json_serializer_class.new(npq_application).serializable_hash
-        else
-          render json: { errors: Api::ErrorFactory.new(model: npq_application).call }, status: :bad_request
-        end
+        service = NPQ::Application::Accept.new(npq_application:)
+
+        render_from_service(service, json_serializer_class)
       end
 
     private

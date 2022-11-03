@@ -2,14 +2,20 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::Accept do
+RSpec.describe NPQ::Application::Accept, :with_default_schedules do
   before { create(:npq_leadership_schedule) }
 
   let(:cohort_2021) { Cohort.current }
   let(:cohort_2022) { create(:cohort, :next) }
 
-  subject do
-    described_class.new(npq_application:)
+  let(:params) do
+    {
+      npq_application:,
+    }
+  end
+
+  subject(:service) do
+    described_class.new(params)
   end
 
   describe "#call" do
@@ -20,15 +26,46 @@ RSpec.describe NPQ::Accept do
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
     let(:npq_application) do
-      NPQApplication.new(
-        teacher_reference_number: trn,
-        participant_identity: identity,
-        npq_course:,
-        npq_lead_provider:,
-        school_urn: "123456",
-        school_ukprn: "12345678",
-        cohort: cohort_2021,
-      )
+      create(:npq_application,
+             teacher_reference_number: trn,
+             participant_identity: identity,
+             npq_course:,
+             npq_lead_provider:,
+             school_urn: "123456",
+             school_ukprn: "12345678",
+             cohort: cohort_2021)
+    end
+
+    describe "validations" do
+      context "when the npq application is missing" do
+        let(:npq_application) {}
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:npq_application)).to include("The property '#/npq_application' must be present")
+        end
+      end
+
+      context "when the npq application is already accepted" do
+        let(:npq_application) { create(:npq_application, :accepted) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:npq_application)).to include("This NPQ application has already been accepted")
+        end
+      end
+
+      context "when the npq application is rejected" do
+        let(:npq_application) { create(:npq_application, :rejected) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:npq_application)).to include("Once rejected an application cannot change state")
+        end
+      end
     end
 
     context "when user applies for EHCO but has accepted ASO" do
@@ -36,27 +73,26 @@ RSpec.describe NPQ::Accept do
       let(:npq_ehco) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
 
       let(:other_npq_application) do
-        NPQApplication.create!(
-          teacher_reference_number: trn,
-          participant_identity: identity,
-          npq_course: npq_ehco,
-          npq_lead_provider:,
-          school_urn: "123456",
-          school_ukprn: "12345678",
-          cohort: cohort_2021,
-        )
+        create(:npq_application,
+               teacher_reference_number: trn,
+               participant_identity: identity,
+               npq_course: npq_ehco,
+               npq_lead_provider:,
+               school_urn: "123456",
+               school_ukprn: "12345678",
+               cohort: cohort_2021)
       end
 
       before do
         create(:npq_aso_schedule)
         create(:npq_ehco_schedule)
 
-        described_class.call(npq_application:)
+        service.call
       end
 
       it "does not accept the EHCO application" do
         expect {
-          described_class.call(npq_application: other_npq_application)
+          described_class.new(npq_application: other_npq_application).call
         }.not_to change { other_npq_application.reload.lead_provider_approval_status }
       end
     end
@@ -65,15 +101,14 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
       let(:other_npq_application) do
-        NPQApplication.new(
-          teacher_reference_number: trn,
-          participant_identity: identity,
-          npq_course:,
-          npq_lead_provider: other_npq_lead_provider,
-          school_urn: "123456",
-          school_ukprn: "12345678",
-          cohort: cohort_2021,
-        )
+        create(:npq_application,
+               teacher_reference_number: trn,
+               participant_identity: identity,
+               npq_course:,
+               npq_lead_provider: other_npq_lead_provider,
+               school_urn: "123456",
+               school_ukprn: "12345678",
+               cohort: cohort_2021)
       end
 
       before do
@@ -82,7 +117,7 @@ RSpec.describe NPQ::Accept do
       end
 
       it "rejects other_npq_application" do
-        described_class.call(npq_application:)
+        service.call
         expect(npq_application.reload.lead_provider_approval_status).to eql("accepted")
         expect(other_npq_application.reload.lead_provider_approval_status).to eql("rejected")
       end
@@ -92,15 +127,14 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
       let(:other_npq_application) do
-        NPQApplication.create!(
-          teacher_reference_number: trn,
-          participant_identity: identity,
-          npq_course:,
-          npq_lead_provider: other_npq_lead_provider,
-          school_urn: "123456",
-          school_ukprn: "12345678",
-          cohort: cohort_2021,
-        )
+        create(:npq_application,
+               teacher_reference_number: trn,
+               participant_identity: identity,
+               npq_course:,
+               npq_lead_provider: other_npq_lead_provider,
+               school_urn: "123456",
+               school_ukprn: "12345678",
+               cohort: cohort_2021)
       end
 
       before do
@@ -109,13 +143,14 @@ RSpec.describe NPQ::Accept do
 
       it "does not allow 2 applications with same course to be accepted" do
         expect {
-          described_class.call(npq_application: other_npq_application)
+          described_class.new(npq_application: other_npq_application).call
         }.not_to change { other_npq_application.reload.lead_provider_approval_status }
       end
 
       it "attaches errors to the object" do
-        described_class.call(npq_application: other_npq_application)
-        expect(other_npq_application.errors).to be_present
+        service = described_class.new(npq_application: other_npq_application).call
+
+        expect(service.errors.messages_for(:npq_application)).to include("The participant already has an accepted application for this course")
       end
     end
 
@@ -124,15 +159,14 @@ RSpec.describe NPQ::Accept do
       let(:other_npq_course) { create(:npq_course) }
 
       let(:other_npq_application) do
-        NPQApplication.new(
-          teacher_reference_number: trn,
-          participant_identity: identity,
-          npq_course: other_npq_course,
-          npq_lead_provider: other_npq_lead_provider,
-          school_urn: "123456",
-          school_ukprn: "12345678",
-          cohort: cohort_2021,
-        )
+        create(:npq_application,
+               teacher_reference_number: trn,
+               participant_identity: identity,
+               npq_course: other_npq_course,
+               npq_lead_provider: other_npq_lead_provider,
+               school_urn: "123456",
+               school_ukprn: "12345678",
+               cohort: cohort_2021)
       end
 
       before do
@@ -141,7 +175,7 @@ RSpec.describe NPQ::Accept do
       end
 
       it "does not reject the other course" do
-        described_class.call(npq_application:)
+        service.call
         expect(npq_application.reload.lead_provider_approval_status).to eql("accepted")
         expect(other_npq_application.reload.lead_provider_approval_status).to eql("pending")
       end
@@ -153,7 +187,7 @@ RSpec.describe NPQ::Accept do
       end
 
       it "creates teacher and participant profile" do
-        expect { subject.call }
+        expect { service.call }
           .to change(TeacherProfile, :count).by(1)
           .and change(ParticipantProfile::NPQ, :count).by(1)
       end
@@ -173,14 +207,13 @@ RSpec.describe NPQ::Accept do
 
       context "when trn is validated" do
         let(:npq_application) do
-          NPQApplication.new(
-            teacher_reference_number: trn,
-            teacher_reference_number_verified: true,
-            participant_identity: identity,
-            npq_course:,
-            npq_lead_provider:,
-            cohort: cohort_2021,
-          )
+          create(:npq_application,
+                 teacher_reference_number: trn,
+                 teacher_reference_number_verified: true,
+                 participant_identity: identity,
+                 npq_course:,
+                 npq_lead_provider:,
+                 cohort: cohort_2021)
         end
 
         it "stores the TRN on teacher profile" do
@@ -201,6 +234,16 @@ RSpec.describe NPQ::Accept do
       end
 
       context "when trn is not validated" do
+        let(:npq_application) do
+          create(:npq_application,
+                 teacher_reference_number: trn,
+                 teacher_reference_number_verified: false,
+                 participant_identity: identity,
+                 npq_course:,
+                 npq_lead_provider:,
+                 cohort: cohort_2021)
+        end
+
         it "does not store the TRN on teacher profile" do
           subject.call
           npq_application.reload
@@ -214,23 +257,19 @@ RSpec.describe NPQ::Accept do
 
       before do
         npq_application.save!
-        subject.call
+        service.call
         npq_application.update!(teacher_reference_number: new_trn)
       end
 
       it "does not create neither teacher nor participant profile" do
-        expect { subject.call }
+        expect { service.call }
           .to change(TeacherProfile, :count).by(0)
           .and change(ParticipantProfile::NPQ, :count).by(0)
       end
 
-      it "returns false" do
-        expect(subject.call).to eql(false)
-      end
-
       it "adds errors to object" do
-        subject.call
-        expect(npq_application.errors).to be_present
+        service.call
+        expect(service.errors).to be_present
       end
     end
 
@@ -241,9 +280,9 @@ RSpec.describe NPQ::Accept do
       end
 
       it "cannot then be accepted" do
-        subject.call
+        service.call
         expect(npq_application.reload).to be_rejected
-        expect(npq_application.errors[:lead_provider_approval_status]).to be_present
+        expect(service.errors.messages_for(:npq_application)).to be_present
       end
     end
 
@@ -251,33 +290,31 @@ RSpec.describe NPQ::Accept do
       let!(:schedule_2022) { create(:npq_leadership_schedule, cohort: cohort_2022) }
 
       let!(:npq_application) do
-        NPQApplication.create!(
-          teacher_reference_number: trn,
-          participant_identity: identity,
-          npq_course:,
-          npq_lead_provider:,
-          school_urn: "123456",
-          school_ukprn: "12345678",
-          cohort: cohort_2022,
-        )
+        create(:npq_application,
+               teacher_reference_number: trn,
+               participant_identity: identity,
+               npq_course:,
+               npq_lead_provider:,
+               school_urn: "123456",
+               school_ukprn: "12345678",
+               cohort: cohort_2022)
       end
 
       context "there is a 2021 pending application" do
         let!(:previous_npq_application) do
-          NPQApplication.create!(
-            teacher_reference_number: trn,
-            participant_identity: identity,
-            npq_course:,
-            npq_lead_provider:,
-            school_urn: "123456",
-            school_ukprn: "12345678",
-            cohort: Cohort.find_by!(start_year: 2021),
-          )
+          create(:npq_application,
+                 teacher_reference_number: trn,
+                 participant_identity: identity,
+                 npq_course:,
+                 npq_lead_provider:,
+                 school_urn: "123456",
+                 school_ukprn: "12345678",
+                 cohort: Cohort.find_by!(start_year: 2021))
         end
 
         it "does not affect 2021 application" do
           expect {
-            subject.call
+            service.call
           }.to change { npq_application.reload.lead_provider_approval_status }
            .and not_change { previous_npq_application.reload.lead_provider_approval_status }
         end
