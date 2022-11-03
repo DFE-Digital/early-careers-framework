@@ -2,11 +2,11 @@
 
 module Api
   module V1
-    module ECFParticipants
-      class Index
-        def initialize(lead_provider, params)
-          self.lead_provider = lead_provider
-          self.params        = params
+    module ECF
+      class ParticipantsQuery
+        def initialize(lead_provider:, params:)
+          @lead_provider = lead_provider
+          @params = params
         end
 
         def induction_records
@@ -57,7 +57,7 @@ module Api
         end
 
         def with_cohorts
-          return Cohort.where(start_year: filter[:cohort]) if filter[:cohort].present?
+          return Cohort.where(start_year: filter[:cohort].split(",")) if filter[:cohort].present?
 
           Cohort.where("start_year > 2020")
         end
