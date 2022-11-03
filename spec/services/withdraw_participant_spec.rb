@@ -74,7 +74,7 @@ RSpec.shared_examples "validating a participant to be withdrawn" do
   end
 end
 
-RSpec.shared_examples "validating a participant is not already withdrawn" do
+RSpec.shared_examples "validating a participant is not already withdrawn for a withdraw" do
   it "is invalid and returns an error message" do
     is_expected.to be_invalid
 
@@ -163,7 +163,7 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
     describe "validations" do
       it_behaves_like "validating a participant to be withdrawn"
 
-      it_behaves_like "validating a participant is not already withdrawn" do
+      it_behaves_like "validating a participant is not already withdrawn for a withdraw" do
         let(:participant_profile) { create(:ect, :withdrawn) }
       end
     end
@@ -181,7 +181,7 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
     describe "validations" do
       it_behaves_like "validating a participant to be withdrawn"
 
-      it_behaves_like "validating a participant is not already withdrawn" do
+      it_behaves_like "validating a participant is not already withdrawn for a withdraw" do
         let(:participant_profile) { create(:mentor, :withdrawn) }
       end
     end
@@ -202,7 +202,7 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
     describe "validations" do
       it_behaves_like "validating a participant to be withdrawn"
 
-      it_behaves_like "validating a participant is not already withdrawn" do
+      it_behaves_like "validating a participant is not already withdrawn for a withdraw" do
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_application:) }
       end
     end

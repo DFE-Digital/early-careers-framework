@@ -3,13 +3,12 @@
 class ChangeSchedule
   include ActiveModel::Model
   include ActiveModel::Attributes
-  include ActiveModel::Validations::Callbacks
 
   attribute :cpd_lead_provider
   attribute :participant_id
   attribute :course_identifier
   attribute :schedule_identifier
-  attribute :cohort
+  attribute :cohort, :integer
 
   delegate :participant_profile_state, to: :participant_profile, allow_nil: true
   delegate :lead_provider, to: :cpd_lead_provider, allow_nil: true
@@ -136,6 +135,6 @@ private
   def change_with_a_different_schedule
     return unless new_schedule && participant_profile && new_schedule == participant_profile.schedule
 
-    errors.add(:schedule_identifier, I18n.t(:invalid_schedule))
+    errors.add(:schedule_identifier, I18n.t(:schedule_already_on_the_profile))
   end
 end
