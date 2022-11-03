@@ -1,0 +1,7 @@
+id,name,trn,dob,nino
+e9052338-6f4c-4ee6-8e12-dc1cfdc23263,Ellie Eligible,1234567,12/3/1986,QQ123456A
+0f4b8062-1e1c-45f0-8a4b-32ad860ecd7c,Nina Not-Found,9210,18/05/1978,
+2628a013-c966-4d73-8f94-740ab6c3ebb4,Martin Manual-Check,901921,21/02/1987,QQ121212B
+9bd5df46-4197-45eb-9c3c-87b27462563f,Ingrid Ineligible,9039201,19/12/1989,QQ321321A
+70f9da7f-7bd7-4db0-97b6-fcdbd2838773,Norman Nodate,1000865,,
+981a19c2-d212-4149-8f67-50dc86882d3d,Betty Bad-date,1000475,banana,
