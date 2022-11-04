@@ -82,7 +82,7 @@ RSpec.shared_examples "validating a participant is not already deferred" do
   end
 end
 
-RSpec.shared_examples "validating a participant is not withdrawn" do
+RSpec.shared_examples "validating a participant is not withdrawn for a defer" do
   it "is invalid returning a meaningful error message" do
     is_expected.to be_invalid
 
@@ -153,7 +153,7 @@ RSpec.describe DeferParticipant, :with_default_schedules do
         let(:participant_profile) { create(:ect, :deferred) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn" do
+      it_behaves_like "validating a participant is not withdrawn for a defer" do
         let(:participant_profile) { create(:ect, :withdrawn) }
       end
     end
@@ -176,7 +176,7 @@ RSpec.describe DeferParticipant, :with_default_schedules do
         let(:participant_profile) { create(:mentor, :deferred) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn" do
+      it_behaves_like "validating a participant is not withdrawn for a defer" do
         let(:participant_profile) { create(:mentor, :withdrawn) }
       end
     end
@@ -199,7 +199,7 @@ RSpec.describe DeferParticipant, :with_default_schedules do
         let(:participant_profile) { create(:npq_participant_profile, :deferred) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn" do
+      it_behaves_like "validating a participant is not withdrawn for a defer" do
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }
       end
     end

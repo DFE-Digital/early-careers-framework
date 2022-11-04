@@ -81,6 +81,37 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
           expect(parsed_response["data"].size).to eql(0)
         end
       end
+
+      context "when filtering by identity record email" do
+        let(:user) { create(:user, email: "fred@example.com") }
+        let!(:identity) { create(:participant_identity, user:, email: "charlie@example.com") }
+
+        context "when a matching identity record exists" do
+          it "returns the associated user record" do
+            get "/api/v1/users", params: { filter: { email: "charlie@example.com" } }
+
+            expect(parsed_response["data"].size).to eql(1)
+            expect(parsed_response.dig("data", 0, "attributes", "email")).to eql("fred@example.com")
+          end
+        end
+
+        context "when a matching user record exists" do
+          it "returns the user record" do
+            get "/api/v1/users", params: { filter: { email: "fred@example.com" } }
+
+            expect(parsed_response["data"].size).to eql(1)
+            expect(parsed_response.dig("data", 0, "attributes", "email")).to eql("fred@example.com")
+          end
+        end
+
+        context "when a matching identity or user record is not found" do
+          it "returns no users" do
+            get "/api/v1/users", params: { filter: { email: "arthur@example.com" } }
+
+            expect(parsed_response["data"].size).to eql(0)
+          end
+        end
+      end
     end
 
     context "when unauthorized" do

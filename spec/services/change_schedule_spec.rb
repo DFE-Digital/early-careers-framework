@@ -54,7 +54,9 @@ RSpec.shared_examples "validating a participant for a change schedule" do
   end
 
   context "when the participant does not belong to the CPD lead provider" do
-    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+    let(:another_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+    let(:npq_lead_provider) { another_cpd_lead_provider.npq_lead_provider }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:) }
 
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
@@ -111,7 +113,6 @@ end
 
 RSpec.describe ChangeSchedule, :with_default_schedules do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
-  let(:induction_record) { participant_profile.induction_records.first }
   let(:params) do
     {
       cpd_lead_provider:,
@@ -126,17 +127,17 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
   end
 
   context "ECT participant profile" do
-    let(:cpd_lead_provider) { induction_record.cpd_lead_provider }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
     let(:schedule_identifier) { "ecf-extended-april" }
-    let!(:schedule) { create(:schedule, schedule_identifier: "ecf-extended-april", name: "ECF Standard") }
-    let(:participant_profile) { create(:ect) }
     let(:course_identifier) { "ecf-induction" }
+    let!(:schedule) { create(:ecf_schedule, schedule_identifier: "ecf-extended-april", name: "ECF Standard") }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
 
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
-        let(:participant_profile) { create(:ect, :withdrawn) }
+        let(:participant_profile) { create(:ect, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
     end
 
@@ -146,17 +147,17 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
   end
 
   context "Mentor participant profile" do
-    let(:cpd_lead_provider) { induction_record.cpd_lead_provider }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
     let(:schedule_identifier) { "ecf-extended-april" }
-    let!(:schedule) { create(:schedule, schedule_identifier: "ecf-extended-april", name: "ECF Standard") }
-    let(:participant_profile) { create(:mentor) }
     let(:course_identifier) { "ecf-mentor" }
+    let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april", name: "Mentor Standard") }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
 
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
-        let(:participant_profile) { create(:mentor, :withdrawn) }
+        let(:participant_profile) { create(:mentor, :withdrawn, lead_provider: cpd_lead_provider.lead_provider) }
       end
     end
 
@@ -166,18 +167,20 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
   end
 
   context "NPQ participant profile" do
-    let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+    let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
+    let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+    let(:npq_application) { create(:npq_application, npq_lead_provider:, npq_course:) }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:) }
+    let(:course_identifier) { npq_course.identifier }
     let(:schedule_identifier) { "npq-extended-april" }
     let!(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-extended-april", name: "NPQ Standard") }
-    let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
-    let(:participant_profile) { npq_application.profile }
-    let(:course_identifier) { npq_application.npq_course.identifier }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
 
       it_behaves_like "validating a participant is not already withdrawn for a change schedule" do
-        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_application:) }
+        let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_lead_provider:, npq_course:) }
       end
     end
 
