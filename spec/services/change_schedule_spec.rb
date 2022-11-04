@@ -170,11 +170,11 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
-    let(:npq_application) { create(:npq_application, npq_lead_provider:, npq_course:) }
-    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:) }
+    let(:schedule) { create(:npq_specialist_schedule) }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:) }
     let(:course_identifier) { npq_course.identifier }
-    let(:schedule_identifier) { "npq-extended-april" }
-    let!(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-extended-april", name: "NPQ Standard") }
+    let(:schedule_identifier) { new_schedule.schedule_identifier }
+    let(:new_schedule) { create(:npq_leadership_schedule) }
 
     describe "validations" do
       it_behaves_like "validating a participant for a change schedule"
