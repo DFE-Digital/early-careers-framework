@@ -94,6 +94,9 @@ RUN apk -U upgrade && \
 COPY --from=assets-precompile /app /app
 COPY --from=assets-precompile /usr/local/bundle/ /usr/local/bundle/
 
+RUN echo export PATH=/usr/local/bin:\$PATH > /root/.ashrc
+ENV ENV="/root/.ashrc"
+
 WORKDIR /app
 
 # Use this for development testing
