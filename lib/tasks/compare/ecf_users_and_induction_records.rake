@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json-diff"
+
 namespace :compare do
   namespace :ecf_users_and_induction_records do
     desc "compare"
