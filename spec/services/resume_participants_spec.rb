@@ -62,7 +62,7 @@ RSpec.shared_examples "validating a participant is not already active" do
   end
 end
 
-RSpec.shared_examples "validating a participant is not withdrawn" do
+RSpec.shared_examples "validating a participant is not withdrawn for a resume" do
   it "is invalid returning a meaningful error message" do
     is_expected.to be_invalid
 
@@ -130,7 +130,7 @@ RSpec.describe ResumeParticipant, :with_default_schedules do
         let(:participant_profile) { create(:ect) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn" do
+      it_behaves_like "validating a participant is not withdrawn for a resume" do
         let(:participant_profile) { create(:ect, :withdrawn) }
       end
     end
@@ -153,7 +153,7 @@ RSpec.describe ResumeParticipant, :with_default_schedules do
         let(:participant_profile) { create(:mentor) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn" do
+      it_behaves_like "validating a participant is not withdrawn for a resume" do
         let(:participant_profile) { create(:mentor, :withdrawn) }
       end
     end
@@ -176,7 +176,7 @@ RSpec.describe ResumeParticipant, :with_default_schedules do
         let(:participant_profile) { create(:npq_participant_profile) }
       end
 
-      it_behaves_like "validating a participant is not withdrawn" do
+      it_behaves_like "validating a participant is not withdrawn for a resume" do
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn) }
       end
     end
