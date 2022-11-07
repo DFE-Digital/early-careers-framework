@@ -446,7 +446,7 @@ class SchoolMailer < ApplicationMailer
         name: induction_coordinator.user.full_name,
         withdrawn_participant_name: withdrawn_participant.user.full_name,
         school: withdrawn_participant.school.name,
-        delivery_partner: partnership.delivery_partner.name,
+        delivery_partner: partnership&.delivery_partner&.name || "No delivery partner",
         lead_provider: partnership.lead_provider.name,
       },
     )
