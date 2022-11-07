@@ -37,6 +37,7 @@ class Partnership < ApplicationRecord
   scope :relationships, -> { where(relationship: true) }
 
   delegate :name, to: :lead_provider, allow_nil: true, prefix: true
+  delegate :name, to: :delivery_partner, allow_nil: true, prefix: true
 
   # NOTE: challenge! has been moved to a service Partnerships::Challenge as there
   # are now many side affects that need to be considered.
