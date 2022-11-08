@@ -121,7 +121,7 @@ module Schools
       validates :start_date,
                 presence: true,
                 inclusion: {
-                  in: ->(_) { (Date.current - 1.year)..(Date.current + 1.year) },
+                  in: ->(_) { (Date.new(2021, 9, 1))..(Date.current + 1.year) },
                   message: :invalid,
                 }
 

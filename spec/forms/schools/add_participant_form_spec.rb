@@ -25,6 +25,30 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
   it { is_expected.to validate_presence_of(:start_date).on(:start_date) }
   it { is_expected.to validate_presence_of(:transfer).on(:transfer) }
 
+  describe "start_date validation" do
+    it "permits dates from 1/9/2021" do
+      form.start_date = Date.new(2021, 9, 1)
+      expect(form.valid?(:start_date)).to be true
+    end
+
+    it "permits dates up to 1 year from now" do
+      form.start_date = Date.current + 1.year
+      expect(form.valid?(:start_date)).to be true
+    end
+
+    it "does not permit a date prior to 1/9/2021" do
+      form.start_date = Date.new(2021, 8, 31)
+      expect(form.valid?(:start_date)).to be false
+      expect(form.errors[:start_date]).to be_present
+    end
+
+    it "does not permit a date more that 1 year in the future" do
+      form.start_date = Date.current + 1.year + 1.day
+      expect(form.valid?(:start_date)).to be false
+      expect(form.errors[:start_date]).to be_present
+    end
+  end
+
   describe "when a record matches the validation data" do
     before do
       form.trn = "1234567"
