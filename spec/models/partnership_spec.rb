@@ -17,6 +17,11 @@ RSpec.describe Partnership, type: :model do
     it { is_expected.to have_many(:partnership_notification_emails) }
   end
 
+  describe "delegations" do
+    it { is_expected.to delegate_method(:name).to(:lead_provider).with_prefix(true).allow_nil }
+    it { is_expected.to delegate_method(:name).to(:delivery_partner).with_prefix(true).allow_nil }
+  end
+
   it "updates the updated_at on participant profiles and users", :with_default_schedules do
     freeze_time
     school_cohort = create(:school_cohort)
