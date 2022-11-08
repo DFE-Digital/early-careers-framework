@@ -1,28 +1,49 @@
 \copy (
-    SELECT DISTINCT s.urn,
-                    sc.induction_programme_choice,
-                    (p.id IS NOT NULL)                 as in_partnership,
-                    lp.name                            as lead_provider_name,
-                    dp.name                            as delivery_partner_name,
-                    (icp.id IS NOT NULL)               as tutor_nominated,
-                    icp.created_at                     as tutor_nominated_at,
-                    (u.current_sign_in_at IS NOT NULL) as tutor_signed_in,
-                    u.full_name                        as tutor_name,
-                    u.email                            as tutor_email,
-                    (pp.id IS NOT NULL)                as sit_mentor,
-                    u.id                              as sit_mentor_id
+  with everything as (
+    select
+      s.urn,
+      sc.induction_programme_choice,
+      (p.id is not null)              as in_partnership,
+      lp.name                         as lead_provider_name,
+      dp.name                         as delivery_partner_name,
+      c.start_year                    as cohort
 
     FROM schools s
-            LEFT OUTER JOIN school_cohorts sc on s.id = sc.school_id
-            LEFT OUTER JOIN cohorts c on sc.cohort_id = c.id
-            LEFT OUTER JOIN partnerships p on s.id = p.school_id
-            LEFT OUTER JOIN lead_providers lp on p.lead_provider_id = lp.id
-            LEFT OUTER JOIN delivery_partners dp on p.delivery_partner_id = dp.id
-            LEFT OUTER JOIN induction_coordinator_profiles_schools icps on s.id = icps.school_id
-            LEFT OUTER JOIN induction_coordinator_profiles icp on icps.induction_coordinator_profile_id = icp.id
-            LEFT OUTER JOIN users u on icp.user_id = u.id
-            LEFT OUTER JOIN teacher_profiles tp on u.id = tp.user_id
-            LEFT OUTER JOIN participant_profiles pp on tp.id = pp.teacher_profile_id and pp.status = 'active' and
-                                                        pp.type = 'ParticipantProfile::Mentor'
-    WHERE (c.start_year > 2020 OR c.id IS NULL)
+
+    left outer join school_cohorts sc on s.id = sc.school_id
+    left outer join cohorts c on sc.cohort_id = c.id
+    left outer join partnerships p on s.id = p.school_id and c.id = p.cohort_id
+    left outer join lead_providers lp on p.lead_provider_id = lp.id
+    left outer join delivery_partners dp on p.delivery_partner_id = dp.id
+
+    where (c.start_year > 2020 or c.id is null)
+  ),
+  just_2021 as (
+    select *
+    from everything
+    where cohort = 2021
+  ),
+  just_2022 as (
+    select *
+    from everything
+    where cohort = 2022
+  )
+  select
+    everything.urn,
+
+    just_2021.induction_programme_choice   as "2021_induction_programme_choice",
+    just_2021.in_partnership               as "2021_in_partnership",
+    just_2021.lead_provider_name           as "2021_lead_provider_name",
+    just_2021.delivery_partner_name        as "2021_delivery_partner_name",
+
+    just_2022.induction_programme_choice   as "2022_induction_programme_choice",
+    just_2022.in_partnership               as "2022_in_partnership",
+    just_2022.lead_provider_name           as "2022_lead_provider_name",
+    just_2022.delivery_partner_name        as "2022_delivery_partner_name"
+  from
+    everything
+  left outer join
+    just_2021 on everything.urn = just_2021.urn
+  left outer join
+    just_2022 on everything.urn = just_2022.urn
 ) to '/tmp/exports/schools.csv' with csv header;
