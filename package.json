@@ -6,7 +6,7 @@
     "yarn": "^1.22.0"
   },
   "dependencies": {
-    "@babel/core": "^7.19.6",
+    "@babel/core": "^7.20.2",
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
     "@babel/runtime": "^7.20.1",
