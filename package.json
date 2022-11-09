@@ -13,7 +13,7 @@
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "accessible-autocomplete": "^2.0.3",
-    "babel-loader": "^8.2.5",
+    "babel-loader": "^8.3.0",
     "babel-plugin-macros": "^3.1.0",
     "compression-webpack-plugin": "^9.2.0",
     "css-loader": "^6.6.0",
