@@ -23,6 +23,7 @@ module Finance
           "Declaration Created At",
           "Statement Name",
           "Statement ID",
+          "Targeted Delivery Funding",
         ].freeze
 
         def initialize(scope, statement)
@@ -68,6 +69,7 @@ module Finance
             record.declaration_created_at.iso8601,
             record.statement_name,
             record.statement_id,
+            record.targeted_delivery_funding_eligibility,
           ]
         end
 
