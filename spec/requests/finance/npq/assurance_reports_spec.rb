@@ -39,18 +39,17 @@ RSpec.describe Finance::NPQ::AssuranceReportsController, :with_default_schedules
       expect(row["Lead Provider Name"]).to     eq(participant_declaration.cpd_lead_provider.npq_lead_provider.name)
 
       participant_profile = participant_declaration.participant_profile
-      expect(row["Participant ID"]).to    eq(participant_profile.participant_identity.external_identifier)
-      expect(row["Participant Name"]).to  eq(CGI.escapeHTML(participant_profile.participant_identity.user.full_name))
-      expect(row["TRN"]).to               eq(participant_profile.teacher_profile.trn)
-      expect(row["Schedule"]).to          eq(participant_profile.schedule.schedule_identifier)
+      expect(row["Participant ID"]).to   eq(participant_profile.participant_identity.external_identifier)
+      expect(row["Participant Name"]).to eq(CGI.escapeHTML(participant_profile.participant_identity.user.full_name))
+      expect(row["TRN"]).to              eq(participant_profile.teacher_profile.trn)
+      expect(row["Schedule"]).to         eq(participant_profile.schedule.schedule_identifier)
 
       npq_application = participant_profile.npq_application
       expect(row["Course Identifier"]).to         eq(npq_application.npq_course.identifier)
       expect(row["School Urn"]).to                eq(npq_application.school_urn)
       expect(row["School Name"]).to               eq(school.name)
-      expect(row["Targeted Delivery Funding"]).to eq(npq_application.targeted_delivery_funding_eligibility)
-
-      expect(row["Eligible For Funding"]).to eq("true")
+      expect(row["Targeted Delivery Funding"]).to eq("true")
+      expect(row["Eligible For Funding"]).to      eq("true")
     end
   end
 end

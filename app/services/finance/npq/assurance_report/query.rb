@@ -19,26 +19,27 @@ module Finance
         def sql
           <<~EOSQL
             SELECT
-              pd.id                   AS id,
-              pi.external_identifier  AS participant_id,
-              u.full_name             AS participant_name,
-              tp.trn                  AS trn,
-              c.identifier            AS course_identifier,
-              sch.schedule_identifier AS schedule,
-              a.eligible_for_funding  AS eligible_for_funding,
-              nlp.name                AS npq_lead_provider_name,
-              nlp.id                  AS npq_lead_provider_id,
-              a.school_urn            AS school_urn,
-              sc.name                 AS school_name,
-              pp.status               AS training_status,
-              pps.reason              AS training_status_reason,
-              pd.id                   AS declaration_id,
-              pd.state                AS declaration_status,
-              pd.declaration_type     AS declaration_type,
-              pd.declaration_date     AS declaration_date,
-              pd.created_at           AS declaration_created_at,
-              s.id                    AS statement_id,
-              s.name                  AS statement_name
+              pd.id                                   AS id,
+              pi.external_identifier                  AS participant_id,
+              u.full_name                             AS participant_name,
+              tp.trn                                  AS trn,
+              c.identifier                            AS course_identifier,
+              sch.schedule_identifier                 AS schedule,
+              a.eligible_for_funding                  AS eligible_for_funding,
+              nlp.name                                AS npq_lead_provider_name,
+              nlp.id                                  AS npq_lead_provider_id,
+              a.school_urn                            AS school_urn,
+              sc.name                                 AS school_name,
+              pp.status                               AS training_status,
+              pps.reason                              AS training_status_reason,
+              pd.id                                   AS declaration_id,
+              pd.state                                AS declaration_status,
+              pd.declaration_type                     AS declaration_type,
+              pd.declaration_date                     AS declaration_date,
+              pd.created_at                           AS declaration_created_at,
+              s.id                                    AS statement_id,
+              s.name                                  AS statement_name,
+              a.targeted_delivery_funding_eligibility AS targeted_delivery_funding
             FROM participant_declarations pd
             JOIN statement_line_items sli       ON sli.participant_declaration_id = pd.id
             JOIN statements s                   ON s.id = sli.statement_id

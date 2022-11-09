@@ -69,7 +69,7 @@ module Finance
             record.declaration_created_at.iso8601,
             record.statement_name,
             record.statement_id,
-            record.targeted_delivery_funding_eligibility,
+            record.targeted_delivery_funding,
           ]
         end
 
