@@ -486,7 +486,7 @@ GEM
     sentry-sidekiq (5.6.0)
       sentry-ruby (~> 5.6.0)
       sidekiq (>= 3.0)
-    shakapacker (6.5.2)
+    shakapacker (6.5.4)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
       railties (>= 5.2)
@@ -597,7 +597,7 @@ GEM
       nokogiri (~> 1.8)
     yard (0.9.28)
       webrick (~> 1.7.0)
-    zeitwerk (2.6.4)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   ruby
@@ -670,7 +670,7 @@ DEPENDENCIES
   sentry-rails (~> 5.5)
   sentry-ruby (~> 5.4)
   sentry-sidekiq
-  shakapacker (~> 6.5.2)
+  shakapacker (~> 6.5.4)
   shoulda-matchers (~> 5.2)
   sidekiq
   sidekiq-cron
