@@ -160,7 +160,7 @@ end
 
 group :test do
   gem "axe-core-rspec"
-  gem "capybara", "~> 3.37"
+  gem "capybara", "~> 3.38"
   gem "jsonapi-rspec"
   gem "launchy"
   gem "pundit-matchers", "~> 1.7.0"
