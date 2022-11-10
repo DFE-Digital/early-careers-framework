@@ -197,9 +197,13 @@ RSpec.describe SchoolMailer, type: :mailer do
         withdrawn_participant: participant_profile,
         induction_coordinator: sit_profile,
       )
+    end
 
-      expect(email.from).to eq(["mail@example.com"])
-      expect(email.to).to eq([induction_coordinator_profile.user.email])
+    it "sets the right sender and recipient addresses" do
+      aggregate_failures do
+        expect(email.from).to eq(["mail@example.com"])
+        expect(email.to).to eq([sit_profile.user.email])
+      end
     end
   end
 end
