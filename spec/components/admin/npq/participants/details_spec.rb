@@ -11,6 +11,8 @@ RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type:
   describe "delegations" do
     subject { component }
 
+    it { is_expected.to delegate_method(:pending?).to(:profile).with_prefix(true) }
+
     it { is_expected.to delegate_method(:full_name).to(:user).with_prefix(true) }
     it { is_expected.to delegate_method(:email).to(:user).with_prefix(true) }
 
@@ -21,7 +23,6 @@ RSpec.describe Admin::NPQ::Participants::Details, :with_default_schedules, type:
     it { is_expected.to delegate_method(:nino).to(:npq_application).with_prefix(true).allow_nil }
     it { is_expected.to delegate_method(:date_of_birth).to(:npq_application).with_prefix(true).allow_nil }
     it { is_expected.to delegate_method(:course_name).to(:npq_application).with_prefix(true).allow_nil }
-    it { is_expected.to delegate_method(:pending?).to(:npq_application).with_prefix(true).allow_nil }
   end
 
   describe "heading" do

@@ -15,7 +15,7 @@
     row.action(text: "Change", href: edit_admin_participant_npq_change_email_path(profile), visually_hidden_text: "participant email address")
   end
 
-  if npq_application_pending?
+  if profile_pending?
     sl.row do |row|
       row.key(text: "National Insurance number")
       row.value(text: npq_application_nino)

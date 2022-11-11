@@ -13,6 +13,8 @@ module Admin
           @school          = school
         end
 
+        delegate :pending?, to: :profile, prefix: true
+
         delegate :full_name, :email, to: :user, prefix: true
 
         delegate :urn, :name, to: :school, prefix: true, allow_nil: true
@@ -21,7 +23,6 @@ module Admin
                  :nino,
                  :date_of_birth,
                  :course_name,
-                 :pending?,
                  to: :npq_application,
                  prefix: true,
                  allow_nil: true
