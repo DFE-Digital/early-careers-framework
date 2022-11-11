@@ -4,43 +4,34 @@ module Admin
   module NPQ
     module Participants
       class Details < BaseComponent
-        attr_reader :profile
+        attr_reader :profile, :user, :npq_application, :school
 
-        def initialize(profile:)
-          @profile = profile
+        def initialize(profile:, user:, npq_application:, school:)
+          @profile         = profile
+          @user            = user
+          @npq_application = npq_application
+          @school          = school
         end
 
-        delegate :user, :pending?, :school, :school_urn, :npq_application, :updated_at, to: :profile
-        delegate :full_name, :email, to: :user
+        delegate :full_name, :email, to: :user, prefix: true
 
-        def school_name
-          return if school.blank?
+        delegate :urn, :name, to: :school, prefix: true, allow_nil: true
 
-          school.name
-        end
-
-        def trn
-          npq_application&.teacher_reference_number
-        end
-
-        def date_of_birth
-          npq_application&.date_of_birth&.to_formatted_s(:govuk)
-        end
-
-        def lead_provider_name
-          npq_application&.npq_lead_provider&.name
-        end
-
-        def npq_course_name
-          npq_application&.npq_course&.name
-        end
-
-        def ni_number
-          npq_application&.nino
-        end
+        delegate :teacher_reference_number,
+                 :nino,
+                 :date_of_birth,
+                 :course_name,
+                 :pending?,
+                 to: :npq_application,
+                 prefix: true,
+                 allow_nil: true
 
         def last_updated
-          updated_at.to_formatted_s(:govuk)
+          latest_updated_timestamp = [profile.updated_at, user.updated_at].compact.max
+
+          return if latest_updated_timestamp.blank?
+
+          latest_updated_timestamp.to_formatted_s(:govuk)
         end
       end
     end
