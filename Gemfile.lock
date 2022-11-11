@@ -219,7 +219,7 @@ GEM
       pagy (~> 5.10.1)
       railties (>= 6.1)
       view_component (~> 2.74.1)
-    govuk_design_system_formbuilder (3.1.2)
+    govuk_design_system_formbuilder (3.2.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -597,7 +597,7 @@ GEM
       nokogiri (~> 1.8)
     yard (0.9.28)
       webrick (~> 1.7.0)
-    zeitwerk (2.6.4)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   ruby
@@ -625,7 +625,7 @@ DEPENDENCIES
   google-cloud-bigquery
   googleauth
   govuk-components (~> 3.2)
-  govuk_design_system_formbuilder (~> 3.1)
+  govuk_design_system_formbuilder (~> 3.2)
   httpclient (~> 2.8, >= 2.8.3)
   json-diff (~> 0.4.1)
   json-schema (>= 2.8.1)
