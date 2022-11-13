@@ -61,9 +61,14 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: "json" } do
     resource :notify_callback, only: :create, path: "notify-callback"
 
-    namespace :v1 do
-      concern :participant_actions, Participants::Routing.new
+    concern :participant_actions do
+      put :withdraw, on: :member
+      put :defer, on: :member
+      put :resume, on: :member
+      put :change_schedule, path: "change-schedule", on: :member
+    end
 
+    namespace :v1 do
       resources :npq_funding, only: [:show], path: "npq-funding", param: :trn
 
       resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
@@ -98,7 +103,6 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      concern :participant_actions, Participants::Routing.new
       resources :ecf_participants, path: "participants/ecf", only: %i[index show] do
         concerns :participant_actions
       end
