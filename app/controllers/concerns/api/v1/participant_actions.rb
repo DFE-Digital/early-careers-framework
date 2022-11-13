@@ -36,14 +36,6 @@ module Api
           .serializable_hash.to_json
       end
 
-      def perform_action(service_namespace:)
-        render json: serialized_response(participant_profile_for(service_namespace))
-      end
-
-      def recorder(service_namespace:)
-        "#{service_namespace}::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
-      end
-
       def permitted_params
         params.require(:data).permit(:type, attributes: %i[course_identifier reason schedule_identifier cohort])
       rescue ActionController::ParameterMissing => e
@@ -60,10 +52,6 @@ module Api
 
       def course_identifier
         permitted_params.dig(:attributes, :course_identifier)
-      end
-
-      def participant_profile_for(service_namespace)
-        recorder(service_namespace:).call(params: params_for_recorder)
       end
 
       def params_for_recorder
