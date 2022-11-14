@@ -28,7 +28,7 @@ module Admin
                  allow_nil: true
 
         def last_updated
-          [profile.updated_at, user.updated_at]
+          [profile.updated_at, user.updated_at, npq_application.updated_at]
             &.compact
             &.max
             &.to_formatted_s(:govuk)
