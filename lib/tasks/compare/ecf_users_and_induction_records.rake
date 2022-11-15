@@ -48,9 +48,9 @@ namespace :compare do
           next if record_from_users_query == record_from_ir_query
 
           if record_from_users_query.blank?
-            ir_with_no_user_report.add record_from_ir_query
+            ir_with_no_user_report.push record_from_ir_query
           elsif record_from_ir_query.blank?
-            users_with_no_ir_report.add record_from_users_query
+            users_with_no_ir_report.push record_from_users_query
           else
             diff_report += "####################\n"
             diff_report += "ID: #{id}\n"
@@ -64,9 +64,9 @@ namespace :compare do
 
         folder = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
         Dir.mkdir "/tmp/#{folder}/"
-        File.open("/tmp/#{folder}/api_users_with_no_ir_report.json", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
-        File.open("/tmp/#{folder}/api_ir_with_no_user_report.json", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
-        File.open("/tmp/#{folder}/api_diff_report.json", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
+        File.open("/tmp/#{folder}/api_users_with_no_ir_report.txt", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
+        File.open("/tmp/#{folder}/api_ir_with_no_user_report.txt", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
+        File.open("/tmp/#{folder}/api_diff_report.txt", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
       end
     end
   end
