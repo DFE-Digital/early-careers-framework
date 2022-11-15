@@ -6,68 +6,76 @@ namespace :compare do
   namespace :ecf_users_and_induction_records do
     desc "compare"
     task run: :environment do
+      puts "getting user data..."
       users = Api::V1::ECF::UsersQuery.new.all
       serialized_users = Api::V1::ECFUserSerializer.new(users).serializable_hash
 
+      puts "getting IR data..."
       induction_records = Api::V1::ECF::InductionRecordsQuery.new.all
       serialized_induction_records = Api::V1::ECFInductionRecordSerializer.new(induction_records).serializable_hash
 
-      ids_from_serialized_users = serialized_users[:data].map { |u| u[:id] }
-      ids_from_serialized_induction_records = serialized_induction_records[:data].map { |u| u[:id] }
+      puts "getting mapping data..."
+      ui_to_ei_map = ParticipantIdentity.select("participant_identities.user_id AS id, participant_identities.external_identifier AS external_identifier").to_a.map(&:serializable_hash)
 
-      duplicate_records = ids_from_serialized_induction_records.tally.filter { |_, v| v > 1 } # assuming we're counting the number of duplications rather than duplicated records
-      same_records      = (ids_from_serialized_users & ids_from_serialized_induction_records)
-      ir_but_not_users  = ids_from_serialized_induction_records - ids_from_serialized_users
-      users_but_not_ir  = ids_from_serialized_users - ids_from_serialized_induction_records
+      puts "analysing..."
 
-      if ids_from_serialized_users.count.zero? && ids_from_serialized_induction_records.count.zero?
-        puts "The API responses are both empty"
+      if serialized_users.count.zero? && serialized_induction_records.count.zero?
+        puts "The API responses are both empty!"
       else
-        puts "ERROR: The API responses are different"
-
-        puts "Records returned by the users query:            #{ids_from_serialized_users.count}"
-        puts "Records returned by the induction record query: #{ids_from_serialized_induction_records.count}"
-        puts "Duplicates found in induction record query:     #{duplicate_records.count}"
-        puts "Records found in both queries:                  #{same_records.count}"
-        puts "Records found users query but not IR:           #{users_but_not_ir.count}"
-        puts "Records found IR query but not users:           #{ir_but_not_users.count}"
-
         indexed_serialized_users = serialized_users[:data].index_by { |x| x[:id] }
         indexed_serialized_induction_records = serialized_induction_records[:data].index_by { |x| x[:id] }
-
-        puts "building detailed reports"
 
         users_with_no_ir_report = []
         ir_with_no_user_report = []
         diff_report = ""
+        diff_count = 0
 
-        [*ids_from_serialized_users, *ids_from_serialized_induction_records].uniq.sort.each do |id|
-          record_from_users_query = indexed_serialized_users[id]
-          record_from_ir_query = indexed_serialized_induction_records[id]
+        ui_to_ei_map.each do |records|
+          record_from_users_query = indexed_serialized_users[records["id"]]
+          record_from_ir_query = indexed_serialized_induction_records[records["external_identifier"]]
 
-          next if record_from_users_query == record_from_ir_query
+          # skip if both are not found
+          next if record_from_users_query.blank? && record_from_ir_query.blank?
 
           if record_from_users_query.blank?
-            ir_with_no_user_report.push record_from_ir_query
+            ir_with_no_user_report.push user_id: records["id"], induction_record: record_from_ir_query
           elsif record_from_ir_query.blank?
-            users_with_no_ir_report.push record_from_users_query
+            users_with_no_ir_report.push external_identifier: records["external_identifier"], user_record: record_from_users_query
           else
+            # skip if the attributes are the same
+            next if record_from_users_query[:attributes] == record_from_ir_query[:attributes]
+
             diff_report += "####################\n"
-            diff_report += "ID: #{id}\n"
-            diff_report += JsonDiff.diff(record_from_users_query, record_from_ir_query, include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
+            diff_report += "user_id: #{records['id']}\n"
+            diff_report += "external_identifier: #{records['external_identifier']}\n"
+            diff_report += "--------------------\n"
+            diff_report += JsonDiff.diff(record_from_users_query[:attributes], record_from_ir_query[:attributes], include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
             diff_report += "--------------------\n"
             diff_report += "#{JSON.pretty_generate(record_from_ir_query)}\n"
+
+            diff_count += 1
           end
         end
 
-        puts "writing detailed reports to file"
+        puts "Records returned by the users query:            #{serialized_users[:data].count}"
+        puts "Records returned by the induction record query: #{serialized_induction_records[:data].count}"
+        puts "Records found in users query but not in IR:     #{users_with_no_ir_report.count}"
+        puts "Records found in IR query but not in users:     #{ir_with_no_user_report.count}"
+        puts "Records with differences:                       #{diff_count}"
+        puts ""
+        puts "building detailed reports..."
 
-        folder = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
-        Dir.mkdir "/tmp/#{folder}/"
-        File.open("/tmp/#{folder}/api_users_with_no_ir_report.txt", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
-        File.open("/tmp/#{folder}/api_ir_with_no_user_report.txt", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
-        File.open("/tmp/#{folder}/api_diff_report.txt", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
+        folder_timestamp = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
+        folder_path = "/tmp/#{folder_timestamp}"
+
+        puts "writing detailed reports to folder #{folder_path}/"
+
+        Dir.mkdir folder_path
+        File.open("#{folder_path}/api_users_with_no_ir_report.json", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
+        File.open("#{folder_path}/api_ir_with_no_user_report.json", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
+        File.open("#{folder_path}/api_diff_report.txt", "w") { |r| r.puts diff_report }
       end
     end
   end
 end
+
