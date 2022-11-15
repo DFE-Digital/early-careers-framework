@@ -55,10 +55,6 @@ module Api
         current_user.lead_provider
       end
 
-      def course_identifier
-        permitted_params.dig(:attributes, :course_identifier)
-      end
-
       def action_params
         HashWithIndifferentAccess.new(
           cpd_lead_provider: current_user,

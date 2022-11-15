@@ -16,20 +16,6 @@ module Api
         render json: serializer_class.new(npq_participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
-      def withdraw
-        if any_participant_declarations_started?
-          service = WithdrawParticipant.new(action_params)
-          serialized_response_for(service)
-        else
-          render json: {
-            error: [{
-              title: "No started declaration found",
-              detail: "An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance.",
-            }],
-          }, status: :unprocessable_entity
-        end
-      end
-
     private
 
       def serializer_class
@@ -57,17 +43,6 @@ module Api
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:npq_lead_provider])
-      end
-
-      def any_participant_declarations_started?
-        ParticipantDeclaration::NPQ
-          .joins(participant_profile: [:npq_course])
-          .joins(user: [:participant_identities])
-          .where(
-            "participant_identities.external_identifier": participant_id,
-            "npq_courses.identifier": course_identifier,
-            declaration_type: "started",
-          ).any?
       end
     end
   end

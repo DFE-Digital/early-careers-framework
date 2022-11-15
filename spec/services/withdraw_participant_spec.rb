@@ -194,7 +194,7 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
   context "NPQ participant profile" do
     let(:cpd_lead_provider) { npq_application.npq_lead_provider.cpd_lead_provider }
     let(:school) { create(:school) }
-    let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+    let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
     let(:participant_profile) { create(:npq_participant_profile, npq_application:, school:) }
     let(:course_identifier) { npq_application.npq_course.identifier }
     let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
@@ -204,6 +204,16 @@ RSpec.describe WithdrawParticipant, :with_default_schedules do
 
       it_behaves_like "validating a participant is not already withdrawn for a withdraw" do
         let(:participant_profile) { create(:npq_participant_profile, :withdrawn, npq_application:) }
+      end
+
+      context "when a participant has no started declarations" do
+        let(:npq_application) { create(:npq_application, :accepted, npq_course: create(:npq_course, identifier: "npq-senior-leadership")) }
+
+        it "is invalid and returns an error message" do
+          is_expected.to be_invalid
+
+          expect(service.errors.messages_for(:participant_profile)).to include("An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance")
+        end
       end
     end
 
