@@ -35,31 +35,38 @@ namespace :compare do
         indexed_serialized_users = serialized_users[:data].index_by { |x| x[:id] }
         indexed_serialized_induction_records = serialized_induction_records[:data].index_by { |x| x[:id] }
 
-        filename = "/tmp/ecf_users_and_induction_records-#{SecureRandom.hex}.txt"
+        puts "building detailed reports"
 
-        puts "writing detailed report to file '#{filename}'"
+        users_with_no_ir_report = []
+        ir_with_no_user_report = []
+        diff_report = ""
 
-        File.open(filename, "w") do |r|
-          [*ids_from_serialized_users, *ids_from_serialized_induction_records].uniq.sort.each do |id|
-            record_from_users_query = indexed_serialized_users[id]
-            record_from_ir_query = indexed_serialized_induction_records[id]
+        [*ids_from_serialized_users, *ids_from_serialized_induction_records].uniq.sort.each do |id|
+          record_from_users_query = indexed_serialized_users[id]
+          record_from_ir_query = indexed_serialized_induction_records[id]
 
-            next if record_from_users_query == record_from_ir_query
+          next if record_from_users_query == record_from_ir_query
 
-            r.puts "####################"
-            r.puts "ID: #{id}"
-
-            if record_from_users_query.blank?
-              r.puts "record_from_users_query is empty"
-            elsif record_from_ir_query.blank?
-              r.puts "record_from_ir_query is empty"
-            else
-              r.puts "Difference detected"
-              r.puts JsonDiff.diff(record_from_users_query, record_from_ir_query, include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
-              r.puts "\nwithin:\n===\n#{JSON.pretty_generate(record_from_ir_query)}"
-            end
+          if record_from_users_query.blank?
+            ir_with_no_user_report.add record_from_ir_query
+          elsif record_from_ir_query.blank?
+            users_with_no_ir_report.add record_from_users_query
+          else
+            diff_report += "####################\n"
+            diff_report += "ID: #{id}\n"
+            diff_report += JsonDiff.diff(record_from_users_query, record_from_ir_query, include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
+            diff_report += "--------------------\n"
+            diff_report += "#{JSON.pretty_generate(record_from_ir_query)}\n"
           end
         end
+
+        puts "writing detailed reports to file"
+
+        folder = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
+        Dir.mkdir "/tmp/#{folder}/"
+        File.open("/tmp/#{folder}/api_users_with_no_ir_report.json", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
+        File.open("/tmp/#{folder}/api_ir_with_no_user_report.json", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
+        File.open("/tmp/#{folder}/api_diff_report.json", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
       end
     end
   end
