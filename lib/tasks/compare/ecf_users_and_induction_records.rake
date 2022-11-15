@@ -48,9 +48,9 @@ namespace :compare do
           next if record_from_users_query == record_from_ir_query
 
           if record_from_users_query.blank?
-            ir_with_no_user_report.add record_from_ir_query
+            ir_with_no_user_report.push record_from_ir_query
           elsif record_from_ir_query.blank?
-            users_with_no_ir_report.add record_from_users_query
+            users_with_no_ir_report.push record_from_users_query
           else
             diff_report += "####################\n"
             diff_report += "ID: #{id}\n"
