@@ -8,7 +8,7 @@
       dp.name                         as delivery_partner_name,
       c.start_year                    as cohort
 
-    FROM schools s
+    from schools s
 
     left outer join school_cohorts sc on s.id = sc.school_id
     left outer join cohorts c on sc.cohort_id = c.id
@@ -17,6 +17,7 @@
     left outer join delivery_partners dp on p.delivery_partner_id = dp.id
 
     where (c.start_year > 2020 or c.id is null)
+    and p.challenged_at is null
   ),
   just_2021 as (
     select *
