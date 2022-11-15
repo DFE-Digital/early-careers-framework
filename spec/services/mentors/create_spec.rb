@@ -76,6 +76,20 @@ RSpec.describe Mentors::Create, :with_default_schedules do
     }.to change { user.reload.full_name }
   end
 
+  context "when the email exists on an identity but not a user record" do
+    let!(:identity) { Identity::Create.call(user:, email: "another.identity@example.com") }
+
+    it "creates the mentor profile under the users identity" do
+      expect {
+        described_class.call(
+          email: identity.email,
+          full_name: user.full_name,
+          school_cohort:,
+        )
+      }.to change { identity.participant_profiles.mentors.count }.by(1)
+    end
+  end
+
   context "when default induction programme is set on the school cohort" do
     it "creates an induction record" do
       induction_programme = create(:induction_programme, :fip, school_cohort:)
