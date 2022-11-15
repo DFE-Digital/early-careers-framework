@@ -64,9 +64,9 @@ namespace :compare do
 
         folder = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
         Dir.mkdir "/tmp/#{folder}/"
-        File.open("/tmp/#{folder}/api_users_with_no_ir_report.json", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
-        File.open("/tmp/#{folder}/api_ir_with_no_user_report.json", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
-        File.open("/tmp/#{folder}/api_diff_report.json", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
+        File.open("/tmp/#{folder}/api_users_with_no_ir_report.txt", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
+        File.open("/tmp/#{folder}/api_ir_with_no_user_report.txt", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
+        File.open("/tmp/#{folder}/api_diff_report.txt", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
       end
     end
   end
