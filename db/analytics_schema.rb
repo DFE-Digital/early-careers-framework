@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_03_153412) do
+ActiveRecord::Schema.define(version: 2022_11_15_103803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -44,6 +44,8 @@ ActiveRecord::Schema.define(version: 2022_11_03_153412) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cohort_id"
+    t.uuid "user_id"
+    t.string "participant_type"
     t.index ["induction_record_id"], name: "index_ecf_inductions_on_induction_record_id", unique: true
   end
 

@@ -25,6 +25,8 @@ module Analytics
         record.training_status = induction_record.training_status
         record.school_transfer = induction_record.school_transfer
         record.cohort_id = induction_record&.cohort&.id
+        record.user_id = participant_profile.user_id
+        record.participant_type = participant_profile.type
 
         record.save!
       end
