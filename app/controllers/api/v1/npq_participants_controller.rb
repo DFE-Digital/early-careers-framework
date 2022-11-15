@@ -16,16 +16,10 @@ module Api
         render json: serializer_class.new(npq_participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
-      def resume
-        service = ResumeParticipant.new(params_for_recorder)
-
-        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-      end
-
       def withdraw
         if any_participant_declarations_started?
-          service = WithdrawParticipant.new(params_for_recorder)
-          render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
+          service = WithdrawParticipant.new(action_params)
+          serialized_response_for(service)
         else
           render json: {
             error: [{
@@ -36,28 +30,14 @@ module Api
         end
       end
 
-      def defer
-        service = DeferParticipant.new(params_for_recorder)
-
-        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-      end
-
-      def change_schedule
-        service = ChangeSchedule.new(params_for_recorder)
-
-        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-      end
-
     private
 
       def serializer_class
         NPQParticipantSerializer
       end
 
-      def serialized_response(participant_profile)
-        serializer_class
-          .new(participant_profile.user, params: { cpd_lead_provider: current_user })
-          .serializable_hash.to_json
+      def serialized_response_for(service)
+        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
       end
 
       def npq_lead_provider
