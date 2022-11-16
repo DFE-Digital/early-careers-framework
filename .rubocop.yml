@@ -26,6 +26,9 @@ Style/MixinUsage:
   Exclude:
     - 'db/seeds/test_data.rb'
 
+Style/SignalException:
+  Enabled: false
+
 Rails/UnknownEnv:
   Environments:
     - production
