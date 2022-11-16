@@ -27,33 +27,33 @@ namespace :compare do
 
         users_with_no_ir_report = []
         ir_with_no_user_report = []
-        diff_report = ""
-        diff_count = 0
+        diff_report = []
 
         ui_to_ei_map.each do |records|
           record_from_users_query = indexed_serialized_users[records["id"]]
           record_from_ir_query = indexed_serialized_induction_records[records["external_identifier"]]
 
-          # skip if both are not found
-          next if record_from_users_query.blank? && record_from_ir_query.blank?
-
-          if record_from_users_query.blank?
+          if record_from_users_query.blank? && record_from_ir_query.blank?
+            # skip if both are not found - do we care about these ?
+            next
+          elsif record_from_users_query.blank?
             ir_with_no_user_report.push user_id: records["id"], induction_record: record_from_ir_query
           elsif record_from_ir_query.blank?
             users_with_no_ir_report.push external_identifier: records["external_identifier"], user_record: record_from_users_query
-          else
+          elsif record_from_users_query[:attributes] == record_from_ir_query[:attributes]
             # skip if the attributes are the same
-            next if record_from_users_query[:attributes] == record_from_ir_query[:attributes]
+            next
+          else
+            original_attributes = JsonDiff.diff(record_from_users_query[:attributes], record_from_ir_query[:attributes], include_was: true).map do |el|
+              attributes = {}
+              attributes[el["path"].sub("/", "")] = el["was"]
+              attributes
+            end
 
-            diff_report += "####################\n"
-            diff_report += "user_id: #{records['id']}\n"
-            diff_report += "external_identifier: #{records['external_identifier']}\n"
-            diff_report += "--------------------\n"
-            diff_report += JsonDiff.diff(record_from_users_query[:attributes], record_from_ir_query[:attributes], include_was: true).map { |el| "    #{el['path']}: \"#{el['was']}\"" }.join("\n")
-            diff_report += "--------------------\n"
-            diff_report += "#{JSON.pretty_generate(record_from_ir_query)}\n"
-
-            diff_count += 1
+            diff_report.push user_id: records["id"],
+                             external_identifier: records["external_identifier"],
+                             old_record: { attributes: original_attributes },
+                             new_record: record_from_ir_query
           end
         end
 
@@ -61,7 +61,7 @@ namespace :compare do
         puts "Records returned by the induction record query: #{serialized_induction_records[:data].count}"
         puts "Records found in users query but not in IR:     #{users_with_no_ir_report.count}"
         puts "Records found in IR query but not in users:     #{ir_with_no_user_report.count}"
-        puts "Records with differences:                       #{diff_count}"
+        puts "Records with differences:                       #{diff_report.count}"
         puts ""
         puts "building detailed reports..."
 
@@ -73,9 +73,8 @@ namespace :compare do
         Dir.mkdir folder_path
         File.open("#{folder_path}/api_users_with_no_ir_report.json", "w") { |r| r.puts JSON.pretty_generate(users_with_no_ir_report) }
         File.open("#{folder_path}/api_ir_with_no_user_report.json", "w") { |r| r.puts JSON.pretty_generate(ir_with_no_user_report) }
-        File.open("#{folder_path}/api_diff_report.txt", "w") { |r| r.puts diff_report }
+        File.open("#{folder_path}/api_diff_report.json", "w") { |r| r.puts JSON.pretty_generate(diff_report) }
       end
     end
   end
 end
-
