@@ -17,7 +17,7 @@ module Mentors
         mentor_profile = ParticipantProfile::Mentor.create!({
           teacher_profile:,
           schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-          participant_identity: Identity::Create.call(user:),
+          participant_identity: Identity::Create.call(user:, email:),
         }.merge(mentor_attributes))
 
         ParticipantProfileState.create!(participant_profile: mentor_profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
@@ -67,9 +67,11 @@ module Mentors
       # the scenario I am working on is enabling a NPQ user to be added as a mentor
       # Not matching on full_name means this works more smoothly for the end user
       # and they don't get "email already in use" errors if they spell the name differently
-      @user ||= User.find_or_create_by!(email:) do |mentor|
-        mentor.full_name = full_name
-      end
+      @user ||= find_or_create_user!
+    end
+
+    def find_or_create_user!
+      Identity.find_user_by(email:) || User.create!(email:, full_name:)
     end
 
     def teacher_profile
