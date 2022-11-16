@@ -44,10 +44,9 @@ namespace :compare do
             # skip if the attributes are the same
             next
           else
-            original_attributes = JsonDiff.diff(record_from_users_query[:attributes], record_from_ir_query[:attributes], include_was: true).map do |el|
-              attributes = {}
-              attributes[el["path"].sub("/", "")] = el["was"]
-              attributes
+            original_attributes = {}
+            JsonDiff.diff(record_from_users_query[:attributes], record_from_ir_query[:attributes], include_was: true).each do |el|
+              original_attributes[el["path"].sub("/", "")] = el["was"]
             end
 
             diff_report.push user_id: records["id"],
