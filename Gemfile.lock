@@ -173,7 +173,7 @@ GEM
     faraday-net_http (3.0.1)
     ffi (1.15.5)
     foreman (0.87.2)
-    friendly_id (5.4.2)
+    friendly_id (5.5.0)
       activerecord (>= 4.0.0)
     fugit (1.7.1)
       et-orbi (~> 1, >= 1.2.7)
@@ -620,7 +620,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.2.0)
   faker
   foreman
-  friendly_id (~> 5.4, >= 5.4.2)
+  friendly_id (~> 5.5)
   google-apis-drive_v3
   google-cloud-bigquery
   googleauth
