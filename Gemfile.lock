@@ -219,7 +219,7 @@ GEM
       pagy (~> 5.10.1)
       railties (>= 6.1)
       view_component (~> 2.74.1)
-    govuk_design_system_formbuilder (3.2.0)
+    govuk_design_system_formbuilder (3.3.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -625,7 +625,7 @@ DEPENDENCIES
   google-cloud-bigquery
   googleauth
   govuk-components (~> 3.2)
-  govuk_design_system_formbuilder (~> 3.2)
+  govuk_design_system_formbuilder (~> 3.3)
   httpclient (~> 2.8, >= 2.8.3)
   json-diff (~> 0.4.1)
   json-schema (>= 2.8.1)
