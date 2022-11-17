@@ -25,14 +25,14 @@ module Api
       }.freeze
 
       set_id :id do |induction_record|
-        induction_record.preferred_identity.external_identifier
+        induction_record.preferred_identity.user_id
       end
+
+      attributes :email, &:participant_email
 
       attributes :full_name do |induction_record|
         induction_record.preferred_identity.user.full_name
       end
-
-      attributes :email, &:participant_email
 
       attributes :user_type do |induction_record|
         case induction_record.participant_profile.type
