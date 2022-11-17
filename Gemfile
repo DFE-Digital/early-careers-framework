@@ -83,7 +83,7 @@ gem "openapi3_parser", "~> 0.9.2"
 
 gem "ransack"
 
-gem "friendly_id", "~> 5.4", ">= 5.4.2"
+gem "friendly_id", "~> 5.5"
 
 platform :mswin, :mingw, :x64_mingw do
   gem "wdm", "~> 0.1"
