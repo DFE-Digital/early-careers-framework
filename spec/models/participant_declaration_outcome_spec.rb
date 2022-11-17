@@ -37,6 +37,24 @@ RSpec.describe ParticipantDeclarationOutcome, :with_default_schedules, type: :mo
 
     it { is_expected.to validate_presence_of(:completion_date) }
 
+    it "is valid with date < today" do
+      outcome.completion_date = Date.yesterday
+      expect(outcome.valid?).to eq(true)
+    end
+
+    it "is valid with date = today" do
+      outcome.completion_date = Time.zone.today
+      expect(outcome.valid?).to eq(true)
+    end
+
+    it "is invalid with date > today" do
+      outcome.completion_date = Date.tomorrow
+      aggregate_failures "future date" do
+        expect(outcome.valid?).to eq(false)
+        expect(outcome.errors[:completion_date].to_a).to eq(["Cannot be in the future"])
+      end
+    end
+
     %w[passed failed voided].each do |state|
       it "allows #{state} for `state`" do
         outcome.state = state

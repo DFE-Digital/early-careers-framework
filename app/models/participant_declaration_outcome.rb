@@ -9,4 +9,13 @@ class ParticipantDeclarationOutcome < ApplicationRecord
 
   validates :state, presence: true
   validates :completion_date, presence: true
+  validate :completion_is_not_in_future, if: :completion_date
+
+private
+
+  def completion_is_not_in_future
+    return if completion_date <= Time.zone.today
+
+    errors.add(:completion_date, "Cannot be in the future")
+  end
 end
