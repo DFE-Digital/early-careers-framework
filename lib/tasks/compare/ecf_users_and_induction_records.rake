@@ -85,8 +85,8 @@ namespace :compare do
         end
 
         anon_diff_report = diff_report.map do |record|
-          record[:old_record][:attributes][:full_name] = "anon" unless record[:old_record][:attributes][:full_name] == nil
-          record[:old_record][:attributes][:email] = "example@example.com" unless record[:old_record][:attributes][:email] == nil
+          record[:old_record][:attributes][:full_name] = "anon" unless record[:old_record][:attributes][:full_name].nil?
+          record[:old_record][:attributes][:email] = "example@example.com" unless record[:old_record][:attributes][:email].nil?
           record[:new_record][:attributes][:full_name] = "anon"
           record[:new_record][:attributes][:email] = "example@example.com"
           record
