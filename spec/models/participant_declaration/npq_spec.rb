@@ -13,7 +13,7 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
       subject { described_class.new(user:) }
       it {
         is_expected.to have_many(:outcomes)
-          .class_name("ParticipantDeclaration::Outcome::NPQ")
+          .class_name("ParticipantOutcome::NPQ")
           .with_foreign_key("participant_declaration_id")
       }
     end
