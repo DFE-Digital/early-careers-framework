@@ -11,7 +11,7 @@ module Api::V1::ECF
 
     def all
       induction_records = InductionRecord
-        .current
+        .merge(InductionRecord.end_date_null.or(InductionRecord.end_date_in_future)).and(InductionRecord.start_date_in_past.or(InductionRecord.not_school_transfer))
         .joins(:induction_programme, :preferred_identity, :participant_profile)
         .merge(ParticipantProfile.ecf)
 
@@ -24,7 +24,7 @@ module Api::V1::ECF
       end
 
       induction_records
-        .group_by(&:preferred_identity_id)
+        .group_by(&:participant_profile_id)
         .transform_values(&:first)
         .values
     end
