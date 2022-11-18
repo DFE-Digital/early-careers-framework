@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantDeclarationOutcome, :with_default_schedules, type: :model do
+RSpec.describe ParticipantDeclaration::Outcome::NPQ, :with_default_schedules, type: :model do
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
   let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
   let(:declaration) { create :npq_participant_declaration, participant_profile: npq_application.profile, cpd_lead_provider: provider }

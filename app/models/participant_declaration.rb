@@ -25,7 +25,7 @@ class ParticipantDeclaration < ApplicationRecord
            through: :billable_statement_line_items,
            source: :statement
 
-  has_many :outcomes, class_name: "ParticipantDeclarationOutcome"
+  has_many :outcomes, class_name: "ParticipantDeclaration::Outcome::NPQ"
 
   enum state: {
     submitted: "submitted",
