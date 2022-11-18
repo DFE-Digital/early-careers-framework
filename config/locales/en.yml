@@ -530,6 +530,8 @@ en:
     clawbacks:
       caption: Clawbacks
       per_participant: Clawback per participant
+    targeted_delivery_funding:
+      caption: Targeted delivery funding
 
     banding_tracker:
       providers:

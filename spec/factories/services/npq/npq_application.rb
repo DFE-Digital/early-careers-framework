@@ -20,7 +20,7 @@ FactoryBot.define do
     active_alert                          { false }
     eligible_for_funding                  { false }
     funding_eligiblity_status_code        { :ineligible_establishment_type }
-    targeted_delivery_funding_eligibility { true }
+    targeted_delivery_funding_eligibility { false }
     teacher_catchment { "england" }
     teacher_catchment_country { nil }
 

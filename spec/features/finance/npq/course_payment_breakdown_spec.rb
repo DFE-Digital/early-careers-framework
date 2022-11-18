@@ -5,15 +5,17 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
   include FinanceHelper
 
-  let(:npq_leadership_schedule) { create(:npq_leadership_schedule) }
-  let(:npq_specialist_schedule) { create(:npq_specialist_schedule) }
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+
+  let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
+  let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
 
   let(:cpd_lead_provider) { create(:cpd_lead_provider, name: "Lead Provider") }
   let(:npq_lead_provider) { create(:npq_lead_provider, cpd_lead_provider:, name: "NPQ Lead Provider") }
 
-  let!(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider:, npq_course: npq_course_leading_teaching) }
-  let!(:npq_leading_behaviour_culture_contract) { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider:, npq_course: npq_course_leading_behaviour_culture) }
-  let!(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider:, npq_course: npq_course_leading_teaching_development) }
+  let!(:npq_leading_teaching_contract) { create(:npq_contract, :npq_leading_teaching, npq_lead_provider:, npq_course: npq_course_leading_teaching, cohort:) }
+  let!(:npq_leading_behaviour_culture_contract) { create(:npq_contract, :npq_leading_behaviour_culture, npq_lead_provider:, npq_course: npq_course_leading_behaviour_culture, cohort:) }
+  let!(:npq_leading_teaching_development_contract) { create(:npq_contract, :npq_leading_teaching_development, npq_lead_provider:, npq_course: npq_course_leading_teaching_development, cohort:) }
 
   let(:npq_course_leading_teaching) { create(:npq_course, identifier: "npq-leading-teaching", name: "Leading Teaching") }
   let(:npq_course_leading_behaviour_culture) { create(:npq_course, identifier: "npq-leading-behaviour-culture", name: "Leading Behaviour Culture") }
@@ -27,6 +29,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       payment_date: Date.new(2022, 2, 16),
       cpd_lead_provider:,
       contract_version: npq_leading_teaching_contract.version,
+      cohort:,
     )
   end
 
@@ -68,6 +71,27 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     then_we_should_not_see_duplicate_courses
   end
 
+  context "Targeted delivery funding" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+
+    scenario "see payment breakdown with targeted delivery funding" do
+      given_i_am_logged_in_as_a_finance_user
+      and_those_courses_have_submitted_declarations
+      and_there_are_targeted_delivery_funding_declarations
+      when_i_visit_the_payment_breakdown_page
+      and_choose_to_see_npq_payment_breakdown
+      and_i_select_an_npq_lead_provider
+
+      then_i_should_see_correct_statement_summary
+      then_i_should_see_correct_course_summary
+      then_i_should_see_correct_output_payment_breakdown
+      then_i_should_see_correct_service_fee_payment_breakdown_below_targeted_delivery_funding
+      then_i_should_see_correct_targeted_delivery_funding_breakdown
+      then_i_should_see_the_correct_total_including_targeted_delivery_funding
+      and_the_page_should_be_accessible
+    end
+  end
+
   def and_a_duplicate_npq_contract_exists
     contract1 = statement.npq_lead_provider.npq_contracts.first
     statement.npq_lead_provider.npq_contracts.create!(
@@ -92,7 +116,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   def create_accepted_application(user, npq_course, npq_lead_provider)
     Identity::Create.call(user:, origin: :npq)
     npq_application = NPQ::BuildApplication.call(
-      npq_application_params: attributes_for(:npq_application, cohort: 2021),
+      npq_application_params: attributes_for(:npq_application, cohort: cohort.start_year),
       npq_course_id: npq_course.id,
       npq_lead_provider_id: npq_lead_provider.id,
       user_id: user.id,
@@ -157,6 +181,18 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       end
   end
 
+  def and_there_are_targeted_delivery_funding_declarations
+    user = create(:user)
+    npq_application = create_accepted_application(user, npq_course_leading_behaviour_culture, npq_lead_provider)
+    npq_application.eligible_for_funding = true
+    npq_application.targeted_delivery_funding_eligibility = true
+    npq_application.save!
+    participant_declaration = create_started_declarations(npq_application)
+    participant_declaration.make_eligible!
+    participant_declaration.make_payable!
+    @targeted_delivery_funding_declarations_count = 1
+  end
+
   def then_i_should_see_correct_statement_summary
     then_i_should_see_correct_overall_payments
     then_i_should_see_correct_cut_off_date
@@ -195,7 +231,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
       expect(page).to have_css("tr:nth-child(1) td:nth-child(1)", text: "Output payment")
       expect(page).to have_css("tr:nth-child(1) td:nth-child(2)", text: total_declarations(npq_leading_behaviour_culture_contract))
       expect(page).to have_css("tr:nth-child(1) td:nth-child(3)", text: number_to_pounds(162))
-      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(1458))
+      expect(page).to have_css("tr:nth-child(1) td:nth-child(4)", text: number_to_pounds(total_declarations(npq_leading_behaviour_culture_contract) * 162.0))
     end
   end
 
@@ -243,10 +279,35 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     end
   end
 
+  def then_i_should_see_correct_service_fee_payment_breakdown_below_targeted_delivery_funding
+    within first(".app-application__card") do
+      expect(page).to have_css("tr:nth-child(3) td:nth-child(1)", text: "Service fee")
+      expect(page).to have_css("tr:nth-child(3) td:nth-child(2)", text: npq_leading_behaviour_culture_contract.recruitment_target)
+      expect(page).to have_css("tr:nth-child(3) td:nth-child(3)", text: number_to_pounds(17.05))
+      expect(page).to have_css("tr:nth-child(3) td:nth-child(4)", text: number_to_pounds(1_227.79))
+    end
+  end
+
+  def then_i_should_see_correct_targeted_delivery_funding_breakdown
+    within first(".app-application__card") do
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(1)", text: "Targeted delivery funding")
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(2)", text: 1)
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(3)", text: number_to_pounds(100.0))
+      expect(page).to have_css("tr:nth-child(2) td:nth-child(4)", text: number_to_pounds(100.0))
+    end
+  end
+
   def then_i_should_see_the_correct_total
     within first(".app-application__card") do
       expect(page).to have_content("Course total")
       expect(page).to have_content(number_to_pounds(1_458 + 1_227.79))
+    end
+  end
+
+  def then_i_should_see_the_correct_total_including_targeted_delivery_funding
+    within first(".app-application__card") do
+      expect(page).to have_content("Course total")
+      expect(page).to have_content(number_to_pounds(1_620 + 100 + 1_227.79))
     end
   end
 
@@ -306,8 +367,12 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     output_payment_per_contract.sum { |output_payment| output_payment[:subtotal] }
   end
 
+  def total_targeted_delivery_funding
+    @targeted_delivery_funding_declarations_count.to_i * contracts.first.targeted_delivery_funding_per_participant
+  end
+
   def total_payment
-    total_service_fees_monthly + total_output_payment
+    total_service_fees_monthly + total_output_payment + total_targeted_delivery_funding
   end
 
   def overall_vat

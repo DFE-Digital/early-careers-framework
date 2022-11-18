@@ -1,5 +1,5 @@
 <section class="app-application__card">
-  <h2 class="govuk-heading-s"><%= t("#{ contract.course_identifier }", scope: "npq_courses") %></h2>
+  <h2 class="govuk-heading-m"><%= t("#{ contract.course_identifier }", scope: "npq_courses").capitalize %></h2>
 
   <header class="app-application-card__header">
     <% calculator.milestones.order(name: :asc).each do |milestone| %>
@@ -28,14 +28,23 @@
 
     <tbody class="govuk-table__body">
       <tr class="gov-table__row">
-        <td scope="row" class="govuk-table__cell govuk-body-s"><%= t("finance.output_payment.label") %></td>
+        <td scope="row" class="govuk-table__cell govuk-body-s"><strong><%= t("finance.output_payment.label") %></strong></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.billable_declarations_count %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.output_payment_per_participant %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.output_payment_subtotal %></td>
       </tr>
 
+      <% if calculator.course_has_targeted_delivery_funding? %>
+        <tr class="gov-table__row">
+          <td scope="row" class="govuk-table__cell govuk-body-s"><strong><%= t("finance.targeted_delivery_funding.caption") %></strong></td>
+          <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.targeted_delivery_funding_declarations_count %></td>
+          <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.targeted_delivery_funding_per_participant %></td>
+          <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.targeted_delivery_funding_subtotal %></td>
+        </tr>
+      <% end %>
+
       <tr class="gov-table__row">
-        <td scope="row" class="govuk-table__cell govuk-body-s"><%= t("finance.service_fee.caption") %></td>
+        <td scope="row" class="govuk-table__cell govuk-body-s"><strong><%= t("finance.service_fee.caption") %></strong></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.recruitment_target %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.service_fees_per_participant %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.monthly_service_fees %></td>

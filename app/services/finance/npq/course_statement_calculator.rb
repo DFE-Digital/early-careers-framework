@@ -7,12 +7,15 @@ module Finance
     class CourseStatementCalculator
       attr_reader :statement, :contract
 
+      delegate :show_targeted_delivery_funding?, to: :statement
+
       def initialize(statement:, contract:)
         @statement = statement
         @contract = contract
       end
 
-      delegate :recruitment_target, to: :contract
+      delegate :recruitment_target, :targeted_delivery_funding_per_participant,
+               to: :contract
       delegate :npq_lead_provider, to: :cpd_lead_provider
 
       def billable_declarations_count
@@ -108,7 +111,32 @@ module Finance
       end
 
       def course_total
-        monthly_service_fees + output_payment_subtotal - clawback_payment
+        monthly_service_fees + output_payment_subtotal - clawback_payment + targeted_delivery_funding_subtotal
+      end
+
+      def course_has_targeted_delivery_funding?
+        show_targeted_delivery_funding? &&
+          !(::Finance::Schedule::NPQEhco::IDENTIFIERS + ::Finance::Schedule::NPQSupport::IDENTIFIERS).compact.include?(course.identifier)
+      end
+
+      def targeted_delivery_funding_declarations_count
+        return 0 unless course_has_targeted_delivery_funding?
+
+        @targeted_delivery_funding_declarations_count ||=
+          statement
+              .billable_statement_line_items
+              .joins(:participant_declaration)
+              .joins("INNER JOIN npq_applications  ON npq_applications.id = participant_declarations.participant_profile_id")
+              .where(
+                participant_declarations: { course_identifier: course.identifier, declaration_type: "started" },
+                npq_applications: { targeted_delivery_funding_eligibility: true, eligible_for_funding: true },
+              )
+              .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+              .count
+      end
+
+      def targeted_delivery_funding_subtotal
+        targeted_delivery_funding_per_participant * targeted_delivery_funding_declarations_count
       end
 
     private
