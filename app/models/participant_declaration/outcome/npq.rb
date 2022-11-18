@@ -6,7 +6,7 @@ class ParticipantDeclaration::Outcome::NPQ < ApplicationRecord
   VALID_STATES = %i[passed failed voided].freeze
   private_constant :VALID_STATES
 
-  belongs_to :participant_declaration
+  belongs_to :participant_declaration, class_name: "ParticipantDeclaration::NPQ"
   enum state: VALID_STATES.index_with(&:to_s)
 
   validates :state, presence: true

@@ -17,7 +17,10 @@ RSpec.describe ParticipantDeclaration::Outcome::NPQ, :with_default_schedules, ty
   describe "associations" do
     subject { described_class.new(valid_params) }
 
-    it { is_expected.to belong_to(:participant_declaration) }
+    it {
+      is_expected.to belong_to(:participant_declaration)
+        .class_name("ParticipantDeclaration::NPQ")
+    }
 
     it "can be created/retrieved via declaration" do
       new_outcome = declaration.outcomes.create!(
