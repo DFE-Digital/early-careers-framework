@@ -185,6 +185,10 @@ en:
           attributes:
             email:
               <<: *email_error_messages
+        participant_outcome/npq:
+          attributes:
+            completion_date:
+              date_in_future: Cannot be in the future
         user:
           attributes:
             email:

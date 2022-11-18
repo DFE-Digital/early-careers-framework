@@ -18,6 +18,6 @@ private
   def completion_is_not_in_future
     return if completion_date <= Time.zone.today
 
-    errors.add(:completion_date, "Cannot be in the future")
+    errors.add(:completion_date, :date_in_future)
   end
 end
