@@ -8,6 +8,16 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
       create_list(:npq_participant_declaration, 20)
     end
 
+    describe "associations" do
+      let(:user) { create(:user) }
+      subject { described_class.new(user:) }
+      it {
+        is_expected.to have_many(:outcomes)
+          .class_name("ParticipantDeclaration::Outcome::NPQ")
+          .with_foreign_key("participant_declaration_id")
+      }
+    end
+
     it "returns all records when not scoped" do
       expect(described_class.all.count).to eq(20)
     end

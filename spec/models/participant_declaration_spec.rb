@@ -10,7 +10,6 @@ RSpec.describe ParticipantDeclaration, :with_default_schedules, type: :model do
     it { is_expected.to belong_to(:cpd_lead_provider) }
     it { is_expected.to belong_to(:participant_profile) }
     it { is_expected.to have_many(:declaration_states) }
-    it { is_expected.to have_many(:outcomes).class_name("ParticipantDeclarationOutcome") }
   end
 
   describe "state transitions" do

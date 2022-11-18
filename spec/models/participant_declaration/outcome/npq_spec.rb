@@ -18,6 +18,14 @@ RSpec.describe ParticipantDeclaration::Outcome::NPQ, :with_default_schedules, ty
     subject { described_class.new(valid_params) }
 
     it { is_expected.to belong_to(:participant_declaration) }
+
+    it "can be created/retrieved via declaration" do
+      new_outcome = declaration.outcomes.create!(
+        completion_date: Date.yesterday,
+        state: "passed",
+      )
+      expect(declaration.reload.outcomes).to include(new_outcome)
+    end
   end
 
   describe "state" do
