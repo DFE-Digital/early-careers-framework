@@ -46,7 +46,8 @@ module Api
       end
 
       attributes :core_induction_programme do |induction_record|
-        case induction_record.induction_programme.core_induction_programme&.name
+        core_induction_programme = find_core_induction_programme(induction_record)
+        case core_induction_programme&.name
         when "Ambition Institute"
           CIP_TYPES[:ambition]
         when "Education Development Trust"
@@ -70,6 +71,12 @@ module Api
 
       attributes :cohort do |induction_record|
         induction_record.school_cohort.cohort.start_year
+      end
+
+      def self.find_core_induction_programme(induction_record)
+        induction_record.induction_programme.core_induction_programme ||
+          induction_record.participant_profile&.core_induction_programme ||
+          induction_record.participant_profile&.school_cohort&.core_induction_programme
       end
     end
   end
