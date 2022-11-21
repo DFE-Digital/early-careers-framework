@@ -42,7 +42,7 @@ module Finance
               sc.urn                                                           AS school_urn,
               sc.name                                                          AS school_name,
               pd.id                                                            AS declaration_id,
-              pd.state                                                         AS declaration_status,
+              sli.state                                                        AS declaration_status,
               pd.declaration_type                                              AS declaration_type,
               pd.declaration_date                                              AS declaration_date,
               pd.created_at                                                    AS declaration_created_at,
@@ -54,7 +54,11 @@ module Finance
             JOIN cpd_lead_providers clp    ON clp.id = pd.cpd_lead_provider_id
             JOIN lead_providers lp         ON lp.cpd_lead_provider_id = clp.id
             JOIN participant_profiles pp   ON pd.participant_profile_id = pp.id
-            LEFT OUTER JOIN participant_profile_states pps ON pps.participant_profile_id = pp.id AND pps.cpd_lead_provider_id = clp.id AND pps.state = 'withdrawn'
+            LEFT OUTER JOIN (
+              SELECT DISTINCT ON (cpd_lead_provider_id) cpd_lead_provider_id, participant_profile_id, state, reason
+              FROM participant_profile_states
+              ORDER BY cpd_lead_provider_id, created_at DESC
+            ) AS pps ON pps.participant_profile_id = pp.id AND pd.cpd_lead_provider_id = pps.cpd_lead_provider_id AND pps.state = 'withdrawn'
             JOIN participant_identities pi ON pp.participant_identity_id = pi.id
             JOIN users u                   ON u.id = pi.user_id
             JOIN teacher_profiles tp       ON tp.id = pp.teacher_profile_id

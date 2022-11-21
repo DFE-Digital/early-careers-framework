@@ -33,7 +33,7 @@ module Finance
               pp.status                               AS training_status,
               pps.reason                              AS training_status_reason,
               pd.id                                   AS declaration_id,
-              pd.state                                AS declaration_status,
+              sli.state                               AS declaration_status,
               pd.declaration_type                     AS declaration_type,
               pd.declaration_date                     AS declaration_date,
               pd.created_at                           AS declaration_created_at,
