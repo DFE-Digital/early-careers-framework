@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantOutcome::NPQ < ApplicationRecord
-  self.table_name = "participant_declaration_outcomes"
+  self.table_name = "participant_outcomes"
 
   VALID_STATES = %i[passed failed voided].freeze
   private_constant :VALID_STATES

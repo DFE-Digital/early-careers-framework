@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_16_085204) do
+ActiveRecord::Schema.define(version: 2022_11_21_095445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -623,15 +623,6 @@ ActiveRecord::Schema.define(version: 2022_11_16_085204) do
     t.index ["participant_declaration_id"], name: "index_declaration_attempts_on_declarations"
   end
 
-  create_table "participant_declaration_outcomes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "state", null: false
-    t.date "completion_date", null: false
-    t.uuid "participant_declaration_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_declaration_id"], name: "index_declaration"
-  end
-
   create_table "participant_declarations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "declaration_type"
     t.datetime "declaration_date"
@@ -666,6 +657,15 @@ ActiveRecord::Schema.define(version: 2022_11_16_085204) do
     t.index ["email"], name: "index_participant_identities_on_email", unique: true
     t.index ["external_identifier"], name: "index_participant_identities_on_external_identifier", unique: true
     t.index ["user_id"], name: "index_participant_identities_on_user_id"
+  end
+
+  create_table "participant_outcomes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "state", null: false
+    t.date "completion_date", null: false
+    t.uuid "participant_declaration_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declaration_id"], name: "index_declaration"
   end
 
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1068,11 +1068,11 @@ ActiveRecord::Schema.define(version: 2022_11_16_085204) do
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
   add_foreign_key "participant_declaration_attempts", "participant_declarations"
-  add_foreign_key "participant_declaration_outcomes", "participant_declarations"
   add_foreign_key "participant_declarations", "participant_declarations", column: "superseded_by_id"
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_identities", "users"
+  add_foreign_key "participant_outcomes", "participant_declarations"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
   add_foreign_key "participant_profile_states", "participant_profiles"
