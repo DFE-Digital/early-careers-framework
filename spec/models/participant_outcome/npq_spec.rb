@@ -6,17 +6,9 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
   let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
   let(:declaration) { create :npq_participant_declaration, participant_profile: npq_application.profile, cpd_lead_provider: provider }
-  let(:valid_params) do
-    {
-      participant_declaration: declaration,
-      completion_date: Date.yesterday,
-      state: "passed",
-    }
-  end
+  subject(:outcome) { create :participant_outcome, participant_declaration: declaration }
 
   describe "associations" do
-    subject { described_class.new(valid_params) }
-
     it {
       is_expected.to belong_to(:participant_declaration)
         .class_name("ParticipantDeclaration::NPQ")
@@ -32,8 +24,6 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
   end
 
   describe "state" do
-    subject { described_class.new(valid_params) }
-
     it {
       is_expected.to define_enum_for(:state).with_values(
         passed: "passed",
@@ -44,8 +34,6 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
   end
 
   describe "validations" do
-    subject(:outcome) { described_class.new(valid_params) }
-
     it { is_expected.to validate_presence_of(:completion_date) }
 
     it "is valid with date < today" do
