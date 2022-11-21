@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_02_132300) do
+ActiveRecord::Schema.define(version: 2022_11_21_095445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -659,6 +659,15 @@ ActiveRecord::Schema.define(version: 2022_11_02_132300) do
     t.index ["user_id"], name: "index_participant_identities_on_user_id"
   end
 
+  create_table "participant_outcomes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "state", null: false
+    t.date "completion_date", null: false
+    t.uuid "participant_declaration_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_declaration_id"], name: "index_declaration"
+  end
+
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
@@ -1063,6 +1072,7 @@ ActiveRecord::Schema.define(version: 2022_11_02_132300) do
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_identities", "users"
+  add_foreign_key "participant_outcomes", "participant_declarations"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
   add_foreign_key "participant_profile_states", "participant_profiles"

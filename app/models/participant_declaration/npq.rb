@@ -7,6 +7,8 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
 
   has_many :statements, class_name: "Finance::Statement::NPQ", through: :statement_line_items
 
+  has_many :outcomes, class_name: "ParticipantOutcome::NPQ", foreign_key: "participant_declaration_id"
+
   scope :for_course, ->(course_identifier) { where(course_identifier:) }
   scope :eligible_for_lead_provider_and_course, ->(cpd_lead_provider, course_identifier) { for_lead_provider(cpd_lead_provider).for_course(course_identifier).eligible }
   scope :payable_for_lead_provider_and_course, ->(cpd_lead_provider, course_identifier) { for_lead_provider(cpd_lead_provider).for_course(course_identifier).payable }
