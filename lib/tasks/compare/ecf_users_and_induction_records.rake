@@ -23,6 +23,7 @@ namespace :compare do
 
         ids_from_serialized_users = serialized_users[:data].map { |u| u[:id] }
         ids_from_serialized_induction_records = serialized_induction_records[:data].map { |u| u[:id] }
+        duplicate_records = ids_from_serialized_induction_records.tally.filter { |_, v| v > 1 }
 
         users_with_no_ir_report = []
         ir_with_no_user_report = []
@@ -52,6 +53,7 @@ namespace :compare do
 
         puts "Records returned by the users query:            #{serialized_users[:data].count}"
         puts "Records returned by the induction record query: #{serialized_induction_records[:data].count}"
+        puts "Duplicates found in induction record query:     #{duplicate_records.count}"
         puts "Records found in users query but not in IR:     #{users_with_no_ir_report.count}"
         puts "Records found in IR query but not in users:     #{ir_with_no_user_report.count}"
         puts "Records with differences:                       #{diff_report.count}"
