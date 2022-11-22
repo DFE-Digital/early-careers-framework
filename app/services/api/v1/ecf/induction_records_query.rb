@@ -10,10 +10,7 @@ module Api::V1::ECF
     end
 
     def all
-      induction_records = InductionRecord
-        .merge(InductionRecord.end_date_null.or(InductionRecord.end_date_in_future)).and(InductionRecord.start_date_in_past.or(InductionRecord.not_school_transfer))
-        .joins(:induction_programme, :preferred_identity, :participant_profile)
-        .merge(ParticipantProfile.ecf)
+      induction_records = relevant_induction_records
 
       if updated_since.present?
         induction_records = induction_records.where("induction_records.updated_at > ?", updated_since)
@@ -24,9 +21,31 @@ module Api::V1::ECF
       end
 
       induction_records
-        .group_by(&:participant_profile_id)
-        .transform_values(&:first)
-        .values
+    end
+
+    def relevant_induction_records
+      InductionRecord
+        .includes(:preferred_identity)
+        .joins(
+          <<-SQL,
+            JOIN (#{induction_record_history.to_sql}) AS historical_induction_records
+              ON historical_induction_records.id = induction_records.id AND historical_induction_records.chronology = 1
+          SQL
+        )
+    end
+
+    def induction_record_history
+      InductionRecord.start_date_in_past
+                     .select(
+                       <<-SQL,
+                         induction_records.id,
+                         ROW_NUMBER() OVER (
+                           PARTITION BY induction_records.participant_profile_id
+                           ORDER BY induction_records.end_date ASC NULLS FIRST, induction_records.start_date ASC
+                         ) AS chronology
+                       SQL
+                     )
+                     .joins(:participant_profile)
     end
   end
 end
