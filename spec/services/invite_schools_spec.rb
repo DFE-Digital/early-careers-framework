@@ -50,7 +50,7 @@ RSpec.describe InviteSchools do
             recipient: school.primary_contact_email,
             school:,
             nomination_url: String,
-            expiry_date: "22/01/2000",
+            expiry_date: "22 January 2000",
           ),
         ).and_call_original
 
@@ -73,7 +73,7 @@ RSpec.describe InviteSchools do
               school:,
               nomination_url: String,
               recipient: school.primary_contact_email,
-              expiry_date: "22/01/2000",
+              expiry_date: "22 January 2000",
             ),
           ).and_call_original
 

@@ -93,7 +93,7 @@ class SchoolMailer < ApplicationMailer
         school_name: partnership.school.name,
         nominate_url:,
         challenge_url:,
-        challenge_deadline: partnership.challenge_deadline.strftime("%d/%m/%Y"),
+        challenge_deadline: partnership.challenge_deadline.to_date.to_s(:govuk),
         subject: "FAO: NQT coordinator. Training provider confirmed.",
       },
     ).tag(:partnership_created, :request_to_nominate_sit).associate_with(partnership, partnership.school)
