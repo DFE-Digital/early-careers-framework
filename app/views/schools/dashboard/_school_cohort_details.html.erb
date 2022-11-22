@@ -88,7 +88,7 @@
 <% if latest_partnership&.challenged? == false %>
   <% if latest_partnership&.in_challenge_window? %>
     <p class="govuk-body">
-      If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", challenge_partnership_path(partnership: latest_partnership) %>. This link will expire on <%= latest_partnership.challenge_deadline&.strftime("%d/%m/%Y") %>.
+      If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", challenge_partnership_path(partnership: latest_partnership) %>. This link will expire on <%= latest_partnership.challenge_deadline&.to_s(:govuk) %>.
     </p>
   <% else %>
     <p class="govuk-body">

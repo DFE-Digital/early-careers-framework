@@ -132,7 +132,7 @@ private
   end
 
   def email_expiry_date
-    NominationEmail::NOMINATION_EXPIRY_TIME.from_now.strftime("%d/%m/%Y")
+    NominationEmail::NOMINATION_EXPIRY_TIME.from_now.to_date.to_s(:govuk)
   end
 
   def logger
