@@ -41,7 +41,7 @@ gem "shakapacker", "~> 6.5.4"
 gem "discard", "~> 1.2", ">= 1.2.0"
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", "~> 1.13", require: false
+gem "bootsnap", "~> 1.14", require: false
 
 # Manage multiple processes i.e. web server and webpack
 gem "foreman"
