@@ -17,7 +17,7 @@ module Api::V1::ECF
       end
 
       if email.present?
-        induction_records = induction_records.where(preferred_identity: { email: })
+        induction_records = induction_records.joins(:preferred_identity).where(preferred_identity: { email: })
       end
 
       induction_records
@@ -25,13 +25,14 @@ module Api::V1::ECF
 
     def relevant_induction_records
       InductionRecord
-        .includes(:preferred_identity)
         .joins(
           <<-SQL,
             JOIN (#{induction_record_history.to_sql}) AS historical_induction_records
               ON historical_induction_records.id = induction_records.id AND historical_induction_records.chronology = 1
+            JOIN participant_profiles ON induction_records.participant_profile_id = participant_profiles.id
           SQL
         )
+        .merge(ParticipantProfile.ecf)
     end
 
     def induction_record_history
