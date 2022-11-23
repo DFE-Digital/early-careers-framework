@@ -5,7 +5,7 @@ module Admin::Participants
     before_action :load_participant_profile
     before_action :load_validation_data_form, except: :validate_details
     before_action :check_can_update_validation_data, if: -> { request.put? || request.post? }
-    before_action :validate_save_and_redirect, except: :validate_details
+    before_action :save_and_redirect, except: :validate_details
 
     def full_name; end
 
@@ -33,10 +33,10 @@ module Admin::Participants
       end
     end
 
-    def validate_save_and_redirect
+    def save_and_redirect
       if (request.put? || request.post?) && step_valid?
         save_validation_data!
-        set_status_message_for_update
+        set_success_message(content: "Validation information updated")
 
         redirect_to validation_page
       end
@@ -50,14 +50,6 @@ module Admin::Participants
         validation_data[current_action] = @validation_data_form.send(current_action)
       end
       validation_data.save!
-    end
-
-    def set_status_message_for_update
-      if validation_data.can_validate_participant?
-        generate_status_message(validate_participant!)
-      else
-        set_success_message(content: "Validation information updated")
-      end
     end
 
     def generate_status_message(validation_result)
