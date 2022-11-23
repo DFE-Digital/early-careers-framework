@@ -36,7 +36,7 @@ module Admin::Participants
     def save_and_redirect
       if (request.put? || request.post?) && step_valid?
         save_validation_data!
-        set_status_message_for_update
+        set_success_message(content: "Validation information updated")
 
         redirect_to validation_page
       end
@@ -50,10 +50,6 @@ module Admin::Participants
         validation_data[current_action] = @validation_data_form.send(current_action)
       end
       validation_data.save!
-    end
-
-    def set_status_message_for_update
-      set_success_message(content: "Validation information updated")
     end
 
     def generate_status_message(validation_result)
