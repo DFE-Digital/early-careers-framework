@@ -6,8 +6,16 @@ RSpec.describe Api::V1::ECF::InductionRecordsQuery, :with_default_schedules do
   let!(:induction_records_ect_1) { create(:induction_record, :ect, :preferred_identity) }
   let!(:induction_records_ect_2) { create(:induction_record, :ect, :preferred_identity) }
   let!(:induction_records_mentor) { create_list(:induction_record, 2, :mentor, :preferred_identity) }
+
+  # real case from seed data
+  let!(:non_ecf_induction_record) do
+    induction_record = create(:induction_record)
+    induction_record.participant_profile.update! type: "ParticipantProfile::NPQ"
+    induction_record
+  end
+
   let(:all_ecf_induction_records) { [induction_records_ect_1, induction_records_ect_2] + induction_records_mentor }
-  let!(:non_ecf_induction_record) { create(:induction_record) }
+  let(:all_non_ecf_induction_records) { [non_ecf_induction_record] }
 
   subject { described_class.new.all }
 
@@ -17,7 +25,7 @@ RSpec.describe Api::V1::ECF::InductionRecordsQuery, :with_default_schedules do
 
   it "only includes ECF participants" do
     expect(subject).to match_array(all_ecf_induction_records)
-    expect(subject).not_to include(non_ecf_induction_record)
+    expect(subject).not_to include(all_non_ecf_induction_records)
   end
 
   context "when filtering by updated_since" do
