@@ -10,9 +10,11 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
   let(:other_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:other_statement)         { create(:npq_statement, cpd_lead_provider: other_cpd_lead_provider) }
 
+  let(:parsed_response) { CSV.parse(response.body.force_encoding("utf-8"), headers: true, encoding: "utf-8", col_sep: ",") }
+
   before do
     travel_to statement.deadline_date do
-      create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider:)
+      @declarations = create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider:)
     end
     travel_to other_statement.deadline_date do
       create_list(:ect_participant_declaration, 2, :eligible, cpd_lead_provider: other_cpd_lead_provider)
@@ -20,14 +22,18 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
     sign_in user
   end
 
-  it "allows to download a CSV of the assurance report", :aggregate_failures do
+  it "allows to download a CSV of the assurance report" do
     get finance_ecf_statement_assurance_report_path(statement, format: "csv")
 
     content_disposition_cookie_header = Rack::Utils.parse_cookies_header(response.headers["Content-Disposition"])
     expect(content_disposition_cookie_header)
       .to include({ "filename" => "\"ECF-Declarations-#{lead_provider.name.gsub(/\W/, '')}-Cohort#{statement.cohort.start_year}-#{statement.name.gsub(/\W/, '')}.csv\"" })
+  end
 
-    CSV.parse(response.body.force_encoding("utf-8"), headers: true, encoding: "utf-8", col_sep: ",") do |row|
+  it "returns the correct values in the CSV", :aggregate_failures do
+    get finance_ecf_statement_assurance_report_path(statement, format: "csv")
+
+    parsed_response.each do |row|
       expect(row["Statement Name"]).to eq(statement.name)
       expect(row["Statement ID"]).to eq(statement.id)
 
@@ -56,6 +62,40 @@ RSpec.describe Finance::ECF::AssuranceReportsController, :with_default_schedules
       school = induction_record.school
       expect(row["School Urn"]).to eq(school.urn)
       expect(row["School Name"]).to eq(school.name)
+    end
+  end
+
+  context "with multiple withdrawn participant profile states" do
+    let(:participant_profile) { @declarations.first.participant_profile }
+    let(:other_participant_profile) { @declarations.last.participant_profile }
+
+    before do
+      participant_profile.participant_profile_states.create!({ state: "withdrawn", cpd_lead_provider: })
+      participant_profile.participant_profile_states.create!({ state: "withdrawn", cpd_lead_provider: })
+      other_participant_profile.participant_profile_states.create!({ state: "withdrawn", cpd_lead_provider: })
+      other_participant_profile.participant_profile_states.create!({ state: "withdrawn", cpd_lead_provider: })
+    end
+
+    it "does not duplicate the CSV response rows count" do
+      get finance_ecf_statement_assurance_report_path(statement, format: "csv")
+
+      expect(parsed_response.length).to eql(2)
+    end
+  end
+
+  context "with latest declaration status different from the one originally set for the statement" do
+    before do
+      @declarations.map { |declaration| declaration.statement_line_items.update_all(state: "awaiting_clawback") }
+    end
+
+    it "gets the declaration status from statement line items" do
+      get finance_ecf_statement_assurance_report_path(statement, format: "csv")
+
+      parsed_response.each do |row|
+        participant_declaration = ParticipantDeclaration.find(row["Declaration ID"])
+        expect(row["Declaration Status"]).not_to eq(participant_declaration.state)
+        expect(row["Declaration Status"]).to eql("awaiting_clawback")
+      end
     end
   end
 end
