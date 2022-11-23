@@ -19,6 +19,10 @@ class Finance::Statement::NPQ < Finance::Statement
   def paid!
     update!(type: "Finance::Statement::NPQ::Paid")
   end
+
+  def show_targeted_delivery_funding?
+    cohort.start_year >= 2022
+  end
 end
 
 require "finance/statement/npq/payable"

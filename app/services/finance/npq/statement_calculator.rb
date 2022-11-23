@@ -8,6 +8,8 @@ module Finance
     class StatementCalculator
       attr_reader :statement
 
+      delegate :show_targeted_delivery_funding?, to: :statement
+
       def initialize(statement:)
         @statement = statement
       end
@@ -19,6 +21,12 @@ module Finance
       def total_output_payment
         contracts.sum do |contract|
           CourseStatementCalculator.new(statement:, contract:).output_payment_subtotal
+        end
+      end
+
+      def total_targeted_delivery_funding
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).targeted_delivery_funding_subtotal
         end
       end
 
@@ -43,7 +51,7 @@ module Finance
       end
 
       def total_payment
-        total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount
+        total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount + total_targeted_delivery_funding
       end
 
       def total_starts

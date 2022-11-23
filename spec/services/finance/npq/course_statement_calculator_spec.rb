@@ -3,13 +3,17 @@
 require "rails_helper"
 
 RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
+  let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
+
   let(:npq_course)          { create(:npq_course) }
-  let(:schedule)            { NPQCourse.schedule_for(npq_course:) }
-  let(:statement)           { create(:npq_statement, :next_output_fee, deadline_date: schedule.milestones.find_by(declaration_type: "completed").start_date + 30.days) }
+  let(:schedule)            { NPQCourse.schedule_for(npq_course:, cohort:) }
+  let(:statement)           { create(:npq_statement, :next_output_fee, deadline_date: schedule.milestones.find_by(declaration_type: "completed").start_date + 30.days, cohort:) }
   let(:cpd_lead_provider)   { statement.cpd_lead_provider }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
-  let!(:contract)           { create(:npq_contract, npq_lead_provider:, course_identifier: npq_course.identifier) }
+  let!(:contract)           { create(:npq_contract, npq_lead_provider:, course_identifier: npq_course.identifier, cohort:) }
   subject { described_class.new(statement:, contract:) }
 
   describe "#billable_declarations_count_for_declaration_type" do
@@ -243,6 +247,100 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
         expected = BigDecimal("0.12402054794520547945205479452054794521e2")
 
         expect(subject.service_fees_per_participant).to eql(expected)
+      end
+    end
+  end
+
+  describe "#course_has_targeted_delivery_funding?" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+    let(:statement) { create(:npq_statement) }
+
+    context "Early headship coaching offer" do
+      let!(:npq_course) { create(:npq_ehco_course) }
+
+      it do
+        expect(subject.course_has_targeted_delivery_funding?).to be false
+      end
+    end
+
+    context "Additional support offer" do
+      let!(:npq_course) { create(:npq_aso_course) }
+
+      it do
+        expect(subject.course_has_targeted_delivery_funding?).to be false
+      end
+    end
+
+    context "Leadership course" do
+      let!(:npq_course) { create(:npq_leadership_course) }
+
+      it do
+        expect(subject.course_has_targeted_delivery_funding?).to be true
+      end
+    end
+  end
+
+  describe "#targeted_delivery_funding_declarations_count" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+
+    let(:participant_profile) do
+      create(
+        :npq_application,
+        :accepted,
+        :eligible_for_funding,
+        npq_course:,
+        npq_lead_provider:,
+
+        eligible_for_funding: true,
+        targeted_delivery_funding_eligibility: true,
+      ).profile
+    end
+
+    context "when there are zero declarations" do
+      it do
+        expect(subject.targeted_delivery_funding_declarations_count).to be_zero
+      end
+    end
+
+    context "when there are targeted delivery funding declarations" do
+      before do
+        travel_to statement.deadline_date do
+          create(:npq_participant_declaration, :eligible, npq_course:, cpd_lead_provider:, participant_profile:)
+        end
+      end
+
+      it "is counted" do
+        expect(subject.targeted_delivery_funding_declarations_count).to eql(1)
+      end
+    end
+
+    context "when multiple declarations from same user of one type" do
+      let(:participant_profile) do
+        create(
+          :npq_application,
+          :accepted,
+          :eligible_for_funding,
+          :with_started_declaration,
+          npq_course:,
+          npq_lead_provider:,
+          eligible_for_funding: true,
+          targeted_delivery_funding_eligibility: true,
+        ).profile
+      end
+
+      before do
+        travel_to statement.deadline_date do
+          create(:npq_participant_declaration, npq_course:, cpd_lead_provider:, participant_profile:, declaration_type: "retained-1", course_identifier: npq_course.identifier)
+        end
+      end
+
+      it "has two declarations" do
+        expect(ParticipantDeclaration.count).to eql(2)
+        expect(subject.statement.statement_line_items.count).to eql(2)
+      end
+
+      it "has one targeted delivery funding declaration" do
+        expect(subject.targeted_delivery_funding_declarations_count).to eql(1)
       end
     end
   end

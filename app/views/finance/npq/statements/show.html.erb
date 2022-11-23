@@ -18,8 +18,15 @@
           <span><%= number_to_pounds(@calculator.total_output_payment) %></span>
         </p>
 
+        <% if @calculator.show_targeted_delivery_funding? %>
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            <%= t("finance.targeted_delivery_funding.caption") %>
+            <span><%= number_to_pounds(@calculator.total_targeted_delivery_funding) %></span>
+          </p>
+        <% end %>
+
         <p class="govuk-body-s govuk-!-margin-bottom-2">
-          Clawback deductions
+          <%= t("finance.clawbacks.caption") %>
           <span><%= number_to_pounds(-@calculator.total_clawbacks) %></span>
         </p>
 

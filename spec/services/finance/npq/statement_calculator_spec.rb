@@ -2,7 +2,11 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
+RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
+  let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
+
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
   let!(:npq_course)         { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
@@ -10,7 +14,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
   let(:milestone)           { participant_profile.schedule.milestones.find_by!(declaration_type:) }
   let(:declaration_type)    { "started" }
-  let!(:contract) { create(:npq_contract, npq_lead_provider:) }
+  let!(:contract) { create(:npq_contract, npq_lead_provider:, cohort:) }
 
   subject { described_class.new(statement:) }
 
@@ -214,6 +218,44 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
     it "only includes declarations for the related cohort" do
       expect(described_class.new(statement:).total_starts).to be_zero
       expect(described_class.new(statement: statement_2022).total_starts).to eql(1)
+    end
+  end
+
+  describe "#total_targeted_delivery_funding" do
+    context "no declarations" do
+      it do
+        expect(subject.total_targeted_delivery_funding).to be_zero
+      end
+    end
+
+    context "with declaration" do
+      let(:cohort) { create(:cohort, start_year: 2022) }
+      let(:declaration_type)    { "started" }
+
+      let(:participant_profile) do
+        create(
+          :npq_application,
+          :accepted,
+          :eligible_for_funding,
+          npq_course:,
+          npq_lead_provider:,
+
+          eligible_for_funding: true,
+          targeted_delivery_funding_eligibility: true,
+        ).profile
+      end
+
+      let!(:participant_declaration) do
+        travel_to milestone.start_date do
+          create(:npq_participant_declaration, :eligible, course_identifier: npq_course.identifier, declaration_type:, participant_profile:, cpd_lead_provider:)
+        end
+      end
+
+      let(:statement) { participant_declaration.statement_line_items.eligible.first.statement }
+
+      it "returns total targeted delivery funding" do
+        expect(subject.total_targeted_delivery_funding.to_f).to eq(100.0)
+      end
     end
   end
 end

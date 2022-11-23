@@ -578,6 +578,7 @@ ActiveRecord::Schema.define(version: 2022_11_21_095445) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cohort_id", null: false
     t.decimal "monthly_service_fee"
+    t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end
