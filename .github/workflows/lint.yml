@@ -17,7 +17,7 @@ jobs:
       - name: Yarn install
         run: npm i -g yarn && yarn
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.123.0
+        uses: ruby/setup-ruby@v1.124.0
         with:
           ruby-version: 3.1.2
       - name: Install dependencies
