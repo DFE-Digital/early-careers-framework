@@ -15,6 +15,10 @@ Rails.application.routes.draw do
     get "/users/link-invalid", to: "users/sessions#link_invalid"
   end
 
+  direct :feedback_form do
+    "https://docs.google.com/forms/d/e/1FAIpQLSdjpB1VMwZlcQxOoTzfW_bw7mnnKbGHek24_uZRhIRDid9f-Q/viewform?usp=sf_link"
+  end
+
   scope :pages, controller: "pages" do
     get "/ect-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-early-career-teachers-ects-ecf-based-training")
     get "/mentor-additional-information", to: redirect("https://www.gov.uk/guidance/guidance-for-mentors-how-to-support-ecf-based-training")
