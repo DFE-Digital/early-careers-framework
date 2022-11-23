@@ -20,7 +20,7 @@ class Schools::DashboardController < Schools::BaseController
 
     if @partnership&.in_challenge_window?
       @report_mistake_link = challenge_partnership_path(partnership: @partnership)
-      @mistake_link_expiry = @partnership.challenge_deadline&.to_s(:govuk)
+      @mistake_link_expiry = @partnership.challenge_deadline&.to_date&.to_s(:govuk)
     end
   end
 
