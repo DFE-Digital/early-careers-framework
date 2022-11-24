@@ -68,7 +68,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def then_i_should_be_on_the_contact_support_page
-        expect(page).to have_selector("h1", text: "This ECT’s training record needs to be transferred manually")
+        expect(page).to have_text("training record needs to be transferred manually")
       end
 
       def then_i_should_be_on_the_who_to_add_page
