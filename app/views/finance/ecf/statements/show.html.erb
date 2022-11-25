@@ -136,7 +136,7 @@
               <% end %>
 
               <% body.row do |row| %>
-                <% row.cell(text: "Fee per trainee") %>
+                <% row.cell(text: "Fee per participant") %>
 
                 <% @calculator.band_letters.each do |letter| %>
                   <% row.cell(text: number_to_pounds(@calculator.public_send("#{event_type}_band_#{letter}_fee_per_declaration")), numeric: true) %>
@@ -187,8 +187,8 @@
         <% table.head do |head| %>
           <% head.row do |row| %>
             <% row.cell(header: true, text: "Adjustment type") %>
-            <% row.cell(header: true, text: "Number of trainees") %>
-            <% row.cell(header: true, text: "Fee per trainee") %>
+            <% row.cell(header: true, text: "Number of participants") %>
+            <% row.cell(header: true, text: "Fee per participant") %>
             <% row.cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
 

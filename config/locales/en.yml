@@ -485,6 +485,9 @@ en:
     current_milestone: Current milestone
     trainees: Trainees
     view: View
+    course:
+      participants: Participants
+      payment_per_participant: Payment per participant
     contract:
       version: Contract reference
       per_participant: Per participant
