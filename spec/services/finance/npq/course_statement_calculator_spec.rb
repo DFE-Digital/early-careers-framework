@@ -344,4 +344,45 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
       end
     end
   end
+
+  describe "#targeted_delivery_funding_refundable_declarations_count" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+
+    let(:participant_profile) do
+      create(
+        :npq_application,
+        :accepted,
+        :eligible_for_funding,
+        npq_course:,
+        npq_lead_provider:,
+
+        eligible_for_funding: true,
+        targeted_delivery_funding_eligibility: true,
+      ).profile
+    end
+
+    context "when there are zero declarations" do
+      it do
+        expect(subject.targeted_delivery_funding_refundable_declarations_count).to be_zero
+      end
+    end
+
+    context "when there are targeted delivery funding refundable declarations" do
+      let!(:to_be_awaiting_clawed_back) do
+        travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
+          create(:npq_participant_declaration, :paid, npq_course:, cpd_lead_provider:, participant_profile:)
+        end
+      end
+
+      before do
+        travel_to statement.deadline_date do
+          Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
+        end
+      end
+
+      it "has one targeted delivery funding refundable declaration" do
+        expect(subject.targeted_delivery_funding_refundable_declarations_count).to eql(1)
+      end
+    end
+  end
 end

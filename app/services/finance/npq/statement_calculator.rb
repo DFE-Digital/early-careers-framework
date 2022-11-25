@@ -36,10 +36,20 @@ module Finance
         end
       end
 
-      def total_clawbacks
+      def clawback_payments
         contracts.sum do |contract|
           CourseStatementCalculator.new(statement:, contract:).clawback_payment
         end
+      end
+
+      def total_targeted_delivery_funding_refundable
+        contracts.sum do |contract|
+          CourseStatementCalculator.new(statement:, contract:).targeted_delivery_funding_refundable_subtotal
+        end
+      end
+
+      def total_clawbacks
+        clawback_payments + total_targeted_delivery_funding_refundable
       end
 
       def overall_vat
