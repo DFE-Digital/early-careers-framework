@@ -7,8 +7,16 @@ FactoryBot.define do
     completion_date { Date.yesterday }
     state { :passed }
 
+    trait :passed do
+      state { :passed }
+    end
+
     trait :failed do
       state { :failed }
+    end
+
+    trait :voided do
+      state { :voided }
     end
   end
 end
