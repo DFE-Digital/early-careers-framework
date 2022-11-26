@@ -15,5 +15,9 @@ FactoryBot.define do
     trait :with_user do
       user { build(:seed_user) }
     end
+
+    after(:build) do |tp|
+      Rails.logger.debug("seeded teacher profile for user #{tp.user.full_name} with TRN #{tp.trn}")
+    end
   end
 end

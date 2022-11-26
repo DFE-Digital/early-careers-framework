@@ -6,5 +6,7 @@ FactoryBot.define do
 
     registration_start_date { Date.new(start_year, 5) }
     academic_year_start_date { Date.new(start_year, 9) }
+
+    after(:build) { |cohort| Rails.logger.debug("seeded cohort #{cohort.start_year}") }
   end
 end
