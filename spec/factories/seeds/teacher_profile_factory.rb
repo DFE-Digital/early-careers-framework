@@ -8,8 +8,8 @@ FactoryBot.define do
       school { build(:seed_school) }
     end
 
-    trait :with_participant_identity do
-      participant_identity { build(:seed_participant_identity) }
+    trait :with_mentor_profile do
+      mentor_profile { build(:seed_mentor_profile) }
     end
 
     trait :with_user do
