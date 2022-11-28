@@ -74,7 +74,7 @@ private
       .where(
         course_identifier:,
         declaration_type: "started",
-      ).any?
+      ).exists?
   end
 
   def relevant_induction_record
