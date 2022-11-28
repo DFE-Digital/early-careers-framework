@@ -19,6 +19,7 @@ class WithdrawParticipant
             }, if: ->(klass) { klass.participant_profile.present? }
   validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
   validate :not_already_withdrawn
+  validate :with_started_participant_declarations
 
   def call
     ActiveRecord::Base.transaction do
@@ -59,6 +60,21 @@ private
     return unless participant_profile
 
     errors.add(:participant_profile, I18n.t(:invalid_withdrawal)) if participant_profile.withdrawn_for?(cpd_lead_provider:)
+  end
+
+  def with_started_participant_declarations
+    return unless participant_profile && participant_profile.npq?
+
+    errors.add(:participant_profile, I18n.t(:no_started_declaration_found)) unless any_participant_declarations_started?
+  end
+
+  def any_participant_declarations_started?
+    participant_profile
+      .participant_declarations
+      .where(
+        course_identifier:,
+        declaration_type: "started",
+      ).exists?
   end
 
   def relevant_induction_record

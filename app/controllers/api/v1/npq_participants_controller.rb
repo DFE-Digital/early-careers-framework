@@ -16,48 +16,14 @@ module Api
         render json: serializer_class.new(npq_participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
-      def resume
-        service = ResumeParticipant.new(params_for_recorder)
-
-        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-      end
-
-      def withdraw
-        if any_participant_declarations_started?
-          service = WithdrawParticipant.new(params_for_recorder)
-          render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-        else
-          render json: {
-            error: [{
-              title: "No started declaration found",
-              detail: "An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance.",
-            }],
-          }, status: :unprocessable_entity
-        end
-      end
-
-      def defer
-        service = DeferParticipant.new(params_for_recorder)
-
-        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-      end
-
-      def change_schedule
-        service = ChangeSchedule.new(params_for_recorder)
-
-        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
-      end
-
     private
 
       def serializer_class
         NPQParticipantSerializer
       end
 
-      def serialized_response(participant_profile)
-        serializer_class
-          .new(participant_profile.user, params: { cpd_lead_provider: current_user })
-          .serializable_hash.to_json
+      def serialized_response_for(service)
+        render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
       end
 
       def npq_lead_provider
@@ -77,17 +43,6 @@ module Api
 
       def access_scope
         LeadProviderApiToken.joins(cpd_lead_provider: [:npq_lead_provider])
-      end
-
-      def any_participant_declarations_started?
-        ParticipantDeclaration::NPQ
-          .joins(participant_profile: [:npq_course])
-          .joins(user: [:participant_identities])
-          .where(
-            "participant_identities.external_identifier": participant_id,
-            "npq_courses.identifier": course_identifier,
-            declaration_type: "started",
-          ).any?
       end
     end
   end

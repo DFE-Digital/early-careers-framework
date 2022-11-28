@@ -4,44 +4,37 @@ module Api
   module V1
     module ParticipantActions
       def withdraw
-        service = WithdrawParticipant.new(params_for_recorder)
-        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
+        service = WithdrawParticipant.new(action_params)
+
+        serialized_response_for(service)
       end
 
       def defer
-        service = DeferParticipant.new(params_for_recorder)
+        service = DeferParticipant.new(action_params)
 
-        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
+        serialized_response_for(service)
       end
 
       def resume
-        service = ResumeParticipant.new(params_for_recorder)
+        service = ResumeParticipant.new(action_params)
 
-        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
+        serialized_response_for(service)
       end
 
       def change_schedule
-        service = ChangeSchedule.new(params_for_recorder)
+        service = ChangeSchedule.new(action_params)
 
-        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
+        serialized_response_for(service)
       end
 
     private
 
-      def serialized_response(profile)
-        relevant_induction_record = profile.relevant_induction_record(lead_provider:)
-
+      def serializer_class
         ParticipantFromInductionRecordSerializer
-          .new(relevant_induction_record, params: { lead_provider: current_user.lead_provider })
-          .serializable_hash.to_json
       end
 
-      def perform_action(service_namespace:)
-        render json: serialized_response(participant_profile_for(service_namespace))
-      end
-
-      def recorder(service_namespace:)
-        "#{service_namespace}::#{::Factories::CourseIdentifier.call(course_identifier)}".constantize
+      def serialized_response_for(service)
+        render_from_service(service, serializer_class, params: { lead_provider: })
       end
 
       def permitted_params
@@ -58,15 +51,11 @@ module Api
         params.require(:id)
       end
 
-      def course_identifier
-        permitted_params.dig(:attributes, :course_identifier)
+      def lead_provider
+        current_user.lead_provider
       end
 
-      def participant_profile_for(service_namespace)
-        recorder(service_namespace:).call(params: params_for_recorder)
-      end
-
-      def params_for_recorder
+      def action_params
         HashWithIndifferentAccess.new(
           cpd_lead_provider: current_user,
           participant_id:,

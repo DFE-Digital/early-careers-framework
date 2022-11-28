@@ -11,18 +11,16 @@ module Importers
     end
 
     def change_participant_schedule(participant_profile, schedule, lead_provider)
-      change_schedule_class(participant_profile).new(
-        params: {
-          participant_id: participant_profile.user_id,
-          cpd_lead_provider: lead_provider.cpd_lead_provider,
-          course_identifier: course_identifeer_for(participant_profile),
-          schedule_identifier: schedule.schedule_identifier,
-        },
+      ChangeSchedule.new(
+        participant_id: participant_profile.user_id,
+        cpd_lead_provider: lead_provider.cpd_lead_provider,
+        course_identifier: course_identifer_for(participant_profile),
+        schedule_identifier: schedule.schedule_identifier,
       ).call
       participant_profile
     end
 
-    def course_identifeer_for(participant_profile)
+    def course_identifer_for(participant_profile)
       participant_profile.is_a?(ParticipantProfile::ECF::Mentor) ? "ecf-mentor" : "ecf-induction"
     end
 
@@ -35,7 +33,7 @@ module Importers
               cpd_lead_provider: lead_provider.cpd_lead_provider,
               declaration_date: declaration_date.rfc3339,
               participant_id: participant_profile.user_id,
-              course_identifier: course_identifeer_for(participant_profile),
+              course_identifier: course_identifer_for(participant_profile),
               declaration_type: "started",
             },
           )
@@ -52,7 +50,7 @@ module Importers
               cpd_lead_provider: lead_provider.cpd_lead_provider,
               declaration_date: declaration_date.rfc3339,
               participant_id: participant_profile.user_id,
-              course_identifier: course_identifeer_for(participant_profile),
+              course_identifier: course_identifer_for(participant_profile),
               declaration_type: "started",
             },
           )
@@ -81,17 +79,13 @@ module Importers
             cpd_lead_provider: lead_provider.cpd_lead_provider,
             declaration_date: declaration_date.rfc3339,
             participant_id: participant_profile.user_id,
-            course_identifier: course_identifeer_for(participant_profile),
+            course_identifier: course_identifer_for(participant_profile),
             declaration_type: "retained-1",
             evidence_held: "other",
           },
         )
       end
       participant_profile
-    end
-
-    def change_schedule_class(participant_profile)
-      participant_profile.is_a?(ParticipantProfile::ECF::Mentor) ? Participants::ChangeSchedule::Mentor : Participants::ChangeSchedule::EarlyCareerTeacher
     end
 
     def random_date_between(start_date, end_date)
