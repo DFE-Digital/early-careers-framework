@@ -127,7 +127,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   def create_started_declarations(npq_application)
-    timestamp = npq_application.profile.schedule.milestones.first.start_date + 1.day
+    timestamp = npq_application.profile.schedule.milestones.order(start_date: :asc).first.start_date + 1.day
     travel_to(timestamp) do
       RecordDeclaration.new(
         participant_id: npq_application.participant_identity.external_identifier,
