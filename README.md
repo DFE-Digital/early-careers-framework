@@ -153,7 +153,7 @@ yarn cypress:open
 
 #### Moving to capybara
 
-Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using: 
+Features and user journeys are being migrated to Capybara as part of the feature scenarios and these can be run using:
 
 ```
 bundle exec bin/features_ci
@@ -335,3 +335,5 @@ We use a gem called `tech_docs_template` to generate govuk-style documentation. 
 You can find it, with its readme, in `docs` directory.
 
 The project in `docs` directory can be used to generate a static site, which we put in `public/api-reference` to make our app serve it.
+
+#just for creating a review app
