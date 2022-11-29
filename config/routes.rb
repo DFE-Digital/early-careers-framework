@@ -84,6 +84,9 @@ Rails.application.routes.draw do
       end
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
+        collection do
+          resources :outcomes, only: %i[index], controller: "participant_outcomes"
+        end
       end
       resources :users, only: %i[index create]
       resources :ecf_users, only: %i[index create], path: "ecf-users"
