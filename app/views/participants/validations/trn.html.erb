@@ -9,10 +9,9 @@
       <%= f.hidden_field :no_trn, value: false %>
       <%= f.govuk_text_field :trn,
         width: "three-quarters",
-        label: { text: "Teacher reference number (TRN)", class: "govuk-visually-hidden" },
+        label: { text: title, tag: :h1, size: 'xl' },
         hint: -> do
       %>
-        <h1 class="govuk-heading-xl"><%= title %></h1>
         <p class="govuk-body">This unique ID is:</p>
         <ul class="govuk-list govuk-list--bullet">
           <li>usually 7 digits long, for example ‘4567814’</li>

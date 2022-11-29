@@ -552,11 +552,11 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_name
-    fill_in "Full_name", with: @participant_data[:full_name]
+    fill_in "What’s this person’s full name?", with: @participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_email
-    fill_in "Email", with: @participant_data[:email]
+    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @participant_data[:email]
   end
 
   def when_i_add_ect_or_mentor_nino_for(name)
@@ -564,7 +564,7 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_email_that_already_exists
-    fill_in "Email", with: @participant_profile_ect.user.email
+    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @participant_profile_ect.user.email
   end
 
   def when_i_choose_assign_mentor_later
@@ -572,11 +572,11 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_updated_name
-    fill_in "Full_name", with: @updated_participant_data[:full_name]
+    fill_in "What’s this person’s full name?", with: @updated_participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_updated_email
-    fill_in "Email", with: @updated_participant_data[:email]
+    fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: @updated_participant_data[:email]
   end
 
   def when_i_choose_an_appropriate_body

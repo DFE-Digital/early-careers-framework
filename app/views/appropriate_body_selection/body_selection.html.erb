@@ -7,31 +7,13 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <span class="govuk-caption-xl"><%= appropriate_body_school_name %></span>
-    <h1 class="govuk-heading-xl"><%= title %></h1>
-
-    <div class="govuk-inset-text">
-      Remember to contact the appropriate body directly to appoint them for your ECTs, if you have not done so already.
-    </div>
-
     <%= form_for @appropriate_body_form, url: { action: :update_appropriate_body }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
 
       <% if @appropriate_body_form.body_type == "national" %>
-        <%= f.govuk_collection_radio_buttons(:body_id,
-                                             appropriate_bodies,
-                                             :id,
-                                             :name,
-                                             legend: { hidden: true },
-                                             ) %>
+        <%= render partial: "appropriate_body_selection/radio_button_body_selection", locals: { f:, appropriate_bodies:, title:} %>
       <% else %>
-        <%= f.govuk_collection_select(:body_id,
-                                      appropriate_bodies,
-                                      :id,
-                                      :name,
-                                      label: { hidden: true },
-                                      options: { include_blank: true },
-                                      class: "autocomplete") %>
+        <%= render partial: "appropriate_body_selection/autocomplete_body_selection", locals: { f:, appropriate_bodies:, title:} %>
       <% end %>
 
       <%= f.govuk_submit "Continue" %>

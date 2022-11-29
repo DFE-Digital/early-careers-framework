@@ -5,19 +5,19 @@
 <% content_for :before_content, govuk_back_link(text: "Back", href: { action: @school_transfer_form.previous_step }) %>
 
 <div class="govuk-grid-row">
-	<div class="govuk-grid-column-two-thirds">
-    	
-    <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
-    	<h1 class="govuk-heading-xl"><%= title %></h1>
-
-		<p class="govuk-body">You can enter their personal or school email address.</p>
-    	
-		<%= form_for @school_transfer_form, url: { action: :email }, method: :put do |f| %>
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @school_transfer_form, url: { action: :email }, method: :put do |f| %>
       <%= f.govuk_error_summary %>
-      <%= f.govuk_text_field :email, label: { hidden: true }, width: "two-thirds" %>
+      <%= f.govuk_text_field :email,
+          width: "two-thirds",
+          label: { text: title, tag: :h1, size: 'xl' },
+          caption: { text: "Transferring school - #{@school_transfer_form.participant_name}", tag: :h1, size: 'xl' } do %>
+
+          <p class="govuk-body">You can enter their personal or school email address.</p>
+      <% end %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>
 
-  	</div>
+    </div>
 </div>

@@ -6,15 +6,12 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-        <span class="govuk-caption-xl"><%= @school.name %></span>
-        <h1 class="govuk-heading-xl"><%= title %></h1>
-
         <%= form_for @transferring_participant_form, url: { action: :dob }, method: :put do |f| %>
             <%= f.govuk_date_field :date_of_birth,
                 date_of_birth: true,
                 width: "two-thirds",
-                legend: { text: title, class: "govuk-visually-hidden" },
+                legend: { text: title, tag: :h1, size: 'xl' },
+                caption: { text: @school.name, tag: :h1, size: 'xl' },
                 hint: { text: "For example, 14 7 1990"} %>
 
             <%= f.govuk_submit "Continue" %>

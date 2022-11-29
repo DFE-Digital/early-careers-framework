@@ -101,7 +101,7 @@ RSpec.describe "Reporting participants with a known TRN",
     click_on "Continue"
     then_i_see_an_error_message "Enter an email address"
 
-    when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
+    when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email], "Sally Teacher"
     click_on "Continue"
     then_i_see_an_error_message "Enter the teacher’s induction start date"
 
@@ -130,7 +130,7 @@ RSpec.describe "Reporting participants with a known TRN",
     when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
     then_the_page_is_accessible
 
-    when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
+    when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email], "Sally Teacher"
     then_the_page_is_accessible
 
     when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
@@ -155,11 +155,11 @@ RSpec.describe "Reporting participants with a known TRN",
     and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
     then_the_page_is_accessible
 
-    when_i_add_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
+    when_i_add_mentor_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
     when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
     when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
 
-    when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email]
+    when_i_add_email_address_to_the_school_add_participant_wizard participant_data[:email], "Sally Teacher"
     then_the_page_is_accessible
 
     when_i_confirm_and_add_on_the_school_add_participant_wizard

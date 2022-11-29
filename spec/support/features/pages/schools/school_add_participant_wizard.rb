@@ -74,7 +74,15 @@ module Pages
 
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
-      fill_in "Full_name", with: participant_name
+      fill_in "What’s this person’s full name?", with: participant_name
+      click_on "Continue"
+
+      self
+    end
+
+    def add_mentor_full_name(participant_name)
+      # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
+      fill_in "What’s the full name of this mentor?", with: participant_name
       click_on "Continue"
 
       self
@@ -96,8 +104,8 @@ module Pages
       self
     end
 
-    def add_email_address(participant_email)
-      fill_in "Email", with: participant_email
+    def add_email_address(participant_email, full_name)
+      fill_in "What’s #{full_name}’s email address?", with: participant_email
       click_on "Continue"
 
       self
