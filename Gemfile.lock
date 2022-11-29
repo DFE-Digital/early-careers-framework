@@ -540,7 +540,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    stackprof (0.2.22)
+    stackprof (0.2.23)
     strong_migrations (1.4.0)
       activerecord (>= 5.2)
     thor (1.2.1)
