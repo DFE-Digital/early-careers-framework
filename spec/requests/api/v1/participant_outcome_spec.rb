@@ -39,6 +39,17 @@ RSpec.describe "participant outcomes endpoint spec", :with_default_schedules, ty
           expect(parsed_response).to eq(expected_response)
         end
       end
+
+      it "can return paginated data" do
+        create :participant_outcome, :failed, participant_declaration: declaration
+        create :participant_outcome, :passed, participant_declaration: declaration
+        create :participant_outcome, :voided, participant_declaration: declaration
+        get "/api/v1/participants/npq/outcomes", params: { page: { per_page: 2, page: 1 } }
+        expect(parsed_response["data"].size).to eql(2)
+
+        get "/api/v1/participants/npq/outcomes", params: { page: { per_page: 2, page: 2 } }
+        expect(parsed_response["data"].size).to eql(1)
+      end
     end
 
     context "when unauthorized" do
