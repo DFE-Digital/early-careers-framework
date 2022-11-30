@@ -38,16 +38,17 @@ module Api::V1::ECF
       # we need to find the oldest `participant_profile` for the user otherwise we risk unwanted changes to their access
       # we need to prioritise `end_date` with `null` first because we need to find the record describing what they are doing right now over what they will eventually do after a transfer
       # we need to order by `start_date` second in case two records have the same `end_date` such as after modifying a transfer to add a mentor
+      #
+      # we can group by "participant_profiles"."teacher_profile_id" without all the joins because users can only have one teacher_profile
       InductionRecord.select(
         <<-SQL,
           FIRST_VALUE(induction_records.id) OVER (
-            PARTITION BY "users"."id"
+            PARTITION BY "participant_profiles"."teacher_profile_id"
             ORDER BY induction_records.end_date ASC NULLS FIRST, induction_records.start_date ASC, induction_records.created_at ASC
           ) AS id
         SQL
       )
-      .joins(participant_profile: %i[teacher_profile user])
-      .merge(ParticipantProfile.ecf, :user)
+      .joins(:participant_profile)
     end
   end
 end
