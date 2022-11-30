@@ -111,7 +111,7 @@ module Finance
       end
 
       def course_total
-        monthly_service_fees + output_payment_subtotal - clawback_payment + targeted_delivery_funding_subtotal
+        monthly_service_fees + output_payment_subtotal - clawback_payment + targeted_delivery_funding_subtotal - targeted_delivery_funding_refundable_subtotal
       end
 
       def course_has_targeted_delivery_funding?
@@ -137,6 +137,26 @@ module Finance
 
       def targeted_delivery_funding_subtotal
         targeted_delivery_funding_per_participant * targeted_delivery_funding_declarations_count
+      end
+
+      def targeted_delivery_funding_refundable_declarations_count
+        return 0 unless course_has_targeted_delivery_funding?
+
+        @targeted_delivery_funding_refundable_declarations_count ||=
+          statement
+              .refundable_statement_line_items
+              .joins(:participant_declaration)
+              .joins("INNER JOIN npq_applications  ON npq_applications.id = participant_declarations.participant_profile_id")
+              .where(
+                participant_declarations: { course_identifier: course.identifier, declaration_type: "started" },
+                npq_applications: { targeted_delivery_funding_eligibility: true, eligible_for_funding: true },
+              )
+              .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
+              .count
+      end
+
+      def targeted_delivery_funding_refundable_subtotal
+        targeted_delivery_funding_per_participant * targeted_delivery_funding_refundable_declarations_count
       end
 
     private

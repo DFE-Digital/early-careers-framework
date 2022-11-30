@@ -258,4 +258,82 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
       end
     end
   end
+
+  describe "#total_targeted_delivery_funding_refundable" do
+    context "no declarations" do
+      it do
+        expect(subject.total_targeted_delivery_funding_refundable).to be_zero
+      end
+    end
+
+    context "with declaration" do
+      let(:cohort) { create(:cohort, start_year: 2022) }
+      let(:declaration_type)    { "started" }
+
+      let(:participant_profile) do
+        create(
+          :npq_application,
+          :accepted,
+          :eligible_for_funding,
+          npq_course:,
+          npq_lead_provider:,
+
+          eligible_for_funding: true,
+          targeted_delivery_funding_eligibility: true,
+        ).profile
+      end
+
+      let!(:to_be_awaiting_clawed_back) do
+        travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
+          create(:npq_participant_declaration, :paid, course_identifier: npq_course.identifier, declaration_type:, participant_profile:, cpd_lead_provider:)
+        end
+      end
+
+      let!(:participant_declaration) do
+        travel_to statement.deadline_date do
+          Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
+        end
+      end
+
+      it "returns total targeted delivery funding refundable" do
+        expect(subject.total_targeted_delivery_funding_refundable.to_f).to eq(100.0)
+      end
+    end
+  end
+
+  describe "#total_clawbacks" do
+    let(:cohort) { create(:cohort, start_year: 2022) }
+    let(:declaration_type)    { "started" }
+
+    let(:participant_profile) do
+      create(
+        :npq_application,
+        :accepted,
+        :eligible_for_funding,
+        npq_course:,
+        npq_lead_provider:,
+
+        eligible_for_funding: true,
+        targeted_delivery_funding_eligibility: true,
+      ).profile
+    end
+
+    let!(:to_be_awaiting_clawed_back) do
+      travel_to create(:npq_statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, cpd_lead_provider:).deadline_date do
+        create(:npq_participant_declaration, :paid, course_identifier: npq_course.identifier, declaration_type:, participant_profile:, cpd_lead_provider:)
+      end
+    end
+
+    let!(:participant_declaration) do
+      travel_to statement.deadline_date do
+        Finance::ClawbackDeclaration.new(to_be_awaiting_clawed_back).call
+      end
+    end
+
+    it "returns total clawbacks" do
+      expect(subject.clawback_payments.to_f).to eq(160.0)
+      expect(subject.total_targeted_delivery_funding_refundable.to_f).to eq(100.0)
+      expect(subject.total_clawbacks.to_f).to eq(160.0 + 100.0)
+    end
+  end
 end

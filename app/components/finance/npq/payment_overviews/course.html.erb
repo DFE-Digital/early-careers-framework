@@ -34,6 +34,17 @@
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.output_payment_subtotal %></td>
       </tr>
 
+      <% if calculator.refundable_declarations_count.positive? %>
+        <% calculator.refundable_declarations_by_type_count.each do |type, count| %>
+          <tr class="gov-table__row">
+            <td scope="row" class="govuk-table__cell govuk-body-s">Clawbacks - <%= type.humanize %></td>
+            <td scope="row" class="govuk-table__cell govuk-body-s"><%= count %></td>
+            <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -calculator.output_payment_per_participant %></td>
+            <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -(count * calculator.output_payment_per_participant) %></td>
+          </tr>
+        <% end %>
+      <% end %>
+
       <% if calculator.course_has_targeted_delivery_funding? %>
         <tr class="gov-table__row">
           <td scope="row" class="govuk-table__cell govuk-body-s"><strong><%= t("finance.targeted_delivery_funding.caption") %></strong></td>
@@ -41,6 +52,15 @@
           <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.targeted_delivery_funding_per_participant %></td>
           <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.targeted_delivery_funding_subtotal %></td>
         </tr>
+
+        <% if calculator.targeted_delivery_funding_refundable_declarations_count > 0 %>
+          <tr class="gov-table__row">
+            <td scope="row" class="govuk-table__cell govuk-body-s">Clawbacks</td>
+            <td scope="row" class="govuk-table__cell govuk-body-s"><%= calculator.targeted_delivery_funding_refundable_declarations_count  %></td>
+            <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -calculator.targeted_delivery_funding_per_participant %></td>
+            <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -calculator.targeted_delivery_funding_refundable_subtotal %></td>
+          </tr>
+        <% end %>
       <% end %>
 
       <tr class="gov-table__row">
@@ -49,17 +69,6 @@
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.service_fees_per_participant %></td>
         <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds calculator.monthly_service_fees %></td>
       </tr>
-
-      <% if calculator.refundable_declarations_count.positive? %>
-        <% calculator.refundable_declarations_by_type_count.each do |type, count| %>
-          <tr class="gov-table__row">
-            <td scope="row" class="govuk-table__cell govuk-body-s">Clawbacks for <%= type %></td>
-            <td scope="row" class="govuk-table__cell govuk-body-s"><%= count %></td>
-            <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -calculator.output_payment_per_participant %></td>
-            <td scope="row" class="govuk-table__cell govuk-body-s"><%= number_to_pounds -(count * calculator.output_payment_per_participant) %></td>
-          </tr>
-        <% end %>
-      <% end %>
     </tbody>
   </table>
 
