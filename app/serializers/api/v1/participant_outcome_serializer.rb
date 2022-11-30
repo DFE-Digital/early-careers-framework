@@ -19,7 +19,7 @@ module Api
       end
 
       attribute :participant_id do |outcome|
-        outcome.participant_declaration.participant_profile.npq_application.participant_identity.user_id
+        outcome.participant_declaration.participant_profile.npq_application.participant_identity.external_identifier
       end
     end
   end
