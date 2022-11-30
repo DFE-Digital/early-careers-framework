@@ -5,31 +5,31 @@
 <%= govuk_summary_list do |sl|
   sl.row do |row|
     row.key(text: "Participant name")
-    row.value(text: full_name)
+    row.value(text: user_full_name)
     row.action(text: "Change", href: edit_admin_participant_npq_change_full_name_path(profile), visually_hidden_text: "participant name")
   end
 
   sl.row do |row|
     row.key(text: "Participant email")
-    row.value(text: email)
+    row.value(text: user_email)
     row.action(text: "Change", href: edit_admin_participant_npq_change_email_path(profile), visually_hidden_text: "participant email address")
   end
 
-  if pending?
+  if profile_pending?
     sl.row do |row|
       row.key(text: "National Insurance number")
-      row.value(text: ni_number)
+      row.value(text: npq_application_nino)
     end
 
     sl.row do |row|
       row.key(text: "Date of birth")
-      row.value(text: date_of_birth)
+      row.value(text: npq_application_date_of_birth.to_formatted_s(:govuk))
     end
   end
 
   sl.row do |row|
     row.key(text: "Teacher reference number")
-    row.value(text: trn)
+    row.value(text: npq_application_teacher_reference_number)
   end
 
   sl.row do |row|
@@ -49,12 +49,12 @@
 
   sl.row do |row|
     row.key(text: "Provider")
-    row.value(text: lead_provider_name)
+    row.value(text: npq_application.npq_lead_provider_name)
   end
 
   sl.row do |row|
     row.key(text: "NPQ course")
-    row.value(text: npq_course_name)
+    row.value(text: npq_application.npq_course_name)
   end
 
   sl.row do |row|
