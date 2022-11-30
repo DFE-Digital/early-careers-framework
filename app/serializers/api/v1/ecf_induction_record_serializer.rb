@@ -96,7 +96,7 @@ module Api
 
       # guard against some of the more complex scenarios where it is not possible to determine what is correct behaviour
       def self.is_consistently_withdrawn(induction_record)
-        induction_record.induction_status == "withdrawn" && induction_record.participant_profile.status == "withdrawn"
+        induction_record.withdrawn_induction_status? && induction_record.participant_profile.withdrawn_record?
       end
     end
   end
