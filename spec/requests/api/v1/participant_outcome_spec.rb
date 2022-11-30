@@ -5,7 +5,6 @@ require "rails_helper"
 RSpec.describe "participant outcomes endpoint spec", :with_default_schedules, type: :request do
   let(:token)                { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: provider) }
   let(:bearer_token)         { "Bearer #{token}" }
-  let(:fake_logger)          { double("logger", info: nil) }
   let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
   let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
   let(:declaration) { create :npq_participant_declaration, participant_profile: npq_application.profile, cpd_lead_provider: provider }
