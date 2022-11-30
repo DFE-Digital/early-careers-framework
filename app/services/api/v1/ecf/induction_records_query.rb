@@ -42,7 +42,7 @@ module Api::V1::ECF
         <<-SQL,
           FIRST_VALUE(induction_records.id) OVER (
             PARTITION BY "users"."id"
-            ORDER BY induction_records.end_date ASC NULLS FIRST, induction_records.start_date ASC
+            ORDER BY induction_records.end_date ASC NULLS FIRST, induction_records.start_date ASC, induction_records.created_at ASC
           ) AS id
         SQL
       )
