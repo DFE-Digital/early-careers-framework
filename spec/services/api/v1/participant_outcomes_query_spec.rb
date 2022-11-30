@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::ParticipantOutcomes::Index, :with_default_schedules do
+RSpec.describe Api::V1::ParticipantOutcomesQuery, :with_default_schedules do
   describe "#scope" do
     let(:provider_declaration) { create_declaration }
     let!(:provider_outcomes) { create_outcomes(provider_declaration) }

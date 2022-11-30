@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Api
-  module ParticipantOutcomes
-    class Index
+  module V1
+    class ParticipantOutcomesQuery
       attr_reader :cpd_lead_provider
 
       def initialize(cpd_lead_provider:)

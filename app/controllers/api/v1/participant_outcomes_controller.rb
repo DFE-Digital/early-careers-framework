@@ -18,7 +18,7 @@ module Api
       end
 
       def query_scope
-        ParticipantOutcomes::Index.new(
+        ParticipantOutcomesQuery.new(
           cpd_lead_provider:,
         ).scope
       end
