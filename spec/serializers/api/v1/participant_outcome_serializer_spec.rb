@@ -7,7 +7,7 @@ RSpec.describe Api::V1::ParticipantOutcomeSerializer, :with_default_schedules do
     let(:provider) { create :cpd_lead_provider, :with_npq_lead_provider }
     let(:npq_application) { create :npq_application, :accepted, npq_lead_provider: provider.npq_lead_provider }
     let(:declaration) { create :npq_participant_declaration, participant_profile: npq_application.profile, cpd_lead_provider: provider }
-    subject(:outcome) { create :participant_outcome, participant_declaration: declaration }
+    subject(:outcome) { create :participant_outcome, :passed, participant_declaration: declaration }
 
     it "serialises to the correct structure" do
       result = described_class.new(outcome).serializable_hash
@@ -18,6 +18,7 @@ RSpec.describe Api::V1::ParticipantOutcomeSerializer, :with_default_schedules do
           attributes: {
             completion_date: outcome.completion_date.rfc3339,
             created_at: outcome.created_at.rfc3339,
+            has_passed: true,
             participant_id: npq_application.participant_identity.external_identifier,
             course_identifier: declaration.course_identifier,
           },
