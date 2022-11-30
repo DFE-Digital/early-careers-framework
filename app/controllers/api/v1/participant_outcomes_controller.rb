@@ -23,14 +23,6 @@ module Api
         ).scope
       end
 
-      def filter
-        params[:filter] ||= {}
-      end
-
-      def participant_id_filter
-        filter[:participant_id]
-      end
-
       def cpd_lead_provider
         current_user
       end
