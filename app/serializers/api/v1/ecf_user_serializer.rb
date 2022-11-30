@@ -28,7 +28,7 @@ module Api
       attributes :email, :full_name
 
       attributes :user_type do |user|
-        case user.teacher_profile.ecf_profiles.last&.type
+        case find_oldest_profile(user)&.type
         when ParticipantProfile::ECT.name
           USER_TYPES[:early_career_teacher]
         when ParticipantProfile::Mentor.name
@@ -60,19 +60,23 @@ module Api
       end
 
       attributes :registration_completed do |user|
-        user.teacher_profile.ecf_profiles.last&.completed_validation_wizard?
+        find_oldest_profile(user)&.completed_validation_wizard?
       end
 
       attributes :cohort do |user|
         find_school_cohort(user)&.cohort&.start_year
       end
 
+      def self.find_oldest_profile(user)
+        user.teacher_profile.ecf_profiles.min_by(&:created_at)
+      end
+
       def self.find_school_cohort(user)
-        user.teacher_profile.ecf_profiles.last&.school_cohort
+        find_oldest_profile(user)&.school_cohort
       end
 
       def self.find_core_induction_programme(user)
-        user.teacher_profile.ecf_profiles.last&.core_induction_programme ||
+        find_oldest_profile(user)&.core_induction_programme ||
           find_school_cohort(user)&.core_induction_programme
       end
     end
