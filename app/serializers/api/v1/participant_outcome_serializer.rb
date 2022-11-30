@@ -21,6 +21,10 @@ module Api
       attribute :participant_id do |outcome|
         outcome.participant_declaration.participant_profile.npq_application.participant_identity.external_identifier
       end
+
+      attribute :created_at do |outcome|
+        outcome.created_at.rfc3339
+      end
     end
   end
 end

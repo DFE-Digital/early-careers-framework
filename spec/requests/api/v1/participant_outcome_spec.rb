@@ -81,6 +81,7 @@ private
     {
       "attributes" => {
         "completion_date" => outcome.completion_date.rfc3339,
+        "created_at" => outcome.created_at.rfc3339,
         "course_identifier" => course_identifier,
         "participant_id" => profile.npq_application.participant_identity.user_id,
       },
