@@ -70,7 +70,7 @@
       <%= render "cookies/banner" %>
     <% end %>
 
-    <%= govuk_header(service_name:) do |header|
+    <%= govuk_header(service_name:, container_classes: ("govuk-width-container__wide" if wide_container_view?)) do |header|
       if user_signed_in?
         header.navigation_item(text: "Sign out", href: destroy_user_session_path)
       end

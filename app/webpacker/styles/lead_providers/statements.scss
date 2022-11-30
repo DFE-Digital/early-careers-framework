@@ -8,8 +8,8 @@
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-auto-flow: row;
-  grid-row-gap: 0;
-  grid-column-gap: 0;
+  grid-row-gap: 1rem;
+  grid-column-gap: 1rem;
 
   .duvet {
     border-top: 1px solid #b1b4b6;
@@ -55,6 +55,10 @@
      display: flex;
      justify-content: space-between;
   }
+
+  h4.govuk-heading-l {
+    font-size: 1.9rem;
+  }
 }
 
 .app-application__panel {
@@ -64,16 +68,11 @@
   border: none;
   flex: 1 1 100%;
   margin-bottom: 0 !important;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-template-rows: repeat(3, auto);
   grid-auto-flow: row;
   grid-row-gap: 1rem;
   grid-column-gap: 1rem;
-
-  @media (min-width: 40.625em) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, auto);
-  }
 
   @media (min-width: 68.75em) {
     grid-template-columns: 1fr;
@@ -87,6 +86,16 @@
 
   @media (min-width: 40.625em) {
     margin-bottom: 10px;
+  }
+
+  @media (max-width: 558px) {
+    .table-responsive-max-width {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
   }
 }
 
@@ -104,6 +113,9 @@
 .finance-panel {
   padding: 20px 20px 10px 20px;
   background-color: #f8f8f8;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 
   &.finance-panel__summary {
     display: grid;

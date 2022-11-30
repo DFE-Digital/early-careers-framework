@@ -55,10 +55,9 @@ $govuk-image-url-function: frontend-image-url;
 }
 
 .govuk-width-container__wide {
-  @media (min-width: 1110px) {
-    min-width: 1250px;
+  @media (min-width: 1280px) {
+    max-width: 1250px;
+    margin-left: auto;
+    margin-right: auto;
   }
-
-  margin-left: auto;
-  margin-right: auto;
 }

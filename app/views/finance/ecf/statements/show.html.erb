@@ -165,14 +165,14 @@
         <% table.head do |head| %>
           <% head.row do |row| %>
             <% row.cell(header: true, text: "Number of participants") %>
-            <% row.cell(header: true, text: "Fee per participant") %>
+            <% row.cell(header: true, text: "Fee per participant", numeric: true) %>
             <% row.cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
 
           <% table.body do |body| %>
             <% body.row do |row| %>
               <% row.cell(text: @calculator.uplift_additions_count) %>
-              <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration)) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_fee_per_declaration), numeric: true) %>
               <% row.cell(text: number_to_pounds(@calculator.uplift_additions_count * @calculator.uplift_fee_per_declaration), numeric: true) %>
             <% end %>
           <% end %>
@@ -188,7 +188,7 @@
           <% head.row do |row| %>
             <% row.cell(header: true, text: "Adjustment type") %>
             <% row.cell(header: true, text: "Number of participants") %>
-            <% row.cell(header: true, text: "Fee per participant") %>
+            <% row.cell(header: true, text: "Fee per participant", numeric: true) %>
             <% row.cell(header: true, text: "Payments", numeric: true) %>
           <% end %>
 
@@ -196,7 +196,7 @@
             <% body.row do |row| %>
               <% row.cell(text: "Uplift clawbacks") %>
               <% row.cell(text: @calculator.uplift_deductions_count) %>
-              <% row.cell(text: number_to_pounds(-@calculator.uplift_fee_per_declaration)) %>
+              <% row.cell(text: number_to_pounds(-@calculator.uplift_fee_per_declaration), numeric: true) %>
               <% row.cell(text: number_to_pounds(@calculator.uplift_deductions_count * -@calculator.uplift_fee_per_declaration), numeric: true) %>
             <% end %>
 
