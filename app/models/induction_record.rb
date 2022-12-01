@@ -115,6 +115,10 @@ class InductionRecord < ApplicationRecord
     update!(induction_status: :leaving, end_date: date_of_change, school_transfer: transferring_out)
   end
 
+  def matches_school_appropriate_body?
+    appropriate_body_id == school_cohort.appropriate_body_id
+  end
+
   def transferring_in?
     active_induction_status? && start_date > Time.zone.now
   end

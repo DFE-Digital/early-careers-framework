@@ -74,7 +74,7 @@
     <% list.row do |row| %>
       <% row.key(text: "Appropriate body") %>
       <% row.value(text: school_cohort.appropriate_body.name) %>
-      <% row.action(text: :none) %>
+      <% row.action(text: "Change", href: change_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "change appropriate body") %>
     <% end %>
   <% elsif school_cohort.appropriate_body_unknown %>
     <% list.row do |row| %>

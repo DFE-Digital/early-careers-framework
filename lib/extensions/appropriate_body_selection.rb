@@ -3,6 +3,8 @@
 module AppropriateBodySelection
   module RouteMappingExtension
     def appropriate_body_selection_routes(controller)
+      get "preconfirm", to: "#{controller}#appropriate_body_preconfirm"
+
       get "appropriate-body-appointed", to: "#{controller}#appropriate_body_appointed"
       put "appropriate-body-appointed", to: "#{controller}#update_appropriate_body_appointed"
 
