@@ -21,7 +21,7 @@ module Api
       end
 
       attribute :participant_id do |outcome|
-        outcome.participant_declaration.participant_profile.npq_application.participant_identity.external_identifier
+        outcome.participant_declaration.participant_profile.participant_identity.external_identifier
       end
 
       attribute :created_at do |outcome|
