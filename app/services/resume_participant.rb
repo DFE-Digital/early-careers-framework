@@ -8,6 +8,7 @@ class ResumeParticipant
   attribute :cpd_lead_provider
   attribute :participant_id
   attribute :course_identifier
+  attribute :relevant_induction_record
 
   validates :cpd_lead_provider,
             induction_record: true

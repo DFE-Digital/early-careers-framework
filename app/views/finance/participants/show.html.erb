@@ -29,7 +29,6 @@
 
 <% @user.participant_profiles.each do |pp| %>
   <h3><%= pp.type %></h3>
-
   <% if pp.ecf? %>
     <%= render partial: "finance/participants/ecf_profile", locals: { pp: pp } %>
   <% else %>
@@ -37,10 +36,12 @@
   <% end %>
 <% end %>
 
-<h2>NPQ applications</h2>
+<% if @user.npq_applications.exists? %>
+  <h2>NPQ applications</h2>
 
-<% @user.npq_applications.each_with_index do |application, i| %>
-  <h3><%= "NPQ application #{i + 1}" %></h3>
+  <% @user.npq_applications.each_with_index do |application, i| %>
+    <h3><%= "NPQ application #{i + 1}" %></h3>
 
-  <%= render partial: "finance/participants/npq_application", locals: { application: application } %>
+    <%= render partial: "finance/participants/npq_application", locals: { application: application } %>
+  <% end %>
 <% end %>

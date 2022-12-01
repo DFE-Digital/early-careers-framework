@@ -14,6 +14,7 @@ module Finance
       attribute :participant_profile
       attribute :training_status
       attribute :reason
+      attribute :induction_record
 
       validates :training_status, inclusion: ParticipantProfile.training_statuses.values
       validates :reason, inclusion: { in: :valid_training_status_reasons }, if: :reason_required?
@@ -38,6 +39,7 @@ module Finance
           cpd_lead_provider:,
           course_identifier:,
           participant_id: participant_profile.participant_identity.external_identifier,
+          relevant_induction_record: induction_record,
         }
 
         case training_status
@@ -67,7 +69,7 @@ module Finance
       # correct we will make the assumpion that we will change it on the latest induction record
       # regarless of the lead provider
       def cpd_lead_provider
-        @cpd_lead_provider ||= participant_profile.induction_records.latest.lead_provider.cpd_lead_provider
+        @cpd_lead_provider ||= induction_record.lead_provider.cpd_lead_provider
       end
 
       def course_identifier
@@ -78,10 +80,6 @@ module Finance
           when :ect
             "ecf-induction"
           end
-      end
-
-      def induction_record
-        @induction_record ||= participant_profile&.induction_records&.latest
       end
 
       def status_unchanged?
