@@ -44,6 +44,29 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
       end
     end
 
+    context "when previously funded for a different course" do
+      let(:trn) { application.teacher_reference_number }
+      let(:application) do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          teacher_reference_number_verified: true,
+        )
+      end
+      let(:npq_application_course) { application.npq_course }
+      # Making sure they are completely separate courses
+      let(:npq_course) { create(:npq_course, identifier: npq_application_course.identifier.reverse) }
+
+      before do
+        NPQ::Application::Accept.new(npq_application: application).call
+      end
+
+      it "returns truthy" do
+        expect(subject.call[:previously_funded]).to be_falsey
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+      end
+    end
+
     context "when previously funded with targeted delivery funding" do
       let(:trn) { application.teacher_reference_number }
       let(:application) do
