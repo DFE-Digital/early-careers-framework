@@ -38,8 +38,8 @@ module Pages
       self
     end
 
-    def add_teacher_reference_number(full_name, trn)
-      fill_in "What’s #{full_name}’s teacher reference number (TRN)", with: trn
+    def add_teacher_reference_number(_full_name, trn)
+      fill_in "What’s your teacher reference number (TRN)", with: trn
       click_on "Continue"
 
       self
