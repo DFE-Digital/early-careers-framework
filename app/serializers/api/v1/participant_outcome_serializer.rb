@@ -11,16 +11,13 @@ module Api
       set_id :id
       set_type :'participant-outcome'
 
+      attribute :state
       attribute :completion_date do |outcome|
         outcome.completion_date.rfc3339
       end
 
       attribute :course_identifier do |outcome|
         outcome.participant_declaration.course_identifier
-      end
-
-      attribute :has_passed do |outcome|
-        outcome.state == "passed"
       end
 
       attribute :participant_id do |outcome|

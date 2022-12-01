@@ -18,7 +18,7 @@ RSpec.describe Api::V1::ParticipantOutcomeSerializer, :with_default_schedules do
           attributes: {
             completion_date: outcome.completion_date.rfc3339,
             created_at: outcome.created_at.rfc3339,
-            has_passed: true,
+            state: "passed",
             participant_id: npq_application.participant_identity.external_identifier,
             course_identifier: declaration.course_identifier,
           },
