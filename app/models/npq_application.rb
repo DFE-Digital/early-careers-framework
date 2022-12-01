@@ -38,6 +38,8 @@ class NPQApplication < ApplicationRecord
     rejected: "rejected",
   }
 
+  scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
+
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 
   delegate :start_year, to: :cohort, prefix: true, allow_nil: true

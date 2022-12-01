@@ -19,6 +19,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       it "returns falsey" do
         expect(subject.call[:previously_funded]).to be_falsey
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
       end
     end
 
@@ -39,6 +40,29 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       it "returns truthy" do
         expect(subject.call[:previously_funded]).to be_truthy
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+      end
+    end
+
+    context "when previously funded with targeted delivery funding" do
+      let(:trn) { application.teacher_reference_number }
+      let(:application) do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          teacher_reference_number_verified: true,
+          targeted_delivery_funding_eligibility: true,
+        )
+      end
+      let(:npq_course) { application.npq_course }
+
+      before do
+        NPQ::Application::Accept.new(npq_application: application).call
+      end
+
+      it "returns truthy" do
+        expect(subject.call[:previously_funded]).to be_truthy
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_truthy
       end
     end
 
@@ -64,6 +88,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       it "returns truthy" do
         expect(subject.call[:previously_funded]).to be_truthy
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
       end
     end
 
@@ -85,8 +110,27 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       it "returns truthy" do
         expect(subject.call[:previously_funded]).to be_truthy
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
       end
     end
+
+    context "when previously funded with targeted delivery funding but not accepted" do
+      let(:trn) { application.teacher_reference_number }
+      let(:application) do
+        create(
+          :npq_application,
+          eligible_for_funding: true,
+          teacher_reference_number_verified: true,
+          targeted_delivery_funding_eligibility: true,
+          )
+      end
+      let(:npq_course) { application.npq_course }
+
+      it "returns truthy" do
+        expect(subject.call[:previously_funded]).to be_falsey
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
+      end
+end
 
     context "when trn does not yield any teachers" do
       let(:trn) { "0000000" }
@@ -96,6 +140,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       it "returns falsey" do
         expect(subject.call[:previously_funded]).to be_falsey
+        expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
       end
     end
   end
