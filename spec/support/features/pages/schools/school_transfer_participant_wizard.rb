@@ -21,10 +21,10 @@ module Pages
       confirm_transferring_an_ect_or_mentor
 
       add_full_name full_name
-      add_teacher_reference_number participant_trn
+      add_teacher_reference_number full_name, participant_trn
       add_date_of_birth date_of_birth
       add_start_date start_date
-      add_email_address email_address
+      add_email_address full_name, email_address
 
       if same_provider
         # UI does not ask about provider
@@ -42,10 +42,10 @@ module Pages
       confirm_transferring_an_ect_or_mentor
 
       add_full_name full_name
-      add_teacher_reference_number participant_trn
+      add_teacher_reference_number full_name, participant_trn
       add_date_of_birth date_of_birth
       add_start_date start_date
-      add_email_address email_address
+      add_email_address full_name, email_address
 
       if same_provider
         # UI does not ask about provider
@@ -73,14 +73,21 @@ module Pages
 
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
-      fill_in "Full_name", with: participant_name
+      fill_in "What’s this person’s full name?", with: participant_name
       click_on "Continue"
 
       self
     end
 
-    def add_teacher_reference_number(trn)
-      fill_in "Teacher reference number (TRN)", with: trn
+    def add_mentor_full_name(participant_name)
+      fill_in "What’s the full name of this mentor?", with: participant_name
+      click_on "Continue"
+
+      self
+    end
+
+    def add_teacher_reference_number(full_name, trn)
+      fill_in "What’s #{full_name}’s teacher reference number (TRN)", with: trn
       click_on "Continue"
 
       self
@@ -104,8 +111,8 @@ module Pages
       self
     end
 
-    def add_email_address(participant_email)
-      fill_in "Email", with: participant_email
+    def add_email_address(full_name, participant_email)
+      fill_in "What’s #{full_name}’s email address?", with: participant_email
       click_on "Continue"
 
       self

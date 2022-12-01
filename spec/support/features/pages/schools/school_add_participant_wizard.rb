@@ -32,7 +32,7 @@ module Pages
       add_full_name full_name
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
-      add_email_address email_address
+      add_email_address full_name, email_address
       add_start_date start_date
       choose_a_mentor mentor_full_name if mentor_full_name.present?
 
@@ -41,10 +41,10 @@ module Pages
 
     def add_mentor(full_name, trn, date_of_birth, email_address)
       choose_to_add_a_new_mentor
-      add_full_name full_name
+      add_mentor_full_name full_name
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
-      add_email_address email_address
+      add_email_address full_name, email_address
 
       confirm_and_add
     end
@@ -81,7 +81,6 @@ module Pages
     end
 
     def add_mentor_full_name(participant_name)
-      # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
       fill_in "What’s the full name of this mentor?", with: participant_name
       click_on "Continue"
 
@@ -104,7 +103,7 @@ module Pages
       self
     end
 
-    def add_email_address(participant_email, full_name)
+    def add_email_address(full_name, participant_email)
       fill_in "What’s #{full_name}’s email address?", with: participant_email
       click_on "Continue"
 
