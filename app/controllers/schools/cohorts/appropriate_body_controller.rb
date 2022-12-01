@@ -18,23 +18,31 @@ module Schools
         end
       end
 
-      def confirm; end
+      def change
+        start_appropriate_body_selection(preconfirmation: true)
+      end
+
+      def confirm
+        @confirmation_type = params[:confirmation_type]
+      end
 
     private
 
-      def start_appropriate_body_selection
-        super from_path: schools_dashboard_path,
+      def start_appropriate_body_selection(preconfirmation: false)
+        super action_name:,
+              from_path: schools_dashboard_path,
               submit_action: :save_appropriate_body,
               school_name: @school.name,
-              ask_appointed: false
+              ask_appointed: false,
+              preconfirmation:
       end
 
       def save_appropriate_body
         Induction::SetSchoolCohortAppropriateBody.call(school_cohort: @school_cohort,
                                                        appropriate_body_id: appropriate_body_form.body_id,
-                                                       appropriate_body_appointed: appropriate_body_form.body_appointed,
-                                                       update_induction_records: true)
-        redirect_to url_for({ action: :confirm })
+                                                       appropriate_body_appointed: appropriate_body_form.body_appointed)
+
+        redirect_to url_for({ action: :confirm, confirmation_type: appropriate_body_action_name })
       end
     end
   end

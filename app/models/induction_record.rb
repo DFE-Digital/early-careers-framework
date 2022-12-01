@@ -9,7 +9,7 @@ class InductionRecord < ApplicationRecord
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
   belongs_to :schedule, class_name: "Finance::Schedule"
   belongs_to :mentor_profile, class_name: "ParticipantProfile::Mentor", optional: true
-  belongs_to :appropriate_body, optional: true
+  belongs_to :customized_appropriate_body, class_name: "AppropriateBody", optional: true
 
   has_one :mentor, through: :mentor_profile, source: :user
   has_one :school_cohort, through: :induction_programme
@@ -94,6 +94,15 @@ class InductionRecord < ApplicationRecord
 
   after_save :update_analytics
 
+  def appropriate_body
+    customized_appropriate_body || school_cohort.appropriate_body
+  end
+
+  def appropriate_body=(appropriate_body)
+    value = appropriate_body if appropriate_body != school_cohort.appropriate_body
+    self.customized_appropriate_body = value
+  end
+
   def enrolled_in_fip?
     induction_programme.full_induction_programme?
   end
@@ -113,6 +122,10 @@ class InductionRecord < ApplicationRecord
   def leaving!(date_of_change = Time.zone.now, transferring_out: false)
     # set transferring_out to true if this action originates from the school the participant is leaving
     update!(induction_status: :leaving, end_date: date_of_change, school_transfer: transferring_out)
+  end
+
+  def matches_school_appropriate_body?
+    customized_appropriate_body_id == school_cohort.appropriate_body_id
   end
 
   def transferring_in?

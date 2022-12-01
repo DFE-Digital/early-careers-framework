@@ -144,7 +144,7 @@ private
   end
 
   def save_appropriate_body
-    @induction_record.update!({ appropriate_body_id: @appropriate_body_form.body_id })
+    @induction_record.update!(customized_appropriate_body_id: @appropriate_body_form.body_id)
     redirect_to appropriate_body_from_path
   end
 

@@ -191,9 +191,9 @@ RSpec.describe "Update participants details", js: true do
       given_the_ect_has_been_validated
       click_on "Sally Teacher"
       then_i_am_taken_to_participant_profile
-      and_i_see_no_appropriate_body_selected
+      and_i_can_change_the_appropriate_body
 
-      when_i_click_on_summary_row_action("Appropriate body", "Add")
+      when_i_click_on_summary_row_action("Appropriate body", "Change")
       then_i_am_taken_to_the_appropriate_body_type_page
 
       when_i_choose_an_appropriate_body

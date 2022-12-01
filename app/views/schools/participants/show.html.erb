@@ -88,7 +88,7 @@
               Appropriate body
             </dt>
             <dd class="govuk-summary-list__value">
-              <%= @induction_record.appropriate_body&.name %>
+              <%= @induction_record.appropriate_body_name %>
             </dd>
             <dd class="govuk-summary-list__actions">
               <%= govuk_link_to (participant_has_appropriate_body? ? "Change" : "Add"), { action: :add_appropriate_body, participant_id: @profile } %>

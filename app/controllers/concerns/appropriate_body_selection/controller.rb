@@ -15,7 +15,11 @@ module AppropriateBodySelection
                              update_appropriate_body]
 
       helper_method :appropriate_body_form, :appropriate_body_from_path, :appropriate_body_school_name,
-                    :appropriate_body_type_back_link
+                    :appropriate_body_type_back_link, :appropriate_body_action_name, :preconfirm_next_action
+    end
+
+    def appropriate_body_preconfirm
+      render "/appropriate_body_selection/preconfirm"
     end
 
     def appropriate_body_appointed
@@ -66,21 +70,27 @@ module AppropriateBodySelection
 
   private
 
-    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true)
+    def first_action
+      appropriate_body_preconfirmation ? :appropriate_body_preconfirm : preconfirm_next_action
+    end
+
+    def preconfirm_next_action
+      appropriate_body_ask_appointed ? :appropriate_body_appointed : :appropriate_body_type
+    end
+
+    def start_appropriate_body_selection(from_path:, submit_action:, school_name:, ask_appointed: true, preconfirmation: false, action_name: :add)
       session.delete(:appropriate_body_selection_form)
 
       session[:appropriate_body_selection] = {
+        action_name:,
         from_path:,
         submit_action:,
         school_name:,
         ask_appointed:,
+        preconfirmation:,
       }
 
-      if ask_appointed
-        redirect_to action: :appropriate_body_appointed
-      else
-        redirect_to action: :appropriate_body_type
-      end
+      redirect_to action: first_action
     end
 
     def ensure_appropriate_body_data
@@ -124,6 +134,14 @@ module AppropriateBodySelection
 
     def appropriate_body_ask_appointed
       appropriate_body_session_data[:ask_appointed]
+    end
+
+    def appropriate_body_action_name
+      appropriate_body_session_data[:action_name]
+    end
+
+    def appropriate_body_preconfirmation
+      appropriate_body_session_data[:preconfirmation]
     end
 
     def appropriate_body_school_name

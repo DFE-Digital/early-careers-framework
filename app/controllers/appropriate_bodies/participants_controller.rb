@@ -3,7 +3,7 @@
 module AppropriateBodies
   class ParticipantsController < BaseController
     def index
-      collection = InductionRecord.includes(:participant_profile).where(appropriate_body:)
+      collection = InductionRecord.includes(:participant_profile).where(customized_appropriate_body: appropriate_body)
 
       @filter = ParticipantsFilter.new(collection:, params: params.permit(:query, :role, :academic_year, :status))
 

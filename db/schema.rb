@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_21_095445) do
+ActiveRecord::Schema.define(version: 2022_12_01_161925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -407,8 +407,8 @@ ActiveRecord::Schema.define(version: 2022_11_21_095445) do
     t.string "induction_status", default: "active", null: false
     t.uuid "mentor_profile_id"
     t.boolean "school_transfer", default: false, null: false
-    t.uuid "appropriate_body_id"
-    t.index ["appropriate_body_id"], name: "index_induction_records_on_appropriate_body_id"
+    t.uuid "customized_appropriate_body_id"
+    t.index ["customized_appropriate_body_id"], name: "index_induction_records_on_customized_appropriate_body_id"
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_induction_records_on_mentor_profile_id"
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
@@ -1168,7 +1168,7 @@ ActiveRecord::Schema.define(version: 2022_11_21_095445) do
               induction_records.induction_status,
               induction_records.mentor_profile_id,
               induction_records.school_transfer,
-              induction_records.appropriate_body_id,
+              induction_records.customized_appropriate_body_id AS appropriate_body_id,
               partnerships.lead_provider_id,
               schools.id AS school_id,
               schools.name AS school_name,

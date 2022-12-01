@@ -76,7 +76,7 @@ module Admin
       @induction_records ||= @participant_profile
         .induction_records
         .eager_load(
-          :appropriate_body,
+          :customized_appropriate_body,
           :preferred_identity,
           :schedule,
           induction_programme: {

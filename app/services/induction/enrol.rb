@@ -14,14 +14,14 @@ class Induction::Enrol < BaseService
         preferred_identity:,
         mentor_profile:,
         school_transfer:,
-        appropriate_body_id:,
+        customized_appropriate_body_id:,
       )
     end
   end
 
 private
 
-  attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile, :school_transfer, :appropriate_body_id
+  attr_reader :participant_profile, :induction_programme, :start_date, :preferred_email, :mentor_profile, :school_transfer, :customized_appropriate_body_id
 
   # preferred_email can be supplied if the participant_profile.participant_identity does not have
   # the required email for the induction i.e. a participant transferring schools might have a new email
@@ -33,7 +33,7 @@ private
     @preferred_email = preferred_email
     @mentor_profile = mentor_profile
     @school_transfer = school_transfer
-    @appropriate_body_id = appropriate_body_id
+    @customized_appropriate_body_id = appropriate_body_id
   end
 
   def preferred_identity

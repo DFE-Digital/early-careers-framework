@@ -17,8 +17,8 @@ module Analytics
         record.school_urn = induction_record.school.urn
         record.schedule_id = induction_record.schedule_id
         record.mentor_id = induction_record.mentor_profile&.participant_identity&.external_identifier if participant_profile.ect?
-        record.appropriate_body_id = induction_record.appropriate_body_id
-        record.appropriate_body_name = induction_record.appropriate_body&.name
+        record.appropriate_body_id = induction_record.customized_appropriate_body_id
+        record.appropriate_body_name = induction_record.customized_appropriate_body&.name
         record.start_date = induction_record.start_date
         record.end_date = induction_record.end_date
         record.induction_status = induction_record.induction_status

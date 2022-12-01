@@ -72,7 +72,7 @@ module Finance
             preferred_identity_id: induction_record.preferred_identity_id,
             induction_programme_id: induction_record.induction_programme_id,
             mentor_profile_id: induction_record.mentor_profile_id,
-            appropriate_body_id: induction_record.appropriate_body_id,
+            customized_appropriate_body_id: induction_record.customized_appropriate_body_id,
             created_at: induction_record.created_at.rfc3339,
             updated_at: induction_record.updated_at.rfc3339,
           }
