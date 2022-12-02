@@ -145,7 +145,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
           eligible_for_funding: true,
           teacher_reference_number_verified: true,
           targeted_delivery_funding_eligibility: true,
-          )
+        )
       end
       let(:npq_course) { application.npq_course }
 
@@ -153,7 +153,7 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         expect(subject.call[:previously_funded]).to be_falsey
         expect(subject.call[:previously_received_targeted_funding_support]).to be_falsey
       end
-end
+    end
 
     context "when trn does not yield any teachers" do
       let(:trn) { "0000000" }
