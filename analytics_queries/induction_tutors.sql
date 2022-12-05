@@ -6,7 +6,7 @@
           u.full_name                        AS tutor_name,
           u.email                            AS tutor_email,
           (pp.id IS NOT NULL)                AS sit_mentor,
-          u.id                               AS sit_mentor_id
+          pi.external_identifier             AS sit_mentor_id
 
     FROM schools s
 
@@ -18,4 +18,5 @@
       ON tp.id = pp.teacher_profile_id
       AND pp.status = 'active'
       AND pp.type = 'ParticipantProfile::Mentor'
+    LEFT OUTER JOIN participant_identities pi on pp.participant_identity_id = pi.id
 ) to '/tmp/exports/induction_tutors.csv' with csv header;
