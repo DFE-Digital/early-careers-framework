@@ -46,7 +46,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
 
         it "displays the eligible fip no partner content" do
           render_inline(component)
@@ -67,7 +67,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -78,7 +78,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous induction" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, previous_induction: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -89,7 +89,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, different_trn: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -100,24 +100,13 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, active_flags: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
         it "displays the checking eligibility content" do
           expect(rendered_content).to have_content I18n.t "schools.participants.status.checking_eligibility.header"
           expect(rendered_content).to have_content I18n.t "schools.participants.status.checking_eligibility.content"
-        end
-      end
-
-      context "when the participant has active flags and ineligible status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :ineligible, active_flags: true, participant_profile: profile) }
-
-        subject! { render_inline(component) }
-
-        it "displays the ineligible flag content" do
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.ineligible_flag.header"
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.ineligible_flag.content"
         end
       end
     end
@@ -127,7 +116,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
 
         it "displays the eligible fip no partner content" do
           render_inline(component)
@@ -148,19 +137,8 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
         end
       end
 
-      context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: profile) }
-
-        subject! { render_inline(component) }
-
-        it "displays the checking eligibility content" do
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.header"
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_fip_no_partner.content"
-        end
-      end
-
       context "when the participant has a previous participation (ERO)" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, previous_participation: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -171,7 +149,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, different_trn: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -183,7 +161,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
 
       context "when the participant is a duplicate profile" do
         let(:profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
-        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile: profile) }
 
         before do
           profile.reload
@@ -209,24 +187,13 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, active_flags: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
         it "displays the checking eligibility content" do
           expect(rendered_content).to have_content I18n.t "schools.participants.status.checking_eligibility.header"
           expect(rendered_content).to have_content I18n.t "schools.participants.status.checking_eligibility.content"
-        end
-      end
-
-      context "when the participant has active flags and ineligible status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :ineligible, active_flags: true, participant_profile: profile) }
-
-        subject! { render_inline(component) }
-
-        it "displays the ineligible flag content" do
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.ineligible_flag.header"
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.ineligible_flag.content"
         end
       end
     end
@@ -239,7 +206,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -250,7 +217,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -261,7 +228,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous induction" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, previous_induction: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -272,7 +239,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, different_trn: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -283,18 +250,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, active_flags: true, participant_profile: profile) }
-
-        subject! { render_inline(component) }
-
-        it "displays the eligible cip content" do
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_cip.header"
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_cip.content"
-        end
-      end
-
-      context "when the participant has active flags and ineligible status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :ineligible, active_flags: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -312,7 +268,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       subject! { render_inline(component) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
 
         it "displays the eligible cip content" do
           expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_cip.header"
@@ -321,7 +277,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -332,7 +288,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous participation (ERO)" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, previous_participation: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -343,7 +299,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, different_trn: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 
@@ -354,18 +310,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, active_flags: true, participant_profile: profile) }
-
-        subject! { render_inline(component) }
-
-        it "displays the eligible cip content" do
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_cip.header"
-          expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_cip.content"
-        end
-      end
-
-      context "when the participant has active flags and ineligible status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :ineligible, active_flags: true, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
 
         subject! { render_inline(component) }
 

@@ -50,7 +50,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
 
     context "when the secondary profile is ineligible because it is a duplicate" do
       let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
 
       it { is_expected.to have_text("Training or eligible for training") }
     end
@@ -64,26 +64,27 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
   end
 
   context "full induction programme participant" do
+    let(:school_cohort) { create(:school_cohort, :fip) }
+
     context "has submitted validation data" do
-      let(:school_cohort) { create(:school_cohort, :fip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
       it { is_expected.to have_text("Training or eligible for training") }
     end
 
     context "was a participant in early roll out" do
-      let(:school_cohort) { create(:school_cohort, :fip) }
       let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_participation: true, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
 
       it { is_expected.to have_text("Training or eligible for training") }
     end
   end
 
   context "core induction programme participant" do
+    let(:school_cohort) { create(:school_cohort, :cip) }
+
     context "has submitted validation data" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile:) }
 
@@ -91,23 +92,20 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     end
 
     context "has a previous induction reason" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_induction: true, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
 
       it { is_expected.to have_text("Not eligible for funded training") }
     end
 
     context "has no QTS reason" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, qts: false, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
       it { is_expected.to have_text("Checking QTS") }
     end
 
     context "has an ineligible status" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
@@ -115,8 +113,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
     end
 
     context "has a withdrawn status" do
-      let(:school_cohort) { create(:school_cohort, :cip) }
-      let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:, user: create(:user, email: "ray.clemence@example.com")) }
+      let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
 
       it { is_expected.to have_text("No longer being trained") }
     end

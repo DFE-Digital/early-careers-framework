@@ -21,8 +21,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :manual_check,
-          no_induction: true,
+          :no_induction_state,
           participant_profile: profile,
         )
         create(
@@ -37,8 +36,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :manual_check,
-          no_induction: true,
+          :no_induction_state,
           participant_profile: profile,
         )
         create(
@@ -103,8 +101,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :ineligible,
-          previous_induction: true,
+          :previous_induction_state,
           participant_profile: profile,
         )
         create(
@@ -119,8 +116,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :ineligible,
-          previous_induction: true,
+          :previous_induction_state,
           participant_profile: profile,
         )
         create(
@@ -135,9 +131,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :ineligible,
-          exempt_from_induction: true,
-          no_induction: true,
+          :exempt_from_induction_state,
           participant_profile: profile,
         )
         create(
@@ -152,8 +146,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :ineligible,
-          previous_induction: true,
+          :previous_induction_state,
           manually_validated: true,
           participant_profile: profile,
         )
@@ -237,8 +230,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :manual_check,
-          qts: false,
+          :no_qts_state,
           participant_profile: profile,
         )
         create(
@@ -253,8 +245,7 @@ RSpec.describe CheckParticipantsInductionAndQtsJob do
       create(:ect_participant_profile).tap do |profile|
         create(
           :ecf_participant_eligibility,
-          :manual_check,
-          qts: false,
+          :no_qts_state,
           participant_profile: profile,
         )
         create(

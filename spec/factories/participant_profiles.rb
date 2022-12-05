@@ -95,13 +95,6 @@ FactoryBot.define do
 
     trait :secondary_profile do
       profile_duplicity { :secondary }
-
-      after(:create) do |profile, _evaluator|
-        if profile.ecf_participant_eligibility.present?
-          profile.ecf_participant_eligibility.determine_status
-          profile.ecf_participant_eligibility.save!
-        end
-      end
     end
   end
 end

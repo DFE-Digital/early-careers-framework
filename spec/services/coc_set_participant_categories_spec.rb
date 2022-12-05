@@ -292,8 +292,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       fip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
       [fip_primary_mentor, fip_secondary_mentor].each do |profile|
-        profile.ecf_participant_eligibility.determine_status
-        profile.ecf_participant_eligibility.save!
+        Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: profile.ecf_participant_eligibility)
       end
     end
 
@@ -325,8 +324,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       cip_mentor_no_qts.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
 
       [cip_primary_mentor, cip_secondary_mentor].each do |profile|
-        profile.ecf_participant_eligibility.determine_status
-        profile.ecf_participant_eligibility.save!
+        Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: profile.ecf_participant_eligibility)
       end
     end
     @ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)

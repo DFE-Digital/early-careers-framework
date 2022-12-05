@@ -4,7 +4,9 @@ class ECFParticipantEligibility < ApplicationRecord
   has_paper_trail
 
   belongs_to :participant_profile, class_name: "ParticipantProfile::ECF", touch: true
-  before_validation :determine_status, on: :create
+
+  validates :status, presence: true
+  validates :reason, presence: true
 
   scope :updated_before, ->(timestamp) { where(updated_at: ..timestamp) }
 
@@ -28,31 +30,7 @@ class ECFParticipantEligibility < ApplicationRecord
   }, _suffix: true
 
   def duplicate_profile?
-    participant_profile&.mentor? && participant_profile&.secondary_profile?
-  end
-
-  def determine_status
-    unless manually_validated?
-      self.status, self.reason = if active_flags?
-                                   %i[manual_check active_flags]
-                                 elsif previous_participation? # ERO mentors
-                                   %i[ineligible previous_participation]
-                                 elsif previous_induction? && participant_profile.ect?
-                                   %i[ineligible previous_induction]
-                                 elsif !qts? && !participant_profile.mentor?
-                                   %i[manual_check no_qts]
-                                 elsif different_trn?
-                                   %i[manual_check different_trn]
-                                 elsif duplicate_profile?
-                                   %i[ineligible duplicate_profile]
-                                 elsif exempt_from_induction? && participant_profile.ect?
-                                   %i[ineligible exempt_from_induction]
-                                 elsif no_induction? && participant_profile.ect?
-                                   %i[manual_check no_induction]
-                                 else
-                                   %i[eligible none]
-                                 end
-    end
+    participant_profile.mentor? && participant_profile.secondary_profile?
   end
 
   def ineligible_but_not_duplicated_or_previously_participated?

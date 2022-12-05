@@ -151,8 +151,8 @@ private
       @participant_eligibility.assign_attributes(eligibility_options)
     end
 
-    @participant_eligibility.determine_status
-    @participant_eligibility.save!
+    Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: @participant_eligibility)
+
     Analytics::UpsertECFParticipantProfileJob.perform_later(participant_profile:)
   end
 

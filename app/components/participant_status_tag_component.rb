@@ -24,9 +24,9 @@ private
     return { text: "Eligible: Mentor at main school", colour: "green" } if eligible? && profile.primary_profile?
     return { text: "Eligible: Mentor at additional school", colour: "green" } if ineligible? && mentor_with_duplicate_profile?
 
+    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts?
     return { text: "DfE checking eligibility", colour: "orange" } if profile.manual_check_needed?
     return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligible?
-    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts? && ineligible?
     return { text: "Eligible to start: ERO", colour: "green" } if ineligible? && mentor_was_in_early_rollout? && on_fip?
     return { text: "Eligible to start", colour: "green" } if ineligible? && mentor_was_in_early_rollout?
     return { text: "Not eligible", colour: "red" } if ineligible?
