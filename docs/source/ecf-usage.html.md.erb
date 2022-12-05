@@ -1,0 +1,53 @@
+---
+title: ECF usage
+weight: 2
+---
+
+# ECF Usage
+
+The scenarios on this page show example request URLs and payloads clients can use to take actions via this API. The
+examples are only concerned with business logic and are missing details necessary for real-world usage. For example,
+authentication is completely left out.
+
+## Continuing the ECF registration process
+
+This scenario begins when an ECF participant has been added to the service by a school induction tutor via the manage
+training for early career teachers service.
+
+### 1. Provider retrieves ECF participant records
+
+Get the ECF participant records.
+
+```
+GET /api/v1/participants/ecf
+```
+
+This will return [multiple ECF participant records](/api-reference/reference-v1#schema-multipleecfparticipantsresponse).
+
+See [retrieve multiple ECF participants endpoint](/api-reference/reference-v1#api-v1-participants-ecf-get).
+
+### ECF Participant enters registration details on register for early career framework service
+
+A participant is invited to continue their registration by validating their TRN and contact details.
+
+When the participant has completed this step the ECF participant record will show;
+
+* whether the email address has been validated
+* whether the TRN is valid
+* whether the participant has achieved QTS status
+* whether the participant is eligible for funding
+
+### 3. Provider refreshes ECF participant records
+
+Get updated ECF participant records.
+
+GET /api/v1/participants/ecf?filter[updated_since]=2021-05-13T11:21:55Z
+
+This will return [multiple ECF participant records](/api-reference/reference-v1#schema-multipleecfparticipantsresponse)
+with the updates to the record included.
+
+See [retrieve multiple participants](/api-reference/reference-v1#api-v1-participants-ecf-get) endpoint.
+
+## Notifying that an ECF participant is taking a break from their course
+
+## Notifying that an ECF participant is resuming their course
