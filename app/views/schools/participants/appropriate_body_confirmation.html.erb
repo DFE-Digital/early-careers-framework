@@ -1,0 +1,15 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <%= govuk_panel title_text: "#{@profile.full_name}'s appropriate body has been updated", classes: "govuk-!-margin-bottom-8" %>
+
+    <ul class="govuk-list">
+      <li><%= govuk_link_to "Return to their details",
+                            schools_participant_path(id: @profile),
+                            class: "govuk-link--no-visited-state" %></li>
+      <li><%= govuk_link_to "Return to your ECTs and mentors",
+                            schools_participants_path,
+                            class: "govuk-link--no-visited-state" %></li>
+    </ul>
+  </div>
+</div>

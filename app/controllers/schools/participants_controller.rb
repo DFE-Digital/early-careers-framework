@@ -95,6 +95,8 @@ class Schools::ParticipantsController < Schools::BaseController
     end
   end
 
+  def appropriate_body_confirmation; end
+
   def remove; end
 
   def destroy
@@ -137,15 +139,17 @@ private
   end
 
   def start_appropriate_body_selection
-    super from_path: schools_participant_path(id: @profile.id),
+    super action_name: @induction_record.appropriate_body_id.present? ? :change : :add,
+          from_path: schools_participant_path(id: @profile.id),
           submit_action: :save_appropriate_body,
           school_name: @profile.user.full_name,
           ask_appointed: false
   end
 
   def save_appropriate_body
-    @induction_record.update!(appropriate_body_id: @appropriate_body_form.body_id)
-    redirect_to appropriate_body_from_path
+    @induction_record.update!(appropriate_body_id: appropriate_body_form.body_id)
+
+    redirect_to url_for(action: :appropriate_body_confirmation)
   end
 
   def participant_has_appropriate_body?

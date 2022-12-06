@@ -197,6 +197,7 @@ RSpec.describe "Update participants details", js: true do
       then_i_am_taken_to_the_appropriate_body_type_page
 
       when_i_choose_an_appropriate_body
+      click_on "Return to their details"
       then_i_see_appropriate_body(appropriate_body)
       and_i_can_change_the_appropriate_body
     end
