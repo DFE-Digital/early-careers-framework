@@ -3,14 +3,18 @@
 
   .govuk-form-group {
     display: inline-block;
-    margin-right: 20px;
     margin-bottom: 0;
+    margin-right: 8px;
+
+    @include govuk-media-query($until: desktop) {
+      width: 100% !important;
+    }
   }
 
   select {
     @extend .govuk-\!-width-full; // hack as form builder does not seem to support injecting of classes where needed
 
-    @include govuk-media-query($until: tablet) {
+    @include govuk-media-query($until: desktop) {
       margin-bottom: 15px;
     }
   }
