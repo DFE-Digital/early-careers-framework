@@ -12,6 +12,7 @@ module NPQ
     def call
       {
         previously_funded: previously_funded?,
+        previously_received_targeted_funding_support: previously_received_targeted_funding_support?,
       }
     end
 
@@ -21,7 +22,7 @@ module NPQ
       @npq_course ||= NPQCourse.find_by!(identifier: npq_course_identifier)
     end
 
-    def all_npq_courses
+    def npq_course_and_rebranded_alternatives
       npq_course.rebranded_alternative_courses
     end
 
@@ -33,14 +34,26 @@ module NPQ
       @teacher_profiles ||= TeacherProfile.where(trn:)
     end
 
-    def previously_funded?
-      users.flat_map.any? do |user|
-        user.npq_applications
-        .where(npq_course: all_npq_courses)
-        .where(eligible_for_funding: true)
-        .accepted
-        .any?
+    def accepted_applications
+      @accepted_applications ||= begin
+        application_ids = users.flat_map do |user|
+          user.npq_applications
+              .where(npq_course: npq_course_and_rebranded_alternatives)
+              .where(eligible_for_funding: true)
+              .accepted
+              .pluck(:id)
+        end
+
+        NPQApplication.where(id: application_ids)
       end
+    end
+
+    def previously_funded?
+      accepted_applications.any?
+    end
+
+    def previously_received_targeted_funding_support?
+      accepted_applications.with_targeted_delivery_funding_eligibility.any?
     end
   end
 end
