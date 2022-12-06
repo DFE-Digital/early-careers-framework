@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Participants::DetermineEligibilityStatus do
   let(:participant_profile) { create(:ect_participant_profile) }
-  let(:eligibility) { create(:ecf_participant_eligibility, participant_profile:, active_flags: false, previous_participation: false, previous_induction: false, qts: true) }
+  let(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
   let(:save_record) { true }
   let(:force_validation) { false }
   subject(:service_call) { described_class.call(ecf_participant_eligibility: eligibility, save_record:, force_validation:) }
@@ -35,6 +35,20 @@ RSpec.describe Participants::DetermineEligibilityStatus do
         it "clears the manually_validated flag" do
           expect(eligibility).not_to be_manually_validated
         end
+      end
+    end
+
+    context "when save_record is false" do
+      let(:save_record) { false }
+
+      before do
+        eligibility.active_flags = true
+        service_call
+      end
+
+      it "does not persist the changes" do
+        expect(eligibility).to be_manual_check_status
+        expect(eligibility.reload).to be_eligible_status
       end
     end
 

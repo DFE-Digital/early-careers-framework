@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+##
+# Determine the +status+ and +reason+ for a participant's +ECFParticipantEligibility+ record
+# Uses the flags stored on the +ECFParticipantEligibility+ and related info from the
+# associated +ParticipantProfile+
+# If the +manually_validated+ attribute is set then the eligibility will not be re-evaluated. Use the <tt>force_validation: true</tt>
+# param to override this behaviour.
+#
+# == Parameters
+# @param :ecf_participant_eligibility [ECFParticipantEligibility] the record to determine eligibilty for
+# @param :save_record [Boolean] whether to save the record after setting the +status+ and +reason+ attributes. Default is +true+
+# @param :force_validation [Boolean] override the +manually_validated+ guard flag if set. Default is +false+
+#
+# == Usage:
+# <tt>Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: eligibility_record)</tt>
+#
 class Participants::DetermineEligibilityStatus < BaseService
   delegate :active_flags?,
            :previous_participation?,
