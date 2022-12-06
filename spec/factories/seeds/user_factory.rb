@@ -14,6 +14,8 @@ FactoryBot.define do
       teacher_profile { build(:seed_teacher_profile) }
     end
 
+    trait(:valid) {}
+
     after(:build) { |u| Rails.logger.debug("seeded school #{u.full_name}") }
   end
 end

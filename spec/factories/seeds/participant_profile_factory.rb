@@ -8,10 +8,6 @@ FactoryBot.define do
 
     schedule { Finance::Schedule.first }
 
-    trait :with_user do
-      user { build(:seed_user) }
-    end
-
     trait :with_teacher_profile do
       teacher_profile { build(:seed_teacher_profile) }
     end

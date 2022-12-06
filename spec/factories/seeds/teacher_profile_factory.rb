@@ -13,11 +13,19 @@ FactoryBot.define do
     end
 
     trait :with_user do
-      user { build(:seed_user) }
+      association(:user, factory: :seed_user)
+    end
+
+    trait :valid do
+      with_user
     end
 
     after(:build) do |tp|
-      Rails.logger.debug("seeded teacher profile for user #{tp.user.full_name} with TRN #{tp.trn}")
+      if tp.user.present?
+        Rails.logger.debug("seeded teacher profile for user #{tp.user.full_name} with TRN #{tp.trn}")
+      else
+        Rails.logger.debug("seeded minimal teacher profile")
+      end
     end
   end
 end
