@@ -4,9 +4,8 @@ class Induction::SetSchoolCohortAppropriateBody < BaseService
   def call
     ActiveRecord::Base.transaction do
       id = appropriate_body_id unless appropriate_body_appointed == false
-      unknown = appropriate_body_appointed == false
       set_induction_records_matching_school_ab(appropriate_body_id: id)
-      school_cohort.update!(appropriate_body_unknown: unknown, appropriate_body_id: id)
+      school_cohort.update!(appropriate_body_id: id)
     end
   end
 

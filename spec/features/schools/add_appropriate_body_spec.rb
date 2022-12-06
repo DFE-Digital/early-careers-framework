@@ -8,11 +8,11 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true 
   end
 
   context "When appropriate body setup was not done for the cohort" do
-    scenario "The appropriate body cannot be added" do
+    scenario "The appropriate body can be added" do
       given_there_is_a_school_and_an_induction_coordinator
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
-      and_i_cant_add_appropriate_body
+      and_i_can_add_appropriate_body
     end
   end
 
@@ -21,7 +21,6 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true 
 
     scenario "The appropriate body can be added and set for all ECTs" do
       given_there_is_a_school_and_an_induction_coordinator
-      and_appropriate_body_is_not_appointed
       and_i_have_added_an_ect
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
@@ -40,12 +39,12 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true 
   context "When appropriate body was appointed during cohort setup" do
     let!(:appropriate_body) { create(:appropriate_body_national_organisation) }
 
-    scenario "The appropriate body can't be changed" do
+    scenario "The appropriate body can be changed" do
       given_there_is_a_school_and_an_induction_coordinator
       and_appropriate_body_is_appointed(appropriate_body)
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_am_on_the_manage_your_training_page
-      and_i_cant_add_appropriate_body
+      and_i_can_change_appropriate_body
     end
   end
 
@@ -81,16 +80,16 @@ private
     expect(page).to have_content("Manage your training")
   end
 
-  def and_i_cant_add_appropriate_body
-    expect(page).to_not have_summary_row_action("Appropriate body", "Add")
+  def and_i_can_add_appropriate_body
+    expect(page).to have_summary_row_action("Appropriate body", "Add")
   end
 
-  def and_appropriate_body_is_not_appointed
-    @school_cohort.update!(appropriate_body_unknown: true)
+  def and_i_can_change_appropriate_body
+    expect(page).to have_summary_row_action("Appropriate body", "Change")
   end
 
   def and_appropriate_body_is_appointed(appropriate_body)
-    @school_cohort.update!(appropriate_body_unknown: false, appropriate_body:)
+    @school_cohort.update!(appropriate_body:)
   end
 
   def when_i_choose_appropriate_body(appropriate_body)

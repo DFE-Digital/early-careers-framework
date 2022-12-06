@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_01_161925) do
+ActiveRecord::Schema.define(version: 2022_12_06_192349) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -860,7 +860,6 @@ ActiveRecord::Schema.define(version: 2022_12_01_161925) do
     t.boolean "opt_out_of_updates", default: false, null: false
     t.uuid "default_induction_programme_id"
     t.uuid "appropriate_body_id"
-    t.boolean "appropriate_body_unknown", default: false, null: false
     t.index ["appropriate_body_id"], name: "index_school_cohorts_on_appropriate_body_id"
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
