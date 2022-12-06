@@ -9,7 +9,7 @@ RSpec.describe ManuallyUpdateParticipantEligibility do
     let(:school_cohort) { create(:school_cohort, school:) }
     let(:teacher_profile) { create(:teacher_profile, school:, trn: nil) }
     let(:participant_profile) { create(:ect_participant_profile, school_cohort:, teacher_profile:) }
-    let!(:participant_eligibility) { create(:ecf_participant_eligibility, qts: false, participant_profile:) }
+    let!(:participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
     it "overrides the normal status determination" do
       service.call(participant_profile:, status: :eligible, reason: :none)

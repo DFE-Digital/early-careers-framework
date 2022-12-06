@@ -44,7 +44,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
 
     context "when the primary profile is eligible" do
       let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
       before do
         participant_profile.reload
@@ -56,7 +56,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
 
     context "when the secondary profile is ineligible because it is a duplicate" do
       let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
 
       before do
         participant_profile.reload
@@ -71,7 +71,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :fip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
       before { render_inline(component) }
 
@@ -81,7 +81,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
     context "was a participant in early roll out" do
       let(:school_cohort) { create(:school_cohort, :fip) }
       let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_participation: true, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
 
       before { render_inline(component) }
 
@@ -103,7 +103,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
     context "has a previous induction reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, previous_induction: true, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
 
       before { render_inline(component) }
 
@@ -113,7 +113,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
     context "has no QTS reason" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, qts: false, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
       before { render_inline(component) }
 
@@ -132,8 +132,8 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
 
     context "has a withdrawn status" do
       let(:school_cohort) { create(:school_cohort, :fip) }
-      let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:, user: create(:user, email: "ray.clemence@example.com")) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :eligible, participant_profile:) }
+      let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
       let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
       let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
 

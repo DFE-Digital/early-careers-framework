@@ -20,14 +20,14 @@ class ParticipantProfileStatus
     elsif ineligible? && mentor_with_duplicate_profile?
       "training_or_eligible_for_training"
 
+    elsif participant_has_no_qts?
+      "checking_qts"
+
     elsif participant_profile.manual_check_needed?
       "dfe_checking_eligibility"
 
     elsif nqt_plus_one? && ineligible?
       "not_eligible_for_funded_training"
-
-    elsif participant_has_no_qts? && ineligible?
-      "checking_qts"
 
     elsif ineligible? && mentor_was_in_early_rollout? && on_fip?
       "training_or_eligible_for_training"

@@ -10,36 +10,62 @@ FactoryBot.define do
     previous_induction { false }
     no_induction { false }
 
-    transient do
-      reason {}
-    end
-
-    after(:create) do |record, evaluator|
-      record.update!(reason: evaluator.reason) if evaluator.reason
-    end
-
-    trait :eligible do
-      after(:create) do |record, _evaluator|
-        record.eligible_status!
-      end
-    end
+    status { :eligible }
+    reason { :none }
 
     trait :ineligible do
-      after(:create) do |record, _evaluator|
-        record.ineligible_status!
-      end
-    end
-
-    trait :matched do
-      after(:create) do |record, _evaluator|
-        record.matched_status!
-      end
+      status { :ineligible }
     end
 
     trait :manual_check do
-      after(:create) do |record, _evaluator|
-        record.manual_check_status!
-      end
+      status { :manual_check }
+    end
+
+    trait :no_induction_state do
+      no_induction { true }
+      manual_check
+      reason { :no_induction }
+    end
+
+    trait :no_qts_state do
+      qts { false }
+      manual_check
+      reason { :no_qts }
+    end
+
+    trait :active_flags_state do
+      active_flags { true }
+      manual_check
+      reason { :active_flags }
+    end
+
+    trait :different_trn_state do
+      different_trn { true }
+      manual_check
+      reason { :different_trn }
+    end
+
+    trait :previous_induction_state do
+      previous_induction { true }
+      ineligible
+      reason { :previous_induction }
+    end
+
+    trait :previous_participation_state do
+      previous_participation { true }
+      ineligible
+      reason { :previous_participation }
+    end
+
+    trait :secondary_profile_state do
+      ineligible
+      reason { :duplicate_profile }
+    end
+
+    trait :exempt_from_induction_state do
+      exempt_from_induction { true }
+      ineligible
+      reason { :exempt_from_induction }
     end
   end
 end

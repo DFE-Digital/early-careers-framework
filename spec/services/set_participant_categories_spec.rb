@@ -27,8 +27,7 @@ RSpec.describe SetParticipantCategories do
 
     before do
       [primary_mentor, secondary_mentor].each do |profile|
-        profile.ecf_participant_eligibility.determine_status
-        profile.ecf_participant_eligibility.save!
+        Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: profile.ecf_participant_eligibility)
       end
     end
 

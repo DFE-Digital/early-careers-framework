@@ -27,6 +27,7 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       let(:eligibility_record) do
         create(
           :ecf_participant_eligibility,
+          :secondary_profile_state,
           participant_profile:,
         )
       end
@@ -41,8 +42,8 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       let(:eligibility_record) do
         create(
           :ecf_participant_eligibility,
+          :previous_participation_state,
           participant_profile:,
-          previous_participation: true,
         )
       end
       it { is_expected.to eq :previous_participation }
@@ -53,8 +54,8 @@ RSpec.describe Participants::ParticipantValidationForm, type: :model do
       let(:eligibility_record) do
         create(
           :ecf_participant_eligibility,
+          :exempt_from_induction_state,
           participant_profile:,
-          exempt_from_induction: true,
         )
       end
       it { is_expected.to eq :exempt_from_induction }
