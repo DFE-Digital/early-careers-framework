@@ -1,0 +1,9 @@
+description: "A list of NPQ outcomes"
+type: object
+required:
+  - data
+properties:
+  data:
+    type: array
+    items:
+      $ref: "#/components/schemas/NPQOutcome"
