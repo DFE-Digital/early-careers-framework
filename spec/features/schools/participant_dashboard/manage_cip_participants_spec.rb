@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.xdescribe "Manage CIP participants", js: true, with_feature_flags: { eligibility_notifications: "active" } do
   include ManageTrainingSteps
 
   before do

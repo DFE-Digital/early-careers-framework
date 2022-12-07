@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Incentives::UpdateSchoolParticipants do
+RSpec.xdescribe Incentives::UpdateSchoolParticipants do
   describe "#call" do
     let(:school) { create(:school) }
     let(:school_cohort_21) { create :school_cohort, :fip, cohort: create(:cohort, start_year: 2021), school: }

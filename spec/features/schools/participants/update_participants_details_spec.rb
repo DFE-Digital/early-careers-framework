@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Update participants details", js: true do
+RSpec.xdescribe "Update participants details", js: true do
   include ManageTrainingSteps
 
   before do

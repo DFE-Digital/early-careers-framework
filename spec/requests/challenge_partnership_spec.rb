@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Challenging a partnership", type: :request do
+RSpec.xdescribe "Challenging a partnership", type: :request do
   let(:partnership_notification_email) { create :partnership_notification_email, partnership: }
   let(:partnership) { create :partnership, :in_challenge_window }
   let(:induction_coordinator) { create(:user, :induction_coordinator, schools: [partnership.school]) }

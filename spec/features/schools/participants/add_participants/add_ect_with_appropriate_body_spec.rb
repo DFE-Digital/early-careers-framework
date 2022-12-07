@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
+RSpec.xdescribe "Adding ECT with appropriate body", type: :feature, js: true do
   let!(:cohort) { create :cohort, start_year: 2021 }
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }

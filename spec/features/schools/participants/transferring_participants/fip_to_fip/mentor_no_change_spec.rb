@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true do
+RSpec.xdescribe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true do
   context "Transferring a Mentor to a school" do
     context "Mentor has matching lead provider and delivery partner" do
       before do

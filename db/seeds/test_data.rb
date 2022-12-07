@@ -7,7 +7,10 @@ require "active_support/testing/time_helpers"
 include ActiveSupport::Testing::TimeHelpers
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
+puts "creating cohort 2021"
 Cohort.find_or_create_by!(start_year: 2021)
+puts "creating cohort 2022"
+Cohort.find_or_create_by!(start_year: 2022)
 cohort_2023 = Cohort.find_or_create_by!(start_year: 2023)
 
 local_authority = LocalAuthority.find_or_create_by!(name: "ZZ Test Local Authority", code: "ZZTEST")
