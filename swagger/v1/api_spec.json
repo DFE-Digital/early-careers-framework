@@ -882,7 +882,7 @@
     },
     "/api/v1/participants/npq/outcomes": {
       "get": {
-        "summary": "List all participant declarations",
+        "summary": "List all participant NPQ outcomes",
         "operationId": "participant_outcomes",
         "tags": [
           "participants outcomes"
@@ -905,7 +905,7 @@
             "explode": true,
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant declarations."
+            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
           }
         ],
         "responses": {

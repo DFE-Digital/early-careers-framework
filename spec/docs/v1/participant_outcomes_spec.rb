@@ -12,7 +12,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
   let!(:outcome) { create :participant_outcome, participant_declaration: declaration }
 
   path "/api/v1/participants/npq/outcomes" do
-    get "List all participant declarations" do
+    get "List all participant NPQ outcomes" do
       operationId :participant_outcomes
       tags "participants outcomes"
       security [bearerAuth: []]
@@ -27,7 +27,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
                 explode: true,
                 required: false,
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
-                description: "Pagination options to navigate through the list of participant declarations."
+                description: "Pagination options to navigate through the list of participant NPQ outcomes."
 
       response "200", "A list of participant outcomes" do
         schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })
