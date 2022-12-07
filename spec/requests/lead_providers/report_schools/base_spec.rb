@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Lead Provider school reporting", type: :request, with_feature_flags: { multiple_cohorts: "active" } do
+RSpec.describe "Lead Provider school reporting", type: :request do
   let(:user) { create(:user, :lead_provider) }
   let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:cohort_2022) { Cohort.next || create(:cohort, :next) }

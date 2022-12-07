@@ -234,11 +234,7 @@ module Schools
     end
 
     def show_mentor?
-      if FeatureFlag.active?(:multiple_cohorts)
-        participant_profile.ect? && @school_cohort.school.school_mentors.any?
-      else
-        participant_profile.ect? && @school_cohort.active_mentors.any?
-      end
+      participant_profile.ect? && @school_cohort.school.school_mentors.any?
     end
 
     def transferable_to_cohort_chosen?

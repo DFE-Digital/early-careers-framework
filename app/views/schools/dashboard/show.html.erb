@@ -9,120 +9,19 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Manage your training</h1>
 
-    <% if FeatureFlag.active?(:multiple_cohorts) %>
-      <%= govuk_tabs(title: "Cohorts") do |component| %>
-        <% if set_up_new_cohort? %>
-          <% component.tab(label: TabLabelDecorator.new(Cohort.active_registration_cohort.description)) do %>
-            <%= render partial: "setup_school_cohort" %>
-          <% end %>
-        <% end %>
-        <% @school_cohorts.each do |school_cohort| %>
-          <% component.tab(label: TabLabelDecorator.new(school_cohort.description)) do %>
-            <% if school_cohort.induction_programme_choice == "no_early_career_teachers" %>
-              <%= render partial: "no_ects_cohort_details", locals: { school_cohort: school_cohort } %>
-            <% else %>
-              <%= render partial: "school_cohort_details", locals: { school_cohort: school_cohort } %>
-            <% end %>
-          <% end %>
+    <%= govuk_tabs(title: "Cohorts") do |component| %>
+      <% if set_up_new_cohort? %>
+        <% component.tab(label: TabLabelDecorator.new(Cohort.active_registration_cohort.description)) do %>
+          <%= render partial: "setup_school_cohort" %>
         <% end %>
       <% end %>
-    <% else %>
       <% @school_cohorts.each do |school_cohort| %>
-        <% if school_cohort.core_induction_programme? || school_cohort.full_induction_programme? %>
-          <% if school_cohort.active_ecf_participant_profiles.any? || school_cohort.active_induction_records.any? %>
-            <p class="govuk-body govuk-!-margin-bottom-5">
-            <%= govuk_link_to 'View your early career teacher and mentor details', schools_participants_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
-            </p>
+        <% component.tab(label: TabLabelDecorator.new(school_cohort.description)) do %>
+          <% if school_cohort.induction_programme_choice == "no_early_career_teachers" %>
+            <%= render partial: "no_ects_cohort_details", locals: { school_cohort: school_cohort } %>
           <% else %>
-            <p class="govuk-body govuk-!-margin-bottom-5">
-            <%= govuk_link_to 'Add your early career teacher and mentor details', roles_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %>
-            </p>
+            <%= render partial: "school_cohort_details", locals: { school_cohort: school_cohort } %>
           <% end %>
-        <% end %>
-
-        <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Cohort year</dt>
-            <dd class="govuk-summary-list__value"><%= school_cohort.cohort.start_year %></dd>
-            <dd class="govuk-summary-list__actions"></dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Induction tutor</dt>
-            <dd class="govuk-summary-list__value"><%= @school.induction_coordinators.first.full_name %></dd>
-            <dd class="govuk-summary-list__actions"><%= govuk_link_to name_schools_change_sit_path do %>
-                Change <span class="govuk-visually-hidden">Induction tutor</span>
-              <% end %>
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Programme</dt>
-            <dd class="govuk-summary-list__value"><%= t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes]) %></dd>
-            <dd class="govuk-summary-list__actions">
-              <% if school_cohort.can_change_programme? %>
-                <%= govuk_link_to change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year) do %>
-                  Change <span class="govuk-visually-hidden">induction programme choice</span>
-                <% end %>
-              <% else %>
-                <%= govuk_link_to "View details", schools_cohort_path(cohort_id: school_cohort.cohort.start_year) %>
-              <% end %>
-            </dd>
-          </div>
-          <% if school_cohort.core_induction_programme? %>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Materials</dt>
-              <dd class="govuk-summary-list__value"><%= school_cohort.core_induction_programme&.name %></dd>
-              <% if school_cohort.core_induction_programme_id? %>
-                <dd class="govuk-summary-list__actions"><%= govuk_link_to 'Change', schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></dd>
-              <% else %>
-                <dd class="govuk-summary-list__actions"><%= govuk_link_to 'Add', info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></dd>
-              <% end %>
-            </div>
-          <% elsif school_cohort.full_induction_programme? %>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">Training provider</dt>
-              <dd class="govuk-summary-list__value"><%= school_cohort.lead_provider&.name %></dd>
-              <% if school_cohort.lead_provider.present? %>
-                <dd class="govuk-summary-list__actions"></dd>
-              <% else %>
-                <dd class="govuk-summary-list__actions"><%= govuk_link_to 'Sign up', schools_partnerships_path(cohort_id: school_cohort.cohort.start_year) %></dd>
-              <% end %>
-            </div>
-            <% if school_cohort.lead_provider.present? %>
-              <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Delivery partner</dt>
-                <dd class="govuk-summary-list__value"><%= school_cohort.delivery_partner&.name %></dd>
-                <dd class="govuk-summary-list__value"></dd>
-              </div>
-            <% end %>
-          <% end %>
-        </dl>
-
-        <% if school_cohort.school_funded_fip? %>
-          <p>You do not need to add information about your ECTs and mentors to this service.</p>
-        <% end %>
-
-        <% if @partnership %>
-          <% if @report_mistake_link.present? %>
-            <p class="govuk-body">
-            If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", @report_mistake_link %>.
-            </p>
-            <p class="govuk-body">
-            This link will expire on <%= @mistake_link_expiry %>.
-            </p>
-          <% else %>
-            <p class="govuk-body">
-            If this does not look right, contact: <%= render MailToSupportComponent.new %>
-            </p>
-          <% end %>
-        <% end %>
-
-        <% if school_cohort.core_induction_programme.present? %>
-          <p class="govuk-body">Use these handbooks and training materials to help you plan your school’s
-          <%= govuk_link_to school_cohort.core_induction_programme.name, induction_tutor_materials_path(
-            provider: school_cohort.core_induction_programme.name.downcase.tr(" ", "-"), year: "year-one"
-          ) %>
-        training programme.
-          </p>
         <% end %>
       <% end %>
     <% end %>

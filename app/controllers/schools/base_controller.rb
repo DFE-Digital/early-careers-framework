@@ -27,10 +27,6 @@ private
     Cohort.find_by(start_year: params[:cohort_id]) if params[:cohort_id].present?
   end
 
-  def multiple_cohorts?
-    FeatureFlag.active?(:multiple_cohorts)
-  end
-
   def set_school_cohort(cohort: active_cohort)
     @cohort = cohort
     @school = active_school
@@ -40,6 +36,6 @@ private
   end
 
   def start_year
-    multiple_cohorts? ? Cohort.active_registration_cohort.start_year : Cohort.current.start_year
+    Cohort.active_registration_cohort.start_year
   end
 end

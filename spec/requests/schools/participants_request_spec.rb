@@ -96,7 +96,7 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
         expect(assigns(:mentor_profile)).to eq mentor_profile_2
       end
 
-      context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
+      context "when multiple cohorts are active" do
         context "when there are mentors in the pool" do
           it "mentors_added is true" do
             get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"

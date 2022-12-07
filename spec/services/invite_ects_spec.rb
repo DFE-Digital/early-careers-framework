@@ -12,7 +12,6 @@ RSpec.describe InviteEcts do
   let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
 
   before(:all) do
-    FeatureFlag.activate(:multiple_cohorts)
     RSpec::Mocks.configuration.verify_partial_doubles = false
   end
 
@@ -21,7 +20,6 @@ RSpec.describe InviteEcts do
   end
 
   after(:all) do
-    FeatureFlag.deactivate(:multiple_cohorts)
     RSpec::Mocks.configuration.verify_partial_doubles = true
   end
 

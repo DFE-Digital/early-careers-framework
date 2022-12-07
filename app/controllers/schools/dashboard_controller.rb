@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Schools::DashboardController < Schools::BaseController
-  before_action :set_school_cohorts, only: :show, unless: -> { FeatureFlag.active?(:multiple_cohorts) }
-  before_action :set_multi_cohorts, only: :show, if: -> { FeatureFlag.active?(:multiple_cohorts) }
+  before_action :set_school_cohorts, only: :show
   skip_after_action :verify_authorized
   skip_after_action :verify_policy_scoped
 
@@ -27,18 +26,6 @@ class Schools::DashboardController < Schools::BaseController
 private
 
   def set_school_cohorts
-    @school = active_school
-
-    @cohort_list = [Cohort.current]
-    @school_cohorts = @school.school_cohorts.where(cohort: @cohort_list)
-
-    # This will need to be updated when more than one cohort is supported
-    unless @school_cohorts[0]
-      redirect_to schools_choose_programme_path(cohort_id: Cohort.current.start_year)
-    end
-  end
-
-  def set_multi_cohorts
     @school = active_school
     @school_cohorts = @school.school_cohorts.dashboard_cohorts
     if @school_cohorts.empty?

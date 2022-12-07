@@ -27,7 +27,7 @@ RSpec.describe Cohort, type: :model do
       expect(Cohort.next).to eq cohort_2021
     end
 
-    context "when multiple cohorts active", with_feature_flags: { multiple_cohorts: "active" } do
+    context "when multiple cohorts active" do
       it "returns the 2022 cohort" do
         expect(Cohort.next).to eq cohort_2022
       end

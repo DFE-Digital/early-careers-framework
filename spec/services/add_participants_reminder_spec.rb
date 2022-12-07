@@ -15,7 +15,6 @@ RSpec.describe AddParticipantsReminder do
   let!(:induction_coordinator_profile_school_two) { create(:induction_coordinator_profile, schools: [school_two]) }
 
   before(:all) do
-    FeatureFlag.activate(:multiple_cohorts)
     RSpec::Mocks.configuration.verify_partial_doubles = false
   end
 
@@ -24,7 +23,6 @@ RSpec.describe AddParticipantsReminder do
   end
 
   after(:all) do
-    FeatureFlag.deactivate(:multiple_cohorts)
     RSpec::Mocks.configuration.verify_partial_doubles = true
   end
 

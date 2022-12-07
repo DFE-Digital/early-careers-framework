@@ -28,7 +28,7 @@ RSpec.feature "School Tutors should be able to manage schools", type: :feature, 
     and_the_page_should_be_accessible
   end
 
-  context "Multiple cohorts when the new cohort is open for registrations", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do
+  context "Multiple cohorts when the new cohort is open for registrations", travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do
     before do
       given_there_is_a_school_that_has_chosen_cip_for_2021
       and_cohort_2022_is_created

@@ -13,14 +13,8 @@
             <%= f.govuk_radio_buttons_fieldset :mentor_id,
                 legend: { text: title, tag: 'h1', size: 'xl' } do %>
 
-                <% if FeatureFlag.active?(:multiple_cohorts) %>
                 <% @school_cohort.school.mentors.each do |mentor| %>
-                    <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name } %>
-                <% end %>
-                <% else %>
-                <% @school_cohort.current_induction_records.mentors.each do |mentor| %>
-                    <%= f.govuk_radio_button :mentor_id, mentor.user.id, label: { text: mentor.user.full_name } %>
-                <% end %>
+                  <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name } %>
                 <% end %>
 
                 <%= f.govuk_radio_divider %>

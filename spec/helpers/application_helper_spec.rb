@@ -33,7 +33,7 @@ RSpec.describe ApplicationHelper, type: :helper do
         expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
       end
 
-      context "when a new registration cohort is active", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.now + 3.years do
+      context "when a new registration cohort is active", travel_to: Time.zone.now + 3.years do
         let(:future_cohort) { create(:cohort, start_year: Time.zone.now.year, registration_start_date: Time.zone.now - 1.day) }
 
         before do
