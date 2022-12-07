@@ -507,6 +507,7 @@ Rails.application.routes.draw do
 
           scope module: :cohorts, path: "appropriate-body" do
             get "add", to: "appropriate_body#add", as: :add_appropriate_body
+            get "change", to: "appropriate_body#change", as: :change_appropriate_body
             appropriate_body_selection_routes "appropriate_body"
             get "confirm", to: "appropriate_body#confirm"
           end

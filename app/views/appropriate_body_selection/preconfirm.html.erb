@@ -1,0 +1,24 @@
+<% title = "Confirm you want to #{appropriate_body_action_name} your appropriate body" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: appropriate_body_from_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= appropriate_body_school_name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <p class="govuk-body">
+      This change will only apply to ECTs and mentors who have started or will start
+      their training in the <%= @school_cohort.description %> academic year.
+    </p>
+
+    <p class="govuk-body">
+      If your school works with more than one appropriate body, this is the one who
+      will be appointed for the majority of your ECTs.
+    </p>
+
+    <%= form_for appropriate_body_form, url: { action: preconfirm_next_action }, method: :get do |f| %>
+      <%= f.govuk_submit "Confirm and continue" %>
+    <% end %>
+  </div>
+</div>
