@@ -2,7 +2,7 @@
 
 PaperTrail.enabled = false
 
-seed_path = %w[db seeds]
+seed_path = %w[db legacy_seeds]
 load Rails.root.join(*seed_path, "initial_seed.rb").to_s
 load Rails.root.join(*seed_path, "schedules.rb").to_s
 
