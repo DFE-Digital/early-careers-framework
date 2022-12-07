@@ -932,6 +932,58 @@
         }
       }
     },
+    "/api/v2/participants/npq/outcomes": {
+      "get": {
+        "summary": "List all participant declarations",
+        "operationId": "participant_outcomes",
+        "tags": [
+          "participants outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant declarations."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v2/participants/ecf": {
       "get": {
         "summary": "Retrieve multiple participants, replaces <code>/api/v2/participants</code>",
@@ -3373,6 +3425,103 @@
             "description": "The Unique Reference Number (URN) of the school where this NPQ participant is teaching",
             "type": "string",
             "example": "106286"
+          }
+        }
+      },
+      "NPQOutcome": {
+        "description": "An NPQ outcome",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the NPQ outcome",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-outcome"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NPQOutcomeAttributes"
+          }
+        }
+      },
+      "NPQOutcomeAttributes": {
+        "description": "The data attributes associated with an NPQ outcome",
+        "type": "object",
+        "required": [
+          "participant_id",
+          "course_identifier",
+          "state",
+          "completion_date",
+          "created_at"
+        ],
+        "properties": {
+          "participant_id": {
+            "description": "The unique ID of the participant",
+            "type": "string",
+            "nullable": false,
+            "format": "uuid",
+            "example": "66218835-9430-4d0c-98ef-7caf0bb4a59b"
+          },
+          "course_identifier": {
+            "description": "The course the participant is enrolled in",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-early-years-leadership"
+            ],
+            "example": "npq-leading-teaching"
+          },
+          "state": {
+            "description": "The state of the outcome (passed, failed, voided)",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "passed",
+              "failed",
+              "voided"
+            ],
+            "example": "passed"
+          },
+          "completion_date": {
+            "description": "The date the participant received the assessment outcome for this course",
+            "type": "string",
+            "example": "2021-05-31T02:21:32.000Z"
+          },
+          "created_at": {
+            "description": "The date you created the participant-outcome record",
+            "type": "string",
+            "example": "2021-05-31T02:21:32.000Z"
+          }
+        }
+      },
+      "NPQOutcomesResponse": {
+        "description": "A list of NPQ outcomes",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NPQOutcome"
+            }
           }
         }
       },
