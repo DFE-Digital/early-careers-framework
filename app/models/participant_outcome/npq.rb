@@ -12,6 +12,8 @@ class ParticipantOutcome::NPQ < ApplicationRecord
   validates :completion_date, presence: true
   validate :completion_is_not_in_future, if: :completion_date
 
+  scope :latest, -> { order(created_at: :desc).first }
+
 private
 
   def completion_is_not_in_future
