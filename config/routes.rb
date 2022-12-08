@@ -151,7 +151,7 @@ Rails.application.routes.draw do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
       resources :partnerships, path: "partnerships/ecf", only: %i[index], controller: "ecf/partnerships"
-      resources :npq_participants, only: %[], path: "participants/npq" do
+      resources :npq_participants, only: [], path: "participants/npq" do
         collection do
           resources :outcomes, only: %i[index], controller: "participant_outcomes"
           get ":participant_id/outcomes", to: "participant_outcomes#show"
