@@ -4,7 +4,6 @@ class ParticipantOutcome::NPQ < ApplicationRecord
   self.table_name = "participant_outcomes"
 
   VALID_STATES = %i[passed failed voided].freeze
-  private_constant :VALID_STATES
 
   belongs_to :participant_declaration, class_name: "ParticipantDeclaration::NPQ"
   enum state: VALID_STATES.index_with(&:to_s)
