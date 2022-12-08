@@ -22,25 +22,35 @@ module NPQ
               }
     validate :participant_profile_has_no_completed_declarations
 
-    def new_participant_outcome
-      @new_participant_outcome ||= ParticipantOutcome::NPQ.new(participant_declaration:, state:, completion_date:)
-    end
-
-    def valid_to_save?
-      return true if participant_declaration&.outcomes.blank?
-
-      participant_declaration.outcomes.latest.slice(:state, :completion_date) != new_participant_outcome.slice(:state, :completion_date)
-    end
-
     def call
       return if invalid?
 
-      new_participant_outcome.save! if valid_to_save?
-      participant_declaration.outcomes.latest
+      if participant_outcome_already_exists?
+        latest_participant_outcome
+      else
+        new_participant_outcome.save!
+        new_participant_outcome
+      end
     end
 
     def participant_identity
       @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_external_id)
+    end
+
+  private
+
+    def new_participant_outcome
+      @new_participant_outcome ||= ParticipantOutcome::NPQ.new(participant_declaration:, state:, completion_date:)
+    end
+
+    def latest_participant_outcome
+      @latest_participant_outcome ||= participant_declaration&.outcomes&.latest
+    end
+
+    def participant_outcome_already_exists?
+      return false if latest_participant_outcome.blank?
+
+      latest_participant_outcome.slice(:state, :completion_date) == new_participant_outcome.slice(:state, :completion_date)
     end
 
     def participant_profile
@@ -59,14 +69,13 @@ module NPQ
     end
 
     def participant_profile_has_no_completed_declarations
-      return unless participant_profile && participant_declarations.blank?
+      return unless participant_profile
+      return if participant_declarations.exists?
 
       errors.add(:base, I18n.t("errors.participant_declarations.completed"))
     end
 
     def participant_declaration
-      return unless participant_declarations
-
       @participant_declaration ||= participant_declarations.first
     end
   end
