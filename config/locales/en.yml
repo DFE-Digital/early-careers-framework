@@ -41,7 +41,7 @@ en:
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
-  future_declaration_date: "The property '#/declaration_date' can not declare a future date"
+  future_date: "The property '#/%{attribute}' can not declare a future date"
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
   missing_declaration_type: "The property '#/declaration_type' must be present"
   missing_evidence_held: "The property '#/evidence_held' must be present"
@@ -51,6 +51,7 @@ en:
   missing_cpd_lead_provider: "The property '#/cpd_lead_provider' must be present"
   missing_reason: "The property '#/reason' must be present"
   missing_state: "The property '#/state' must be present"
+  missing_completion_date: "The property '#/completion_date' must be present"
   declaration_already_exists: There already exists a declaration that will be or has been paid for this event
   already_active: The participant is already active
   invalid_withdrawal: The participant is already withdrawn
