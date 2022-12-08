@@ -44,4 +44,46 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
       end
     end
   end
+
+  path "/api/v1/participants/npq/{id}/outcomes" do
+    let(:id) { npq_application.participant_identity.external_identifier }
+    get "List NPQ outcomes for single participant" do
+      operationId :participant_outcomes
+      tags "participants outcomes"
+      security [bearerAuth: []]
+
+      parameter name: :id,
+                in: :path,
+                type: :string,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The external ID of the participant"
+
+      parameter name: :page,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/Pagination",
+                },
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
+                description: "Pagination options to navigate through the list of participant NPQ outcomes."
+
+      response "200", "A list of participant outcomes" do
+        schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })
+
+        run_test!
+      end
+
+      response "401", "Unauthorized" do
+        let(:Authorization) { "Bearer invalid" }
+
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+
+        run_test!
+      end
+    end
+  end
 end
