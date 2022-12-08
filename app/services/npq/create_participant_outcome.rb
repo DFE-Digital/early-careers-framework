@@ -22,10 +22,21 @@ module NPQ
               }
     validate :participant_profile_has_no_completed_declarations
 
+    def new_participant_outcome
+      @new_participant_outcome ||= ParticipantOutcome::NPQ.new(participant_declaration:, state:, completion_date:)
+    end
+
+    def valid_to_save?
+      return true if participant_declaration&.outcomes.blank?
+
+      participant_declaration.outcomes.latest.slice(:state, :completion_date) != new_participant_outcome.slice(:state, :completion_date)
+    end
+
     def call
       return if invalid?
 
-      ParticipantOutcome::NPQ.find_or_create_by!(participant_declaration:, state:, completion_date:)
+      new_participant_outcome.save! if valid_to_save?
+      participant_declaration.outcomes.latest
     end
 
     def participant_identity
@@ -44,15 +55,13 @@ module NPQ
     def participant_declarations
       return unless participant_profile
 
-      @participant_declarations ||= participant_profile.participant_declarations.npq.order(declaration_date: :desc)
+      @participant_declarations ||= participant_profile.participant_declarations.npq.for_declaration("completed").order(declaration_date: :desc)
     end
 
     def participant_profile_has_no_completed_declarations
-      return unless participant_profile
+      return unless participant_profile && participant_declarations.blank?
 
-      if participant_declarations.for_declaration("completed").any?
-        errors.add(:base, I18n.t("errors.participant_declarations.completed"))
-      end
+      errors.add(:base, I18n.t("errors.participant_declarations.completed"))
     end
 
     def participant_declaration
