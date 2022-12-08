@@ -33,6 +33,7 @@ RSpec.describe LeadProviderApiSpecification do
         /api/v1/participants/ecf/{id}/change-schedule
         /api/v1/participants/npq/{id}/change-schedule
         /api/v1/participants/npq/outcomes
+        /api/v1/participants/npq/{id}/outcomes
         /api/v1/participants/{id}/withdraw
       ]
 
