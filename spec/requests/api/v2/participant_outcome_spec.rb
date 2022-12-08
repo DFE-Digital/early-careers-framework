@@ -37,6 +37,20 @@ RSpec.describe "participant outcomes endpoint spec", :with_default_schedules, ty
 
           expect(parsed_response).to eq(expected_response)
         end
+
+        it "returns matching outcomes by participant_external_id" do
+          get "/api/v2/participants/npq/#{npq_application.participant_identity.external_identifier}/outcomes"
+          expect(response.status).to eq 200
+
+          expect(parsed_response).to eq(expected_response)
+        end
+
+        it "doesn't return outcomes unless matching participant_external_id" do
+          get "/api/v2/participants/npq/#{SecureRandom.uuid}/outcomes"
+          expect(response.status).to eq 200
+
+          expect(parsed_response).to eq("data" => [])
+        end
       end
 
       it "can return paginated data" do

@@ -125,6 +125,9 @@ Rails.application.routes.draw do
         collection do
           resources :outcomes, only: %i[index], controller: "participant_outcomes"
         end
+        member do
+          resources :outcomes, only: %i[index], controller: "participant_outcomes", action: :show
+        end
       end
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"
       resources :users, only: %i[index create]
