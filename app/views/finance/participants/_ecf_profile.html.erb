@@ -36,12 +36,6 @@
   <% end %>
 
   <% summary_list.row do |row| %>
-    <% row.key { "Training status" } %>
-    <% row.value { pp.training_status } %>
-    <% row.action(text: :none) %>
-  <% end %>
-
-  <% summary_list.row do |row| %>
     <% row.key { "Schedule identifier" } %>
     <% row.value { pp.schedule&.schedule_identifier } %>
     <% row.action(text: :none) %>
@@ -71,7 +65,7 @@
 <% pp.induction_records.order(start_date: :desc).each do |ir| %>
   <h5>Induction record: <%= ir.id %></h5>
 
-  <%= govuk_summary_list do |summary_list| %>
+  <%= summary_list do |summary_list| %>
     <% summary_list.row do |row| %>
       <% row.key { "Training programme" } %>
       <% row.value { ir.induction_programme.training_programme.humanize } %>
@@ -99,16 +93,7 @@
     <% summary_list.row do |row| %>
       <% row.key { "Training status" } %>
       <% row.value { ir.training_status } %>
-      <%
-        if ir == pp.latest_induction_record_for(cpd_lead_provider: ir.cpd_lead_provider)
-          row.action(
-            text: "Change",
-            visually_hidden_text: "training status",
-            href: new_finance_participant_profile_ecf_induction_records_path(pp.id, ir.id))
-        else
-          row.action(text: :none)
-        end
-      %>
+      <%= change_induction_record_training_status_button(ir, pp, row) %>
     <% end %>
 
     <% summary_list.row do |row| %>

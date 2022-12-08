@@ -64,10 +64,6 @@ module Finance
         reason_options[training_status] || []
       end
 
-      # this is not correct because a participant may changeable induction records
-      # with different lead provider. But due to the participant drilldown not being
-      # correct we will make the assumpion that we will change it on the latest induction record
-      # regarless of the lead provider
       def cpd_lead_provider
         @cpd_lead_provider ||= induction_record.lead_provider.cpd_lead_provider
       end
