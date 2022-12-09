@@ -51,6 +51,16 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
+          School start
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @first_school_induction_record&.start_date.to_date.to_s(:govuk) %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
           Role
         </dt>
         <dd class="govuk-summary-list__value">
