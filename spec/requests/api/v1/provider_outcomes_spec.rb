@@ -18,7 +18,7 @@ RSpec.describe "participant outcomes endpoint spec", :with_default_schedules, ty
 
       context "when no outcome exists" do
         it "returns empty array" do
-          get "/api/v1/participants/npq/#{npq_application.participant_identity.external_identifier}/outcomes"
+          get "/api/v1/participants/npq/outcomes"
           expect(response.status).to eq 200
 
           expect(parsed_response).to eq("data" => [])
@@ -31,19 +31,23 @@ RSpec.describe "participant outcomes endpoint spec", :with_default_schedules, ty
         end
         let!(:outcome) { create :participant_outcome, participant_declaration: declaration }
 
-        it "returns matching outcomes by participant_external_id" do
-          get "/api/v1/participants/npq/#{npq_application.participant_identity.external_identifier}/outcomes"
+        it "returns serialised data" do
+          get "/api/v1/participants/npq/outcomes"
           expect(response.status).to eq 200
 
           expect(parsed_response).to eq(expected_response)
         end
+      end
 
-        it "doesn't return outcomes unless matching participant_external_id" do
-          get "/api/v1/participants/npq/#{SecureRandom.uuid}/outcomes"
-          expect(response.status).to eq 200
+      it "can return paginated data" do
+        create :participant_outcome, :failed, participant_declaration: declaration
+        create :participant_outcome, :passed, participant_declaration: declaration
+        create :participant_outcome, :voided, participant_declaration: declaration
+        get "/api/v1/participants/npq/outcomes", params: { page: { per_page: 2, page: 1 } }
+        expect(parsed_response["data"].size).to eql(2)
 
-          expect(parsed_response).to eq("data" => [])
-        end
+        get "/api/v1/participants/npq/outcomes", params: { page: { per_page: 2, page: 2 } }
+        expect(parsed_response["data"].size).to eql(1)
       end
     end
 
