@@ -85,10 +85,10 @@ Rails.application.routes.draw do
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
-          resources :outcomes, only: %i[index], controller: "participant_outcomes"
+          resources :outcomes, only: %i[index], controller: "provider_outcomes"
         end
         member do
-          resources :outcomes, only: %i[index], controller: "participant_outcomes", action: :show
+          resources :outcomes, only: %i[index], controller: "participant_outcomes"
         end
       end
       resources :users, only: %i[index create]
@@ -123,10 +123,10 @@ Rails.application.routes.draw do
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
-          resources :outcomes, only: %i[index], controller: "participant_outcomes"
+          resources :outcomes, only: %i[index], controller: "provider_outcomes"
         end
         member do
-          resources :outcomes, only: %i[index], controller: "participant_outcomes", action: :show
+          resources :outcomes, only: %i[index], controller: "participant_outcomes"
         end
       end
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"

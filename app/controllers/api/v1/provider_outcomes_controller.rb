@@ -2,11 +2,12 @@
 
 module Api
   module V1
-    class ParticipantOutcomesController < Api::ApiController
+    class ProviderOutcomesController < Api::ApiController
       include ApiTokenAuthenticatable
+      include ApiPagination
 
       def index
-        participant_declarations_hash = serializer_class.new(query_scope).serializable_hash
+        participant_declarations_hash = serializer_class.new(paginate(query_scope)).serializable_hash
         render json: participant_declarations_hash.to_json
       end
 
@@ -19,16 +20,11 @@ module Api
       def query_scope
         ParticipantOutcomesQuery.new(
           cpd_lead_provider:,
-          participant_external_id:,
         ).scope
       end
 
       def cpd_lead_provider
         current_user
-      end
-
-      def participant_external_id
-        params[:id]
       end
     end
   end
