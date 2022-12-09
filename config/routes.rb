@@ -84,10 +84,9 @@ Rails.application.routes.draw do
       end
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
-        member do
+        collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
-          resources :outcomes, only: %i[index], controller: "participant_outcomes"
-          get ":participant_id/outcomes", to: "participant_outcomes#show"
+          get ":participant_id/outcomes", to: "participant_outcomes#index"
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end
@@ -122,10 +121,9 @@ Rails.application.routes.draw do
       end
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
-        member do
+        collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
-          resources :outcomes, only: %i[index], controller: "participant_outcomes"
-          get ":participant_id/outcomes", to: "participant_outcomes#show"
+          get ":participant_id/outcomes", to: "participant_outcomes#index"
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end
@@ -153,8 +151,8 @@ Rails.application.routes.draw do
       resources :partnerships, path: "partnerships/ecf", only: %i[index], controller: "ecf/partnerships"
       resources :npq_participants, only: [], path: "participants/npq" do
         collection do
-          resources :outcomes, only: %i[index], controller: "participant_outcomes"
-          get ":participant_id/outcomes", to: "participant_outcomes#show"
+          resources :outcomes, only: %i[index], controller: "provider_outcomes"
+          get ":participant_id/outcomes", to: "participant_outcomes#index"
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end

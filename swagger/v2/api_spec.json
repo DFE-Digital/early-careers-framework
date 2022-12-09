@@ -342,66 +342,6 @@
         }
       }
     },
-    "/api/v2/participants/npq/{participant_id}/outcomes": {
-      "post": {
-        "summary": "Submit a NPQ outcome",
-        "operationId": "npq_outcome_post",
-        "tags": [
-          "NPQ outcomes"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQOutcomeRequest"
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "participant_id",
-            "description": "The unique ID of the participant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully submit a NPQ outcome",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NPQOutcomeResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorisedResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v2/participants/npq": {
       "get": {
         "summary": "Retrieve multiple NPQ participants",
@@ -997,7 +937,7 @@
         "summary": "List all participant NPQ outcomes",
         "operationId": "participant_outcomes",
         "tags": [
-          "participants outcomes"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -1044,12 +984,12 @@
         }
       }
     },
-    "/api/v2/participants/npq/{id}/outcomes": {
+    "/api/v2/participants/npq/{participant_id}/outcomes": {
       "get": {
         "summary": "List NPQ outcomes for single participant",
         "operationId": "participant_outcomes",
         "tags": [
-          "participants outcomes"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -1060,7 +1000,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
@@ -1077,6 +1017,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit a NPQ outcome for a single participant",
+        "operationId": "npq_outcome_post",
+        "tags": [
+          "Participants Outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "participant_id",
+            "description": "The unique ID of the participant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully submit a NPQ outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomeResponse"
                 }
               }
             }
