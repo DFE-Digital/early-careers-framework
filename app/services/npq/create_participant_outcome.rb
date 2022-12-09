@@ -12,12 +12,12 @@ module NPQ
     attribute :completion_date, :date
 
     validates :cpd_lead_provider, :participant_external_id, presence: true
-    validates :completion_date, future_date: true, presence: { message: I18n.t(:missing_completion_date) }
+    validates :completion_date, presence: { message: I18n.t(:missing_completion_date) }
     validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
     validates :state,
               presence: { message: I18n.t(:missing_state) },
               inclusion: {
-                in: ParticipantOutcome::NPQ::VALID_STATES.map(&:to_s),
+                in: ParticipantOutcome::NPQ::PERMITTED_STATES.map(&:to_s),
                 message: I18n.t(:invalid_state),
               }
     validate :participant_profile_has_no_completed_declarations
@@ -65,7 +65,7 @@ module NPQ
     def participant_declarations
       return unless participant_profile
 
-      @participant_declarations ||= participant_profile.participant_declarations.npq.for_declaration("completed").order(declaration_date: :desc)
+      @participant_declarations ||= participant_profile.participant_declarations.npq.valid_to_have_outcome_for_lead_provider_and_course(cpd_lead_provider, course_identifier)
     end
 
     def participant_profile_has_no_completed_declarations
