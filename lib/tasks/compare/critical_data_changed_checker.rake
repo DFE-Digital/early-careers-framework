@@ -47,7 +47,7 @@ Row = Struct.new(
       changed_lead_provider:,
       changed_delivery_partner:,
       changed_school:,
-      changed_cohort:
+      changed_cohort:,
     }
   end
 end
@@ -74,6 +74,9 @@ namespace :compare do
     desc "compare"
     task run: :environment do
       rows = []
+
+      registration_end_date = Date.new(2022, 9, 1)
+      first_declaration_date = Date.new(2022, 10, 31)
 
       InductionRecord.end_date_null.find_in_batches.each do |batch|
         batch.each do |induction_record|
@@ -119,19 +122,11 @@ namespace :compare do
       Dir.mkdir folder_path
       File.open("#{folder_path}/critical-data-changes-report.json", "w") { |r| r.puts JSON.pretty_generate(data) }
 
-      changed = data.filter {|row| row[:changed] }.count
-      complete = data.reject {|row| row[:changed] }.count
+      changed = data.filter { |row| row[:changed] }.count
+      complete = data.reject { |row| row[:changed] }.count
       percent = 100 - (changed.to_f / complete * 100)
 
-      puts "total completed: %i :: total changed: %i :: percentage: %.2f%%" % [complete, changed, percent]
-    end
-
-    def registration_end_date
-      Date.new(2022, 9, 1)
-    end
-
-    def first_declaration_date
-      Date.new(2022, 10, 31)
+      puts sprintf("total completed: %i :: total changed: %i :: percentage: %.2f%%", complete, changed, percent)
     end
   end
 end
