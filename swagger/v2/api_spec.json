@@ -984,6 +984,68 @@
         }
       }
     },
+    "/api/v2/participants/npq/{id}/outcomes": {
+      "get": {
+        "summary": "List NPQ outcomes for single participant",
+        "operationId": "participant_outcomes",
+        "tags": [
+          "participants outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The external ID of the participant",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v2/participants/ecf": {
       "get": {
         "summary": "Retrieve multiple participants, replaces <code>/api/v2/participants</code>",
