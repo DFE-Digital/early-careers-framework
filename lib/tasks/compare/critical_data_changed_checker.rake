@@ -11,7 +11,7 @@ Row = Struct.new(
   :past_cohort_years,
   :past_mentor_ids,
   keyword_init: true,
-  ) do
+) do
   def changed_lead_provider
     ([induction_record&.lead_provider&.id] + past_lead_provider_ids).compact.uniq.count > 1
   end
@@ -118,7 +118,7 @@ namespace :compare do
       puts "writing detailed reports to folder #{folder_path}/"
       Dir.mkdir folder_path
       File.open("#{folder_path}/critical-data-changes-report.json", "w") { |r| r.puts JSON.pretty_generate(data) }
-      
+
       changed = data.filter {|row| row[:changed] }.count
       complete = data.filter {|row| !row[:changed] }.count
       percent = 100 - (changed.to_f / complete * 100)
