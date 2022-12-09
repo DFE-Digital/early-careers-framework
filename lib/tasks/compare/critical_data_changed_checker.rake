@@ -120,7 +120,7 @@ namespace :compare do
       File.open("#{folder_path}/critical-data-changes-report.json", "w") { |r| r.puts JSON.pretty_generate(data) }
 
       changed = data.filter {|row| row[:changed] }.count
-      complete = data.filter {|row| !row[:changed] }.count
+      complete = data.reject {|row| row[:changed] }.count
       percent = 100 - (changed.to_f / complete * 100)
 
       puts "total completed: %i :: total changed: %i :: percentage: %.2f%%" % [complete, changed, percent]
