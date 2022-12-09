@@ -290,6 +290,66 @@
         }
       }
     },
+    "/api/v1/participants/npq/{participant_id}/outcomes": {
+      "post": {
+        "summary": "Submit a NPQ outcome",
+        "operationId": "npq_outcome_post",
+        "tags": [
+          "NPQ outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "participant_id",
+            "description": "The unique ID of the participant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully submit a NPQ outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/participants/npq": {
       "get": {
         "summary": "Retrieve multiple NPQ participants",
@@ -3530,6 +3590,18 @@
             "description": "The date you created the participant-outcome record",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
+          }
+        }
+      },
+      "NPQOutcomeResponse": {
+        "description": "The details of an NPQ Outcome",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQOutcome"
           }
         }
       },

@@ -475,12 +475,12 @@
         }
       }
     },
-    "/api/v3/participants/npq/{id}/outcomes": {
+    "/api/v3/participants/npq/{participant_id}/outcomes": {
       "get": {
         "summary": "Retrieve NPQ outcomes for the specified participant",
         "operationId": "npq_outcome_get",
         "tags": [
-          "outcomes"
+          "NPQ outcomes"
         ],
         "security": [
           {
@@ -491,7 +491,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
             "description": "The unique ID of the participant",
             "in": "path",
             "required": true,
@@ -526,29 +526,16 @@
         }
       },
       "post": {
-        "summary": "Submit an NPQ outcome",
+        "summary": "Submit a NPQ outcome",
         "operationId": "npq_outcome_post",
         "tags": [
-          "outcomes"
+          "NPQ outcomes"
         ],
         "security": [
           {
             "bearerAuth": [
 
             ]
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "description": "The unique ID of the participant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
           }
         ],
         "requestBody": {
@@ -560,9 +547,22 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "participant_id",
+            "description": "The unique ID of the participant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successfully submit an NPQ outcome",
+            "description": "Successfully submit a NPQ outcome",
             "content": {
               "application/json": {
                 "schema": {
@@ -1903,9 +1903,6 @@
       "DeliveryPartnerAttributes": {
         "description": "The data attributes associated with a delivery partner",
         "type": "object",
-        "required": [
-          "name"
-        ],
         "properties": {
           "name": {
             "description": "The name of the delivery partner you are working with",
@@ -3560,8 +3557,8 @@
         "required": [
           "participant_id",
           "course_identifier",
-          "has_passed",
-          "declaration_date",
+          "state",
+          "completion_date",
           "created_at"
         ],
         "properties": {
@@ -3588,18 +3585,24 @@
             ],
             "example": "npq-leading-teaching"
           },
-          "has_passed": {
-            "description": "Whether the participant has failed or passed",
-            "type": "boolean",
-            "example": true
+          "state": {
+            "description": "The state of the outcome (passed, failed, voided)",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "passed",
+              "failed",
+              "voided"
+            ],
+            "example": "passed"
           },
-          "declaration_date": {
+          "completion_date": {
             "description": "The date the participant received the assessment outcome for this course",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           },
           "created_at": {
-            "description": "The date you created the latest npq-outcome-confirmation record",
+            "description": "The date you created the participant-outcome record",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           }
@@ -3675,14 +3678,14 @@
             "type": "npq-outcome-confirmation",
             "attributes": {
               "course_identifier": "npq-leading-teaching",
-              "has_passed": false,
-              "declaration_date": "2021-05-31T02:21:32.000Z"
+              "state": "passed",
+              "completion_date": "2021-05-31T02:21:32.000Z"
             }
           }
         }
       },
       "NPQOutcomeResponse": {
-        "description": "A list of NPQ outcomes",
+        "description": "The details of an NPQ Outcome",
         "type": "object",
         "required": [
           "data"
@@ -4990,9 +4993,6 @@
       "StatementAttributes": {
         "description": "The data attributes associated with a financial statement",
         "type": "object",
-        "required": [
-          "name"
-        ],
         "properties": {
           "month": {
             "description": "The month which appears on the statement in the DfE portal",
