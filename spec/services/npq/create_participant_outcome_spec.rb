@@ -36,16 +36,6 @@ RSpec.describe NPQ::CreateParticipantOutcome, :with_default_schedules do
       end
     end
 
-    context "when the completion date is in the future" do
-      let(:completion_date) { Date.tomorrow.strftime("%F") }
-
-      it "is invalid returning a meaningful error message" do
-        is_expected.to be_invalid
-
-        expect(service.errors.messages_for(:completion_date)).to include("The property '#/completion_date' can not declare a future date")
-      end
-    end
-
     context "when the course_identifier is missing" do
       let(:course_identifier) {}
 
