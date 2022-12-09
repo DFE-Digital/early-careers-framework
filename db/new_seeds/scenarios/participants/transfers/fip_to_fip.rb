@@ -53,14 +53,14 @@ module NewSeeds
 
             # partnership induction programmes
             _induction_programme_1 = FactoryBot.create(:seed_induction_programme,
-                                                      :fip,
-                                                      school_cohort: school_cohort_1,
-                                                      partnership: partnership_1)
+                                                       :fip,
+                                                       school_cohort: school_cohort_1,
+                                                       partnership: partnership_1)
 
             _induction_programme_2 = FactoryBot.create(:seed_induction_programme,
-                                                      :fip,
-                                                      school_cohort: school_cohort_2,
-                                                      partnership: partnership_2)
+                                                       :fip,
+                                                       school_cohort: school_cohort_2,
+                                                       partnership: partnership_2)
 
             # do a transfer:
             # * there should be a Partnershp with `relationship: true` between the new school

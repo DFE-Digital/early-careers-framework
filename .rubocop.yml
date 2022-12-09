@@ -24,7 +24,7 @@ Lint/AmbiguousBlockAssociation:
 
 Style/MixinUsage:
   Exclude:
-    - 'db/seeds/test_data.rb'
+    - 'db/legacy_seeds/test_data.rb'
 
 Rails/UnknownEnv:
   Environments:
