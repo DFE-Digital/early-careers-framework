@@ -110,15 +110,17 @@ namespace :compare do
         end
       end
 
+      data = rows.map(&:to_h)
+
       folder_timestamp = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
       folder_path = "/tmp/#{folder_timestamp}"
 
       puts "writing detailed reports to folder #{folder_path}/"
       Dir.mkdir folder_path
-      File.open("#{folder_path}/critical-data-changes-report.json", "w") { |r| r.puts JSON.pretty_generate(rows) }
-
-      changed = rows.map(&:to_h).filter {|row| row[:changed] }.count
-      complete = rows.map(&:to_h).filter {|row| !row[:changed] }.count
+      File.open("#{folder_path}/critical-data-changes-report.json", "w") { |r| r.puts JSON.pretty_generate(data) }
+      
+      changed = data.filter {|row| row[:changed] }.count
+      complete = data.filter {|row| !row[:changed] }.count
       percent = 100 - (changed.to_f / complete * 100)
 
       puts "total completed: %i :: total changed: %i :: percentage: %.2f%%" % [complete, changed, percent]
