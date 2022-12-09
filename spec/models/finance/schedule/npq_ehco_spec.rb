@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Finance::Schedule::NPQEhco, type: :model do
   before do
-    load Rails.root.join("db/seeds/schedules.rb").to_s
+    load Rails.root.join("db/legacy_seeds/schedules.rb").to_s
   end
 
   it "seeds from csv" do

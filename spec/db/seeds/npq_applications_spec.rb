@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-load "db/seeds/npq_applications.rb"
+load "db/legacy_seeds/npq_applications.rb"
 
 RSpec.describe Seeds::NPQApplication do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
