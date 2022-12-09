@@ -65,7 +65,7 @@
 <% pp.induction_records.order(start_date: :desc).each do |ir| %>
   <h5>Induction record: <%= ir.id %></h5>
 
-  <%= summary_list do |summary_list| %>
+  <%= govuk_summary_list do |summary_list| %>
     <% summary_list.row do |row| %>
       <% row.key { "Training programme" } %>
       <% row.value { ir.induction_programme.training_programme.humanize } %>

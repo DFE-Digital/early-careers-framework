@@ -9,7 +9,6 @@ class DeferParticipant
   attribute :participant_id
   attribute :reason
   attribute :course_identifier
-  attribute :relevant_induction_record
 
   validates :cpd_lead_provider,
             induction_record: true

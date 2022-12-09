@@ -39,7 +39,6 @@ module Finance
           cpd_lead_provider:,
           course_identifier:,
           participant_id: participant_profile.participant_identity.external_identifier,
-          relevant_induction_record: induction_record,
         }
 
         case training_status
