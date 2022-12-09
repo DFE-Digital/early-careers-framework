@@ -4,7 +4,7 @@ FactoryBot.define do
   factory(:seed_lead_provider_cip, class: "LeadProviderCip") do
     trait(:with_lead_provider) { association(:lead_provider, factory: :seed_lead_provider) }
     trait(:with_core_induction_programme) { association(:core_induction_programme, factory: :seed_core_induction_programme) }
-    trait(:with_cohort) { Cohort.current }
+    trait(:with_cohort) { association(:cohort, factory: :seed_cohort) }
 
     trait(:valid) do
       with_cohort

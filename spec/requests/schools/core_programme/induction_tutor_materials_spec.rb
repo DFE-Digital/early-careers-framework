@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Pages for induction tutor materials for existing CIPs", type: :request do
   before do
-    seed_path = %w[db seeds]
+    seed_path = %w[db legacy_seeds]
 
     load Rails.root.join(*seed_path, "initial_seed.rb").to_s
   end

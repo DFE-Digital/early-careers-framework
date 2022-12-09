@@ -2,9 +2,7 @@
 
 FactoryBot.define do
   factory(:seed_partnership, class: "Partnership") do
-    trait(:with_cohort) do
-      Cohort.first ? cohort { Cohort.first } : association(:cohort, factory: :seed_cohort)
-    end
+    trait(:with_cohort) { association(:cohort, factory: :seed_cohort) }
     trait(:with_school) { association(:school, factory: :seed_school) }
     trait(:with_lead_provider) { association(:lead_provider, factory: :seed_lead_provider) }
     trait(:with_delivery_partner) { association(:delivery_partner, factory: :seed_delivery_partner) }
