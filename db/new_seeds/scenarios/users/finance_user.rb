@@ -4,7 +4,7 @@ module NewSeeds
   module Scenarios
     module Users
       class FinanceUser
-        attr_reader :user, :appropriate_body
+        attr_reader :user
 
         def initialize(user: nil)
           @user = user

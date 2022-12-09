@@ -26,3 +26,6 @@ NewSeeds::Scenarios::Users::AppropriateBodyUser.new.build
 
 Rails.logger.info("Adding a finance user")
 NewSeeds::Scenarios::Users::FinanceUser.new.build
+
+Rails.logger.info("Building two delivery partner user with two delivery partners each")
+2.times { NewSeeds::Scenarios::Users::DeliveryPartnerUser.new(number: 2).build }
