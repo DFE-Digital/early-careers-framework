@@ -16,6 +16,6 @@ FactoryBot.define do
 
     trait(:valid) {}
 
-    after(:build) { |u| Rails.logger.debug("seeded school #{u.full_name}") }
+    after(:build) { |u| Rails.logger.debug("seeded user #{u.full_name}") }
   end
 end
