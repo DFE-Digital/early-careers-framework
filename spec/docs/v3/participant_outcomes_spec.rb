@@ -2,7 +2,7 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_spec.json" do
+RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
   let(:token)                { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)         { "Bearer #{token}" }
   let(:Authorization)     { bearer_token }
@@ -12,7 +12,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
   let(:participant_profile) { participant_declaration.participant_profile }
   let!(:participant_outcome) { create :participant_outcome, participant_declaration: }
 
-  path "/api/v2/participants/npq/outcomes" do
+  path "/api/v3/participants/npq/outcomes" do
     get "List all participant NPQ outcomes" do
       operationId :participant_outcomes
       tags "Participants Outcomes"
@@ -46,7 +46,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
     end
   end
 
-  path "/api/v2/participants/npq/{participant_id}/outcomes" do
+  path "/api/v3/participants/npq/{participant_id}/outcomes" do
     let(:participant_id) { participant_profile.participant_identity.external_identifier }
 
     get "List NPQ outcomes for single participant" do
@@ -60,6 +60,18 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The external ID of the participant"
+
+      parameter name: :page,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/Pagination",
+                },
+                type: :object,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
+                description: "Pagination options to navigate through the list of participant NPQ outcomes."
 
       response "200", "A list of participant outcomes" do
         schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })
