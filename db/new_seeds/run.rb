@@ -12,14 +12,15 @@ end
 
 Rails.logger.info("Seeding database")
 
-Rails.logger.info("Setting up cohorts")
-load_base_file("add_cohorts.rb")
-
-Rails.logger.info("Setting up core induction programmes and lead providers")
-load_base_file("add_core_induction_programmes_and_lead_providers.rb")
-
-Rails.logger.info("Setting up schedules")
-load_base_file("add_schedules.rb")
+{
+  "importing cohorts" => "add_cohorts.rb",
+  "importing schedules" => "add_schedules.rb",
+  "importing privacy policy 1.0" => "add_privacy_policy.rb",
+  "importing core induction programmes and lead providers" => "add_core_induction_programmes_and_lead_providers.rb",
+}.each do |msg, file|
+  Rails.logger.info(msg)
+  load_base_file(file)
+end
 
 Rails.logger.info("Adding a user with an appropriate body")
 NewSeeds::Scenarios::Users::AppropriateBodyUser.new.build
