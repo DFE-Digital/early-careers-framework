@@ -77,6 +77,8 @@ class InductionRecord < ApplicationRecord
   scope :oldest_first, -> { order(created_at: :asc) }
   scope :newest_first, -> { order(created_at: :desc) }
 
+  scope :oldest, -> { oldest_first.first }
+
   def self.latest
     newest_first.first
   end
