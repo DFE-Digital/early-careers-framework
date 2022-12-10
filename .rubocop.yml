@@ -15,6 +15,11 @@ AllCops:
 Style/FrozenStringLiteralComment:
   Enabled: true
 
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  Include:
+    - "db/new_seeds"
+
 Layout/EndOfLine:
   EnforcedStyle: lf
 
