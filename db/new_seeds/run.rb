@@ -16,7 +16,7 @@ Rails.logger.info("Seeding database")
   "importing cohorts" => "add_cohorts.rb",
   "importing schedules" => "add_schedules.rb",
   "importing privacy policy 1.0" => "add_privacy_policy.rb",
-  "importing core induction programmes and lead providers" => "add_core_induction_programmes_and_lead_providers.rb",
+  "importing core induction programmes and lead providers" => "add_lead_providers_and_cips.rb",
 }.each do |msg, file|
   Rails.logger.info(msg)
   load_base_file(file)

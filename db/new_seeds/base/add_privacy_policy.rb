@@ -1,3 +1,8 @@
-PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)
-  .tap { |pp| pp.html = Rails.root.join("data/privacy_policy.html").read }
-  .save!
+# frozen_string_literal: true
+
+FactoryBot.create(
+  :seed_privacy_policy,
+  html: Rails.root.join("data/privacy_policy.html").read,
+  major_version: 1,
+  minor_version: 0,
+)
