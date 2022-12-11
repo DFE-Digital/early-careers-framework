@@ -10,9 +10,8 @@ the necessary associations for them to be valid.
 
 I'd add in a few participants who:
 
-- [x] I'd add in a few participants who have transferred to that school and
-      continued with their original training provider (i.e. have a relationship
-      rather than a partnership)
+- [x] who have transferred to that school and continued with their original
+      training provider (i.e. have a relationship rather than a partnership)
 - [ ] have transferred to that school and now adopted the new school's training provision
 - [ ] are mentoring >1 ECT and those ECTs are all being trained by the same provider
 - [ ] are mentoring >1 ECT and those ECTs are not all being trained by the same provider
@@ -21,5 +20,3 @@ I'd add in a few participants who:
 - [ ] are representative of the main schedules as well the cohorts e.g.
       ecf-standard-september versus jan/apr and versus
       extended/reduced/replacement
-
-
