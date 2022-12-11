@@ -14,6 +14,13 @@ FactoryBot.define do
     school_website { "www.#{domain}" }
     primary_contact_email { Faker::Internet.email(domain:) }
 
+    school_status_code { 1 }
+    school_type_code { 1 }
+    administrative_district_code { "E123" }
+
+    trait(:closed) { school_status_code { 2 } }
+    trait(:valid) {}
+
     after(:build) { |s| Rails.logger.debug("seeded school #{s.name}") }
   end
 end
