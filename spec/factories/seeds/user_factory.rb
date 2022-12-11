@@ -2,8 +2,10 @@
 
 FactoryBot.define do
   factory(:seed_user, class: "User") do
-    email { Faker::Internet.unique.safe_email }
-    full_name { Faker::Name.name }
+    transient { identity { Faker::Name.name } }
+
+    full_name { identity }
+    email { "#{identity.parameterize}@#{Faker::Alphanumeric.alpha(number: 5)}.#{Faker::Internet.domain_name}" }
 
     trait :with_login_token do
       login_token { Faker::Alphanumeric.alpha(number: 10) }
