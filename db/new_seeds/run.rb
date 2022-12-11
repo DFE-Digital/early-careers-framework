@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Faker::Config.locale = "en-GB"
+
 Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
   require scenario
 end
