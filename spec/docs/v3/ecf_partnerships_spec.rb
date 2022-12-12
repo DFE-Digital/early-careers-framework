@@ -2,7 +2,12 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let(:bearer_token) { "Bearer #{token}" }
+  let(:Authorization) { bearer_token }
+
   path "/api/v3/partnerships/ecf" do
     get "Retrieve multiple ECF partnerships" do
       operationId :partnerships_ecf_get
@@ -49,7 +54,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
     end
   end
 
-  path "/api/v3/partnerships/ecf" do
+  path "/api/v3/partnerships/ecf", api_v3: true do
     post "Create an ECF partnership with a school and delivery partner" do
       operationId :partnerships_ecf_post
       tags "ECF partnerships"
