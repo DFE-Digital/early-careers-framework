@@ -22,7 +22,7 @@ RSpec.shared_examples("a seed factory") do
 
       build(factory_name)
 
-      expect(Rails.logger).to have_received(:debug).once
+      expect(Rails.logger).to have_received(:debug).at_least(1).time
     end
   end
 end

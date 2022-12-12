@@ -11,6 +11,14 @@ FactoryBot.define do
       external_identifier { user.id }
     end
 
-    after(:build) { |pi| Rails.logger.debug("seeded participant_identity for user #{pi.user.full_name}") }
+    trait(:valid) { with_user }
+
+    after(:build) do |pi|
+      if pi.user.present?
+        Rails.logger.debug("seeded participant_identity for user #{pi.user.full_name}")
+      else
+        Rails.logger.debug("seeded participant_identity with no user")
+      end
+    end
   end
 end

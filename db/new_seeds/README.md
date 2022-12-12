@@ -13,7 +13,7 @@ I'd add in a few participants who:
 - [x] who have transferred to that school and continued with their original
       training provider (i.e. have a relationship rather than a partnership)
 - [x] have transferred to that school and now adopted the new school's training provision
-- [ ] are mentoring >1 ECT and those ECTs are all being trained by the same provider
+- [x] are mentoring >1 ECT and those ECTs are all being trained by the same provider
 - [ ] are mentoring >1 ECT and those ECTs are not all being trained by the same provider
 - [ ] is due to leave the school
 - [ ] has left the school

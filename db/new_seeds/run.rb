@@ -43,3 +43,4 @@ Rails.logger.info("Building two delivery partner user with two delivery partners
 # complex scenarios
 NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider.new.build
 NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider.new.build
+NewSeeds::Scenarios::Participants::Mentors::MentoringMultipleEctsWithSameProvider.new.build
