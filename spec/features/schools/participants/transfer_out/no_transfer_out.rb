@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transfer out participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false do
+RSpec.describe "transfer out participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true, rutabaga: false do
   context "An ECT has been transferred in to another school" do
     before do
       set_participant_data

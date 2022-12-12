@@ -52,9 +52,6 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
   end
 
   before do
-    allow(FeatureFlag).to receive(:active?).with(:participant_outcomes_feature).and_return(false)
-    allow(FeatureFlag).to receive(:active?).with(:multiple_cohorts).and_return(true)
-
     generate_declarations(state: :payable)
     generate_declarations(state: :paid)
 

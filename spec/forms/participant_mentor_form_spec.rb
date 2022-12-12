@@ -20,7 +20,7 @@ RSpec.describe ParticipantMentorForm, :with_default_schedules, type: :model do
       expect(subject.available_mentors).to include(active_mentor_record)
     end
 
-    context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
+    context "when multiple cohorts are active" do
       let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
       let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
 

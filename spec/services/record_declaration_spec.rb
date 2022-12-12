@@ -252,10 +252,9 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
-
       it_behaves_like "creates participant declaration attempt"
 
-      context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+      context "for 2022 cohort", :with_default_schedules do
         let!(:schedule) { create(:ecf_schedule, cohort:) }
         let!(:statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
 
@@ -323,10 +322,9 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
     it_behaves_like "validates the participant milestone"
-
     it_behaves_like "creates participant declaration attempt"
 
-    context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+    context "for 2022 cohort", :with_default_schedules do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
       let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
 

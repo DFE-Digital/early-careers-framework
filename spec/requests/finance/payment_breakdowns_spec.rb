@@ -16,7 +16,7 @@ RSpec.describe Finance::PaymentBreakdownsController do
     sign_in user
   end
 
-  describe "POST #choose_ecf_statement", with_feature_flags: { multiple_cohorts: "active" } do
+  describe "POST #choose_ecf_statement" do
     let!(:statement_2021) { create(:ecf_statement, cpd_lead_provider:, name: "November 2022", cohort: cohort_2021) }
     let!(:statement_2022) { create(:ecf_statement, cpd_lead_provider:, name: "November 2022", cohort: cohort_2022) }
 
@@ -41,7 +41,7 @@ RSpec.describe Finance::PaymentBreakdownsController do
     end
   end
 
-  describe "POST #choose_npq_statement", with_feature_flags: { multiple_cohorts: "active" } do
+  describe "POST #choose_npq_statement" do
     let!(:statement_2021) { create(:npq_statement, cpd_lead_provider:, name: "November 2022", cohort: cohort_2021) }
     let!(:statement_2022) { create(:npq_statement, cpd_lead_provider:, name: "November 2022", cohort: cohort_2022) }
 

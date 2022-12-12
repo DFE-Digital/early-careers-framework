@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Admin::Schools::Participants", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" }, type: :request do
+RSpec.describe "Admin::Schools::Participants", :with_default_schedules, type: :request do
   let(:cohort_2021) { Cohort.current }
   let(:cohort_2022) { create(:cohort, :next) }
   let!(:schedule_2022) { create(:ecf_schedule, cohort: cohort_2022) }

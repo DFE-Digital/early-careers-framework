@@ -23,7 +23,6 @@ RSpec.feature "CIP to CIP - Transfer a participant",
               with_feature_flags: {
                 eligibility_notifications: "active",
                 change_of_circumstances: "active",
-                # multiple_cohorts: "active",
               },
               type: :feature,
               end_to_end_scenario: true do

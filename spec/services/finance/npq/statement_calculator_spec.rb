@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
   let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
@@ -195,7 +195,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
     end
   end
 
-  context "when there exists contracts over multiple cohorts", with_feature_flags: { multiple_cohorts: "active" } do
+  context "when there exists contracts over multiple cohorts" do
     let!(:cohort_2022) { Cohort.next || create(:cohort, :next) }
     let!(:contract_2022) { create(:npq_contract, npq_lead_provider:, cohort: cohort_2022) }
     let!(:statement_2022) { create(:npq_statement, cpd_lead_provider:, cohort: cohort_2022) }
