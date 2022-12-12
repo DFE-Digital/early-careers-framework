@@ -12,7 +12,9 @@ module NPQ
     attribute :completion_date, :date
 
     validates :cpd_lead_provider, :participant_external_id, presence: true
-    validates :completion_date, presence: { message: I18n.t(:missing_completion_date) }
+    validates :completion_date,
+              presence: { message: I18n.t(:missing_completion_date) },
+              format: { with: /\d{4}-\d{2}-\d{2}/, message: I18n.t(:invalid_completion_date) }
     validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
     validates :state,
               presence: { message: I18n.t(:missing_state) },
@@ -76,7 +78,7 @@ module NPQ
     end
 
     def participant_declaration
-      @participant_declaration ||= participant_declarations.first
+      @participant_declaration ||= participant_declarations&.first
     end
   end
 end
