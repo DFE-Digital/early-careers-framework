@@ -27,8 +27,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
       it { is_expected.to forbid_action(:update_validation_data) }
     end
 
@@ -40,8 +38,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
       it { is_expected.to permit_action(:update_validation_data) }
     end
 
@@ -62,8 +58,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
       it { is_expected.to forbid_action(:update_validation_data) }
     end
 
@@ -82,8 +76,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
         it { is_expected.to permit_action(:update_name) }
         it { is_expected.to permit_action(:edit_email) }
         it { is_expected.to permit_action(:update_email) }
-        it { is_expected.to permit_action(:edit_start_term) }
-        it { is_expected.to permit_action(:update_start_term) }
       end
 
       context "with only voided declarations" do
@@ -96,8 +88,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
         it { is_expected.to permit_action(:update_name) }
         it { is_expected.to permit_action(:edit_email) }
         it { is_expected.to permit_action(:update_email) }
-        it { is_expected.to permit_action(:edit_start_term) }
-        it { is_expected.to permit_action(:update_start_term) }
       end
     end
 
@@ -111,8 +101,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
     end
   end
 
@@ -135,8 +123,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
     end
 
     context "when the participant is found to be ineligible" do
@@ -147,8 +133,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
     end
 
     context "with a declaration" do
@@ -161,8 +145,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to permit_action(:update_name) }
       it { is_expected.to permit_action(:edit_email) }
       it { is_expected.to permit_action(:update_email) }
-      it { is_expected.to forbid_action(:edit_start_term) }
-      it { is_expected.to forbid_action(:update_start_term) }
     end
 
     context "with only voided declarations" do
@@ -175,8 +157,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to forbid_action(:update_name) }
       it { is_expected.to forbid_action(:edit_email) }
       it { is_expected.to forbid_action(:update_email) }
-      it { is_expected.to forbid_action(:edit_start_term) }
-      it { is_expected.to forbid_action(:update_start_term) }
     end
 
     context "with an NPQ application" do
@@ -189,8 +169,6 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
       it { is_expected.to forbid_action(:update_name) }
       it { is_expected.to forbid_action(:edit_email) }
       it { is_expected.to forbid_action(:update_email) }
-      it { is_expected.to permit_action(:edit_start_term) }
-      it { is_expected.to permit_action(:update_start_term) }
     end
   end
 
@@ -206,7 +184,5 @@ RSpec.describe ParticipantProfile::ECFPolicy, :with_default_schedules, type: :po
     it { is_expected.to forbid_action(:update_name) }
     it { is_expected.to forbid_action(:edit_email) }
     it { is_expected.to forbid_action(:update_email) }
-    it { is_expected.to forbid_action(:edit_start_term) }
-    it { is_expected.to forbid_action(:update_start_term) }
   end
 end

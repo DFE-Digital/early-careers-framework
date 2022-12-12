@@ -168,7 +168,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_an_eligible_mentor
-    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible mentor"), school_cohort: @school_cohort, start_term: "summer_2022")
+    @eligible_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Eligible mentor"), school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @eligible_mentor, induction_programme: @induction_programme)
   end
 
@@ -362,7 +362,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_details_being_checked_ect_with_mentor
-    @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, start_term: "Spring 2022")
+    @details_being_checked_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "DBC With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     @details_being_checked_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "different_trn")
     Induction::Enrol.call(participant_profile: @details_being_checked_ect_with_mentor, induction_programme: @induction_programme)
   end
@@ -380,7 +380,7 @@ module ManageTrainingSteps
   end
 
   def and_i_have_added_a_no_qts_ect_with_mentor
-    @no_qts_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "No-qts With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort, start_term: "Spring 2022")
+    @no_qts_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "No-qts With-Mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     @no_qts_ect_with_mentor.ecf_participant_eligibility.update!(status: "manual_check", reason: "no_qts")
     Induction::Enrol.call(participant_profile: @no_qts_ect_with_mentor, induction_programme: @induction_programme)
   end
@@ -536,10 +536,6 @@ module ManageTrainingSteps
     fill_in "Email", with: @participant_profile_ect.user.email
   end
 
-  def when_i_choose_start_term
-    choose(@participant_data[:start_term].humanize, allow_label_click: true)
-  end
-
   def when_i_choose_assign_mentor_later
     choose("Assign mentor later", allow_label_click: true)
   end
@@ -550,10 +546,6 @@ module ManageTrainingSteps
 
   def when_i_add_ect_or_mentor_updated_email
     fill_in "Email", with: @updated_participant_data[:email]
-  end
-
-  def when_i_add_ect_or_mentor_updated_term
-    choose(@updated_participant_data[:start_term].humanize, allow_label_click: true)
   end
 
   def when_i_choose_an_appropriate_body
@@ -832,11 +824,6 @@ module ManageTrainingSteps
     expect(page).to have_text((@updated_participant_data[:email]).to_s)
   end
 
-  def then_i_can_view_updated_term
-    expect(page).to have_selector("h1", text: "Check your answers")
-    expect(page).to have_text(@updated_participant_data[:start_term].humanize)
-  end
-
   def then_i_can_view_the_added_materials
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Materials")
@@ -1063,7 +1050,6 @@ module ManageTrainingSteps
       date_of_birth: Date.new(1998, 3, 22),
       email: "sally@school.com",
       nino: "AB123456A",
-      start_term: "summer_2022",
       start_date: Date.new(2022, 9, 1),
     }
   end
@@ -1091,7 +1077,6 @@ module ManageTrainingSteps
     @updated_participant_data = {
       full_name: "Jane Teacher",
       email: "jane@school.com",
-      start_term: "spring_2022",
     }
   end
 
