@@ -3565,7 +3565,7 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "participant-outcome"
+            "example": "npq-outcome-confirmation"
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQOutcomeAttributes"
@@ -3620,17 +3620,98 @@
           "completion_date": {
             "description": "The date the participant received the assessment outcome for this course",
             "type": "string",
-            "example": "2021-05-31T02:21:32.000Z"
+            "example": "2021-05-31"
           },
           "created_at": {
-            "description": "The date you created the participant-outcome record",
+            "description": "The date you created the latest npq-outcome-confirmation record",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           }
         }
       },
+      "NPQOutcomeAttributesRequest": {
+        "type": "object",
+        "required": [
+          "participant_id",
+          "course_identifier",
+          "state"
+        ],
+        "properties": {
+          "course_identifier": {
+            "description": "The course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-early-years-leadership"
+            ],
+            "example": "npq-leading-teaching"
+          },
+          "state": {
+            "description": "The state of the outcome (passed, failed, voided)",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "passed",
+              "failed",
+              "voided"
+            ],
+            "example": "passed"
+          },
+          "completion_date": {
+            "description": "The date the participant received the assessment outcome for this course",
+            "type": "string",
+            "example": "2021-05-31"
+          }
+        }
+      },
+      "NPQOutcomeDataRequest": {
+        "description": "The NPQ outcome submission request attributes",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-outcome-confirmation"
+          },
+          "data": {
+            "$ref": "#/components/schemas/NPQOutcomeAttributesRequest"
+          }
+        }
+      },
+      "NPQOutcomeRequest": {
+        "description": "The NPQ outcome submission request",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQOutcomeDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "npq-outcome-confirmation",
+            "attributes": {
+              "course_identifier": "npq-leading-teaching",
+              "state": "passed",
+              "completion_date": "2021-05-31"
+            }
+          }
+        }
+      },
       "NPQOutcomeResponse": {
-        "description": "The details of an NPQ Outcome",
+        "description": "A list of NPQ outcomes",
         "type": "object",
         "required": [
           "data"
