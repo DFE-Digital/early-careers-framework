@@ -36,7 +36,7 @@ class ParticipantProfile < ApplicationRecord
       other
     ].freeze
 
-    self.ignored_columns = %i[mentor_profile_id school_cohort_id start_term]
+    self.ignored_columns = %i[mentor_profile_id school_cohort_id]
     belongs_to :school, optional: true
     belongs_to :npq_course, optional: true
 

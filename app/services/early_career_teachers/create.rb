@@ -50,12 +50,11 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :start_term, :school_cohort, :mentor_profile_id, :year_2020, :start_date, :sit_validation, :appropriate_body_id
+    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :year_2020, :start_date, :sit_validation, :appropriate_body_id
 
-    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_term: nil, start_date: nil, year_2020: false, sit_validation: false, appropriate_body_id: nil)
+    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_date: nil, year_2020: false, sit_validation: false, appropriate_body_id: nil)
       @full_name = full_name
       @email = email
-      @start_term = start_term || school_cohort.cohort.start_term_options.first
       @school_cohort = school_cohort
       @mentor_profile_id = mentor_profile_id
       @start_date = start_date
@@ -66,7 +65,6 @@ module EarlyCareerTeachers
 
     def ect_attributes
       {
-        start_term:,
         school_cohort_id: school_cohort.id,
         mentor_profile_id:,
         sparsity_uplift: sparsity_uplift?(start_year),
