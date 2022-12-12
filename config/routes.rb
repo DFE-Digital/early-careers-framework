@@ -521,7 +521,7 @@ Rails.application.routes.draw do
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
 
-          resource :setup_school_cohort, path: "register-programme", constraints: ->(_request) { FeatureFlag.active?(:multiple_cohorts) } do
+          resource :setup_school_cohort, path: "register-programme" do
             get "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects", as: :expect_any_ects
             put "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects"
 

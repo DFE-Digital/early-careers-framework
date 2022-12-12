@@ -1,15 +1,6 @@
 en:
   schools:
     participants:
-      add:
-        start_term:
-          ect: "When do you expect %{full_name} to start their induction programme?"
-          mentor: "When do you expect %{full_name} to begin mentoring ECTs?"
-      change:
-        start_term:
-          ect: "Change when you expect %{full_name} to start their induction programme"
-          mentor: "Change when you expect %{full_name} to start mentoring ECTs"
-
       type:
         ect: "Early career teacher"
         mentor: "Mentor"

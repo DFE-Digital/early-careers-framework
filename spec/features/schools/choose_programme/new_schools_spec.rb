@@ -8,10 +8,6 @@ RSpec.feature "New schools should be able to choose their programme", type: :fea
   include NewSchoolsSteps
   include ChooseProgrammeSteps
 
-  before do
-    FeatureFlag.activate(:multiple_cohorts)
-  end
-
   context "when no ECTs expected" do
     scenario "a new school chooses their programme and get confirmation" do
       given_a_new_school
