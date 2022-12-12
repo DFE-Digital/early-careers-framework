@@ -100,17 +100,6 @@ namespace :compare do
         first_declaration_date: Date.new(2022, 10, 31),
       )
 
-      CSV_EXPORT_COLUMNS = %i[
-        participant_profile_id
-        changed
-        changed_lead_provider
-        changed_delivery_partner
-        changed_school
-        changed_cohort
-        changed_identity
-        changed_schedule
-      ].freeze
-
       rows = []
       InductionRecord.end_date_null.find_in_batches.each do |batch|
         batch.each do |induction_record|
@@ -213,11 +202,22 @@ namespace :compare do
       puts "writing detailed reports to folder #{folder_path}/"
       Dir.mkdir folder_path
 
+      columns = %i[
+        participant_profile_id
+        changed
+        changed_lead_provider
+        changed_delivery_partner
+        changed_school
+        changed_cohort
+        changed_identity
+        changed_schedule
+      ]
+
       CSV.open("#{folder_path}/critical-data-changes-report.csv", "wb") do |csv|
-        csv << CSV_EXPORT_COLUMNS
+        csv << columns
 
         rows.each do |row|
-          csv_row_data = CSV_EXPORT_COLUMNS.map { |csv_column| row.send(csv_column) }
+          csv_row_data = columns.map { |csv_column| row.send(csv_column) }
 
           csv << csv_row_data
         end
