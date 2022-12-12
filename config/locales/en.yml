@@ -41,6 +41,7 @@ en:
   invalid_identifier: "The property '#/course_identifier' must be an available course to '#/participant_id'"
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
+  invalid_completion_date: "The property '#/completion_date' must be in the following format: '2021-05-31'"
   future_date: "The property '#/%{attribute}' can not declare a future date"
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
   missing_declaration_type: "The property '#/declaration_type' must be present"
