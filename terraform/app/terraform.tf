@@ -16,8 +16,7 @@ provider cloudfoundry {
 }
 
 provider "statuscake" {
-  username = var.statuscake_username
-  apikey   = var.statuscake_apikey
+  api_token = var.statuscake_api_token
 }
 
 /*
