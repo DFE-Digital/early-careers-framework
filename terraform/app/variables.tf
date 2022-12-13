@@ -111,7 +111,7 @@ variable "statuscake_alerts" {
   default     = {}
 }
 
-variable statuscake_apikey {
+variable statuscake_api_token {
 }
 
 locals {
