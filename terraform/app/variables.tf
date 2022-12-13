@@ -111,9 +111,6 @@ variable "statuscake_alerts" {
   default     = {}
 }
 
-variable statuscake_username {
-}
-
 variable statuscake_apikey {
 }
 
