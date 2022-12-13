@@ -13,5 +13,7 @@ class ParticipantOutcome::NPQ < ApplicationRecord
   validates :state, presence: true
   validates :completion_date, presence: true, future_date: true
 
-  scope :latest, -> { order(created_at: :desc).first }
+  def self.latest
+    order(created_at: :desc).first
+  end
 end

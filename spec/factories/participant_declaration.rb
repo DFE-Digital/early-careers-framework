@@ -10,6 +10,7 @@ FactoryBot.define do
     transient do
       profile_traits { [] }
       uplifts        { [] }
+      has_passed     { false }
     end
 
     factory :ecf_participant_declaration, class: "ParticipantDeclaration::ECF" do
@@ -45,6 +46,7 @@ FactoryBot.define do
         declaration_date: declaration_date.rfc3339,
         declaration_type:,
         cpd_lead_provider:,
+        has_passed:,
       }
 
       params[:evidence_held] = "other" if declaration_type != "started"

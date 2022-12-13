@@ -21,6 +21,7 @@ class FeatureFlag
     multiple_cohorts
     api_v3
     appropriate_bodies
+    participant_outcomes_feature
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

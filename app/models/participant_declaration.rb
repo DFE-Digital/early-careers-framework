@@ -159,6 +159,14 @@ class ParticipantDeclaration < ApplicationRecord
       )
   end
 
+  def npq?
+    false
+  end
+
+  def ecf?
+    false
+  end
+
 private
 
   def build_initial_declaration_state
