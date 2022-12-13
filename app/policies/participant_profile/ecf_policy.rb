@@ -23,6 +23,7 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :appropriate_body_type?, :update?
   alias_method :update_appropriate_body_type?, :update?
   alias_method :appropriate_body?, :update?
+  alias_method :appropriate_body_confirmation?, :update?
   alias_method :update_appropriate_body?, :update?
 
   def update_start_term?

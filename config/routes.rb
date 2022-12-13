@@ -616,6 +616,7 @@ Rails.application.routes.draw do
             get :edit_mentor, path: "edit-mentor"
             put :update_mentor, path: "update-mentor"
             get :add_appropriate_body, path: "add-appropriate-body"
+            get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
             appropriate_body_selection_routes :participants
           end
 
