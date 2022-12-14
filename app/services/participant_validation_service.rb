@@ -37,7 +37,7 @@ class ParticipantValidationService
 private
 
   def magic_date_criteria_met?
-    (Rails.env.development? || Rails.env.deployed_development?) && date_of_birth == Date.new(1900,1,1)
+    (Rails.env.development? || Rails.env.deployed_development?) && date_of_birth == Date.new(1900, 1, 1)
   end
 
   def magic_response
