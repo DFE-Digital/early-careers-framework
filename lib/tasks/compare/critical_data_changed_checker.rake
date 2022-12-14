@@ -2,6 +2,22 @@
 
 require "json-diff"
 
+CSV_REPORT_COLUMNS = %i[
+  participant_profile_id
+  records_started
+  last_updated
+  changed
+  changed_lead_provider
+  changed_delivery_partner
+  changed_school
+  changed_cohort
+  changed_mentor
+  changed_external_id
+  changed_email
+  changed_schedule
+  registration_year
+].freeze
+
 Row = Struct.new(
   :induction_record,
   :participant_profile_id,
@@ -11,9 +27,28 @@ Row = Struct.new(
   :past_cohort_years,
   :past_mentor_ids,
   :past_identity_ids,
+  :past_emails,
   :past_schedules,
+  :records_started_on,
+  :last_updated_on,
   keyword_init: true,
 ) do
+
+  def records_started
+    records_started_on&.strftime("%Y-%m-%d")
+  end
+
+  def last_updated
+    last_updated_on&.strftime("%Y-%m-%d")
+  end
+
+  def registration_year
+    year = records_started_on&.year
+    # schools are encouraged to begin registering from May
+    year - 1 if !year.nil? && records_started_on.month < 5
+    year
+  end
+
   def changed_lead_provider
     ([induction_record&.lead_provider&.id] + past_lead_provider_ids).compact.uniq.count > 1
   end
@@ -34,8 +69,12 @@ Row = Struct.new(
     ([induction_record&.mentor&.id] + past_mentor_ids).compact.uniq.count > 1
   end
 
-  def changed_identity
+  def changed_external_id
     ([induction_record&.preferred_identity&.external_identifier] + past_identity_ids).compact.uniq.count > 1
+  end
+
+  def changed_email
+    ([induction_record&.preferred_identity&.email] + past_emails).compact.uniq.count > 1
   end
 
   def changed_schedule
@@ -48,21 +87,31 @@ Row = Struct.new(
       changed_school ||
       changed_cohort ||
       changed_mentor ||
-      changed_identity ||
+      changed_external_id ||
+      changed_email ||
       changed_schedule
   end
 
   def to_h
     {
       participant_profile_id:,
+      records_started:,
+      last_updated:,
       changed:,
       changed_lead_provider:,
       changed_delivery_partner:,
       changed_school:,
       changed_cohort:,
-      changed_identity:,
+      changed_mentor:,
+      changed_external_id:,
+      changed_email:,
       changed_schedule:,
+      registration_year:,
     }
+  end
+
+  def to_csv_row
+    CSV_REPORT_COLUMNS.map { |csv_column| send(csv_column) }
   end
 end
 
@@ -92,27 +141,65 @@ namespace :compare do
   # The results are stored in an array of Row structs which is intended to be
   # parsed into a CSV and written to disk
   namespace :critical_data_changed_checker do
-    desc "compare"
-    task :run, %i[registration_start_date registration_end_date first_declaration_date] => :environment do |_task, args|
-      args.with_defaults(
-        registration_start_date: Date.new(2022, 7, 1),
-        registration_end_date: Date.new(2022, 9, 1),
-        first_declaration_date: Date.new(2022, 10, 31),
-      )
+    desc "Analyse critical data changes over a period"
 
+    task :run, %i[start_date end_date] => :environment do |_task, args|
+      args.with_defaults start_date: "2022-05-01", end_date: "2023-04-30"
+
+      report_start_date = Date.parse(args[:start_date])
+      report_end_date = Date.parse(args[:end_date])
+
+      folder_timestamp = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
+      folder_path = "/tmp/#{folder_timestamp}"
+      puts "Creating folder #{folder_path}/"
+      Dir.mkdir folder_path
+
+      period_end_date = Date.new(report_start_date.year, report_start_date.month - 1, 1)
+
+      while period_end_date < report_end_date
+        period_start_date = period_end_date + 1.day
+        period_end_date = Date.new(period_start_date.year, period_start_date.month, -1)
+
+        file_path = "#{folder_path}/critical-data-changes-report-#{period_start_date.strftime("%Y-%m-%d")}-#{period_end_date.strftime("%Y-%m-%d")}.csv"
+        rows = analyse_period(period_start_date, period_end_date)
+        puts "Writing report to #{file_path}"
+        create_csv_report(file_path, rows)
+
+        changed = rows.filter(&:changed).count
+        complete = rows.reject(&:changed).count
+
+        puts "#{period_start_date.strftime("%Y-%m-%d")} to #{period_end_date.strftime("%Y-%m-%d")}"
+        puts sprintf("total analysed: %i :: total changed in period: %i", complete, changed)
+      end
+    end
+
+    def create_csv_report(file_path, rows)
+      CSV.open(file_path, "wb") do |csv|
+        csv << CSV_REPORT_COLUMNS
+
+        rows.each do |row|
+          csv << row.to_csv_row
+        end
+      end
+    end
+
+    def analyse_period(period_start_date, period_end_date)
       rows = []
-      InductionRecord.end_date_null.find_in_batches.each do |batch|
+      InductionRecord.find_in_batches.each do |batch|
         batch.each do |induction_record|
           previous_versions = InductionRecord
                                 .where(participant_profile_id: induction_record.participant_profile_id)
-                                # records were created after july 1st
-                                .where(InductionRecord.arel_table[:created_at].gteq(args[:registration_start_date]))
-                                # records were modified between the registration period ending and the milestone period beginning
-                                .where(InductionRecord.arel_table[:updated_at].gteq(args[:registration_end_date]))
-                                .where(InductionRecord.arel_table[:updated_at].lteq(args[:first_declaration_date]))
+                                .where(InductionRecord.arel_table[:updated_at].gteq(period_start_date))
+                                .where(InductionRecord.arel_table[:updated_at].lteq(period_end_date))
                                 .where.not(id: induction_record.id)
 
           row = Row.new(induction_record:, participant_profile_id: induction_record.participant_profile_id)
+
+          participant_created_on = induction_record.participant_profile&.created_at
+          first_induction_record_start_date = induction_record.participant_profile&.induction_records&.oldest&.start_date
+          row.records_started_on = !participant_created_on.nil? && participant_created_on < first_induction_record_start_date ? participant_created_on : first_induction_record_start_date
+
+          row.last_updated_on = induction_record.updated_at
 
           # participant identifier
           # this finds all the previous participant identities and retrieves the external identifiers
@@ -128,6 +215,7 @@ namespace :compare do
 
           # email
           # this provides the ability for the Lead Provider to continue with registration
+          row.past_emails = previous_versions.map { |pv| pv&.preferred_identity&.email }
 
           # full name
           # This has to be done through support and should trigger a re-validation of the TRN
@@ -144,8 +232,7 @@ namespace :compare do
           row.past_school_urns = previous_versions.map { |pv| pv&.school&.urn }
 
           # participant type
-          # a new ParticipantProfile would be the result of this and therefore
-          #     the first InductionRecord will have be created in the period
+          # a new ParticipantProfile would be the result of this so it can't be measured
 
           # cohort
           # lead providers use this to identify which materials are required for a participant
@@ -196,38 +283,7 @@ namespace :compare do
         end
       end
 
-      folder_timestamp = Time.zone.now.strftime "%Y-%m-%dT%H-%M-%S"
-      folder_path = "/tmp/#{folder_timestamp}"
-
-      puts "writing detailed reports to folder #{folder_path}/"
-      Dir.mkdir folder_path
-
-      columns = %i[
-        participant_profile_id
-        changed
-        changed_lead_provider
-        changed_delivery_partner
-        changed_school
-        changed_cohort
-        changed_identity
-        changed_schedule
-      ]
-
-      CSV.open("#{folder_path}/critical-data-changes-report.csv", "wb") do |csv|
-        csv << columns
-
-        rows.each do |row|
-          csv_row_data = columns.map { |csv_column| row.send(csv_column) }
-
-          csv << csv_row_data
-        end
-      end
-
-      changed = rows.filter(&:changed).count
-      complete = rows.reject(&:changed).count
-      percent = 100 - (changed.to_f / complete * 100)
-
-      puts sprintf("total completed: %i :: total changed: %i :: percentage: %.2f%%", complete, changed, percent)
+      rows
     end
   end
 end
