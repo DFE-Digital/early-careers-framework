@@ -1008,18 +1008,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Pagination"
-            },
-            "style": "deepObject",
-            "explode": true,
-            "required": false,
-            "example": "page[page]=1&page[per_page]=5",
-            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
           }
         ],
         "responses": {
