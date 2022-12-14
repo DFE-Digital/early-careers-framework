@@ -59,18 +59,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The external ID of the participant"
 
-      parameter name: :page,
-                in: :query,
-                schema: {
-                  "$ref": "#/components/schemas/Pagination",
-                },
-                type: :object,
-                style: :deepObject,
-                explode: true,
-                required: false,
-                example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
-                description: "Pagination options to navigate through the list of participant NPQ outcomes."
-
       response "200", "A list of participant outcomes" do
         schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })
 
