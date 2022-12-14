@@ -16,6 +16,10 @@ class ParticipantValidationService
   end
 
   def validate
+    if magic_date_criteria_met?
+      return magic_response
+    end
+
     validated_record = matching_record(trn:, nino:, full_name:, dob: date_of_birth)
     return if validated_record.nil?
 
@@ -31,6 +35,22 @@ class ParticipantValidationService
   end
 
 private
+
+  def magic_date_criteria_met?
+    (Rails.env.development? || Rails.env.deployed_development?) && date_of_birth == Date.new(1900,1,1)
+  end
+
+  def magic_response
+    {
+      trn: TeacherReferenceNumber.new(trn:).formatted_trn,
+      qts: true,
+      active_alert: false,
+      previous_participation: false,
+      previous_induction: false,
+      no_induction: false,
+      exempt_from_induction: false,
+    }
+  end
 
   def previous_participation?(validation_data)
     CheckParticipantPreviousParticipation.call(trn: validation_data["trn"])
