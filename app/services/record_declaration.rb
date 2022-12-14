@@ -85,15 +85,19 @@ private
   end
 
   def declaration_attempt
-    if participant_id && cpd_lead_provider
+    if user && cpd_lead_provider
       @declaration_attempt ||= ParticipantDeclarationAttempt.create!(
         course_identifier:,
         declaration_date:,
         declaration_type:,
         cpd_lead_provider:,
-        user_id: participant_id,
+        user:,
       )
     end
+  end
+
+  def user
+    @user ||= participant_identity&.user
   end
 
   def set_eligibility
