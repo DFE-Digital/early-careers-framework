@@ -7,6 +7,7 @@ module Finance
 
     before_action :authenticate_user!
     before_action :ensure_finance
+    before_action :set_paper_trail_whodunnit
 
     layout "finance"
 
