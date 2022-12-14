@@ -165,11 +165,12 @@ namespace :compare do
         puts "Writing report to #{file_path}"
         create_csv_report(file_path, rows)
 
+        unchanged = rows.reject(&:changed).count
         changed = rows.filter(&:changed).count
-        complete = rows.reject(&:changed).count
 
-        puts "#{period_start_date.strftime("%Y-%m-%d")} to #{period_end_date.strftime("%Y-%m-%d")}"
-        puts sprintf("total analysed: %i :: total changed in period: %i", complete, changed)
+        puts "for period #{period_start_date.strftime("%Y-%m-%d")} to #{period_end_date.strftime("%Y-%m-%d")}"
+        puts sprintf("total participants without changes: %i", unchanged)
+        puts sprintf("total participants with changes: %i", changed)
       end
     end
 
@@ -185,8 +186,10 @@ namespace :compare do
 
     def analyse_period(period_start_date, period_end_date)
       rows = []
-      InductionRecord.find_in_batches.each do |batch|
-        batch.each do |induction_record|
+      ParticipantProfile::ECF.find_in_batches.each do |batch|
+        batch.each do |participant_profile|
+          induction_record = participant_profile.induction_records.latest
+
           previous_versions = InductionRecord
                                 .where(participant_profile_id: induction_record.participant_profile_id)
                                 .where(InductionRecord.arel_table[:updated_at].gteq(period_start_date))
