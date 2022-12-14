@@ -2,7 +2,7 @@
 
 RSpec.describe Induction::Enrol do
   describe "#call" do
-    let(:school_cohort) { create :school_cohort }
+    let(:school_cohort) { create :school_cohort, appropriate_body: create(:appropriate_body_local_authority) }
     let!(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
     let(:teacher_profile) { create(:teacher_profile) }
     let(:participant_profile) { create(:ect_participant_profile, teacher_profile:, school_cohort:) }
@@ -28,6 +28,10 @@ RSpec.describe Induction::Enrol do
 
       it "sets the preferred identity to be the participant_profile.participant_identity" do
         expect(induction_record.preferred_identity_id).to eq(participant_profile.participant_identity_id)
+      end
+
+      it "sets the appropriate body the default one from the school cohort of the induction programme" do
+        expect(induction_record.appropriate_body_id).to eq(school_cohort.appropriate_body_id)
       end
     end
 

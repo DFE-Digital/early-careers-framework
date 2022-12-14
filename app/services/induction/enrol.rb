@@ -33,7 +33,11 @@ private
     @preferred_email = preferred_email
     @mentor_profile = mentor_profile
     @school_transfer = school_transfer
-    @appropriate_body_id = appropriate_body_id
+    @appropriate_body_id = appropriate_body_id || school_appropriate_body_id
+  end
+
+  def school_appropriate_body_id
+    induction_programme.school_cohort.appropriate_body_id
   end
 
   def preferred_identity
@@ -45,13 +49,13 @@ private
     end
   end
 
-  def schedule_start_date
-    participant_profile.schedule.milestones.first.start_date
-  end
-
   def record_active_profile_participant_state!
     ParticipantProfileState.create!(participant_profile:,
                                     state: ParticipantProfileState.states[:active],
                                     cpd_lead_provider: induction_programme&.lead_provider&.cpd_lead_provider)
+  end
+
+  def schedule_start_date
+    participant_profile.schedule.milestones.first.start_date
   end
 end
