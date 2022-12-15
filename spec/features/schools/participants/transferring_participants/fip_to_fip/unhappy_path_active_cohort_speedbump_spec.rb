@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false do
-  context "Transferring a participant to a school" do
+  # speed bump removed so not sure this is needed
+  xcontext "Transferring a participant to a school" do
     context "School has not created a programme for the previous cohort" do
       before do
         given_there_are_two_schools_that_have_chosen_fip_for_2022_and_partnered

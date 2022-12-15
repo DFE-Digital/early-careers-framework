@@ -127,13 +127,13 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
         @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
-        @mentor = create(:mentor_participant_profile, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
+        @mentor = create(:mentor_participant_profile, schedule: create(:ecf_schedule, cohort: @cohort), user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
         @partnership_1 = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
         @partnership_2 = create(:partnership, school: @school_two, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
         @induction_programme_one = create(:induction_programme, :fip, school_cohort: @school_cohort_one, partnership: @partnership_1)
         @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_2)
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
-        Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
+        Induction::Enrol.call(participant_profile: @mentor, start_date: Date.new(2021, 9, 1), induction_programme: @induction_programme_one)
         Mentors::AddToSchool.call(school: @school_one, mentor_profile: @mentor)
       end
 
@@ -321,9 +321,9 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def and_there_is_an_ect_who_will_be_transferring
-        @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
+        @participant_profile_ect = create(:ect_participant_profile, schedule: create(:ecf_schedule, cohort: @cohort), user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
-        Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two)
+        Induction::Enrol.call(participant_profile: @participant_profile_ect, start_date: Date.new(2021, 9, 1), induction_programme: @induction_programme_two)
       end
 
       def and_it_should_list_the_schools_mentors

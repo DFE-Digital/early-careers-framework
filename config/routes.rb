@@ -568,6 +568,8 @@ Rails.application.routes.draw do
             put "dob", to: "transferring_participants#dob"
             get "cannot-find-their-details", to: "transferring_participants#cannot_find_their_details", as: :cannot_find_their_details
             get "cannot-add", to: "transferring_participants#cannot_add", as: :cannot_add
+            get "need-training-setup", to: "transferring_participants#need_training_setup", as: :need_training_setup
+            put "need-training-setup", to: "transferring_participants#need_training_setup"
             get "teacher-start-date", to: "transferring_participants#teacher_start_date", as: :teacher_start_date
             put "teacher-start-date", to: "transferring_participants#teacher_start_date"
             get "email", to: "transferring_participants#email", as: :email

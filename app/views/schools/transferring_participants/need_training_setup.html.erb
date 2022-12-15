@@ -1,0 +1,27 @@
+<% title = "We need some more information" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link( text: "Back", href: { action: @transferring_participant_form.previous_step }) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+        <h1 class="govuk-heading-xl"><%= title %></h1>
+
+        <p class="govuk-body">Before you can register <%= @transferring_participant_form.full_name %> for ECF-based training at your school,
+          you need to set up training for the <%= @transferring_participant_form.participant_cohort.description %> year.  This is because
+          <%= @transferring_participant_form.full_name %> has already started training at a previous school so cannot be added to the 
+          <%= @cohort.description %> year.</p>
+
+        <div class="govuk-inset-text">
+          <p class="govuk-body">The name, TRN and date of birth you have entered will not be saved.
+            You will need to enter this information again once you have set up the training.</p>
+        </div>
+    
+        <%= form_for @transferring_participant_form, url: { action: :need_training_setup }, method: :put do |f| %>
+            <%= f.govuk_submit "Continue to set up training" %>
+        <% end %>
+    </div>
+</div>
+

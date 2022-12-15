@@ -3,7 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false do
-  context "Transferring an ECT to a school" do
+  # Don't think this is required any longer
+  xcontext "Transferring an ECT to a school" do
     context "ECT has matching lead provider and delivery partner" do
       before do
         allow_participant_transfer_mailers
