@@ -160,13 +160,39 @@ RSpec.shared_examples "validates the participant milestone" do
   end
 end
 
+RSpec.shared_examples "creates participant declaration attempt" do
+  context "when user has same ID as participant external ID" do
+    it "creates the relevant participant declaration" do
+      expect { subject.call }.to change(ParticipantDeclarationAttempt, :count).by(1)
+    end
+  end
+
+  context "when user has different ID to participant external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+    let(:opts) { { participant_identity: } }
+
+    it "creates the relevant participant declaration" do
+      expect { subject.call }.to change(ParticipantDeclarationAttempt, :count).by(1)
+    end
+  end
+
+  context "with incorrect participant ID" do
+    let(:participant_id) { "non-existent-user" }
+
+    it "does not create the relevant participant declaration" do
+      expect { subject.call }.not_to change(ParticipantDeclarationAttempt, :count)
+    end
+  end
+end
+
 RSpec.describe RecordDeclaration, :with_default_schedules do
   let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
+  let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:params) do
     {
-      participant_id: participant_profile.participant_identity.external_identifier,
+      participant_id:,
       declaration_date: declaration_date.rfc3339,
       declaration_type:,
       course_identifier:,
@@ -188,9 +214,10 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
     let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
     let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
-    let(:traits)              { [] }
+    let(:traits)                { [] }
+    let(:opts)                  { {} }
     let(:participant_profile) do
-      create(particpant_type, *traits, lead_provider: cpd_lead_provider.lead_provider)
+      create(particpant_type, *traits, **opts, lead_provider: cpd_lead_provider.lead_provider)
     end
 
     context "when the participant is an ECT" do
@@ -214,6 +241,8 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
+
+      it_behaves_like "creates participant declaration attempt"
 
       context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
         let!(:schedule) { create(:ecf_schedule, cohort:) }
@@ -248,6 +277,8 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
+
+      it_behaves_like "creates participant declaration attempt"
     end
   end
 
@@ -281,6 +312,8 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
     it_behaves_like "validates the participant milestone"
+
+    it_behaves_like "creates participant declaration attempt"
 
     context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
