@@ -78,11 +78,7 @@
 
     <%= yield(:nav_bar) %>
 
-    <% if wide_container_view? %>
-      <%= render "layouts/phase_banner_wide" %>
-    <% else %>
-      <%= render "layouts/phase_banner" %>
-    <% end %>
+    <%= render "layouts/phase_banner" %>
 
     <% if current_user != true_user %>
       <div class="govuk-width-container">
@@ -102,10 +98,6 @@
 
     <%= yield %>
 
-    <% if wide_container_view? %>
-      <%= render "layouts/footer_wide" %>
-    <% else %>
-      <%= render "layouts/footer" %>
-    <% end %>
+    <%= render "layouts/footer" %>
   </body>
 </html>

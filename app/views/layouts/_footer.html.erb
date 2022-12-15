@@ -1,5 +1,5 @@
 <footer class="govuk-footer" role="contentinfo">
-  <div class="govuk-width-container">
+  <%= tag.div(class: class_names("govuk-width-container", "govuk-width-container__wide" => wide_container_view?)) do %>
     <div class="govuk-footer__meta">
       <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
         <%= render 'layouts/support_links' %>
@@ -16,5 +16,5 @@
         <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
       </div>
     </div>
-  </div>
+  <% end %>
 </footer>
