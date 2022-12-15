@@ -389,6 +389,36 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
           end
         end
       end
+
+      context "ehco course identifier" do
+        let!(:npq_ehco_schedule) { create(:npq_ehco_schedule) }
+        let(:npq_course) { create(:npq_ehco_course) }
+        let(:has_passed) { true }
+
+        it "does not create participant outcome" do
+          travel_to declaration_date do
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+            expect(service).to be_valid
+            service.call
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+          end
+        end
+      end
+
+      context "aso course identifier" do
+        let!(:npq_aso_schedule) { create(:npq_aso_schedule) }
+        let(:npq_course) { create(:npq_aso_course) }
+        let(:has_passed) { true }
+
+        it "does not create participant outcome" do
+          travel_to declaration_date do
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+            expect(service).to be_valid
+            service.call
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+          end
+        end
+      end
     end
   end
 
