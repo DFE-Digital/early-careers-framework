@@ -19,7 +19,8 @@ module NPQ
         ApplicationRecord.transaction do
           teacher_profile.update!(trn: npq_application.teacher_reference_number) if npq_application.teacher_reference_number_verified?
           create_participant_profile!
-          npq_application.update(lead_provider_approval_status: "accepted") && other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected")
+          npq_application.update!(lead_provider_approval_status: "accepted")
+          other_applications_in_same_cohort.update(lead_provider_approval_status: "rejected") # rubocop:disable Rails/SaveBang
           deduplicate_by_trn!
         end
 
