@@ -8,18 +8,15 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
   before do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
+    and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_fip_induction_dashboard
     set_dqt_blank_validation_result
   end
 
   scenario "Induction tutor cannot add new ECT participant when dqt returns no match" do
-    when_i_click_on_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_roles_page
-
-    when_i_click_on_continue
+    when_i_navigate_to_participants_dashboard
     and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
     and_i_choose_to_add_a_new_ect_on_the_school_add_participant_wizard
     and_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
@@ -34,10 +31,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
   end
 
   scenario "Induction tutor cannot add new mentor participant when dqt returns no match" do
-    when_i_click_on_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_roles_page
-
-    when_i_click_on_continue
+    when_i_navigate_to_participants_dashboard
     and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
     and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
     and_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]

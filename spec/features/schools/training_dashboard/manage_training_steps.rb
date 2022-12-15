@@ -40,6 +40,7 @@ module ManageTrainingSteps
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
     @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
+    create(:school_cohort, school: @school_cohort.school, cohort: create(:cohort, start_year: 2020))
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -68,6 +69,7 @@ module ManageTrainingSteps
     @cohort = create(:cohort, start_year: 2021)
     @school = create(:school, name: "No ECT Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
+    create(:school_cohort, school: @school, cohort: create(:cohort, start_year: 2020))
   end
 
   def given_i_am_on_the_cip_induction_dashboard
@@ -279,6 +281,36 @@ module ManageTrainingSteps
     click_on "Change induction programme choice"
   end
 
+  def then_i_can_change_the_programme_to_design_your_own
+    expect(page).to have_text("Your school has told us you do not expect any ECTs")
+    click_on "Tell us if this has changed"
+    choose "Yes"
+    click_on "Continue"
+    choose("Design and deliver you own programme based on the early career framework (ECF)")
+    click_on "Continue"
+    click_on("Confirm")
+    choose("No")
+    click_on "Continue"
+    click_on("Return to manage your training")
+    expect(page).to have_content("Manage your training")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+  end
+
+  def then_i_can_change_the_programme_to_no_ects_expected
+    expect(page).to have_text("Your school has told us you do not expect any ECTs")
+    click_on "Tell us if this has changed"
+    choose "Yes"
+    click_on "Continue"
+    choose("Design and deliver you own programme based on the early career framework (ECF)")
+    click_on "Continue"
+    click_on("Confirm")
+    choose("No")
+    click_on "Continue"
+    click_on("Return to manage your training")
+    expect(page).to have_content("Manage your training")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+  end
+
   def and_i_should_see_multiple_schools
     expect(page).to have_text("Test School 1")
     expect(page).to have_text("Test School 2")
@@ -448,6 +480,10 @@ module ManageTrainingSteps
     click_on("Change induction programme choice", visible: false)
   end
 
+  def when_i_click_on_tell_us_if_this_has_changed
+    click_on("Tell us if this has changed")
+  end
+
   def when_i_click_on_add
     click_on("Add")
   end
@@ -601,9 +637,7 @@ module ManageTrainingSteps
   end
 
   def when_i_navigate_to_participants_dashboard
-    when_i_click_on_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_roles_page
-    when_i_click_on_continue
+    when_i_click_on_summary_row_action("ECTs and mentors", "Manage")
     then_i_am_taken_to_your_ect_and_mentors_page
   end
 
@@ -694,6 +728,10 @@ module ManageTrainingSteps
   def then_i_am_taken_to_change_how_you_run_programme_page
     expect(page).to have_selector("h1", text: "Change how you run your training programme")
     expect(page).to have_text("Check the other options available for your school if this changes")
+  end
+
+  def then_i_am_taken_to_setup_my_programme
+    expect(page).to have_selector("h1", text: "Does your school expect any new ECTs")
   end
 
   def then_i_am_taken_to_check_details_page
@@ -793,7 +831,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_the_no_ect_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_text("No early career teachers for this cohort")
+    expect(page).to have_text("Your school has told us you do not expect any ECTs")
   end
 
   def then_i_can_view_assign_mentor_later_status
@@ -941,7 +979,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_the_fip_induction_dashboard_without_partnership_details
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).not_to have_text("Delivery partner")
+    expect(page).to have_summary_row("Delivery partner", "To be confirmed")
   end
 
   def then_i_can_view_transferring_in_participants
@@ -961,6 +999,8 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
+    expect(page).to have_summary_row("Programme", "Use a training provider funded by the DfE")
+    expect(page).to have_summary_row_action("Programme", "Change\ninduction programme choice")
     expect(page).to have_text("Training provider")
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
