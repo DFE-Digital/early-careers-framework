@@ -77,11 +77,6 @@ module ManageTrainingSteps
     expect(page).not_to have_text("Programme materials")
   end
 
-  def given_i_can_view_the_fip_induction_dashboard_without_partnership_details
-    expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).not_to have_text("Delivery partner")
-  end
-
   def given_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_text("Training provider")
@@ -282,21 +277,6 @@ module ManageTrainingSteps
   end
 
   def then_i_can_change_the_programme_to_design_your_own
-    expect(page).to have_text("Your school has told us you do not expect any ECTs")
-    click_on "Tell us if this has changed"
-    choose "Yes"
-    click_on "Continue"
-    choose("Design and deliver you own programme based on the early career framework (ECF)")
-    click_on "Continue"
-    click_on("Confirm")
-    choose("No")
-    click_on "Continue"
-    click_on("Return to manage your training")
-    expect(page).to have_content("Manage your training")
-    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
-  end
-
-  def then_i_can_change_the_programme_to_no_ects_expected
     expect(page).to have_text("Your school has told us you do not expect any ECTs")
     click_on "Tell us if this has changed"
     choose "Yes"
@@ -981,6 +961,8 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Delivery partner", "To be confirmed")
   end
+  alias_method :given_i_can_view_the_fip_induction_dashboard_without_partnership_details,
+               :then_i_can_view_the_fip_induction_dashboard_without_partnership_details
 
   def then_i_can_view_transferring_in_participants
     expect(page).to have_text("Transferring to your school")
