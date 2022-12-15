@@ -4,10 +4,19 @@ require "rails_helper"
 
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
-    let(:traits) { [:withdrawn] }
-    before { travel_to(withdrawal_time) { participant_profile } }
+    before do
+      travel_to(withdrawal_time - 1.second) { participant_profile }
+      travel_to(withdrawal_time) do
+        WithdrawParticipant.new(
+          participant_id: participant_profile.participant_identity.external_identifier,
+          cpd_lead_provider:,
+          reason: "other",
+          course_identifier:,
+        ).call
+      end
+    end
 
-    context "when the declaration is backdated before the participant has been withdrawn" do
+    context "when the declaration is made after the participant has been withdrawn" do
       let(:withdrawal_time) { declaration_date - 1.second }
 
       it "has a meaningful error" do
@@ -17,7 +26,7 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
       end
     end
 
-    context "when the declaration date is made after the participant has been withrawn" do
+    context "when the declaration is backdated before the participant has been withdrawn" do
       let(:withdrawal_time) { declaration_date + 1.second }
 
       it { is_expected.to be_valid }

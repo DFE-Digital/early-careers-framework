@@ -10,8 +10,9 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
   let(:traits)               { [] }
   let(:school_cohort)        { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider) }
   let(:participant_profile)  { create(particpant_type, *traits, school_cohort:) }
+  let(:schedule)             { Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort) }
   let(:particpant_type)      { :ect }
-  let(:milestone_start_date) { participant_profile.schedule.milestones.find_by(declaration_type: "started").start_date }
+  let(:milestone_start_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
 
   describe "POST /api/v1/participant-declarations" do
     let(:declaration_date)  { milestone_start_date }
@@ -200,8 +201,13 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         let(:transfer_lp_token)        { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider: new_cpd_lead_provider) }
         let(:transfer_lp_bearer_token) { "Bearer #{transfer_lp_token}" }
         let(:url)                      { "/api/v1/participants/ecf/#{participant_profile.user_id}/withdraw" }
+        let(:participant_profile_date) { Time.zone.now }
 
         before do
+          travel_to(participant_profile_date) do
+            participant_profile
+          end
+
           Induction::TransferToSchoolsProgramme.call(
             induction_programme: new_school_cohort.default_induction_programme,
             start_date: milestone_start_date + 1,
@@ -211,6 +217,8 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         context "when the participant has been withdrawn" do
           let(:withdrawal_date) { (milestone_start_date + 5.days).in_time_zone }
+          let(:participant_profile_date) { withdrawal_date - 1.second }
+
           before do
             travel_to(withdrawal_date) do
               put url, params: { data: { type: :participant, attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } }.to_json
