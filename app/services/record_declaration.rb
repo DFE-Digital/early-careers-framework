@@ -199,6 +199,8 @@ private
   end
 
   def validate_has_passed?
+    return false unless FeatureFlag.active?(:participant_outcomes_feature)
+
     participant_profile&.npq? && declaration_type == "completed"
   end
 
@@ -207,7 +209,7 @@ private
   end
 
   def create_participant_outcome
-    return unless FeatureFlag.active?(:participant_outcomes_feature)
+    return unless validate_has_passed?
 
     NPQ::CreateParticipantOutcome.new(
       cpd_lead_provider:,
