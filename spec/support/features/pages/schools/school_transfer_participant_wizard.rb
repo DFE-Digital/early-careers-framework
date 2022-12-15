@@ -66,7 +66,7 @@ module Pages
     end
 
     def confirm_transferring_an_ect_or_mentor
-      click_on "Report a transferring ECT or mentor"
+      # click_on "Report a transferring ECT or mentor"
       click_on "Continue"
 
       self
