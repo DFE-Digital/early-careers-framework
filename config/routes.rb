@@ -85,6 +85,9 @@ Rails.application.routes.draw do
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
+          resources :outcomes, only: %i[index], controller: "provider_outcomes"
+        end
+        member do
           resources :outcomes, only: %i[index], controller: "participant_outcomes"
         end
       end
@@ -120,6 +123,9 @@ Rails.application.routes.draw do
       resources :npq_participants, only: %i[index show], path: "participants/npq" do
         concerns :participant_actions
         collection do
+          resources :outcomes, only: %i[index], controller: "provider_outcomes"
+        end
+        member do
           resources :outcomes, only: %i[index], controller: "participant_outcomes"
         end
       end
