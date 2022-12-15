@@ -30,7 +30,7 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
 
       it "returns the school dashboard path (show)" do
-        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
+        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}#_2021-to-2022")
       end
 
       context "when a new registration cohort is active", travel_to: Time.zone.now + 3.years do

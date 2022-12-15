@@ -10,7 +10,7 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
     given_there_is_a_school_and_an_induction_coordinator
     and_i_am_signed_in_as_an_induction_coordinator
 
-    click_on "Change"
+    click_on "Change induction tutor"
     then_i_should_be_on_the_change_sit_name_page
     and_the_page_should_be_accessible
 
@@ -50,7 +50,7 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
     and_i_am_signed_in_as_an_induction_coordinator
 
     click_on "Test School 1"
-    click_on "Change"
+    click_on "Change induction tutor"
     then_i_should_be_on_the_change_sit_name_page
 
     when_i_fill_in_the_sits_name
