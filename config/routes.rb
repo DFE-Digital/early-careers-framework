@@ -239,7 +239,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get "admin", to: "admin/home#show"
   namespace :admin do
+    resource :home, only: :show, controller: "home"
     resources :schools, only: %i[index show] do
       resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
       get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
