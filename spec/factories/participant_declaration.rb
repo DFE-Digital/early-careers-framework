@@ -52,7 +52,6 @@ FactoryBot.define do
       params[:evidence_held] = "other" if declaration_type != "started"
 
       service = RecordDeclaration.new(params)
-
       raise ArgumentError, service.errors.full_messages unless service.valid?
 
       if participant_profile.is_a?(ParticipantProfile::NPQ) && participant_profile.fundable?

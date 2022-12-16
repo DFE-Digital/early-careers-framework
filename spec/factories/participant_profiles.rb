@@ -29,12 +29,13 @@ FactoryBot.define do
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
       transient do
+        cohort            { Cohort.current || create(:cohort, :current) }
         npq_course        { create(:npq_course) }
         user              { create(:user) }
         npq_lead_provider { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
         trn               { user.teacher_profile&.trn || sprintf("%07i", Random.random_number(9_999_999)) }
       end
-      npq_application { create(:npq_application, *profile_traits, :accepted, user:, npq_lead_provider:, npq_course:) }
+      npq_application { create(:npq_application, *profile_traits, :accepted, user:, npq_lead_provider:, npq_course:, cohort:) }
 
       trait :eligible_for_funding do
         profile_traits { [:eligible_for_funding] }
