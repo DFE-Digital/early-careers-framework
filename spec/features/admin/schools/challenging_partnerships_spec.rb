@@ -28,7 +28,7 @@ private
 
   def given_there_is_a_partnered_school
     @school = create(:school, name: "Test School")
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
     @partnership = create(:partnership, school: @school, cohort: @cohort)
     create(:school_cohort, cohort: @cohort, school: @school, induction_programme_choice: "full_induction_programme")
   end

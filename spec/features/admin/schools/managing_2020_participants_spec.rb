@@ -24,8 +24,8 @@ private
 
   def given_there_is_a_school_with_2020_cohort
     school = create(:school, name: "Test school")
-    cohort = create(:cohort, start_year: 2020)
-    create(:ecf_schedule, cohort: create(:cohort, start_year: 2021))
+    cohort = Cohort.find_by_start_year(2020) || create(:cohort, start_year: 2020)
+    create(:ecf_schedule, cohort: Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021))
     core_induction_programme = create(:core_induction_programme)
     @school_cohort = create(:school_cohort, :cip, school:, cohort:, core_induction_programme:)
     create(:ect_participant_profile, school_cohort: @school_cohort, user: create(:user, full_name: "Test NQT+1"))

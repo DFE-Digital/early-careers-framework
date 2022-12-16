@@ -23,7 +23,7 @@ RSpec.feature "Delivery partner users participants", type: :feature do
   let(:induction_programme) { create(:induction_programme, :fip, partnership:, school_cohort:) }
   let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
-  let!(:prev_cohort_year) { create(:cohort, start_year: 2020) }
+  let!(:prev_cohort_year) { Cohort.find_by_start_year(2020) || create(:cohort, start_year: 2020) }
 
   before do
     given_i_am_logged_in_as_a_delivery_partner_user

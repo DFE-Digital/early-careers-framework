@@ -14,7 +14,7 @@ RSpec.describe NPQCourse do
       end
 
       context "when requesting for cohort 2022" do
-        let(:cohort_2022) { create(:cohort, :next) }
+        let(:cohort_2022) { Cohort.next || create(:cohort, :next) }
         let!(:schedule_2022) { create(:npq_leadership_schedule, cohort: cohort_2022) }
 
         it "uses 2022 schedule" do

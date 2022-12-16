@@ -42,7 +42,7 @@ RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn parti
     let(:tokens) { {} }
 
     let!(:cohort) do
-      cohort = create(:cohort, start_year: 2021)
+      cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
       allow(Cohort).to receive(:current).and_return(cohort)
       allow(Cohort).to receive(:next).and_return(cohort)
       allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)

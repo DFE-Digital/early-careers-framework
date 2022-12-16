@@ -76,7 +76,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
       context "when posting for the new cohort" do
         let(:school)              { create(:school) }
-        let(:next_cohort)         { create(:cohort, :next) }
+        let(:next_cohort)         { Cohort.next || create(:cohort, :next) }
         let(:next_school_cohort)  { create(:school_cohort, :fip, :with_induction_programme, school:, cohort: next_cohort, lead_provider: cpd_lead_provider.lead_provider) }
         let(:participant_profile) { create(:ect, :eligible_for_funding, school_cohort: next_school_cohort, lead_provider: cpd_lead_provider.lead_provider) }
         let!(:next_schedule) do
@@ -512,7 +512,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
       end
 
       context "when participant has been retained" do
-        let!(:cohort) { create(:cohort, :next) }
+        let!(:cohort) { Cohort.next || create(:cohort, :next) }
         let!(:started_declaration) { create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:) }
         let(:milestone_start_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
         let(:params) do

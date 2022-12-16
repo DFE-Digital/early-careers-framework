@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  let!(:cohort_2021) { create(:cohort, start_year: 2021) }
-  let!(:cohort_2022) { create(:cohort, start_year: 2022) }
-  let!(:cohort_2023) { create(:cohort, start_year: 2023) }
-  let!(:cohort_2024) { create(:cohort, start_year: 2024) }
+  let!(:cohort_2021) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
+  let!(:cohort_2022) { Cohort.find_by_start_year(2022) || create(:cohort, start_year: 2022) }
+  let!(:cohort_2023) { Cohort.find_by_start_year(2023) || create(:cohort, start_year: 2023) }
+  let!(:cohort_2024) { Cohort.find_by_start_year(2024) || create(:cohort, start_year: 2024) }
 
   describe ".current" do
     describe "when the current date matches the academic year start date" do

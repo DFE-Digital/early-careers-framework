@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe PartnershipCsvUpload, type: :model do
-  let!(:current_cohort) { create(:cohort, :current) }
+  let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
   let(:valid_school) { create(:school) }
   let(:welsh_school) { create(:school, administrative_district_code: "W123", school_type_code: 30) }
   let(:closed_school) { create(:school, school_status_code: 2) }
@@ -99,7 +99,7 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     context "school already recruited by other provider" do
       it "errors when school is partnered in previous year and hasn't created the following year cohort" do
         school_cohort = create(:school_cohort, cohort: current_cohort)
-        next_cohort = create(:cohort, :next)
+        next_cohort = Cohort.next || create(:cohort, :next)
         create(:partnership, school: school_cohort.school)
 
         given_the_csv_contains_urns([school_cohort.school.urn], next_cohort)

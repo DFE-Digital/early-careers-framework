@@ -15,7 +15,7 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
     end
   end
   let(:schedule)           { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september") }
-  let(:next_cohort)        { create(:cohort, :next) }
+  let(:next_cohort)        { Cohort.next || create(:cohort, :next) }
   let(:next_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort) }
   let(:next_cohort_ect)    { create(:ect, school_cohort: next_school_cohort, lead_provider: cpd_lead_provider.lead_provider) }
 

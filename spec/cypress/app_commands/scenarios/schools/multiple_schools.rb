@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-cohort = FactoryBot.create(:cohort, :current)
+cohort = Cohort.current || FactoryBot.create(:cohort, :current)
 first_school = FactoryBot.create(:school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111")
 FactoryBot.create(:school_cohort, :cip, school: first_school, cohort:)
 second_school = FactoryBot.create(:school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112")

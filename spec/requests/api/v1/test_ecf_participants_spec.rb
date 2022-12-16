@@ -6,7 +6,7 @@ require "csv"
 RSpec.describe "Participants API", type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:cohort) { create(:cohort, :current) }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
 
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:, private_api_access: true) }
   let(:bearer_token) { "Bearer #{token}" }

@@ -6,7 +6,7 @@ module ManageTrainingSteps
   # Given_steps
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -40,7 +40,7 @@ module ManageTrainingSteps
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
     @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
-    create(:school_cohort, school: @school_cohort.school, cohort: create(:cohort, start_year: 2020))
+    create(:school_cohort, school: @school_cohort.school, cohort: Cohort.find_by_start_year(2020) || create(:cohort, start_year: 2020))
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -60,16 +60,16 @@ module ManageTrainingSteps
   end
 
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
   end
 
   def given_there_is_a_school_that_has_chosen_no_ect_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "No ECT Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
-    create(:school_cohort, school: @school, cohort: create(:cohort, start_year: 2020))
+    create(:school_cohort, school: @school, cohort: Cohort.find_by_start_year(2020) || create(:cohort, start_year: 2020))
   end
 
   def given_i_am_on_the_cip_induction_dashboard
@@ -427,7 +427,7 @@ module ManageTrainingSteps
   end
 
   def and_cohort_2022_is_created
-    create(:cohort, start_year: 2022)
+    Cohort.find_by_start_year(2022) || create(:cohort, start_year: 2022)
   end
 
   def and_the_cohort_2022_tab_is_selected
