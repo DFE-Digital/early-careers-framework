@@ -64,6 +64,15 @@ RSpec.describe NPQ::Application::Accept, :with_default_schedules do
           expect(service.errors.messages_for(:npq_application)).to include("Once rejected an application cannot change state")
         end
       end
+
+      context "when the existing data is invalid" do
+        let(:npq_application) { create(:npq_application) }
+
+        it "throws ActiveRecord::RecordInvalid" do
+          npq_application.eligible_for_funding = nil
+          expect { service.call }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
     end
 
     context "when user applies for EHCO but has accepted ASO" do
