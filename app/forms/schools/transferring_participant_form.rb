@@ -64,6 +64,16 @@ module Schools
       teachers_current_programme_choice == "yes"
     end
 
+    def participant_profile
+      return if formatted_trn.blank?
+
+      ECFParticipantValidationData.find_by(trn: formatted_trn)&.participant_profile
+    end
+
+    def participant_cohort
+      participant_profile&.schedule&.cohort
+    end
+
     def mentor
       User.find(mentor_id) if mentor_id.present?
     end

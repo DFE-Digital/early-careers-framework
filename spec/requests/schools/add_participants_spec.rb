@@ -45,8 +45,8 @@ RSpec.describe "Schools::AddParticipant", type: :request do
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/participant-type", params: { schools_new_participant_or_transfer_form: { type: :transfer } }
       end
 
-      it "redirects to the check transfers page" do
-        expect(subject).to redirect_to check_transfer_schools_transferring_participant_path
+      it "redirects to the what we need schools transferring page" do
+        expect(subject).to redirect_to what_we_need_schools_transferring_participant_path
       end
     end
 

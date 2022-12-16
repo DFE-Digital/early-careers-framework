@@ -35,8 +35,7 @@ private
     @cohort = cohort
     @school = active_school
     @school_cohort = policy_scope(SchoolCohort).find_by(cohort: @cohort, school: @school)
-
-    redirect_to schools_choose_programme_path(cohort_id: start_year) unless @school_cohort
+    redirect_to schools_choose_programme_path(cohort_id: @cohort) unless @school_cohort
   end
 
   def start_year
