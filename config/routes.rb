@@ -265,7 +265,8 @@ Rails.application.routes.draw do
       resource :cohort2020, controller: "schools/cohort2020", only: %i[show new create]
     end
 
-    resources :participants, only: %i[show index destroy] do
+    resources :participants, only: %i[index destroy] do
+      get "/", to: redirect("/admin/participants/%{participant_id}/details")
       resource :details, only: :show, controller: "participants/details"
       resource :school, only: :show, controller: "participants/school"
       resource :history, only: :show, controller: "participants/history"
