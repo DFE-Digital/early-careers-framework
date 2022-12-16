@@ -1,6 +1,6 @@
 <% title = "What’s the URN of the new school" %>
 <% content_for :title, title %>
-<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_path(id: @participant_profile)) %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_path(@participant_profile)) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
