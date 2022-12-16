@@ -7,9 +7,11 @@
           pd.evidence_held,
           pd.state,
           pds.state_reason,
-          clp.name as cpd_lead_provider_name
+          clp.name as cpd_lead_provider_name,
+          dp.name as delivery_partner_name
     FROM participant_declarations pd
     LEFT JOIN declaration_states pds on pd.id = pds.participant_declaration_id and pd.state = pds.state
     LEFT JOIN cpd_lead_providers clp on pd.cpd_lead_provider_id = clp.id
+    LEFT JOIN delivery_partners dp on pd.delivery_partner_id = dp.id
     WHERE course_identifier in ('ecf-induction', 'ecf-mentor')
 ) to '/tmp/exports/declarations.csv' with csv header;
