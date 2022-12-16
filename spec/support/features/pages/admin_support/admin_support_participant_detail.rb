@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class AdminSupportParticipantDetail < ::Pages::BasePage
-    set_url "/admin/participants/{participant_id}"
+    set_url "/admin/participants/{participant_id}/details"
     # this is a hack as the participants name is the page title
     set_primary_heading(/^.*$/)
 
@@ -20,18 +20,22 @@ module Pages
       element_has_content? self, "Email address", email_address, "Change email"
     end
 
+    def has_school_transfer?(school_name)
+      # School transfers
+      # | School name | Induction Programme | Start Date | End Date |
+      # | {school_name} | Full induction programme | 1 September 2021 | 4 September 2021 |
+    end
+
+    def click_school_link
+      click_on "School"
+    end
+
     def has_school?(school_name)
       element_has_content? self, "School", school_name
     end
 
     def has_lead_provider?(lead_provider_name)
       element_has_content? self, "Lead provider", lead_provider_name
-    end
-
-    def has_school_transfer?(school_name)
-      # School transfers
-      # | School name | Induction Programme | Start Date | End Date |
-      # | {school_name} | Full induction programme | 1 September 2021 | 4 September 2021 |
     end
   end
 end

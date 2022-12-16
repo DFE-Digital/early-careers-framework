@@ -58,14 +58,14 @@ module ParticipantDetailsSteps
 
   def then_i_should_see_the_ects_details
     expect(page).to have_text(@participant_profile_ect.user.full_name)
-    have_link "Change", href: edit_name_admin_participant_path(id: @participant_profile_ect.id)
-    have_link "Change", href: edit_email_admin_participant_path(id: @participant_profile_ect.id)
+    have_link "Change", href: edit_name_admin_participant_path(@participant_profile_ect.id)
+    have_link "Change", href: edit_email_admin_participant_path(@participant_profile_ect.id)
   end
 
   def then_i_should_see_the_mentors_details
     expect(page).to have_text(@participant_profile_mentor.user.full_name)
-    have_link "Change", href: edit_name_admin_participant_path(id: @participant_profile_mentor.id)
-    have_link "Change", href: edit_email_admin_participant_path(id: @participant_profile_mentor.id)
+    have_link "Change", href: edit_name_admin_participant_path(@participant_profile_mentor.id)
+    have_link "Change", href: edit_email_admin_participant_path(@participant_profile_mentor.id)
   end
 
   def then_i_should_see_a_list_of_participants
