@@ -616,8 +616,8 @@ module ManageTrainingSteps
     click_on name
   end
 
-  def when_i_navigate_to_participants_dashboard
-    when_i_click_on_summary_row_action("ECTs and mentors", "Manage")
+  def when_i_navigate_to_participants_dashboard(action: "Manage")
+    when_i_click_on_summary_row_action("ECTs and mentors", action)
     then_i_am_taken_to_your_ect_and_mentors_page
   end
 
@@ -957,9 +957,9 @@ module ManageTrainingSteps
     expect(page).to have_text("We need this to check their eligibility with the Teaching Regulation Agency.")
   end
 
-  def then_i_can_view_the_fip_induction_dashboard_without_partnership_details
+  def then_i_can_view_the_fip_induction_dashboard_without_partnership_details(displayed_value: "To be confirmed")
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_summary_row("Delivery partner", "To be confirmed")
+    expect(page).to have_summary_row("Delivery partner", displayed_value)
   end
   alias_method :given_i_can_view_the_fip_induction_dashboard_without_partnership_details,
                :then_i_can_view_the_fip_induction_dashboard_without_partnership_details

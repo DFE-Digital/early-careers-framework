@@ -26,8 +26,7 @@ RSpec.describe "Schools::ChooseProgramme", type: :request do
       it "redirects to the dashboard" do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme"
         follow_redirect!
-
-        expect(response).to redirect_to("/schools/#{school.slug}")
+        expect(response).to redirect_to("/schools/#{school.slug}#_2021-to-2022")
       end
     end
   end
