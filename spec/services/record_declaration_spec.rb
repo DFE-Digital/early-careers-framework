@@ -199,7 +199,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
-  let(:has_passed)            { false }
+  let(:has_passed) { false }
   let(:params) do
     {
       participant_id:,
