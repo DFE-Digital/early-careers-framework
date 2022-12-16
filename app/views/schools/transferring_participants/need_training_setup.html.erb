@@ -14,10 +14,8 @@
           <%= @transferring_participant_form.full_name %> has already started training at a previous school so cannot be added to the 
           <%= @cohort.description %> year.</p>
 
-        <div class="govuk-inset-text">
-          <p class="govuk-body">The name, TRN and date of birth you have entered will not be saved.
-            You will need to enter this information again once you have set up the training.</p>
-        </div>
+        <%= render GovukComponent::InsetTextComponent.new(text: "The name, TRN and date of birth you have entered will not be saved.
+            You will need to enter this information again once you have set up the training.") %>
     
         <%= form_for @transferring_participant_form, url: { action: :need_training_setup }, method: :put do |f| %>
             <%= f.govuk_submit "Continue to set up training" %>

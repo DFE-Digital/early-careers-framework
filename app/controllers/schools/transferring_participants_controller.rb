@@ -223,7 +223,7 @@ module Schools
         @school_cohort = @school.school_cohorts.find_by(cohort: participant_cohort)
         if @school_cohort.present? && @school_cohort.full_induction_programme?
           set_school_cohort(cohort: participant_cohort)
-        elsif action_name.to_sym != :need_training_setups
+        else
           store_form_redirect_to_next_step(:need_training_setup)
         end
       end
