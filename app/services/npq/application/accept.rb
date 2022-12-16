@@ -54,7 +54,7 @@ module NPQ
 
         @other_accepted_applications_with_same_course ||= NPQApplication
                                                             .joins(:participant_identity)
-                                                            .where(lead_provider_approval_status: "accepted", npq_course: npq_course.rebranded_alternative_courses, participant_identity: { user_id: user.id })
+                                                            .where(lead_provider_approval_status: "accepted", npq_course: npq_course.rebranded_alternative_courses, participant_identity: { user: [user, same_trn_user] })
                                                             .where.not(id: npq_application.id)
       end
 
@@ -91,20 +91,24 @@ module NPQ
         @user ||= npq_application.participant_identity.user
       end
 
+      def same_trn_user
+        return if teacher_profile&.trn.blank?
+
+        @same_trn_user ||= TeacherProfile
+                           .where(trn: teacher_profile.trn)
+                           .where.not(id: teacher_profile.id)
+                           .first
+                           &.user
+      end
+
       def npq_course
         npq_application.npq_course
       end
 
       def deduplicate_by_trn!
-        return if participant_profile.teacher_profile.trn.blank?
+        return unless same_trn_user
 
-        same_trn_user = TeacherProfile
-          .where(trn: participant_profile.teacher_profile.trn)
-          .where.not(id: participant_profile.teacher_profile.id)
-          .first
-          &.user
-
-        Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user) if same_trn_user
+        Identity::Transfer.call(from_user: participant_profile.user, to_user: same_trn_user)
       end
     end
   end

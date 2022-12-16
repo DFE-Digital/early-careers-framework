@@ -133,31 +133,66 @@ RSpec.describe NPQ::Application::Accept, :with_default_schedules do
     context "when accepting an application for a course that has already been accepted by another provider" do
       let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
-      let(:other_npq_application) do
-        create(:npq_application,
-               teacher_reference_number: trn,
-               participant_identity: identity,
-               npq_course:,
-               npq_lead_provider: other_npq_lead_provider,
-               school_urn: "123456",
-               school_ukprn: "12345678",
-               cohort: cohort_2021)
+      context "when the other npq applicaton belongs to the same participant identity user" do
+        let(:other_npq_application) do
+          create(:npq_application,
+                 teacher_reference_number: trn,
+                 participant_identity: identity,
+                 npq_course:,
+                 npq_lead_provider: other_npq_lead_provider,
+                 school_urn: "123456",
+                 school_ukprn: "12345678",
+                 cohort: cohort_2021)
+        end
+
+        before do
+          npq_application.update!(lead_provider_approval_status: "accepted")
+        end
+
+        it "does not allow 2 applications with same course to be accepted" do
+          expect {
+            described_class.new(npq_application: other_npq_application).call
+          }.not_to change { other_npq_application.reload.lead_provider_approval_status }
+        end
+
+        it "attaches errors to the object" do
+          service = described_class.new(npq_application: other_npq_application).call
+
+          expect(service.errors.messages_for(:npq_application)).to include("The participant already has an accepted application for this course")
+        end
       end
 
-      before do
-        npq_application.update!(lead_provider_approval_status: "accepted")
-      end
+      context "when the other npq applicaton belongs to a different user but with the same teacher profile TRN" do
+        let!(:teacher_profile) { create(:teacher_profile, trn:) }
+        let(:another_teacher_profile) { create(:teacher_profile, trn:) }
+        let!(:identity) { create(:participant_identity, user: another_teacher_profile.user) }
 
-      it "does not allow 2 applications with same course to be accepted" do
-        expect {
-          described_class.new(npq_application: other_npq_application).call
-        }.not_to change { other_npq_application.reload.lead_provider_approval_status }
-      end
+        let(:other_npq_application) do
+          create(:npq_application,
+                 teacher_reference_number: trn,
+                 participant_identity: identity,
+                 npq_course:,
+                 npq_lead_provider: other_npq_lead_provider,
+                 school_urn: "123456",
+                 school_ukprn: "12345678",
+                 cohort: cohort_2021)
+        end
 
-      it "attaches errors to the object" do
-        service = described_class.new(npq_application: other_npq_application).call
+        before do
+          npq_application.update!(lead_provider_approval_status: "accepted")
+        end
 
-        expect(service.errors.messages_for(:npq_application)).to include("The participant already has an accepted application for this course")
+        it "does not allow 2 applications with same course to be accepted" do
+          expect {
+            described_class.new(npq_application: other_npq_application).call
+          }.not_to change { other_npq_application.reload.lead_provider_approval_status }
+        end
+
+        it "attaches errors to the object" do
+          service = described_class.new(npq_application: other_npq_application).call
+
+          expect(service.errors.messages_for(:npq_application)).to include("The participant already has an accepted application for this course")
+        end
       end
     end
 
