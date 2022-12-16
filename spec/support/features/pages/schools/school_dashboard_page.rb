@@ -36,14 +36,6 @@ module Pages
       element_has_content? self, "Programme DfE-accredited materials"
     end
 
-=begin
-    def view_programme_details
-      click_on "View details"
-
-      Pages::SchoolCohortsPage.loaded
-    end
-=end
-
     def report_school_has_been_confirmed_incorrectly
       click_on "report that your school has been confirmed incorrectly"
 

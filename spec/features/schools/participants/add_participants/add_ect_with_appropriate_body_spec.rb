@@ -4,9 +4,10 @@ require "rails_helper"
 
 RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
   let!(:cohort) { create :cohort, start_year: 2021 }
+  let!(:next_cohort) { create :cohort, start_year: 2022 }
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
-  let!(:school_cohort) { create :school_cohort, school:, cohort: Cohort.next, induction_programme_choice: "full_induction_programme", appropriate_body: }
+  let!(:school_cohort) { create :school_cohort, school:, cohort: next_cohort, induction_programme_choice: "full_induction_programme", appropriate_body: }
   let!(:induction_programme) do
     induction_programme = create(:induction_programme, :fip, school_cohort:)
     school_cohort.update! default_induction_programme: induction_programme
@@ -99,8 +100,7 @@ private
   end
 
   def when_i_go_to_add_new_ect_page
-    click_on "Add your early career teacher and mentor details"
-    click_on "Continue"
+    when_i_click_on_summary_row_action("ECTs and mentors", "Add")
     click_on "Add a new ECT"
   end
 
