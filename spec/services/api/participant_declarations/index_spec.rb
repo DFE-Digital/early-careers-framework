@@ -74,7 +74,7 @@ RSpec.describe Api::ParticipantDeclarations::Index, :with_default_schedules do
         Induction::TransferToSchoolsProgramme.call(
           participant_profile: profile,
           induction_programme: new_school_cohort.default_induction_programme,
-          )
+        )
 
         profile.reload
 

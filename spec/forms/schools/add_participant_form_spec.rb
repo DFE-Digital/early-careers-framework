@@ -154,6 +154,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     context "when the email is in use by a NPQ registrant", :with_default_schedules do
       let(:user) { create(:user, email: "ray.clemence@example.com") }
       let(:teacher_profile) { create(:teacher_profile, user:) }
+      let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort: cohort_2021) }
       let!(:npq_profile) { create(:npq_participant_profile, teacher_profile:, cohort: cohort_2021) }
 
       it "returns false" do
