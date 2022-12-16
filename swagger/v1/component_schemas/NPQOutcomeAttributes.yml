@@ -28,7 +28,7 @@ properties:
       - npq-early-years-leadership
     example: npq-leading-teaching
   state:
-    description: The state of the outcome (passed, failed, voided)
+    description: The state of the outcome (passed, failed or voided)
     type: string
     nullable: false
     enum:

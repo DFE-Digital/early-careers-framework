@@ -3607,7 +3607,7 @@
             "example": "npq-leading-teaching"
           },
           "state": {
-            "description": "The state of the outcome (passed, failed, voided)",
+            "description": "The state of the outcome (passed, failed or voided)",
             "type": "string",
             "nullable": false,
             "enum": [
@@ -3653,13 +3653,12 @@
             "example": "npq-leading-teaching"
           },
           "state": {
-            "description": "The state of the outcome (passed, failed, voided)",
+            "description": "The state of the outcome (passed or failed)",
             "type": "string",
             "nullable": false,
             "enum": [
               "passed",
-              "failed",
-              "voided"
+              "failed"
             ],
             "example": "passed"
           },

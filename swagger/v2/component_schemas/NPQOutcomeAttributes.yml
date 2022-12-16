@@ -28,13 +28,12 @@ properties:
       - npq-early-years-leadership
     example: npq-leading-teaching
   state:
-    description: The state of the outcome (passed, failed, voided)
+    description: The state of the outcome (passed or failed)
     type: string
     nullable: false
     enum:
       - passed
       - failed
-      - voided
     example: passed
   completion_date:
     description: The date the participant received the assessment outcome for this course
