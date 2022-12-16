@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request do
+RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request, with_feature_flags: { participant_outcomes_feature: "active" } do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:started_milestone) { ect_profile.schedule.milestones.find_by(declaration_type: "started") }
   let(:declaration_date)  { started_milestone.start_date }
@@ -237,7 +237,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         end
       end
 
-      context "when NPQ participant has completed declaration", with_feature_flags: { participant_outcomes_feature: "active" } do
+      context "when NPQ participant has completed declaration" do
         let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
         let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
         let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
