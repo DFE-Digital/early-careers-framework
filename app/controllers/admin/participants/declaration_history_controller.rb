@@ -5,7 +5,9 @@ module Admin::Participants
     include RetrieveProfile
 
     def show
-      # TODO
+      @participant_declarations = @participant_profile.participant_declarations
+                                                      .includes(:cpd_lead_provider, :delivery_partner)
+                                                      .order(created_at: :desc)
     end
   end
 end

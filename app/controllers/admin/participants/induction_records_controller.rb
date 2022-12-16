@@ -3,9 +3,10 @@
 module Admin::Participants
   class InductionRecordsController < Admin::BaseController
     include RetrieveProfile
+    include FindInductionRecords
 
     def show
-      # TODO
+      @all_induction_records = all_induction_records
     end
   end
 end

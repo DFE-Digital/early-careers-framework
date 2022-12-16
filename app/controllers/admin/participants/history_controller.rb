@@ -3,9 +3,11 @@
 module Admin::Participants
   class HistoryController < Admin::BaseController
     include RetrieveProfile
+    include FindInductionRecords
 
     def show
-      # TODO
+      @latest_induction_record = latest_induction_record
+      @historical_induction_records = historical_induction_records
     end
   end
 end

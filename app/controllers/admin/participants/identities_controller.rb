@@ -5,7 +5,7 @@ module Admin::Participants
     include RetrieveProfile
 
     def show
-      # TODO
+      @participant_identities = @participant_profile.user.participant_identities
     end
   end
 end

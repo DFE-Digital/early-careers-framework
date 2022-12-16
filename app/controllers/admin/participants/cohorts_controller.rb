@@ -3,9 +3,10 @@
 module Admin::Participants
   class CohortsController < Admin::BaseController
     include RetrieveProfile
+    include FindInductionRecords
 
     def show
-      # TODO
+      @latest_induction_record = latest_induction_record
     end
   end
 end

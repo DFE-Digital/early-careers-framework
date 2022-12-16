@@ -272,9 +272,21 @@ Rails.application.routes.draw do
       resource :induction_records, only: :show, controller: "participants/induction_records"
       resource :cohorts, only: :show, controller: "participants/cohorts"
       resource :declaration_history, only: :show, controller: "participants/declaration_history"
-      # FIXME: validation_data already exists, need to amend rather than create
-      # resource :validation_data, only: :show, controller: "participants/validation_data"
       resource :identities, only: :show, controller: "participants/identities"
+
+      resource :validation_data, path: "validation-data", only: :show, controller: "participants/validation_data" do
+        member do
+          get "full-name", action: :full_name, as: :full_name
+          put "full-name", action: :full_name
+          get "teacher-reference-number", action: :trn, as: :trn
+          put "teacher-reference-number", action: :trn
+          get "date-of-birth", action: :date_of_birth, as: :date_of_birth
+          put "date-of-birth", action: :date_of_birth
+          get "national-insurance-number", action: :nino, as: :nino
+          put "national-insurance-number", action: :nino
+          post "validate-details", action: :validate_details, as: :validate_details
+        end
+      end
 
       member do
         get :edit_name, path: "edit-name"
@@ -308,20 +320,6 @@ Rails.application.routes.draw do
           get "check-answers", action: :check_answers, as: :check_answers
           put "check-answers", action: :check_answers
           get "cannot-transfer", action: :cannot_transfer, as: :cannot_transfer
-        end
-      end
-
-      resource :validation_data, path: "validation-data", only: [], controller: "participants/validation_data" do
-        member do
-          get "full-name", action: :full_name, as: :full_name
-          put "full-name", action: :full_name
-          get "teacher-reference-number", action: :trn, as: :trn
-          put "teacher-reference-number", action: :trn
-          get "date-of-birth", action: :date_of_birth, as: :date_of_birth
-          put "date-of-birth", action: :date_of_birth
-          get "national-insurance-number", action: :nino, as: :nino
-          put "national-insurance-number", action: :nino
-          post "validate-details", action: :validate_details, as: :validate_details
         end
       end
     end

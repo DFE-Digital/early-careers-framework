@@ -5,3 +5,74 @@
 <% end %>
 
 <%= render partial: "admin/participants/nav" %>
+
+<h2 class="govuk-heading-m">Declarations history</h2>
+
+<% if @participant_declarations.none? %>
+  <p>
+    <%= @participant_profile.full_name %> has no declarations.
+  </p>
+<% else %>
+  <% @participant_declarations.each do |participant_declaration| %>
+    <%= tag.h3(participant_declaration.id, class: "govuk-heading-s") %>
+
+    <%=
+      govuk_summary_list do |sl|
+        sl.row do |row|
+          row.key(text: "Declaration type")
+          row.value(text: participant_declaration.declaration_type)
+        end
+
+        sl.row do |row|
+          row.key(text: "Declaration date")
+          row.value(text: participant_declaration.declaration_date.to_formatted_s(:govuk))
+        end
+
+        sl.row do |row|
+          row.key(text: "Course identifier")
+          row.value(text: participant_declaration.course_identifier)
+        end
+
+        sl.row do |row|
+          row.key(text: "Evidence held")
+          row.value(text: participant_declaration.evidence_held)
+        end
+
+        sl.row do |row|
+          row.key(text: "Type")
+          row.value(text: participant_declaration.type)
+        end
+
+        sl.row do |row|
+          row.key(text: "CPD Lead Provider")
+          row.value(text: participant_declaration.cpd_lead_provider&.name)
+        end
+
+        sl.row do |row|
+          row.key(text: "Delivery parner")
+          row.value(text: participant_declaration.delivery_partner&.name)
+        end
+
+        sl.row do |row|
+          row.key(text: "State")
+          row.value(text: participant_declaration.state)
+        end
+
+        sl.row do |row|
+          row.key(text: "Superseded by")
+          row.value(text: participant_declaration.superseded_by_id)
+        end
+
+        sl.row do |row|
+          row.key(text: "Sparcity uplift")
+          row.value(text: participant_declaration.sparsity_uplift)
+        end
+
+        sl.row do |row|
+          row.key(text: "Pupil premium uplift")
+          row.value(text: participant_declaration.pupil_premium_uplift)
+        end
+      end
+    %>
+  <% end %>
+<% end %>

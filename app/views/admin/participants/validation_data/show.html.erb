@@ -1,13 +1,21 @@
-<% can_be_updated = policy(validation_data.participant_profile).update_validation_data? %>
+<%= tag.h1 do %>
+  <%= tag.span(@participant_profile.full_name, class: "govuk-caption-m") %>
+
+  Validation data
+<% end %>
+
+<%= render partial: "admin/participants/nav" %>
+
+<% can_be_updated = policy(@validation_data.participant_profile).update_validation_data? %>
 
 <%= govuk_summary_list(actions: true) do |sl|
   sl.row do |row|
     row.key(text: "Full name")
-    row.value(text: validation_data.full_name)
+    row.value(text: @validation_data.full_name)
 
     if can_be_updated
       row.action(
-        href: full_name_admin_participant_validation_data_path(validation_data.participant_profile),
+        href: full_name_admin_participant_validation_data_path(@validation_data.participant_profile),
         visually_hidden_text: "name used for validation"
       )
     end
@@ -15,10 +23,10 @@
 
   sl.row do |row|
     row.key(text: "Teacher Reference Number (TRN)")
-    row.value(text: validation_data.trn)
+    row.value(text: @validation_data.trn)
     if can_be_updated
       row.action(
-        href: trn_admin_participant_validation_data_path(validation_data.participant_profile),
+        href: trn_admin_participant_validation_data_path(@validation_data.participant_profile),
         visually_hidden_text: "teacher reference number"
       )
     end
@@ -26,10 +34,10 @@
 
   sl.row do |row|
     row.key(text: "Date of birth")
-    row.value(text: validation_data.date_of_birth&.to_s(:govuk))
+    row.value(text: @validation_data.date_of_birth&.to_s(:govuk))
     if can_be_updated
       row.action(
-        href: date_of_birth_admin_participant_validation_data_path(validation_data.participant_profile),
+        href: date_of_birth_admin_participant_validation_data_path(@validation_data.participant_profile),
         visually_hidden_text: "date of birth"
       )
     end
@@ -37,72 +45,72 @@
 
   sl.row do |row|
     row.key(text: "National Insurance Number")
-    row.value(text: validation_data.nino)
+    row.value(text: @validation_data.nino)
     if can_be_updated
       row.action(
-        href: nino_admin_participant_validation_data_path(validation_data.participant_profile),
+        href: nino_admin_participant_validation_data_path(@validation_data.participant_profile),
         visually_hidden_text: "National Insurance number"
       )
     end
   end
 end %>
 
-<% if eligibility_data.present? %>
+<% if @eligibility_data.present? %>
   <h3 class="govuk-heading-m">Eligibility state</h3>
   <%= govuk_summary_list(actions: true) do |sl|
     sl.row do |row|
       row.key(text: "Status")
-      row.value(text: eligibility_data.eligibility)
+      row.value(text: @eligibility_data.eligibility)
     end
 
-    unless eligibility_data.eligible_status?
+    unless @eligibility_data.eligible_status?
       sl.row do |row|
         row.key(text: "Primary reason")
-        row.value(text: eligibility_data.reason)
+        row.value(text: @eligibility_data.reason)
       end
 
       sl.row do |row|
         row.key(text: "Active Flags")
-        row.value(text: eligibility_data.active_flags)
+        row.value(text: @eligibility_data.active_flags)
       end
 
-      if eligibility_data.mentor?
+      if @eligibility_data.mentor?
         sl.row do |row|
           row.key(text: "Previous participation (ERO)")
-          row.value(text: eligibility_data.previous_participation)
+          row.value(text: @eligibility_data.previous_participation)
         end
 
         sl.row do |row|
           row.key(text: "Secondary mentor profile")
-          row.value(text: eligibility_data.duplicate_profile)
+          row.value(text: @eligibility_data.duplicate_profile)
         end
       end
 
-      if eligibility_data.ect?
+      if @eligibility_data.ect?
         sl.row do |row|
           row.key(text: "Previous induction (NQT+1)")
-          row.value(text: eligibility_data.previous_induction)
+          row.value(text: @eligibility_data.previous_induction)
         end
 
         sl.row do |row|
           row.key(text: "Qualified teacher status (QTS)")
-          row.value(text: eligibility_data.qts)
+          row.value(text: @eligibility_data.qts)
         end
 
         sl.row do |row|
           row.key(text: "Exempt from induction")
-          row.value(text: eligibility_data.exempt_from_induction)
+          row.value(text: @eligibility_data.exempt_from_induction)
         end
 
         sl.row do |row|
           row.key(text: "Induction is registered with TRA")
-          row.value(text: eligibility_data.registered_induction)
+          row.value(text: @eligibility_data.registered_induction)
         end
       end
 
       sl.row do |row|
         row.key(text: "Teacher profile has different TRN")
-        row.value(text: eligibility_data.different_trn)
+        row.value(text: @eligibility_data.different_trn)
       end
 
     end
@@ -113,4 +121,4 @@ end %>
   <% button_label = "Validate details" %>
 <% end %>
 
-<%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(validation_data.participant_profile) if can_be_updated %>
+<%= govuk_button_to button_label, validate_details_admin_participant_validation_data_path(@validation_data.participant_profile) if can_be_updated %>

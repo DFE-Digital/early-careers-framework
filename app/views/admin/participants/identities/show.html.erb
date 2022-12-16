@@ -5,3 +5,5 @@
 <% end %>
 
 <%= render partial: "admin/participants/nav" %>
+
+<%= render Admin::Participants::Identities.new(identities: @participant_identities) %>

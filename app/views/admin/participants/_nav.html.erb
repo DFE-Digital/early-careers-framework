@@ -23,6 +23,10 @@
     Declaration history
   <% end %>
 
+  <%= component.nav_item(path: admin_participant_validation_data_path(@participant_profile)) do %>
+    Validation data
+  <% end %>
+
   <%= component.nav_item(path: admin_participant_identities_path(@participant_profile)) do %>
     Identities
   <% end %>
