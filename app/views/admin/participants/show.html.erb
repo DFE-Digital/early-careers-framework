@@ -4,13 +4,16 @@
 <% unless @participant_profile.npq? %>
   <span class="govuk-caption-l"><%= @latest_induction_record&.user&.user_description %></span>
 <% end %>
-<h1 class="govuk-heading-xl">
+<h1 class="govuk-heading-l">
   <%= @participant_profile.user.full_name %>
 </h1>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <% if @participant_profile.npq? %>
+    <% if true %>
+      <%= render partial: "nav" %>
+
+    <% elsif @participant_profile.npq? %>
       <%=
         render Admin::NPQ::Participants::Details.new(
           profile: @participant_profile,

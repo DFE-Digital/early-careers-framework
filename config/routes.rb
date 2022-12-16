@@ -266,6 +266,16 @@ Rails.application.routes.draw do
     end
 
     resources :participants, only: %i[show index destroy] do
+      resource :details, only: :show, controller: "participants/details"
+      resource :school, only: :show, controller: "participants/school"
+      resource :history, only: :show, controller: "participants/history"
+      resource :induction_records, only: :show, controller: "participants/induction_records"
+      resource :cohorts, only: :show, controller: "participants/cohorts"
+      resource :declaration_history, only: :show, controller: "participants/declaration_history"
+      # FIXME: validation_data already exists, need to amend rather than create
+      # resource :validation_data, only: :show, controller: "participants/validation_data"
+      resource :identities, only: :show, controller: "participants/identities"
+
       member do
         get :edit_name, path: "edit-name"
         put :update_name, path: "update-name"
