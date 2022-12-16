@@ -11,7 +11,7 @@ FactoryBot.define do
     academic_year_start_date { Date.new(start_year.to_i, 9, 1) }
 
     trait :current do
-      start_year { 2021 }
+      start_year { Date.current.month < 9 ? Date.current.year - 1 : Date.current.year }
     end
 
     trait :next do

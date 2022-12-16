@@ -220,6 +220,10 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
   context "when the participant is an ECF" do
     before do
+      Cohort.current || create(:cohort, :current)
+      Finance::Schedule::ECF.default_for(cohort: Cohort.current) || create(:ecf_schedule, cohort: Cohort.current)
+      Cohort.current.previous || create(:cohort, start_year: Cohort.current.start_year - 1)
+      Finance::Schedule::ECF.default_for(cohort: Cohort.current.previous) || create(:ecf_schedule, cohort: Cohort.current.previous)
       create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
     end
 
@@ -228,11 +232,11 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     let(:traits)                { [] }
     let(:opts)                  { {} }
     let(:participant_profile) do
-      create(particpant_type, *traits, **opts, lead_provider: cpd_lead_provider.lead_provider)
+      create(participant_type, *traits, **opts, lead_provider: cpd_lead_provider.lead_provider)
     end
 
     context "when the participant is an ECT" do
-      let(:particpant_type)   { :ect }
+      let(:participant_type)   { :ect }
       let(:course_identifier) { "ecf-induction" }
       let(:delivery_partner) { participant_profile.induction_records[0].induction_programme.partnership.delivery_partner }
 
@@ -276,7 +280,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     end
 
     context "when the participant is a Mentor" do
-      let(:particpant_type) { :mentor }
+      let(:participant_type) { :mentor }
       let(:course_identifier) { "ecf-mentor" }
 
       it "creates a participant declaration" do
