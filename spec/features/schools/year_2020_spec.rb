@@ -2,7 +2,7 @@
 
 RSpec.describe "School leaders adding 2020 participants", :with_default_schedules, js: true do
   let(:school) { create(:school, name: "Test School") }
-  let!(:cohort_2020) { create(:cohort, start_year: 2020) }
+
   let!(:core_induction_programme) { create(:core_induction_programme, name: "Awesome induction course") }
 
   scenario "Adding a 2020 participant" do
