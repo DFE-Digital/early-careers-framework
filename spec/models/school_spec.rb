@@ -4,6 +4,8 @@ require "rails_helper"
 
 RSpec.describe School, type: :model do
   subject(:school) { create(:school) }
+
+  let(:cohort_2021) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
@@ -512,12 +514,12 @@ RSpec.describe School, type: :model do
     end
 
     it "returns false when the school is not in a partnership" do
-      expect(school.partnered?(Cohort.current || create(:cohort, :current))).to be false
+      expect(school.partnered?(cohort)).to be false
     end
 
     it "returns false when the school is not in a partnership for the specified cohort" do
       partnership = create(:partnership)
-      expect(partnership.school.partnered?(Cohort.current || create(:cohort, :current))).to be false
+      expect(partnership.school.partnered?(cohort_2021)).to be false
     end
 
     it "returns false when the partnership has been challenged" do

@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "JSON Participant Change schedule endpoint" do
+  let(:cohort) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
+
   describe "/api/v1/participants/ID/change-schedule" do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before do
-      create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
+      create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021", cohort:)
     end
 
     it "changes participant schedule" do
@@ -14,6 +16,7 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
           attributes: {
             course_identifier: "ecf-induction",
             schedule_identifier: "ecf-january-standard-2021",
+            cohort: "2021",
           },
         },
       }
@@ -26,8 +29,8 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
   describe "/api/v1/participants/ID/change-schedule with cohort" do
     let(:parsed_response) { JSON.parse(response.body) }
 
-    let!(:schedule) { create(:schedule, schedule_identifier: "schedule", name: "schedule") }
-    let!(:new_schedule) { create(:schedule, schedule_identifier: "new-schedule", name: "new schedule") }
+    let!(:schedule) { create(:schedule, schedule_identifier: "schedule", name: "schedule", cohort:) }
+    let!(:new_schedule) { create(:schedule, schedule_identifier: "new-schedule", name: "new schedule", cohort:) }
 
     it "changes participant schedule" do
       expect {
@@ -51,11 +54,19 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before do
-      create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021")
+      create(:schedule, schedule_identifier: "ecf-january-standard-2021", name: "ECF January standard 2021", cohort:)
     end
 
     it "changes participant schedule" do
-      put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/change-schedule", params: { data: { attributes: { course_identifier: "ecf-induction", schedule_identifier: "ecf-january-standard-2021" } } }
+      put "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}/change-schedule", params: {
+        data: {
+          attributes: {
+            course_identifier: "ecf-induction",
+            schedule_identifier: "ecf-january-standard-2021",
+            cohort: "2021",
+          }
+        }
+      }
 
       expect(response).to be_successful
       expect(parsed_response.dig("data", "attributes", "schedule_identifier")).to eql("ecf-january-standard-2021")

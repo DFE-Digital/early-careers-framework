@@ -8,16 +8,16 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
       Finance::Schedule::ECF.default_for(cohort:) || create(:ecf_schedule, cohort:)
     end
 
-    # create other schedules for the current cohort
-    current_cohort = Cohort.current
-    Finance::Schedule.find_by(cohort: current_cohort, schedule_identifier: "npq-specialist-spring") ||
-      create(:npq_specialist_schedule, cohort: current_cohort)
-    Finance::Schedule.find_by(cohort: current_cohort, schedule_identifier: "npq-leadership-spring") ||
-      create(:npq_leadership_schedule, cohort: current_cohort)
-    Finance::Schedule.find_by(cohort: current_cohort, schedule_identifier: "npq-aso-december") ||
-      create(:npq_aso_schedule, cohort: current_cohort)
-    Finance::Schedule.find_by(cohort: current_cohort, schedule_identifier: "npq-ehco-december") ||
-      create(:npq_ehco_schedule, cohort: current_cohort)
+    # create extra schedules for the current cohort
+    cohort = Cohort.current
+    {
+      npq_specialist_schedule: "npq-specialist-spring",
+      npq_leadership_schedule: "npq-leadership-spring",
+      npq_aso_schedule:        "npq-aso-december",
+      npq_ehco_schedule:       "npq-ehco-december",
+    }.each do |schedule_type, schedule_identifier|
+      Finance::Schedule.find_by(cohort:, schedule_identifier:) || create(schedule_type, cohort:)
+    end
   end
 end
 

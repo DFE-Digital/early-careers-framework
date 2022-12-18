@@ -5,9 +5,11 @@ require "csv"
 
 RSpec.describe "Participants API", :with_default_schedules, type: :request do
   describe "GET /api/v1/participants" do
+    let(:cohort) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
+
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider)     { cpd_lead_provider.lead_provider }
-    let(:school_cohort)     { create(:school_cohort, :fip, :with_induction_programme, lead_provider:) }
+    let(:school_cohort)     { create(:school_cohort, :fip, :with_induction_programme, lead_provider:, cohort:) }
     let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
     let(:bearer_token)      { "Bearer #{token}" }
 
