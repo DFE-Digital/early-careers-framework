@@ -36,8 +36,8 @@ RSpec.describe AdminHelper, type: :helper do
 
     describe "#all_emails_associated_with_a_user" do
       it "returns all emails associated with a user" do
-        latest_induction_record = profile.induction_records.active.latest
-        users_emails = helper.all_emails_associated_with_a_user(latest_induction_record)
+        user = profile.user
+        users_emails = helper.all_emails_associated_with_a_user(user)
         expect(users_emails).to include(user.email)
         expect(users_emails).to include("login2@example.com")
       end

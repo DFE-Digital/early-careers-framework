@@ -6,59 +6,61 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<%= govuk_summary_list(actions: true) do |sl|
-  lead_provider = @latest_induction_record.school_cohort.lead_provider
-
-  sl.row do |row|
-    row.key(text: "School name")
-    row.value do
-      govuk_link_to(
-        @latest_induction_record.school_cohort.school.name,
-        admin_school_path(@latest_induction_record.school_cohort.school.friendly_id)
-      )
-    end
-  end
-
-  sl.row do |row|
-    row.key(text: "School URN")
-    row.value(text: @latest_induction_record.school_cohort.school.urn)
-  end
-
-  if @latest_induction_record.participant_profile.ect?
+<% if @school.blank? %>
+  <p>No school details for <%= @participant_profile.full_name %>.</p>
+<% else %>
+  <%= govuk_summary_list(actions: true) do |sl|
     sl.row do |row|
-      row.key(text: "Mentor")
-      row.value(text: @latest_induction_record.mentor_profile&.user&.full_name || 'Not yet assigned')
-    end
-  end
-
-  sl.row do |row|
-    row.key(text: "Lead provider")
-    row.value(text: @latest_induction_record.school_cohort.lead_provider&.name)
-  end
-
-  sl.row do |row|
-    row.key(text: "Delivery partner")
-    row.value(text: @latest_induction_record.school_cohort.delivery_partner&.name)
-  end
-
-  if @latest_induction_record.participant_profile.mentor?
-    sl.row do |row|
-      row.key(text: "Mentoring at")
+      row.key(text: "School name")
       row.value do
-        ["<ul class='govuk-list govuk-list--bullet'>",
-        @latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
-          "<li>#{govuk_link_to(school_mentor.school.name, admin_school_path(school_mentor.school.friendly_id))}</li>"
-        end,
-        "</ul>"].flatten.join.html_safe
+        govuk_link_to(
+          @school.name,
+          admin_school_path(@school.friendly_id)
+        )
       end
     end
-  end
-end %>
 
-<%=
-  govuk_button_link_to(
-    "Transfer to another school",
-    select_school_admin_participant_school_transfer_path(@participant_profile),
-    secondary: true,
-  )
-%>
+    sl.row do |row|
+      row.key(text: "School URN")
+      row.value(text: @latest_induction_record.school_cohort.school.urn)
+    end
+
+    if @latest_induction_record.participant_profile.ect?
+      sl.row do |row|
+        row.key(text: "Mentor")
+        row.value(text: @latest_induction_record.mentor_profile&.user&.full_name || 'Not yet assigned')
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: "Lead provider")
+      row.value(text: @latest_induction_record.school_cohort.lead_provider&.name)
+    end
+
+    sl.row do |row|
+      row.key(text: "Delivery partner")
+      row.value(text: @latest_induction_record.school_cohort.delivery_partner&.name)
+    end
+
+    if @latest_induction_record.participant_profile.mentor?
+      sl.row do |row|
+        row.key(text: "Mentoring at")
+        row.value do
+          ["<ul class='govuk-list govuk-list--bullet'>",
+          @latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
+            "<li>#{govuk_link_to(school_mentor.school.name, admin_school_path(school_mentor.school.friendly_id))}</li>"
+          end,
+          "</ul>"].flatten.join.html_safe
+        end
+      end
+    end
+  end %>
+
+  <%=
+    govuk_button_link_to(
+      "Transfer to another school",
+      select_school_admin_participant_school_transfer_path(@participant_profile),
+      secondary: true,
+    )
+  %>
+<% end %>

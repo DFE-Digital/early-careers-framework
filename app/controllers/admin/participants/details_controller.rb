@@ -7,6 +7,7 @@ module Admin::Participants
 
     def show
       @latest_induction_record = latest_induction_record
+      @user = @participant_profile.user
     end
   end
 end

@@ -9,8 +9,8 @@ module AdminHelper
     end
   end
 
-  def all_emails_associated_with_a_user(induction_record)
-    ParticipantIdentity.where(user: induction_record.participant_profile.user).pluck(:email)
+  def all_emails_associated_with_a_user(user)
+    ParticipantIdentity.where(user:).pluck(:email)
   end
 
   def on_admin_npq_application_page?

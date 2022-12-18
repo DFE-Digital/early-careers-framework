@@ -7,6 +7,9 @@ module Admin::Participants
 
     def show
       @latest_induction_record = latest_induction_record
+      @school_cohort = @latest_induction_record&.school_cohort
+      @lead_provider = @school_cohort&.lead_provider
+      @school = @school_cohort&.school
     end
   end
 end
