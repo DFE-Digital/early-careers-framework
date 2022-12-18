@@ -3,6 +3,7 @@
 module NewSeeds
   module Scenarios
     module Users
+      # not sure how useful this class is, it's just wrapping the factory at the moment
       class AppropriateBodyUser
         attr_reader :user, :appropriate_body
 

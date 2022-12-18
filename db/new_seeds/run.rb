@@ -23,6 +23,7 @@ Rails.logger.info("Seeding database")
   "importing privacy policy 1.0" => "add_privacy_policy.rb",
   "importing core induction programmes and lead providers" => "add_lead_providers_and_cips.rb",
   "adding users" => "add_users.rb",
+  "adding appropriate bodies" => "add_appropriate_bodies.rb",
 }.each do |msg, file|
   Rails.logger.info(msg)
   load_base_file(file)
