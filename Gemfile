@@ -167,7 +167,7 @@ group :test do
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"
   gem "selenium-webdriver"
-  gem "shoulda-matchers", "~> 5.2"
+  gem "shoulda-matchers", "~> 5.3"
   gem "simplecov"
   gem "site_prism", "~> 3.7"
   gem "webdrivers", "~> 5.2"
