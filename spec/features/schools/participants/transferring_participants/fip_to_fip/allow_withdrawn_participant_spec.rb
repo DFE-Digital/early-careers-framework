@@ -9,7 +9,7 @@ RSpec.describe "transferring participants", :with_default_schedules, with_featur
         allow_participant_transfer_mailers
         set_participant_data
         set_dqt_validation_result
-        given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+        given_there_are_two_schools_that_have_chosen_fip_for_current_cohort_and_partnered
         and_there_is_a_withdrawn_ect_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
         and_i_have_selected_my_cohort_tab
@@ -65,11 +65,11 @@ RSpec.describe "transferring participants", :with_default_schedules, with_featur
 
       # given
 
-      def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+      def given_there_are_two_schools_that_have_chosen_fip_for_current_cohort_and_partnered
         @cohort = Cohort.current
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
-        create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: Cohort.find_by_start_year(2022) || create(:cohort, start_year: 2022))
+        create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: Cohort.next || create(:cohort, :next))
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
         @school_cohort_one = create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: @cohort, lead_provider: @lead_provider, delivery_partner: @delivery_partner)
@@ -80,15 +80,9 @@ RSpec.describe "transferring participants", :with_default_schedules, with_featur
 
         @lead_provider_profile = create(:lead_provider_profile, lead_provider: @lead_provider)
         @mentor = create(:mentor, user: create(:user, full_name: "Billy Mentor"), school_cohort: @school_cohort_one)
-        # @partnership_one = create(:partnership, school: @school_one, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
-
-        # @partnership_two = create(:partnership, school: @school_two, lead_provider: @lead_provider_two, delivery_partner: @other_delivery_partner, cohort: @cohort)
 
         @induction_programme_one = @school_cohort_one.default_induction_programme
         @induction_programme_two = @school_cohort_two.default_induction_programme
-
-        # Induction::Enrol.call(participant_profile: @mentor, induction_programme: @induction_programme_one)
-        # Mentors::AddToSchool.call(school: @school_one, mentor_profile: @mentor)
       end
 
       # when

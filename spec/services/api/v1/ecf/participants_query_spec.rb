@@ -22,7 +22,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
 
     describe "cohort filter" do
       context "with correct value" do
-        let(:params) { { filter: { cohort: "2021" } } }
+        let(:params) { { filter: { cohort: cohort.display_name } } }
 
         it "returns all induction records for the specific cohort" do
           expect(subject.induction_records).to match_array([induction_record])
@@ -36,7 +36,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
         let(:another_induction_programme) { create(:induction_programme, :fip, partnership: another_partnership) }
         let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
 
-        let(:params) { { filter: { cohort: "2021,2050" } } }
+        let(:params) { { filter: { cohort: "#{cohort.start_year},#{another_cohort.start_year}" } } }
 
         it "returns all induction records for the specific cohort" do
           expect(subject.induction_records).to match_array([induction_record, another_induction_record])

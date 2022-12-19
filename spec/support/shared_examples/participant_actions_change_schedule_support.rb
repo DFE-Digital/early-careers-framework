@@ -64,8 +64,8 @@ RSpec.shared_examples "JSON Participant Change schedule endpoint" do
             course_identifier: "ecf-induction",
             schedule_identifier: "ecf-january-standard-2021",
             cohort: "2021",
-          }
-        }
+          },
+        },
       }
 
       expect(response).to be_successful

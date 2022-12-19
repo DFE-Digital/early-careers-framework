@@ -12,6 +12,10 @@ class Cohort < ApplicationRecord
     where(registration_start_date: ..Date.current).order(start_year: :desc).first
   end
 
+  def self.previous
+    where(academic_year_start_date: ..(Date.current - 1.year)).order(start_year: :desc).first
+  end
+
   def self.current
     where(academic_year_start_date: ..Date.current).order(start_year: :desc).first
   end

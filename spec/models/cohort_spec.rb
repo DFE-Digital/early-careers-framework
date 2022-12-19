@@ -3,6 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
+  let!(:cohort_2020) { Cohort.find_by_start_year(2020) || create(:cohort, start_year: 2020) }
   let!(:cohort_2021) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
   let!(:cohort_2022) { Cohort.find_by_start_year(2022) || create(:cohort, start_year: 2022) }
   let!(:cohort_2023) { Cohort.find_by_start_year(2023) || create(:cohort, start_year: 2023) }
@@ -12,22 +13,6 @@ RSpec.describe Cohort, type: :model do
     describe "when the current date matches the academic year start date" do
       it "returns the cohort with start_year the current year" do
         Timecop.freeze(Date.new(2021, 9, 1)) do
-          expect(Cohort.current).to eq cohort_2021
-        end
-      end
-    end
-
-    describe "when the current date is before the registration start date of the next cohort" do
-      it "returns the cohort with start_year the previous year" do
-        Timecop.freeze(Date.new(2022, 4, 30)) do
-          expect(Cohort.current).to eq cohort_2021
-        end
-      end
-    end
-
-    describe "when the current date matches the registration start date of the next cohort" do
-      it "returns the cohort with start_year the previous year" do
-        Timecop.freeze(Date.new(2022, 5, 1)) do
           expect(Cohort.current).to eq cohort_2021
         end
       end
@@ -51,26 +36,28 @@ RSpec.describe Cohort, type: :model do
       end
     end
 
-    describe "when the current date is before the registration start date of the next cohort" do
-      it "returns the cohort with start_year the current year" do
-        Timecop.freeze(Date.new(2022, 4, 30)) do
-          expect(Cohort.next).to eq cohort_2022
-        end
-      end
-    end
-
-    describe "when the current date matches the registration start date of the next cohort" do
-      it "returns the cohort with start_year the current year" do
-        Timecop.freeze(Date.new(2022, 5, 1)) do
-          expect(Cohort.next).to eq cohort_2022
-        end
-      end
-    end
-
     describe "when the current date is before the academic year start date of the next cohort" do
       it "returns the cohort with start_year the current year" do
         Timecop.freeze(Date.new(2022, 8, 31)) do
           expect(Cohort.next).to eq cohort_2022
+        end
+      end
+    end
+  end
+
+  describe ".previous" do
+    describe "when exactly 1 year ago matches the academic year start date" do
+      it "returns the cohort with start_year the previous year" do
+        Timecop.freeze(Date.new(2021, 9, 1)) do
+          expect(Cohort.previous).to eq cohort_2020
+        end
+      end
+    end
+
+    describe "when exactly 1 year ago is before the academic year start date of the previous cohort" do
+      it "returns the cohort with start_year 2 years ago" do
+        Timecop.freeze(Date.new(2022, 8, 31)) do
+          expect(Cohort.previous).to eq cohort_2020
         end
       end
     end

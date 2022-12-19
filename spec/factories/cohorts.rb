@@ -10,6 +10,10 @@ FactoryBot.define do
     registration_start_date { Date.new(start_year.to_i, 5, 10) }
     academic_year_start_date { Date.new(start_year.to_i, 9, 1) }
 
+    trait :previous do
+      start_year { Date.current.month < 9 ? Date.current.year - 2 : Date.current.year - 1 }
+    end
+
     trait :current do
       start_year { Date.current.month < 9 ? Date.current.year - 1 : Date.current.year }
     end
