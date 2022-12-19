@@ -6,7 +6,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   let(:profile) { create(:ecf_participant_profile) }
 
   describe ":current_cohort" do
-    let!(:cohort_2020) { Cohort.find_by_start_year(2020) || create(:cohort, start_year: 2020) }
+    let!(:cohort_2020) { Cohort[2020] || create(:cohort, start_year: 2020) }
     let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
     let!(:participant_2020) { create(:ecf_participant_profile, school_cohort: create(:school_cohort, cohort: cohort_2020)) }
     let!(:current_participant) { create(:ecf_participant_profile, school_cohort: create(:school_cohort, cohort: current_cohort)) }

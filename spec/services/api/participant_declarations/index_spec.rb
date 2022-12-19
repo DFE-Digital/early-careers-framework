@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Api::ParticipantDeclarations::Index, :with_default_schedules do
   describe "#scope" do
-    let(:cohort_2021) { Cohort.find_by_start_year(2021) }
+    let(:cohort_2021) { Cohort[2021] }
 
     context "when new provider querying" do
       let(:old_cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Old CPD LeadProvider") }

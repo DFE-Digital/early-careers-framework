@@ -48,7 +48,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
     # given
 
     def given_a_school_have_chosen_fip_for_2021
-      @cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
+      @cohort = Cohort[2021] || create(:cohort, start_year: 2021)
       @school_one = create(:school, name: "Fip School 1")
       @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
       @ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_one)

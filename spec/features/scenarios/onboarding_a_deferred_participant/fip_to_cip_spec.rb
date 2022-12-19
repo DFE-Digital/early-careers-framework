@@ -42,7 +42,7 @@ RSpec.feature "FIP to CIP - Onboard a deferred participant",
     let(:tokens) { {} }
 
     let!(:cohort) do
-      cohort = Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021)
+      cohort = Cohort[2021] || create(:cohort, start_year: 2021)
       allow(Cohort).to receive(:current).and_return(cohort)
       allow(Cohort).to receive(:next).and_return(cohort)
       allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)

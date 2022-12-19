@@ -5,8 +5,8 @@ RSpec.describe Importers::SeedStatements do
     create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider)
   end
 
-  let!(:cohort_2021) { create(:cohort, :current) }
-  let!(:cohort_2022) { create(:cohort, :next) }
+  let!(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let!(:cohort_2022) { Cohort[2022] || create(:cohort, start_year: 2022) }
 
   describe "#call" do
     it "creates ECF statements idempotently" do

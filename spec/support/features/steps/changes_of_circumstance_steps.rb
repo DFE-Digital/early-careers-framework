@@ -37,7 +37,7 @@ module Steps
         sign_out
 
         if programme == "CIP"
-          school_cohort = school.school_cohorts.where(cohort: Cohort.find_by_start_year(2021)).first
+          school_cohort = school.school_cohorts.where(cohort: Cohort[2021]).first
           Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort.induction_programme_choice
         end
 

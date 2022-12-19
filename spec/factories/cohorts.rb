@@ -11,15 +11,15 @@ FactoryBot.define do
     academic_year_start_date { Date.new(start_year.to_i, 9, 1) }
 
     trait :previous do
-      start_year { Date.current.month < 9 ? Date.current.year - 2 : Date.current.year - 1 }
+      start_year { Date.current.year - (Date.current.month < 9 ? 2 : 1) }
     end
 
     trait :current do
-      start_year { Date.current.month < 9 ? Date.current.year - 1 : Date.current.year }
+      start_year { Date.current.year - (Date.current.month < 9 ? 1 : 0) }
     end
 
     trait :next do
-      start_year { Date.current.month < 9 ? Date.current.year : Date.current.year + 1 }
+      start_year { Date.current.year + (Date.current.month < 9 ? 0 : 1) }
     end
 
     trait :consecutive_years do

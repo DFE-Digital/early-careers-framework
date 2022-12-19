@@ -8,20 +8,27 @@ class Cohort < ApplicationRecord
   has_many :statements
 
   # Class Methods
+  def self.[](year)
+    find_by_start_year(year)
+  end
+
   def self.active_registration_cohort
     where(registration_start_date: ..Date.current).order(start_year: :desc).first
   end
 
   def self.previous
-    where(academic_year_start_date: ..(Date.current - 1.year)).order(start_year: :desc).first
+    date_range = (Date.current - 2.year + 1.day)..(Date.current - 1.year)
+    where(academic_year_start_date: date_range).order(start_year: :desc).first
   end
 
   def self.current
-    where(academic_year_start_date: ..Date.current).order(start_year: :desc).first
+    date_range = (Date.current - 1.year + 1.day)..Date.current
+    where(academic_year_start_date: date_range).first
   end
 
   def self.next
-    where.not(academic_year_start_date: ..Date.current).order(start_year: :asc).first
+    date_range = (Date.current + 1.day)..(Date.current + 1.year)
+    where(academic_year_start_date: date_range).first
   end
 
   # Instance Methods

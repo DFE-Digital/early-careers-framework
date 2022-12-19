@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "JSON Participant Change schedule endpoint" do
-  let(:cohort) { Cohort.find_by_start_year(2021) || create(:cohort, start_year: 2021) }
+  let(:cohort) { Cohort[2021] || create(:cohort, start_year: 2021) }
 
   describe "/api/v1/participants/ID/change-schedule" do
     let(:parsed_response) { JSON.parse(response.body) }

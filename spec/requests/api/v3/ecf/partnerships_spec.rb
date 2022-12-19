@@ -13,10 +13,11 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
 
+  let!(:another_cohort) { create(:cohort, start_year: "2050") }
+
   describe "#index" do
-    before :each do
+    before do
       another_delivery_partner = create(:delivery_partner, name: "Second Delivery Partner")
-      another_cohort = create(:cohort, start_year: "2050")
       create(:partnership, school:, cohort: another_cohort, delivery_partner: another_delivery_partner, lead_provider:)
     end
 
@@ -67,7 +68,7 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
 
       context "when filtering by cohort" do
         it "returns all partnerships that match" do
-          get "/api/v3/partnerships/ecf", params: { filter: { cohort: "2021,2050" } }
+          get "/api/v3/partnerships/ecf", params: { filter: { cohort: [cohort.display_name, another_cohort.display_name].join(',') } }
 
           expect(parsed_response["data"].size).to eql(2)
         end
