@@ -8,11 +8,12 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
   let(:bearer_token) { "Bearer #{token}" }
 
   describe "#index" do
-    before :each do
+    let!(:cohort) { Cohort.current || create(:cohort, :current) }
+
+    before do
       # Heads up, for some reason the stored CIP IDs don't match
       cip = create(:core_induction_programme, name: "Teach First")
       school = create(:school)
-      cohort = Cohort.current
       school_cohort = create(:school_cohort, school:)
       mentor_profile = create(:mentor_participant_profile, school_cohort:, core_induction_programme: cip, cohort:)
       create(:npq_participant_profile, school:)
@@ -70,7 +71,7 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
 
       it "should return correct cohort year" do
         get "/api/v1/ecf-users"
-        expect(parsed_response["data"][0]["attributes"]["cohort"]).to eql(2021)
+        expect(parsed_response["data"][0]["attributes"]["cohort"]).to eql(cohort.start_year)
       end
 
       it "returns the right number of users per page" do

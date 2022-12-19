@@ -17,7 +17,7 @@ class Cohort < ApplicationRecord
   end
 
   def self.previous
-    date_range = (Date.current - 2.year + 1.day)..(Date.current - 1.year)
+    date_range = (Date.current - 2.years + 1.day)..(Date.current - 1.year)
     where(academic_year_start_date: date_range).order(start_year: :desc).first
   end
 

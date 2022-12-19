@@ -30,7 +30,7 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
       end
 
       context "with multiple values" do
-        let(:params) { { filter: { cohort: [cohort.display_name, another_cohort.display_name].join(',') } } }
+        let(:params) { { filter: { cohort: [cohort.display_name, another_cohort.display_name].join(",") } } }
 
         it "returns all partnerships for the specific cohort" do
           expect(subject.partnerships).to match_array([partnership, another_partnership])

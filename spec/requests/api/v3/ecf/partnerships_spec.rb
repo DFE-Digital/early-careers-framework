@@ -68,7 +68,7 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
 
       context "when filtering by cohort" do
         it "returns all partnerships that match" do
-          get "/api/v3/partnerships/ecf", params: { filter: { cohort: [cohort.display_name, another_cohort.display_name].join(',') } }
+          get "/api/v3/partnerships/ecf", params: { filter: { cohort: [cohort.display_name, another_cohort.display_name].join(",") } }
 
           expect(parsed_response["data"].size).to eql(2)
         end

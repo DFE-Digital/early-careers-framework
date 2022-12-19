@@ -13,12 +13,12 @@ RSpec.describe NPQCourse do
           .to eq(Finance::Schedule::NPQLeadership.default)
       end
 
-      context "when requesting for cohort 2022" do
-        let(:cohort_2022) { Cohort.next || create(:cohort, :next) }
-        let!(:schedule_2022) { create(:npq_leadership_schedule, cohort: cohort_2022) }
+      context "when requesting for next cohort" do
+        let(:next_cohort) { Cohort.next || create(:cohort, :next) }
+        let!(:next_cohort_schedule) { create(:npq_leadership_schedule, cohort: next_cohort) }
 
-        it "uses 2022 schedule" do
-          expect(described_class.schedule_for(npq_course:, cohort: cohort_2022)).to eql(schedule_2022)
+        it "uses next cohort schedule" do
+          expect(described_class.schedule_for(npq_course:, cohort: next_cohort)).to eql(next_cohort_schedule)
         end
       end
     end
