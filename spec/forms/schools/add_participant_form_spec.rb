@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Schools::AddParticipantForm, type: :model do
-  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
   let(:school_cohort) { create(:school_cohort, cohort: cohort_2021) }
   let(:school) { school_cohort.school }
   let(:user) { create :user }
@@ -79,7 +79,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "when multiple cohorts are active" do
-      let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+      let(:cohort_2022) { Cohort[2022] || create(:cohort, start_year: 2022) }
       let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
 
       context "when there are mentors in the school mentor pool" do

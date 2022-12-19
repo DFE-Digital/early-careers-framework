@@ -75,7 +75,7 @@ module NPQ
     end
 
     def cohort
-      @cohort ||= Cohort.find_by(start_year: npq_application_params[:cohort])
+      @cohort ||= Cohort[npq_application_params[:cohort]]
     end
 
     def npq_course

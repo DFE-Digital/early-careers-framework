@@ -3,19 +3,15 @@
 require "rails_helper"
 
 RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :model do
-  let(:npq_application) { create(:npq_application) }
+  let(:npq_application) { create(:npq_application, cohort: cohort_2021) }
   let(:npq_application_id) { npq_application.id }
 
-  let!(:cohort_2022) { create(:cohort, :next) }
-  let(:cohort_2021) { Cohort.find_by(start_year: 2021) }
+  let!(:cohort_2022) { Cohort[2022] || create(:cohort, start_year: 2022) }
+  let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
 
-  let(:target_cohort_start_year) { cohort_2021.start_year }
-  subject do
-    described_class.new(
-      npq_application_id:,
-      target_cohort_start_year:,
-    )
-  end
+  let(:target_cohort_start_year) { 2021 }
+
+  subject { described_class.new(npq_application_id:, target_cohort_start_year:) }
 
   describe "validations" do
     context "when the NPQ application id is blank" do
@@ -81,8 +77,15 @@ RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :mode
       context "when a profile is attached to an NPQ application" do
         let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
         let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_2022, npq_course:) }
-        let!(:source_schedule) { create(:npq_specialist_schedule, cohort: cohort_2022) }
-        let!(:target_schedule) { Finance::Schedule::NPQSpecialist.find_by(cohort: cohort_2021) }
+
+        let!(:source_schedule) do
+          Finance::Schedule::NPQSpecialist.find_by(cohort: cohort_2022) ||
+            create(:npq_specialist_schedule, cohort: cohort_2022)
+        end
+        let!(:target_schedule) do
+          Finance::Schedule::NPQSpecialist.find_by(cohort: cohort_2021) ||
+            create(:npq_specialist_schedule, cohort: cohort_2021)
+        end
 
         it "updates the cohort on the NPQ application to the target cohort" do
           expect { subject.call }.to change { npq_application.reload.cohort }.from(cohort_2022).to(cohort_2021)

@@ -2,10 +2,10 @@
 
 RSpec.describe ParticipantMentorForm, :with_default_schedules, type: :model do
   describe "#available_mentors" do
-    let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+    let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
     let(:school_cohort) { create(:school_cohort, cohort: cohort_2021) }
     let(:school) { school_cohort.school }
-    let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+    let(:cohort_2022) { Cohort[2022] || create(:cohort, start_year: 2022) }
     let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
 
     subject { described_class.new(school_id: school.id, cohort_id: school_cohort.cohort_id) }

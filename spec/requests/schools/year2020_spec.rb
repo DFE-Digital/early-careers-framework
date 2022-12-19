@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Schools::AddParticipant", type: :request do
-  let!(:default_schedule) { create(:ecf_schedule) }
+  let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let!(:default_schedule) { create(:ecf_schedule, cohort: cohort_2021) }
   let!(:school) { create :school }
-  let!(:cohort) { create :cohort, start_year: 2020 }
+  let!(:cohort) { Cohort[2020] || create(:cohort, start_year: 2020) }
   let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
   let!(:core_induction_programme) { create :core_induction_programme }
 

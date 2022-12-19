@@ -98,7 +98,7 @@ private
   end
 
   def cohort
-    @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
+    @cohort ||= Cohort[params[:cohort_id]]
   end
 
   def school_cohort

@@ -44,7 +44,7 @@ private
   def previous_lead_provider(school_cohort)
     school = school_cohort.school
     previous_start_year = school_cohort.cohort.start_year - 1
-    previous_school_cohort = school.school_cohorts.find_by(cohort: Cohort.find_by(start_year: previous_start_year))
+    previous_school_cohort = school.school_cohorts.find_by(cohort: Cohort[previous_start_year])
     previous_school_cohort.lead_provider
   end
 

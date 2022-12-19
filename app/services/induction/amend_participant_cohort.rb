@@ -107,7 +107,7 @@ module Induction
     end
 
     def source_cohort
-      @source_cohort ||= Cohort.find_by(start_year: source_cohort_start_year)
+      @source_cohort ||= Cohort[source_cohort_start_year]
     end
 
     def source_cohort_start_date
@@ -123,7 +123,7 @@ module Induction
     end
 
     def target_cohort
-      @target_cohort ||= Cohort.find_by(start_year: target_cohort_start_year)
+      @target_cohort ||= Cohort[target_cohort_start_year]
     end
 
     def target_school_cohort

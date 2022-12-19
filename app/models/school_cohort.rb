@@ -56,7 +56,7 @@ class SchoolCohort < ApplicationRecord
   end
 
   def self.previous
-    find_by(cohort: Cohort.find_by(start_year: Cohort.active_registration_cohort.start_year - 1))
+    find_by(cohort: Cohort[Cohort.active_registration_cohort.start_year - 1])
   end
 
   def lead_provider

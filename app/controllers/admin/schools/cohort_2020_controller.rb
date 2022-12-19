@@ -53,7 +53,7 @@ module Admin
       end
 
       def school_cohort
-        SchoolCohort.find_by(school:, cohort: Cohort.find_by(start_year: 2020))
+        SchoolCohort.find_by(school:, cohort: Cohort[2020])
       end
     end
   end

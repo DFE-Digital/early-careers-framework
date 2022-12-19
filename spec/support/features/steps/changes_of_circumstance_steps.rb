@@ -12,7 +12,7 @@ module Steps
         create :call_off_contract, lead_provider: lead_provider
 
         delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
-        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
+        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort[2021]
 
         user = create(:user, full_name: lead_provider_name)
         create :lead_provider_profile, user: user, lead_provider: lead_provider

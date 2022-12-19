@@ -20,7 +20,7 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
 
   describe "default_for" do
     context "when registration cohort is 2021" do
-      let(:cohort) { Cohort.find_by(start_year: 2021) }
+      let(:cohort) { Cohort[2021] }
 
       it "returns ECF September standard 2021 schedule" do
         expect(ecf_schedule.default_for(cohort:).name).to eql "ECF Standard September"
@@ -30,7 +30,7 @@ RSpec.describe Finance::Schedule::ECF, type: :model do
   end
 
   context "for 2021 cohort" do
-    let(:cohort) { Cohort.find_by(start_year: 2021) }
+    let(:cohort) { Cohort[2021] }
 
     it "seeds ecf schedules and milestones" do
       schedule = described_class.find_by(cohort:, schedule_identifier: "ecf-standard-april")

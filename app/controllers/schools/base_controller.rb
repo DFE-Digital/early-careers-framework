@@ -24,7 +24,7 @@ private
   end
 
   def active_cohort
-    Cohort.find_by(start_year: params[:cohort_id]) if params[:cohort_id].present?
+    Cohort[params[:cohort_id]] if params[:cohort_id].present?
   end
 
   def set_school_cohort(cohort: active_cohort)

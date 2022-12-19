@@ -4,7 +4,7 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
   before do
     # create cohorts since 2020 with default schedule
     (2020..Date.current.year).each do |start_year|
-      cohort = Cohort.find_by_start_year(start_year) || create(:cohort, start_year:)
+      cohort = Cohort[start_year] || create(:cohort, start_year:)
       Finance::Schedule::ECF.default_for(cohort:) || create(:ecf_schedule, cohort:)
     end
 

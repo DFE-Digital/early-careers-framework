@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules do
-  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let(:cohort) { Cohort[2021] || create(:cohort, start_year: 2021) }
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
 

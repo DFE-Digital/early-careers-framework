@@ -46,11 +46,11 @@ class Cohort < ApplicationRecord
   end
 
   def next
-    Cohort.find_by(start_year: start_year + 1)
+    Cohort[start_year + 1]
   end
 
   def previous
-    Cohort.find_by(start_year: start_year - 1)
+    Cohort[start_year - 1]
   end
 
   def to_param

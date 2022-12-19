@@ -75,7 +75,7 @@ module ApplicationHelper
 private
 
   def post_2020_ecf_participant?(user)
-    user.teacher_profile.ecf_profiles.where.not(cohort: Cohort.find_by(start_year: 2020)).any?
+    user.teacher_profile.ecf_profiles.where.not(cohort: Cohort[2020]).any?
   end
 
   def school_dashboard_with_tab_path(school)
