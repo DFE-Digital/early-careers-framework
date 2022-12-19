@@ -24,6 +24,7 @@ Rails.logger.info("Seeding database")
   "importing core induction programmes and lead providers" => "add_lead_providers_and_cips.rb",
   "adding users" => "add_users.rb",
   "adding appropriate bodies" => "add_appropriate_bodies.rb",
+  "adding schools and local authorities" => "add_schools_and_local_authorities.rb",
 }.each do |msg, file|
   Rails.logger.info(msg)
   load_base_file(file)
