@@ -4,12 +4,13 @@
 local_authorities = FactoryBot.create_list(:local_authority, 10)
 
 cohorts = Cohort.where(start_year: [2021, 2022])
+lead_providers = LeadProvider.all
 
 # create some generic schools with:
 # * [x] a local authority
 # * [x] an induction tutor
 # * [x] some school cohorts
-# * [ ] partnerships
+# * [x] partnerships
 # * [ ] some ects
 # * [ ] some ects with eligibility
 # * [ ] some mentors
@@ -22,6 +23,11 @@ local_authorities.each do |local_authority|
 
       cohorts.sample(Random.rand(1..cohorts.length)).each do |cohort|
         FactoryBot.create(:seed_school_cohort, school:, cohort:)
+      end
+
+      lead_providers.sample do |lead_provider|
+        # TODO: partnerhips also have a cohort, do we set that here? Seems to work ok without
+        FactoryBot.create(:seed_partnership, :with_delivery_partner, school:, lead_provider:)
       end
     end
   end
