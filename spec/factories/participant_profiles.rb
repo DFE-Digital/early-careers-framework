@@ -3,14 +3,15 @@
 FactoryBot.define do
   factory :participant_profile do
     transient do
+      cohort         { Cohort.current || create(:cohort, :current) }
       profile_traits { [] }
     end
 
     factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
       profile_duplicity { :single }
-      school_cohort { association :school_cohort }
+      school_cohort { association :school_cohort, cohort: }
       teacher_profile { association :teacher_profile, school: school_cohort.school }
-      schedule { Finance::Schedule::ECF.default || create(:ecf_schedule) }
+      schedule { Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort) || create(:ecf_schedule, cohort: school_cohort.cohort) }
       after :build do |participant_profile|
         participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
       end
@@ -29,7 +30,6 @@ FactoryBot.define do
 
     factory :npq_participant_profile, class: "ParticipantProfile::NPQ" do
       transient do
-        cohort            { Cohort.current || create(:cohort, :current) }
         npq_course        { create(:npq_course) }
         user              { create(:user) }
         npq_lead_provider { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }

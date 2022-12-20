@@ -131,6 +131,7 @@ module ManageTrainingSteps
     teacher_profile = create(:teacher_profile, user:)
     @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @participant_profile_mentor, school: @school)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
@@ -290,6 +291,11 @@ module ManageTrainingSteps
     expect(page).to have_content("Manage your training")
     expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
   end
+
+  def and_i_click_on(string)
+    page.click_on(string)
+  end
+  alias_method :when_i_click_on, :and_i_click_on
 
   def and_i_should_see_multiple_schools
     expect(page).to have_text("Test School 1")

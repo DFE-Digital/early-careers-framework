@@ -19,6 +19,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
       and_the_action_required_is_remove
@@ -37,6 +38,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -54,6 +56,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -71,6 +74,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -89,6 +93,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -106,6 +111,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -123,6 +129,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -141,6 +148,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
 
@@ -158,6 +166,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
 
@@ -175,6 +184,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
 
@@ -193,6 +203,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       click_on "Mentors"
       then_i_can_view_contacted_for_info_participants
@@ -211,6 +222,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -228,6 +240,7 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 

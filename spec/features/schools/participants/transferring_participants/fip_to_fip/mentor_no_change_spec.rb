@@ -12,8 +12,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
         and_there_is_a_mentor_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
-        when_i_click_on_view_your_early_career_teacher_and_mentor_details
-        then_i_am_taken_to_your_ect_and_mentors_page
+        and_i_click_on("2021 to 2022")
+        when_i_navigate_to_participants_dashboard
       end
 
       scenario "Induction tutor can transfer an Mentor to their school" do
@@ -85,12 +85,13 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
 
       # when
 
-      def when_i_click_on_view_your_early_career_teacher_and_mentor_details
-        click_on("View your early career teacher and mentor details")
-      end
-
       def when_i_click_to_add_a_new_ect_or_mentor
         click_on "Add an ECT or mentor"
+      end
+
+      def when_i_navigate_to_participants_dashboard(action: "Manage")
+        when_i_click_on_summary_row_action("ECTs and mentors", action)
+        then_i_am_taken_to_your_ect_and_mentors_page
       end
 
       def when_i_select_transfer_teacher_option
@@ -193,6 +194,10 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
         privacy_policy = create(:privacy_policy)
         privacy_policy.accept!(@induction_coordinator_profile.user)
         sign_in_as @induction_coordinator_profile.user
+      end
+
+      def and_i_click_on(string)
+        page.click_on(string)
       end
 
       def and_there_is_a_mentor_who_will_be_transferring

@@ -8,6 +8,7 @@ FactoryBot.define do
     end
 
     transient do
+      cohort         { Cohort.current || create(:cohort, :current) }
       profile_traits { [] }
       uplifts        { [] }
       has_passed     { false }
@@ -18,12 +19,12 @@ FactoryBot.define do
 
       factory :ect_participant_declaration, class: "ParticipantDeclaration::ECF" do
         course_identifier { "ecf-induction" }
-        participant_profile { create(:ect, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider) }
+        participant_profile { create(:ect, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
       end
 
       factory :mentor_participant_declaration, class: "ParticipantDeclaration::ECF" do
         course_identifier { "ecf-mentor" }
-        participant_profile { create(:mentor, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider) }
+        participant_profile { create(:mentor, *uplifts, *profile_traits, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
       end
     end
 
