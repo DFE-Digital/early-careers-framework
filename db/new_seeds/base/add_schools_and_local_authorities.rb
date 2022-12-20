@@ -11,9 +11,9 @@ lead_providers = LeadProvider.all
 # * [x] an induction tutor
 # * [x] some school cohorts
 # * [x] partnerships
-# * [ ] some ects
+# * [x] some ects
 # * [ ] some ects with eligibility
-# * [ ] some mentors
+# * [x] some mentors
 # * [ ] some declarations
 local_authorities.each do |local_authority|
   FactoryBot.create(:seed_school).tap do |school|
@@ -28,6 +28,15 @@ local_authorities.each do |local_authority|
       lead_providers.sample do |lead_provider|
         # TODO: partnerhips also have a cohort, do we set that here? Seems to work ok without
         FactoryBot.create(:seed_partnership, :with_delivery_partner, school:, lead_provider:)
+      end
+
+      Random.rand(1..4).times do
+        NewSeeds::Scenarios::Participants::Mentors::MentoringMultipleEctsWithSameProvider
+          .new(
+            school:,
+            number: Random.rand(1..4), # number of mentees
+          )
+          .build
       end
     end
   end

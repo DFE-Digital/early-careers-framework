@@ -49,7 +49,7 @@ module NewSeeds
             @mentor ||= build_mentor
 
             # set up ECTs
-            @mentees = 1.upto(number).map { build_mentee }
+            @mentees = number.times.map { build_mentee }
 
             # assign ECTs to mentor
             @mentee_induction_records = mentees.each do |mentee|
