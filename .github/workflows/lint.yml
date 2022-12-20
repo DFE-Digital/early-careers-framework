@@ -22,8 +22,6 @@ jobs:
           ruby-version: 3.1.2
       - name: Install dependencies
         run: bundle install
-      - name: Create mail log file
-        run: touch log/mail.log
       - name: Lint ruby
         run: rubocop
       - name: Lint SCSS
