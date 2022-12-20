@@ -6,7 +6,7 @@ require "csv"
 RSpec.describe "Participants API", :with_default_schedules, type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
   let(:lead_provider)     { create(:lead_provider) }
-  let(:cohort)            { Cohort.current }
+  let(:cohort)            { Cohort.current || create(:cohort, :current) }
   let(:school_cohort)     { create(:school_cohort, :fip, :with_induction_programme, cohort:, induction_programme_choice: "full_induction_programme", lead_provider: cpd_lead_provider.lead_provider) }
   let(:partnership)       { school_cohort.default_induction_programme.partnership }
   let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
@@ -52,7 +52,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "only returns users for the current cohort" do
-          cohort_2020 = create(:cohort, start_year: 2020)
+          cohort_2020 = Cohort[2020] || create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
           create(:ecf_schedule, cohort: cohort_2020)
@@ -63,7 +63,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
-          cohort_2020 = create(:cohort, start_year: 2020)
+          cohort_2020 = Cohort[2020] || create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
           create(:ecf_schedule, cohort: cohort_2020)
@@ -75,7 +75,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           parsed_response["data"].each do |user|
             next unless user["id"] == mentor_profile.user.id
 
-            expect(user["attributes"]["cohort"]).to eq("2021")
+            expect(user["attributes"]["cohort"]).to eq(cohort.display_name)
             expect(user["attributes"]["participant_type"]).to eq("mentor")
             expect(user["attributes"]["mentor_id"]).to be_nil
           end

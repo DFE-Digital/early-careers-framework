@@ -62,7 +62,7 @@ RSpec.describe "API Delivery Partners", :with_default_schedules, type: :request,
 
       context "when filtering by cohort" do
         it "returns all delivery partners that match" do
-          get "/api/v3/delivery-partners", params: { filter: { cohort: "2021,2050" } }
+          get "/api/v3/delivery-partners", params: { filter: { cohort: [cohort.start_year, 2050].join(",") } }
 
           expect(parsed_response["data"].size).to eql(2)
         end
