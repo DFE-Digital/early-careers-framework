@@ -97,7 +97,7 @@ FactoryBot.define do
       with_ecf_milestones
 
       factory :ecf_schedule_january do
-        name { "ECF January standard 2021" }
+        name { "ECF January standard" }
         schedule_identifier { "ecf-standard-january" }
       end
     end
@@ -110,28 +110,28 @@ FactoryBot.define do
     end
 
     factory :npq_specialist_schedule, class: "Finance::Schedule::NPQSpecialist", parent: :schedule do
-      name { "NPQ Specialist Spring 2021" }
+      name { "NPQ Specialist Spring" }
       schedule_identifier { "npq-specialist-spring" }
 
       with_npq_milestones
     end
 
     factory :npq_leadership_schedule, class: "Finance::Schedule::NPQLeadership", parent: :schedule do
-      name { "NPQ Leadership Spring 2021" }
+      name { "NPQ Leadership Spring" }
       schedule_identifier { "npq-leadership-spring" }
 
       with_npq_milestones
     end
 
     factory :npq_aso_schedule, class: "Finance::Schedule::NPQSupport", parent: :schedule do
-      name { "NPQ Additional Support Offer December 2021" }
+      name { "NPQ Additional Support Offer December" }
       schedule_identifier { "npq-aso-december" }
 
       with_npq_milestones
     end
 
     factory :npq_ehco_schedule, class: "Finance::Schedule::NPQEhco", parent: :schedule do
-      name { "NPQ EHCO December 2021" }
+      name { "NPQ EHCO December" }
       schedule_identifier { "npq-ehco-december" }
 
       with_npq_milestones
