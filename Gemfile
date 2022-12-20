@@ -65,7 +65,7 @@ gem "view_component", require: "view_component/engine"
 # Fetching from APIs
 gem "httpclient", "~> 2.8", ">= 2.8.3"
 gem "rubyzip", "~> 2.3", ">= 2.3.0"
-gem "savon", "~> 2.13"
+gem "savon", "~> 2.14"
 
 # Strong migration checker for database migrations
 gem "strong_migrations", "~> 1.4"
