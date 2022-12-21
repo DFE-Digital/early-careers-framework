@@ -31,7 +31,6 @@ Feature: Induction tutors choosing programmes
     Then I should have been redirected to "school cohorts" page
     And the page should be accessible
     And "page body" should contain "Manage your training"
-    And "page body" should contain "Add your early career teacher and mentor details"
 
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
@@ -50,7 +49,6 @@ Feature: Induction tutors choosing programmes
     Then I should be on "school cohorts" page
     And the page should be accessible
     And "page body" should contain "Manage your training"
-    And "page body" should contain "Add your early career teacher and mentor details"
 
   Scenario: Choosing to design and deliver our own programme
     When I click on "design and deliver our own programme radio button"
