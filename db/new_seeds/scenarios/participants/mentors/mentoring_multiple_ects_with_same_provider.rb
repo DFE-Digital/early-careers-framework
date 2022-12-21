@@ -19,11 +19,12 @@ module NewSeeds
                         :lead_provider,
                         :induction_programme
 
-          def initialize(school: nil, mentor: nil, number: 2)
+          def initialize(school: nil, mentor: nil, lead_provider: nil, number: 2)
             Rails.logger.info("################# seeding scenario MentoringMultipleEctsWithSameProvider")
-            @school = school
-            @mentor = mentor
-            @number = number
+            @school        = school
+            @mentor        = mentor
+            @number        = number
+            @lead_provider = lead_provider
           end
 
           def build
@@ -31,8 +32,8 @@ module NewSeeds
 
             # we'll probably be doing a lot of this, might make sense to move it somewhere communal
             @school ||= FactoryBot.create(:seed_school)
+            @lead_provider ||= FactoryBot.create(:seed_lead_provider)
             @school_cohort = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school:)
-            @lead_provider = FactoryBot.create(:seed_lead_provider)
             @delivery_partner = FactoryBot.create(:seed_delivery_partner)
             @partnership = FactoryBot.create(:seed_partnership,
                                              cohort: cohort(2022),
