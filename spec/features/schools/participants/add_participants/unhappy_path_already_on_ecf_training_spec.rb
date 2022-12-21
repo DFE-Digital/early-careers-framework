@@ -90,7 +90,11 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
       when_i_add_ect_or_mentor_email
       when_i_click_on_continue
-      then_i_should_be_taken_to_the_teachers_current_programme_page
+      then_i_am_taken_to_choose_mentor_in_transfer_page
+
+      when_i_select_a_mentor
+      when_i_click_on_continue
+      then_i_am_taken_to_the_teachers_current_programme_page
 
       when_i_select "Yes"
       when_i_click_on_continue

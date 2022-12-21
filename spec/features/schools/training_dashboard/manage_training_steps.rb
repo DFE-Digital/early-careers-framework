@@ -34,7 +34,7 @@ module ManageTrainingSteps
     @cohort = Cohort[2021] || create(:cohort, start_year: 2021)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
-    @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort)
+    @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
@@ -109,6 +109,11 @@ module ManageTrainingSteps
   def and_i_can_change_the_appropriate_body
     expect(page).to have_summary_row_action("Appropriate body", "Change")
   end
+
+  def and_i_can_manage_ects_and_mentors(action: "Manage")
+    expect(page).to have_summary_row_action("ECTs and mentors", action)
+  end
+  alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
 
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
@@ -466,6 +471,10 @@ module ManageTrainingSteps
     click_on("Change induction programme choice", visible: false)
   end
 
+  def when_i_click_on_choose_materials
+    click_on("Choose materials", visible: false)
+  end
+
   def when_i_click_on_tell_us_if_this_has_changed
     click_on("Tell us if this has changed")
   end
@@ -611,7 +620,9 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_materials
+    click_on("Continue")
     choose("CIP Programme 1", allow_label_click: true)
+    click_on("Continue")
   end
 
   def when_i_visit_manage_training_dashboard
@@ -755,7 +766,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    expect(page).to have_text("You’ve chosen to: deliver your own programme using DfE-accredited materials")
+    expect(page).to have_text("Your school has chosen to deliver your own programme using DfE-accredited materials")
   end
 
   def then_i_am_taken_to_sign_up_to_training_provider_page
@@ -764,7 +775,11 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_course_choice_page
-    expect(page).to have_text("Which training materials do you want to use?")
+    expect(page).to have_text("Do you know which accredited materials you want to use?")
+  end
+
+  def then_i_am_taken_to_training_materials_confirmed_page
+    expect(page).to have_text("Training materials confirmed")
   end
 
   def then_i_am_taken_to_participant_profile
@@ -1027,13 +1042,14 @@ module ManageTrainingSteps
     expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
   end
 
-  def then_i_am_taken_choose_mentor_in_transfer_page
+  def then_i_am_taken_to_choose_mentor_in_transfer_page
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
     expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
   end
+  alias_method :then_i_am_taken_to_the_teachers_current_programme_page, :then_i_should_be_taken_to_the_teachers_current_programme_page
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")

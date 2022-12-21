@@ -3,11 +3,10 @@
 require "rails_helper"
 
 RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
-  let!(:cohort) { create :cohort, start_year: 2021 }
-  let!(:next_cohort) { create :cohort, start_year: 2022 }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
-  let!(:school_cohort) { create :school_cohort, school:, cohort: next_cohort, induction_programme_choice: "full_induction_programme", appropriate_body: }
+  let!(:school_cohort) { create :school_cohort, school:, cohort:, induction_programme_choice: "full_induction_programme", appropriate_body: }
   let!(:induction_programme) do
     induction_programme = create(:induction_programme, :fip, school_cohort:)
     school_cohort.update! default_induction_programme: induction_programme
@@ -18,7 +17,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
            school:,
            lead_provider: create(:lead_provider, name: "Big Provider Ltd"),
            delivery_partner: create(:delivery_partner, name: "Amazing Delivery Team"),
-           cohort: Cohort.next,
+           cohort:,
            challenge_deadline: 2.weeks.ago
   end
   let!(:user) { create(:user, full_name: "Induction tutor") }

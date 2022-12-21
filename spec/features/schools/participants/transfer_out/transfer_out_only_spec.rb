@@ -9,7 +9,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
       allow_participant_transfer_mailers
       given_a_school_have_chosen_fip_for_2021
       and_i_am_signed_in_as_an_induction_coordinator
-      and_select_the_most_recent_cohort
+      and_select_2021_to_2022_cohort
       when_i_click_to_view_ects_and_mentors
       then_i_am_taken_to_your_ect_and_mentors_page
     end
@@ -60,7 +60,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
     # when
 
     def when_i_click_to_view_ects_and_mentors
-      click_on "Manage"
+      when_i_click_on_summary_row_action("ECTs and mentors", "Manage")
     end
 
     def when_i_click_on_an_ect
@@ -146,8 +146,8 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
       sign_in_as @induction_coordinator_profile.user
     end
 
-    def and_select_the_most_recent_cohort
-      click_on Cohort.active_registration_cohort.description
+    def and_select_2021_to_2022_cohort
+      click_on("2021 to 2022")
     end
 
     def and_the_participant_should_be_notified_that_theyre_transferred_out
