@@ -61,6 +61,8 @@ module NewSeeds
 
               Rails.logger.info("seeded induction record where #{mentor.user.full_name} is mentoring #{mentee.user.full_name}")
             end
+
+            self
           end
 
           def build_mentor
