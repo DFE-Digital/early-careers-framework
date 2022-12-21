@@ -4,11 +4,10 @@ Feature: Your schools flow
     And cohort was created with start_year "2022"
     And I am logged in as a "lead_provider"
     And scenario "lead_provider_with_schools" has been run
-    And I am on "lead providers your schools" page
+    And I am on "lead providers your schools" page with query "cohort=2022"
 
   Scenario: Viewing my schools
     Then "page body" should contain "Your schools"
-    And "page body" should contain "Confirm more schools"
     And "page body" should contain "2022 cohort"
     And "page body" should contain "2021 cohort"
     And "page body" should contain "Download schools for 2022"
@@ -21,7 +20,6 @@ Feature: Your schools flow
     When I am on "dashboard" page
     And I click on "link" containing "Check your schools"
     Then "page body" should contain "Your schools"
-    And "page body" should contain "Confirm more schools"
     And "page body" should contain "Download schools for 2022"
     And "schools table" should exist
 
