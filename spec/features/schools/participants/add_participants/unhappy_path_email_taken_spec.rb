@@ -11,6 +11,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
     and_i_am_signed_in_as_an_induction_coordinator
+    and_i_click("2021 to 2022")
     then_i_am_taken_to_fip_induction_dashboard
     set_dqt_validation_result
   end

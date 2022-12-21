@@ -51,7 +51,7 @@ module Pages
     end
 
     def view_participant_details
-      click_on "View your early career teacher and mentor details"
+      click_on "Manage"
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end

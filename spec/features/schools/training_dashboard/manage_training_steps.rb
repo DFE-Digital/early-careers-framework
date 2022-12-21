@@ -40,7 +40,7 @@ module ManageTrainingSteps
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
     @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
-    create(:school_cohort, school: @school_cohort.school, cohort: Cohort[2020] || create(:cohort, start_year: 2020))
+    create(:school_cohort, school: @school_cohort.school, cohort: Cohort.previous || create(:cohort, :previous))
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator

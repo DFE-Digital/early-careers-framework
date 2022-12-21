@@ -58,6 +58,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
       and_i_have_a_transferred_out_participant
       and_i_am_signed_in_as_an_induction_coordinator
+      and_i_click("2021 to 2022")
     end
 
     scenario "Induction coordinator can view participants that have completed their transfer out" do

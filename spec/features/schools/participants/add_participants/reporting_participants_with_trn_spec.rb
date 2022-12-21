@@ -16,7 +16,8 @@ RSpec.describe "Reporting participants with a known TRN",
                with_feature_flags: { change_of_circumstances: "active" },
                type: :feature,
                js: true do
-  let!(:cohort) { create :cohort, start_year: 2021 }
+  let!(:cohort) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let!(:next_cohort) { Cohort[2022] || create(:cohort, start_year: 2022) }
   let!(:privacy_policy) do
     privacy_policy = create(:privacy_policy)
     PrivacyPolicy::Publish.call
@@ -35,7 +36,7 @@ RSpec.describe "Reporting participants with a known TRN",
   end
 
   let!(:school) { create :school, name: "Fip School" }
-  let!(:school_cohort) { create :school_cohort, school:, cohort: Cohort.next, induction_programme_choice: "full_induction_programme" }
+  let!(:school_cohort) { create :school_cohort, school:, cohort: next_cohort, induction_programme_choice: "full_induction_programme" }
   let!(:induction_programme) do
     induction_programme = create(:induction_programme, :fip, school_cohort:)
     school_cohort.update! default_induction_programme: induction_programme
@@ -46,7 +47,7 @@ RSpec.describe "Reporting participants with a known TRN",
            school:,
            lead_provider: create(:lead_provider, name: "Big Provider Ltd"),
            delivery_partner: create(:delivery_partner, name: "Amazing Delivery Team"),
-           cohort: Cohort.next,
+           cohort: next_cohort,
            challenge_deadline: 2.weeks.ago
   end
   let(:mentor_full_name) { "Billy Mentor" }
@@ -55,6 +56,7 @@ RSpec.describe "Reporting participants with a known TRN",
     teacher_profile = create(:teacher_profile, user:)
     participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort:)
     Induction::Enrol.call(participant_profile: participant_profile_mentor, induction_programme:)
+    Mentors::AddToSchool.call(mentor_profile: participant_profile_mentor, school:)
     participant_profile_mentor
   end
   let!(:induction_coordinator) do

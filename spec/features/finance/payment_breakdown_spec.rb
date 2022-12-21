@@ -6,9 +6,9 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   include FinanceHelper
   include ActionView::Helpers::NumberHelper
 
-  let!(:lead_provider)         { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
+  let!(:lead_provider)   { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
   let(:cpd_lead_provider)      { lead_provider.cpd_lead_provider }
-  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
+  let!(:contract)        { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
   let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
   let(:participant_aggregator_nov) do
     Finance::ECF::ParticipantAggregator.new(
