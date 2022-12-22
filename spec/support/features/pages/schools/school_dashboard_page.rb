@@ -25,7 +25,7 @@ module Pages
     end
 
     def confirm_has_no_participants
-      element_has_content? self, "Add your early career teacher and mentor details"
+      element_has_content?(self, "ECTs and mentors0")
     end
 
     def confirm_will_use_dfe_funded_training_provider
@@ -51,15 +51,19 @@ module Pages
     end
 
     def view_participant_details
-      click_on "Manage"
+      click_on "Manage participants"
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
 
     def add_participant_details
-      click_on "Add your early career teacher and mentor details"
+      if has_content?("ECTs and mentors0")
+        click_on("Add participants")
+      else
+        click_on("Manage participants")
+      end
 
-      Pages::SchoolAddParticipantStartPage.loaded
+      Pages::SchoolParticipantsDashboardPage.loaded
     end
   end
 end

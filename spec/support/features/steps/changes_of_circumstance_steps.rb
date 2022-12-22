@@ -69,7 +69,6 @@ module Steps
 
         wizard = Pages::SchoolDashboardPage.loaded
                                            .add_participant_details
-                                           .continue
                                            .choose_to_add_an_ect_or_mentor
         participant_start_date = Date.new(2021, 9, 1)
         response = {
