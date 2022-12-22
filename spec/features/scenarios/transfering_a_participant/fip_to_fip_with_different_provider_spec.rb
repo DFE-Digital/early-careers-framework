@@ -33,6 +33,7 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant",
   fixture_data_path = File.join(File.dirname(__FILE__), "../changes_of_circumstances_fixtures.csv")
   CSV.parse(File.read(fixture_data_path), headers: true).each_with_index do |fixture_data, index|
     next if includes.any? && !includes.include?(index + 2)
+
     scenario = ChangesOfCircumstanceScenario.new index + 2, fixture_data
 
     next unless scenario.original_programme == "FIP" && scenario.new_programme == "FIP" && scenario.transfer == :different_provider

@@ -110,7 +110,7 @@ module ManageTrainingSteps
     expect(page).to have_summary_row_action("Appropriate body", "Change")
   end
 
-  def and_i_can_manage_ects_and_mentors(action: "Manage")
+  def and_i_can_manage_ects_and_mentors(action: "Manage participants")
     expect(page).to have_summary_row_action("ECTs and mentors", action)
   end
   alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
@@ -1003,7 +1003,7 @@ module ManageTrainingSteps
   def then_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Programme", "Use a training provider funded by the DfE")
-    expect(page).to have_summary_row_action("Programme", "Change\ninduction programme choice")
+    expect(page).to have_summary_row_action("Programme", "Change induction programme choice")
     expect(page).to have_text("Training provider")
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")

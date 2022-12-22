@@ -177,7 +177,6 @@ module Steps
 
         page_object = Pages::SchoolDashboardPage.loaded
                                                 .add_participant_details
-                                                .continue
                                                 .choose_to_transfer_an_ect_or_mentor
 
         if participant_profile.ect?

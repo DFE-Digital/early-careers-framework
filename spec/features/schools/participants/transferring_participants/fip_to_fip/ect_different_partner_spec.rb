@@ -163,7 +163,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       # when
 
       def when_i_click_to_view_ects_and_mentors
-        click_on("Manage")
+        click_on("Manage participants")
       end
 
       def when_i_click_to_add_a_new_ect_or_mentor
