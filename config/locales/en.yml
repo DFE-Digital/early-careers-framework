@@ -98,8 +98,6 @@ en:
       blank: "Enter an email address"
     type:
       blank: "Select whether to add or transfer a teacher"
-    start_term:
-      blank: "Enter a start term"
     date_of_birth: &date_of_birth_error_messages
       blank: "Enter date of birth"
       invalid: "Invalid date of birth"
@@ -325,8 +323,6 @@ en:
           attributes:
             mentor_id:
               blank: "Choose a mentor"
-            start_term:
-              blank: "Choose a start term"
             do_you_know_teachers_trn:
               blank: "Select whether you know the teacher reference number (TRN) for the teacher you are adding"
             trn:

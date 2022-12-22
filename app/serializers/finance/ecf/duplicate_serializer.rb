@@ -17,7 +17,6 @@ module Finance
       attribute :request_for_details_sent_at, &:request_for_details_sent_at
       attribute :training_status, &:training_status
       attribute :profile_duplicity, &:profile_duplicity
-      attribute :start_term, &:start_term
       attribute :notes, &:notes
 
       attribute :npq_course_id, &:npq_course_id

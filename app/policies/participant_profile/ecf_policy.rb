@@ -26,18 +26,9 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :appropriate_body_confirmation?, :update?
   alias_method :update_appropriate_body?, :update?
 
-  def update_start_term?
-    return true if admin?
-    return false if record.participant_declarations.any?
-
-    user.induction_coordinator? && same_school?
-  end
-
   def update_validation_data?
     admin? && record.training_status_active? && (record.ecf_participant_eligibility.blank? || !record.ecf_participant_eligibility.eligible_status?)
   end
-
-  alias_method :edit_start_term?, :update_start_term?
 
   def withdraw_record?
     return false if record.participant_declarations.not_voided.any?

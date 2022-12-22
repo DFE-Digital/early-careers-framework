@@ -42,12 +42,11 @@ module Mentors
 
   private
 
-    attr_reader :full_name, :email, :start_term, :school_cohort, :start_date, :sit_validation
+    attr_reader :full_name, :email, :school_cohort, :start_date, :sit_validation
 
-    def initialize(full_name:, email:, school_cohort:, start_term: nil, start_date: nil, sit_validation: false, **)
+    def initialize(full_name:, email:, school_cohort:, start_date: nil, sit_validation: false, **)
       @full_name = full_name
       @email = email
-      @start_term = start_term || school_cohort.cohort.start_term_options.first
       @start_date = start_date
       @school_cohort = school_cohort
       @sit_validation = sit_validation
@@ -55,7 +54,6 @@ module Mentors
 
     def mentor_attributes
       {
-        start_term:,
         school_cohort_id: school_cohort.id,
         sparsity_uplift: sparsity_uplift?(start_year),
         pupil_premium_uplift: pupil_premium_uplift?(start_year),
