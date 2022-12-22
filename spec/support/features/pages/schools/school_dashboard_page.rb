@@ -51,7 +51,11 @@ module Pages
     end
 
     def view_participant_details
-      click_on "Manage participants"
+      if has_link?("Manage participants")
+        click_on("Manage participants")
+      else
+        click_on("Add participants")
+      end
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
