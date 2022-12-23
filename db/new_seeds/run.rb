@@ -15,7 +15,7 @@ end
 Rails.logger.info("Seeding database")
 
 # base files are simply ruby scripts we run, they contain
-# static data
+# static data and generic records
 
 {
   "importing cohorts" => "add_cohorts.rb",
@@ -25,6 +25,7 @@ Rails.logger.info("Seeding database")
   "adding users" => "add_users.rb",
   "adding appropriate bodies" => "add_appropriate_bodies.rb",
   "adding schools and local authorities" => "add_schools_and_local_authorities.rb",
+  "adding npq registrations" => "add_npq_registrations.rb",
 }.each do |msg, file|
   Rails.logger.info(msg)
   load_base_file(file)

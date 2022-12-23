@@ -6,6 +6,6 @@ FactoryBot.define do
 
     trait(:valid) {}
 
-    after(:build) { |cpdlp| Rails.logger.debug("seeded npq lead provider #{cpdlp.name}") }
+    after(:build) { |cpdlp| Rails.logger.debug("seeded cpd lead provider #{cpdlp.name}") }
   end
 end

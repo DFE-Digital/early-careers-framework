@@ -5,9 +5,22 @@ FactoryBot.define do
     start_date { 6.months.ago }
     schedule { Finance::Schedule.first }
 
-    trait(:with_participant_profile) { association(:participant_profile, factory: :seed_participant_profile) }
-    trait(:with_induction_programme) { association(:induction_programme, factory: :seed_induction_programme) }
+    trait(:with_participant_profile) { association(:participant_profile, factory: %i[seed_ecf_participant_profile valid]) }
+    trait(:with_induction_programme) { association(:induction_programme, factory: %i[seed_induction_programme valid]) }
+    trait(:with_schedule) { association(:schedule, factory: %i[seed_finance_schedule valid]) }
 
-    after(:build) { |ir| Rails.logger.debug("seeded induction_record for #{ir.user.full_name}") }
+    trait(:valid) do
+      with_schedule
+      with_participant_profile
+      with_induction_programme
+    end
+
+    after(:build) do |ir|
+      if ir.user.present?
+        Rails.logger.debug("seeded induction_record for #{ir.user.full_name}")
+      else
+        Rails.logger.debug("seeded incomplete induction record")
+      end
+    end
   end
 end
