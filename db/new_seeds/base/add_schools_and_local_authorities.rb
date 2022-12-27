@@ -14,7 +14,7 @@ lead_providers = LeadProvider.all
 # * [x] some school cohorts
 # * [x] partnerships
 # * [x] some ects
-# * [ ] some ects with eligibility
+# * [x] some ects with eligibility
 # * [x] some mentors
 # * [ ] some declarations
 local_authorities.each do |local_authority|
