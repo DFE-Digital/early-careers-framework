@@ -14,8 +14,8 @@ end
 
 Rails.logger.info("Seeding database")
 
-# base files are simply ruby scripts we run, they contain
-# static data and generic records
+# base files are simply ruby scripts we run, they contain static data and
+# generic records
 
 {
   "importing cohorts" => "add_cohorts.rb",
@@ -33,15 +33,6 @@ end
 
 # scenarios are ruby classes that can be used to build more complicated
 # structures of data
-
-Rails.logger.info("Adding a user with an appropriate body")
-NewSeeds::Scenarios::Users::AppropriateBodyUser.new.build
-
-Rails.logger.info("Adding a finance user")
-NewSeeds::Scenarios::Users::FinanceUser.new.build
-
-Rails.logger.info("Building two delivery partner user with two delivery partners each")
-2.times { NewSeeds::Scenarios::Users::DeliveryPartnerUser.new(number: 2).build }
 
 # complex scenarios
 NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider.new.build
