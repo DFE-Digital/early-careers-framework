@@ -25,7 +25,17 @@ module NewSeeds
       def add_application
         raise(StandardError, "no participant_identity, call #build first") if participant_identity.blank?
 
-        @application = FactoryBot.create(:seed_npq_application, :valid, participant_identity:, npq_lead_provider:)
+        @application = FactoryBot.create(
+          :seed_npq_application,
+          :valid,
+          participant_identity:,
+          npq_lead_provider:,
+
+          # it turns out that we don't find the NPQ application via the participant identity but
+          # instead by the `has_one` on participant profile. The id of the NPQ application needs
+          # to match the corresponding participant profile's id.
+          id: @participant_profile.id,
+        )
 
         self
       end
