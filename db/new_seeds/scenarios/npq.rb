@@ -34,7 +34,7 @@ module NewSeeds
         raise(StandardError, "no user, call #build first") if user.blank?
 
         FactoryBot.create(
-          :seed_participant_declaration,
+          :seed_npq_participant_declaration,
           user:,
           participant_profile:,
           cpd_lead_provider: npq_lead_provider.cpd_lead_provider,

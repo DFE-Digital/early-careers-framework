@@ -26,15 +26,9 @@ Rails.logger.info("Seeding database")
   "adding appropriate bodies" => "add_appropriate_bodies.rb",
   "adding schools and local authorities" => "add_schools_and_local_authorities.rb",
   "adding npq registrations" => "add_npq_registrations.rb",
+  "adding transfer scenarios" => "add_transfer_scenarios.rb",
+  "adding mentor scenarios" => "add_mentor_scenarios.rb",
 }.each do |msg, file|
   Rails.logger.info(msg)
   load_base_file(file)
 end
-
-# scenarios are ruby classes that can be used to build more complicated
-# structures of data
-
-# complex scenarios
-NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider.new.build
-NewSeeds::Scenarios::Participants::Transfers::FipToFipChangingTrainingProvider.new.build
-NewSeeds::Scenarios::Participants::Mentors::MentoringMultipleEctsWithSameProvider.new.build

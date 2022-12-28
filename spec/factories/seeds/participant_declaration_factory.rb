@@ -5,15 +5,24 @@ FactoryBot.define do
   # ParticipantProfile. This means we end up with two users despite always
   # being able to infer a user via the participant profile. If possible hard
   # code these values when calling this factory
-  factory(:seed_participant_declaration, class: "ParticipantDeclaration") do
+  factory(:seed_abstract_participant_declaration, class: "ParticipantDeclaration") do
+    factory(:seed_npq_participant_declaration, class: "ParticipantDeclaration::NPQ") do
+      trait(:with_participant_profile) do
+        association(:participant_profile, factory: %i[seed_npq_participant_profile valid])
+      end
+    end
+
+    factory(:seed_ecf_participant_declaration, class: "ParticipantDeclaration::ECF") do
+      trait(:with_participant_profile) do
+        association(:participant_profile, factory: %i[seed_ecf_participant_profile valid])
+      end
+    end
+
     declaration_date { Faker::Date.between(from: 2.years.ago, to: 1.day.ago) }
     course_identifier { "ecf-induction" }
 
     trait(:with_cpd_lead_provider) { association(:cpd_lead_provider, factory: :seed_cpd_lead_provider) }
     trait(:with_user) { association(:user, factory: :seed_user) }
-    trait(:with_participant_profile) do
-      association(:participant_profile, factory: %i[seed_ecf_participant_profile valid])
-    end
 
     trait(:valid) do
       with_user
