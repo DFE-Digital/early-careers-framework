@@ -8,15 +8,6 @@ local_authorities = FactoryBot.create_list(:local_authority, 10)
 cohorts = Cohort.where(start_year: [2021, 2022])
 lead_providers = LeadProvider.all
 
-# create some generic schools with:
-# * [x] a local authority
-# * [x] an induction tutor
-# * [x] some school cohorts
-# * [x] partnerships
-# * [x] some ects
-# * [x] some ects with eligibility
-# * [x] some mentors
-# * [ ] some declarations
 local_authorities.each do |local_authority|
   FactoryBot.create(:seed_school).tap do |school|
     FactoryBot.create(:seed_school_local_authority, school:, local_authority:)
