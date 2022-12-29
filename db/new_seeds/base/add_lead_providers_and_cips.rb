@@ -52,13 +52,13 @@ teach_first_cip = FactoryBot.create(:seed_core_induction_programme, name: teach_
 ucl_cip = FactoryBot.create(:seed_core_induction_programme, name: ucl_institute_of_education.name)
 
 {
-  ambition_cip    => [ambition.name, capita.name],
-  ucl_cip         => [ucl_institute_of_education.name, best_practice_network.name],
-  edt_cip         => [education_development_trust.name],
-  teach_first_cip => [teach_first.name],
-}.each do |cip, names|
-  names.each do |name|
-    FactoryBot.create(:seed_lead_provider, name:).tap do |lead_provider|
+  ambition_cip    => [ambition, capita],
+  ucl_cip         => [ucl_institute_of_education, best_practice_network],
+  edt_cip         => [education_development_trust],
+  teach_first_cip => [teach_first],
+}.each do |cip, cpd_lead_providers|
+  cpd_lead_providers.each do |cpd_lead_provider|
+    FactoryBot.create(:seed_lead_provider, cpd_lead_provider:, name: cpd_lead_provider.name).tap do |lead_provider|
       lead_provider.update!(cohorts: [cohort_2021, cohort_2022])
 
       # FIXME: what about 2022? omitted in legacy
