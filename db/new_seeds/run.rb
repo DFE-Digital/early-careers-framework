@@ -18,17 +18,18 @@ Rails.logger.info("Seeding database")
 # generic records
 
 {
-  "importing cohorts" => "add_cohorts.rb",
-  "importing schedules" => "add_schedules.rb",
-  "importing privacy policy 1.0" => "add_privacy_policy.rb",
-  "importing core induction programmes and lead providers" => "add_lead_providers_and_cips.rb",
-  "adding users" => "add_users.rb",
-  "adding appropriate bodies" => "add_appropriate_bodies.rb",
-  "adding schools and local authorities" => "add_schools_and_local_authorities.rb",
-  "adding npq registrations" => "add_npq_registrations.rb",
-  "adding transfer scenarios" => "add_transfer_scenarios.rb",
-  "adding mentor scenarios" => "add_mentor_scenarios.rb",
+  "cohorts" => "add_cohorts.rb",
+  "schedules" => "add_schedules.rb",
+  "privacy policy 1.0" => "add_privacy_policy.rb",
+  "core induction programmes and lead providers" => "add_lead_providers_and_cips.rb",
+  "seed statements" => "add_seed_statements.rb",
+  "users" => "add_users.rb",
+  "appropriate bodies" => "add_appropriate_bodies.rb",
+  "schools and local authorities" => "add_schools_and_local_authorities.rb",
+  "npq registrations" => "add_npq_registrations.rb",
+  "transfer scenarios" => "add_transfer_scenarios.rb",
+  "mentor scenarios" => "add_mentor_scenarios.rb",
 }.each do |msg, file|
-  Rails.logger.info(msg)
+  Rails.logger.info("adding #{msg}")
   load_base_file(file)
 end
