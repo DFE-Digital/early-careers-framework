@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-# Admin user
-
-FactoryBot.create(:seed_user, full_name: "Administrator", email: "admin@example.com").tap do |admin_user|
-  FactoryBot.create(:seed_admin_profile, user: admin_user)
-end
+Rails.logger.info("Adding an admin user")
+NewSeeds::Scenarios::Users::AdminUser
+  .new(email: "admin@example.com", full_name: "Admin user")
+  .build
 
 Rails.logger.info("Adding a finance user")
 NewSeeds::Scenarios::Users::FinanceUser

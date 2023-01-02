@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory(:seed_participant_identity, class: "ParticipantIdentity") do
-    email { "participant-identity-#{SecureRandom.hex(4)}@example.com" }
     external_identifier { SecureRandom.uuid }
 
     trait :with_user do
@@ -15,6 +14,8 @@ FactoryBot.define do
     # the participant identity doesn't resemble the name in the user, so by
     # default let's use a generic one by default but allow override if
     # necessary
+    email { "participant-identity-#{SecureRandom.hex(4)}@example.com" }
+
     trait :with_realistic_email_address do
       email { Faker::Internet.unique.email }
     end

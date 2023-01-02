@@ -12,10 +12,7 @@ FactoryBot.define do
     trait(:with_school_cohort) { association(:school_cohort, factory: %i[seed_school_cohort valid]) }
     trait(:with_school) { association(:school, factory: :seed_school) }
 
-    trait(:valid) do
-      fip
-      with_school_cohort
-    end
+    trait(:valid) { with_school_cohort }
 
     after(:build) do |ip|
       if ip.school_cohort.present?
