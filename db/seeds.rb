@@ -2,9 +2,7 @@
 
 PaperTrail.enabled = false
 
-if ENV["NEW_SEEDS"] == "true"
-  load(Rails.root.join(*%w[db new_seeds run.rb]).to_s)
-else
+if ENV["LEGACY_SEEDS"] == "true"
   seed_path = %w[db legacy_seeds]
   load Rails.root.join(*seed_path, "initial_seed.rb").to_s
   load Rails.root.join(*seed_path, "schedules.rb").to_s
@@ -23,6 +21,8 @@ else
       FeatureFlag.activate(feature)
     end
   end
+else
+  load(Rails.root.join(*%w[db new_seeds run.rb]).to_s)
 end
 
 PaperTrail.enabled = true
