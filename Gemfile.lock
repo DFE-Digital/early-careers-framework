@@ -126,7 +126,7 @@ GEM
     commonmarker (0.23.6)
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
-    countries (5.2.0)
+    countries (5.2.1)
       unaccent (~> 0.3)
     crack (0.4.5)
       rexml
