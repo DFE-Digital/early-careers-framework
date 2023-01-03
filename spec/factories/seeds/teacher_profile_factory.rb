@@ -4,7 +4,7 @@ FactoryBot.define do
   factory(:seed_teacher_profile, class: "TeacherProfile") do
     trn { Faker::Number.unique.rand_in_range(10_000, 100_000).to_s }
 
-    trait(:ith_school) do
+    trait(:with_school) do
       school { build(:seed_school) }
     end
 
