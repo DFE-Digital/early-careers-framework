@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory(:seed_induction_record, class: "InductionRecord") do
     start_date { 6.months.ago }
-    schedule { Finance::Schedule.first }
+    schedule { Finance::Schedule::ECF.default }
 
     trait(:with_participant_profile) { association(:participant_profile, factory: %i[seed_ecf_participant_profile valid]) }
     trait(:with_induction_programme) { association(:induction_programme, factory: %i[seed_induction_programme valid]) }

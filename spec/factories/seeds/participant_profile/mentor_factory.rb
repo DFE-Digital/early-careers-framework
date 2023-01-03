@@ -4,7 +4,7 @@ FactoryBot.define do
   factory(:seed_mentor_participant_profile, class: "ParticipantProfile::Mentor") do
     type { "ParticipantProfile::Mentor" }
 
-    schedule { Finance::Schedule.first }
+    schedule { Finance::Schedule::ECF.default }
 
     trait :with_teacher_profile do
       association(:teacher_profile, factory: %i[seed_teacher_profile valid])
