@@ -34,7 +34,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     email: "rp-mentor.ambition.2021@example.com",
     core_induction_programme: ambition,
     school_cohort: school_cohort_one,
-    schedule: Finance::Schedule::ECF.default,
+    schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_one.cohort),
     induction_programme: induction_programme_one,
   ),
   OpenStruct.new(
@@ -42,7 +42,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     email: "rp-mentor.edt.2021@example.com",
     core_induction_programme: edt,
     school_cohort: school_cohort_two,
-    schedule: Finance::Schedule::ECF.default,
+    schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_two.cohort),
     induction_programme: induction_programme_two,
   ),
   OpenStruct.new(
@@ -50,7 +50,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     email: "rp-mentor.ucl.2021@example.com",
     core_induction_programme: ucl,
     school_cohort: school_cohort_three,
-    schedule: Finance::Schedule::ECF.default,
+    schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_three.cohort),
     induction_programme: induction_programme_three,
   ),
 
@@ -59,7 +59,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     email: "rp-mentor.ambition.2022@example.com",
     core_induction_programme: ambition,
     school_cohort: school_cohort_four,
-    schedule: Finance::Schedule::ECF.default,
+    schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_four.cohort),
     induction_programme: induction_programme_four,
   ),
   OpenStruct.new(
@@ -67,7 +67,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     email: "rp-mentor.edt.2022@example.com",
     core_induction_programme: edt,
     school_cohort: school_cohort_five,
-    schedule: Finance::Schedule::ECF.default,
+    schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_five.cohort),
     induction_programme: induction_programme_five,
   ),
   OpenStruct.new(
@@ -75,7 +75,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     email: "rp-mentor.ucl.2022@example.com",
     core_induction_programme: ucl,
     school_cohort: school_cohort_six,
-    schedule: Finance::Schedule::ECF.default,
+    schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_six.cohort),
     induction_programme: induction_programme_six,
   ),
 ].each do |mentor_params|
