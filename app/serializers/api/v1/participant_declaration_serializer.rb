@@ -37,7 +37,7 @@ module Api
 
       attribute :has_passed, if: -> { FeatureFlag.active?(:participant_outcomes_feature) } do |declaration|
         if declaration.npq?
-          declaration.outcomes.latest&.passed?
+          declaration.outcomes.latest&.has_passed?
         end
       end
     end

@@ -77,4 +77,21 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
       end
     end
   end
+
+  describe ".has_passed?" do
+    it "returns true if passed" do
+      outcome = described_class.new(state: "passed")
+      expect(outcome.has_passed?).to eql(true)
+    end
+
+    it "returns false if failed" do
+      outcome = described_class.new(state: "failed")
+      expect(outcome.has_passed?).to eql(false)
+    end
+
+    it "returns nil if voided" do
+      outcome = described_class.new(state: "voided")
+      expect(outcome.has_passed?).to eql(nil)
+    end
+  end
 end

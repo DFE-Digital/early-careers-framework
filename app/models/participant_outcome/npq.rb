@@ -16,4 +16,10 @@ class ParticipantOutcome::NPQ < ApplicationRecord
   def self.latest
     order(created_at: :desc).first
   end
+
+  def has_passed?
+    return nil if voided?
+
+    passed?
+  end
 end
