@@ -4,88 +4,17 @@
   Details
 <% end %>
 
-<%= render partial: "admin/participants/nav" %>
+<% content_for :before_content do %>
+  <%= govuk_back_link(href: admin_participants_path) %>
+<% end %>
 
-<%= govuk_summary_list do |sl|
-  sl.row do |row|
-    row.key(text: "Full name")
-    row.value(text: @user.full_name)
-    row.action(
-      href: edit_name_admin_participant_path(@participant_profile),
-      visually_hidden_text: "name"
-    )
-  end
+<% if @participant_profile.npq? %>
+  <%= render partial: "show_npq" %>
+<% else %>
+  <%= render partial: "admin/participants/nav" %>
 
-  sl.row do |row|
-    row.key(text: "Email address")
-    row.value(text: @user.email)
-    row.action(
-      href: edit_email_admin_participant_path(@participant_profile),
-      visually_hidden_text: "email"
-    )
-  end
-
-  sl.row do |row|
-    row.key(text: "Date of birth")
-    row.value(text: @participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
-  end
-
-  sl.row do |row|
-    row.key(text: "Induction start date")
-    row.value(text: @participant_profile&.induction_start_date&.to_s(:govuk))
-    # row.action(
-    #   href: edit_admin_participant_change_induction_start_date_path(participant_profile),
-    #   visually_hidden_text: "induction start date"
-    # )
-  end
-
-  if @participant_profile.teacher_profile
-    sl.row do |row|
-      row.key(text: "TRN")
-      row.value(text: @participant_profile.teacher_profile.trn)
-    end
-  end
-
-  sl.row do |row|
-    row.key(text: "ID")
-    row.value(text: tag.code(@user.id))
-  end
-
-  sl.row do |row|
-    row.key(text: "External ID")
-    row.value(text: tag.code(@participant_profile.participant_identity.external_identifier))
-  end
-
-  sl.row do |row|
-    row.key(text: "Associated email addresses")
-    row.value(text: html_list(all_emails_associated_with_a_user(@user)))
-  end
-
-  sl.row do |row|
-    row.key(text: "Validation status")
-    row.value(text: render(ParticipantStatusTagComponent.new(profile: @participant_profile, induction_record: @latest_induction_record)))
-  end
-
-  sl.row do |row|
-    row.key(text: "Notes")
-
-    row.value do
-      if @participant_profile.notes?
-        simple_format(@participant_profile.notes, class: "govuk-body")
-      else
-        "No notes"
-      end
-    end
-
-    notes_present = @participant_profile.notes.present?
-
-    row.action(
-      text: notes_present ? "Change notes" : "Add notes",
-      href: edit_admin_note_path(@participant_profile),
-      visually_hidden_text: notes_present ? "on #{@user.full_name}'s profile" : "to #{@user.full_name}'s profile",
-    )
-  end
-end %>
+  <%= render partial: "show_ecf" %>
+<% end %>
 
 <% if @participant_profile.policy_class.new(current_user, @participant_profile).withdraw_record? %>
   <%= govuk_button_link_to "Delete participant", remove_admin_participant_path(@participant_profile), warning: true %>
