@@ -35,7 +35,7 @@ gem "ar-uuid", "~> 0.2.3"
 gem "puma", "~> 5.6"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "shakapacker", "~> 6.5.4"
+gem "shakapacker", "~> 6.5.5"
 
 # Soft delete
 gem "discard", "~> 1.2", ">= 1.2.0"
