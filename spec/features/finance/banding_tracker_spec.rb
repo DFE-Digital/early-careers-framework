@@ -14,23 +14,23 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
       end
     end
   end
-  let(:next_cohort)        { Cohort.next || create(:cohort, :next) }
-  let(:schedule)           { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september") }
-  let(:next_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort) }
-  let(:next_cohort_ect)    { create(:ect, school_cohort: next_school_cohort, lead_provider: cpd_lead_provider.lead_provider) }
+  let(:cohort)        { Cohort.current || create(:cohort, :current) }
+  let(:schedule)      { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september", cohort:) }
+  let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
+  let(:ect)           { create(:ect, school_cohort:, lead_provider: cpd_lead_provider.lead_provider) }
 
   def create_output_statement_for(milestone)
     create(:statement, :output_fee, cpd_lead_provider:, deadline_date: milestone.milestone_date)
   end
 
   def generate_declarations(state:)
-    cohort = schedule.cohort
-
-    travel_to(schedule.milestones.find_by(declaration_type: "started").milestone_date) do
+    milestone = schedule.milestones.find_by(declaration_type: "started")
+    travel_to(milestone.milestone_date) do
       create_list(:ect_participant_declaration, 17, state, declaration_type: "started", cpd_lead_provider:, cohort:)
     end
 
-    travel_to schedule.milestones.find_by(declaration_type: "retained-1").milestone_date do
+    milestone = schedule.milestones.find_by(declaration_type: "retained-1")
+    travel_to milestone.milestone_date do
       create_list(:ect_participant_declaration, 5, state, declaration_type: "retained-1", cpd_lead_provider:, cohort:)
     end
 
@@ -57,17 +57,15 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
 
     create(:milestone,
            declaration_type: "started",
-           milestone_date: Date.new(next_cohort.start_year, 12, 22),
-           schedule: create(:schedule,
-                            schedule_identifier: "ecf-standard-september",
-                            name: "ECF September Standard",
-                            type: "Finance::Schedule::ECF",
-                            cohort: next_cohort))
+           milestone_date: Date.new(cohort.start_year, 12, 22),
+           schedule: create(:schedule, schedule_identifier: "ecf-standard-september", name: "ECF September Standard", type: "Finance::Schedule::ECF", cohort:))
 
-    travel_to next_cohort_ect.schedule.milestones.find_by(declaration_type: "started").milestone_date do
-      create(:ect_participant_declaration,
-             participant_profile: next_cohort_ect,
-             cpd_lead_provider:)
+    travel_to ect.schedule.milestones.find_by(declaration_type: "started").milestone_date do
+      create(
+        :ect_participant_declaration,
+        participant_profile: ect,
+        cpd_lead_provider:,
+      )
     end
   end
 
