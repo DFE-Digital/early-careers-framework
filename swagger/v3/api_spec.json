@@ -475,7 +475,7 @@
         }
       }
     },
-    "/api/v3/participants/npq/{id}/outcomes": {
+    "/api/v3/participants/npq/{participant_id}/outcomes": {
       "get": {
         "summary": "Retrieve NPQ outcomes for the specified participant",
         "operationId": "npq_outcome_get",
@@ -491,7 +491,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
             "description": "The unique ID of the participant",
             "in": "path",
             "required": true,
@@ -540,7 +540,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
             "description": "The unique ID of the participant",
             "in": "path",
             "required": true,
@@ -3560,8 +3560,8 @@
         "required": [
           "participant_id",
           "course_identifier",
-          "has_passed",
-          "declaration_date",
+          "state",
+          "completion_date",
           "created_at"
         ],
         "properties": {
@@ -3588,15 +3588,21 @@
             ],
             "example": "npq-leading-teaching"
           },
-          "has_passed": {
-            "description": "Whether the participant has failed or passed",
-            "type": "boolean",
-            "example": true
+          "state": {
+            "description": "The state of the outcome (passed, failed or voided)",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "passed",
+              "failed",
+              "voided"
+            ],
+            "example": "passed"
           },
-          "declaration_date": {
+          "completion_date": {
             "description": "The date the participant received the assessment outcome for this course",
             "type": "string",
-            "example": "2021-05-31T02:21:32.000Z"
+            "example": "2021-05-31"
           },
           "created_at": {
             "description": "The date you created the latest npq-outcome-confirmation record",
@@ -3610,7 +3616,7 @@
         "required": [
           "participant_id",
           "course_identifier",
-          "has_passed"
+          "state"
         ],
         "properties": {
           "course_identifier": {
@@ -3628,16 +3634,20 @@
             ],
             "example": "npq-leading-teaching"
           },
-          "has_passed": {
-            "description": "Whether the participant has failed or passed",
-            "type": "boolean",
-            "example": false
-          },
-          "declaration_date": {
-            "description": "The timestamp associated with when this outcome was achieved",
+          "state": {
+            "description": "The state of the outcome (passed or failed)",
             "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:21:32.000Z"
+            "nullable": false,
+            "enum": [
+              "passed",
+              "failed"
+            ],
+            "example": "passed"
+          },
+          "completion_date": {
+            "description": "The date the participant received the assessment outcome for this course",
+            "type": "string",
+            "example": "2021-05-31"
           }
         }
       },
@@ -3675,8 +3685,8 @@
             "type": "npq-outcome-confirmation",
             "attributes": {
               "course_identifier": "npq-leading-teaching",
-              "has_passed": false,
-              "declaration_date": "2021-05-31T02:21:32.000Z"
+              "state": "passed",
+              "completion_date": "2021-05-31"
             }
           }
         }
@@ -3897,8 +3907,7 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at",
-          "has_passed"
+          "updated_at"
         ],
         "properties": {
           "participant_id": {

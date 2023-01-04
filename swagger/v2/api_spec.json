@@ -937,7 +937,7 @@
         "summary": "List all participant NPQ outcomes",
         "operationId": "participant_outcomes",
         "tags": [
-          "participants outcomes"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -984,12 +984,12 @@
         }
       }
     },
-    "/api/v2/participants/npq/{id}/outcomes": {
+    "/api/v2/participants/npq/{participant_id}/outcomes": {
       "get": {
         "summary": "List NPQ outcomes for single participant",
         "operationId": "participant_outcomes",
         "tags": [
-          "participants outcomes"
+          "Participants Outcomes"
         ],
         "security": [
           {
@@ -1000,7 +1000,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "participant_id",
             "in": "path",
             "required": true,
             "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
@@ -1017,6 +1017,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit a NPQ outcome for a single participant",
+        "operationId": "npq_outcome_post",
+        "tags": [
+          "Participants Outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "participant_id",
+            "description": "The unique ID of the participant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "70885c85-f52b-45fe-b969-e09a93ffc6ee"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully submit a NPQ outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomeResponse"
                 }
               }
             }
@@ -1535,14 +1593,17 @@
             ]
           },
           "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this NPQ participant",
+            "description": "The Teacher Reference Number (TRN) for this ECF participant",
             "type": "string",
-            "example": "1234567"
+            "example": "1234567",
+            "required": false,
+            "nullable": true
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "example": true
+            "example": true,
+            "nullable": true
           },
           "eligible_for_funding": {
             "description": "Indicates whether this participant is eligible to receive DfE funded induction",
@@ -1922,12 +1983,16 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "example": "1234567"
+            "example": "1234567",
+            "required": false,
+            "nullable": true
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "example": true
+            "example": true,
+            "required": false,
+            "nullable": true
           },
           "eligible_for_funding": {
             "description": "Indicates whether this participant is eligible to receive DfE funded induction",
@@ -2524,12 +2589,16 @@
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
             "type": "string",
-            "example": "1234567"
+            "example": "1234567",
+            "required": false,
+            "nullable": true
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
             "type": "boolean",
-            "example": true
+            "example": true,
+            "required": false,
+            "nullable": true
           },
           "eligible_for_funding": {
             "description": "Indicates whether this participant is eligible to receive DfE funded induction",
@@ -3496,7 +3565,7 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "participant-outcome"
+            "example": "npq-outcome-confirmation"
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQOutcomeAttributes"
@@ -3538,7 +3607,7 @@
             "example": "npq-leading-teaching"
           },
           "state": {
-            "description": "The state of the outcome (passed, failed, voided)",
+            "description": "The state of the outcome (passed, failed or voided)",
             "type": "string",
             "nullable": false,
             "enum": [
@@ -3551,12 +3620,104 @@
           "completion_date": {
             "description": "The date the participant received the assessment outcome for this course",
             "type": "string",
-            "example": "2021-05-31T02:21:32.000Z"
+            "example": "2021-05-31"
           },
           "created_at": {
-            "description": "The date you created the participant-outcome record",
+            "description": "The date you created the latest npq-outcome-confirmation record",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
+          }
+        }
+      },
+      "NPQOutcomeAttributesRequest": {
+        "type": "object",
+        "required": [
+          "participant_id",
+          "course_identifier",
+          "state"
+        ],
+        "properties": {
+          "course_identifier": {
+            "description": "The course the participant is enrolled in",
+            "type": "string",
+            "enum": [
+              "npq-leading-teaching",
+              "npq-leading-behaviour-culture",
+              "npq-leading-teaching-development",
+              "npq-leading-literacy",
+              "npq-senior-leadership",
+              "npq-headship",
+              "npq-executive-leadership",
+              "npq-early-years-leadership"
+            ],
+            "example": "npq-leading-teaching"
+          },
+          "state": {
+            "description": "The state of the outcome (passed or failed)",
+            "type": "string",
+            "nullable": false,
+            "enum": [
+              "passed",
+              "failed"
+            ],
+            "example": "passed"
+          },
+          "completion_date": {
+            "description": "The date the participant received the assessment outcome for this course",
+            "type": "string",
+            "example": "2021-05-31"
+          }
+        }
+      },
+      "NPQOutcomeDataRequest": {
+        "description": "The NPQ outcome submission request attributes",
+        "type": "object",
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "npq-outcome-confirmation"
+          },
+          "data": {
+            "$ref": "#/components/schemas/NPQOutcomeAttributesRequest"
+          }
+        }
+      },
+      "NPQOutcomeRequest": {
+        "description": "The NPQ outcome submission request",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQOutcomeDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "npq-outcome-confirmation",
+            "attributes": {
+              "course_identifier": "npq-leading-teaching",
+              "state": "passed",
+              "completion_date": "2021-05-31"
+            }
+          }
+        }
+      },
+      "NPQOutcomeResponse": {
+        "description": "A list of NPQ outcomes",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/NPQOutcome"
           }
         }
       },

@@ -26,4 +26,16 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
       expect(NPQCourse.identifiers.uniq.map { |course_identifier| described_class.for_course(course_identifier).count }.inject(:+)).to eq(20)
     end
   end
+
+  describe "scopes" do
+    describe "#valid_to_have_outcome_for_lead_provider_and_course" do
+      let!(:participant_declaration) { create(:npq_participant_declaration, :eligible) }
+
+      before { participant_declaration.update!(declaration_type: "completed") }
+
+      it "returns only valid declarations" do
+        expect(described_class.valid_to_have_outcome_for_lead_provider_and_course(participant_declaration.cpd_lead_provider, participant_declaration.course_identifier)).to match([participant_declaration])
+      end
+    end
+  end
 end

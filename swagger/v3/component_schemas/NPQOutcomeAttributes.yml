@@ -3,8 +3,8 @@ type: object
 required:
   - participant_id
   - course_identifier
-  - has_passed
-  - declaration_date
+  - state
+  - completion_date
   - created_at
 properties:
   participant_id:
@@ -27,15 +27,20 @@ properties:
       - npq-executive-leadership
       - npq-early-years-leadership
     example: npq-leading-teaching
-  has_passed:
-    description: Whether the participant has failed or passed
-    type: boolean
-    example: true
-  declaration_date:
+  state:
+    description: The state of the outcome (passed, failed or voided)
+    type: string
+    nullable: false
+    enum:
+      - passed
+      - failed
+      - voided
+    example: passed
+  completion_date:
     description: The date the participant received the assessment outcome for this course
     type: string
-    example: "2021-05-31T02:21:32.000Z"
+    example: "2021-05-31"
   created_at:
-    description: The date you created the latest npq-outcome-confirmation record
+    description: The date you created the participant-outcome record
     type: string
     example: "2021-05-31T02:21:32.000Z"

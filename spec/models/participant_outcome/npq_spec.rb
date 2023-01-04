@@ -50,7 +50,7 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
       outcome.completion_date = Date.tomorrow
       aggregate_failures "future date" do
         expect(outcome.valid?).to eq(false)
-        expect(outcome.errors[:completion_date].to_a).to eq(["Cannot be in the future"])
+        expect(outcome.errors[:completion_date].to_a).to eq(["The property '#/completion_date' can not declare a future date"])
       end
     end
 
@@ -64,6 +64,17 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
     it "disallows anything else for state" do
       expect { outcome.state = "invalid" }.to raise_error(ArgumentError, "'invalid' is not a valid state")
       expect(outcome.valid?).to eq(true)
+    end
+  end
+
+  describe "scopes" do
+    describe "#latest" do
+      let!(:outcome) { create(:participant_outcome, participant_declaration: declaration, created_at: 1.day.ago) }
+      let!(:another_outcome) { create(:participant_outcome, participant_declaration: declaration) }
+
+      it "returns the latest outcome only" do
+        expect(described_class.latest).to eql(another_outcome)
+      end
     end
   end
 end
