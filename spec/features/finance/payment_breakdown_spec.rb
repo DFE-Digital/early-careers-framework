@@ -6,10 +6,12 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
   include FinanceHelper
   include ActionView::Helpers::NumberHelper
 
-  let!(:lead_provider) { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
-  let(:cpd_lead_provider) { lead_provider.cpd_lead_provider }
-  let!(:contract) { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
-  let(:voided_declarations) { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
+  let!(:lead_provider)         { create(:lead_provider, name: "Test provider", id: "cffd2237-c368-4044-8451-68e4a4f73369") }
+  let(:cpd_lead_provider)      { lead_provider.cpd_lead_provider }
+  let!(:contract)              { create(:call_off_contract, lead_provider:, version: "0.0.1", cohort: Cohort.current) }
+  let(:current_start_year)     { Cohort.current.start_year }
+  let(:next_start_year)        { Cohort.next.start_year }
+  let(:voided_declarations)    { create_list(:ect_participant_declaration, 2, :eligible, :voided, cpd_lead_provider:) }
   let(:participant_aggregator_nov) do
     Finance::ECF::ParticipantAggregator.new(
       statement: november_statement,
@@ -23,8 +25,8 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     )
   end
 
-  let!(:january_statement)  { create(:ecf_statement, name: "January 2022", deadline_date: Date.new(2022, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
-  let!(:november_statement) { create(:ecf_statement, name: "November 2021", deadline_date: Date.new(2021, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
+  let!(:january_statement)  { create(:ecf_statement, name: "January #{next_start_year}", deadline_date: Date.new(next_start_year, 1, 31), cpd_lead_provider:, contract_version: contract.version) }
+  let!(:november_statement) { create(:ecf_statement, name: "November #{current_start_year}", deadline_date: Date.new(current_start_year, 11, 30), cpd_lead_provider:, contract_version: contract.version) }
 
   let(:jan_starts_breakdowns) do
     Finance::ECF::CalculationOrchestrator.new(
@@ -65,7 +67,7 @@ RSpec.feature "Finance users payment breakdowns", :with_default_schedules, type:
     when_i_click_on_view_contract_link
     then_i_see_contract_information
 
-    select("November 2021", from: "statement-field")
+    select("November #{current_start_year}", from: "statement-field")
     click_button("View")
 
     expect(page)
@@ -174,7 +176,7 @@ private
 
   def then_i_should_see_correct_breakdown_summary
     expect(page).to have_css(".govuk-caption-l", text: lead_provider.name)
-    select("January 2022", from: "statement-field")
+    select("January #{next_start_year}", from: "statement-field")
     click_button("View")
 
     within ".finance-panel__summary" do
