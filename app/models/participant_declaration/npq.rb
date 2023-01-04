@@ -43,4 +43,8 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
     .where.not(state: states.values_at("voided", "awaiting_clawback", "clawed_back"))
     .order(created_at: :desc)
   }
+
+  def npq?
+    true
+  end
 end

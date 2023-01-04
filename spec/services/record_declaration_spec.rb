@@ -199,6 +199,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
+  let(:has_passed) { false }
   let(:params) do
     {
       participant_id:,
@@ -206,6 +207,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       declaration_type:,
       course_identifier:,
       cpd_lead_provider:,
+      has_passed:,
     }
   end
 
@@ -340,6 +342,82 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
         expect(declaration).to be_eligible
         expect(declaration.statements).to include(statement)
+      end
+    end
+
+    context "when submitting completed", with_feature_flags: { participant_outcomes_feature: "active" } do
+      let(:declaration_type) { "completed" }
+      let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
+
+      context "has_passed is nil" do
+        let(:has_passed) { nil }
+
+        it "returns error" do
+          expect(service).to be_invalid
+          expect(service.errors.messages_for(:has_passed)).to eq(["The property '#/has_passed' must be present for completed declaration types"])
+        end
+      end
+
+      context "has_passed is true" do
+        let(:has_passed) { true }
+
+        it "creates participant outcome" do
+          travel_to declaration_date do
+            expect(service).to be_valid
+            participant_declaration = service.call
+            expect(participant_declaration.outcomes.count).to be(1)
+
+            outcome = participant_declaration.outcomes.first
+            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
+            expect(outcome).to be_passed
+          end
+        end
+      end
+
+      context "has_passed is false" do
+        let(:has_passed) { false }
+
+        it "does not create participant outcome" do
+          travel_to declaration_date do
+            expect(service).to be_valid
+            participant_declaration = service.call
+            expect(participant_declaration.outcomes.count).to be(1)
+
+            outcome = participant_declaration.outcomes.first
+            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
+            expect(outcome).to be_failed
+          end
+        end
+      end
+
+      context "ehco course identifier" do
+        let!(:npq_ehco_schedule) { create(:npq_ehco_schedule) }
+        let(:npq_course) { create(:npq_ehco_course) }
+        let(:has_passed) { true }
+
+        it "does not create participant outcome" do
+          travel_to declaration_date do
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+            expect(service).to be_valid
+            service.call
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+          end
+        end
+      end
+
+      context "aso course identifier" do
+        let!(:npq_aso_schedule) { create(:npq_aso_schedule) }
+        let(:npq_course) { create(:npq_aso_course) }
+        let(:has_passed) { true }
+
+        it "does not create participant outcome" do
+          travel_to declaration_date do
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+            expect(service).to be_valid
+            service.call
+            expect(ParticipantOutcome::NPQ.count).to be(0)
+          end
+        end
       end
     end
   end

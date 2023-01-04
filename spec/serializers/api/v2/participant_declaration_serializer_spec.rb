@@ -2,18 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V1::ParticipantDeclarationSerializer, :with_default_schedules, with_feature_flags: { participant_outcomes_feature: "active" } do
-  describe "#state" do
-    let(:participant_declaration) do
-      create(:ect_participant_declaration, :awaiting_clawback)
-    end
-
-    it "dasherizes the value" do
-      result = described_class.new(participant_declaration).serializable_hash
-      expect(result[:data][:attributes][:state]).to eql("awaiting-clawback")
-    end
-  end
-
+RSpec.describe Api::V2::ParticipantDeclarationSerializer, :with_default_schedules, with_feature_flags: { participant_outcomes_feature: "active" } do
   describe "#has_passed" do
     let(:declaration_type) { "completed" }
     let(:npq_course) { create(:npq_leadership_course) }

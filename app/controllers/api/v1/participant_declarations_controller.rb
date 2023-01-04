@@ -72,7 +72,7 @@ module Api
       def permitted_params
         params
           .require(:data)
-          .permit(:type, attributes: %i[course_identifier declaration_date declaration_type participant_id evidence_held])
+          .permit(:type, attributes: %i[course_identifier declaration_date declaration_type participant_id evidence_held has_passed])
       rescue ActionController::ParameterMissing => e
         if e.param == :data
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)

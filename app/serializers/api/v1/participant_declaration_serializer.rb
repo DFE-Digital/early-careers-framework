@@ -34,6 +34,12 @@ module Api
       attribute :state do |declaration|
         declaration.current_state.dasherize
       end
+
+      attribute :has_passed, if: -> { FeatureFlag.active?(:participant_outcomes_feature) } do |declaration|
+        if declaration.npq?
+          declaration.outcomes.latest&.has_passed?
+        end
+      end
     end
   end
 end

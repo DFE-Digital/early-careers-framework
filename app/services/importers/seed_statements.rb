@@ -4,6 +4,8 @@
 # It is not designed to keep statements in sync
 # For that should be done by hand
 
+require "csv"
+
 class Importers::SeedStatements
   def call
     (2021..2022).each do |start_year|

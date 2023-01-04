@@ -11,6 +11,7 @@ class RecordDeclaration
   attribute :declaration_type
   attribute :participant_id
   attribute :evidence_held
+  attribute :has_passed, :boolean
 
   before_validation :declaration_attempt
 
@@ -26,6 +27,7 @@ class RecordDeclaration
               if: :validate_evidence_held?,
               message: I18n.t(:invalid_evidence_type),
             }
+  validates :has_passed, inclusion: { in: [true, false], message: I18n.t(:missing_has_passed) }, if: :validate_has_passed?
 
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
@@ -43,6 +45,8 @@ class RecordDeclaration
       end
 
       declaration_attempt.update!(participant_declaration:)
+
+      create_participant_outcome
     end
 
     participant_declaration
@@ -175,7 +179,7 @@ private
   def validates_billable_slot_available
     return unless participant_profile
 
-    return unless participant_declaration_class_for(participant_profile)
+    return unless participant_declaration_class
                     .where(state: %w[submitted eligible payable paid])
                     .where(
                       user: participant_identity.user,
@@ -186,9 +190,42 @@ private
     errors.add(:base, I18n.t(:declaration_already_exists))
   end
 
-  def participant_declaration_class_for(participant_profile)
-    return ParticipantDeclaration::NPQ if participant_profile.is_a?(ParticipantProfile::NPQ)
+  def participant_declaration_class
+    if participant_profile.npq?
+      ParticipantDeclaration::NPQ
+    else
+      ParticipantDeclaration::ECF
+    end
+  end
 
-    ParticipantDeclaration::ECF
+  def validate_has_passed?
+    return false unless FeatureFlag.active?(:participant_outcomes_feature)
+
+    participant_profile&.npq? &&
+      declaration_type == "completed" &&
+      valid_course_identifier_for_participant_outcome?
+  end
+
+  def valid_course_identifier_for_participant_outcome?
+    !(
+      ::Finance::Schedule::NPQEhco::IDENTIFIERS +
+      ::Finance::Schedule::NPQSupport::IDENTIFIERS
+    ).compact.include?(course_identifier)
+  end
+
+  def participant_outcome_state
+    has_passed ? "passed" : "failed"
+  end
+
+  def create_participant_outcome
+    return unless validate_has_passed?
+
+    NPQ::CreateParticipantOutcome.new(
+      cpd_lead_provider:,
+      course_identifier:,
+      participant_external_id: participant_identity.external_identifier,
+      completion_date: declaration_date,
+      state: participant_outcome_state,
+    ).call
   end
 end

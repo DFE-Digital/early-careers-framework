@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request do
+RSpec.describe "participant-declarations endpoint spec", :with_default_schedules, type: :request, with_feature_flags: { participant_outcomes_feature: "active" } do
   let(:cpd_lead_provider)    { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token)                { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)         { "Bearer #{token}" }
@@ -573,7 +573,61 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
           end
         end
       end
+
+      context "when NPQ participant has completed declaration" do
+        let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
+        let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
+        let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
+        let(:npq_course) { create(:npq_leadership_course) }
+        let(:participant_profile) do
+          create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
+        end
+        let(:course_identifier) { npq_course.identifier }
+        let(:declaration_type)  { "completed" }
+        let(:has_passed) { nil }
+        let(:params) do
+          {
+            data: {
+              type: "participant-declaration",
+              attributes: {
+                participant_id:,
+                declaration_type:,
+                declaration_date: declaration_date.rfc3339,
+                course_identifier:,
+                has_passed:,
+              },
+            },
+          }
+        end
+
+        before do
+          travel_to declaration_date
+        end
+
+        context "has_passed is true" do
+          let(:has_passed)  { true }
+
+          it "creates passed participant outcome" do
+            expect(ParticipantOutcome::NPQ.count).to eql(0)
+            post "/api/v1/participant-declarations", params: params.to_json
+            expect(parsed_response["data"]["attributes"]["has_passed"]).to eq(true)
+            expect(ParticipantOutcome::NPQ.count).to eql(1)
+          end
+        end
+
+        context "has_passed is false" do
+          let(:has_passed)  { false }
+
+          it "creates failed participant outcome" do
+            expect(ParticipantOutcome::NPQ.count).to eql(0)
+            post "/api/v1/participant-declarations", params: params.to_json
+            expect(parsed_response["data"]["attributes"]["has_passed"]).to eq(false)
+            expect(ParticipantOutcome::NPQ.count).to eql(1)
+          end
+        end
+      end
     end
+
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
@@ -734,7 +788,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
     it "returns the correct headers" do
       expect(parsed_response.headers).to match_array(
-        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided updated_at],
+        %w[id course_identifier declaration_date declaration_type participant_id state eligible_for_payment voided updated_at has_passed],
       )
     end
 
@@ -800,23 +854,23 @@ private
     JSON.parse(response.body)
   end
 
-  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
+  def expected_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil)
     {
       "data" =>
       [
-        single_json_declaration(declaration:, profile:, course_identifier:, state:),
+        single_json_declaration(declaration:, profile:, course_identifier:, state:, has_passed:),
       ],
     }
   end
 
-  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
+  def expected_single_json_response(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil)
     {
       "data" =>
-      single_json_declaration(declaration:, profile:, course_identifier:, state:),
+      single_json_declaration(declaration:, profile:, course_identifier:, state:, has_passed:),
     }
   end
 
-  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted")
+  def single_json_declaration(declaration:, profile:, course_identifier: "ecf-induction", state: "submitted", has_passed: nil)
     {
       "id" => declaration.id,
       "type" => "participant-declaration",
@@ -829,6 +883,7 @@ private
         "eligible_for_payment" => state == "eligible",
         "voided" => state == "voided",
         "updated_at" => declaration.updated_at.rfc3339,
+        "has_passed" => has_passed,
       },
     }
   end

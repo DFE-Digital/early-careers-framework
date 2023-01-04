@@ -17,6 +17,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
 require "with_model"
+require "csv"
 
 RSpec.configure do |config|
   # Configure rutabaga/turnip to find features outside of /features/ folders in

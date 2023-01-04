@@ -43,6 +43,7 @@ properties:
     description: Whether the participant has failed or passed
     type: boolean
     example: true
+    nullable: true
 example:
   participant_id: db3a7848-7308-4879-942a-c4a70ced400a
   declaration_type: completed

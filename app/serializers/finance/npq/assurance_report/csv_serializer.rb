@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "csv"
+
 module Finance
   module NPQ
     module AssuranceReport

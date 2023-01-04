@@ -46,6 +46,7 @@ en:
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
   missing_declaration_type: "The property '#/declaration_type' must be present"
   missing_evidence_held: "The property '#/evidence_held' must be present"
+  missing_has_passed: "The property '#/has_passed' must be present for completed declaration types"
   missing_lead_provider: "The lead provider must be present"
   missing_course_identifier: "The property '#/course_identifier' must be present"
   missing_participant_id: "The property '#/participant_id' must be present"
