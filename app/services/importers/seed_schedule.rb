@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "csv"
+
 class Importers::SeedSchedule
   attr_reader :path_to_csv, :klass
 
