@@ -50,7 +50,7 @@
     <% end %>
 
     <% list.row do |row| %>
-s      <% row.key(text: "Delivery partner") %>
+      <% row.key(text: "Delivery partner") %>
       <% if latest_partnership&.challenged? == true %>
         <% row.value(text: nil) %>
       <% else %>
