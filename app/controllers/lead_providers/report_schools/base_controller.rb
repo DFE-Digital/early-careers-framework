@@ -13,7 +13,7 @@ module LeadProviders
 
       def start
         clean_form!
-        report_schools_form.cohort_id = @cohort&.id || Cohort.next&.id
+        report_schools_form.cohort_id = @cohort&.id || Cohort.next.id
         report_schools_form.lead_provider_id = current_user.lead_provider_profile.lead_provider.id
       end
 
