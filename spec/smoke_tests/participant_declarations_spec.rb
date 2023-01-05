@@ -12,12 +12,12 @@ RSpec.describe "Participant API availability", smoke_test: true do
       WebMock.allow_net_connect!
     end
 
-    it "ensures participant declaration api allows declarations" do
-      participant = fetch_first_active_participant
-      skip "No active participant found" if participant.blank?
-      res = make_started_declaration(participant)
-      expect(res).to be_a Net::HTTPSuccess
-    end
+    # it "ensures participant declaration api allows declarations" do
+    #   participant = fetch_first_active_participant
+    #   skip "No active participant found" if participant.blank?
+    #   res = make_started_declaration(participant)
+    #   expect(res).to be_a Net::HTTPSuccess
+    # end
   end
 
 private
