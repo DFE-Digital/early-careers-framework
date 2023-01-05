@@ -115,7 +115,7 @@ class School < ApplicationRecord
   end
 
   def mentors
-    mentor_profiles.active_record.map(&:user).sort_by(&:full_name)
+    User.where(id: mentor_profiles.active_record.joins(:user).select("users.id")).order(:full_name)
   end
 
   def registered?
