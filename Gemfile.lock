@@ -126,7 +126,7 @@ GEM
     commonmarker (0.23.6)
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
-    countries (5.2.1)
+    countries (5.3.0)
       unaccent (~> 0.3)
     crack (0.4.5)
       rexml
@@ -609,7 +609,7 @@ DEPENDENCIES
   byebug
   canonical-rails (~> 0.2.14)
   capybara (~> 3.38)
-  countries (~> 5.2)
+  countries (~> 5.3)
   cypress-on-rails (~> 1.13)
   database_cleaner-active_record
   devise (>= 4.8.0)
