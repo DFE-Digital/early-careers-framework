@@ -2,8 +2,8 @@
 
 RSpec.describe Schools::Year2020Form, type: :model do
   let!(:school) { create :school }
-  let!(:cohort_2020) { Cohort[2020] || create(:cohort, start_year: 2020) }
-  let!(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let!(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:core_induction_programme) { create :core_induction_programme }
   let!(:default_schedule) { create(:ecf_schedule, cohort: cohort_2021) }
   let!(:name) { Faker::Name.name }

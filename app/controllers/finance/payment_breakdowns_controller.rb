@@ -46,7 +46,7 @@ module Finance
     end
 
     def choose_npq_statement
-      cohort = Cohort[params[:cohort_year]]
+      cohort = Cohort.find_by(start_year: params[:cohort_year])
       npq_lead_provider = NPQLeadProvider.find(params[:npq_lead_provider])
       statement_name = params[:statement].humanize.gsub("-", " ")
       statement = npq_lead_provider.statements.find_by(cohort:, name: statement_name)
@@ -55,7 +55,7 @@ module Finance
     end
 
     def choose_ecf_statement
-      cohort = Cohort[params[:cohort_year]]
+      cohort = Cohort.find_by(start_year: params[:cohort_year])
       lead_provider = LeadProvider.find(params[:lead_provider])
       statement_name = params[:statement].humanize.gsub("-", " ")
       statement = lead_provider.statements.find_by(cohort:, name: statement_name)

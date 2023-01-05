@@ -5,7 +5,7 @@ RSpec.describe PartnershipNotificationService do
 
   let!(:lead_provider) { create(:lead_provider) }
   let!(:delivery_partner) { create(:delivery_partner) }
-  # let!(:cohort) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  # let!(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:cohort) { Cohort.current || create(:cohort, :current) }
 
   before do

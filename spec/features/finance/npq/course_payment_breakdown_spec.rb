@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :feature, js: true do
   include FinanceHelper
 
-  let(:cohort) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
@@ -33,7 +33,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
     )
   end
 
-  let(:cohort_2022) { Cohort[2022] }
+  let(:cohort_2022) { Cohort.find_by(start_year: 2022) }
 
   scenario "see a payment breakdown per NPQ course and a payment breakdown of each individual NPQ courses for each provider" do
     given_i_am_logged_in_as_a_finance_user
@@ -72,7 +72,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   end
 
   context "Targeted delivery funding" do
-    let(:cohort) { Cohort[2022] || create(:cohort, start_year: 2022) }
+    let(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
 
     scenario "see payment breakdown with targeted delivery funding" do
       given_i_am_logged_in_as_a_finance_user

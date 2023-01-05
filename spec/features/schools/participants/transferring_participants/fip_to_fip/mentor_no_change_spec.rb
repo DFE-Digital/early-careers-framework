@@ -63,8 +63,8 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       # given
 
       def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-        @cohort = Cohort[2021] || create(:cohort, start_year: 2021)
-        @cohort_two = Cohort[2022] || create(:cohort, start_year: 2022)
+        @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+        @cohort_two = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")

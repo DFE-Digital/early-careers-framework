@@ -7,7 +7,7 @@ module Api
     module Finance
       RSpec.describe StatementSerializer do
         describe "serialization" do
-          let(:cohort) { Cohort[2022] || create(:cohort, start_year: 2022) }
+          let(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
           let(:statement) { create(:ecf_statement, name: "January 2022", cohort:) }
           subject(:serialiser) { described_class.new(statement) }
 

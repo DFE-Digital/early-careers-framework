@@ -12,7 +12,7 @@ module Steps
         create :call_off_contract, lead_provider: lead_provider
 
         delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
-        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort[2021]
+        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
 
         user = create(:user, full_name: lead_provider_name)
         create :lead_provider_profile, user: user, lead_provider: lead_provider
@@ -37,7 +37,7 @@ module Steps
         sign_out
 
         if programme == "CIP"
-          school_cohort = school.school_cohorts.where(cohort: Cohort[2021]).first
+          school_cohort = school.school_cohorts.where(cohort: Cohort.find_by(start_year: 2021)).first
           Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort.induction_programme_choice
         end
 

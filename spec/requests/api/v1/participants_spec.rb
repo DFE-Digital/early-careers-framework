@@ -5,7 +5,7 @@ require "csv"
 
 RSpec.describe "Participants API", :with_default_schedules, type: :request do
   describe "GET /api/v1/participants" do
-    let(:cohort) { Cohort[2021] || create(:cohort, start_year: 2021) }
+    let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider)     { cpd_lead_provider.lead_provider }

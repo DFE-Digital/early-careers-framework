@@ -6,8 +6,8 @@ RSpec.describe "Admin::Schools::Cohort2020", type: :request do
   let(:admin_user) { create(:user, :admin) }
   let(:school) { create(:school) }
   let(:cip) { create(:core_induction_programme, name: "CIP Programme") }
-  let(:cohort_2020) { Cohort[2020] || create(:cohort, start_year: 2020) }
-  let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let(:school_cohort) { create(:school_cohort, :cip, cohort: cohort_2020, school:, core_induction_programme: cip) }
   let(:current_cohort) { Cohort.current || create(:cohort, :current) }
   let(:other_school_cohort) { create(:school_cohort, :cip, cohort: current_cohort, school: school_cohort.school, core_induction_programme: cip) }

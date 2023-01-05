@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # NOTE: These seeds are short lived, and should be tidied up and/or deleted before this PR is merged.
-seed_cohort = Cohort[2021]
+seed_cohort = Cohort.find_by(start_year: 2021)
 
 # ===== FIP school and SIT ==================
 fip_school = School.find_or_create_by!(urn: "090001") do |school|

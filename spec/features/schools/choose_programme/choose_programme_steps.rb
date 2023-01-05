@@ -7,8 +7,8 @@ module ChooseProgrammeSteps
 
   def given_a_school_with_no_chosen_programme_for_next_academic_year(cip_only: false)
     name = "NoECTsSchool"
-    @previous_cohort = Cohort[2021] || create(:cohort, start_year: 2021)
-    @cohort = Cohort[2022] || create(:cohort, start_year: 2022)
+    @previous_cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
     @school = cip_only ? create(:school, :cip_only, name:) : create(:school, name:)
     create(:school_cohort, :cip, school: @school, cohort: @previous_cohort)
   end
@@ -34,7 +34,7 @@ module ChooseProgrammeSteps
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
-    @cohort = @cohort_2022 = Cohort[2021] || create(:cohort, start_year: 2021)
+    @cohort = @cohort_2022 = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -165,7 +165,7 @@ module ChooseProgrammeSteps
   end
 
   def and_cohort_2022_is_created
-    @cohort_2022 = Cohort[2022] || create(:cohort, start_year: 2022)
+    @cohort_2022 = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
   end
 
   def and_the_dashboard_page_shows_the_no_ects_message
@@ -189,7 +189,7 @@ module ChooseProgrammeSteps
   end
 
   def and_cohort_for_next_academic_year_is_created
-    @cohort_2022 = Cohort[2022] || create(:cohort, start_year: 2022)
+    @cohort_2022 = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
   end
 
   def and_i_see_add_ects_link

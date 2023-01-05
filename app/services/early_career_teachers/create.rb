@@ -18,7 +18,7 @@ module EarlyCareerTeachers
         profile = if year_2020
                     ParticipantProfile::ECT.create!({
                       teacher_profile:,
-                      schedule: Finance::Schedule::ECF.default_for(cohort: Cohort["2021"]),
+                      schedule: Finance::Schedule::ECF.default_for(cohort: Cohort.find_by(start_year: "2021")),
                       participant_identity: Identity::Create.call(user:),
                     }.merge(ect_attributes))
                   else

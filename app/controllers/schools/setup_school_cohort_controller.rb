@@ -256,7 +256,7 @@ module Schools
     end
 
     def cohort
-      @cohort ||= Cohort[params[:cohort_id]]
+      @cohort ||= Cohort.find_by(start_year: params[:cohort_id])
     end
 
     def previous_cohort

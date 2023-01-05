@@ -8,14 +8,14 @@ RSpec.describe "Admin::Schools::Cohorts", type: :request do
   let(:cip) { create(:core_induction_programme, name: "CIP Programme") }
   let!(:school_cohorts) do
     [
-      create(:school_cohort, school:, core_induction_programme: cip),
-      create(:school_cohort, school:),
-      create(:school_cohort, school:, induction_programme_choice: "full_induction_programme"),
-      create(:school_cohort, school:, induction_programme_choice: "no_early_career_teachers"),
-      create(:school_cohort, school:, induction_programme_choice: "design_our_own"),
+      create(:school_cohort, cohort: create(:cohort, start_year: 2021), school:, core_induction_programme: cip),
+      create(:school_cohort, cohort: create(:cohort, start_year: 2022), school:),
+      create(:school_cohort, cohort: create(:cohort, start_year: 2023), school:, induction_programme_choice: "full_induction_programme"),
+      create(:school_cohort, cohort: create(:cohort, start_year: 2024), school:, induction_programme_choice: "no_early_career_teachers"),
+      create(:school_cohort, cohort: create(:cohort, start_year: 2025), school:, induction_programme_choice: "design_our_own"),
     ]
   end
-  let!(:cohort_without_programme_chosen) { create(:cohort) }
+  let!(:cohort_without_programme_chosen) { create(:cohort, start_year: 2026) }
 
   before do
     sign_in admin_user

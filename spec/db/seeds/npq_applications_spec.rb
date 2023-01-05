@@ -7,7 +7,7 @@ RSpec.describe Seeds::NPQApplication do
 
   before do
     create(:npq_course)
-    Cohort[2022] || create(:cohort, start_year: 2022)
+    Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
   end
 
   subject { described_class.new(cpd_lead_provider:) }

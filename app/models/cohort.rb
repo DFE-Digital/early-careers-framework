@@ -9,11 +9,6 @@ class Cohort < ApplicationRecord
 
   # Class Methods
 
-  # Find the cohort with start year matching the given year.
-  def self.[](year)
-    find_by_start_year(year)
-  end
-
   def self.active_registration_cohort
     where(registration_start_date: ..Date.current).order(start_year: :desc).first
   end
@@ -51,11 +46,11 @@ class Cohort < ApplicationRecord
   end
 
   def next
-    Cohort[start_year + 1]
+    self.class.find_by(start_year: start_year + 1)
   end
 
   def previous
-    Cohort[start_year - 1]
+    self.class.find_by(start_year: start_year - 1)
   end
 
   # e.g. "2022"

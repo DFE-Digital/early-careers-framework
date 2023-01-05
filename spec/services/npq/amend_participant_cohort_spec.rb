@@ -6,8 +6,8 @@ RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :mode
   let(:npq_application) { create(:npq_application, cohort: cohort_2021) }
   let(:npq_application_id) { npq_application.id }
 
-  let!(:cohort_2022) { Cohort[2022] || create(:cohort, start_year: 2022) }
-  let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   let(:target_cohort_start_year) { 2021 }
 

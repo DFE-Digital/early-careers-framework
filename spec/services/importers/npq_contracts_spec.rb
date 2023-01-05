@@ -8,7 +8,7 @@ RSpec.describe Importers::NPQContracts do
 
   let!(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider, name: "Ambition Institute") }
   let!(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
-  let!(:cohort) { Cohort[2022] || create(:cohort, start_year: 2022) }
+  let!(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
   let!(:npq_specialist_course) { create(:npq_specialist_course, name: "NPQ Leading Teaching (NPQLT)") }
   let!(:npq_leadership_course) { create(:npq_leadership_course, name: "NPQ for Headship (NPQH)") }
   let!(:npq_ehco_course)       { create(:npq_ehco_course, name: "The Early Headship Coaching Offer") }

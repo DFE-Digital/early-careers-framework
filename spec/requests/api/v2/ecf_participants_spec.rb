@@ -52,7 +52,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "only returns users for the current cohort" do
-          cohort_2020 = Cohort[2020] || create(:cohort, start_year: 2020)
+          cohort_2020 = Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
           create(:ecf_schedule, cohort: cohort_2020)
@@ -63,7 +63,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
-          cohort_2020 = Cohort[2020] || create(:cohort, start_year: 2020)
+          cohort_2020 = Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
           create(:ecf_schedule, cohort: cohort_2020)

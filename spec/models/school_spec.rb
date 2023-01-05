@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe School, type: :model do
   subject(:school) { create(:school) }
 
-  let(:cohort_2020) { Cohort[2020] || create(:cohort, start_year: 2020) }
-  let(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:school_cohort) { create(:school_cohort, school:, cohort:) }
 

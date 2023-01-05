@@ -29,7 +29,7 @@ module Schools
     end
 
     def cohort
-      Cohort[2020]
+      Cohort.find_by(start_year: 2020)
     end
 
     def email_already_taken?

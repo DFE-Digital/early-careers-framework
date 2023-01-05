@@ -39,7 +39,7 @@ module NPQ
     end
 
     def target_cohort
-      @target_cohort ||= Cohort[target_cohort_start_year]
+      @target_cohort ||= Cohort.find_by(start_year: target_cohort_start_year)
     end
 
     def npq_application

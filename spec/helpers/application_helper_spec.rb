@@ -9,7 +9,7 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let(:participant_profile) { create(:ect) }
-  let(:cohort_2020) { Cohort[2020] || create(:cohort, start_year: 2020) }
+  let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
   let(:schedule_2020) { build(:ecf_schedule, cohort: cohort_2020) }
   let(:year_2020_participant_profile) do
     create(:ecf_participant_profile,
@@ -18,7 +18,7 @@ RSpec.describe ApplicationHelper, type: :helper do
            school_cohort: build(:school_cohort, cohort: cohort_2020))
   end
 
-  let!(:cohort_2021) { Cohort[2021] || create(:cohort, start_year: 2021) }
+  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
   describe "#induction_coordinator_dashboard_path" do
     it "returns schools/choose-programme for induction coordinators" do
