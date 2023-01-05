@@ -74,6 +74,10 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
   context "Targeted delivery funding" do
     let(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
 
+    before do
+      create(:npq_specialist_schedule, cohort: Cohort.find_by(start_year: 2021))
+    end
+
     scenario "see payment breakdown with targeted delivery funding" do
       given_i_am_logged_in_as_a_finance_user
       and_those_courses_have_submitted_declarations

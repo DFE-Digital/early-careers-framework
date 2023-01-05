@@ -265,6 +265,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         end
 
         before do
+          create(:npq_leadership_schedule, cohort: Cohort.find_by(start_year: 2021))
           travel_to declaration_date
         end
 
