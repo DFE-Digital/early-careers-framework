@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "./db/seeds/call_off_contracts"
+require "./db/legacy_seeds/call_off_contracts"
 require "./spec/features/scenarios/changes_of_circumstance_scenario"
 
 RSpec.shared_examples "CIP to FIP" do |scenario|

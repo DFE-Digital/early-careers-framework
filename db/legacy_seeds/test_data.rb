@@ -765,11 +765,11 @@ create_npq_declarations = lambda {
 end
 
 service = Importers::NPQContracts.new(
-  path_to_csv: Rails.root.join("db/seeds/npq_contracts/fake-2021.csv"),
+  path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2021.csv"),
 )
 service.call
 
 service = Importers::NPQContracts.new(
-  path_to_csv: Rails.root.join("db/seeds/npq_contracts/fake-2022.csv"),
+  path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2022.csv"),
 )
 service.call

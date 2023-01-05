@@ -15,6 +15,11 @@ AllCops:
 Style/FrozenStringLiteralComment:
   Enabled: true
 
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  Include:
+    - "db/new_seeds"
+
 Layout/EndOfLine:
   EnforcedStyle: lf
 
@@ -24,7 +29,7 @@ Lint/AmbiguousBlockAssociation:
 
 Style/MixinUsage:
   Exclude:
-    - 'db/seeds/test_data.rb'
+    - 'db/legacy_seeds/test_data.rb'
 
 Rails/UnknownEnv:
   Environments:

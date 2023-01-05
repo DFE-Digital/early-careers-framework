@@ -92,7 +92,7 @@ private
 
   def ecf_statements
     @ecf_statements ||= CSV.read(
-      Rails.root.join("db/seeds/statements/ecf.csv"),
+      Rails.root.join("db/data/statements/ecf.csv"),
       headers: true,
       skip_blanks: true,
       converters: [statement_converter],
@@ -101,7 +101,7 @@ private
 
   def npq_statements
     @npq_statements ||= CSV.read(
-      Rails.root.join("db/seeds/statements/npq.csv"),
+      Rails.root.join("db/data/statements/npq.csv"),
       headers: true,
       skip_blanks: true,
       converters: [statement_converter],
