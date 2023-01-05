@@ -35,7 +35,7 @@
     "whatwg-fetch": "^3.6.1"
   },
   "devDependencies": {
-    "axe-core": "^4.6.1",
+    "axe-core": "^4.6.2",
     "cypress": "9.7.0",
     "cypress-axe": "^0.14.0",
     "cypress-cucumber-preprocessor": "^4.3.1",
