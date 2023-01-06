@@ -87,7 +87,3 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     )
     .add_induction_record(induction_programme: mentor_params.induction_programme)
 end
-
-# now some more complicted mentor scenarios
-
-NewSeeds::Scenarios::Participants::Mentors::MentoringMultipleEctsWithSameProvider.new.build
