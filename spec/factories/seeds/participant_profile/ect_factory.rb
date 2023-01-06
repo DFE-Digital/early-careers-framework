@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory(:seed_ecf_participant_profile, class: "ParticipantProfile::ECF") do
-    type { "ParticipantProfile::ECF" }
+  factory(:seed_ect_participant_profile, class: "ParticipantProfile::ECT") do
+    type { "ParticipantProfile::ECT" }
 
     schedule { Finance::Schedule::ECF.default }
 
@@ -31,9 +31,9 @@ FactoryBot.define do
 
     after(:build) do |pp|
       if pp.user.present?
-        Rails.logger.debug("seeded ecf participant_profile for user #{pp.user.full_name}")
+        Rails.logger.debug("seeded ect participant_profile for user #{pp.user.full_name}")
       else
-        Rails.logger.debug("seeded ecf participant_profile with no user")
+        Rails.logger.debug("seeded ect participant_profile with no user")
       end
     end
   end
