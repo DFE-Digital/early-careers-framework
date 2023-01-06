@@ -3,8 +3,10 @@
 RSpec.describe Finance::ECF::ChangeTrainingStatusForm, :with_default_schedules, type: :model do
   subject(:form) { described_class.new(params) }
 
-  let(:cpd_lead_provider)        { create(:cpd_lead_provider, :with_lead_provider) }
-  let(:params)                   { { participant_profile:, training_status: "deferred", reason: "bereavement" } }
+  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:induction_programme) { create(:induction_programme, :fip) }
+  let!(:induction_record)   { Induction::Enrol.call(participant_profile:, induction_programme:) }
+  let(:params)              { { participant_profile:, training_status: "deferred", reason: "bereavement", induction_record: } }
 
   describe "EarlyCareerTeacher" do
     let!(:participant_declaration) { create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:) }

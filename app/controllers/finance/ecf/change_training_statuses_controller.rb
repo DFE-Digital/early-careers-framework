@@ -24,6 +24,10 @@ module Finance
         @participant_profile ||= ParticipantProfile.find(params[:participant_profile_id])
       end
 
+      def induction_record
+        @induction_record ||= participant_profile.induction_records.find(params[:induction_record_id])
+      end
+
       def change_training_status_form_params
         params.fetch(:finance_ecf_change_training_status_form, {}).permit(
           :training_status,
@@ -32,7 +36,7 @@ module Finance
       end
 
       def change_training_status_form
-        @change_training_status_form ||= Finance::ECF::ChangeTrainingStatusForm.new(participant_profile:)
+        @change_training_status_form ||= Finance::ECF::ChangeTrainingStatusForm.new(participant_profile:, induction_record:)
       end
     end
   end

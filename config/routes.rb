@@ -420,7 +420,12 @@ Rails.application.routes.draw do
     resources :participants, only: %i[index show]
     resources :participant_profiles, only: [] do
       namespace :ecf do
-        resource :change_training_status, only: %i[new create]
+        resource :induction_records, only: [] do
+          collection do
+            get ":induction_record_id/change_training_status/new", to: "change_training_statuses#new", as: :new
+            post ":induction_record_id/change_training_status", to: "change_training_statuses#create", as: :create
+          end
+        end
       end
       namespace :npq do
         resource :change_training_status, only: %i[new create]

@@ -102,14 +102,14 @@ RSpec.feature "Finance users participant change training status", :with_default_
 
   def then_table_value_is(label:, value:)
     table_values =
-      page.all("dl.govuk-summary-list .govuk-summary-list__row").each_with_object({}) do |row, sum|
+      page.all("dl.govuk-summary-list .govuk-summary-list__row").each_with_object({}.compare_by_identity) do |row, sum|
         key = row.find(".govuk-summary-list__key").text.to_s.strip
         val = row.find(".govuk-summary-list__value").text.to_s.strip
-        if key.present?
+        if key.present? && key == label
           sum[key] = val
         end
       end
-    expect(table_values[label]).to eql(value)
+    expect(table_values).to include({ label => value })
   end
 
   def and_an_ect_user_with_profile_and_declarations

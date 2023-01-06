@@ -11,13 +11,18 @@
         <%= @participant_profile.user.id %>
       </p>
       <p>
+        <strong>Induction Record ID</strong>
+        <br/>
+        <%= @induction_record.id %>
+      </p>
+      <p>
         <strong>Training status</strong>
         <br/>
         <%= @change_training_status_form.current_training_status %>
       </p>
     </div>
 
-    <%= form_for @change_training_status_form, url: finance_participant_profile_ecf_change_training_status_path(@participant_profile) do |f| %>
+    <%= form_for @change_training_status_form, url: create_finance_participant_profile_ecf_induction_records_path(@participant_profile, @induction_record) do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_radio_buttons_fieldset :training_status, legend: { text: "Choose a different training status", tag: 'h1', size: 'm' } do %>
