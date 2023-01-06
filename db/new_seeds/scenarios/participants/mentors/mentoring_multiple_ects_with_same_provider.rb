@@ -92,7 +92,7 @@ module NewSeeds
                                                       teacher_profile:,
                                                       school_cohort:)
                                   else
-                                    FactoryBot.create(:seed_ecf_participant_profile,
+                                    FactoryBot.create(:seed_ect_participant_profile,
                                                       participant_identity:,
                                                       teacher_profile:,
                                                       school_cohort:)

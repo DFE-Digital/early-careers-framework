@@ -20,7 +20,7 @@ FactoryBot.define do
 
     factory(:seed_ecf_participant_declaration, class: "ParticipantDeclaration::ECF") do
       trait(:with_ecf_participant_profile) do
-        association(:participant_profile, factory: %i[seed_ecf_participant_profile valid])
+        association(:participant_profile, factory: %i[seed_ect_participant_profile valid])
       end
 
       trait(:valid) do

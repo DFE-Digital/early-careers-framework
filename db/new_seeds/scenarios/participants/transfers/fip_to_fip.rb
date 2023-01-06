@@ -51,7 +51,7 @@ module NewSeeds
             @user = FactoryBot.create(:seed_user)
             @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_from)
             @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
-            @participant_profile = FactoryBot.create(:seed_ecf_participant_profile,
+            @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
                                                      participant_identity:,
                                                      teacher_profile:,
                                                      school_cohort: school_cohort_from)
