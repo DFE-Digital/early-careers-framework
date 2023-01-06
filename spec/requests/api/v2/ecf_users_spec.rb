@@ -2,23 +2,20 @@
 
 require "rails_helper"
 
-RSpec.describe "API Users", :with_default_schedules, type: :request do
+RSpec.describe "Support ECTs Users API", :with_support_for_ect_examples, type: :request do
   let(:parsed_response) { JSON.parse(response.body) }
   let(:token) { EngageAndLearnApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
 
   describe "#index" do
-    let(:cohort) { Cohort.current }
+    let!(:users) do
+      cip_mentor_only
 
-    before :each do
-      # Heads up, for some reason the stored CIP IDs don't match
-      cip = create(:core_induction_programme, name: "Teach First")
-      school = create(:school)
-      school_cohort = create(:school_cohort, school:)
-      mentor_profile = create(:mentor_participant_profile, school_cohort:, core_induction_programme: cip, cohort:)
-      create(:npq_participant_profile, school:)
-      create(:npq_participant_profile, school:, teacher_profile: mentor_profile.teacher_profile)
-      create_list(:ect_participant_profile, 2, school_cohort:, core_induction_programme: cip, cohort:)
+      npq_only
+      npq_with_induction_record
+
+      cip_ect_only
+      cip_ect_updated_a_year_ago
     end
 
     context "when authorized" do
@@ -90,8 +87,7 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
       end
 
       it "returns users changed since a particular time, if given a changed_since parameter" do
-        User.order(:created_at).first.update!(updated_at: 2.days.ago)
-        get "/api/v2/ecf-users", params: { filter: { updated_since: 1.day.ago.iso8601 } }
+        get "/api/v2/ecf-users", params: { filter: { updated_since: 90.days.ago.iso8601 } }
         expect(parsed_response["data"].size).to eql(2)
       end
 
