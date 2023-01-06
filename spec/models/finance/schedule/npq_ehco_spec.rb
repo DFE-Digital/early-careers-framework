@@ -15,8 +15,8 @@ RSpec.describe Finance::Schedule::NPQEhco, type: :model do
 
   describe ".default_for" do
     let(:cohort) { Cohort.find_by!(start_year: 2022) }
-    it "returns NPQ EHCO November schedule for the cohort" do
-      expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-november")
+    it "returns NPQ EHCO June schedule for the cohort" do
+      expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-june")
 
       expect(described_class.default_for(cohort:)).to eql(expected_schedule)
     end
@@ -67,9 +67,11 @@ RSpec.describe Finance::Schedule::NPQEhco, type: :model do
     end
 
     context "when date range exceeds the current cohort" do
-      it "raises an error" do
+      it "returns default schedule for cohort" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-june")
+
         travel_to Date.new(cohort_start_year + 1, 10, 1) do
-          expect { described_class.schedule_for(cohort:) }.to raise_error(ArgumentError, "Invalid cohort for NPQEhco schedule")
+          expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
         end
       end
     end

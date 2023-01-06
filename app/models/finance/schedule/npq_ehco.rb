@@ -10,7 +10,7 @@ module Finance
       PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS
 
       def self.default_for(cohort: Cohort.current)
-        find_by(cohort:, schedule_identifier: "npq-ehco-november")
+        find_by!(cohort:, schedule_identifier: "npq-ehco-june")
       end
 
       def self.schedule_for(cohort: Cohort.current)
@@ -26,7 +26,7 @@ module Finance
         when Date.new(cohort.start_year + 1, 6, 1)..Date.new(cohort.start_year + 1, 9, -1)
           Finance::Schedule::NPQEhco.find_by!(cohort:, schedule_identifier: "npq-ehco-june")
         else
-          raise ArgumentError, "Invalid cohort for NPQEhco schedule"
+          default_for(cohort:)
         end
       end
 
