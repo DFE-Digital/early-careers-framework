@@ -33,7 +33,9 @@ module NewSeeds
             # we'll probably be doing a lot of this, might make sense to move it somewhere communal
             @school ||= FactoryBot.create(:seed_school)
             @lead_provider ||= FactoryBot.create(:seed_lead_provider)
-            @school_cohort = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school:)
+
+            @school_cohort = @school.school_cohorts.find_by(cohort: cohort(2022)) || FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school:)
+
             @delivery_partner = FactoryBot.create(:seed_delivery_partner)
             @partnership = FactoryBot.create(:seed_partnership,
                                              cohort: cohort(2022),
