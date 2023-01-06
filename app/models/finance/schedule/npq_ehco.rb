@@ -9,8 +9,8 @@ module Finance
 
       PERMITTED_COURSE_IDENTIFIERS = IDENTIFIERS
 
-      def self.default
-        find_by(cohort: Cohort.find_by!(start_year: 2022), schedule_identifier: "npq-ehco-december")
+      def self.default_for(cohort: Cohort.current)
+        find_by(cohort:, schedule_identifier: "npq-ehco-november")
       end
 
       def self.schedule_for(cohort: Cohort.current)

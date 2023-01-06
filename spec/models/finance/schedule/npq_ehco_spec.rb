@@ -13,10 +13,12 @@ RSpec.describe Finance::Schedule::NPQEhco, type: :model do
     expect(schedule.milestones.count).to eql(4)
   end
 
-  describe "default" do
-    it "returns NPQ EHCO December schedule" do
-      expected_schedule = described_class.find_by(cohort: Cohort.find_by!(start_year: 2022), schedule_identifier: "npq-ehco-december")
-      expect(described_class.default).to eql(expected_schedule)
+  describe ".default_for" do
+    let(:cohort) { Cohort.find_by!(start_year: 2022) }
+    it "returns NPQ EHCO November schedule for the cohort" do
+      expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-ehco-november")
+
+      expect(described_class.default_for(cohort:)).to eql(expected_schedule)
     end
   end
 
