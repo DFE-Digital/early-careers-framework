@@ -202,15 +202,7 @@ private
     return false unless FeatureFlag.active?(:participant_outcomes_feature)
 
     participant_profile&.npq? &&
-      declaration_type == "completed" &&
-      valid_course_identifier_for_participant_outcome?
-  end
-
-  def valid_course_identifier_for_participant_outcome?
-    !(
-      ::Finance::Schedule::NPQEhco::IDENTIFIERS +
-      ::Finance::Schedule::NPQSupport::IDENTIFIERS
-    ).compact.include?(course_identifier)
+      declaration_type == "completed"
   end
 
   def participant_outcome_state

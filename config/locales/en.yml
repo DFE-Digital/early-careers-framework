@@ -159,6 +159,8 @@ en:
       exist: "The participant must have no declarations"
       billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
       completed: "The participant has no completed declarations"
+    participant_outcomes:
+      invalid_course_identifier: "Invalid course identifier for participant outcome"
     participant_profile:
       blank: "Not registered"
       not_active: "Not active"
