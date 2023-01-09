@@ -84,7 +84,7 @@ module Finance
       end
 
       def milestones
-        NPQCourse.schedule_for(npq_course: course).milestones
+        NPQCourse.schedule_for(npq_course: course, cohort: contract.cohort).milestones
       end
 
       def declaration_count_for_milestone(milestone)

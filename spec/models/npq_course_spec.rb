@@ -39,6 +39,18 @@ RSpec.describe NPQCourse do
       end
     end
 
+    context "when a course is Early Headship Coaching Offer" do
+      let(:identifier) { "npq-early-headship-coaching-offer" }
+
+      it "returns the default NPQ EHCO schedule" do
+        expected_schedule = Finance::Schedule::NPQEhco.find_by(schedule_identifier: "npq-ehco-december")
+
+        travel_to Date.new(Cohort.current.start_year, 12, 1) do
+          expect(described_class.schedule_for(npq_course:)).to eq(expected_schedule)
+        end
+      end
+    end
+
     context "with and unknown course identifier" do
       let(:identifier) { "unknown-course-identifier" }
 

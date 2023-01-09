@@ -30,7 +30,7 @@ module Importers
           recruitment_target: row["recruitment_target"].to_i,
           per_participant: row["per_participant"],
           service_fee_installments: row["service_fee_installments"].to_i,
-          number_of_payment_periods: number_of_payment_periods_for(course:),
+          number_of_payment_periods: number_of_payment_periods_for(course:, cohort:),
           service_fee_percentage: service_fee_percentage_for(course:),
           output_payment_percentage: output_payment_percentage_for(course:),
         )
@@ -39,7 +39,7 @@ module Importers
 
   private
 
-    def number_of_payment_periods_for(course:)
+    def number_of_payment_periods_for(course:, cohort:)
       case course.identifier
       when *Finance::Schedule::NPQLeadership::IDENTIFIERS
         Finance::Schedule::NPQLeadership.default.milestones.count
@@ -48,7 +48,7 @@ module Importers
       when *Finance::Schedule::NPQSupport::IDENTIFIERS
         Finance::Schedule::NPQSupport.default.milestones.count
       when *Finance::Schedule::NPQEhco::IDENTIFIERS
-        Finance::Schedule::NPQEhco.default.milestones.count
+        Finance::Schedule::NPQEhco.default_for(cohort:).milestones.count
       else
         raise ArgumentError, "Invalid course identifier"
       end
