@@ -16,6 +16,7 @@ module NPQ
               presence: { message: I18n.t(:missing_completion_date) },
               format: { with: /\d{4}-\d{2}-\d{2}/, message: I18n.t(:invalid_completion_date) }
     validates :course_identifier, course: true, presence: { message: I18n.t(:missing_course_identifier) }
+    validate :check_for_valid_course_identifiers
     validates :state,
               presence: { message: I18n.t(:missing_state) },
               inclusion: {
@@ -79,6 +80,12 @@ module NPQ
 
     def participant_declaration
       @participant_declaration ||= participant_declarations&.first
+    end
+
+    def check_for_valid_course_identifiers
+      if (::Finance::Schedule::NPQEhco::IDENTIFIERS + ::Finance::Schedule::NPQSupport::IDENTIFIERS).compact.include?(course_identifier)
+        errors.add(:course_identifier, I18n.t("errors.participant_outcomes.invalid_course_identifier"))
+      end
     end
   end
 end

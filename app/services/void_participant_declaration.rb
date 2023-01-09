@@ -12,6 +12,8 @@ class VoidParticipantDeclaration
       make_voided
     end
 
+    NPQ::VoidParticipantOutcome.new(participant_declaration).call
+
     participant_declaration
   end
 

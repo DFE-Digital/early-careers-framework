@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
-  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:school) { participant_profile.school_cohort.school }
@@ -109,6 +109,37 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
         subject.call
         expect(participant_declaration.reload).to be_voided
         expect(line_item.reload).to be_voided
+      end
+    end
+
+    context "when NPQ completed declaration thats paid", with_feature_flags: { participant_outcomes_feature: "active" } do
+      let(:schedule) { NPQCourse.schedule_for(npq_course:) }
+      let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
+      let(:npq_course) { create(:npq_leadership_course) }
+      let(:declaration_type) { "completed" }
+      let(:participant_profile) do
+        create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
+      end
+      let(:participant_declaration) do
+        travel_to declaration_date do
+          create(:npq_participant_declaration, participant_profile:, cpd_lead_provider:, declaration_type:, declaration_date:, state: "paid", has_passed: true)
+        end
+      end
+
+      before do
+        create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
+      end
+
+      it "can be voided" do
+        expect(participant_declaration.reload).to be_paid
+        expect(participant_declaration.outcomes.count).to eql(1)
+
+        travel_to declaration_date + 1.day do
+          subject.call
+        end
+        expect(participant_declaration.reload).to be_awaiting_clawback
+        expect(participant_declaration.outcomes.count).to eql(2)
+        expect(participant_declaration.outcomes.latest).to be_voided
       end
     end
   end
