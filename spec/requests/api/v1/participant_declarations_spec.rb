@@ -14,10 +14,6 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
   let(:participant_type)     { :ect }
   let(:milestone_start_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
 
-  before do
-    create(:npq_leadership_schedule, cohort: Cohort.find_by(start_year: 2021))
-  end
-
   describe "POST /api/v1/participant-declarations" do
     let(:declaration_date)  { milestone_start_date }
     let(:declaration_type)  { "started" }

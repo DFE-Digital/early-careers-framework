@@ -25,10 +25,6 @@ RSpec.describe Api::V1::ParticipantDeclarationSerializer, :with_default_schedule
       end
     end
 
-    before do
-      create(:npq_leadership_schedule, cohort: Cohort.find_by(start_year: 2021))
-    end
-
     describe "when participant declaration does not have outcome" do
       let(:participant_declaration) do
         create(:npq_participant_declaration, :eligible, declaration_type: "started")

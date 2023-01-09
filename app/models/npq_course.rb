@@ -7,7 +7,7 @@ class NPQCourse < ApplicationRecord
     pluck(:identifier)
   end
 
-  def self.schedule_for(npq_course:, cohort: Cohort.find_by!(start_year: 2021))
+  def self.schedule_for(npq_course:, cohort: Cohort.current)
     case npq_course.identifier
     when *Finance::Schedule::NPQLeadership::IDENTIFIERS
       Finance::Schedule::NPQLeadership.find_by!(cohort:)
