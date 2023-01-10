@@ -49,7 +49,7 @@ gem "foreman"
 # Canonical meta tag
 gem "canonical-rails", "~> 0.2.14"
 
-gem "listen", "~> 3.7"
+gem "listen", "~> 3.8"
 gem "rack-attack", "~> 6.6"
 
 # GOV.UK Notify
