@@ -8,18 +8,13 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
 
   before do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_added_an_ect
+    and_i_am_signed_in_as_an_induction_coordinator
     then_i_am_taken_to_fip_induction_dashboard
   end
 
   scenario "Induction tutor can add new ECT participant" do
-    when_i_click_on_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_roles_page
-
-    when_i_click_on_continue
-    then_i_am_taken_to_your_ect_and_mentors_page
-
+    when_i_navigate_to_participants_dashboard
     when_i_click_to_add_a_new_ect_or_mentor
     then_i_should_be_on_the_who_to_add_page
 

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "old and new SIT transferring the same participant", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
+RSpec.describe "old and new SIT transferring the same participant", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
   context "Transfer out an ECT that has already been transferred in" do
     before do
       set_participant_data
@@ -52,7 +52,7 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
     # given
 
     def given_two_schools_have_chosen_fip_for_2021
-      @cohort = create(:cohort, start_year: 2021)
+      @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
       @school_one = create(:school, name: "Fip School 1")
       @school_two = create(:school, name: "Fip School 2")
       @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
@@ -76,7 +76,7 @@ RSpec.describe "old and new SIT transferring the same participant", with_feature
     # when
 
     def when_i_click_to_view_ects_and_mentors
-      click_on "Manage"
+      click_on "Manage participants"
     end
 
     def when_i_click_on_an_ect

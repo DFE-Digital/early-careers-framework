@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Schools::AddParticipantForm, type: :model do
-  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
-  let(:school_cohort) { create(:school_cohort, cohort: cohort_2021) }
+  let(:school_cohort) { create(:school_cohort) }
   let(:school) { school_cohort.school }
   let(:user) { create :user }
+
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:dqt_response) do
     {
       trn: "1234567",
@@ -65,20 +66,22 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
 
   describe "mentor_options" do
     it "does not include mentors with withdrawn records" do
-      withdrawn_mentor_record = create(:mentor_participant_profile, :withdrawn_record, school_cohort:).user
+      create(:ecf_schedule)
+      withdrawn_mentor_record = create(:mentor, :withdrawn_record, school_cohort:).user
 
       expect(form.mentor_options).not_to include(withdrawn_mentor_record)
     end
 
     it "includes active mentors" do
-      active_mentor_record = create(:mentor_participant_profile, school_cohort:).user
+      create(:ecf_schedule)
+      active_mentor_record = create(:mentor, school_cohort:).user
 
       expect(form.mentor_options).to include(active_mentor_record)
     end
 
-    context "when multiple cohorts are active", with_feature_flags: { multiple_cohorts: "active" } do
-      let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
-      let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
+    context "when multiple cohorts are active" do
+      let(:previous_cohort) { Cohort.previous || create(:cohort, :previous) }
+      let(:school_cohort_2) { create(:school_cohort, school:, cohort: previous_cohort) }
 
       context "when there are mentors in the school mentor pool" do
         let(:mentor_profile) { create(:mentor_participant_profile, school_cohort:) }
@@ -221,7 +224,7 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
       form.mentor_id = (form.mentor_options.pluck(:id) + %w[later]).sample if form.type == :ect
       allow(ParticipantValidationService).to receive(:validate).and_return(response)
 
-      create :ecf_schedule
+      create(:ecf_schedule)
     end
 
     context "Participant has been added" do

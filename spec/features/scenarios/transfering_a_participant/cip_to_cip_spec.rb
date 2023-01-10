@@ -23,7 +23,6 @@ RSpec.feature "CIP to CIP - Transfer a participant",
               with_feature_flags: {
                 eligibility_notifications: "active",
                 change_of_circumstances: "active",
-                # multiple_cohorts: "active",
               },
               type: :feature,
               end_to_end_scenario: true do
@@ -42,7 +41,7 @@ RSpec.feature "CIP to CIP - Transfer a participant",
     let(:tokens) { {} }
 
     let!(:cohort) do
-      cohort = create(:cohort, start_year: 2021)
+      cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
       allow(Cohort).to receive(:current).and_return(cohort)
       allow(Cohort).to receive(:next).and_return(cohort)
       allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)

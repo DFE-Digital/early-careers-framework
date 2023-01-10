@@ -61,6 +61,8 @@ RSpec.describe PupilPremium, type: :model do
   end
 
   describe "scopes" do
+    let(:start_year) { build(:cohort, :current).start_year }
+
     describe ".with_start_year" do
       let!(:school) { create(:school) }
 
@@ -78,8 +80,8 @@ RSpec.describe PupilPremium, type: :model do
       let(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
       it "returns uplifted eligibilities" do
-        expect(PupilPremium.only_with_uplift(2021)).to include(*uplifted_school.pupil_premiums)
-        expect(PupilPremium.only_with_uplift(2021)).not_to include(*not_uplifted_school.pupil_premiums)
+        expect(PupilPremium.only_with_uplift(start_year)).to include(*uplifted_school.pupil_premiums)
+        expect(PupilPremium.only_with_uplift(start_year)).not_to include(*not_uplifted_school.pupil_premiums)
       end
     end
 
@@ -88,8 +90,8 @@ RSpec.describe PupilPremium, type: :model do
       let(:not_sparse_school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
       it "returns uplifted eligibilities" do
-        expect(PupilPremium.only_with_sparsity(2021)).to include(*sparse_school.pupil_premiums)
-        expect(PupilPremium.only_with_sparsity(2021)).not_to include(*not_sparse_school.pupil_premiums)
+        expect(PupilPremium.only_with_sparsity(start_year)).to include(*sparse_school.pupil_premiums)
+        expect(PupilPremium.only_with_sparsity(start_year)).not_to include(*not_sparse_school.pupil_premiums)
       end
     end
   end

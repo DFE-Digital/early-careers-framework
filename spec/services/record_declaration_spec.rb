@@ -5,7 +5,11 @@ require "rails_helper"
 RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     before do
-      travel_to(withdrawal_time - 1.second) { participant_profile }
+      travel_to(withdrawal_time - 1.second) do
+        create(:npq_leadership_schedule, cohort: Cohort.current)
+        participant_profile
+      end
+
       travel_to(withdrawal_time) do
         WithdrawParticipant.new(
           participant_id: participant_profile.participant_identity.external_identifier,
@@ -218,21 +222,26 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     described_class.new(params)
   end
 
-  context "when the participant is an ECF" do
-    before do
-      create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
-    end
+  let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
+  let!(:previous_cohort) { Cohort.current.previous || create(:cohort, start_year: Cohort.current.start_year - 1) }
 
-    let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+  context "when the participant is an ECF" do
+    let(:schedule)              { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
     let(:declaration_date)      { schedule.milestones.find_by(declaration_type: "started").start_date }
     let(:traits)                { [] }
     let(:opts)                  { {} }
     let(:participant_profile) do
-      create(particpant_type, *traits, **opts, lead_provider: cpd_lead_provider.lead_provider)
+      create(participant_type, *traits, **opts, lead_provider: cpd_lead_provider.lead_provider)
+    end
+
+    before do
+      Finance::Schedule::ECF.default_for(cohort: current_cohort)  || create(:ecf_schedule, cohort: current_cohort)
+      Finance::Schedule::ECF.default_for(cohort: previous_cohort) || create(:ecf_schedule, cohort: previous_cohort)
+      create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:)
     end
 
     context "when the participant is an ECT" do
-      let(:particpant_type)   { :ect }
+      let(:participant_type) { :ect }
       let(:course_identifier) { "ecf-induction" }
       let(:delivery_partner) { participant_profile.induction_records[0].induction_programme.partnership.delivery_partner }
 
@@ -252,32 +261,11 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
       it_behaves_like "validates existing declarations"
       it_behaves_like "validates the participant milestone"
-
       it_behaves_like "creates participant declaration attempt"
-
-      context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
-        let!(:schedule) { create(:ecf_schedule, cohort:) }
-        let!(:statement) { create(:ecf_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
-
-        let(:cohort) { Cohort.next || create(:cohort, :next) }
-        let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider:, cohort:) }
-        let(:lead_provider) { cpd_lead_provider.lead_provider }
-        let(:participant_profile) { create(:ect, :eligible_for_funding, school_cohort:, lead_provider:) }
-        let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
-
-        it "creates declaration to 2022 statement" do
-          expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
-
-          declaration = ParticipantDeclaration.last
-
-          expect(declaration).to be_eligible
-          expect(declaration.statements).to include(statement)
-        end
-      end
     end
 
     context "when the participant is a Mentor" do
-      let(:particpant_type) { :mentor }
+      let(:participant_type) { :mentor }
       let(:course_identifier) { "ecf-mentor" }
 
       it "creates a participant declaration" do
@@ -294,10 +282,10 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   end
 
   context "when the participant is an NPQ" do
-    let(:schedule)              { NPQCourse.schedule_for(npq_course:) }
-    let(:declaration_date)      { schedule.milestones.find_by(declaration_type:).start_date }
+    let(:schedule) { NPQCourse.schedule_for(npq_course:, cohort: current_cohort) }
+    let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
     let(:npq_course) { create(:npq_leadership_course) }
-    let(:traits)     { [] }
+    let(:traits) { [] }
     let(:participant_profile) do
       create(:npq_participant_profile, *traits, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
     end
@@ -323,10 +311,9 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
     it_behaves_like "validates the course_identifier, cpd_lead_provider, participant_id"
     it_behaves_like "validates existing declarations"
     it_behaves_like "validates the participant milestone"
-
     it_behaves_like "creates participant declaration attempt"
 
-    context "for 2022 cohort", :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
+    context "for next cohort", :with_default_schedules do
       let!(:schedule) { create(:npq_specialist_schedule, cohort:) }
       let!(:statement) { create(:npq_statement, :output_fee, deadline_date: 6.weeks.from_now, cpd_lead_provider:, cohort:) }
 
@@ -335,7 +322,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       let(:participant_profile) { create(:npq_participant_profile, :eligible_for_funding, npq_lead_provider:, npq_course:, schedule:) }
       let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
 
-      it "creates declaration to 2022 statement" do
+      it "creates declaration to next cohort statement" do
         expect { service.call }.to change { ParticipantDeclaration.count }.by(1)
 
         declaration = ParticipantDeclaration.last
@@ -425,7 +412,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
   context "when re-posting after a clawback" do
     let(:lead_provider) { cpd_lead_provider.lead_provider }
     let(:participant_profile) { create(:ect, :eligible_for_funding, lead_provider:) }
-    let(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september") }
+    let(:schedule) { Finance::Schedule::ECF.find_by(schedule_identifier: "ecf-standard-september", cohort: current_cohort) }
     let(:declaration_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
     let(:course_identifier) { "ecf-induction" }
 

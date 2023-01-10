@@ -33,7 +33,7 @@ RSpec.describe DataStage::School, type: :model do
 
     context "when counterpart school exists" do
       let(:current_year) { Time.zone.now.year }
-      let(:cohort) { create(:cohort, start_year: current_year) }
+      let(:cohort) { Cohort.current || create(:cohort, start_year: current_year) }
       let(:old_local_authority) { create(:local_authority, code: "234") }
       let(:old_local_authority_district) { create(:local_authority_district, :sparse, code: "E234") }
       let!(:counterpart_school) { create(:school, urn: school.urn) }

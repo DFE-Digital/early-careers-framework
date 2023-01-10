@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe NPQ::Application::Accept, :with_default_schedules do
   let(:cohort_2021) { Cohort.current }
-  let(:cohort_2022) { create(:cohort, :next) }
+  let(:cohort_2022) { Cohort.next || create(:cohort, :next) }
 
   let(:params) do
     {

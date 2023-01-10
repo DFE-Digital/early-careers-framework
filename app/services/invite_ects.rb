@@ -13,7 +13,7 @@ class InviteEcts
         next if Email.associated_with(sit).tagged_with(:preterm_reminder_unconfirmed_for_2022).any?
 
         # Already chosen a programme this cohort
-        next if school.chosen_programme?(Cohort.next)
+        next if school.chosen_programme?(Cohort.current)
 
         ParticipantMailer.preterm_reminder_unconfirmed_for_2022(induction_coordinator_profile: sit).deliver_later
       end

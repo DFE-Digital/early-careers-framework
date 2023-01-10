@@ -178,6 +178,10 @@ Given("I am on {string} error page", (page) => {
 
 const ID_REGEX = /:([a-z_]+)/g;
 
+Given("I am on {string} page with query {string}", (page, queryString) => {
+  cy.visit(`${pagePaths[page]}?${queryString}`);
+});
+
 Given("I am on {string} page with {}", (page, argsString) => {
   const args = parseArgs(argsString);
   const path = pagePaths[page].replace(ID_REGEX, (_, key) => args[key]);

@@ -12,8 +12,8 @@ RSpec.describe "Manage No ECT training", js: true do
     then_i_can_view_the_no_ect_induction_dashboard
     then_the_page_should_be_accessible
 
-    when_i_click_on_change_programme
-    then_i_am_taken_to_change_how_you_run_programme_page
+    when_i_click_on_tell_us_if_this_has_changed
+    then_i_am_taken_to_setup_my_programme
     then_the_page_should_be_accessible
   end
 

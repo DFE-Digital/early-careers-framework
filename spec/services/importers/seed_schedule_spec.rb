@@ -5,6 +5,7 @@ require "tempfile"
 RSpec.describe Importers::SeedSchedule do
   describe "#call" do
     context "when a schedule changes name" do
+      let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
       let(:csv) { Tempfile.new("data.csv") }
       let(:path_to_csv) { csv.path }
 
@@ -12,7 +13,7 @@ RSpec.describe Importers::SeedSchedule do
         described_class.new(path_to_csv:, klass: Finance::Schedule::ECF)
       end
 
-      let!(:schedule) { create(:schedule, name: "foo extra", schedule_identifier: "foo") }
+      let!(:schedule) { create(:schedule, name: "foo extra", schedule_identifier: "foo", cohort:) }
 
       before do
         csv.write "schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"

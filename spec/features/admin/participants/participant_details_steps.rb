@@ -6,7 +6,7 @@ module ParticipantDetailsSteps
   # Given
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)

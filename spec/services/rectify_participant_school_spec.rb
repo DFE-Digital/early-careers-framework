@@ -4,9 +4,10 @@ require "rails_helper"
 
 RSpec.describe RectifyParticipantSchool do
   subject(:service) { described_class }
-  let(:participant_profile) { create(:ect_participant_profile) }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
+  let(:participant_profile) { create(:ect_participant_profile, cohort:) }
   let(:new_school) { create(:school, name: "Big Shiny School", urn: "123000") }
-  let!(:school_cohort) { create(:school_cohort, cohort: participant_profile.school_cohort.cohort, school: new_school) }
+  let!(:school_cohort) { create(:school_cohort, cohort:, school: new_school) }
   let(:transfer_uplift) { true }
 
   describe ".call" do

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transfer out participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true, rutabaga: false do
+RSpec.describe "transfer out participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true, rutabaga: false do
   context "An ECT has been transferred in to another school" do
     before do
       set_participant_data
@@ -28,7 +28,7 @@ RSpec.describe "transfer out participants", with_feature_flags: { change_of_circ
     # given
 
     def given_two_schools_have_chosen_fip_for_2021
-      @cohort = create(:cohort, start_year: 2021)
+      @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
       @school_one = create(:school, name: "Fip School 1")
       @school_two = create(:school, name: "Fip School 2")
       @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")

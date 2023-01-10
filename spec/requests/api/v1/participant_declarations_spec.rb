@@ -9,9 +9,9 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
   let(:fake_logger)          { double("logger", info: nil) }
   let(:traits)               { [] }
   let(:school_cohort)        { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider) }
-  let(:participant_profile)  { create(particpant_type, *traits, school_cohort:) }
+  let(:participant_profile)  { create(participant_type, *traits, school_cohort:) }
   let(:schedule)             { Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort) }
-  let(:particpant_type)      { :ect }
+  let(:participant_type)     { :ect }
   let(:milestone_start_date) { schedule.milestones.find_by(declaration_type: "started").start_date }
 
   describe "POST /api/v1/participant-declarations" do
@@ -74,14 +74,13 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         end
       end
 
-      context "when posting for the new cohort", with_feature_flags: { multiple_cohorts: "active" } do
+      context "when posting for the new cohort" do
         let(:school)              { create(:school) }
-        let(:next_cohort)         { create(:cohort, :next) }
+        let(:next_cohort)         { Cohort.next || create(:cohort, :next) }
         let(:next_school_cohort)  { create(:school_cohort, :fip, :with_induction_programme, school:, cohort: next_cohort, lead_provider: cpd_lead_provider.lead_provider) }
         let(:participant_profile) { create(:ect, :eligible_for_funding, school_cohort: next_school_cohort, lead_provider: cpd_lead_provider.lead_provider) }
         let!(:next_schedule) do
-          create(:schedule, schedule_identifier: "ecf-standard-september", name: "ECF September 2022", cohort: next_cohort)
-            .tap { |schedule| create(:milestone, schedule:, start_date: Date.new(2022, 9, 1), declaration_type: "started", milestone_date: Date.new(2022, 11, 30)) }
+          Finance::Schedule::ECF.default_for(cohort: next_cohort)
         end
 
         let(:milestone_start_date) { participant_profile.schedule.milestones.first.start_date }
@@ -157,7 +156,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
       context "when lead provider has no access to the user" do
         let(:another_lead_provider_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: create(:cpd_lead_provider, :with_lead_provider).lead_provider) }
-        let(:participant_profile)                 { create(particpant_type, *traits, school_cohort: another_lead_provider_school_cohort) }
+        let(:participant_profile)                 { create(participant_type, *traits, school_cohort: another_lead_provider_school_cohort) }
 
         it "create declaration attempt" do
           expect { post "/api/v1/participant-declarations", params: params.to_json }
@@ -511,8 +510,8 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         end
       end
 
-      context "when participant has been retained", with_feature_flags: { multiple_cohorts: "active" } do
-        let!(:cohort) { create(:cohort, :next) }
+      context "when participant has been retained" do
+        let!(:cohort) { Cohort.next || create(:cohort, :next) }
         let!(:started_declaration) { create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:) }
         let(:milestone_start_date) { participant_profile.schedule.milestones.find_by(declaration_type:).start_date }
         let(:params) do

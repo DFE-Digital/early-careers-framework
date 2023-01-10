@@ -8,9 +8,8 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:admin_user) { create(:user, :admin) }
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
-  let!(:cohort) { create(:cohort, :current) }
   let(:participant_profile) { create(:ect) }
-  let(:cohort_2020) { create(:cohort, start_year: 2020) }
+  let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
   let(:schedule_2020) { build(:ecf_schedule, cohort: cohort_2020) }
   let(:year_2020_participant_profile) do
     create(:ecf_participant_profile,
@@ -19,22 +18,24 @@ RSpec.describe ApplicationHelper, type: :helper do
            school_cohort: build(:school_cohort, cohort: cohort_2020))
   end
 
+  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+
   describe "#induction_coordinator_dashboard_path" do
     it "returns schools/choose-programme for induction coordinators" do
-      expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/cohorts/#{cohort.start_year}/choose-programme")
+      expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}/cohorts/2021/choose-programme")
     end
 
     context "when a school has chosen a programme" do
       before do
-        SchoolCohort.create!(school:, cohort: Cohort.current, induction_programme_choice: "full_induction_programme")
+        SchoolCohort.create!(school:, cohort: cohort_2021, induction_programme_choice: "full_induction_programme")
       end
 
       it "returns the school dashboard path (show)" do
-        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}")
+        expect(helper.induction_coordinator_dashboard_path(induction_coordinator)).to eq("/schools/#{school.slug}#_2021-to-2022")
       end
 
-      context "when a new registration cohort is active", with_feature_flags: { multiple_cohorts: "active" }, travel_to: Time.zone.now + 3.years do
-        let(:future_cohort) { create(:cohort, start_year: Time.zone.now.year, registration_start_date: Time.zone.now - 1.day) }
+      context "when a new registration cohort is active", travel_to: Time.current + 3.years do
+        let(:future_cohort) { create(:cohort, start_year: Time.current.year, registration_start_date: Time.current - 1.day) }
 
         before do
           SchoolCohort.create!(school:, cohort: future_cohort, induction_programme_choice: "full_induction_programme")

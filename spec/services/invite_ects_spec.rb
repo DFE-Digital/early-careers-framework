@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe InviteEcts do
   subject(:invite_ects) { described_class.new }
-  let!(:cohort) { create(:cohort, :next) }
+  let!(:cohort) { create(:cohort, :current) }
 
   let!(:school) { create(:school) }
   let!(:school_cohort) { create(:school_cohort, school:, cohort: create(:cohort, start_year: cohort.start_year - 1)) }
@@ -12,7 +12,6 @@ RSpec.describe InviteEcts do
   let!(:induction_coordinator_profile) { create(:induction_coordinator_profile, schools: [school]) }
 
   before(:all) do
-    FeatureFlag.activate(:multiple_cohorts)
     RSpec::Mocks.configuration.verify_partial_doubles = false
   end
 
@@ -21,7 +20,6 @@ RSpec.describe InviteEcts do
   end
 
   after(:all) do
-    FeatureFlag.deactivate(:multiple_cohorts)
     RSpec::Mocks.configuration.verify_partial_doubles = true
   end
 

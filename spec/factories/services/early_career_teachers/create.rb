@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :ect, class: "EarlyCareerTeachers::Create" do
     transient do
+      cohort        { Cohort.current || create(:cohort, :current) }
       lead_provider { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
       uplifts       { [] }
     end
@@ -11,7 +12,7 @@ FactoryBot.define do
     mentor_profile_id {}
     sit_validation    { false }
     school_cohort do
-      create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:)
+      create(:school_cohort, :fip, :with_induction_programme, *uplifts, lead_provider:, cohort:)
     end
 
     trait :sparsity_uplift do

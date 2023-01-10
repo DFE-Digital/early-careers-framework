@@ -2,9 +2,11 @@
 
 RSpec.describe Incentives::UpdateSchoolParticipants do
   describe "#call" do
+    let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+    let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
     let(:school) { create(:school) }
-    let(:school_cohort_21) { create :school_cohort, :fip, cohort: create(:cohort, start_year: 2021), school: }
-    let(:school_cohort_22) { create :school_cohort, :fip, cohort: create(:cohort, start_year: 2022), school: }
+    let(:school_cohort_21) { create :school_cohort, :fip, cohort: cohort_2021, school: }
+    let(:school_cohort_22) { create :school_cohort, :fip, cohort: cohort_2022, school: }
     let(:induction_programme_21) { create(:induction_programme, :fip, school_cohort: school_cohort_21) }
     let(:induction_programme_22) { create(:induction_programme, :fip, school_cohort: school_cohort_22) }
     let(:ect_profile) { create(:ect_participant_profile, school_cohort: school_cohort_21) }

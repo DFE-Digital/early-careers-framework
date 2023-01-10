@@ -6,7 +6,7 @@ RSpec.describe SchoolBreadcrumbsHelper, type: :helper do
   include Devise::Test::ControllerHelpers
 
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
-  let!(:cohort) { create(:cohort, :current) }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
 
   before do
     sign_in induction_coordinator

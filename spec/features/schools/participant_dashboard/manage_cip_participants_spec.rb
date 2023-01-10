@@ -8,17 +8,18 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
 
   before do
     given_there_is_a_school_that_has_chosen_cip_for_2021
-    and_i_am_signed_in_as_an_induction_coordinator
   end
 
   context "Ineligible ECTs with mentor assigned" do
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_ineligible_ect_with_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
     end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
       and_the_action_required_is_remove
@@ -30,10 +31,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Ineligible ECTs without mentor assigned" do
-    before { and_i_have_added_an_ineligible_ect_without_mentor }
+    before do
+      and_i_have_added_an_ineligible_ect_without_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -44,10 +49,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Ineligible mentor" do
-    before { and_i_have_added_an_ineligible_mentor }
+    before do
+      and_i_have_added_an_ineligible_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -58,10 +67,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "ERO mentor" do
-    before { and_i_have_added_an_ero_mentor }
+    before do
+      and_i_have_added_an_ero_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -75,10 +88,12 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_an_eligible_ect_with_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
     end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -89,10 +104,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Eligible ECTs without a mentor assigned" do
-    before { and_i_have_added_an_eligible_ect_without_mentor }
+    before do
+      and_i_have_added_an_eligible_ect_without_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -103,10 +122,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Eligible mentor" do
-    before { and_i_have_added_an_eligible_mentor }
+    before do
+      and_i_have_added_an_eligible_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -120,10 +143,12 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
     before do
       and_i_have_added_a_mentor
       and_i_have_added_a_contacted_for_info_ect_with_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
     end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
 
@@ -134,10 +159,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Contacted for info ECTs without mentor assigned" do
-    before { and_i_have_added_a_contacted_for_info_ect_without_mentor }
+    before do
+      and_i_have_added_a_contacted_for_info_ect_without_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
 
@@ -148,10 +177,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Contacted for info mentor" do
-    before { and_i_have_added_a_contacted_for_info_mentor }
+    before do
+      and_i_have_added_a_contacted_for_info_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_contacted_for_info_participants
 
@@ -165,10 +198,12 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
     before do
       and_i_have_added_a_contacted_for_info_mentor
       and_i_have_added_a_details_being_checked_ect_with_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
     end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       click_on "Mentors"
       then_i_can_view_contacted_for_info_participants
@@ -180,10 +215,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Details being checked ECT without mentor" do
-    before { and_i_have_added_a_details_being_checked_ect_without_mentor }
+    before do
+      and_i_have_added_a_details_being_checked_ect_without_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 
@@ -194,10 +233,14 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
   end
 
   context "Details being checked mentor" do
-    before { and_i_have_added_a_details_being_checked_mentor }
+    before do
+      and_i_have_added_a_details_being_checked_mentor
+      and_i_am_signed_in_as_an_induction_coordinator
+    end
 
     scenario "Induction coordinators can view and manage participant" do
       given_i_am_on_the_cip_induction_dashboard
+      and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
       then_i_can_view_cip_eligible_participants
 

@@ -60,18 +60,6 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       then_i_am_on_the_report_incorrect_partnership_success_page
     end
 
-    scenario "Can challenge a partnership by entering the partnerships URL" do
-      given_a_fip_school_with_a_partnership_that_can_be_challenged "test-sit@example.com", "Test school", "111111-test-school", "abc1234"
-      and_i_sign_in_as_the_user_with_the_email "test-sit@example.com"
-
-      when_i_view_programme_details_from_the_school_dashboard_page
-      and_i_enter_partnership_details_url_on_the_school_cohorts_page
-      and_i_report_school_partnership_has_been_confirmed_incorrectly_on_the_school_partnerships_page
-      and_i_report_an_unrecognised_provider_on_the_report_incorrect_partnership_page
-
-      then_i_am_on_the_report_incorrect_partnership_success_page
-    end
-
     scenario "Cannot challenge a partnership twice" do
       given_a_fip_school_with_a_partnership_that_has_previously_been_challenged "test-sit@example.com", "Test school", "111111-test-school", "abc1234"
       and_i_sign_in_as_the_user_with_the_email "test-sit@example.com"
@@ -96,38 +84,6 @@ RSpec.feature "Reporting an error with a partnership", type: :feature, js: true,
       and_i_report_an_unrecognised_provider_on_the_report_incorrect_partnership_page
 
       then_i_am_on_the_report_incorrect_partnership_success_page
-    end
-
-    scenario "Can challenge a partnership by entering the partnerships URL" do
-      given_a_cip_school_with_a_partnership_that_can_be_challenged "test-sit@example.com", "Test school", "111111-test-school", "abc1234"
-      and_i_sign_in_as_the_user_with_the_email "test-sit@example.com"
-
-      when_i_view_programme_details_from_the_school_dashboard_page
-      and_i_enter_partnership_details_url_on_the_school_cohorts_page
-      and_i_report_school_partnership_has_been_confirmed_incorrectly_on_the_school_partnerships_page
-      and_i_report_an_unrecognised_provider_on_the_report_incorrect_partnership_page
-
-      then_i_am_on_the_report_incorrect_partnership_success_page
-    end
-
-    scenario "Cannot challenge a partnership twice" do
-      given_a_cip_school_with_a_partnership_that_has_previously_been_challenged "test-sit@example.com", "Test school", "111111-test-school", "abc1234"
-      and_i_sign_in_as_the_user_with_the_email "test-sit@example.com"
-
-      when_i_view_programme_details_from_the_school_dashboard_page
-      and_i_enter_partnership_details_url_on_the_school_cohorts_page
-
-      then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
-    end
-
-    scenario "Cannot challenge an expired challenge" do
-      given_a_cip_school_with_a_partnership_that_has_an_expired_challenge "test-sit@example.com", "Test school", "111111-test-school", "abc1234"
-      and_i_sign_in_as_the_user_with_the_email "test-sit@example.com"
-
-      when_i_view_programme_details_from_the_school_dashboard_page
-      and_i_enter_partnership_details_url_on_the_school_cohorts_page
-
-      then_i_cannot_report_school_partnership_has_been_confirmed_incorrectly
     end
   end
 

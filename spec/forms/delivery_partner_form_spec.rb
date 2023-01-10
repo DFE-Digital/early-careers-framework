@@ -7,7 +7,7 @@ RSpec.describe DeliveryPartnerForm, type: :model do
     context "when another delivery partner is working with the lead provider" do
       let(:lead_provider) { create(:lead_provider) }
       let(:other_delivery_partner) { create(:delivery_partner) }
-      let(:cohort) { create(:cohort, :current) }
+      let(:cohort) { Cohort.current || create(:cohort, :current) }
       before do
         ProviderRelationship.create!(lead_provider:, delivery_partner: other_delivery_partner, cohort:)
       end

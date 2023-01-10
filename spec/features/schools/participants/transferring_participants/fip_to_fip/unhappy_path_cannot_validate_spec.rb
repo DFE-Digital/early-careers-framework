@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active", multiple_cohorts: "active" }, type: :feature, js: true do
+RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true do
   context "Attempting to transfer an ECT to a school" do
     context "ECT cannot be validated" do
       before do
@@ -49,10 +49,10 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       # given
 
       def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-        @cohort = create(:cohort, start_year: 2021)
+        @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
-        create(:school_cohort, school: @school_one, cohort: create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
+        create(:school_cohort, school: @school_one, cohort: Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -72,7 +72,7 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       # when
 
       def when_i_click_to_view_ects_and_mentors
-        click_on("Manage")
+        click_on("Manage participants")
       end
 
       def when_i_click_to_add_a_new_ect_or_mentor

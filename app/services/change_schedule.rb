@@ -79,11 +79,7 @@ private
   end
 
   def cohort
-    @cohort ||= if super
-                  Cohort.find_by(start_year: super)
-                else
-                  Cohort.current
-                end
+    @cohort ||= super ? Cohort.find_by(start_year: super) : Cohort.current
   end
 
   def relevant_induction_record

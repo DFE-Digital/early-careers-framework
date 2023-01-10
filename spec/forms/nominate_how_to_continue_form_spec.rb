@@ -8,7 +8,7 @@ RSpec.describe NominateHowToContinueForm, type: :model do
   end
 
   describe "#choices" do
-    let(:cohort) { create(:cohort, :current) }
+    let(:cohort) { Cohort.current || create(:cohort, :current) }
     subject(:form) { described_class.new(cohort:) }
 
     it "provides options for the nomination induction tutor choices" do

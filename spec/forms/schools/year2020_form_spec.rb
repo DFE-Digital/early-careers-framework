@@ -2,9 +2,10 @@
 
 RSpec.describe Schools::Year2020Form, type: :model do
   let!(:school) { create :school }
-  let!(:cohort) { create :cohort, start_year: 2020 }
+  let!(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:core_induction_programme) { create :core_induction_programme }
-  let!(:default_schedule) { create(:ecf_schedule) }
+  let!(:default_schedule) { create(:ecf_schedule, cohort: cohort_2021) }
   let!(:name) { Faker::Name.name }
   let!(:email) { Faker::Internet.email }
 
@@ -30,7 +31,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
       add_new_participant(subject)
 
       subject.save!
-      school_cohort = SchoolCohort.find_by(school:, cohort:)
+      school_cohort = SchoolCohort.find_by(school:, cohort: cohort_2020)
 
       expect(school_cohort).not_to be_nil
       expect(school_cohort.ecf_participants.count).to eq(1)
@@ -45,7 +46,7 @@ RSpec.describe Schools::Year2020Form, type: :model do
       test_participants.each { |participant| add_new_participant(subject, name: participant.full_name, email: participant.email) }
 
       subject.save!
-      school_cohort = SchoolCohort.find_by(school:, cohort:)
+      school_cohort = SchoolCohort.find_by(school:, cohort: cohort_2020)
       expect(school_cohort).not_to be_nil
       expect(school_cohort.ecf_participants.count).to eq(3)
 

@@ -2,19 +2,19 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
-  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
-  let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
-  let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
-
+RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules do
+  let(:cohort)              { Cohort.current || create(:cohort, :current) }
   let(:cpd_lead_provider)   { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:npq_lead_provider)   { cpd_lead_provider.npq_lead_provider }
-  let!(:npq_course)         { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
   let(:statement)           { create(:npq_statement, cpd_lead_provider:) }
   let(:participant_profile) { create(:npq_application, :accepted, :eligible_for_funding, npq_course:, npq_lead_provider:).profile }
   let(:milestone)           { participant_profile.schedule.milestones.find_by!(declaration_type:) }
   let(:declaration_type)    { "started" }
-  let!(:contract) { create(:npq_contract, npq_lead_provider:, cohort:) }
+
+  let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
+  let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
+  let!(:npq_course)              { create(:npq_leadership_course, identifier: "npq-leading-teaching") }
+  let!(:contract)                { create(:npq_contract, npq_lead_provider:, cohort:) }
 
   subject { described_class.new(statement:) }
 
@@ -87,12 +87,13 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
     end
 
     context "when there are declarations" do
+      let(:statement) { participant_declaration.statement_line_items.eligible.first.statement }
+
       let!(:participant_declaration) do
         travel_to milestone.start_date do
           create(:npq_participant_declaration, :eligible, declaration_type:, cpd_lead_provider:, participant_profile:)
         end
       end
-      let(:statement) { participant_declaration.statement_line_items.eligible.first.statement }
 
       it "counts them" do
         expect(subject.total_completed).to eq(1)
@@ -195,7 +196,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
     end
   end
 
-  context "when there exists contracts over multiple cohorts", with_feature_flags: { multiple_cohorts: "active" } do
+  context "when there exists contracts over multiple cohorts" do
     let!(:cohort_2022) { Cohort.next || create(:cohort, :next) }
     let!(:contract_2022) { create(:npq_contract, npq_lead_provider:, cohort: cohort_2022) }
     let!(:statement_2022) { create(:npq_statement, cpd_lead_provider:, cohort: cohort_2022) }
@@ -229,8 +230,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
     end
 
     context "with declaration" do
-      let(:cohort) { create(:cohort, start_year: 2022) }
-      let(:declaration_type)    { "started" }
+      let(:declaration_type) { "started" }
 
       let(:participant_profile) do
         create(
@@ -267,8 +267,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
     end
 
     context "with declaration" do
-      let(:cohort) { create(:cohort, start_year: 2022) }
-      let(:declaration_type)    { "started" }
+      let(:declaration_type) { "started" }
 
       let(:participant_profile) do
         create(
@@ -302,8 +301,7 @@ RSpec.describe Finance::NPQ::StatementCalculator, :with_default_schedules, with_
   end
 
   describe "#total_clawbacks" do
-    let(:cohort) { create(:cohort, start_year: 2022) }
-    let(:declaration_type)    { "started" }
+    let(:declaration_type) { "started" }
 
     let(:participant_profile) do
       create(

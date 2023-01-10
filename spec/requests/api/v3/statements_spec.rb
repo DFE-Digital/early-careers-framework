@@ -7,13 +7,13 @@ RSpec.describe "statements endpoint spec", type: :request do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
 
-  let(:cohort_2021) { create(:cohort, :current) }
-  let(:cohort_2022) { create(:cohort, :next) }
-  let!(:ecf_statement_cohort_2022) do
+  let(:current_cohort) { Cohort.current || create(:cohort, :current) }
+  let(:next_cohort) { Cohort.next || create(:cohort, :next) }
+  let!(:ecf_statement_next_cohort) do
     create(
       :ecf_statement,
       cpd_lead_provider:,
-      cohort: cohort_2022,
+      cohort: next_cohort,
     )
   end
 
@@ -21,25 +21,25 @@ RSpec.describe "statements endpoint spec", type: :request do
   let(:params) { {} }
 
   describe "GET /statements" do
-    let!(:ecf_statement_cohort_2021) do
+    let!(:ecf_statement_current_cohort) do
       create(
         :ecf_statement,
         cpd_lead_provider:,
-        cohort: cohort_2021,
+        cohort: current_cohort,
       )
     end
-    let!(:npq_statement_cohort_2022) do
+    let!(:npq_statement_next_cohort) do
       create(
         :npq_statement,
         cpd_lead_provider:,
-        cohort: cohort_2022,
+        cohort: next_cohort,
       )
     end
-    let!(:npq_statement_cohort_2021) do
+    let!(:npq_statement_current_cohort) do
       create(
         :npq_statement,
         cpd_lead_provider:,
-        cohort: cohort_2021,
+        cohort: current_cohort,
       )
     end
 
@@ -105,7 +105,7 @@ RSpec.describe "statements endpoint spec", type: :request do
       end
 
       context "with cohort filter" do
-        let(:params) { { filter: { cohort: "2021" } } }
+        let(:params) { { filter: { cohort: current_cohort.display_name } } }
         it "returns statements within filter cohort" do
           get("/api/v3/statements", params:)
 
@@ -134,7 +134,7 @@ RSpec.describe "statements endpoint spec", type: :request do
   end
 
   describe "GET /statements/:id" do
-    let(:statement_id) { ecf_statement_cohort_2022.id }
+    let(:statement_id) { ecf_statement_next_cohort.id }
 
     before do
       default_headers[:Authorization] = bearer_token

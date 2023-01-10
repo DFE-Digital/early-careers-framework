@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe ProviderRelationship, type: :model do
   let(:lead_provider) { create(:lead_provider) }
   let(:delivery_partner) { create(:delivery_partner) }
-  let(:cohort) { create(:cohort) }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:provider_relationship) do
     ProviderRelationship.create(lead_provider:, delivery_partner:, cohort:)
   end
@@ -15,7 +15,7 @@ RSpec.describe ProviderRelationship, type: :model do
       ProviderRelationship.create(
         lead_provider: create(:lead_provider),
         delivery_partner: create(:delivery_partner),
-        cohort: create(:cohort),
+        cohort: Cohort.current || create(:cohort, :current),
       )
     }.to change { ProviderRelationship.count }.by(1)
   end

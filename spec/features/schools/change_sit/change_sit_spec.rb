@@ -10,7 +10,7 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
     given_there_is_a_school_and_an_induction_coordinator
     and_i_am_signed_in_as_an_induction_coordinator
 
-    click_on "Change"
+    click_on "Change induction tutor"
     then_i_should_be_on_the_change_sit_name_page
     and_the_page_should_be_accessible
 
@@ -50,7 +50,7 @@ RSpec.describe "Change a school induction tutor (SIT) as a SIT", js: true do
     and_i_am_signed_in_as_an_induction_coordinator
 
     click_on "Test School 1"
-    click_on "Change"
+    click_on "Change induction tutor"
     then_i_should_be_on_the_change_sit_name_page
 
     when_i_fill_in_the_sits_name
@@ -76,7 +76,7 @@ private
   # given
 
   def given_there_is_a_school_and_an_induction_coordinator
-    @cohort = create(:cohort, :current)
+    @cohort = Cohort.current || create(:cohort, :current)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
 
@@ -88,7 +88,7 @@ private
     first_school = create(:school, name: "Test School 1", slug: "111111-test-school-1", urn: "111111")
     second_school = create(:school, name: "Test School 2", slug: "111112-test-school-2", urn: "111112")
 
-    @cohort = create(:cohort, :current)
+    @cohort = Cohort.current || create(:cohort, :current)
     @school_cohort = create(:school_cohort, :cip, school: first_school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
 
     create_partnership(first_school)

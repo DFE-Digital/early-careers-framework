@@ -29,7 +29,8 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
   end
 
   describe "PUT /admin/participants/:participant_id/change_cohort" do
-    let(:params) { { induction_amend_participant_cohort: { target_cohort_start_year: 2022 } } }
+    let(:next_cohort) { Cohort.next || create(:cohort, :next) }
+    let(:params) { { induction_amend_participant_cohort: { target_cohort_start_year: next_cohort.start_year } } }
 
     it "initializes an Induction::AmendParticipantCohort" do
       expect_any_instance_of(Induction::AmendParticipantCohort).to receive(:save).and_return(true)
@@ -38,8 +39,8 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
       put("/admin/participants/#{mentor_profile.id}/change_cohort", params:)
 
       expect(Induction::AmendParticipantCohort).to have_received(:new).with(
-        source_cohort_start_year: 2021,
-        target_cohort_start_year: "2022", # string because this one is passed in from the form
+        source_cohort_start_year: Cohort.current.start_year,
+        target_cohort_start_year: next_cohort.display_name, # string because this one is passed in from the form
         participant_profile: mentor_profile,
       )
 

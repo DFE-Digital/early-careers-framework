@@ -4,7 +4,10 @@ require "rails_helper"
 
 RSpec.describe School, type: :model do
   subject(:school) { create(:school) }
-  let(:cohort) { create(:cohort) }
+
+  let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
   describe "School" do
@@ -277,7 +280,7 @@ RSpec.describe School, type: :model do
   describe "#pupil_premium_uplift?" do
     context "it has no pupil premium eligibility record" do
       it "returns false" do
-        expect(school.pupil_premium_uplift?(2021)).to be false
+        expect(school.pupil_premium_uplift?(cohort.start_year)).to be false
       end
     end
 
@@ -285,7 +288,7 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
       it "returns false" do
-        expect(school.pupil_premium_uplift?(2021)).to be false
+        expect(school.pupil_premium_uplift?(cohort.start_year)).to be false
       end
     end
 
@@ -293,7 +296,7 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, :pupil_premium_uplift) }
 
       it "returns true" do
-        expect(school.pupil_premium_uplift?(2021)).to be true
+        expect(school.pupil_premium_uplift?(cohort.start_year)).to be true
       end
     end
   end
@@ -301,7 +304,7 @@ RSpec.describe School, type: :model do
   describe "#sparsity_uplift?" do
     context "it has no pupil premium eligibility record" do
       it "returns false" do
-        expect(school.sparsity_uplift?(2021)).to be false
+        expect(school.sparsity_uplift?(cohort.start_year)).to be false
       end
     end
 
@@ -309,7 +312,7 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
       it "returns false" do
-        expect(school.sparsity_uplift?(2021)).to be false
+        expect(school.sparsity_uplift?(cohort.start_year)).to be false
       end
     end
 
@@ -317,7 +320,7 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, :sparsity_uplift) }
 
       it "returns true" do
-        expect(school.sparsity_uplift?(2021)).to be true
+        expect(school.sparsity_uplift?(cohort.start_year)).to be true
       end
     end
   end
@@ -327,8 +330,8 @@ RSpec.describe School, type: :model do
     let!(:not_uplifted_school) { create(:school, pupil_premiums: [build(:pupil_premium)]) }
 
     it "returns uplifted schools" do
-      expect(School.with_pupil_premium_uplift(2021)).to include(uplifted_school)
-      expect(School.with_pupil_premium_uplift(2021)).not_to include(not_uplifted_school)
+      expect(School.with_pupil_premium_uplift(cohort.start_year)).to include(uplifted_school)
+      expect(School.with_pupil_premium_uplift(cohort.start_year)).not_to include(not_uplifted_school)
     end
   end
 
@@ -339,15 +342,15 @@ RSpec.describe School, type: :model do
     let!(:not_sparse_school) { create(:school) }
 
     it "includes sparse schools" do
-      expect(School.with_sparsity_uplift(2021)).to include(sparse_school)
+      expect(School.with_sparsity_uplift(cohort.start_year)).to include(sparse_school)
     end
 
     it "does not include previously sparse schools" do
-      expect(School.with_sparsity_uplift(2021)).not_to include(previously_sparse_school)
+      expect(School.with_sparsity_uplift(cohort.start_year)).not_to include(previously_sparse_school)
     end
 
     it "does not include not sparse schools" do
-      expect(School.with_sparsity_uplift(2021)).not_to include(not_sparse_school)
+      expect(School.with_sparsity_uplift(cohort.start_year)).not_to include(not_sparse_school)
     end
 
     it "includes previously sparse schools for the correct year" do
@@ -356,7 +359,7 @@ RSpec.describe School, type: :model do
   end
 
   describe "School.partnered_with_lead_provider" do
-    let(:cohort) { create(:cohort, start_year: Time.zone.now.year) }
+    let(:cohort) { Cohort.current || create(:cohort, :current) }
     let(:lead_provider) { create(:lead_provider, cohorts: [cohort]) }
     let(:schools) { create_list(:school, 2) }
     let(:not_this_cohort_school) { create(:school) }
@@ -367,7 +370,7 @@ RSpec.describe School, type: :model do
         create(:partnership, school:, lead_provider:, cohort:)
       end
       create(:partnership, school: not_this_cohort_school, lead_provider:,
-                           cohort: create(:cohort, start_year: Time.zone.now.year + 1))
+                           cohort: Cohort.next || create(:cohort, :next))
     end
 
     it "returns schools partnered with the lead provider for the given cohort year" do
@@ -404,8 +407,6 @@ RSpec.describe School, type: :model do
   end
 
   describe "#delivery_partner_for" do
-    let(:cohort_2020) { create(:cohort, start_year: 2020) }
-    let(:cohort_2021) { create(:cohort, start_year: 2021) }
     let(:delivery_1) { create(:delivery_partner, name: "Ace Education") }
     let(:delivery_2) { create(:delivery_partner, name: "Super Learn") }
     let!(:partnership_2020) { create(:partnership, school:, delivery_partner: delivery_1, cohort: cohort_2020) }
@@ -440,7 +441,7 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, :pupil_premium_uplift) }
 
       it "returns the correct characteristic for pupil premium" do
-        expect(school.characteristics_for(2021)).to eq "Pupil premium above 40%"
+        expect(school.characteristics_for(cohort.start_year)).to eq "Pupil premium above 40%"
       end
     end
 
@@ -448,7 +449,7 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, :sparsity_uplift) }
 
       it "returns the correct characteristic" do
-        expect(school.characteristics_for(2021)).to eq "Remote school"
+        expect(school.characteristics_for(cohort.start_year)).to eq "Remote school"
       end
     end
 
@@ -456,13 +457,13 @@ RSpec.describe School, type: :model do
       let(:school) { create(:school, :pupil_premium_and_sparsity_uplift) }
 
       it "returns the correct characteristics" do
-        expect(school.characteristics_for(2021)).to eq "Pupil premium above 40% and Remote school"
+        expect(school.characteristics_for(cohort.start_year)).to eq "Pupil premium above 40% and Remote school"
       end
     end
 
     context "when neither pupil premium nor sparcity uplifts apply" do
       it "returns an empty string" do
-        expect(school.characteristics_for(2021)).to be_blank
+        expect(school.characteristics_for(cohort.start_year)).to be_blank
       end
     end
   end
@@ -494,7 +495,7 @@ RSpec.describe School, type: :model do
   end
 
   describe "scope :not_opted_out" do
-    let!(:cohort) { create(:cohort, :current) }
+    let!(:cohort) { Cohort.current || create(:cohort, :current) }
     let!(:opted_out_school) { create(:school_cohort, opt_out_of_updates: true, induction_programme_choice: "design_our_own", cohort:).school }
     let!(:school_without_cohort) { create(:school) }
     let!(:cip_school) { create(:school_cohort, induction_programme_choice: "core_induction_programme", cohort:).school }
@@ -512,12 +513,12 @@ RSpec.describe School, type: :model do
     end
 
     it "returns false when the school is not in a partnership" do
-      expect(school.partnered?(create(:cohort))).to be false
+      expect(school.partnered?(cohort)).to be false
     end
 
     it "returns false when the school is not in a partnership for the specified cohort" do
       partnership = create(:partnership)
-      expect(partnership.school.partnered?(create(:cohort))).to be false
+      expect(partnership.school.partnered?(cohort_2021)).to be false
     end
 
     it "returns false when the partnership has been challenged" do
@@ -549,7 +550,7 @@ RSpec.describe School, type: :model do
     end
 
     it "does not include participants from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school:)
+      another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
       ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
       mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
@@ -579,7 +580,7 @@ RSpec.describe School, type: :model do
     end
 
     it "does not include ECTs from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school:)
+      another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
       ect_profile = create(:ect_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.early_career_teacher_profiles_for(cohort)).not_to include ect_profile
@@ -613,7 +614,7 @@ RSpec.describe School, type: :model do
     end
 
     it "does not include mentors from other cohorts" do
-      another_school_cohort = create(:school_cohort, cohort: create(:cohort), school:)
+      another_school_cohort = create(:school_cohort, cohort: Cohort.next || create(:cohort, :next), school:)
       mentor_profile = create(:mentor_participant_profile, school_cohort: another_school_cohort)
 
       expect(school.mentor_profiles_for(cohort)).not_to include mentor_profile

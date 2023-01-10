@@ -62,7 +62,7 @@ RSpec.describe SchoolCohort, type: :model do
 
   describe ".for_year" do
     let(:school) { create(:school) }
-    let(:cohort) { create(:cohort, start_year: 2020) }
+    let(:cohort) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
     subject(:school_cohort) { create(:school_cohort, school:, cohort:) }
 
     before do

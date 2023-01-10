@@ -23,7 +23,7 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
     end
 
     context "with correct cohort filter" do
-      let(:params) { { filter: { cohort: "2021" } } }
+      let(:params) { { filter: { cohort: cohort.display_name } } }
 
       it "returns all delivery partners for the specific cohort" do
         expect(subject.delivery_partners).to match_array([delivery_partner])
@@ -31,7 +31,7 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
     end
 
     context "with multiple cohort filter" do
-      let(:params) { { filter: { cohort: "2021,2050" } } }
+      let(:params) { { filter: { cohort: [cohort.start_year, 2050].join(",") } } }
 
       it "returns all delivery partners for the specific cohort" do
         expect(subject.delivery_partners).to match_array([delivery_partner, another_delivery_partner])

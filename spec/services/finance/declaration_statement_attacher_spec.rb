@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
-  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, :current) }
-  let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, :next) }
+  let(:previous_cohort) { Cohort.previous || create(:cohort, :previous) }
+  let(:current_cohort) { Cohort.current || create(:cohort, :current) }
 
-  let(:schedule_2021) { create(:ecf_schedule, cohort: cohort_2021) }
-  let(:schedule_2022) { create(:ecf_schedule, cohort: cohort_2022) }
-  let(:npq_schedule_2022) { create(:npq_leadership_schedule, cohort: cohort_2022) }
+  let(:schedule_previous_cohort) { create(:ecf_schedule, cohort: previous_cohort) }
+  let(:schedule_current_cohort) { create(:ecf_schedule, cohort: current_cohort) }
+  let(:npq_schedule_current_cohort) { create(:npq_leadership_schedule, cohort: current_cohort) }
 
   let(:declaration) { create(:ect_participant_declaration, cpd_lead_provider:, participant_profile:, state: "eligible") }
 
-  let(:ecf_statement_2021) { create(:ecf_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now) }
-  let(:ecf_statement_2022) { create(:ecf_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: cohort_2022) }
+  let(:ecf_statement_previous_cohort) { create(:ecf_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: previous_cohort) }
+  let(:ecf_statement_current_cohort) { create(:ecf_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: current_cohort) }
 
-  let(:npq_statement_2022) { create(:npq_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: cohort_2022) }
+  let(:npq_statement_current_cohort) { create(:npq_statement, output_fee: true, cpd_lead_provider:, deadline_date: 2.months.from_now, cohort: current_cohort) }
 
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
@@ -27,10 +27,10 @@ RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
   subject { described_class.new(declaration) }
 
   describe "#call" do
-    context "when cohort 2021" do
-      let!(:statement) { ecf_statement_2021 }
-      let!(:schedule) { schedule_2021 }
-      let(:cohort) { cohort_2021 }
+    context "when previous cohort" do
+      let!(:statement) { ecf_statement_previous_cohort }
+      let!(:schedule) { schedule_previous_cohort }
+      let(:cohort) { previous_cohort }
 
       before do
         Induction::Enrol.call(participant_profile:, induction_programme:)
@@ -50,18 +50,18 @@ RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
       end
     end
 
-    context "when cohort 2022" do
-      let(:cohort) { cohort_2022 }
+    context "when current cohort" do
+      let(:cohort) { current_cohort }
 
       context "ECF" do
-        let!(:schedule) { schedule_2022 }
-        let!(:statement) { ecf_statement_2022 }
+        let!(:schedule) { schedule_current_cohort }
+        let!(:statement) { ecf_statement_current_cohort }
 
         before do
           Induction::Enrol.call(participant_profile:, induction_programme:)
         end
 
-        it "attaches to 2022 statement" do
+        it "attaches to current cohort statement" do
           subject.call
 
           expect(statement.participant_declarations).to include(declaration)
@@ -69,8 +69,8 @@ RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
       end
 
       context "NPQ" do
-        let!(:statement) { npq_statement_2022 }
-        let(:schedule) { npq_schedule_2022 }
+        let!(:statement) { npq_statement_current_cohort }
+        let(:schedule) { npq_schedule_current_cohort }
         let(:participant_profile) { declaration.participant_profile }
         let(:declaration) { create(:npq_participant_declaration, cpd_lead_provider:, state: "eligible") }
 
@@ -78,7 +78,7 @@ RSpec.describe Finance::DeclarationStatementAttacher, :with_default_schedules do
           participant_profile.update! schedule:
         end
 
-        it "attaches to 2022 statement" do
+        it "attaches to current cohort statement" do
           subject.call
 
           expect(statement.participant_declarations).to include(declaration)

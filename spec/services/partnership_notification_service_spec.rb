@@ -2,20 +2,18 @@
 
 RSpec.describe PartnershipNotificationService do
   subject(:partnership_notification_service) { described_class.new }
+
+  let!(:lead_provider) { create(:lead_provider) }
+  let!(:delivery_partner) { create(:delivery_partner) }
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+
   before do
-    @lead_provider = create(:lead_provider)
-    @delivery_partner = create(:delivery_partner)
-    @cohort = create(:cohort, start_year: 2021)
-    ProviderRelationship.create!(lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort)
+    ProviderRelationship.create!(lead_provider:, delivery_partner:, cohort:)
   end
 
   let(:school) { create(:school) }
   let(:partnership) do
-    create(:partnership,
-           lead_provider: @lead_provider,
-           delivery_partner: @delivery_partner,
-           cohort: @cohort,
-           school:)
+    create(:partnership, lead_provider:, delivery_partner:, cohort:, school:)
   end
   let(:partnership_notification_email) { partnership.partnership_notification_emails.last }
   let(:notify_id) { Faker::Alphanumeric.alphanumeric(number: 16) }

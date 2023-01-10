@@ -27,12 +27,6 @@ Feature: Induction tutors choosing programmes
     Then I should be on "school cohorts" page
     And the page should be accessible
 
-    When I navigate to "choose programme" page with school_id "test-school" and cohort_id "2021"
-    Then I should have been redirected to "school cohorts" page
-    And the page should be accessible
-    And "page body" should contain "Manage your training"
-    And "page body" should contain "Add your early career teacher and mentor details"
-
   Scenario: Choosing Full Induction Programme
     When I click on "training provider" label
     And I click the submit button
@@ -45,12 +39,6 @@ Feature: Induction tutors choosing programmes
     When I click on "No" label
     And I click the submit button
     Then I should be on "choose programme success" page
-
-    When I click on "link" containing "Continue"
-    Then I should be on "school cohorts" page
-    And the page should be accessible
-    And "page body" should contain "Manage your training"
-    And "page body" should contain "Add your early career teacher and mentor details"
 
   Scenario: Choosing to design and deliver our own programme
     When I click on "design and deliver our own programme radio button"

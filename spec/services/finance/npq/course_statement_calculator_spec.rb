@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules, with_feature_flags: { multiple_cohorts: "active" } do
-  let(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules do
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:npq_leadership_schedule) { create(:npq_leadership_schedule, cohort:) }
   let!(:npq_specialist_schedule) { create(:npq_specialist_schedule, cohort:) }
 
@@ -170,7 +170,7 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
   end
 
   describe "#declaration_count_for_milestone" do
-    let(:started_milestone) { NPQCourse.schedule_for(npq_course:).milestones.find_by(declaration_type: "started") }
+    let(:started_milestone) { NPQCourse.schedule_for(npq_course:, cohort:).milestones.find_by(declaration_type: "started") }
 
     context "when there are no declarations" do
       it do
@@ -252,7 +252,6 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
   end
 
   describe "#course_has_targeted_delivery_funding?" do
-    let(:cohort) { create(:cohort, start_year: 2022) }
     let(:statement) { create(:npq_statement) }
 
     context "Early headship coaching offer" do
@@ -281,8 +280,6 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
   end
 
   describe "#targeted_delivery_funding_declarations_count" do
-    let(:cohort) { create(:cohort, start_year: 2022) }
-
     let(:participant_profile) do
       create(
         :npq_application,
@@ -346,8 +343,6 @@ RSpec.describe Finance::NPQ::CourseStatementCalculator, :with_default_schedules,
   end
 
   describe "#targeted_delivery_funding_refundable_declarations_count" do
-    let(:cohort) { create(:cohort, start_year: 2022) }
-
     let(:participant_profile) do
       create(
         :npq_application,

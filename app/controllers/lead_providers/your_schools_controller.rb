@@ -12,14 +12,8 @@ module LeadProviders
         redirect_to cohort: params[:selected_cohort_id]
         return
       end
-      if FeatureFlag.active?(:multiple_cohorts)
-        # The search component only submits the query string, so the search will always
-        # run against the current cohort schools if the selected cohort is not persisted.
-        session[:selected_cohort] = params[:cohort] if params[:cohort]
-        @selected_cohort = session[:selected_cohort] ? @cohorts.find_by(start_year: session[:selected_cohort]) : Cohort.current
-      else
-        @selected_cohort = Cohort.current
-      end
+      session[:selected_cohort] = params[:cohort] if params[:cohort]
+      @selected_cohort = session[:selected_cohort] ? @cohorts.find_by(start_year: session[:selected_cohort]) : Cohort.current
 
       @partnerships = Partnership
         .includes(:delivery_partner, :cohort, :school)

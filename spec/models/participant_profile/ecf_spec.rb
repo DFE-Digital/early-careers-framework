@@ -6,8 +6,8 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   let(:profile) { create(:ecf_participant_profile) }
 
   describe ":current_cohort" do
-    let!(:cohort_2020) { create(:cohort, start_year: 2020) }
-    let!(:current_cohort) { create(:cohort, :current) }
+    let!(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+    let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
     let!(:participant_2020) { create(:ecf_participant_profile, school_cohort: create(:school_cohort, cohort: cohort_2020)) }
     let!(:current_participant) { create(:ecf_participant_profile, school_cohort: create(:school_cohort, cohort: current_cohort)) }
 
@@ -232,7 +232,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   describe "#relevant_induction_record" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:cohort) { create(:cohort, :next) }
+    let(:cohort) { Cohort.next || create(:cohort, :next) }
     let(:partnership) { create(:partnership, lead_provider:, cohort:) }
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:) }
     let(:induction_programme) { create(:induction_programme, school_cohort:, partnership:) }
@@ -245,7 +245,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when participant is in an older cohort" do
-      let(:cohort) { create(:cohort, :current) }
+      let(:cohort) { Cohort.current || create(:cohort, :current) }
 
       it "finds the most recent induction record" do
         expect(profile.relevant_induction_record(lead_provider:)).to eq(induction_record_latest)

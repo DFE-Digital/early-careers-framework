@@ -25,7 +25,7 @@ module Pages
     end
 
     def confirm_has_no_participants
-      element_has_content? self, "Add your early career teacher and mentor details"
+      element_has_content?(self, "ECTs and mentors0")
     end
 
     def confirm_will_use_dfe_funded_training_provider
@@ -34,12 +34,6 @@ module Pages
 
     def confirm_is_using_dfe_accredited_materials
       element_has_content? self, "Programme DfE-accredited materials"
-    end
-
-    def view_programme_details
-      click_on "View details"
-
-      Pages::SchoolCohortsPage.loaded
     end
 
     def report_school_has_been_confirmed_incorrectly
@@ -57,15 +51,23 @@ module Pages
     end
 
     def view_participant_details
-      click_on "View your early career teacher and mentor details"
+      if has_link?("Manage participants")
+        click_on("Manage participants")
+      else
+        click_on("Add participants")
+      end
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
 
     def add_participant_details
-      click_on "Add your early career teacher and mentor details"
+      if has_content?("ECTs and mentors0")
+        click_on("Add participants")
+      else
+        click_on("Manage participants")
+      end
 
-      Pages::SchoolAddParticipantStartPage.loaded
+      Pages::SchoolParticipantsDashboardPage.loaded
     end
   end
 end

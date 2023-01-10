@@ -13,8 +13,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
-  let!(:cohort_2021) { Cohort.current || create(:cohort, :current) }
-  let!(:cohort_2022) { create(:cohort, :next) }
+  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
 
   describe "#show" do
     before do

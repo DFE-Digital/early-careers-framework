@@ -41,7 +41,7 @@ module Support
       match do |actual|
         key_node = find_key_node(actual, key)
         action_node = find_action_node(key_node)
-        if action_node.text != action
+        if action_node.text(:all) != action
           @failure_message = "Expected summary row \"#{key}\" with action \"#{action}\" but \"#{action_node.text}\" found instead"
           return false
         end

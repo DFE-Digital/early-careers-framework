@@ -109,11 +109,7 @@ class Schools::ParticipantsController < Schools::BaseController
 private
 
   def set_mentors_added
-    @mentors_added = if FeatureFlag.active?(:multiple_cohorts)
-                       @school.school_mentors.any?
-                     else
-                       @school.mentor_profiles_for(@cohort).any?
-                     end
+    @mentors_added = @school.school_mentors.any?
   end
 
   def build_mentor_form

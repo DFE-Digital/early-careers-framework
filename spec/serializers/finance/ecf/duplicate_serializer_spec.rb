@@ -32,7 +32,7 @@ RSpec.describe Finance::ECF::DuplicateSerializer, :with_default_schedules do
         trn: participant_profile.teacher_profile.trn,
         external_identifier: participant_profile.participant_identity.external_identifier,
         email: participant_profile.participant_identity.email,
-        cohort: "2021",
+        cohort: Cohort.current.display_name,
       )
     end
 
@@ -40,10 +40,10 @@ RSpec.describe Finance::ECF::DuplicateSerializer, :with_default_schedules do
       result = subject.serializable_hash
 
       expect(result[:data][:attributes][:induction_records][0]).to include(
-        cohort: "2021",
+        cohort: Cohort.current.display_name,
         training_status: "active",
         induction_status: "active",
-        start_date: "2021-09-01T00:00:00Z",
+        start_date: Cohort.current.academic_year_start_date.rfc3339,
         end_date: nil,
         school_transfer: false,
       )
@@ -51,10 +51,9 @@ RSpec.describe Finance::ECF::DuplicateSerializer, :with_default_schedules do
 
     it "returns the expected data attributes for the participant profile declarations" do
       result = subject.serializable_hash
-
       expect(result[:data][:attributes][:participant_declarations][0]).to include(
         declaration_type: "started",
-        declaration_date: "2021-09-01T00:00:00Z",
+        declaration_date: Cohort.current.academic_year_start_date.rfc3339,
         course_identifier: "ecf-induction",
       )
     end

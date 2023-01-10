@@ -4,19 +4,21 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe "Participants API", :with_default_schedules, type: :request do
+  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+
   let(:cpd_lead_provider) { create(:cpd_lead_provider, lead_provider:) }
   let(:lead_provider)     { create(:lead_provider) }
   let(:token)             { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)      { "Bearer #{token}" }
-  let(:school_cohort)     { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider) }
 
+  let!(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort: cohort_2021) }
   let!(:mentor_profile) do
     travel_to 3.days.ago do
       create(:mentor, school_cohort:, lead_provider:)
     end
   end
 
-  before :each do
+  before do
     travel_to 2.days.ago do
       create_list :ect, 2, mentor_profile_id: mentor_profile.id, lead_provider:, school_cohort:
     end
@@ -36,7 +38,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     create(:ect, :withdrawn_record, school_cohort:, lead_provider:)
   end
 
-  let(:early_career_teacher_profile) { create(:ect, lead_provider:) }
+  let(:early_career_teacher_profile) { create(:ect, lead_provider:, cohort: cohort_2021) }
 
   describe "GET /api/v1/participants/ecf" do
     context "when authorized" do
@@ -59,7 +61,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "only returns users for the current cohort" do
-          cohort_2020 = create(:cohort, start_year: 2020)
+          cohort_2020 = Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
           create(:ect_participant_profile, school_cohort: school_cohort_2020)
@@ -69,7 +71,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
         end
 
         it "when user is NQT+1 and a mentor, the mentor profile is used" do
-          cohort_2020 = create(:cohort, start_year: 2020)
+          cohort_2020 = Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020)
           partnership_2020 = create(:partnership, lead_provider:, cohort: cohort_2020)
           school_cohort_2020 = create(:school_cohort, school: partnership_2020.school, cohort: cohort_2020, induction_programme_choice: "full_induction_programme")
           create(:ect_participant_profile, school_cohort: school_cohort_2020, teacher_profile: mentor_profile.teacher_profile)
@@ -185,7 +187,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
 
         context "when cohort parameter is supplied" do
           it "returns participants only within that cohort" do
-            next_cohort = create(:cohort, :next)
+            next_cohort = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
             next_partnership = create(:partnership, lead_provider:, cohort: next_cohort)
             next_school_cohort = create(:school_cohort, school: next_partnership.school, cohort: next_cohort, induction_programme_choice: "full_induction_programme")
             next_induction_programme = create(:induction_programme, school_cohort: next_school_cohort, partnership: next_partnership)
@@ -193,7 +195,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
             next_participant_profile = create(:ect_participant_profile, school_cohort: next_school_cohort, schedule: next_schedule)
             create(:induction_record, participant_profile: next_participant_profile, induction_programme: next_induction_programme, schedule: next_schedule)
 
-            get "/api/v1/participants/ecf", params: { filter: { cohort: Cohort.current.start_year } }
+            get "/api/v1/participants/ecf", params: { filter: { cohort: 2021 } }
             expect(parsed_response["data"].size).to eq(5)
           end
 

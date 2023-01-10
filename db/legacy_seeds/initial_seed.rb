@@ -1,9 +1,22 @@
 # frozen_string_literal: true
 
-Cohort.find_or_create_by!(start_year: 2020, registration_start_date: Date.new(2020, 5, 10), academic_year_start_date: Date.new(2020, 9, 1))
-cohort_2021 = Cohort.find_or_create_by!(start_year: 2021, registration_start_date: Date.new(2021, 5, 10), academic_year_start_date: Date.new(2021, 9, 1))
-# moving the date back so the changes can be checked in the review app
-cohort_2022 = Cohort.find_or_create_by!(start_year: 2022, registration_start_date: Date.new(2022, 4, 10), academic_year_start_date: Date.new(2022, 9, 1))
+registration_month = 5
+registration_day = 10
+academic_year_start_month = 9
+academic_year_start_day = 1
+
+# Make sure Cohort 2020 exists
+Cohort.find_or_create_by!(start_year: 2020,
+                          registration_start_date: Date.new(2020, registration_month, registration_day),
+                          academic_year_start_date: Date.new(2020, academic_year_start_month, academic_year_start_day))
+
+# Create cohorts since 2021 until Cohort.next
+next_cohort_start_year = Date.current.year + (Date.current.month < academic_year_start_month ? 0 : 1)
+cohorts = (2021..next_cohort_start_year).to_a.map do |start_year|
+  Cohort.find_or_create_by!(start_year:,
+                            registration_start_date: Date.new(start_year, registration_month, registration_day),
+                            academic_year_start_date: Date.new(start_year, academic_year_start_month, academic_year_start_day))
+end
 
 ambition_cip = CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
 edt_cip = CoreInductionProgramme.find_or_create_by!(name: "Education Development Trust")
@@ -19,8 +32,8 @@ ucl_cip = CoreInductionProgramme.find_or_create_by!(name: "UCL Institute of Educ
   { provider_name: "UCL Institute of Education", cip: ucl_cip },
 ].each do |seed|
   provider = LeadProvider.find_or_create_by!(name: seed[:provider_name])
-  provider.update!(cohorts: [cohort_2021, cohort_2022]) unless provider.cohorts.any?
-  LeadProviderCip.find_or_create_by!(lead_provider: provider, cohort: cohort_2021, core_induction_programme: seed[:cip])
+  provider.update!(cohorts:) unless provider.cohorts.any?
+  LeadProviderCip.find_or_create_by!(lead_provider: provider, cohort: cohorts.first, core_induction_programme: seed[:cip])
 end
 
 PrivacyPolicy.find_or_initialize_by(major_version: 1, minor_version: 0)

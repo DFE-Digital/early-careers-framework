@@ -14,10 +14,10 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
       end
     end
   end
-  let(:schedule)           { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september") }
-  let(:next_cohort)        { create(:cohort, :next) }
-  let(:next_school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort: next_cohort) }
-  let(:next_cohort_ect)    { create(:ect, school_cohort: next_school_cohort, lead_provider: cpd_lead_provider.lead_provider) }
+  let(:cohort)        { Cohort.current || create(:cohort, :current) }
+  let(:schedule)      { Finance::Schedule.find_by(schedule_identifier: "ecf-standard-september", cohort:) }
+  let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider: cpd_lead_provider.lead_provider, cohort:) }
+  let(:ect)           { create(:ect, school_cohort:, lead_provider: cpd_lead_provider.lead_provider) }
 
   def create_output_statement_for(milestone)
     create(:statement, :output_fee, cpd_lead_provider:, deadline_date: milestone.milestone_date)
@@ -26,47 +26,44 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
   def generate_declarations(state:)
     milestone = schedule.milestones.find_by(declaration_type: "started")
     travel_to(milestone.milestone_date) do
-      create_list(:ect_participant_declaration, 17, state, declaration_type: "started", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 17, state, declaration_type: "started", cpd_lead_provider:, cohort:)
     end
 
     milestone = schedule.milestones.find_by(declaration_type: "retained-1")
     travel_to milestone.milestone_date do
-      create_list(:ect_participant_declaration, 5, state, declaration_type: "retained-1", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 5, state, declaration_type: "retained-1", cpd_lead_provider:, cohort:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "retained-2").milestone_date do
-      create_list(:ect_participant_declaration, 4, state, declaration_type: "retained-2", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 4, state, declaration_type: "retained-2", cpd_lead_provider:, cohort:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "retained-3").milestone_date do
-      create_list(:ect_participant_declaration, 3, state, declaration_type: "retained-3", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 3, state, declaration_type: "retained-3", cpd_lead_provider:, cohort:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "retained-4").milestone_date do
-      create_list(:ect_participant_declaration, 1,  state, declaration_type: "retained-4", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 1,  state, declaration_type: "retained-4", cpd_lead_provider:, cohort:)
     end
 
     travel_to schedule.milestones.find_by(declaration_type: "completed").milestone_date do
-      create_list(:ect_participant_declaration, 0,  state, declaration_type: "completed", cpd_lead_provider:)
+      create_list(:ect_participant_declaration, 0,  state, declaration_type: "completed", cpd_lead_provider:, cohort:)
     end
   end
 
   before do
-    allow(FeatureFlag).to receive(:active?).with(:participant_outcomes_feature).and_return(false)
-    allow(FeatureFlag).to receive(:active?).with(:multiple_cohorts).and_return(true)
-
     generate_declarations(state: :payable)
     generate_declarations(state: :paid)
 
     create(:milestone,
            declaration_type: "started",
-           milestone_date: Date.new(2022, 12, 22),
-           schedule: create(:schedule, schedule_identifier: "ecf-standard-september", name: "ECF September Standard", type: "Finance::Schedule::ECF", cohort: next_cohort))
+           milestone_date: Date.new(cohort.start_year, 12, 22),
+           schedule: create(:schedule, schedule_identifier: "ecf-standard-september", name: "ECF September Standard", type: "Finance::Schedule::ECF", cohort:))
 
-    travel_to next_cohort_ect.schedule.milestones.find_by(declaration_type: "started").milestone_date do
+    travel_to ect.schedule.milestones.find_by(declaration_type: "started").milestone_date do
       create(
         :ect_participant_declaration,
-        participant_profile: next_cohort_ect,
+        participant_profile: ect,
         cpd_lead_provider:,
       )
     end

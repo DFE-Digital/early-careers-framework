@@ -22,7 +22,7 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
 
     describe "cohort filter" do
       context "with correct value" do
-        let(:params) { { filter: { cohort: "2021" } } }
+        let(:params) { { filter: { cohort: cohort.display_name } } }
 
         it "returns all partnerships for the specific cohort" do
           expect(subject.partnerships).to match_array([partnership])
@@ -30,7 +30,7 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
       end
 
       context "with multiple values" do
-        let(:params) { { filter: { cohort: "2021,2050" } } }
+        let(:params) { { filter: { cohort: [cohort.display_name, another_cohort.display_name].join(",") } } }
 
         it "returns all partnerships for the specific cohort" do
           expect(subject.partnerships).to match_array([partnership, another_partnership])

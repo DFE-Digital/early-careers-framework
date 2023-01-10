@@ -26,8 +26,8 @@ RSpec.describe DeliveryPartner, type: :model do
 
   describe "#cohorts_with_lead_provider" do
     let(:delivery_partner)   { create(:delivery_partner) }
-    let(:partnered_cohort)   { create(:cohort) }
-    let(:unpartnered_cohort) { create(:cohort) }
+    let(:partnered_cohort)   { Cohort.current || create(:cohort, :current) }
+    let(:unpartnered_cohort) { Cohort.next || create(:cohort, :next) }
     let(:lead_provider)      { create(:lead_provider, cohorts: [partnered_cohort, unpartnered_cohort]) }
 
     before do

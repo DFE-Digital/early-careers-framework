@@ -8,12 +8,9 @@ RSpec.describe "Update participants details", js: true do
 
   before do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
-    and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_added_an_ect
-    when_i_click_on_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_roles_page
-    when_i_click_on_continue
-    then_i_am_taken_to_your_ect_and_mentors_page
+    and_i_am_signed_in_as_an_induction_coordinator
+    when_i_navigate_to_participants_dashboard
     and_i_have_added_a_mentor
   end
 
@@ -75,7 +72,9 @@ RSpec.describe "Update participants details", js: true do
   scenario "withdrawn participants" do
     given_an_ect_has_been_withdrawn_by_the_provider
     when_i_visit_manage_training_dashboard
-    and_i_click_on_view_your_early_career_teacher_and_mentor_details
+    and_i_click("2021 to 2022")
+
+    when_i_navigate_to_participants_dashboard
     click_on "Not training"
     then_it_should_show_the_withdrawn_participant
     and_the_page_should_be_accessible

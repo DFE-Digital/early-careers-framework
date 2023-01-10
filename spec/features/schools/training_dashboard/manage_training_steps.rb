@@ -6,7 +6,7 @@ module ManageTrainingSteps
   # Given_steps
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
@@ -34,12 +34,13 @@ module ManageTrainingSteps
     @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "CIP School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "core_induction_programme")
-    @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort)
+    @induction_programme = create(:induction_programme, :cip, school_cohort: @school_cohort, core_induction_programme: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
     @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
+    create(:school_cohort, school: @school_cohort.school, cohort: Cohort.previous || create(:cohort, :previous))
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -59,25 +60,21 @@ module ManageTrainingSteps
   end
 
   def given_there_is_a_school_that_has_chosen_design_our_own_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Design Our Own Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "design_our_own")
   end
 
   def given_there_is_a_school_that_has_chosen_no_ect_for_2021
-    @cohort = create(:cohort, start_year: 2021)
+    @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "No ECT Programme School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "no_early_career_teachers")
+    create(:school_cohort, school: @school, cohort: Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020))
   end
 
   def given_i_am_on_the_cip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).not_to have_text("Programme materials")
-  end
-
-  def given_i_can_view_the_fip_induction_dashboard_without_partnership_details
-    expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).not_to have_text("Delivery partner")
   end
 
   def given_i_am_taken_to_fip_induction_dashboard
@@ -113,6 +110,11 @@ module ManageTrainingSteps
     expect(page).to have_summary_row_action("Appropriate body", "Change")
   end
 
+  def and_i_can_manage_ects_and_mentors(action: "Manage participants")
+    expect(page).to have_summary_row_action("ECTs and mentors", action)
+  end
+  alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
+
   def and_i_am_signed_in_as_an_induction_coordinator
     @induction_coordinator_profile = create(:induction_coordinator_profile, schools: [@school_cohort.school], user: create(:user, full_name: "Carl Coordinator"))
     privacy_policy = create(:privacy_policy)
@@ -134,6 +136,7 @@ module ManageTrainingSteps
     teacher_profile = create(:teacher_profile, user:)
     @participant_profile_mentor = create(:mentor_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
+    Mentors::AddToSchool.call(mentor_profile: @participant_profile_mentor, school: @school)
   end
 
   def and_i_have_added_an_eligible_ect_with_mentor
@@ -279,6 +282,26 @@ module ManageTrainingSteps
     click_on "Change induction programme choice"
   end
 
+  def then_i_can_change_the_programme_to_design_your_own
+    expect(page).to have_text("Your school has told us you do not expect any ECTs")
+    click_on "Tell us if this has changed"
+    choose "Yes"
+    click_on "Continue"
+    choose("Design and deliver you own programme based on the early career framework (ECF)")
+    click_on "Continue"
+    click_on("Confirm")
+    choose("No")
+    click_on "Continue"
+    click_on("Return to manage your training")
+    expect(page).to have_content("Manage your training")
+    expect(page).to have_summary_row("Programme", "Design and deliver your own programme based on the Early Career Framework (ECF)")
+  end
+
+  def and_i_click_on(string)
+    page.click_on(string)
+  end
+  alias_method :when_i_click_on, :and_i_click_on
+
   def and_i_should_see_multiple_schools
     expect(page).to have_text("Test School 1")
     expect(page).to have_text("Test School 2")
@@ -415,7 +438,7 @@ module ManageTrainingSteps
   end
 
   def and_cohort_2022_is_created
-    create(:cohort, start_year: 2022)
+    Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
   end
 
   def and_the_cohort_2022_tab_is_selected
@@ -446,6 +469,14 @@ module ManageTrainingSteps
 
   def when_i_click_on_change_programme
     click_on("Change induction programme choice", visible: false)
+  end
+
+  def when_i_click_on_choose_materials
+    click_on("Choose materials", visible: false)
+  end
+
+  def when_i_click_on_tell_us_if_this_has_changed
+    click_on("Tell us if this has changed")
   end
 
   def when_i_click_on_add
@@ -589,7 +620,9 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_materials
+    click_on("Continue")
     choose("CIP Programme 1", allow_label_click: true)
+    click_on("Continue")
   end
 
   def when_i_visit_manage_training_dashboard
@@ -600,10 +633,8 @@ module ManageTrainingSteps
     click_on name
   end
 
-  def when_i_navigate_to_participants_dashboard
-    when_i_click_on_add_your_early_career_teacher_and_mentor_details
-    then_i_am_taken_to_roles_page
-    when_i_click_on_continue
+  def when_i_navigate_to_participants_dashboard(action: "Manage")
+    when_i_click_on_summary_row_action("ECTs and mentors", action)
     then_i_am_taken_to_your_ect_and_mentors_page
   end
 
@@ -696,6 +727,10 @@ module ManageTrainingSteps
     expect(page).to have_text("Check the other options available for your school if this changes")
   end
 
+  def then_i_am_taken_to_setup_my_programme
+    expect(page).to have_selector("h1", text: "Does your school expect any new ECTs")
+  end
+
   def then_i_am_taken_to_check_details_page
     expect(page).to have_selector("h1", text: "Check your answers")
   end
@@ -731,7 +766,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_cip_programme_choice_info_page
-    expect(page).to have_text("You’ve chosen to: deliver your own programme using DfE-accredited materials")
+    expect(page).to have_text("Your school has chosen to deliver your own programme using DfE-accredited materials")
   end
 
   def then_i_am_taken_to_sign_up_to_training_provider_page
@@ -740,7 +775,11 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_course_choice_page
-    expect(page).to have_text("Which training materials do you want to use?")
+    expect(page).to have_text("Do you know which accredited materials you want to use?")
+  end
+
+  def then_i_am_taken_to_training_materials_confirmed_page
+    expect(page).to have_text("Training materials confirmed")
   end
 
   def then_i_am_taken_to_participant_profile
@@ -793,7 +832,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_the_no_ect_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_text("No early career teachers for this cohort")
+    expect(page).to have_text("Your school has told us you do not expect any ECTs")
   end
 
   def then_i_can_view_assign_mentor_later_status
@@ -939,10 +978,12 @@ module ManageTrainingSteps
     expect(page).to have_text("We need this to check their eligibility with the Teaching Regulation Agency.")
   end
 
-  def then_i_can_view_the_fip_induction_dashboard_without_partnership_details
+  def then_i_can_view_the_fip_induction_dashboard_without_partnership_details(displayed_value: "To be confirmed")
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).not_to have_text("Delivery partner")
+    expect(page).to have_summary_row("Delivery partner", displayed_value)
   end
+  alias_method :given_i_can_view_the_fip_induction_dashboard_without_partnership_details,
+               :then_i_can_view_the_fip_induction_dashboard_without_partnership_details
 
   def then_i_can_view_transferring_in_participants
     expect(page).to have_text("Transferring to your school")
@@ -961,6 +1002,8 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
+    expect(page).to have_summary_row("Programme", "Use a training provider funded by the DfE")
+    expect(page).to have_summary_row_action("Programme", "Change induction programme choice")
     expect(page).to have_text("Training provider")
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
@@ -999,13 +1042,14 @@ module ManageTrainingSteps
     expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at a different school")
   end
 
-  def then_i_am_taken_choose_mentor_in_transfer_page
+  def then_i_am_taken_to_choose_mentor_in_transfer_page
     expect(page).to have_selector("h1", text: "Who will #{@participant_data[:full_name]}’s mentor be?")
   end
 
   def then_i_should_be_taken_to_the_teachers_current_programme_page
     expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
   end
+  alias_method :then_i_am_taken_to_the_teachers_current_programme_page, :then_i_should_be_taken_to_the_teachers_current_programme_page
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")

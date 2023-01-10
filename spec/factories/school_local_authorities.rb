@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :school_local_authority do
-    start_year { 2021 }
+    start_year { build(:cohort, :current).start_year }
     school
     local_authority
   end

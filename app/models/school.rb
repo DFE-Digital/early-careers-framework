@@ -115,7 +115,7 @@ class School < ApplicationRecord
   end
 
   def mentors
-    User.where(id: school_mentors.joins(preferred_identity: :user).select("users.id")).order(:full_name)
+    User.where(id: mentor_profiles.active_record.joins(:user).select("users.id")).order(:full_name)
   end
 
   def registered?

@@ -26,7 +26,7 @@ private
 
   def given_there_is_a_cip_school_in_2021
     school = create(:school, name: "Test school")
-    cohort = create(:cohort, start_year: 2021)
+    cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     chosen_cip = create(:core_induction_programme, name: "Chosen CIP")
     @school_cohort = create(:school_cohort,
                             school:,

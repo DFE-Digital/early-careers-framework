@@ -196,6 +196,7 @@ RSpec.describe "Schools::TransferringParticipants", type: :request, with_feature
     it "redirects to the choose mentor template" do
       mentor = create(:mentor_participant_profile, school_cohort:)
       Induction::Enrol.call(participant_profile: mentor, induction_programme: induction_programme_one)
+      school.school_mentors.create!(participant_profile: mentor, preferred_identity: mentor.participant_identity)
       put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/transferring-participant/email",
           params: { schools_transferring_participant_form: {
             full_name: ect.user.full_name,

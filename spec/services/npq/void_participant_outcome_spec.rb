@@ -8,7 +8,7 @@ RSpec.describe NPQ::VoidParticipantOutcome, :with_default_schedules, with_featur
   let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
   let(:npq_course) { create(:npq_leadership_course) }
   let(:declaration_type) { "completed" }
-  let(:participant_profile) do
+  let!(:participant_profile) do
     create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider, npq_course:)
   end
   let(:participant_declaration) do

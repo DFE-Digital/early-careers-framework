@@ -37,7 +37,7 @@ module Steps
         sign_out
 
         if programme == "CIP"
-          school_cohort = school.school_cohorts.where(cohort: Cohort.find_by_start_year(2021)).first
+          school_cohort = school.school_cohorts.where(cohort: Cohort.find_by(start_year: 2021)).first
           Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort.induction_programme_choice
         end
 
@@ -69,7 +69,6 @@ module Steps
 
         wizard = Pages::SchoolDashboardPage.loaded
                                            .add_participant_details
-                                           .continue
                                            .choose_to_add_an_ect_or_mentor
         participant_start_date = Date.new(2021, 9, 1)
         response = {
@@ -178,7 +177,6 @@ module Steps
 
         page_object = Pages::SchoolDashboardPage.loaded
                                                 .add_participant_details
-                                                .continue
                                                 .choose_to_transfer_an_ect_or_mentor
 
         if participant_profile.ect?

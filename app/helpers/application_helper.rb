@@ -20,17 +20,9 @@ module ApplicationHelper
     return schools_dashboard_index_path if user.schools.count > 1
 
     school = user.induction_coordinator_profile.schools.first
-    if FeatureFlag.active?(:multiple_cohorts)
-      return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.active_registration_cohort.start_year) if school.school_cohorts.empty?
-    else
-      return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.current.start_year) unless school.chosen_programme?(Cohort.current)
-    end
+    return schools_choose_programme_path(school_id: school.slug, cohort_id: Cohort.active_registration_cohort.start_year) if school.school_cohorts.empty?
 
-    if FeatureFlag.active?(:multiple_cohorts)
-      school_dashboard_with_tab_path(school)
-    else
-      schools_dashboard_path(school_id: school.slug)
-    end
+    school_dashboard_with_tab_path(school)
   end
 
   def induction_coordinator_mentor_path(user)
