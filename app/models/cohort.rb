@@ -14,19 +14,21 @@ class Cohort < ApplicationRecord
   end
 
   def self.current
-    date_range = (Date.current - 1.year + 1.day)..Date.current
-    where(academic_year_start_date: date_range).first
+    starting_within(Date.current - 1.year + 1.day, Date.current)
   end
 
   def self.next
-    date_range = (Date.current + 1.day)..(Date.current + 1.year)
-    where(academic_year_start_date: date_range).first
+    starting_within(Date.current + 1.day, Date.current + 1.year)
   end
 
   def self.previous
-    date_range = (Date.current - 2.years + 1.day)..(Date.current - 1.year)
-    where(academic_year_start_date: date_range).order(start_year: :desc).first
+    starting_within(Date.current - 2.years + 1.day, Date.current - 1.year)
   end
+
+  def self.starting_within(start_date, end_date)
+    find_by(academic_year_start_date: start_date..end_date)
+  end
+  private_class_method :starting_within
 
   # Instance Methods
 
