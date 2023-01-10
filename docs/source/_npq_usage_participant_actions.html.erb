@@ -138,3 +138,71 @@
 <p class="govuk-body-m">
   For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration, such as a start, retention-1 or completion, from 1 November 2021.
 </p>
+
+<h2 id="declaring-that-an-npq-participant-has-completed-their-course" class="govuk-heading-l">Declaring that an NPQ participant has completed their course</h2>
+<p class="govuk-body-m">This scenario begins after it has been confirmed that an NPQ participant has completed their course.</p>
+<p class="govuk-body-m">Providers should declare this when a participant has reached their final milestone and completed their NPQ course with a pass or fail outcome.</p>
+<p class="govuk-body-m">An explicit <code>completed</code> declaration is required to trigger output payments.</p>
+
+<h3 class="govuk-heading-m" id="provider-confirms-NPQ-participant-completed">1. Provider confirms an NPQ participant has completed their course.</h3>
+<p class="govuk-body-m">Confirm a participant has completed their NPQ course.</p>
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
+
+<p class="govuk-body-m">The request body must contain all attributes described in the <a href="/api-reference/reference-v1#schema-ecfparticipantstarteddeclaration" class="govuk-link">NPQ participant completed declaration</a>, including a value in the <code>has_passed</code> attribute.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference-v1#schema-singleparticipantdeclarationresponse" class="govuk-link">participant declaration</a>.</p>
+<p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1#api-v1-participant-declarations-post" class="govuk-link">confirm NPQ participant declarations</a> endpoint.</p>
+
+<h3 class="govuk-heading-m" id="provider-records-NPQ-participant-declaration-id-3">2. Provider records the NPQ participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned NPQ participant declaration ID for future management tasks.</p>
+
+<h2 id="removing-participant-declaration" class="govuk-heading-l">Removing a declaration submitted in error</h2>
+<p class="govuk-body-m">This scenario begins when a provider needs to correct participant data that may have been submitted in error.</p>
+<p class="govuk-body-m">This operation allows the provider to void a declaration that has been previously submitted.</p>
+
+<h3 class="govuk-heading-m" id="provider-voids-a-declaration">1. Provider voids a declaration</h3>
+<p class="govuk-body-m">Void an NPQ participant declaration</p>
+<p class="govuk-body-m"><pre><code>PUT /api/v1/participant-declarations/{id}/void</code></pre></p>
+<p class="govuk-body-m">This will return a <a href="/api-reference/reference-v1#schema-participantdeclarationresponse" class="govuk-link">participant declaration record</a> with the updates to the record included.</p>
+<p class="govuk-body-m">If providers void <code>completed</code> declarations where the participant had passed assessment (<code>"has_passed": true</code>), then this outcome will also be retracted and the participants will be notified.</p>
+<p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1#api-v1-participant-declarations-id-void-put" class="govuk-link">void participant declaration</a> endpoint.</p>
+
+<h2 id="listing-npq-participant-outcomes" class="govuk-heading-l">Listing NPQ participant outcomes</h2>
+<p class="govuk-body-m">This scenario begins after a provider has submitted a <code>completed</code> declaration for an NPQ participant and confirmed their outcome.</p>
+<p class="govuk-body-m">This operation allows the provider to view the most recent pass, fail or voided outcome for an NPQ participant.</p>
+
+<h3 class="govuk-heading-m">1. Provider views the latest outcome for an NPQ participant</h3>
+<p class="govuk-body-m">View outcomes for a specific NPQ participant.</p>
+<p class="govuk-body-m"><pre><code>GET /api/v1/participant/npq/{id}/outcomes</code></pre></p>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference-v3.html#schema-npqoutcomesresponse" class="govuk-link">NPQ outcomes response</a>, including a state value to show: </p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><p class="govuk-body-m">the most recent outcome submitted (<code>passed</code> or <code>failed</code>)</p></li>
+  <li><p class="govuk-body-m">if the <code>completed</code> declaration has been voided and the outcome retracted (<code>voided</code>)</p></li>
+</ul>
+<p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1.html#api-v1-participants-npq-participant_id-outcomes-get" class="govuk-link">participant outcome</a> endpoint.</p>
+
+<h3 class="govuk-heading-m">2. Provider views the latest outcomes for all NPQ participants</h3>
+<p class="govuk-body-m">View outcomes for all NPQ participants.</p>
+<p class="govuk-body-m"><pre><code>GET /api/v1/participant/npq/outcomes</code></pre></p>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference-v3.html#schema-npqoutcomesresponse" class="govuk-link">NPQ outcomes response</a>, including a state value to show: </p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><p class="govuk-body-m">the most recent outcomes submitted (<code>passed</code> or <code>failed</code>)</p></li>
+  <li><p class="govuk-body-m">if any <code>completed</code> declaration have been voided and the outcomes retracted (<code>voided</code>)</p></li>
+</ul>
+<p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1.html#api-v1-participants-npq-participant_id-outcomes-get" class="govuk-link">participant outcome</a> endpoint.</p>
+
+<h2 id="updating-npq-participant-outcomes" class="govuk-heading-l">Updating NPQ participant outcomes</h2>
+<p class="govuk-body-m">This scenario begins after a provider has submitted a <code>completed</code> declaration for a participant, including their course outcome.</p>
+<p class="govuk-body-m">This operation allows providers to update the outcome of the NPQ participant. Providers can also view a list of all <a href="/api-reference/npq-usage.html#checking-all-previously-submitted-declarations" class="govuk-link">previously submitted declarations</a>.</p>
+
+<h3 class="govuk-heading-m">1. Updating NPQ outcomes</h3>
+<p class="govuk-body-m">Providers may need to update an outcome if the previously submitted data was inaccurate. For example, a provider should update the outcome if:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><p class="govuk-body-m">the reported NPQ outcome was incorrect </p></li>
+  <li><p class="govuk-body-m">the reported date the participant received their outcome was incorrect</p></li>
+  <li><p class="govuk-body-m">a participant has retaken their NPQ assessment and their outcome has changed. </p></li>
+</ul>
+<p class="govuk-body-m">Submit an updated NPQ outcome. </p>
+<p class="govuk-body-m"><pre><code>GET /api/v1/participant/npq/{id}/outcomes</code></pre></p>
+<p class="govuk-body-m">The request body must contain all attributes described in the <a href="/api-reference/reference-v3.html#schema-npqoutcomerequest-example" class="govuk-link">NPQ participant outcome schema</a>, including updated values for the <code>completion_date</code> and <code>state</code> attributes.</p>
+<p class="govuk-body-m">This returns an <a href="/api-reference/reference-v3.html#schema-npqoutcomeresponse" class="govuk-link">NPQ outcomes response</a> including updates to the record.</p>
+<p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1.html#api-v1-participants-npq-participant_id-outcomes-post" class="govuk-link">NPQ outcomes endpoint.</a></p>
