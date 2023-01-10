@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with Support for ECTs example profiles", shared_context: :metadata do
+  let!(:cohort) { Cohort.current || create(:cohort, :current) }
+
   let(:core_induction_programme) { create(:core_induction_programme, name: "Teach First") }
   let(:cip_school_cohort) { create :school_cohort, induction_programme_choice: "core_induction_programme" }
   let(:cip_induction_programme) { create(:induction_programme, core_induction_programme:, training_programme: "core_induction_programme", school_cohort: cip_school_cohort) }
