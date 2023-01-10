@@ -4,10 +4,6 @@
   Details
 <% end %>
 
-<% content_for :before_content do %>
-  <%= govuk_back_link(href: admin_participants_path) %>
-<% end %>
-
 <% if @participant_profile.npq? %>
   <%= render partial: "show_npq" %>
 <% else %>

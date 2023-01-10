@@ -1,3 +1,7 @@
+<% content_for :before_content do %>
+  <%= govuk_back_link(href: admin_participants_path) %>
+<% end %>
+
 <%= render SubnavComponent.new do |component| %>
   <%= component.nav_item(path: admin_participant_details_path(@participant_profile)) do %>
     Details

@@ -6,4 +6,8 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<%= render Admin::Participants::Identities.new(identities: @participant_identities) %>
+<% if @participant_identities.none? %>
+  <p><%= @participant_profile.user.full_name %> has no identities.</p>
+<% else %>
+  <%= render Admin::Participants::Identities.new(identities: @participant_identities) %>
+<% end %>

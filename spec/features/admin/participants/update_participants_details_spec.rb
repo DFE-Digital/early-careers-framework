@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "./participant_details_steps"
+require_relative "./participant_steps"
 
 RSpec.feature "Admin should be able to update participants details", js: true, rutabaga: false do
-  include ParticipantDetailsSteps
+  include ParticipantSteps
 
   before do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
