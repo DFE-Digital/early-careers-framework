@@ -1,8 +1,4 @@
-<%= tag.h1 do %>
-  <%= tag.span(@user.full_name, class: "govuk-caption-m") %>
-
-  Details
-<% end %>
+<%= admin_participant_header_and_title(user: @user, section: "Details") %>
 
 <% if @participant_profile.npq? %>
   <%= render partial: "show_npq" %>

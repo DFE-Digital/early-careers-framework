@@ -46,4 +46,12 @@ module AdminHelper
 
     safe_join(parts.compact_blank, tag.br)
   end
+
+  def admin_participant_header_and_title(user:, section:)
+    content_for(:title) { "#{user.full_name} - #{section}" }
+
+    tag.h1 do
+      safe_join([tag.span(user.full_name, class: "govuk-caption-m"), section])
+    end
+  end
 end

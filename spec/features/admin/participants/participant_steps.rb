@@ -208,4 +208,8 @@ module ParticipantSteps
     expect(page).to have_css("h2", text: "Identities")
     expect(page).to have_text(@participant_profile_ect.user.email)
   end
+
+  def and_the_page_title_should_be(expected_title)
+    expect(page.title).to start_with(expected_title)
+  end
 end

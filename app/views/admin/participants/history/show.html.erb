@@ -1,8 +1,4 @@
-<%= tag.h1 do %>
-  <%= tag.span(@participant_profile.full_name, class: "govuk-caption-m") %>
-
-  History
-<% end %>
+<%= admin_participant_header_and_title(user: @participant_profile.user, section: "History") %>
 
 <%= render partial: "admin/participants/nav" %>
 

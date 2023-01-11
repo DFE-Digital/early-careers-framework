@@ -15,5 +15,6 @@ RSpec.feature "Admin should be able to see the participant's current school", js
     when_i_click_on_tab("School")
     then_i_should_be_on_the_participant_school_page
     and_i_should_see_the_current_schools_details
+    and_the_page_title_should_be("Sally Teacher - School")
   end
 end

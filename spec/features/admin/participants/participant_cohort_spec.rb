@@ -15,5 +15,6 @@ RSpec.feature "Admin should be able to see the participant's cohort details", js
     when_i_click_on_tab("Cohorts")
     then_i_should_be_on_the_participant_cohorts_page
     and_i_should_see_the_participant_cohorts
+    and_the_page_title_should_be("Sally Teacher - Cohort")
   end
 end

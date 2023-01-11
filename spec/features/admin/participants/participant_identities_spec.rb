@@ -15,5 +15,6 @@ RSpec.feature "Admin should be able to see the participant's identities", js: tr
     when_i_click_on_tab("Identities")
     then_i_should_be_on_the_participant_identities_page
     and_i_should_see_the_participant_identities
+    and_the_page_title_should_be("Sally Teacher - Identities")
   end
 end

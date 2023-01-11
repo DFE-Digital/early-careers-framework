@@ -15,5 +15,6 @@ RSpec.feature "Admin should be able to see the participant's history", js: true,
     when_i_click_on_tab("History")
     then_i_should_be_on_the_participant_history_page
     and_i_should_see_the_participant_history
+    and_the_page_title_should_be("Sally Teacher - History")
   end
 end
