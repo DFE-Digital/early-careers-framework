@@ -19,6 +19,7 @@ Rails.logger.info("Seeding database")
   "add_schedules.rb",
   "add_privacy_policy.rb",
   "add_lead_providers_and_cips.rb",
+  "add_npq_courses.rb",
   "add_seed_statements.rb",
   "add_users.rb",
   "add_appropriate_bodies.rb",
