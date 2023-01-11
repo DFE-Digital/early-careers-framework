@@ -85,7 +85,7 @@
 
       sl.row do |row|
         row.key(text: "Creation date")
-        row.value(text: induction_record.start_date&.to_s(:govuk))
+        row.value(text: induction_record.created_at&.to_s(:govuk))
       end
 
       sl.row do |row|
