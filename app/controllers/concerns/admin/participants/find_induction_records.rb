@@ -32,7 +32,7 @@ module Admin
             },
             mentor_profile: :user,
           )
-          .order(created_at: :desc)
+          .order(start_date: :desc, created_at: :desc)
       end
     end
   end
