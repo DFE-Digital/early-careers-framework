@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory(:seed_npq_course, class: "NPQCourse") do
     name { "NPQ Leading Teaching (#{SecureRandom.hex(6)})" }
+    identifier { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
 
     trait(:valid) {}
 
