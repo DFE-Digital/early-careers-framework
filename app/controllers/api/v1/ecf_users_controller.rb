@@ -8,7 +8,7 @@ module Api
       include ApiFilter
 
       def index
-        render json: ECFUserSerializer.new(paginate(users)).serializable_hash.to_json
+        render json: ECFInductionRecordSerializer.new(paginate(users)).serializable_hash.to_json
       end
 
       def create
@@ -48,7 +48,7 @@ module Api
       end
 
       def users
-        Api::V1::ECF::UsersQuery.new(updated_since:, email:).all
+        Api::V1::ECF::InductionRecordsQuery.new(updated_since:, email:).all
       end
     end
   end
