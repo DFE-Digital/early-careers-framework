@@ -3,16 +3,18 @@
 module NewSeeds
   module Scenarios
     class NPQ
-      attr_reader :user, :application, :participant_identity, :participant_profile, :npq_lead_provider
+      attr_reader :user, :application, :participant_identity, :participant_profile, :npq_lead_provider, :npq_course
 
-      def initialize(user: nil, lead_provider: nil)
+      def initialize(user: nil, lead_provider: nil, npq_course: nil)
         @supplied_user = user
         @supplied_lead_provider = lead_provider
+        @supplied_npq_course = npq_course
       end
 
       def build
         @user = @supplied_user || FactoryBot.create(:seed_user, :valid)
         @npq_lead_provider = @supplied_lead_provider || FactoryBot.create(:seed_npq_lead_provider, :valid)
+        @npq_course = @supplied_npq_course || FactoryBot.create(:seed_npq_course, :valid)
 
         @participant_identity = user&.participant_identities&.sample ||
           FactoryBot.create(:seed_participant_identity, user:)
@@ -30,6 +32,7 @@ module NewSeeds
           :valid,
           participant_identity:,
           npq_lead_provider:,
+          npq_course:,
 
           # it turns out that we don't find the NPQ application via the participant identity but
           # instead by the `has_one` on participant profile. The id of the NPQ application needs
@@ -47,6 +50,7 @@ module NewSeeds
           :seed_npq_participant_declaration,
           user:,
           participant_profile:,
+          course_identifier: npq_course.identifier,
           cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
         )
 
