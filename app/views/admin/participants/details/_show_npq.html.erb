@@ -1,0 +1,12 @@
+<%=
+  render Admin::NPQ::Participants::Details.new(
+    profile: @participant_profile,
+    npq_application: @participant_profile.npq_application,
+    school: @participant_profile.school,
+    user: @participant_profile.user,
+  )
+%>
+
+<%= render Admin::NPQ::Participants::ValidationTasks.new(profile: @participant_profile) %>
+
+<%= render Admin::Participants::Identities.new(identities: @participant_profile.user.participant_identities) %>

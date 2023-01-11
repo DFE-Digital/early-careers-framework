@@ -1,6 +1,10 @@
+<%= admin_participant_header_and_title(user: @participant_profile.user, section: "Induction records") %>
+
+<%= render partial: "admin/participants/nav" %>
+
 <h2 class="govuk-heading-m">Induction records</h2>
 
-<% induction_records.each do |induction_record| %>
+<% @all_induction_records.each do |induction_record| %>
   <%= tag.h3(induction_record.id, class: "govuk-heading-s") %>
 
   <%=
@@ -73,6 +77,11 @@
       sl.row do |row|
         row.key(text: "Appropriate body")
         row.value(text: induction_record.appropriate_body_name)
+      end
+
+      sl.row do |row|
+        row.key(text: "Creation date")
+        row.value(text: induction_record.created_at&.to_s(:govuk))
       end
 
       sl.row do |row|

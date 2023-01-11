@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require_relative "../participants/participant_details_steps"
+require_relative "../participants/participant_steps"
 
 RSpec.feature "Admin can add notes to a participants record in the admin console", js: true, rutabaga: false do
-  include ParticipantDetailsSteps
+  include ParticipantSteps
+
   before do
     given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     and_i_am_signed_in_as_an_admin

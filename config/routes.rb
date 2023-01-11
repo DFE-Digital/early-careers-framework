@@ -239,7 +239,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get "admin", to: "admin/home#show"
   namespace :admin do
+    resource :home, only: :show, controller: "home"
     resources :schools, only: %i[index show] do
       resources :induction_coordinators, controller: "schools/induction_coordinators", only: %i[new create edit update], path: "induction-coordinators"
       get "/replace-or-update-induction-tutor", to: "schools/replace_or_update_induction_tutor#show"
@@ -263,7 +265,30 @@ Rails.application.routes.draw do
       resource :cohort2020, controller: "schools/cohort2020", only: %i[show new create]
     end
 
-    resources :participants, only: %i[show index destroy] do
+    resources :participants, only: %i[index destroy] do
+      get "/", to: redirect("/admin/participants/%{participant_id}/details")
+      resource :details, only: :show, controller: "participants/details"
+      resource :school, only: :show, controller: "participants/school"
+      resource :history, only: :show, controller: "participants/history"
+      resource :induction_records, only: :show, controller: "participants/induction_records"
+      resource :cohorts, only: :show, controller: "participants/cohorts"
+      resource :declaration_history, only: :show, controller: "participants/declaration_history"
+      resource :identities, only: :show, controller: "participants/identities"
+
+      resource :validation_data, path: "validation-data", only: :show, controller: "participants/validation_data" do
+        member do
+          get "full-name", action: :full_name, as: :full_name
+          put "full-name", action: :full_name
+          get "teacher-reference-number", action: :trn, as: :trn
+          put "teacher-reference-number", action: :trn
+          get "date-of-birth", action: :date_of_birth, as: :date_of_birth
+          put "date-of-birth", action: :date_of_birth
+          get "national-insurance-number", action: :nino, as: :nino
+          put "national-insurance-number", action: :nino
+          post "validate-details", action: :validate_details, as: :validate_details
+        end
+      end
+
       member do
         get :edit_name, path: "edit-name"
         put :update_name, path: "update-name"
@@ -296,20 +321,6 @@ Rails.application.routes.draw do
           get "check-answers", action: :check_answers, as: :check_answers
           put "check-answers", action: :check_answers
           get "cannot-transfer", action: :cannot_transfer, as: :cannot_transfer
-        end
-      end
-
-      resource :validation_data, path: "validation-data", only: [], controller: "participants/validation_data" do
-        member do
-          get "full-name", action: :full_name, as: :full_name
-          put "full-name", action: :full_name
-          get "teacher-reference-number", action: :trn, as: :trn
-          put "teacher-reference-number", action: :trn
-          get "date-of-birth", action: :date_of_birth, as: :date_of_birth
-          put "date-of-birth", action: :date_of_birth
-          get "national-insurance-number", action: :nino, as: :nino
-          put "national-insurance-number", action: :nino
-          post "validate-details", action: :validate_details, as: :validate_details
         end
       end
     end

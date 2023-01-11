@@ -13,7 +13,7 @@ module Admin
       @participant_profile.assign_attributes(note_params)
 
       if @participant_profile.save
-        redirect_to admin_participant_path
+        redirect_to admin_participant_path(@participant_profile)
       else
         render action: "edit"
       end

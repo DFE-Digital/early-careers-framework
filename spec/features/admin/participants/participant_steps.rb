@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ParticipantDetailsSteps
+module ParticipantSteps
   include Capybara::DSL
 
   # Given
@@ -10,6 +10,15 @@ module ParticipantDetailsSteps
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort)
+  end
+
+  def setup_participant
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    and_i_am_signed_in_as_an_admin
+    and_i_have_added_an_ect
+    and_i_have_added_a_mentor
+    when_i_visit_admin_participants_dashboard
+    then_i_should_see_a_list_of_participants
   end
 
   # When
@@ -46,6 +55,10 @@ module ParticipantDetailsSteps
     fill_in "notes", with: "The participants notes have been updated"
   end
 
+  def when_i_click_on_tab(text)
+    within(".app-subnav") { click_on(text) }
+  end
+
   # Then
 
   def then_i_should_be_on_the_edit_name_page
@@ -58,14 +71,14 @@ module ParticipantDetailsSteps
 
   def then_i_should_see_the_ects_details
     expect(page).to have_text(@participant_profile_ect.user.full_name)
-    have_link "Change", href: edit_name_admin_participant_path(id: @participant_profile_ect.id)
-    have_link "Change", href: edit_email_admin_participant_path(id: @participant_profile_ect.id)
+    have_link "Change", href: edit_name_admin_participant_path(@participant_profile_ect.id)
+    have_link "Change", href: edit_email_admin_participant_path(@participant_profile_ect.id)
   end
 
   def then_i_should_see_the_mentors_details
     expect(page).to have_text(@participant_profile_mentor.user.full_name)
-    have_link "Change", href: edit_name_admin_participant_path(id: @participant_profile_mentor.id)
-    have_link "Change", href: edit_email_admin_participant_path(id: @participant_profile_mentor.id)
+    have_link "Change", href: edit_name_admin_participant_path(@participant_profile_mentor.id)
+    have_link "Change", href: edit_email_admin_participant_path(@participant_profile_mentor.id)
   end
 
   def then_i_should_see_a_list_of_participants
@@ -101,6 +114,34 @@ module ParticipantDetailsSteps
     expect(page).to have_text("Enter an email address in the correct format, like name@example.com")
   end
 
+  def then_i_should_be_on_the_participant_school_page
+    expect(current_path).to eql(admin_participant_school_path(@participant_profile_ect))
+  end
+
+  def then_i_should_be_on_the_participant_history_page
+    expect(current_path).to eql(admin_participant_history_path(@participant_profile_ect))
+  end
+
+  def then_i_should_be_on_the_participant_induction_records_page
+    expect(current_path).to eql(admin_participant_induction_records_path(@participant_profile_ect))
+  end
+
+  def then_i_should_be_on_the_participant_cohorts_page
+    expect(current_path).to eql(admin_participant_cohorts_path(@participant_profile_ect))
+  end
+
+  def then_i_should_be_on_the_participant_declaration_history_page
+    expect(current_path).to eql(admin_participant_declaration_history_path(@participant_profile_ect))
+  end
+
+  def then_i_should_be_on_the_participant_validation_data_page
+    expect(current_path).to eql(admin_participant_validation_data_path(@participant_profile_ect))
+  end
+
+  def then_i_should_be_on_the_participant_identities_page
+    expect(current_path).to eql(admin_participant_identities_path(@participant_profile_ect))
+  end
+
   # And
 
   def and_i_have_added_an_ect
@@ -132,5 +173,43 @@ module ParticipantDetailsSteps
 
   def and_the_notes_that_have_been_added
     expect(page).to have_text("The participants notes have been updated")
+  end
+
+  def and_i_should_see_the_current_schools_details
+    expect(page).to have_text(@school.urn)
+    expect(page).to have_text(@school.name)
+  end
+
+  def and_i_should_see_the_participant_history
+    expect(page).to have_css("h2", text: "Key events")
+  end
+
+  def and_i_should_see_the_participant_induction_records
+    expect(page).to have_css("h2", text: "Induction records")
+  end
+
+  def and_i_should_see_the_participant_cohorts
+    expect(page).to have_text("Cohort")
+    expect(page).to have_link("Change cohort")
+  end
+
+  def and_i_should_see_the_participant_declaration_history
+    expect(page).to have_text("has no declarations")
+  end
+
+  def and_i_should_see_the_participant_validation_data
+    expect(page).to have_text("Full name")
+    expect(page).to have_text("Date of birth")
+    expect(page).to have_text("Teacher Reference Number")
+    expect(page).to have_text("National Insurance Number")
+  end
+
+  def and_i_should_see_the_participant_identities
+    expect(page).to have_css("h2", text: "Identities")
+    expect(page).to have_text(@participant_profile_ect.user.email)
+  end
+
+  def and_the_page_title_should_be(expected_title)
+    expect(page.title).to start_with(expected_title)
   end
 end

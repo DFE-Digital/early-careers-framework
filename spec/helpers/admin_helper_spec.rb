@@ -36,8 +36,8 @@ RSpec.describe AdminHelper, type: :helper do
 
     describe "#all_emails_associated_with_a_user" do
       it "returns all emails associated with a user" do
-        latest_induction_record = profile.induction_records.active.latest
-        users_emails = helper.all_emails_associated_with_a_user(latest_induction_record)
+        user = profile.user
+        users_emails = helper.all_emails_associated_with_a_user(user)
         expect(users_emails).to include(user.email)
         expect(users_emails).to include("login2@example.com")
       end
@@ -85,6 +85,16 @@ RSpec.describe AdminHelper, type: :helper do
       expect(format_address("a")).to eql("a")
       expect(format_address("a", "b")).to eql("a<br>b")
       expect(format_address("a", "b", "c")).to eql("a<br>b<br>c")
+    end
+  end
+
+  describe "#admin_participant_header_and_title" do
+    let(:fake_user) { OpenStruct.new(full_name: "Joey") }
+    subject { admin_participant_header_and_title(section: "ABC", user: fake_user) }
+
+    it "returns a h1 tag the section that has a caption containing the user name" do
+      expect(subject).to have_css("h1", text: /ABC/)
+      expect(subject).to have_css(".govuk-caption-m", text: "Joey")
     end
   end
 end

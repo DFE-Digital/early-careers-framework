@@ -1,10 +1,10 @@
 <% content_for :title, "Participant notes" %>
-<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participant_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participant_path(@participant_profile)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
    <span class="govuk-caption-l"><%= @participant_profile.user.full_name %></span>
-    <%= form_for @participant_profile, as: :participant_profile, url: admin_note_path, method: :put do |f| %>
+    <%= form_for @participant_profile, as: :participant_profile, url: admin_note_path(@participant_profile), method: :put do |f| %>
 
       <%= f.govuk_text_area(
             :notes,
@@ -13,7 +13,7 @@
             width: "three-quarters",
             label: { text: "Add notes", tag: "h1", size: "xl" },
             hint: { text: "Give details about any changes made to this participant. Notes are for internal use only" }
-            )%>
+            ) %>
 
       <%= f.submit "Save", class: "govuk-button" %>
     <% end %>

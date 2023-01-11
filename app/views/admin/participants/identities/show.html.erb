@@ -1,0 +1,9 @@
+<%= admin_participant_header_and_title(user: @participant_profile.user, section: "Identities") %>
+
+<%= render partial: "admin/participants/nav" %>
+
+<% if @participant_identities.none? %>
+  <p><%= @participant_profile.user.full_name %> has no identities.</p>
+<% else %>
+  <%= render Admin::Participants::Identities.new(identities: @participant_identities) %>
+<% end %>

@@ -2,10 +2,16 @@
 
 module Admin::Participants
   class ValidationDataController < Admin::BaseController
-    before_action :load_participant_profile
+    include RetrieveProfile
+
     before_action :load_validation_data_form, except: :validate_details
     before_action :check_can_update_validation_data, if: -> { request.put? || request.post? }
     before_action :save_and_redirect, except: :validate_details
+
+    def show
+      @validation_data = @participant_profile.ecf_participant_validation_data || ECFParticipantValidationData.new(participant_profile: @participant_profile)
+      @eligibility_data = ::EligibilityPresenter.new(@participant_profile.ecf_participant_eligibility)
+    end
 
     def full_name; end
 
@@ -62,12 +68,6 @@ module Admin::Participants
 
     def validation_page
       admin_participant_path(@participant_profile, anchor: "validation-data")
-    end
-
-    def load_participant_profile
-      @participant_profile = policy_scope(ParticipantProfile).find(params[:participant_id]).tap do |participant_profile|
-        authorize participant_profile, :update?, policy_class: participant_profile.policy_class
-      end
     end
 
     def has_npq_profile?

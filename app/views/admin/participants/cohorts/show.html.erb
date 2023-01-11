@@ -1,0 +1,21 @@
+<%= admin_participant_header_and_title(user: @participant_profile.user, section: "Cohorts") %>
+
+<%= render partial: "admin/participants/nav" %>
+
+<%= govuk_warning_text do %>
+  This is a temporary tab intended to help debug the multiple cohort problems.
+<% end %>
+
+<%= govuk_summary_list do |sl|
+  sl.row do |row|
+    row.key(text: "Cohort (via induction record)")
+    row.value(text: @latest_induction_record&.cohort&.start_year)
+  end
+
+  sl.row do |row|
+    row.key(text: "Cohort (via schedule)")
+    row.value(text: @latest_induction_record&.schedule&.cohort&.start_year)
+  end
+end %>
+
+<%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@latest_induction_record.participant_profile), secondary: true) %>
