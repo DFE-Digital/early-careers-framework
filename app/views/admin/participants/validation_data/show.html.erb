@@ -1,4 +1,10 @@
-<%= admin_participant_header_and_title(user: @participant_profile.user, section: "Validation data") %>
+<%=
+  admin_participant_header_and_title(
+    full_name: @participant_profile.full_name,
+    role: @participant_profile.role,
+    section: "Validation data"
+  )
+%>
 
 <%= render partial: "admin/participants/nav" %>
 

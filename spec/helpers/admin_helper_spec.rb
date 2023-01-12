@@ -89,12 +89,11 @@ RSpec.describe AdminHelper, type: :helper do
   end
 
   describe "#admin_participant_header_and_title" do
-    let(:fake_user) { OpenStruct.new(full_name: "Joey") }
-    subject { admin_participant_header_and_title(section: "ABC", user: fake_user) }
+    subject { admin_participant_header_and_title(section: "ABC", full_name: "Joey", role: "mentor") }
 
     it "returns a h1 tag the section that has a caption containing the user name" do
       expect(subject).to have_css("h1", text: /ABC/)
-      expect(subject).to have_css(".govuk-caption-m", text: "Joey")
+      expect(subject).to have_css(".govuk-caption-m", text: "Joey (mentor)")
     end
   end
 end

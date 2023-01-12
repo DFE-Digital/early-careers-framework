@@ -1,4 +1,10 @@
-<%= admin_participant_header_and_title(user: @participant_profile.user, section: "Induction records") %>
+<%=
+  admin_participant_header_and_title(
+    full_name: @participant_profile.full_name,
+    role: @participant_profile.role,
+    section: "Induction records"
+  )
+%>
 
 <%= render partial: "admin/participants/nav" %>
 
