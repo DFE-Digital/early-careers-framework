@@ -30,6 +30,10 @@ private
         .or(User.email_matches(search_term))
         .or(ParticipantIdentity.email_matches(search_term))
         .or(TeacherProfile.trn_matches(search_term))
+        .or(ParticipantProfile.where(id: search_term))
+        .or(TeacherProfile.where(id: search_term))
+        .or(User.where(id: search_term))
+        .or(ParticipantIdentity.where(external_identifier: search_term))
     else
       User.all
     end
