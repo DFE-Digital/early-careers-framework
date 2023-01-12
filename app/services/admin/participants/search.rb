@@ -33,6 +33,7 @@ private
         .or(ParticipantProfile.where(id: search_term))
         .or(TeacherProfile.where(id: search_term))
         .or(User.where(id: search_term))
+        .or(ParticipantIdentity.where(external_identifier: search_term))
     else
       User.all
     end
