@@ -68,6 +68,20 @@ RSpec.describe Admin::Participants::Search, :with_default_schedules do
           expect(results).not_to include(pp_1, pp_2)
         end
       end
+
+      describe "matching by participant profile id" do
+        let(:search_term) { pp_1.id }
+
+        let(:results) { search.call(ParticipantProfile, search_term:) }
+
+        it "returns matching participants" do
+          expect(results).to include(pp_1)
+        end
+
+        it "doesn't return non-matching participants" do
+          expect(results).not_to include(pp_2, pp_3)
+        end
+      end
     end
   end
 end
