@@ -3565,7 +3565,7 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "npq-outcome-confirmation"
+            "example": "participant-outcome"
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQOutcomeAttributes"
@@ -3607,13 +3607,12 @@
             "example": "npq-leading-teaching"
           },
           "state": {
-            "description": "The state of the outcome (passed, failed or voided)",
+            "description": "The state of the outcome (passed or failed)",
             "type": "string",
             "nullable": false,
             "enum": [
               "passed",
-              "failed",
-              "voided"
+              "failed"
             ],
             "example": "passed"
           },
@@ -3623,7 +3622,7 @@
             "example": "2021-05-31"
           },
           "created_at": {
-            "description": "The date you created the latest npq-outcome-confirmation record",
+            "description": "The date you created the participant-outcome record",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           }
@@ -3710,7 +3709,7 @@
         }
       },
       "NPQOutcomeResponse": {
-        "description": "A list of NPQ outcomes",
+        "description": "The details of an NPQ Outcome",
         "type": "object",
         "required": [
           "data"
@@ -4471,6 +4470,12 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": true,
+            "nullable": true
           }
         }
       },

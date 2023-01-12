@@ -1,4 +1,4 @@
-description: "An NPQ outcome"
+description: "The details of an NPQ outcome"
 type: object
 required:
   - id
