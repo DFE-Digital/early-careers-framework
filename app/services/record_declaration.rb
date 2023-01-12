@@ -11,7 +11,7 @@ class RecordDeclaration
   attribute :declaration_type
   attribute :participant_id
   attribute :evidence_held
-  attribute :has_passed, :boolean
+  attribute :has_passed
 
   before_validation :declaration_attempt
 
@@ -27,8 +27,7 @@ class RecordDeclaration
               if: :validate_evidence_held?,
               message: I18n.t(:invalid_evidence_type),
             }
-  validates :has_passed, inclusion: { in: [true, false], message: I18n.t(:missing_has_passed) }, if: :validate_has_passed?
-
+  validate :validate_has_passed_field, if: :validate_has_passed?
   validate :validate_milestone_exists
   validate :validates_billable_slot_available
 
@@ -198,6 +197,16 @@ private
     end
   end
 
+  def validate_has_passed_field
+    self.has_passed = has_passed.to_s
+
+    if has_passed.blank?
+      errors.add(:has_passed, I18n.t(:missing_has_passed))
+    elsif !%w[true false].include?(has_passed)
+      errors.add(:has_passed, I18n.t(:invalid_has_passed))
+    end
+  end
+
   def validate_has_passed?
     return false unless FeatureFlag.active?(:participant_outcomes_feature)
 
@@ -206,7 +215,7 @@ private
   end
 
   def participant_outcome_state
-    has_passed ? "passed" : "failed"
+    has_passed.to_s == "true" ? "passed" : "failed"
   end
 
   def create_participant_outcome

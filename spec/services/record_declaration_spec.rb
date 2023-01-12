@@ -345,6 +345,15 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
         end
       end
 
+      context "has_passed is invalid text" do
+        let(:has_passed) { "no_supported" }
+
+        it "returns error" do
+          expect(service).to be_invalid
+          expect(service.errors.messages_for(:has_passed)).to eq(["The property '#/has_passed' must be true or false"])
+        end
+      end
+
       context "has_passed is true" do
         let(:has_passed) { true }
 
@@ -361,8 +370,40 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
         end
       end
 
+      context "has_passed is 'true'" do
+        let(:has_passed) { "true" }
+
+        it "creates participant outcome" do
+          travel_to declaration_date do
+            expect(service).to be_valid
+            participant_declaration = service.call
+            expect(participant_declaration.outcomes.count).to be(1)
+
+            outcome = participant_declaration.outcomes.first
+            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
+            expect(outcome).to be_passed
+          end
+        end
+      end
+
       context "has_passed is false" do
         let(:has_passed) { false }
+
+        it "does not create participant outcome" do
+          travel_to declaration_date do
+            expect(service).to be_valid
+            participant_declaration = service.call
+            expect(participant_declaration.outcomes.count).to be(1)
+
+            outcome = participant_declaration.outcomes.first
+            expect(outcome.completion_date).to eql(participant_declaration.declaration_date.to_date)
+            expect(outcome).to be_failed
+          end
+        end
+      end
+
+      context "has_passed is 'false'" do
+        let(:has_passed) { "false" }
 
         it "does not create participant outcome" do
           travel_to declaration_date do

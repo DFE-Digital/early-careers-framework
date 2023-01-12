@@ -65,6 +65,7 @@ en:
   invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
   invalid_reason: "The property '#/reason' must be a valid reason"
   invalid_state: "The property '#/state' must be a valid state"
+  invalid_has_passed: "The property '#/has_passed' must be true or false"
   no_started_declaration_found: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
   schedule_already_on_the_profile: Selected schedule is already on the profile
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
