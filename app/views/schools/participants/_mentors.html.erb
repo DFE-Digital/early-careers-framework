@@ -36,15 +36,15 @@
   <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Eligible to start</h2>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-  <% if @school_cohort.core_induction_programme? %>
-    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
-  <% elsif @school_cohort.delivery_partner.present? %>
-    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
-  <% else %>
-    <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
-  <% end %>
+      <% if @school_cohort.core_induction_programme? %>
+        <p class="govuk-body">We’ve confirmed these people are eligible for this programme. They have access to their materials.</p>
+      <% elsif @school_cohort.delivery_partner.present? %>
+        <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.</p>
+      <% else %>
+        <p class="govuk-body">We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.</p>
+      <% end %>
+    </div>
   </div>
-</div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible">
     <% if FeatureFlag.active?(:change_of_circumstances) %>
@@ -54,4 +54,3 @@
     <% end %>
   </table>
 <% end %>
-

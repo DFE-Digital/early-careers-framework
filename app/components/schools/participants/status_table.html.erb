@@ -1,18 +1,19 @@
 <thead class="govuk-table__head">
   <tr class="govuk-table__row">
-  <% if ineligible_participants? %>
-    <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Name</th>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
-  <% else %>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
-
-    <% if school_cohort.school_chose_cip? %>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-half">Materials supplier</th>
+    <% if ineligible_participants? %>
+      <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Name</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
     <% else %>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Lead provider</th>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Delivery partner</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+
+      <% if school_cohort.school_chose_cip? %>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-half">Materials supplier</th>
+      <% else %>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Lead provider</th>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Delivery partner</th>
+      <% end %>
     <% end %>
-  <% end %>
+    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"></th>
   </tr>
 </thead>
 

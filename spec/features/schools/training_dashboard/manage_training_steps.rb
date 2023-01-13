@@ -633,6 +633,10 @@ module ManageTrainingSteps
     click_on name
   end
 
+  def when_i_go_to_manage_the_participant_named(name)
+    click_on "Manage #{name}"
+  end
+
   def when_i_navigate_to_participants_dashboard(action: "Manage")
     when_i_click_on_summary_row_action("ECTs and mentors", action)
     then_i_am_taken_to_your_ect_and_mentors_page

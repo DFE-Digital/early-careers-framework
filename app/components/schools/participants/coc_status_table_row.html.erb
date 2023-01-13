@@ -1,17 +1,17 @@
 <tr class="govuk-table__row">
   <% if ineligible_participant? && !mentor_in_early_rollout? %>
-    <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to induction_record.user.full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids) %></td>
+    <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to induction_record.user.full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids), class: "govuk-link--no-visited-state" %></td>
     <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
 
   <% elsif transferred? %>
 
-    <td class="govuk-table__cell govuk-!-width-one-half"><%= govuk_link_to induction_record.user.full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids) %></td>
+    <td class="govuk-table__cell govuk-!-width-one-half"><%= govuk_link_to induction_record.user.full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids), class: "govuk-link--no-visited-state" %></td>
     <td class="govuk-table__cell govuk-!-width-one-quarter"><%= induction_record.end_date.to_date.to_s(:govuk) %></td>
     <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
 
   <% else %>
 
-    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to induction_record.user.full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids) %></td>
+    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= govuk_link_to induction_record.user.full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids), class: "govuk-link--no-visited-state" %></td>
 
     <% if induction_record.enrolled_in_cip? %>
       <td class="govuk-table__cell govuk-!-width-one-half"><%= induction_record.induction_programme.core_induction_programme&.name %></td>
@@ -22,4 +22,10 @@
 
     <td class="govuk-table__cell govuk-!-width-one-quarter"><%= date_column_value %></td>
   <% end %>
+  <td class="govuk-table__cell govuk-!-width-one-quarter">
+    <%= govuk_link_to schools_participant_path(id: induction_record.participant_profile_id, **path_ids),
+                      class: "govuk-link--no-visited-state" do %>
+      Manage <span class="govuk-visually-hidden"><%= induction_record.user.full_name %></span>
+    <% end %>
+  </td>
 </tr>

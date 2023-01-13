@@ -1,23 +1,24 @@
 <thead class="govuk-table__head">
   <tr class="govuk-table__row">
-  <% if ineligible_participants? %>
-    <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Name</th>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
-  <% elsif transferred_participants? %>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Name</th>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Transferred</th>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
-  <% else %>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
-
-    <% if school_chose_cip? %>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-half">Materials supplier</th>
+    <% if ineligible_participants? %>
+      <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Name</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
+    <% elsif transferred_participants? %>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-half">Name</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Transferred</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Action required</th>
     <% else %>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Lead provider</th>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Delivery partner</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+
+      <% if school_chose_cip? %>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-half">Materials supplier</th>
+      <% else %>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Lead provider</th>
+        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Delivery partner</th>
+      <% end %>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><%= date_column_heading %></th>
     <% end %>
-    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"><%= date_column_heading %></th>
-  <% end %>
+    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter"></th>
   </tr>
 </thead>
 
