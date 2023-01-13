@@ -51,7 +51,17 @@ module AdminHelper
     content_for(:title) { "#{full_name} - #{section}" }
 
     tag.h1 do
-      safe_join([tag.span("#{full_name} (#{role.downcase})", class: "govuk-caption-m"), section])
+      safe_join([tag.span("#{full_name} - #{role}", class: "govuk-caption-m"), section])
+    end
+  end
+
+  def admin_participant_role_name(class_name)
+    case class_name
+    when "ParticipantProfile::Mentor" then "Mentor"
+    when "ParticipantProfile::ECT" then "ECT"
+    when "ParticipantProfile::NPQ" then "NPQ"
+    else
+      "unknown"
     end
   end
 end

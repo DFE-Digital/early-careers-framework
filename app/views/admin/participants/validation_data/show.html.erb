@@ -1,7 +1,7 @@
 <%=
   admin_participant_header_and_title(
     full_name: @participant_profile.full_name,
-    role: @participant_profile.role,
+    role: admin_participant_role_name(@participant_profile.class.name),
     section: "Validation data"
   )
 %>
