@@ -1,4 +1,10 @@
-<%= admin_participant_header_and_title(user: @participant_profile.user, section: "Declaration history") %>
+<%=
+  admin_participant_header_and_title(
+    full_name: @participant_profile.full_name,
+    role: admin_participant_role_name(@participant_profile.class.name),
+    section: "Declaration history"
+  )
+%>
 
 <%= render partial: "admin/participants/nav" %>
 
