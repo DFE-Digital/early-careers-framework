@@ -4269,13 +4269,13 @@
       "NPQParticipantDeclarationAttributes": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
           }
         ]
       },

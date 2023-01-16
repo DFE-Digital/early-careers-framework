@@ -159,7 +159,7 @@
 <p class="govuk-body-m">This scenario begins after it has been confirmed that an NPQ participant has completed enough of their course to meet a milestone.</p>
 
 <h3 class="govuk-heading-m" id="provider-confirms-NPQ-participant-has-been-retained">1. Provider confirms an NPQ participant has been retained</h3>
-<p class="govuk-body-m">1. Confirm an NPQ participant has been retained by the appropriate number of months for this retained event on their NPQ course.</p>
+<p class="govuk-body-m">Confirm an NPQ participant has been retained by the appropriate number of months for this retained event on their NPQ course.</p>
 <p class="govuk-body-m">An explicit <code>retained-x</code> declaration is required to trigger output payments. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.</p>
 <p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
 
@@ -179,7 +179,7 @@
 <p class="govuk-body-m">Confirm a participant has completed their NPQ course.</p>
 <p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
 
-<p class="govuk-body-m">The request body must contain all attributes described in the <a href="/api-reference/reference-v3.html#schema-npqparticipantcompleteddeclarationattributes" class="govuk-link">NPQ participant completed declaration</a>, including a value in the <code>has_passed</code> attribute.</p>
+<p class="govuk-body-m">The request body must contain all attributes described in the <a href="/api-reference/reference-v1.html#schema-npqparticipantdeclarationcompletedattributesrequest" class="govuk-link">NPQ participant completed declaration</a>, including a value in the <code>has_passed</code> attribute.</p>
 <p class="govuk-body-m">This returns <a href="/api-reference/reference-v1#schema-singleparticipantdeclarationresponse" class="govuk-link">participant declaration</a>.</p>
 <p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1#api-v1-participant-declarations-post" class="govuk-link">confirm NPQ participant declarations</a> endpoint.</p>
 
@@ -204,7 +204,7 @@
 <h3 class="govuk-heading-m">1. Provider views outcomes for an NPQ participant</h3>
 <p class="govuk-body-m">View outcomes for a specific NPQ participant.</p>
 <p class="govuk-body-m"><pre><code>GET /api/v1/participant/npq/{participant_id}/outcomes</code></pre></p>
-<p class="govuk-body-m">This will return an <a href="/api-reference/reference-v3.html#schema-npqoutcomesresponse" class="govuk-link">NPQ outcomes response</a>, including a <code>state</code> value to show: </p>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference-v1.html#schema-npqoutcomesresponse" class="govuk-link">NPQ outcomes response</a>, including a <code>state</code> value to show: </p>
 <ul class="govuk-list govuk-list--bullet">
   <li><p class="govuk-body-m">outcomes submitted (<code>passed</code> or <code>failed</code>)</p></li>
   <li><p class="govuk-body-m">if the <code>completed</code> declaration has been voided and the outcome retracted (<code>voided</code>)</p></li>
@@ -214,7 +214,7 @@
 <h3 class="govuk-heading-m">2. Provider views outcomes for all NPQ participants</h3>
 <p class="govuk-body-m">View outcomes for all NPQ participants.</p>
 <p class="govuk-body-m"><pre><code>GET /api/v1/participant/npq/outcomes</code></pre></p>
-<p class="govuk-body-m">This will return an <a href="/api-reference/reference-v3.html#schema-npqoutcomesresponse" class="govuk-link">NPQ outcomes response</a>, including <code>state</code> values to show: </p>
+<p class="govuk-body-m">This will return an <a href="/api-reference/reference-v1.html#schema-npqoutcomesresponse" class="govuk-link">NPQ outcomes response</a>, including <code>state</code> values to show: </p>
 <ul class="govuk-list govuk-list--bullet">
   <li><p class="govuk-body-m">outcomes submitted (<code>passed</code> or <code>failed</code>)</p></li>
   <li><p class="govuk-body-m">if any <code>completed</code> declarations have been voided and the outcomes retracted (<code>voided</code>)</p></li>
