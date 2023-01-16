@@ -82,7 +82,7 @@ RSpec.describe NPQ::CreateParticipantOutcome, :with_default_schedules do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:state)).to include("The property '#/state' must be a valid state")
+        expect(service.errors.messages_for(:state)).to include("The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration")
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe NPQ::CreateParticipantOutcome, :with_default_schedules do
       it "is invalid returning a meaningful error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.full_messages).to include("The participant has no completed declarations")
+        expect(service.errors.full_messages).to include("The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome")
       end
     end
 

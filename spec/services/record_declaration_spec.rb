@@ -94,7 +94,7 @@ RSpec.shared_examples "validates existing declarations" do
       it "does not create close duplicates and throws an error", :aggregate_failures do
         expect(service).to be_invalid
         expect(service.errors.messages_for(:base))
-          .to eql(["There already exists a declaration that will be or has been paid for this event"])
+          .to eql(["A declaration has already been submitted that will be, or has been, paid for this event"])
       end
     end
 
@@ -341,7 +341,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
         it "returns error" do
           expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["The property '#/has_passed' must be present for completed declaration types"])
+          expect(service.errors.messages_for(:has_passed)).to eq(["The attribute '#/has_passed' must be included as part of 'completed' declaration submissions. Values can be 'true' or 'false' to indicate whether the participant has passed or failed their course"])
         end
       end
 
@@ -350,7 +350,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
 
         it "returns error" do
           expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["The property '#/has_passed' must be true or false"])
+          expect(service.errors.messages_for(:has_passed)).to eq(["The attribute '#/has_passed' can only include 'true' or 'false' values to indicate whether the participant has passed or failed their course"])
         end
       end
 

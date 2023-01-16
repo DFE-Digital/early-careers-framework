@@ -50,7 +50,7 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
       outcome.completion_date = Date.tomorrow
       aggregate_failures "future date" do
         expect(outcome.valid?).to eq(false)
-        expect(outcome.errors[:completion_date].to_a).to eq(["The property '#/completion_date' can not declare a future date"])
+        expect(outcome.errors[:completion_date].to_a).to eq(["The attribute '#/completion_date' cannot contain a future date. Resubmit the outcome update with a valid date."])
       end
     end
 
