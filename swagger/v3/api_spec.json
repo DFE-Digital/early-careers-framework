@@ -475,6 +475,58 @@
         }
       }
     },
+    "/api/v3/participants/npq/outcomes": {
+      "get": {
+        "summary": "List all participant NPQ outcomes",
+        "operationId": "participant_outcomes",
+        "tags": [
+          "Participants Outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/participants/npq/{participant_id}/outcomes": {
       "get": {
         "summary": "Retrieve NPQ outcomes for the specified participant",
@@ -3547,7 +3599,7 @@
           "type": {
             "description": "The data type",
             "type": "string",
-            "example": "npq-outcome-confirmation"
+            "example": "participant-outcome"
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQOutcomeAttributes"
@@ -3605,7 +3657,7 @@
             "example": "2021-05-31"
           },
           "created_at": {
-            "description": "The date you created the latest npq-outcome-confirmation record",
+            "description": "The date you created the participant-outcome record",
             "type": "string",
             "example": "2021-05-31T02:21:32.000Z"
           }
@@ -3692,7 +3744,7 @@
         }
       },
       "NPQOutcomeResponse": {
-        "description": "A list of NPQ outcomes",
+        "description": "The details of an NPQ Outcome",
         "type": "object",
         "required": [
           "data"
@@ -3907,7 +3959,8 @@
           "declaration_date",
           "course_identifier",
           "state",
-          "updated_at"
+          "updated_at",
+          "has_passed"
         ],
         "properties": {
           "participant_id": {
@@ -4011,13 +4064,13 @@
       "NPQParticipantDeclarationAttributes": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
+            "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
           }
         ]
       },
@@ -4761,27 +4814,21 @@
           "data"
         ],
         "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "participant-declaration"
-                ]
+          "type": {
+            "type": "string",
+            "enum": [
+              "participant-declaration"
+            ]
+          },
+          "attributes": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
+              },
+              {
+                "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
               }
-            }
-          }
-        },
-        "example": {
-          "data": {
-            "type": "participant-declaration",
-            "attributes": {
-              "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
-              "declaration_type": "started",
-              "declaration_date": "2021-05-31T02:21:32.000Z",
-              "course_identifier": "ecf-mentor"
-            }
+            ]
           }
         }
       },
