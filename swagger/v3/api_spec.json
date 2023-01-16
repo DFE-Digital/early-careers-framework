@@ -475,6 +475,58 @@
         }
       }
     },
+    "/api/v3/participants/npq/outcomes": {
+      "get": {
+        "summary": "List all participant NPQ outcomes",
+        "operationId": "participant_outcomes",
+        "tags": [
+          "Participants Outcomes"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant NPQ outcomes."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of participant outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NPQOutcomesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/participants/npq/{participant_id}/outcomes": {
       "get": {
         "summary": "Retrieve NPQ outcomes for the specified participant",

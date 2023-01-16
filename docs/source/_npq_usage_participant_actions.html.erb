@@ -27,11 +27,11 @@
 <p class="govuk-body-m">This will return an <a href="/api-reference/reference-v1#schema-npqparticipantresponse" class="govuk-link">NPQ participant record</a> with the updates to the record included.</p>
 <p class="govuk-body-m">See <a href="/api-reference/reference.html#api-v1-participants-npq-id-defer-put" class="govuk-link">defer an NPQ participant</a> endpoint.</p>
 
-<h2 id="notifying-of-npq-resume" class="govuk-heading-l">Notifying that an NPQ participant is resuming their course</h2>
+<h2 id="resuming-npq-participant" class="govuk-heading-l">Notifying that an NPQ participant is resuming their course</h2>
 
 <p class="govuk-body-m">This functionality allows the provider to inform the DfE that a participant has resumed an NPQ course.</p>
 
-<h3 class="govuk-heading-m" id="resuming-npq-participant">1. Provider resumes an NPQ participant</h3>
+<h3 class="govuk-heading-m">1. Provider resumes an NPQ participant</h3>
 
 <p class="govuk-body-m">Submit the resumed notification to the following endpoint</p>
 <pre>
@@ -138,6 +138,37 @@
 <p class="govuk-body-m">
   For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration, such as a start, retention-1 or completion, from 1 November 2021.
 </p>
+
+<h2 id="declaring-that-an-npq-participant-has-started-their-course" class="govuk-heading-l">Declaring that an NPQ participant has started their course</h2>
+<p class="govuk-body-m">This scenario begins after it has been confirmed that an NPQ participant is ready to begin their induction training.</p>
+
+<h3 class="govuk-heading-m" id="provider-confirms-NPQ-participant-has-started">1. Provider confirms an NPQ participant has started</h3>
+<p class="govuk-body-m">Confirm an NPQ participant has started their induction training before Milestone 1.</p>
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
+
+<p class="govuk-body-m">With a <a href="/api-reference/reference-v1#schema-npqparticipantstarteddeclaration" class="govuk-link">request body containing an NPQ participant declaration</a>.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference-v1#schema-singleparticipantdeclarationresponse" class="govuk-link">participant declaration</a>.</p>
+
+<p class="govuk-body-m">This endpoint is idempotent - submitting exact copy of a request will return the same response body as submitting it the first time.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference-v1#api-v1-participant-declarations-post" class="govuk-link">confirm NPQ participant declarations</a> endpoint.</p>
+
+<h3 class="govuk-heading-m" id="provider-records-NPQ-participant-declaration-id">2. Provider records the NPQ participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned NPQ participant declaration ID for future management tasks.</p>
+
+<h2 id="declaring-that-an-npq-participant-has-retained-their-course" class="govuk-heading-l">Declaring that an NPQ participant has reached a retained milestone</h2>
+<p class="govuk-body-m">This scenario begins after it has been confirmed that an NPQ participant has completed enough of their course to meet a milestone.</p>
+
+<h3 class="govuk-heading-m" id="provider-confirms-NPQ-participant-has-been-retained">1. Provider confirms an NPQ participant has been retained</h3>
+<p class="govuk-body-m">1. Confirm an NPQ participant has been retained by the appropriate number of months for this retained event on their NPQ course.</p>
+<p class="govuk-body-m">An explicit <code>retained-x</code> declaration is required to trigger output payments. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.</p>
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant-declarations</code></pre></p>
+
+<p class="govuk-body-m">With a <a href="/api-reference/reference-v1#schema-npqparticipantretaineddeclaration" class="govuk-link">request body containing an NPQ participant retained declaration</a>.</p>
+<p class="govuk-body-m">This returns <a href="/api-reference/reference-v1#schema-singleparticipantdeclarationresponse" class="govuk-link">participant declaration</a>.</p>
+<p class="govuk-body-m">See <a href="/api-reference/reference-v1#api-v1-participant-declarations-post" class="govuk-link">confirm NPQ participant declarations</a> endpoint.</p>
+
+<h3 class="govuk-heading-m" id="provider-records-NPQ-participant-declaration-id-2">2. Provider records the NPQ participant declaration ID</h3>
+<p class="govuk-body-m">Store the returned NPQ participant declaration ID for future management tasks.</p>
 
 <h2 id="declaring-that-an-npq-participant-has-completed-their-course" class="govuk-heading-l">Declaring that an NPQ participant has completed their course</h2>
 <p class="govuk-body-m">This scenario begins after it has been confirmed that an NPQ participant has completed their course.</p>
