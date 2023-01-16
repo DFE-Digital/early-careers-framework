@@ -43,10 +43,11 @@ en:
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
   invalid_completion_date: "The property '#/completion_date' must be in the following format: '2021-05-31'"
   future_date: "The property '#/%{attribute}' can not declare a future date"
+  future_date_outcomes: "The attribute '#/%{attribute}' cannot contain a future date. Resubmit the outcome update with a valid date."
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
   missing_declaration_type: "The property '#/declaration_type' must be present"
   missing_evidence_held: "The property '#/evidence_held' must be present"
-  missing_has_passed: "The property '#/has_passed' must be present for completed declaration types"
+  missing_has_passed: "The attribute '#/has_passed' must be included as part of 'completed' declaration submissions. Values can be 'true' or 'false' to indicate whether the participant has passed or failed their course"
   missing_lead_provider: "The lead provider must be present"
   missing_course_identifier: "The property '#/course_identifier' must be present"
   missing_participant_id: "The property '#/participant_id' must be present"
@@ -54,7 +55,7 @@ en:
   missing_reason: "The property '#/reason' must be present"
   missing_state: "The property '#/state' must be present"
   missing_completion_date: "The property '#/completion_date' must be present"
-  declaration_already_exists: There already exists a declaration that will be or has been paid for this event
+  declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
   already_active: The participant is already active
   invalid_withdrawal: The participant is already withdrawn
   invalid_resume: Cannot resume a withdrawn participant
@@ -64,8 +65,8 @@ en:
   invalid_evidence_type: "The property '#/evidence_held' must be an available type to the event type and course type"
   invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
   invalid_reason: "The property '#/reason' must be a valid reason"
-  invalid_state: "The property '#/state' must be a valid state"
-  invalid_has_passed: "The property '#/has_passed' must be true or false"
+  invalid_state: "The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration"
+  invalid_has_passed: "The attribute '#/has_passed' can only include 'true' or 'false' values to indicate whether the participant has passed or failed their course"
   no_started_declaration_found: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
   schedule_already_on_the_profile: Selected schedule is already on the profile
   schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
@@ -159,7 +160,7 @@ en:
     participant_declarations:
       exist: "The participant must have no declarations"
       billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
-      completed: "The participant has no completed declarations"
+      completed: "The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome"
     participant_outcomes:
       invalid_course_identifier: "Invalid course identifier for participant outcome"
     participant_profile:

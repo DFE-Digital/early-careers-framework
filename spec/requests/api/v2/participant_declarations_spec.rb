@@ -77,7 +77,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         }.to change(ParticipantDeclarationAttempt, :count).by(1)
 
         expect(response).not_to be_successful
-        expect(parsed_response["errors"]).to eq(["title" => "base", "detail" => "There already exists a declaration that will be or has been paid for this event"])
+        expect(parsed_response["errors"]).to eq(["title" => "base", "detail" => "A declaration has already been submitted that will be, or has been, paid for this event"])
       end
 
       it "does not create duplicate declarations with different declaration date and stores the duplicate declaration attempts" do
