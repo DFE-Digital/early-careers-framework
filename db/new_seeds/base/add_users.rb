@@ -24,3 +24,18 @@ Rails.logger.info("Building a lead provider user")
 NewSeeds::Scenarios::Users::LeadProviderUser
   .new(email: "lead-provider@example.com", full_name: "Lead provider user")
   .build
+
+Rails.logger.info("Building a CIP induction coordinator")
+NewSeeds::Scenarios::InductionCoordinator
+  .new(email: "cpd-test+tutor-1@digital.education.gov.uk", induction_programme: :cip)
+  .build
+
+Rails.logger.info("Building a FIP induction coordinator")
+NewSeeds::Scenarios::InductionCoordinator
+  .new(email: "cpd-test+tutor-2@digital.education.gov.uk", induction_programme: :fip)
+  .build
+
+Rails.logger.info("Building a School Leader")
+NewSeeds::Scenarios::InductionCoordinator
+  .new(email: "school-leader@example.com", full_name: "School Leader", induction_programme: :fip)
+  .build
