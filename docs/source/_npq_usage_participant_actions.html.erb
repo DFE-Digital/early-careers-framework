@@ -231,8 +231,8 @@
   <li><p class="govuk-body-m">a participant has retaken their NPQ assessment and their outcome has changed. </p></li>
 </ul>
 <h3 class="govuk-heading-m">1. Updating NPQ outcomes</h3>
-<p class="govuk-body-m">Submit an updated NPQ outcome. </p>
-<p class="govuk-body-m"><pre><code>GET /api/v1/participant/npq/{participant_id}/outcomes</code></pre></p>
+<p class="govuk-body-m">Submit an updated NPQ outcome.</p>
+<p class="govuk-body-m"><pre><code>POST /api/v1/participant/npq/{participant_id}/outcomes</code></pre></p>
 <p class="govuk-body-m">The request body must contain all attributes described in the <a href="/api-reference/reference-v3.html#schema-npqoutcomerequest-example" class="govuk-link">NPQ participant outcome schema</a>, including updated values for the <code>completion_date</code> and <code>state</code> attributes.</p>
 <p class="govuk-body-m">This returns an <a href="/api-reference/reference-v3.html#schema-npqoutcomeresponse" class="govuk-link">NPQ outcomes response</a> including updates to the record.</p>
 <p class="govuk-body-m">See specifications for the <a href="/api-reference/reference-v1.html#api-v1-participants-npq-participant_id-outcomes-post" class="govuk-link">NPQ outcomes endpoint.</a></p>
