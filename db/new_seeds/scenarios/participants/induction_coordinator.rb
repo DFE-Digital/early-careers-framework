@@ -17,6 +17,8 @@ module NewSeeds
         @school_cohort = FactoryBot.create(:seed_school_cohort, induction_programme, :valid)
         @user = FactoryBot.create(:user, email:, **user_args)
         @induction_coordinator_profile = FactoryBot.create(:seed_induction_coordinator_profile, user:)
+
+        @induction_coordinator_profile.schools << @school_cohort.school
       end
 
     private
