@@ -50,9 +50,13 @@ module AdminHelper
   def admin_participant_header_and_title(full_name:, role:, section:)
     content_for(:title) { "#{full_name} - #{section}" }
 
-    tag.h1 do
-      safe_join([tag.span("#{full_name} - #{role}", class: "govuk-caption-m"), section])
-    end
+    caption = tag.span(role, class: "govuk-caption-xl")
+    visually_hidden = tag.span(" - #{section}", class: "govuk-visually-hidden")
+
+    safe_join([
+      caption,
+      tag.h1(class: "govuk-heading-xl") { safe_join([full_name, visually_hidden]) },
+    ])
   end
 
   def admin_participant_role_name(class_name)
