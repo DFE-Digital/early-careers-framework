@@ -32,7 +32,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
         when_i_navigate_to_participants_dashboard
         then_i_can_view_transferring_in_participants
 
-        when_i_click_on_the_participants_name "Transferring in participant"
+        when_i_go_to_manage_the_participant_named "Transferring in participant"
         then_i_am_taken_to_view_details_page
       end
     end
@@ -67,7 +67,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       click_on "Not training"
       then_i_can_view_transferred_from_your_school_participants
 
-      when_i_click_on_the_participants_name "Eligible ect"
+      when_i_go_to_manage_the_participant_named "Eligible ect"
       then_i_am_taken_to_view_details_page
     end
   end

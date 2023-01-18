@@ -41,13 +41,13 @@
     </div>
   </div>
 
-<table class="govuk-table govuk-!-margin-bottom-9" data-test="no_qts">
-  <% if FeatureFlag.active?(:change_of_circumstances) %>
-    <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.no_qts_participants) %>
-  <% else %>
-    <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.no_qts_participants, school_cohort: @school_cohort) %>
-  <% end %>
-</table>
+  <table class="govuk-table govuk-!-margin-bottom-9" data-test="no_qts">
+    <% if FeatureFlag.active?(:change_of_circumstances) %>
+      <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.no_qts_participants) %>
+    <% else %>
+      <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.no_qts_participants, school_cohort: @school_cohort) %>
+    <% end %>
+  </table>
 <% end %>
 
 <% if ect_profiles.eligible.any? %>
