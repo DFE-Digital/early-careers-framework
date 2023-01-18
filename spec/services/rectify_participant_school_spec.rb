@@ -6,13 +6,22 @@ RSpec.describe RectifyParticipantSchool do
   subject(:service) { described_class }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:participant_profile) { create(:ect_participant_profile, cohort:) }
+  let(:participant_identity) { participant_profile.participant_identity }
+  let(:old_school) { participant_profile.school }
   let(:new_school) { create(:school, name: "Big Shiny School", urn: "123000") }
   let!(:school_cohort) { create(:school_cohort, cohort:, school: new_school) }
   let(:transfer_uplift) { true }
 
   describe ".call" do
     before do
-      service.call(participant_profile:, school: new_school, transfer_pupil_premium_and_sparsity: transfer_uplift)
+      if participant_profile.mentor?
+        old_school.school_mentors.create!(participant_profile:, preferred_identity: participant_identity)
+      end
+
+      service.call(participant_profile:,
+                   from_school: old_school,
+                   to_school: new_school,
+                   transfer_pupil_premium_and_sparsity: transfer_uplift)
       participant_profile.reload
     end
 
@@ -63,6 +72,15 @@ RSpec.describe RectifyParticipantSchool do
 
       it "does not change the sparsity uplift flag on the participant profile" do
         expect(participant_profile).not_to be_sparsity_uplift
+      end
+    end
+
+    context "when the participant is a mentor" do
+      let(:participant_profile) { create(:mentor_participant_profile) }
+
+      it "update both schools' mentor pool" do
+        expect(old_school.mentor_profiles).not_to include(participant_profile)
+        expect(new_school.mentor_profiles).to include(participant_profile)
       end
     end
   end
