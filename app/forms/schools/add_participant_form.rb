@@ -287,7 +287,7 @@ module Schools
     def save!
       profile = nil
       ActiveRecord::Base.transaction do
-        profile = creators[participant_type].call(
+        profile = creators.fetch(participant_type).call(
           full_name:,
           email:,
           school_cohort:,
