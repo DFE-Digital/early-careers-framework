@@ -4,13 +4,15 @@ require "rails_helper"
 RSpec.describe NPQCourse do
   describe "::schedule_for", :with_default_schedules do
     let(:npq_course) { build(:npq_course, identifier:) }
+    let(:cohort) { Cohort.previous }
 
     context "when a course is one of NPQCourse::LEADERSHIP_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
+      let!(:cohort_schedule) { create(:npq_leadership_schedule, cohort:) }
 
       it "returns the default NPQ leadership schedule" do
-        expect(described_class.schedule_for(npq_course:))
-          .to eq(Finance::Schedule::NPQLeadership.default)
+        expect(described_class.schedule_for(npq_course:, cohort:))
+          .to eq(Finance::Schedule::NPQLeadership.default_for(cohort:))
       end
 
       context "when requesting for next cohort" do
@@ -25,9 +27,10 @@ RSpec.describe NPQCourse do
 
     context "when a course is one of NPQCourse::SPECIALIST_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQSpecialist::IDENTIFIERS.sample }
+      let!(:cohort_schedule) { create(:npq_specialist_schedule, cohort:) }
 
       it "returns the default NPQ specialist schedule" do
-        expect(described_class.schedule_for(npq_course:)).to eq(Finance::Schedule::NPQSpecialist.default)
+        expect(described_class.schedule_for(npq_course:, cohort:)).to eq(Finance::Schedule::NPQSpecialist.default_for(cohort:))
       end
     end
 

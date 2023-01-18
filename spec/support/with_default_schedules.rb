@@ -12,12 +12,14 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
     # create extra schedules for the current cohort
     cohort = Cohort.current
     {
-      npq_specialist_schedule: "npq-specialist-spring",
-      npq_leadership_schedule: "npq-leadership-spring",
-      npq_aso_schedule:        "npq-aso-december",
-      npq_ehco_schedule:       "npq-ehco-december",
-    }.each do |schedule_type, schedule_identifier|
-      Finance::Schedule.find_by(cohort:, schedule_identifier:) || create(schedule_type, cohort:)
+      npq_specialist_schedule: %w[npq-specialist-spring npq-specialist-autumn],
+      npq_leadership_schedule: %w[npq-leadership-spring npq-leadership-autumn],
+      npq_aso_schedule:        %w[npq-aso-december],
+      npq_ehco_schedule:       %w[npq-ehco-december],
+    }.each do |schedule_type, schedule_identifiers|
+      schedule_identifiers.each do |schedule_identifier|
+        Finance::Schedule.find_by(cohort:, schedule_identifier:) || create(schedule_type, cohort:, schedule_identifier:)
+      end
     end
   end
 end

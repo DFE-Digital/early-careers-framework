@@ -42,9 +42,9 @@ module Importers
     def number_of_payment_periods_for(course:, cohort:)
       case course.identifier
       when *Finance::Schedule::NPQLeadership::IDENTIFIERS
-        Finance::Schedule::NPQLeadership.default.milestones.count
+        Finance::Schedule::NPQLeadership.default_for(cohort:).milestones.count
       when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
-        Finance::Schedule::NPQSpecialist.default.milestones.count
+        Finance::Schedule::NPQSpecialist.default_for(cohort:).milestones.count
       when *Finance::Schedule::NPQSupport::IDENTIFIERS
         Finance::Schedule::NPQSupport.default.milestones.count
       when *Finance::Schedule::NPQEhco::IDENTIFIERS
