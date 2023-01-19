@@ -5,7 +5,14 @@ module NewSeeds
     module Participants
       module Mentors
         class MentoringMultipleEctsWithSameProvider
-          Person = Struct.new(:user, :teacher_profile, :participant_profile, :participant_identity, keyword_init: true)
+          Person = Struct.new(
+            :user,
+            :teacher_profile,
+            :participant_profile,
+            :participant_identity,
+            :participant_validation_data,
+            keyword_init: true,
+          )
 
           attr_accessor :mentor,
                         :mentees,
@@ -72,7 +79,7 @@ module NewSeeds
           end
 
           def build_mentee
-            build_person(mentor: false)
+            build_person(mentor: false, validation_data: true)
           end
 
         private
@@ -81,7 +88,7 @@ module NewSeeds
             Cohort.find_by!(start_year: year)
           end
 
-          def build_person(mentor: false)
+          def build_person(mentor: false, validation_data: false)
             user = FactoryBot.create(:seed_user)
 
             teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school:)
@@ -100,7 +107,21 @@ module NewSeeds
                                                       school_cohort:)
                                   end
 
-            Person.new(user:, teacher_profile:, participant_identity:, participant_profile:)
+            participant_validation_data = if validation_data
+                                            FactoryBot.create(
+                                              :seed_ecf_participant_validation_data,
+                                              :valid,
+                                              user:,
+                                            )
+                                          end
+
+            Person.new(
+              user:,
+              teacher_profile:,
+              participant_identity:,
+              participant_profile:,
+              participant_validation_data:,
+            )
           end
         end
       end
