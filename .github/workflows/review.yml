@@ -35,6 +35,8 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+        with:
+          version: v0.9.1 # More recent buildx versions generate an OCI manifest
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -52,6 +54,7 @@ jobs:
           push: true
           tags: dfedigital/early-careers-framework-dev:builder
           target: builder
+          provenance: false
 
       - name: Build and push docker image from early-careers-framework-gems-node-modules target
         uses: docker/build-push-action@v2
