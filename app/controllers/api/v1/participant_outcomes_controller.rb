@@ -16,7 +16,7 @@ module Api
       # POST /api/v1/participants/npq/:participant_id/outcomes
       #
       def create
-        service = NPQ::CreateParticipantOutcome.new(action_params)
+        service = ::NPQ::CreateParticipantOutcome.new(action_params)
 
         render_from_service(service, serializer_class)
       end

@@ -12,7 +12,7 @@ module Api
     private
 
       def service
-        @service ||= NPQ::FundingEligibility.new(
+        @service ||= ::NPQ::FundingEligibility.new(
           trn: params[:trn],
           npq_course_identifier: params[:npq_course_identifier],
         )
