@@ -23,7 +23,7 @@ module Analytics
         record.active = participant_profile.active_record?
         record.sparsity = participant_profile.sparsity_uplift
         record.pupil_premium = participant_profile.pupil_premium_uplift
-        record.training_status = participant_profile.training_status
+        record.training_status = training_status_for(participant_profile)
         record.schedule_identifier = participant_profile.schedule&.schedule_identifier
 
         record.save!
@@ -53,6 +53,10 @@ module Analytics
 
       def trn_verified?(participant_profile)
         participant_profile.ecf_participant_eligibility.present?
+      end
+
+      def training_status_for(participant_profile)
+        participant_profile&.latest_induction_record&.training_status
       end
     end
   end
