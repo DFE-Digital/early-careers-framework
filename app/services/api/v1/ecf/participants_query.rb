@@ -24,7 +24,19 @@ module Api
                      },
                    )
 
+          necessary_fields = %i[
+            induction_programme_id
+            induction_status
+            mentor_profile_id
+            participant_profile_id
+            preferred_identity_id
+            schedule_id
+            training_status
+            updated_at
+          ]
+
           scope = InductionRecord
+                    .select(*necessary_fields)
                     .references(participant_profile: %i[participant_identity])
                     .includes(
                       :preferred_identity,
