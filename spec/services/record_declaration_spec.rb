@@ -78,6 +78,44 @@ RSpec.shared_examples "validates the course_identifier, cpd_lead_provider, parti
       expect(service.errors.messages_for(:course_identifier)).to eq(["The property '#/course_identifier' must be an available course to '#/participant_id'"])
     end
   end
+
+  context "when the declaration date is invalid" do
+    context "When the declaration date is empty" do
+      before { params[:declaration_date] = "" }
+
+      it "has a meaningful error", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.messages_for(:declaration_date)).to include("The property '#/declaration_date' must be present")
+      end
+    end
+
+    context "when declaration date format is invalid" do
+      before { params[:declaration_date] = "2021-06-21 08:46:29" }
+
+      it "has a meaningful error", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
+      end
+    end
+
+    context "when declaration date is invalid" do
+      before { params[:declaration_date] = "2023-19-01T11:21:55Z" }
+
+      it "has a meaningful error", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
+      end
+    end
+
+    context "when declaration time is invalid" do
+      before { params[:declaration_date] = "2023-19-01T29:21:55Z" }
+
+      it "has a meaningful error", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.messages_for(:declaration_date)).to include("The property '#\/declaration_date' must be a valid RCF3339 date")
+      end
+    end
+  end
 end
 
 RSpec.shared_examples "validates existing declarations" do

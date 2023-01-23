@@ -54,6 +54,7 @@ en:
   missing_cpd_lead_provider: "The property '#/cpd_lead_provider' must be present"
   missing_reason: "The property '#/reason' must be present"
   missing_state: "The property '#/state' must be present"
+  missing_declaration_date: "The property '#/declaration_date' must be present"
   missing_completion_date: "The property '#/completion_date' must be present"
   declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
   already_active: The participant is already active

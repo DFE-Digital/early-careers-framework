@@ -15,7 +15,8 @@ class RecordDeclaration
 
   before_validation :declaration_attempt
 
-  validates :declaration_date, :declaration_type, presence: true
+  validates :declaration_date, presence: { message: I18n.t(:missing_declaration_date) }
+  validates :declaration_type, presence: { message: I18n.t(:missing_declaration_type) }
   validates :declaration_date, future_date: true, declaration_date: true, allow_blank: true
   validates :participant_id, participant_not_withdrawn: true
   validates :cpd_lead_provider, induction_record: true
