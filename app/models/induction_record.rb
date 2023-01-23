@@ -31,6 +31,7 @@ class InductionRecord < ApplicationRecord
   belongs_to :preferred_identity, class_name: "ParticipantIdentity", optional: true
 
   validates :start_date, presence: true
+  validate :validate_sensible_dates
 
   enum induction_status: {
     active: "active",
@@ -137,5 +138,11 @@ private
 
   def update_analytics
     Analytics::UpsertECFInductionJob.perform_later(induction_record: self) if saved_changes?
+  end
+
+  def validate_sensible_dates
+    return if start_date.blank? || end_date.blank?
+
+    errors.add(:end_date, :before_start_date) if start_date > end_date
   end
 end
