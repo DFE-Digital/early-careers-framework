@@ -13,7 +13,7 @@
             WHERE pp2.id = pp.mentor_profile_id)                  as mentor_id,
           c.start_year                                            as cohort,
           pp.status                                               as status,
-          latest_induction_record.training_status                 as training_status,
+          latest_induction_records.training_status                as training_status,
           pps.reason                                              as training_status_reason,
           s.name                                                  as schedule,
           s.schedule_identifier                                   as schedule_identifier,
@@ -36,17 +36,23 @@
             JOIN participant_identities pi on pp.participant_identity_id = pi.id
             LEFT OUTER JOIN ecf_participant_validation_data epvd on pp.id = epvd.participant_profile_id
             LEFT OUTER JOIN ecf_participant_eligibilities epe on pp.id = epe.participant_profile_id
-            JOIN (
-                 SELECT
-                    DISTINCT ON (participant_profile_id) participant_profile_id,
-                    training_status
-                 FROM induction_records
-                 JOIN induction_programmes ON induction_programmes.id = induction_records.induction_programme_id
-                 JOIN partnerships ON partnerships.id = induction_programmes.partnership_id
-                 ORDER BY participant_profile_id, induction_records.created_at DESC
-            ) AS latest_induction_record ON latest_induction_record.participant_profile_id = pp.id
+            LEFT OUTER JOIN (
+              SELECT
+                induction_records.*,
+                partnerships.lead_provider_id,
+                schools.id AS school_id,
+                schools.name AS school_name,
+                lead_providers.name AS lead_provider_name,
+                induction_programmes.training_programme AS training_programme,
+                ROW_NUMBER() OVER (PARTITION BY participant_profile_id ORDER BY induction_records.created_at DESC) AS induction_record_sort_order
+              FROM induction_records
+              JOIN induction_programmes ON induction_programmes.id = induction_records.induction_programme_id
+              LEFT OUTER JOIN partnerships         ON partnerships.id         = induction_programmes.partnership_id
+              LEFT OUTER JOIN lead_providers       ON lead_providers.id       = partnerships.lead_provider_id
+              LEFT OUTER JOIN schools              ON schools.id              = partnerships.school_id
+            ) AS latest_induction_records ON latest_induction_records.participant_profile_id = pp.id AND induction_record_sort_order = 1
             LEFT OUTER JOIN participant_profile_states pps on pp.id = pps.participant_profile_id AND pps.id = (
-              SELECT id from participant_profile_states _pps WHERE _pps.participant_profile_id = pp.id AND _pps.state = latest_induction_record.training_status ORDER BY created_at desc LIMIT 1
+              SELECT id from participant_profile_states _pps WHERE _pps.participant_profile_id = pp.id AND _pps.state = latest_induction_records.training_status ORDER BY created_at desc LIMIT 1
             )
     WHERE pp.type IN ('ParticipantProfile::ECT', 'ParticipantProfile::Mentor')
       AND c.start_year > 2020

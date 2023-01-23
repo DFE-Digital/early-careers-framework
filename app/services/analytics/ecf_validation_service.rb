@@ -56,7 +56,7 @@ module Analytics
       end
 
       def training_status_for(participant_profile)
-        participant_profile&.latest_induction_record&.training_status
+        participant_profile&.latest_induction_record&.training_status.presence || participant_profile.training_status
       end
     end
   end
