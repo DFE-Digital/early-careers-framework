@@ -55,11 +55,6 @@ RSpec.feature "Banding tracker", :with_default_schedules, type: :feature, js: tr
     generate_declarations(state: :payable)
     generate_declarations(state: :paid)
 
-    create(:milestone,
-           declaration_type: "started",
-           milestone_date: Date.new(cohort.start_year, 12, 22),
-           schedule: create(:schedule, schedule_identifier: "ecf-standard-september", name: "ECF September Standard", type: "Finance::Schedule::ECF", cohort:))
-
     travel_to ect.schedule.milestones.find_by(declaration_type: "started").milestone_date do
       create(
         :ect_participant_declaration,
