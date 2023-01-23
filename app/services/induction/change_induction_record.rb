@@ -21,6 +21,7 @@ class Induction::ChangeInductionRecord < BaseService
 
         induction_record.changing!(time_now)
         new_record.assign_attributes(default_attrs.merge(changes))
+        new_record.start_date = new_record.end_date if new_record.start_date && new_record.end_date && new_record.start_date > new_record.end_date
         new_record.save!
       end
     end
