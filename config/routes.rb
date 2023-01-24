@@ -324,6 +324,7 @@ Rails.application.routes.draw do
         end
       end
     end
+
     resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]
 
@@ -334,6 +335,12 @@ Rails.application.routes.draw do
       resources :schools_to_add, only: %i[index], path: "schools-to-add"
       resources :schools_to_close, only: %i[index], path: "schools-to-close"
       resources :major_school_changes, only: %i[index], path: "major-school-changes"
+    end
+
+    unless Rails.env.production?
+      namespace :testing do
+        resources :overview, only: :index
+      end
     end
 
     scope :suppliers, module: "suppliers" do
