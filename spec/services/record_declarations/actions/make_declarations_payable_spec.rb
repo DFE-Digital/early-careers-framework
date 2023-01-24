@@ -16,8 +16,12 @@ RSpec.describe RecordDeclarations::Actions::MakeDeclarationsPayable, :with_defau
   end
   let(:npq_declaration) do
     travel_to before_cutoff_date do
-      create(:npq_specialist_schedule, cohort: Cohort.current || create(:cohort, :current))
-      create(:npq_leadership_schedule, cohort: Cohort.current || create(:cohort, :current))
+      %w[npq-specialist-spring npq-specialist-autumn].each do |schedule_identifier|
+        create(:npq_specialist_schedule, schedule_identifier:, cohort: Cohort.current || create(:cohort, :current))
+      end
+      %w[npq-leadership-spring npq-leadership-autumn].each do |schedule_identifier|
+        create(:npq_leadership_schedule, schedule_identifier:, cohort: Cohort.current || create(:cohort, :current))
+      end
       create(:npq_participant_declaration, :eligible, declaration_date: before_cutoff_date, cpd_lead_provider:)
     end
   end

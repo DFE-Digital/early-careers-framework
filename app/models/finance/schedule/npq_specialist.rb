@@ -16,58 +16,31 @@ module Finance
         find_by!(cohort:, schedule_identifier: "npq-specialist-spring")
       end
 
-      def self.schedule_for(cohort: Cohort.current)
-        return find_by!(cohort:) unless cohort_with_multiple_schedules?(cohort)
-
-        case Date.current
-
-        when june_1_current_year(cohort.start_year)..december_25_current_year(cohort.start_year)
+      def self.schedule_for(cohort: Cohort.current, schedule_date: Date.current)
+        if autumn_schedule_2022?(schedule_date)
           find_by!(cohort:, schedule_identifier: "npq-specialist-autumn")
-        when december_26_current_year(cohort.start_year)..april_15_next_year(cohort.start_year)
+        elsif spring_schedule?(schedule_date)
           find_by!(cohort:, schedule_identifier: "npq-specialist-spring")
-        when april_16_next_year(cohort.start_year)..december_25_next_year(cohort.start_year)
+        elsif autumn_schedule?(schedule_date)
           find_by!(cohort:, schedule_identifier: "npq-specialist-autumn")
-        when december_26_next_year(cohort.start_year)..april_15_next_next_year(cohort.start_year)
-          find_by!(cohort:, schedule_identifier: "npq-specialist-spring")
         else
           default_for(cohort:)
         end
       end
 
-      def self.cohort_with_multiple_schedules?(cohort)
-        Cohort.where(start_year: 2022..).include?(cohort)
+      def self.autumn_schedule_2022?(date)
+        (Date.new(2022, 6, 1)..Date.new(2022, 12, 25)).include?(date)
       end
 
-      def self.june_1_current_year(cohort_start_year)
-        Date.new(cohort_start_year, 6, 1)
+      def self.spring_schedule?(date)
+        # Between: Dec 26 to Apr 15
+        (Date.new(date.year, 1, 1)..Date.new(date.year, 4, 15)).include?(date) ||
+          (Date.new(date.year, 12, 26)..Date.new(date.year, 12, 31)).include?(date)
       end
 
-      def self.december_25_current_year(cohort_start_year)
-        Date.new(cohort_start_year, 12, 25)
-      end
-
-      def self.december_26_current_year(cohort_start_year)
-        Date.new(cohort_start_year, 12, 26)
-      end
-
-      def self.april_15_next_year(cohort_start_year)
-        Date.new(cohort_start_year + 1, 4, 15)
-      end
-
-      def self.april_16_next_year(cohort_start_year)
-        Date.new(cohort_start_year + 1, 4, 16)
-      end
-
-      def self.december_25_next_year(cohort_start_year)
-        Date.new(cohort_start_year + 1, 12, 25)
-      end
-
-      def self.december_26_next_year(cohort_start_year)
-        Date.new(cohort_start_year + 1, 12, 26)
-      end
-
-      def self.april_15_next_next_year(cohort_start_year)
-        Date.new(cohort_start_year + 2, 4, 15)
+      def self.autumn_schedule?(date)
+        # Between: Apr 16 to Dec 25
+        (Date.new(date.year, 4, 16)..Date.new(date.year, 12, 25)).include?(date)
       end
     end
   end

@@ -47,13 +47,19 @@ FactoryBot.create :ect_participant_profile,
                   school_cohort: another_school_cohort,
                   created_at: Date.parse("29/12/2020")
 
-FactoryBot.create(:npq_specialist_schedule)
+%w[npq-specialist-spring npq-specialist-autumn].each do |schedule_identifier|
+  FactoryBot.create(:npq_specialist_schedule, schedule_identifier:)
+end
 npq_course = FactoryBot.create(:npq_course, identifier: "npq-senior-leadership")
 npq_user = FactoryBot.create(:user, full_name: "Natalie Portman Quebec", email: "natalie.portman@quebec.ca")
 
 Timecop.freeze(Date.parse("19/09/2019")) do
-  FactoryBot.create(:npq_leadership_schedule)
-  FactoryBot.create(:npq_specialist_schedule)
+  %w[npq-specialist-spring npq-specialist-autumn].each do |schedule_identifier|
+    FactoryBot.create(:npq_specialist_schedule, schedule_identifier:)
+  end
+  %w[npq-leadership-spring npq-leadership-autumn].each do |schedule_identifier|
+    FactoryBot.create(:npq_leadership_schedule, schedule_identifier:)
+  end
   npq_application = FactoryBot.create :npq_application,
                                       participant_identity: Identity::Create.call(user: npq_user, origin: :npq),
                                       date_of_birth: Date.parse("10/12/1982"),

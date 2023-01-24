@@ -4,7 +4,7 @@ require "rails_helper"
 RSpec.describe NPQCourse do
   describe "::schedule_for", :with_default_schedules do
     let(:npq_course) { build(:npq_course, identifier:) }
-    let(:cohort) { Cohort.previous }
+    let(:cohort) { Cohort.current }
 
     context "when a course is one of NPQCourse::LEADERSHIP_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }

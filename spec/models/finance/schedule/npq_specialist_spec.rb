@@ -16,7 +16,7 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   describe ".default_for" do
     let(:cohort) { Cohort.find_by!(start_year: 2022) }
 
-    it "returns NPQ Specialist Autumn 2022 schedule" do
+    it "returns NPQ Specialist Spring 2022 schedule" do
       expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-specialist-spring")
 
       expect(described_class.default_for(cohort:)).to eql(expected_schedule)
@@ -67,16 +67,6 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
       end
     end
 
-    context "when date range exceeds the current cohort" do
-      it "returns default schedule for cohort" do
-        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-specialist-autumn")
-
-        travel_to Date.new(cohort_start_year + 1, 10, 1) do
-          expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
-        end
-      end
-    end
-
     context "when no schedule exists for the cohort" do
       let(:cohort) { create(:cohort, start_year: 2020) }
 
@@ -84,14 +74,40 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
         expect { described_class.schedule_for(cohort:) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
+  end
 
-    context "when selected cohort is before multiple schedules existed for Specialist" do
-      let(:cohort) { Cohort.find_by!(start_year: 2021) }
+  describe ".spring_schedule?" do
+    it "returns true when date between Dec 26 to Apr 15" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-12-26".to_date)..("#{year + 1}-04-15".to_date)).each do |date|
+          expect(described_class.spring_schedule?(date)).to be(true)
+        end
+      end
+    end
 
-      it "returns NPQ Specialist Autumn schedule" do
-        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-specialist-autumn")
+    it "returns false when date between Apr 16 to Dec 25" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-04-16".to_date)..("#{year}-12-25".to_date)).each do |date|
+          expect(described_class.spring_schedule?(date)).to be(false)
+        end
+      end
+    end
+  end
 
-        expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
+  describe ".autumn_schedule?" do
+    it "returns true when date between Apr 16 to Dec 25" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-04-16".to_date)..("#{year}-12-25".to_date)).each do |date|
+          expect(described_class.autumn_schedule?(date)).to be(true)
+        end
+      end
+    end
+
+    it "returns false when date between Dec 26 to Apr 15" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-12-26".to_date)..("#{year + 1}-04-15".to_date)).each do |date|
+          expect(described_class.autumn_schedule?(date)).to be(false)
+        end
       end
     end
   end
