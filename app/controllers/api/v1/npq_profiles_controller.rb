@@ -86,6 +86,8 @@ module Api
             :national_insurance_number,
             :school_urn,
             :school_ukprn,
+            :itt_provider,
+            :lead_mentor,
             :teacher_reference_number,
             :teacher_reference_number_verified,
             :works_in_school,
