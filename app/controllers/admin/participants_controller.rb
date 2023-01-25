@@ -23,24 +23,6 @@ module Admin
         .call(policy_scope(ParticipantProfile), search_term:, type:)
     end
 
-    def edit_email; end
-
-    def update_email
-      user = @participant_profile.user
-      user.assign_attributes(params.require(:user).permit(:email))
-
-      if user.save
-        if @participant_profile.ect?
-          set_success_message(heading: "The ECT’s email address has been updated")
-        else
-          set_success_message(heading: "The mentor’s email address has been updated")
-        end
-        redirect_to admin_participants_path
-      else
-        render "admin/participants/edit_email"
-      end
-    end
-
     def remove; end
 
     def destroy
