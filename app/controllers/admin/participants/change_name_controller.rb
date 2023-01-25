@@ -3,6 +3,7 @@
 module Admin::Participants
   class ChangeNameController < Admin::BaseController
     before_action :load_participant
+    skip_after_action :verify_policy_scoped
 
     def edit; end
 
@@ -23,7 +24,7 @@ module Admin::Participants
 
     def load_participant
       @participant_profile = ParticipantProfile
-                               .eager_load(:teacher_profile, :ecf_participant_validation_data).find(params[:id])
+                               .eager_load(:teacher_profile, :ecf_participant_validation_data).find(params[:participant_id])
 
       authorize @participant_profile, policy_class: @participant_profile.policy_class
     end
