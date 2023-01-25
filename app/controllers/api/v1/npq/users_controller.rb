@@ -21,14 +21,14 @@ module Api
             hash = {
               errors: errors.map do |error|
                 {
-                  status: "401",
+                  status: "400",
                   title: error.attribute,
                   detail: error.message,
                 }
               end,
             }
 
-            render json: hash, status: :unauthorized
+            render json: hash, status: :bad_request
           end
         end
 
