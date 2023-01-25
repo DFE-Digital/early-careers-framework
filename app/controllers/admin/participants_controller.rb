@@ -23,21 +23,6 @@ module Admin
         .call(policy_scope(ParticipantProfile), search_term:, type:)
     end
 
-    def edit_name; end
-
-    def update_name
-      if @participant_profile.user.update(params.require(:user).permit(:full_name))
-        if @participant_profile.ect?
-          set_success_message(heading: "The ECT’s name has been updated")
-        else
-          set_success_message(heading: "The mentor’s name has been updated")
-        end
-        redirect_to admin_participants_path
-      else
-        render "admin/participants/edit_name"
-      end
-    end
-
     def edit_email; end
 
     def update_email
