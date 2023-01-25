@@ -421,8 +421,8 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
           expect(parsed_response["errors"])
             .to eq(
               [
-                { "title" => "declaration_date",  "detail" => "can't be blank" },
-                { "title" => "declaration_type",  "detail" => "can't be blank" },
+                { "title" => "declaration_date",  "detail" => "The property '#/declaration_date' must be present" },
+                { "title" => "declaration_type",  "detail" => "The property '#/declaration_type' must be present" },
                 { "title" => "participant_id",    "detail" => "The property '#/participant_id' must be a valid Participant ID" },
                 { "title" => "course_identifier", "detail" => "The property '#/course_identifier' must be an available course to '#/participant_id'" },
               ],

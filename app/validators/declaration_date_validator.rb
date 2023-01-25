@@ -11,8 +11,12 @@ class DeclarationDateValidator < ActiveModel::Validator
 private
 
   def date_has_the_right_format(record)
-    return if record.declaration_date.blank?
-    return if record.raw_declaration_date.match?(RFC3339_DATE_REGEX)
+    return if record.raw_declaration_date.blank?
+    return if record.raw_declaration_date.match?(RFC3339_DATE_REGEX) && begin
+      record.raw_declaration_date&.to_datetime
+    rescue Date::Error
+      false
+    end
 
     record.errors.add(:declaration_date, I18n.t(:invalid_declaration_date))
   end
