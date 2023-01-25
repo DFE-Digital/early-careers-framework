@@ -4,8 +4,9 @@ require "rails_helper"
 
 RSpec.describe "API Users", :with_default_schedules, type: :request do
   let(:parsed_response) { JSON.parse(response.body) }
-  let(:token)           { EngageAndLearnApiToken.create_with_random_token! }
+  let(:token)           { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token)    { "Bearer #{token}" }
+  let(:authorization_header) { bearer_token }
 
   describe "#create" do
     let(:url) { "/api/v1/npq/users.json" }
@@ -633,21 +634,42 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
     end
 
     context "when not authorized" do
-      let(:authorization_header) { nil }
+      context "due to providing a non-NPQ API token" do
+        let(:token) { EngageAndLearnApiToken.create_with_random_token! }
 
-      include_examples "correct response check" do
-        let(:expected_response_code) { 401 }
-        let(:expected_response_body) do
-          {
-            "error" => "HTTP Token: Access denied",
-          }
+        include_examples "correct response check" do
+          let(:expected_response_code) { 401 }
+          let(:expected_response_body) do
+            {
+              "error" => "HTTP Token: Access denied",
+            }
+          end
+        end
+
+        it "does not a new user" do
+          expect {
+            send_request
+          }.to_not change(User, :count)
         end
       end
 
-      it "does not a new user" do
-        expect {
-          send_request
-        }.to_not change(User, :count)
+      context "due to providing no API token" do
+        let(:authorization_header) { nil }
+
+        include_examples "correct response check" do
+          let(:expected_response_code) { 401 }
+          let(:expected_response_body) do
+            {
+              "error" => "HTTP Token: Access denied",
+            }
+          end
+        end
+
+        it "does not a new user" do
+          expect {
+            send_request
+          }.to_not change(User, :count)
+        end
       end
     end
   end

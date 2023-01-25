@@ -3,9 +3,7 @@
 module Api
   module V1
     module NPQ
-      class UsersController < Api::ApiController
-        include ApiTokenAuthenticatable
-
+      class UsersController < ApiController
         def create
           creation_response = ::NPQ::Users::FindOrCreateBy.new(params: find_or_create_params).call
 
