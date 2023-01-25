@@ -39,11 +39,7 @@ module ApplicationHelper
   end
 
   def service_name
-    if request.path.include? "year-2020"
-      "Get support materials for NQTs"
-    else
-      "Manage training for early career teachers"
-    end
+    "Manage training for early career teachers"
   end
 
   def text_otherwise_link_to(text, url, condition_for_text)

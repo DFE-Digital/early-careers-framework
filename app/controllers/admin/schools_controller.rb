@@ -14,7 +14,6 @@ module Admin
       @school = School.eligible_or_cip_only.friendly.find(params[:id])
       authorize @school
       @induction_coordinator = @school.induction_coordinators&.first
-      @setup_done = @school.school_cohorts.for_year(2020).present?
     end
 
   private

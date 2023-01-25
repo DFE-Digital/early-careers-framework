@@ -18,7 +18,6 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
           email: Faker::Internet.email(name:),
           school_cohort: random_school_cohort,
           mentor_profile_id: nil,
-          year_2020: false,
         )
       end
     end

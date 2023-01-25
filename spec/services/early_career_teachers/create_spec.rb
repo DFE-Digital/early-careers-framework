@@ -107,32 +107,6 @@ RSpec.describe EarlyCareerTeachers::Create, :with_default_schedules do
     expect(ParticipantDetailsReminderJob).to have_received(:schedule).with(profile)
   end
 
-  context "when creating a participant for 2020" do
-    it "does not schedule participant_added email" do
-      expect {
-        described_class.call(
-          email: user.email,
-          full_name: Faker::Name.name,
-          school_cohort:,
-          year_2020: true,
-        )
-      }.to_not have_enqueued_mail(ParticipantMailer, :participant_added)
-    end
-
-    it "scheduled reminder email job" do
-      allow(ParticipantDetailsReminderJob).to receive(:schedule)
-
-      described_class.call(
-        email: user.email,
-        full_name: Faker::Name.name,
-        school_cohort:,
-        year_2020: true,
-      )
-
-      expect(ParticipantDetailsReminderJob).not_to have_received(:schedule)
-    end
-  end
-
   context "when a SIT is adding and validating an ECT" do
     it "does not schedule participant_added email" do
       expect {
