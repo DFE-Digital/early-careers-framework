@@ -23,7 +23,7 @@ module Admin::Participants
       end
     end
 
-    private
+  private
 
     def load_participant
       @participant_profile = ParticipantProfile
