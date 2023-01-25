@@ -121,6 +121,7 @@ RSpec.describe DeliveryPartners::Participants::TableRow, type: :component do
 
     context "has a withdrawn status" do
       let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
+      let!(:induction_record) { create(:induction_record, training_status: "withdrawn", participant_profile:) }
 
       it { is_expected.to have_text("No longer being trained") }
     end

@@ -98,7 +98,8 @@ RSpec.feature "Appropriate body users participants", type: :feature do
   end
 
   context "Filter status" do
-    let(:participant_profile) { create(:ect_participant_profile, school_cohort:, training_status: "withdrawn") }
+    let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+    let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:, appropriate_body:, training_status: "withdrawn") }
 
     scenario "None existing status" do
       when_i_choose("status", with: "Checking QTS")

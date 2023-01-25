@@ -71,7 +71,9 @@ module DeliveryPartners
     def filter_status(scoped, status)
       ids = []
       scoped.each do |pp|
-        pps = ParticipantProfileStatus.new(participant_profile: pp)
+        ir = pp.relevant_induction_record_for(delivery_partner: params[:delivery_partner])
+
+        pps = ParticipantProfileStatus.new(participant_profile: pp, induction_record: ir)
         if pps.is_status?(status)
           ids << pp.id
         end

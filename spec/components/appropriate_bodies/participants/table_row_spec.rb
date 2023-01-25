@@ -6,7 +6,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
 
   let(:appropriate_body) { create(:appropriate_body_local_authority) }
   let(:participant_profile) { create :ect_participant_profile }
-  let(:induction_record) { create :induction_record, participant_profile: }
+  let!(:induction_record) { create :induction_record, participant_profile: }
 
   context "when the request for details has not been sent yet" do
     it { is_expected.to have_text("Contacted for information") }
@@ -114,6 +114,7 @@ RSpec.describe AppropriateBodies::Participants::TableRow, type: :component do
 
     context "has a withdrawn status" do
       let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
+      let!(:induction_record) { create(:induction_record, training_status: "withdrawn", participant_profile:) }
 
       it { is_expected.to have_text("No longer being trained") }
     end

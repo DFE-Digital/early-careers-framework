@@ -20,7 +20,7 @@ module DeliveryPartners
         },
       )
 
-      @filter = ParticipantsFilter.new(collection:, params: params.permit(:query, :role, :academic_year, :status))
+      @filter = ParticipantsFilter.new(collection:, params: filter_params)
 
       respond_to do |format|
         format.html do
@@ -61,6 +61,10 @@ module DeliveryPartners
           csv << attributes.map { |attribute| item[:attributes][attribute].to_s }
         end
       end
+    end
+
+    def filter_params
+      params.permit(:query, :role, :academic_year, :status).merge(delivery_partner:)
     end
   end
 end
