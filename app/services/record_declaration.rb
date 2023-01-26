@@ -210,9 +210,17 @@ private
 
   def validate_has_passed?
     return false unless FeatureFlag.active?(:participant_outcomes_feature)
+    return false unless valid_course_identifier_for_participant_outcome?
 
     participant_profile&.npq? &&
       declaration_type == "completed"
+  end
+
+  def valid_course_identifier_for_participant_outcome?
+    !(
+      ::Finance::Schedule::NPQEhco::IDENTIFIERS +
+      ::Finance::Schedule::NPQSupport::IDENTIFIERS
+    ).compact.include?(course_identifier)
   end
 
   def participant_outcome_state
