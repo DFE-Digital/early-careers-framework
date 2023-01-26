@@ -29,6 +29,7 @@ Rails.logger.info("Seeding database")
   "add_mentor_scenarios.rb",
   "add_api_tokens.rb",
   "add_feature_flags.rb",
+  "add_sit_nominations.rb",
 ].each do |file|
   Rails.logger.info("seeding #{file}")
   load_base_file(file)
