@@ -299,8 +299,8 @@ Rails.application.routes.draw do
       end
 
       resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"
-      resource :change_name, only: %i[edit update], controller: "participants/change_name"
-      resource :change_email, only: %i[edit update], controller: "participants/change_email"
+      resource :change_name, only: %i[edit update], controller: "participants/change_name", path: "name"
+      resource :change_email, only: %i[edit update], controller: "participants/change_email", path: "email"
 
       resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
