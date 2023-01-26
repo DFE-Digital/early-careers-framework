@@ -1,30 +1,30 @@
-<h1 class="govuk-heading-l">Testing - Overview</h1>
+<% title = "Test Data" %>
+<% content_for :title, title %>
 
-<h2 class="govuk-heading-m">Schools without SITs</h2>
+<span class="govuk-caption-xl">Schools that haven’t chosen a programme this year</span>
+<h1 class="govuk-heading-xl"><%= title %></h1>
+
+<%= render partial: "admin/test_data/nav" %>
+
 <div class="nhsuk-table-container">
   <table class="govuk-table nhsuk-table-responsive">
     <thead class="nhsuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">School</th>
         <th scope="col" class="govuk-table__header">URN</th>
-        <th scope="col" class="govuk-table__header">Programme</th>
+        <th scope="col" class="govuk-table__header">Name</th>
         <th scope="col" class="govuk-table__header">Induction tutor</th>
       </tr>
     </thead>
     <tbody class="govuk-table__body nhsuk-table__body">
-      <% @schools_without_sits.each do |school| %>
+      <% @schools.each do |school| %>
         <tr class="govuk-table__row nhsuk-table__row">
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <span class="nhsuk-table-responsive__heading">School</span>
-            <%= govuk_link_to school.name, admin_school_path(school) %>
-          </td>
           <td class="govuk-table__cell nhsuk-table__cell">
             <span class="nhsuk-table-responsive__heading">URN</span>
             <%= school.urn %>
           </td>
           <td class="govuk-table__cell nhsuk-table__cell">
-            <span class="nhsuk-table-responsive__heading">Programme</span>
-            -
+            <span class="nhsuk-table-responsive__heading">School</span>
+            <%= govuk_link_to school.name, admin_school_path(school) %>
           </td>
           <td class="govuk-table__cell nhsuk-table__cell">
             <span class="nhsuk-table-responsive__heading">Induction tutor</span>
@@ -35,3 +35,4 @@
     </tbody>
   </table>
 </div>
+<%= govuk_pagination(pagy: @pagy) %>

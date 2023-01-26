@@ -338,8 +338,16 @@ Rails.application.routes.draw do
     end
 
     unless Rails.env.production?
-      namespace :testing do
-        resources :overview, only: :index
+      namespace :test_data, path: "test-data" do
+        get "/", to: redirect("/admin/test-data/fip-schools")
+        resources :fip_schools, only: :index, path: "fip-schools"
+        resources :cip_schools, only: :index, path: "cip-schools"
+        resources :yet_to_choose_schools, only: :index, path: "yet-to-choose-schools"
+        resources :unclaimed_schools, only: :index, path: "unclaimed-schools" do
+          member do
+            get "generate-link", action: :generate_link
+          end
+        end
       end
     end
 

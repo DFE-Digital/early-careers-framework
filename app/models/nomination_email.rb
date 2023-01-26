@@ -32,6 +32,10 @@ class NominationEmail < ApplicationRecord
     )
   end
 
+  def plain_nomination_url
+    Rails.application.routes.url_helpers.start_nominate_induction_coordinator_url(token:, host: Rails.application.config.domain)
+  end
+
   def self.generate_token
     loop do
       value = SecureRandom.hex(16)

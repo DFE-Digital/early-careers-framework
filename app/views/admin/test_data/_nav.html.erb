@@ -1,0 +1,22 @@
+<% content_for :before_content do %>
+  <%= govuk_back_link(href: admin_schools_path) %>
+<% end %>
+
+<%= render SubnavComponent.new do |component| %>
+  <%= component.nav_item(path: admin_test_data_fip_schools_path) do %>
+    FIP Schools
+  <% end %>
+
+  <%= component.nav_item(path: admin_test_data_cip_schools_path) do %>
+    CIP Schools
+  <% end %>
+
+  <%= component.nav_item(path: admin_test_data_unclaimed_schools_path) do %>
+    Unclaimed schools
+  <% end %>
+
+  <%= component.nav_item(path: admin_test_data_yet_to_choose_schools_path) do %>
+    Yet to choose a programme
+  <% end %>
+
+<% end %>
