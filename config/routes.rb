@@ -289,9 +289,6 @@ Rails.application.routes.draw do
       end
 
       member do
-        get :edit_name, path: "edit-name"
-        put :update_name, path: "update-name"
-        get :edit_email, path: "edit-email"
         put :update_email, path: "update-email"
         get :remove
         scope path: "validations", controller: "participants/validations" do
@@ -301,6 +298,8 @@ Rails.application.routes.draw do
       end
 
       resource :change_cohort, only: %i[edit update], controller: "participants/change_cohort"
+      resource :change_name, only: %i[edit update], controller: "participants/change_name", path: "name"
+      resource :change_email, only: %i[edit update], controller: "participants/change_email", path: "email"
 
       resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"

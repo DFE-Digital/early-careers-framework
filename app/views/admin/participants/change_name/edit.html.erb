@@ -2,7 +2,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Change <%= @participant_profile.ect? ? "ECT’s" : "mentor’s" %> name</h1>
-    <%= form_for @participant_profile.user, url: update_name_admin_participant_path(@participant_profile), method: :put do |f| %>
+    <%= form_for @participant_profile.user, url: admin_participant_change_name_path(@participant_profile), method: :put do |f| %>
       <%= f.govuk_text_field :full_name, label: { text: "Full name" } %>
       <%= f.govuk_submit %>
     <% end %>
