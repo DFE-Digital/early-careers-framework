@@ -9,14 +9,6 @@ RSpec.describe ApplicationHelper, type: :helper do
   let(:induction_coordinator) { create(:user, :induction_coordinator) }
   let(:school) { induction_coordinator.induction_coordinator_profile.schools.first }
   let(:participant_profile) { create(:ect) }
-  let(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
-  let(:schedule_2020) { build(:ecf_schedule, cohort: cohort_2020) }
-  let(:year_2020_participant_profile) do
-    create(:ecf_participant_profile,
-           participant_identity: build(:participant_identity, external_identifier: SecureRandom.uuid),
-           schedule: schedule_2020,
-           school_cohort: build(:school_cohort, cohort: cohort_2020))
-  end
 
   let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
 
@@ -62,10 +54,6 @@ RSpec.describe ApplicationHelper, type: :helper do
   describe "#participant_start_path" do
     it "returns the validation start path", :with_default_schedules do
       expect(helper.participant_start_path(participant_profile.user)).to eq("/participants/validation")
-    end
-
-    it "returns the no access path for NQT+1s" do
-      expect(helper.participant_start_path(year_2020_participant_profile.user)).to eq("/participants/no_access")
     end
   end
 
@@ -114,18 +102,9 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe "#service_name" do
-    context "when the current path doesn't contain 'year-2020'" do
-      it "displays the default service name" do
-        helper.request.path = "/"
-        expect(helper.service_name).to eq "Manage training for early career teachers"
-      end
-    end
-
-    context "when the current path does contain 'year-2020'" do
-      it "displays an NQT-oriented service name" do
-        helper.request.path = start_schools_year_2020_path(school)
-        expect(helper.service_name).to eq "Get support materials for NQTs"
-      end
+    it "displays the default service name" do
+      helper.request.path = "/"
+      expect(helper.service_name).to eq "Manage training for early career teachers"
     end
   end
 end

@@ -262,7 +262,6 @@ Rails.application.routes.draw do
         end
       end
       resources :participants, controller: "schools/participants", only: :index
-      resource :cohort2020, controller: "schools/cohort2020", only: %i[show new create]
     end
 
     resources :participants, only: %i[index destroy] do
@@ -513,25 +512,6 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
-      resource :year_2020, path: "year-2020", controller: "year2020", only: [] do
-        get "support-materials-for-NQTs", action: :start, as: :start
-
-        get "choose-core-induction-programme", action: :select_cip
-        put "choose-core-induction-programme", action: :choose_cip
-        get "add-teacher", action: :new_teacher
-        put "add-teacher", action: :create_teacher
-        get "remove-teacher", action: :remove_teacher
-        put "remove-teacher", action: :delete_teacher
-        get "edit-teacher", action: :edit_teacher
-        put "edit-teacher", action: :update_teacher
-        get "check-your-answers", action: :check
-        post "check-your-answers", action: :confirm
-        get "success", action: :success
-
-        get "2020-cohort-already-have-access", action: :cohort_already_have_access
-        get "no-accredited-materials", action: :no_accredited_materials
-      end
-
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice

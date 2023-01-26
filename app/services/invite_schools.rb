@@ -64,14 +64,6 @@ private
     )
   end
 
-  def year2020_start_url(school, utm_source:)
-    Rails.application.routes.url_helpers.start_schools_year_2020_url(
-      host: Rails.application.config.domain,
-      **UTMService.email(utm_source, utm_source),
-      school_id: school.friendly_id,
-    )
-  end
-
   def sign_in_url_with_campaign(campaign)
     Rails.application.routes.url_helpers.new_user_session_url(
       host: Rails.application.config.domain,

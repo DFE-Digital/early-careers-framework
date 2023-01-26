@@ -15,19 +15,12 @@ module EarlyCareerTeachers
 
         raise ParticipantProfileExistsError if participant_profile_exists?
 
-        profile = if year_2020
-                    ParticipantProfile::ECT.create!({
-                      teacher_profile:,
-                      schedule: Finance::Schedule::ECF.default_for(cohort: Cohort.find_by(start_year: "2021")),
-                      participant_identity: Identity::Create.call(user:),
-                    }.merge(ect_attributes))
-                  else
-                    ParticipantProfile::ECT.create!({
-                      teacher_profile:,
-                      schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
-                      participant_identity: Identity::Create.call(user:),
-                    }.merge(ect_attributes))
-                  end
+        profile = ParticipantProfile::ECT.create!(
+          teacher_profile:,
+          schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort),
+          participant_identity: Identity::Create.call(user:),
+          **ect_attributes,
+        )
 
         ParticipantProfileState.create!(participant_profile: profile, cpd_lead_provider: school_cohort&.default_induction_programme&.lead_provider&.cpd_lead_provider)
         if school_cohort.default_induction_programme.present?
@@ -39,7 +32,7 @@ module EarlyCareerTeachers
         end
       end
 
-      unless year_2020 || sit_validation
+      unless sit_validation
         ParticipantMailer.participant_added(participant_profile: profile).deliver_later
         profile.update_column(:request_for_details_sent_at, Time.zone.now)
         ParticipantDetailsReminderJob.schedule(profile)
@@ -50,15 +43,14 @@ module EarlyCareerTeachers
 
   private
 
-    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :year_2020, :start_date, :sit_validation, :appropriate_body_id
+    attr_reader :full_name, :email, :school_cohort, :mentor_profile_id, :start_date, :sit_validation, :appropriate_body_id
 
-    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_date: nil, year_2020: false, sit_validation: false, appropriate_body_id: nil)
+    def initialize(full_name:, email:, school_cohort:, mentor_profile_id: nil, start_date: nil, sit_validation: false, appropriate_body_id: nil)
       @full_name = full_name
       @email = email
       @school_cohort = school_cohort
       @mentor_profile_id = mentor_profile_id
       @start_date = start_date
-      @year_2020 = year_2020
       @sit_validation = sit_validation
       @appropriate_body_id = appropriate_body_id
     end
