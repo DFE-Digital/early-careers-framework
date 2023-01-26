@@ -421,7 +421,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       context "ehco course identifier" do
         let!(:npq_ehco_schedule) { create(:npq_ehco_schedule) }
         let(:npq_course) { create(:npq_ehco_course) }
-        let(:has_passed) { true }
+        let(:has_passed) { nil }
 
         it "does not create participant outcome" do
           travel_to declaration_date do
@@ -436,7 +436,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       context "aso course identifier" do
         let!(:npq_aso_schedule) { create(:npq_aso_schedule) }
         let(:npq_course) { create(:npq_aso_course) }
-        let(:has_passed) { true }
+        let(:has_passed) { nil }
 
         it "does not create participant outcome" do
           travel_to declaration_date do
