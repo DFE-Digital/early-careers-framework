@@ -338,7 +338,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
   describe "#relevant_induction_record_for" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
     let(:lead_provider) { cpd_lead_provider.lead_provider }
-    let(:cohort) { Cohort.next || create(:cohort, :next) }
+    let(:cohort) { Cohort.current || create(:cohort, :current) }
     let(:delivery_partner) { create(:delivery_partner) }
     let(:partnership) do
       create(
