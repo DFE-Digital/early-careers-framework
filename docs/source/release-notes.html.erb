@@ -9,6 +9,25 @@ weight: 8
   If you have any questions or comments about these notes, please contact DfE via Slack or email.
 </p>
 
+<h2 class="govuk-heading-l" id="26-1-2023">26th January 2023</h2>
+<p class="govuk-body-m">
+  Providers are now able to submit, view and update NPQ participant outcomes in the production environment.
+  </br>
+  </br>
+  When an NPQ participant completes their course, their final assessment will determine a pass or fail outcome. Providers are required to notify DfE of outcomes, and provide updated outcomes as required.
+  </br>
+  </br>
+  DfE will then notify the TRA who will issue certificates to any participants who have passed their NPQ course.
+  </br>
+  </br>
+  Note, this functionality became available in the sandbox environment on 16th January 2023. Read more detailed guidance below on:
+  </br>
+  <ul class="govuk-list govuk-list--bullet">
+    <li><a class="govuk-link" href="#submitting-npq-outcomes">Submitting NPQ outcomes in 'completed' declarations</a></li>
+    <li><a class="govuk-link" href="#updating-npq-outcomes">Updating NPQ outcomes</a></li>
+    <li><a class="govuk-link" href="#viewing-npq-outcomes">Viewing NPQ outcomes for participants.</a></li>
+  </ul>
+</p>
 <h2 class="govuk-heading-l" id="16-1-2023">16th January 2023</h2>
 <p class="govuk-body-m">
   Providers are now able to submit, view and update NPQ participant outcomes in the sandbox environment. Note, providers will be notified ahead of this functionality becoming available in the production environment.
@@ -18,7 +37,7 @@ weight: 8
   </br>
   </br>
   DfE will then notify the TRA who will issue certificates to any participants who have passed their NPQ course.
-  <h3 class="govuk-heading-m">Submitting NPQ outcomes in 'completed' declarations</h3>
+  <h3 class="govuk-heading-m" id="submitting-npq-outcomes">Submitting NPQ outcomes in 'completed' declarations</h3>
   Providers must include participant outcomes as part of NPQ <code>completed</code> declaration submissions. The mandatory <code>has_passed</code> attribute must be included as part of the request body for the following endpoint:
   <pre><code>POST /api/v1/participant-declarations</pre></code>
   Providers can submit <code>has_passed</code> values as follows:
@@ -34,7 +53,7 @@ weight: 8
   If providers void <code>completed</code> declarations where a participant had passed assessment (<code>"has_passed"</code>: <code>true</code>), then this outcome will also be retracted and the participants will be notified.
   </br>
   </br>
-  <h3 class="govuk-heading-m">Updating NPQ outcomes</h3>
+  <h3 class="govuk-heading-m" id="updating-npq-outcomes">Updating NPQ outcomes</h3>
   Providers can update participant outcomes (defined by the <code>state</code> attribute) if they made an error in the data originally submitted, or if the participant fails, retakes and goes on to pass their assessment.
   </br>
   </br>
@@ -47,7 +66,7 @@ weight: 8
     <li><code>"state": passed</code> - This will update the record to signify a participant has passed their course.</li>
     <li><code>"state": failed</code> - This will update the record to signify a participant has failed their course.</li>
   </ul>
-  <h3 class="govuk-heading-m">Viewing NPQ outcomes for all participants</h3>
+  <h3 class="govuk-heading-m" id="viewing-npq-outcomes">Viewing NPQ outcomes for all participants</h3>
   Providers can view all outcomes submitted for NPQ participants by using the following endpoints. Outcomes will be defined in the responses by the state attribute with values including:
   </br>
   </br>
