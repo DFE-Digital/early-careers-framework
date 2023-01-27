@@ -8,98 +8,101 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<h2 class="govuk-heading-m">Induction records</h2>
+<% if @all_induction_records.present? %>
+  <h2 class="govuk-heading-m">Induction records</h2>
 
-<% @all_induction_records.each do |induction_record| %>
-  <%= tag.h3(induction_record.id, class: "govuk-heading-s") %>
+  <% @all_induction_records.each do |induction_record| %>
+    <%= tag.h3(induction_record.id, class: "govuk-heading-s") %>
 
-  <%=
-    govuk_summary_list do |sl|
-      sl.row do |row|
-        row.key(text: "Cohort")
-        row.value(text: induction_record.cohort.start_year)
-      end
+    <%=
+      govuk_summary_list do |sl|
+        sl.row do |row|
+          row.key(text: "Cohort")
+          row.value(text: induction_record.cohort.start_year)
+        end
 
-      sl.row do |row|
-        row.key(text: "School name")
-        row.value do
-          govuk_link_to(
-            induction_record.school_name,
-            admin_school_path(induction_record.school.friendly_id)
-          )
+        sl.row do |row|
+          row.key(text: "School name")
+          row.value do
+            govuk_link_to(
+              induction_record.school_name,
+              admin_school_path(induction_record.school.friendly_id)
+            )
+          end
+        end
+
+        sl.row do |row|
+          row.key(text: "School URN")
+          row.value(text: induction_record.school_urn)
+        end
+
+        sl.row do |row|
+          row.key(text: "Preferred email")
+          row.value(text: induction_record.participant_email)
+        end
+
+        sl.row do |row|
+          row.key(text: "Training programme")
+          row.value(text: induction_programme_friendly_name(induction_record.training_programme))
+        end
+
+        sl.row do |row|
+          row.key(text: "Lead provider")
+          row.value(text: induction_record.lead_provider_name || "No lead provider")
+        end
+
+        sl.row do |row|
+          row.key(text: "Delivery partner")
+          row.value(text: induction_record.delivery_partner_name || "No delivery partner")
+        end
+
+        sl.row do |row|
+          row.key(text: "School transfer")
+          row.value(text: induction_record.school_transfer)
+        end
+
+        sl.row do |row|
+          row.key(text: "Induction status")
+          row.value(text: induction_record.induction_status)
+        end
+
+        sl.row do |row|
+          row.key(text: "Training status")
+          row.value(text: induction_record.training_status)
+        end
+
+        sl.row do |row|
+          row.key(text: "Mentor")
+          row.value(text: induction_record.mentor_full_name)
+        end
+
+        sl.row do |row|
+          row.key(text: "Schedule")
+          row.value(text: induction_record.schedule_identifier)
+        end
+
+        sl.row do |row|
+          row.key(text: "Appropriate body")
+          row.value(text: induction_record.appropriate_body_name)
+        end
+
+        sl.row do |row|
+          row.key(text: "Creation date")
+          row.value(text: induction_record.created_at&.to_s(:govuk))
+        end
+
+        sl.row do |row|
+          row.key(text: "Start date")
+          row.value(text: induction_record.start_date.to_formatted_s(:govuk))
+        end
+
+        sl.row do |row|
+          row.key(text: "End date")
+          row.value(text: induction_record.end_date&.to_s(:govuk))
         end
       end
-
-      sl.row do |row|
-        row.key(text: "School URN")
-        row.value(text: induction_record.school_urn)
-      end
-
-      sl.row do |row|
-        row.key(text: "Preferred email")
-        row.value(text: induction_record.participant_email)
-      end
-
-      sl.row do |row|
-        row.key(text: "Training programme")
-        row.value(text: induction_programme_friendly_name(induction_record.training_programme))
-      end
-
-      sl.row do |row|
-        row.key(text: "Lead provider")
-        row.value(text: induction_record.lead_provider_name || "No lead provider")
-      end
-
-      sl.row do |row|
-        row.key(text: "Delivery partner")
-        row.value(text: induction_record.delivery_partner_name || "No delivery partner")
-      end
-
-      sl.row do |row|
-        row.key(text: "School transfer")
-        row.value(text: induction_record.school_transfer)
-      end
-
-      sl.row do |row|
-        row.key(text: "Induction status")
-        row.value(text: induction_record.induction_status)
-      end
-
-      sl.row do |row|
-        row.key(text: "Training status")
-        row.value(text: induction_record.training_status)
-      end
-
-      sl.row do |row|
-        row.key(text: "Mentor")
-        row.value(text: induction_record.mentor_full_name)
-      end
-
-      sl.row do |row|
-        row.key(text: "Schedule")
-        row.value(text: induction_record.schedule_identifier)
-      end
-
-      sl.row do |row|
-        row.key(text: "Appropriate body")
-        row.value(text: induction_record.appropriate_body_name)
-      end
-
-      sl.row do |row|
-        row.key(text: "Creation date")
-        row.value(text: induction_record.created_at&.to_s(:govuk))
-      end
-
-      sl.row do |row|
-        row.key(text: "Start date")
-        row.value(text: induction_record.start_date.to_formatted_s(:govuk))
-      end
-
-      sl.row do |row|
-        row.key(text: "End date")
-        row.value(text: induction_record.end_date&.to_s(:govuk))
-      end
-    end
-  %>
-
+    %>
+  <% end %>
+<% else %>
+  <p>No induction records for <%= @participant_profile.full_name %>.</p>
 <% end %>
