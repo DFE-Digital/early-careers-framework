@@ -11,8 +11,9 @@ module Admin::TestData
     def generate_link
       nomination_email = NominationEmail.create_nomination_email(
         sent_to: current_user.email,
-        sent_at: Time.zone.now, 
-        school: @school)
+        sent_at: Time.zone.now,
+        school: @school,
+      )
 
       nomination_url = nomination_email.plain_nomination_url
       set_success_message(heading: "Nomination link for #{@school.name}:", content: helpers.govuk_link_to(nomination_url))
@@ -26,7 +27,7 @@ module Admin::TestData
 
       if nomination_email.nil? || nomination_email.expired?
         helpers.govuk_link_to generate_link_admin_test_data_unclaimed_school_path(school) do
-          %Q(Generate link <span class="govuk-visually-hidden">for #{school.name}</span>).html_safe
+          %(Generate link <span class="govuk-visually-hidden">for #{school.name}</span>).html_safe
         end
       else
         helpers.govuk_link_to nomination_email.plain_nomination_url, nomination_email.plain_nomination_url

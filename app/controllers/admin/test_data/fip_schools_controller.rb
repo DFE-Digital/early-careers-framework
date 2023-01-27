@@ -11,7 +11,7 @@ module Admin::TestData
     def find_schools
       policy_scope(School)
         .joins(:induction_coordinator_profiles_schools, school_cohorts: :cohort)
-        .includes(partnerships: [:lead_provider, :delivery_partner])
+        .includes(partnerships: %i[lead_provider delivery_partner])
         .merge(SchoolCohort.full_induction_programme)
         .where(school_cohorts: { cohort: Cohort.current })
         .order(:urn)
