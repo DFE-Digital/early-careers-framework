@@ -3,6 +3,10 @@
 module ParticipantSteps
   include Capybara::DSL
 
+  def active_tab_selector
+    ".app-subnav__list-item--selected"
+  end
+
   # Given
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
@@ -181,11 +185,11 @@ module ParticipantSteps
   end
 
   def and_i_should_see_the_participant_history
-    expect(page).to have_css("h2", text: "Key events")
+    expect(page).to have_css(active_tab_selector, text: "History")
   end
 
   def and_i_should_see_the_participant_induction_records
-    expect(page).to have_css("h2", text: "Induction records")
+    expect(page).to have_css(active_tab_selector, text: "Induction records")
   end
 
   def and_i_should_see_the_participant_cohorts
@@ -205,7 +209,7 @@ module ParticipantSteps
   end
 
   def and_i_should_see_the_participant_identities
-    expect(page).to have_css("h2", text: "Identities")
+    expect(page).to have_css(active_tab_selector, text: "Identities")
     expect(page).to have_text(@participant_profile_ect.user.email)
   end
 
