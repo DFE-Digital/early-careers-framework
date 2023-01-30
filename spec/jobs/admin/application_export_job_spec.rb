@@ -48,6 +48,8 @@ RSpec.describe Admin::ApplicationExportJob do
         user_full_name
         teacher_reference_number_verified
         teacher_reference_number
+        itt_provider
+        lead_mentor
       ]
     end
 
