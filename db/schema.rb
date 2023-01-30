@@ -1009,7 +1009,7 @@ ActiveRecord::Schema.define(version: 2023_01_25_182955) do
     t.string "get_an_identity_id"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["get_an_identity_id"], name: "index_users_on_get_an_identity_id"
+    t.index ["get_an_identity_id"], name: "index_users_on_get_an_identity_id", unique: true
   end
 
   create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
