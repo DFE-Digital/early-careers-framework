@@ -24,27 +24,18 @@ module Api
                      },
                    )
 
-          necessary_fields = %i[
-            induction_programme_id
-            induction_status
-            mentor_profile_id
-            participant_profile_id
-            preferred_identity_id
-            schedule_id
-            training_status
-            updated_at
-          ]
-
           scope = InductionRecord
                     .select(*necessary_fields)
-                    .references(participant_profile: %i[participant_identity])
-                    .includes(
-                      :preferred_identity,
-                      :schedule,
+                    .eager_load(:schedule)
+                    .left_outer_joins(
                       induction_programme: { school_cohort: %i[school cohort] },
-                      mentor_profile: [:participant_identity],
-                      participant_profile: %i[ecf_participant_eligibility ecf_participant_validation_data participant_identity teacher_profile user],
+                      participant_profile: %i[ecf_participant_eligibility ecf_participant_validation_data teacher_profile user],
                     )
+                    .joins(left_outer_join_preferred_identities)
+                    .joins(left_outer_join_participant_profiles)
+                    .joins(left_outer_join_participant_identities)
+                    .joins(left_outer_join_mentor_profiles)
+                    .joins(left_outer_join_mentor_participant_identities)
                     .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.id = induction_records.id AND latest_induction_records.created_at_precedence = 1")
 
           if updated_since.present?
@@ -56,7 +47,6 @@ module Api
 
         def induction_record
           induction_records
-            .joins(participant_profile: %i[participant_identity])
             .find_by!(participant_profile: { participant_identities: { external_identifier: params[:id] } })
         end
 
@@ -80,6 +70,101 @@ module Api
           Time.iso8601(filter[:updated_since])
         rescue ArgumentError
           Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+        end
+
+        def left_outer_join_preferred_identities
+          "LEFT OUTER JOIN participant_identities preferred_identities ON preferred_identities.id = induction_records.preferred_identity_id"
+        end
+
+        def left_outer_join_participant_profiles
+          "LEFT OUTER JOIN participant_profiles ON participant_profiles.id = induction_records.participant_profile_id"
+        end
+
+        def left_outer_join_participant_identities
+          "LEFT OUTER JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id"
+        end
+
+        def left_outer_join_mentor_profiles
+          "LEFT OUTER JOIN participant_profiles mentor_profiles ON mentor_profiles.id = induction_records.mentor_profile_id"
+        end
+
+        def left_outer_join_mentor_participant_identities
+          "LEFT OUTER JOIN participant_identities participant_identities_mentor_profiles ON participant_identities_mentor_profiles.id = mentor_profiles.participant_identity_id"
+        end
+
+        def necessary_fields
+          induction_record_fields +
+            participant_profile_fields +
+            participant_identity_fields +
+            user_fields +
+            ecf_participant_eligibily_fields +
+            school_fields +
+            teacher_profile_fields +
+            ecf_participant_validation_fields +
+            cohort_fields
+        end
+
+        def school_fields
+          ["schools.urn AS schools_urn"]
+        end
+
+        def teacher_profile_fields
+          ["teacher_profiles.trn AS teacher_profile_trn"]
+        end
+
+        def ecf_participant_validation_fields
+          ["ecf_participant_validation_data.trn AS ecf_participant_validation_data_trn"]
+        end
+
+        def cohort_fields
+          ["cohorts.start_year AS start_year"]
+        end
+
+        def ecf_participant_eligibily_fields
+          [
+            "ecf_participant_eligibilities.reason AS ecf_participant_eligibility_reason",
+            "ecf_participant_eligibilities.status AS ecf_participant_eligibility_status",
+          ]
+        end
+
+        def user_fields
+          [
+            "users.full_name AS full_name",
+            "users.email AS user_email",
+            "users.updated_at AS user_updated_at",
+          ]
+        end
+
+        def participant_identity_fields
+          [
+            "participant_identities.external_identifier as external_identifier",
+            "participant_identities.updated_at AS participant_identity_updated_at",
+            "preferred_identities.email AS preferred_identity_email",
+            "participant_identities_mentor_profiles.external_identifier AS mentor_external_identifier",
+          ]
+        end
+
+        def participant_profile_fields
+          [
+            "participant_profiles.sparsity_uplift AS sparsity_uplift",
+            "participant_profiles.pupil_premium_uplift AS pupil_premium_uplift",
+            "participant_profiles.id AS participant_profile_id",
+            "participant_profiles.updated_at AS participant_profile_updated_at",
+            "participant_profiles.type AS participant_profile_type",
+          ]
+        end
+
+        def induction_record_fields
+          %i[
+            induction_programme_id
+            induction_status
+            mentor_profile_id
+            participant_profile_id
+            preferred_identity_id
+            schedule_id
+            training_status
+            updated_at
+          ]
         end
       end
     end
