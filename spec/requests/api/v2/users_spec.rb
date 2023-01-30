@@ -44,7 +44,7 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
 
       it "has correct attributes" do
         get "/api/v2/users"
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name, :get_an_identity_id).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:email, :full_name).exactly
       end
 
       it "returns the right number of users per page" do

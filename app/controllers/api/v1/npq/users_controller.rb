@@ -8,7 +8,7 @@ module Api
           creation_response = ::NPQ::Users::FindOrCreateBy.new(params: find_or_create_params).call
 
           if creation_response.user.present?
-            hash = Api::V1::UserSerializer.new(creation_response.user).serializable_hash
+            hash = Api::V1::NPQ::UserSerializer.new(creation_response.user).serializable_hash
             status_code = creation_response.new_user ? :created : :ok
 
             render json: hash, status: status_code

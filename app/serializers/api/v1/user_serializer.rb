@@ -9,7 +9,7 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       set_id :id
-      attributes :email, :full_name, :get_an_identity_id
+      attributes :email, :full_name
     end
   end
 end
