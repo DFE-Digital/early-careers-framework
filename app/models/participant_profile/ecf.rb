@@ -118,6 +118,19 @@ class ParticipantProfile < ApplicationRecord
       !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
     end
 
+    def relevant_induction_record_for(delivery_partner:)
+      induction_records.includes(induction_programme: [:partnership]).where(
+        induction_programme: {
+          partnerships: {
+            delivery_partner:,
+            challenged_at: nil,
+            challenge_reason: nil,
+            pending: false,
+          },
+        },
+      ).latest
+    end
+
   private
 
     def update_analytics

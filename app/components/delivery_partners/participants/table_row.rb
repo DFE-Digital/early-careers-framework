@@ -49,21 +49,13 @@ module DeliveryPartners
       attr_reader :participant_profile, :delivery_partner
 
       def induction_record
-        @induction_record ||= participant_profile.induction_records.includes(induction_programme: [:partnership]).where(
-          induction_programme: {
-            partnerships: {
-              delivery_partner:,
-              challenged_at: nil,
-              challenge_reason: nil,
-              pending: false,
-            },
-          },
-        ).latest
+        @induction_record ||= participant_profile.relevant_induction_record_for(delivery_partner:)
       end
 
       def status_name
         @status_name ||= ParticipantProfileStatus.new(
           participant_profile:,
+          induction_record:,
         ).status_name
       end
     end

@@ -334,4 +334,47 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
       expect(subject.record_to_serialize_for(lead_provider:)).to eq(subject.induction_records.latest.reload)
     end
   end
+
+  describe "#relevant_induction_record_for" do
+    let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+    let(:lead_provider) { cpd_lead_provider.lead_provider }
+    let(:cohort) { Cohort.current || create(:cohort, :current) }
+    let(:delivery_partner) { create(:delivery_partner) }
+    let(:partnership) do
+      create(
+        :partnership,
+        delivery_partner:,
+        cohort:,
+        lead_provider:,
+        challenged_at: nil,
+        challenge_reason: nil,
+        pending: false,
+      )
+    end
+    let(:another_partnership) do
+      create(
+        :partnership,
+        cohort:,
+        lead_provider:,
+        challenged_at: nil,
+        challenge_reason: nil,
+        pending: false,
+      )
+    end
+    let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:) }
+    let(:induction_programme) { create(:induction_programme, school_cohort:, partnership:) }
+    let(:another_induction_programme) { create(:induction_programme, school_cohort:, partnership: another_partnership) }
+    let(:profile) { create(:ecf_participant_profile, school_cohort:) }
+    let!(:induction_record_oldest) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 3.days.ago) }
+    let!(:induction_record_latest_first_delivery_partner) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 2.days.ago) }
+    let!(:induction_record_latest_second_delivery_partner) { create(:induction_record, participant_profile: profile, induction_programme: another_induction_programme, start_date: 1.day.ago) }
+
+    it "finds the most recent induction record for the given delivery partner" do
+      expect(profile.relevant_induction_record_for(delivery_partner: partnership.delivery_partner)).to eq(induction_record_latest_first_delivery_partner)
+    end
+
+    it "finds the most recent induction record for the given delivery partner" do
+      expect(profile.relevant_induction_record_for(delivery_partner: another_partnership.delivery_partner)).to eq(induction_record_latest_second_delivery_partner)
+    end
+  end
 end

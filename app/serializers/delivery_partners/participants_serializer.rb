@@ -9,21 +9,14 @@ module DeliveryPartners
 
     class << self
       def induction_record(participant_profile, delivery_partner)
-        participant_profile.induction_records.includes(induction_programme: [:partnership]).where(
-          induction_programme: {
-            partnerships: {
-              delivery_partner:,
-              challenged_at: nil,
-              challenge_reason: nil,
-              pending: false,
-            },
-          },
-        ).latest
+        @induction_record ||= {}
+        @induction_record["#{participant_profile.id},#{delivery_partner.id}"] ||= participant_profile.relevant_induction_record_for(delivery_partner:)
       end
 
-      def status_name(participant_profile)
+      def status_name(participant_profile, delivery_partner)
         ParticipantProfileStatus.new(
           participant_profile:,
+          induction_record: induction_record(participant_profile, delivery_partner),
         ).status_name
       end
     end
@@ -65,8 +58,8 @@ module DeliveryPartners
       induction_record(participant_profile, params[:delivery_partner])&.training_status
     end
 
-    attribute :status do |participant_profile|
-      I18n.t("participant_profile_status.status.#{status_name(participant_profile)}.title")
+    attribute :status do |participant_profile, params|
+      I18n.t("participant_profile_status.status.#{status_name(participant_profile, params[:delivery_partner])}.title")
     end
   end
 end

@@ -53,6 +53,7 @@ module AppropriateBodies
       def status_name
         @status_name ||= ParticipantProfileStatus.new(
           participant_profile:,
+          induction_record:,
         ).status_name
       end
     end

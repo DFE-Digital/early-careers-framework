@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 class ParticipantProfileStatus
-  def initialize(participant_profile:)
+  def initialize(participant_profile:, induction_record:)
     @participant_profile = participant_profile
+    @induction_record = induction_record
   end
 
   def status_name
     return unless participant_profile
 
-    if participant_profile.training_status_withdrawn?
+    if training_status_withdrawn?
       "no_longer_being_trained"
 
     elsif eligible? && participant_profile.single_profile?
@@ -68,7 +69,7 @@ class ParticipantProfileStatus
 
 private
 
-  attr_reader :participant_profile
+  attr_reader :participant_profile, :induction_record
 
   delegate :school_cohort,
            :ecf_participant_eligibility,
@@ -108,5 +109,9 @@ private
 
   def participant_has_no_qts?
     ecf_participant_eligibility&.no_qts_reason?
+  end
+
+  def training_status_withdrawn?
+    induction_record.present? ? induction_record.training_status_withdrawn? : participant_profile.training_status_withdrawn?
   end
 end
