@@ -40,7 +40,7 @@ module Api
     private
 
       def serializer_class
-        ParticipantFromInductionRecordSerializer
+        ParticipantFromQuerySerializer
       end
 
       def induction_records
