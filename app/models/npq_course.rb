@@ -10,9 +10,9 @@ class NPQCourse < ApplicationRecord
   def self.schedule_for(npq_course:, cohort: Cohort.current)
     case npq_course.identifier
     when *Finance::Schedule::NPQLeadership::IDENTIFIERS
-      Finance::Schedule::NPQLeadership.find_by!(cohort:)
+      Finance::Schedule::NPQLeadership.schedule_for(cohort:)
     when *Finance::Schedule::NPQSpecialist::IDENTIFIERS
-      Finance::Schedule::NPQSpecialist.find_by!(cohort:)
+      Finance::Schedule::NPQSpecialist.schedule_for(cohort:)
     when *Finance::Schedule::NPQSupport::IDENTIFIERS
       Finance::Schedule::NPQSupport.find_by!(cohort:)
     when *Finance::Schedule::NPQEhco::IDENTIFIERS

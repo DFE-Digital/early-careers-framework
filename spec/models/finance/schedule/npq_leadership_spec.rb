@@ -13,10 +13,102 @@ RSpec.describe Finance::Schedule::NPQLeadership, type: :model do
     expect(schedule.milestones.count).to eql(4)
   end
 
-  describe "default" do
-    it "returns NPQ Leadership Spring 2021 schedule" do
-      expected_schedule = described_class.find_by(cohort: Cohort.current, schedule_identifier: "npq-leadership-spring")
-      expect(described_class.default).to eql(expected_schedule)
+  describe ".default_for" do
+    let(:cohort) { Cohort.find_by!(start_year: 2022) }
+
+    it "returns NPQ Leadership Spring 2022 schedule" do
+      expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-leadership-spring")
+
+      expect(described_class.default_for(cohort:)).to eql(expected_schedule)
+    end
+  end
+
+  describe ".schedule_for" do
+    let(:cohort)            { Cohort.find_by!(start_year: 2022) }
+    let(:cohort_start_year) { cohort.start_year }
+
+    context "when date is between June and December of cohort start year" do
+      it "returns NPQ Leadership Autumn schedule" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-leadership-autumn")
+
+        travel_to Date.new(cohort_start_year, 6, 1) do
+          expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
+        end
+      end
+    end
+
+    context "when date is between December of cohort start year and April of the next year" do
+      it "returns NPQ Leadership Spring schedule" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-leadership-spring")
+
+        travel_to Date.new(cohort_start_year, 12, 26) do
+          expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
+        end
+      end
+    end
+
+    context "when date is between April and December of the next year" do
+      it "returns NPQ Leadership Autumn schedule" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-leadership-autumn")
+
+        travel_to Date.new(cohort_start_year + 1, 4, 16) do
+          expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
+        end
+      end
+    end
+
+    context "when date is between December of next year and April in 2 years" do
+      it "returns NPQ Leadership Spring schedule" do
+        expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-leadership-spring")
+
+        travel_to Date.new(cohort_start_year + 1, 12, 26) do
+          expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
+        end
+      end
+    end
+
+    context "when no schedule exists for the cohort" do
+      let(:cohort) { create(:cohort, start_year: 2020) }
+
+      it "raises an error" do
+        expect { described_class.schedule_for(cohort:) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe ".spring_schedule?" do
+    it "returns true when date between Dec 26 to Apr 15" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-12-26".to_date)..("#{year + 1}-04-15".to_date)).each do |date|
+          expect(described_class.spring_schedule?(date)).to be(true)
+        end
+      end
+    end
+
+    it "returns false when date between Apr 16 to Dec 25" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-04-16".to_date)..("#{year}-12-25".to_date)).each do |date|
+          expect(described_class.spring_schedule?(date)).to be(false)
+        end
+      end
+    end
+  end
+
+  describe ".autumn_schedule?" do
+    it "returns true when date between Apr 16 to Dec 25" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-04-16".to_date)..("#{year}-12-25".to_date)).each do |date|
+          expect(described_class.autumn_schedule?(date)).to be(true)
+        end
+      end
+    end
+
+    it "returns false when date between Dec 26 to Apr 15" do
+      (2.years.ago.year..Date.current.year).each do |year|
+        (("#{year}-12-26".to_date)..("#{year + 1}-04-15".to_date)).each do |date|
+          expect(described_class.autumn_schedule?(date)).to be(false)
+        end
+      end
     end
   end
 end

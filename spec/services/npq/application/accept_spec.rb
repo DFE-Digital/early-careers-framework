@@ -239,7 +239,7 @@ RSpec.describe NPQ::Application::Accept, :with_default_schedules do
 
         profile = user.teacher_profile.npq_profiles.first
 
-        expect(profile.schedule).to eql(Finance::Schedule::NPQLeadership.default)
+        expect(profile.schedule).to eql(Finance::Schedule::NPQLeadership.default_for(cohort: cohort_2021))
         expect(profile.npq_course).to eql(npq_application.npq_course)
         expect(profile.teacher_profile).to eql(user.teacher_profile)
         expect(profile.user).to eql(user)

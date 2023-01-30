@@ -6,7 +6,9 @@ RSpec.shared_examples "validates the declaration for a withdrawn participant" do
   context "when a participant has been withdrawn" do
     before do
       travel_to(withdrawal_time - 1.second) do
-        create(:npq_leadership_schedule, cohort: Cohort.current)
+        %w[npq-leadership-spring npq-leadership-autumn].each do |schedule_identifier|
+          create(:npq_leadership_schedule, schedule_identifier:, cohort: Cohort.current)
+        end
         participant_profile
       end
 
