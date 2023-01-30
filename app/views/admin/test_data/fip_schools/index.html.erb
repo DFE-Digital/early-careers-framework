@@ -1,18 +1,18 @@
-<h1 class="govuk-heading-l">Schools</h1>
-<% unless Rails.env.production? %>
-  <div class="govuk-body"><%= govuk_link_to "View test data", admin_test_data_path %></div>
-<% end %>
-<%= render SearchBox.new(query: @query, title: "Search schools", hint: "Enter the school’s name, postcode, URN or tutor email") %>
+<% title = "Test Data" %>
+<% content_for :title, title %>
 
+<span class="govuk-caption-xl">Schools that have chosen FIP for <%= Cohort.current.academic_year %></span>
+<h1 class="govuk-heading-xl"><%= title %></h1>
+
+<%= render partial: "admin/test_data/nav" %>
 
 <div class="nhsuk-table-container">
   <table class="govuk-table nhsuk-table-responsive">
     <thead class="nhsuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">School</th>
         <th scope="col" class="govuk-table__header">URN</th>
-        <th scope="col" class="govuk-table__header">Local Authority</th>
-        <th scope="col" class="govuk-table__header">Group/network</th>
+        <th scope="col" class="govuk-table__header">Name</th>
+        <th scope="col" class="govuk-table__header">Provider</th>
         <th scope="col" class="govuk-table__header">Induction tutor</th>
       </tr>
     </thead>
@@ -20,20 +20,17 @@
       <% @schools.each do |school| %>
         <tr class="govuk-table__row nhsuk-table__row">
           <td class="govuk-table__cell nhsuk-table__cell">
-            <span class="nhsuk-table-responsive__heading">School</span>
-            <%= govuk_link_to school.name, admin_school_path(school) %>
-          </td>
-          <td class="govuk-table__cell nhsuk-table__cell">
             <span class="nhsuk-table-responsive__heading">URN</span>
             <%= school.urn %>
           </td>
           <td class="govuk-table__cell nhsuk-table__cell">
-            <span class="nhsuk-table-responsive__heading">Local Authority</span>
-            <%= school.local_authority&.name %>
+            <span class="nhsuk-table-responsive__heading">School</span>
+            <%= govuk_link_to school.name, admin_school_path(school) %>
           </td>
           <td class="govuk-table__cell nhsuk-table__cell">
-            <span class="nhsuk-table-responsive__heading">Group/network</span>
-            - <span class='govuk-visually-hidden'>No group or network</span>
+            <span class="nhsuk-table-responsive__heading">Provider</span>
+            <% programme = school.school_cohorts.where(cohort: Cohort.current).first.default_induction_programme %>
+            <%= "#{programme&.lead_provider_name} / #{programme&.delivery_partner_name}" %> 
           </td>
           <td class="govuk-table__cell nhsuk-table__cell">
             <span class="nhsuk-table-responsive__heading">Induction tutor</span>
@@ -44,5 +41,4 @@
     </tbody>
   </table>
 </div>
-
-<%== govuk_pagination(pagy: @pagy) %>
+<%= govuk_pagination(pagy: @pagy) %>

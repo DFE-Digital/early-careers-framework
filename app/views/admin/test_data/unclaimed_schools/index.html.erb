@@ -1,0 +1,38 @@
+<% title = "Test Data" %>
+<% content_for :title, title %>
+
+<span class="govuk-caption-xl">Schools without an induction tutor</span>
+<h1 class="govuk-heading-xl"><%= title %></h1>
+
+<%= render partial: "admin/test_data/nav" %>
+
+<div class="nhsuk-table-container">
+  <table class="govuk-table nhsuk-table-responsive">
+    <thead class="nhsuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">URN</th>
+        <th scope="col" class="govuk-table__header">Name</th>
+        <th scope="col" class="govuk-table__header">Nomination Link</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body nhsuk-table__body">
+      <% @schools.each do |school| %>
+        <tr class="govuk-table__row nhsuk-table__row">
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">URN</span>
+            <%= school.urn %>
+          </td>
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">School</span>
+            <%= govuk_link_to school.name, admin_school_path(school) %>
+          </td>
+          <td class="govuk-table__cell nhsuk-table__cell">
+            <span class="nhsuk-table-responsive__heading">Nomination Link</span>
+            <%= nomination_email_or_generate_link school %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<%= govuk_pagination(pagy: @pagy) %>

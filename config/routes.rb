@@ -322,6 +322,7 @@ Rails.application.routes.draw do
         end
       end
     end
+
     resources :notes, only: %i[edit update]
     resource :impersonate, only: %i[create destroy]
 
@@ -332,6 +333,20 @@ Rails.application.routes.draw do
       resources :schools_to_add, only: %i[index], path: "schools-to-add"
       resources :schools_to_close, only: %i[index], path: "schools-to-close"
       resources :major_school_changes, only: %i[index], path: "major-school-changes"
+    end
+
+    unless Rails.env.production?
+      namespace :test_data, path: "test-data" do
+        get "/", to: redirect("/admin/test-data/fip-schools")
+        resources :fip_schools, only: :index, path: "fip-schools"
+        resources :cip_schools, only: :index, path: "cip-schools"
+        resources :yet_to_choose_schools, only: :index, path: "yet-to-choose-schools"
+        resources :unclaimed_schools, only: :index, path: "unclaimed-schools" do
+          member do
+            get "generate-link", action: :generate_link
+          end
+        end
+      end
     end
 
     scope :suppliers, module: "suppliers" do

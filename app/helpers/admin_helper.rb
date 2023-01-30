@@ -59,6 +59,18 @@ module AdminHelper
     ])
   end
 
+  def nomination_email_or_generate_link(school)
+    nomination_email = school.nomination_emails.first
+
+    if nomination_email.nil? || nomination_email.expired?
+      govuk_link_to generate_link_admin_test_data_unclaimed_school_path(school) do
+        %(Generate link <span class="govuk-visually-hidden">for #{school.name}</span>).html_safe
+      end
+    else
+      govuk_link_to nomination_email.plain_nomination_url, nomination_email.plain_nomination_url
+    end
+  end
+
   def admin_participant_role_name(class_name)
     case class_name
     when "ParticipantProfile::Mentor" then "Mentor"
