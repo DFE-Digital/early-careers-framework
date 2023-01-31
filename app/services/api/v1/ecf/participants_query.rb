@@ -24,7 +24,7 @@ module Api
                      },
                    )
 
-          scope = InductionRecord
+          nested = InductionRecord
                     .select(*necessary_fields)
                     .eager_load(:schedule)
                     .left_outer_joins(
@@ -38,11 +38,21 @@ module Api
                     .joins(left_outer_join_mentor_participant_identities)
                     .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
 
-          if updated_since.present?
-            scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
-          else
-            scope.order("users.created_at ASC")
-          end
+          scope = InductionRecord
+            .select(
+              "query_rows.user_id",
+              "json_build_object('profiles', array_agg(query_rows))::json profiles"
+            )
+            .from("(#{nested.to_sql}) query_rows")
+            .group(
+              "query_rows.user_id",
+            )
+
+          # if updated_since.present?
+          #   scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
+          # else
+          #   scope.order("query_rows.user_created_at ASC")
+          # end
         end
 
         def induction_record
@@ -149,6 +159,7 @@ module Api
             "users.full_name AS full_name",
             "users.email AS user_email",
             "users.updated_at AS user_updated_at",
+            "users.created_at AS user_created_at",
           ]
         end
 
@@ -173,6 +184,7 @@ module Api
 
         def induction_record_fields
           %i[
+            id
             induction_programme_id
             induction_status
             mentor_profile_id
