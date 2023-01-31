@@ -51,6 +51,7 @@ end
   add_school_to_local_authority(
     school: FactoryBot.create(
       :seed_school,
+      :with_induction_coordinator,
       urn: i.to_s.rjust(6, "0"),
       name: "ZZ Test School #{i}",
       primary_contact_email: "cpd-test+school-#{i}@digital.education.gov.uk",
