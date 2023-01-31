@@ -27,6 +27,7 @@ module Analytics
         record.cohort_id = induction_record&.cohort&.id
         record.user_id = participant_profile.user_id
         record.participant_type = participant_profile.type
+        record.induction_record_created_at = induction_record.created_at
 
         record.save!
       end
