@@ -5,7 +5,7 @@ module NPQ
     class FindOrCreateBy
       UserResponse = Struct.new(:user, :new_user, :success, keyword_init: true)
       ErrorsResponse = Struct.new(:errors, :success, keyword_init: true)
-      RecordlessError = Struct.new(:attribute, :message, :type, keyword_init: true)
+      FindOrCreateError = Struct.new(:attribute, :message, :type, keyword_init: true)
 
       attr_reader :email, :get_an_identity_id, :full_name
 
@@ -129,7 +129,7 @@ module NPQ
       end
 
       def missing_email_response_with_errors
-        response_with_errors(error: RecordlessError.new(attribute: :email, message: "is required"))
+        response_with_errors(error: FindOrCreateError.new(attribute: :email, message: "is required"))
       end
 
       def response_with_errors(errors: [], error: nil)
