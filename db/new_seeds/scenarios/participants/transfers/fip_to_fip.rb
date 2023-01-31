@@ -42,8 +42,8 @@ module NewSeeds
 
           def setup
             # schools with cohorts
-            @school_from ||= FactoryBot.create(:seed_school)
-            @school_to ||= FactoryBot.create(:seed_school)
+            @school_from ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
+            @school_to ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
             @school_cohort_from = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school: school_from)
             @school_cohort_to = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school: school_to)
 

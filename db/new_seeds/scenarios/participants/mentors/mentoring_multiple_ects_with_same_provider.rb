@@ -38,7 +38,7 @@ module NewSeeds
             # set up school with cohort, lead provider, delivery partner and induction programme
 
             # we'll probably be doing a lot of this, might make sense to move it somewhere communal
-            @school ||= FactoryBot.create(:seed_school)
+            @school ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
             @lead_provider ||= FactoryBot.create(:seed_lead_provider)
 
             @school_cohort = @school.school_cohorts.find_by(cohort: cohort(2022)) || FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school:)
@@ -110,7 +110,7 @@ module NewSeeds
             participant_validation_data = if validation_data
                                             FactoryBot.create(
                                               :seed_ecf_participant_validation_data,
-                                              :valid,
+                                              participant_profile:,
                                               user:,
                                             )
                                           end

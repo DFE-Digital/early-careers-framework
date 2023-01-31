@@ -5,7 +5,11 @@ FactoryBot.define do
     transient { identity { Faker::Name.name } }
 
     full_name { identity }
-    email { "#{identity.parameterize}@#{Faker::Alphanumeric.alpha(number: 5)}.#{Faker::Internet.domain_name}" }
+    email { "#{identity.parameterize}.#{Faker::Alphanumeric.alpha(number: 5)}@example.com" }
+
+    trait :random do
+      email { "#{identity.parameterize}@#{Faker::Alphanumeric.alpha(number: 5)}.#{Faker::Internet.domain_name}" }
+    end
 
     trait :with_login_token do
       login_token { Faker::Alphanumeric.alpha(number: 10) }

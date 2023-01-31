@@ -19,6 +19,11 @@ FactoryBot.define do
     administrative_district_code { "E123" }
 
     trait(:closed) { school_status_code { 2 } }
+
+    trait(:with_induction_coordinator) do
+      induction_coordinator_profiles { FactoryBot.build_list(:seed_induction_coordinator_profile, 2, :with_user) }
+    end
+
     trait(:valid) {}
 
     after(:build) { |s| Rails.logger.debug("seeded school #{s.name}") }
