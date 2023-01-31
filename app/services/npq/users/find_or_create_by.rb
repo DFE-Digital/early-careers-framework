@@ -3,6 +3,10 @@
 module NPQ
   module Users
     class FindOrCreateBy
+      UserResponse = Struct.new(:user, :new_user, :success, keyword_init: true)
+      ErrorsResponse = Struct.new(:errors, :success, keyword_init: true)
+      RecordlessError = Struct.new(:attribute, :message, :type, keyword_init: true)
+
       attr_reader :email, :get_an_identity_id, :full_name
 
       def initialize(params:)
@@ -11,14 +15,24 @@ module NPQ
         @full_name = params[:full_name]
       end
 
+      # Returns one of two responses:
+      #   1. UserResponse, which responds to:
+      #        - user     : User     : A persisted User record
+      #        - new_user : Boolean  : Whether user is a new record
+      #        - success  : Boolean  : Always true, for use checking whether the find/create was successful
+      #   2. ErrorsResponse, which responds to:
+      #        - errors   : Array    : A collection of ActiveRecord::Errors and RecordlessErrors.
+      #                                The latter for when the caller sends no email.
+      #        - success  : Boolean  : Always false, for use checking whether the find/create was successful
+      #
       def call
-        return missing_email_error_response if email.blank?
+        return missing_email_response_with_errors if email.blank?
 
         response = existing_user_by_get_an_identity_id ||
           existing_user_by_email ||
           create_new_user
 
-        if response.user.present?
+        if response.success
           response.user.update!(full_name:)
         end
 
@@ -37,14 +51,14 @@ module NPQ
 
         if user_with_email.present?
           if user_with_email == user_with_get_an_identity_id
-            return OpenStruct.new(user: user_with_get_an_identity_id)
+            return response_with_user(user_with_get_an_identity_id)
           else
             return user_with_get_an_identity_id_different_to_user_with_email_response
           end
         end
 
         user_with_get_an_identity_id.update!(email:)
-        OpenStruct.new(user: user_with_get_an_identity_id)
+        response_with_user(user_with_get_an_identity_id)
       end
 
       # Attempts to find a user matching the email address
@@ -55,7 +69,7 @@ module NPQ
         return if user_with_email.blank?
 
         if get_an_identity_id.blank?
-          return OpenStruct.new(user: user_with_email) if user_with_email.get_an_identity_id.blank?
+          return response_with_user(user_with_email) if user_with_email.get_an_identity_id.blank?
 
           return email_lookup_failed_as_matching_get_an_identity_id_not_sent_response
         end
@@ -65,19 +79,19 @@ module NPQ
 
       def update_get_an_identity_id_on_user_with_email
         if user_with_email.get_an_identity_id.present?
-          return OpenStruct.new(user: user_with_email) if user_with_email.get_an_identity_id == get_an_identity_id
+          return response_with_user(user_with_email) if user_with_email.get_an_identity_id == get_an_identity_id
 
           return user_with_email_has_different_get_an_identity_id_response
         end
 
         user_with_email.update!(get_an_identity_id:)
-        OpenStruct.new(user: user_with_email)
+        response_with_user(user_with_email)
       end
 
       def create_new_user
         return new_user_save_errors_response unless new_user.save
 
-        OpenStruct.new(user: new_user, new_user: true)
+        response_with_user(new_user, new_user: true)
       end
 
       def user_with_get_an_identity_id
@@ -93,26 +107,37 @@ module NPQ
       end
 
       def email_lookup_failed_as_matching_get_an_identity_id_not_sent_response
-        error = user_with_email.errors.add(:email, :lookup_failed_as_matching_get_an_identity_id_not_sent)
-        OpenStruct.new(error:)
+        response_with_errors(
+          error: user_with_email.errors.add(:email, :lookup_failed_as_matching_get_an_identity_id_not_sent),
+        )
       end
 
       def user_with_get_an_identity_id_different_to_user_with_email_response
-        error = user_with_email.errors.add(:email, :user_with_get_an_identity_id_different_to_user_with_email_response)
-        OpenStruct.new(error:)
+        response_with_errors(
+          error: user_with_email.errors.add(:email, :user_with_get_an_identity_id_different_to_user_with_email_response),
+        )
       end
 
       def user_with_email_has_different_get_an_identity_id_response
-        error = user_with_email.errors.add(:get_an_identity_id, :user_with_email_already_has_different_get_an_identity_id)
-        OpenStruct.new(error:)
+        response_with_errors(
+          error: user_with_email.errors.add(:get_an_identity_id, :user_with_email_already_has_different_get_an_identity_id),
+        )
       end
 
       def new_user_save_errors_response
-        OpenStruct.new(errors: new_user.errors.map(&:itself))
+        response_with_errors(errors: new_user.errors.map(&:itself))
       end
 
-      def missing_email_error_response
-        OpenStruct.new(error: OpenStruct.new(attribute: :email, message: "is required"))
+      def missing_email_response_with_errors
+        response_with_errors(error: RecordlessError.new(attribute: :email, message: "is required"))
+      end
+
+      def response_with_errors(errors: [], error: nil)
+        ErrorsResponse.new(errors: [errors, error].compact.flatten, success: false)
+      end
+
+      def response_with_user(user, new_user: false)
+        UserResponse.new(user:, new_user:, success: true)
       end
     end
   end

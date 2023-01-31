@@ -7,19 +7,15 @@ module Api
         def create
           creation_response = ::NPQ::Users::FindOrCreateBy.new(params: find_or_create_params).call
 
-          if creation_response.user.present?
+          if creation_response.success
             hash = Api::V1::NPQ::UserSerializer.new(creation_response.user).serializable_hash
             status_code = creation_response.new_user ? :created : :ok
 
             render json: hash, status: status_code
           else
-            errors = [
-              creation_response.errors,
-              creation_response.error,
-            ].flatten.compact
 
             hash = {
-              errors: errors.map do |error|
+              errors: creation_response.errors.map do |error|
                 {
                   status: "400",
                   title: error.attribute,
