@@ -3,11 +3,11 @@
 require "rails_helper"
 
 RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :model do
-  let(:npq_application) { create(:npq_application, cohort: cohort_2021) }
+  let(:npq_application) { create(:npq_application, cohort: cohort_previous) }
   let(:npq_application_id) { npq_application.id }
 
-  let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
-  let(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+  let!(:cohort_current) { Cohort.current }
+  let(:cohort_previous) { Cohort.previous }
 
   let(:target_cohort_start_year) { 2021 }
 
@@ -59,7 +59,7 @@ RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :mode
   end
 
   describe "#call" do
-    let(:npq_application) { create(:npq_application, cohort: cohort_2022) }
+    let(:npq_application) { create(:npq_application, cohort: cohort_current) }
 
     context "when invalid" do
       let(:target_cohort_start_year) {}
@@ -71,24 +71,28 @@ RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :mode
 
     context "when valid" do
       it "updates the cohort on the NPQ application to the target cohort" do
-        expect { subject.call }.to change { npq_application.reload.cohort }.from(cohort_2022).to(cohort_2021)
+        expect { subject.call }.to change { npq_application.reload.cohort }.from(cohort_current).to(cohort_previous)
       end
 
       context "when a profile is attached to an NPQ application" do
         let(:npq_course) { create(:npq_course, identifier: "npq-leading-teaching") }
-        let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_2022, npq_course:) }
+        let(:npq_application) { create(:npq_application, :accepted, cohort: cohort_current, npq_course:) }
 
-        let!(:source_schedule) do
-          Finance::Schedule::NPQSpecialist.find_by(cohort: cohort_2022) ||
-            create(:npq_specialist_schedule, cohort: cohort_2022)
-        end
-        let!(:target_schedule) do
-          Finance::Schedule::NPQSpecialist.find_by(cohort: cohort_2021) ||
-            create(:npq_specialist_schedule, cohort: cohort_2021)
+        let(:source_schedule) { Finance::Schedule::NPQSpecialist.schedule_for(cohort: cohort_current) }
+        let(:target_schedule) { Finance::Schedule::NPQSpecialist.schedule_for(cohort: cohort_previous) }
+
+        before do
+          {
+            npq_specialist_schedule: %w[npq-specialist-spring npq-specialist-autumn],
+          }.each do |schedule_type, schedule_identifiers|
+            schedule_identifiers.each do |schedule_identifier|
+              create(schedule_type, cohort: cohort_previous, schedule_identifier:)
+            end
+          end
         end
 
         it "updates the cohort on the NPQ application to the target cohort" do
-          expect { subject.call }.to change { npq_application.reload.cohort }.from(cohort_2022).to(cohort_2021)
+          expect { subject.call }.to change { npq_application.reload.cohort }.from(cohort_current).to(cohort_previous)
         end
 
         it "updates the schedule on the profile to the target cohort schedule" do
