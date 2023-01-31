@@ -26,5 +26,6 @@ describe Analytics::ECFInductionService do
     expect(record.induction_status).to eq "leaving"
     expect(record.end_date).to be_within(1.second).of end_date
     expect(record.cohort_id).to eq induction_programme.school_cohort.cohort.id
+    expect(record.induction_record_created_at).to eq induction_record.created_at
   end
 end
