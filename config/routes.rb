@@ -105,6 +105,10 @@ Rails.application.routes.draw do
       namespace :data_studio, path: "data-studio" do
         get "/school-rollout", to: "school_rollout#index"
       end
+
+      namespace :npq do
+        resources :users, only: %i[create]
+      end
     end
 
     namespace :v2 do
