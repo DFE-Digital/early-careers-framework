@@ -41,7 +41,7 @@ module Api
       end
 
       def build_npq_application
-        NPQ::BuildApplication.call(
+        ::NPQ::BuildApplication.call(
           npq_application_params:,
           npq_course_id:,
           npq_lead_provider_id:,

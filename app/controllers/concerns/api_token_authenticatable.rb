@@ -16,7 +16,7 @@ module ApiTokenAuthenticatable
 
   def authenticate
     result = authenticate_or_request_with_http_token("Application", UNAUTHORIZED_MESSAGE) do |unhashed_token|
-      @current_api_token = ApiToken.find_by_unhashed_token(unhashed_token)
+      @current_api_token = supported_api_token_class.find_by_unhashed_token(unhashed_token)
       if @current_api_token
         @current_api_token.update!(
           last_used_at: Time.zone.now,
@@ -34,6 +34,12 @@ module ApiTokenAuthenticatable
   end
 
 private
+
+  # By default all API token types are supported, this method can be overridden on a case by case basis
+  # to narrow down who can access different areas of the API
+  def supported_api_token_class
+    ApiToken
+  end
 
   def current_api_token
     @current_api_token

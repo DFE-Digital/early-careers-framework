@@ -197,8 +197,12 @@ en:
               <<: *email_error_messages
         user:
           attributes:
+            get_an_identity_id:
+              user_with_email_already_has_different_get_an_identity_id: "could not be persisted as user with matching email address already has a different get_an_identity_id"
             email:
               <<: *email_error_messages
+              user_with_get_an_identity_id_different_to_user_with_email_response: "could not be updated on user with get_an_identity_id as email taken on another user"
+              lookup_failed_as_matching_get_an_identity_id_not_sent: "lookup failed as user with matching email has get_an_identity_id and none was sent"
             full_name:
               <<: *full_name_error_messages
         school_cohort_form:
