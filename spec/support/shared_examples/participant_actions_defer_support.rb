@@ -4,7 +4,7 @@ RSpec.shared_examples "JSON Participant Deferral endpoint" do |serialiser_type|
   let(:parsed_response) { JSON.parse(response.body) }
 
   it "changes the training status of a participant to deferred" do
-    put url, params: params
+    put(url, params:)
 
     expect(response).to be_successful
 
@@ -14,7 +14,7 @@ RSpec.shared_examples "JSON Participant Deferral endpoint" do |serialiser_type|
   context "when participant is already withdrawn" do
     it "returns an error" do
       put withdrawal_url, params: withdrawal_params
-      put url, params: params
+      put(url, params:)
 
       expect(response).not_to be_successful
     end

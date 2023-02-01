@@ -15,7 +15,7 @@ RSpec.shared_examples "a participant withdraw action endpoint" do
         before { params[:data][:attributes][:reason] = "" }
 
         it "returns and error with the reason for the error" do
-          put url, params: params
+          put(url, params:)
 
           expect(response).not_to be_successful
           expect(parsed_response.dig("errors", 0, "detail")).to include("The property '#/reason' must be a valid reason")
@@ -27,7 +27,7 @@ RSpec.shared_examples "a participant withdraw action endpoint" do
       before { params[:data][:attributes][:reason] = "erroneous-reason" }
 
       it "returns and error with the reason for the error" do
-        put url, params: params
+        put(url, params:)
 
         expect(response).not_to be_successful
         expect(parsed_response.dig("errors", 0, "detail")).to include("The property '#/reason' must be a valid reason")

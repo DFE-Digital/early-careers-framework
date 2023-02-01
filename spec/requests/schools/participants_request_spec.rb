@@ -139,7 +139,7 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
   describe "PUT /schools/:school_id/cohorts/:start_year/participants/:id/update-mentor" do
     it "updates mentor" do
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
-      put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params: params
+      put("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params:)
 
       expect(response).to redirect_to(schools_participant_path(id: ect_profile))
       expect(flash[:success][:title]).to eq("Success")

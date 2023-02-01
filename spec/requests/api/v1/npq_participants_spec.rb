@@ -114,7 +114,7 @@ RSpec.describe "NPQ Participants API", :with_default_schedules, type: :request d
         context "when there is a started declaration" do
           it_behaves_like "a participant withdraw action endpoint" do
             it "changes the training status of a participant to withdrawn" do
-              put url, params: params
+              put(url, params:)
 
               expect(response).to be_successful
               expect(npq_application.reload.profile.training_status).to eql("withdrawn")
@@ -126,7 +126,7 @@ RSpec.describe "NPQ Participants API", :with_default_schedules, type: :request d
           let(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456") }
 
           it "returns an error message" do
-            put url, params: params
+            put(url, params:)
 
             expect(response.status).to eq(422)
           end

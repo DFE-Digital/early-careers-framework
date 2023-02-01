@@ -33,11 +33,11 @@ RSpec.shared_examples "FIP to FIP with same provider" do |scenario, participant_
 
     it Steps::ChangesOfCircumstanceSteps.then_lead_provider_can_see_context(scenario, scenario.all_declarations, participant_status, see_prior_school:),
        :aggregate_failures do
-      then_lead_provider_can_see_participant_in_api subject,
+      then_lead_provider_can_see_participant_in_api(subject,
                                                     scenario,
                                                     scenario.all_declarations,
                                                     participant_status,
-                                                    see_prior_school: see_prior_school
+                                                    see_prior_school:)
 
       if scenario.duplicate_declarations.any?
         scenario.duplicate_declarations.each do |declaration_type|

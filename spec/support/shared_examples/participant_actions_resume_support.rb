@@ -4,7 +4,7 @@ RSpec.shared_examples "JSON Participant Resume endpoint" do |serialiser_type|
   let(:parsed_response) { JSON.parse(response.body) }
 
   it "changes the training status of a participant to active" do
-    put url, params: params
+    put(url, params:)
 
     expect(response).to be_successful
 
@@ -19,7 +19,7 @@ RSpec.shared_examples "JSON Participant Resume endpoint" do |serialiser_type|
 
   it "returns an error when the participant is already withdrawn" do
     put withdrawal_url, params: withdrawal_params
-    put url, params: params
+    put(url, params:)
 
     expect(response).not_to be_successful
   end

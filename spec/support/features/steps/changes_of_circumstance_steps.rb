@@ -9,13 +9,13 @@ module Steps
       travel_to(@timestamp) do
         lead_provider = create(:lead_provider, name: lead_provider_name)
         cpd_lead_provider = create(:cpd_lead_provider, lead_provider:, name: lead_provider_name)
-        create :call_off_contract, lead_provider: lead_provider
+        create(:call_off_contract, lead_provider:)
 
         delivery_partner = create(:delivery_partner, name: "#{lead_provider_name}'s Delivery Partner 2021")
-        create :provider_relationship, lead_provider: lead_provider, delivery_partner: delivery_partner, cohort: Cohort.find_by(start_year: 2021)
+        create :provider_relationship, lead_provider:, delivery_partner:, cohort: Cohort.find_by(start_year: 2021)
 
         user = create(:user, full_name: lead_provider_name)
-        create :lead_provider_profile, user: user, lead_provider: lead_provider
+        create(:lead_provider_profile, user:, lead_provider:)
 
         tokens[lead_provider_name] = LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:, lead_provider:, private_api_access: true)
 
@@ -28,7 +28,7 @@ module Steps
       travel_to(@timestamp) do
         school = create(:school, :pupil_premium_uplift, name: "#{sit_name}'s School")
         user = create(:user, full_name: sit_name)
-        create :induction_coordinator_profile, schools: [school], user: user
+        create(:induction_coordinator_profile, schools: [school], user:)
         PrivacyPolicy.current.accept! user
 
         sign_in_as user
@@ -199,16 +199,16 @@ module Steps
       next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
       travel_to(@timestamp) do
         # OLD way
-        participant_profile.teacher_profile.update! school: school
+        participant_profile.teacher_profile.update!(school:)
         participant_profile.active_record!
         participant_profile.training_status_active!
-        participant_profile.update! school_cohort: school_cohort
+        participant_profile.update!(school_cohort:)
 
         # NEW way
         current_induction_record = participant_profile.current_induction_records.current.first
         current_induction_record.changing! unless current_induction_record.nil?
 
-        Induction::Enrol.call participant_profile: participant_profile,
+        Induction::Enrol.call participant_profile:,
                               induction_programme: school_cohort.default_induction_programme,
                               start_date: 1.day.from_now
 
@@ -228,16 +228,16 @@ module Steps
         profile_state.delete
         participant_profile.reload
 
-        participant_profile.teacher_profile.update! school: school
+        participant_profile.teacher_profile.update!(school:)
         participant_profile.active_record!
         participant_profile.training_status_active!
-        participant_profile.update! school_cohort: school_cohort
+        participant_profile.update!(school_cohort:)
 
         # NEW way
         current_induction_record = participant_profile.current_induction_records.current.first
         current_induction_record.changing! unless current_induction_record.nil?
 
-        Induction::Enrol.call participant_profile: participant_profile,
+        Induction::Enrol.call participant_profile:,
                               induction_programme: school_cohort.default_induction_programme,
                               start_date: 1.day.from_now
 
@@ -257,16 +257,16 @@ module Steps
         profile_state.delete
         participant_profile.reload
 
-        participant_profile.teacher_profile.update! school: school
+        participant_profile.teacher_profile.update!(school:)
         participant_profile.active_record!
         participant_profile.training_status_active!
-        participant_profile.update! school_cohort: school_cohort
+        participant_profile.update!(school_cohort:)
 
         # NEW way
         current_induction_record = participant_profile.current_induction_records.current.first
         current_induction_record.changing! unless current_induction_record.nil?
 
-        Induction::Enrol.call participant_profile: participant_profile,
+        Induction::Enrol.call participant_profile:,
                               induction_programme: school_cohort.default_induction_programme,
                               start_date: 1.day.from_now
 
