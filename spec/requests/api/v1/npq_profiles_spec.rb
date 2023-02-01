@@ -166,6 +166,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               funding_eligiblity_status_code: "funded",
               teacher_catchment: "other",
               teacher_catchment_country: "United Kingdom",
+              itt_provider: nil,
+              lead_mentor: false,
             },
             relationships: {
               user: {
@@ -235,6 +237,8 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
           "teacher_catchment" => "other",
           "teacher_catchment_country" => "United Kingdom",
           "teacher_catchment_iso_country_code" => "GBR",
+          "itt_provider" => nil,
+          "lead_mentor" => false,
         })
       end
 
