@@ -110,7 +110,7 @@ private
                   email: email_address
 
     create :induction_coordinator_profile,
-           user: user,
+           user:,
            schools: [school]
 
     PrivacyPolicy.current.accept! user
@@ -140,22 +140,22 @@ private
     partnership = if expired
                     create :partnership,
                            challenge_deadline: created_date + 14.days,
-                           school: school,
+                           school:,
                            cohort: school_cohort.cohort,
-                           delivery_partner: delivery_partner,
+                           delivery_partner:,
                            created_at: created_date
                   else
                     create :partnership,
                            :in_challenge_window,
-                           school: school,
+                           school:,
                            cohort: school_cohort.cohort,
-                           delivery_partner: delivery_partner,
+                           delivery_partner:,
                            created_at: created_date
                   end
 
     PartnershipNotificationEmail.create! token: challenge_token,
                                          sent_to: school.induction_coordinators.first.email,
-                                         partnership: partnership,
+                                         partnership:,
                                          email_type: PartnershipNotificationEmail.email_types[:induction_coordinator_email],
                                          created_at: created_date
 

@@ -60,7 +60,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         it "create eligible declaration record when user is eligible" do
           params = build_params(valid_params)
-          post "/api/v2/participant-declarations", params: params
+          post("/api/v2/participant-declarations", params:)
 
           expect(ParticipantDeclaration.order(:created_at).last).to be_eligible
         end
@@ -68,7 +68,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
       it "does not create duplicate declarations with the same declaration date and stores the duplicate declaration attempts" do
         params = build_params(valid_params)
-        post "/api/v2/participant-declarations", params: params
+        post("/api/v2/participant-declarations", params:)
 
         expect {
           expect {
@@ -88,7 +88,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         params_with_different_declaration_date = build_params(new_valid_params)
 
-        post "/api/v2/participant-declarations", params: params
+        post("/api/v2/participant-declarations", params:)
         original_id = parsed_response["id"]
 
         expect { post "/api/v2/participant-declarations", params: }
@@ -105,7 +105,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         params = build_params(valid_params)
 
-        post "/api/v2/participant-declarations", params: params
+        post("/api/v2/participant-declarations", params:)
 
         expect(response.status).to eq 200
         expect(fake_logger).to have_received(:info).with("Passed schema validation").ordered
@@ -132,7 +132,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         it "returns 200" do
           params = build_params(valid_params)
-          post "/api/v2/participant-declarations", params: params
+          post("/api/v2/participant-declarations", params:)
           expect(response.status).to eq 200
         end
       end
@@ -144,7 +144,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
 
         it "returns 200" do
           params = build_params(valid_params)
-          post "/api/v2/participant-declarations", params: params
+          post("/api/v2/participant-declarations", params:)
           expect(response.status).to eq 200
         end
       end
@@ -229,7 +229,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
         it "logs info to rails logger" do
           allow(Rails).to receive(:logger).and_return(fake_logger)
 
-          post "/api/v2/participant-declarations", params: params
+          post("/api/v2/participant-declarations", params:)
 
           expect(response.status).to eql(200)
           expect(fake_logger).to have_received(:info).with("Failed schema validation for #{request.body.read}").ordered
@@ -296,7 +296,7 @@ RSpec.describe "participant-declarations endpoint spec", :with_default_schedules
       it "returns 401 for invalid bearer token" do
         params = build_params(valid_params)
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        post "/api/v2/participant-declarations", params: params
+        post("/api/v2/participant-declarations", params:)
         expect(response.status).to eq 401
         expect(ApiRequestAudit.order(created_at: :asc).last.body).to eq(params.to_s)
       end

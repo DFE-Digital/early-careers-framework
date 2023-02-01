@@ -37,7 +37,7 @@ RSpec.describe "API errors", type: :request, exceptions_app: true do
         "CONTENT_TYPE" => "application/json",
       }
 
-      get "/normal_endpoint", headers: headers
+      get("/normal_endpoint", headers:)
       expect(response.status).to eq 401
       expect(JSON.parse(response.body)).to eq({
         "error" => "HTTP Token: Access denied",
@@ -53,7 +53,7 @@ RSpec.describe "API errors", type: :request, exceptions_app: true do
         "CONTENT_TYPE" => "application/json",
       }
 
-      get "/not_found_exception", headers: headers
+      get("/not_found_exception", headers:)
       expect(response.status).to eq 404
       expect(response.content_type).to eq "application/vnd.api+json"
       expect(JSON.parse(response.body)).to eq({
@@ -67,7 +67,7 @@ RSpec.describe "API errors", type: :request, exceptions_app: true do
         "CONTENT_TYPE" => "application/json",
       }
 
-      get "/jibberish", headers: headers
+      get("/jibberish", headers:)
       expect(response.status).to eq 404
       expect(response.content_type).to include "application/vnd.api+json"
       expect(JSON.parse(response.body)).to eq({
@@ -83,7 +83,7 @@ RSpec.describe "API errors", type: :request, exceptions_app: true do
         "CONTENT_TYPE" => "application/json",
       }
 
-      get "/random_error", headers: headers
+      get("/random_error", headers:)
       expect(response.status).to eq 500
       expect(response.content_type).to eq "application/vnd.api+json"
       expect(JSON.parse(response.body)).to eq({

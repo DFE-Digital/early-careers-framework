@@ -267,7 +267,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
 
           it "changes the training status of a participant to withdrawn" do
-            put url, params: params
+            put(url, params:)
 
             expect(response).to be_successful
             expect(parsed_response.dig("data", "attributes", "training_status")).to eql("withdrawn")

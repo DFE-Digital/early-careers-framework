@@ -6,7 +6,7 @@ class AddCohortIdToPartnershipCsvUploads < ActiveRecord::Migration[6.1]
   def change
     default = Cohort.find_by(start_year: 2021).id
 
-    add_reference :partnership_csv_uploads, :cohort, index: true, default: default
+    add_reference(:partnership_csv_uploads, :cohort, index: true, default:)
     change_column_default :partnership_csv_uploads, :cohort_id, from: default, to: nil
   end
 end

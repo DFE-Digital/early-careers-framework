@@ -11,7 +11,7 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     ecf_lead_provider = create(:lead_provider, name: lead_provider_name)
     create :cpd_lead_provider, lead_provider: ecf_lead_provider, name: lead_provider_name
     user = create(:user, full_name: "#{lead_provider_name}'s Manager", email: email_address)
-    create :lead_provider_profile, user: user, lead_provider: ecf_lead_provider
+    create :lead_provider_profile, user:, lead_provider: ecf_lead_provider
     ecf_lead_provider
   end
 

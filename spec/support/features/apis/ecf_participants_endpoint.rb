@@ -55,7 +55,7 @@ module APIs
         "Content-type": "application/json",
       }
       session = ActionDispatch::Integration::Session.new Rails.application
-      session.get url, headers: headers
+      session.get(url, headers:)
 
       @response = JSON.parse(session.response.body)["data"]
       if @response.nil?
