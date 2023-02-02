@@ -10,9 +10,7 @@ RSpec.describe LeadProviderMailer, type: :mailer do
 
     let(:nomination_confirmation_email) do
       LeadProviderMailer.welcome_email(
-        user:,
-        lead_provider_name: lead_provider.name,
-        start_url:,
+        { user:, lead_provider_name: lead_provider.name, start_url: },
       ).deliver_now
     end
 
@@ -28,8 +26,10 @@ RSpec.describe LeadProviderMailer, type: :mailer do
 
     let(:nomination_confirmation_email) do
       LeadProviderMailer.partnership_challenged_email(
-        user:,
-        partnership:,
+        {
+          user:,
+          partnership:,
+        },
       ).deliver_now
     end
 
@@ -47,10 +47,12 @@ RSpec.describe LeadProviderMailer, type: :mailer do
 
     let(:programme_changed_email) do
       LeadProviderMailer.programme_changed_email(
-        user:,
-        partnership:,
-        cohort_year:,
-        what_changes_choice:,
+        {
+          user:,
+          partnership:,
+          cohort_year:,
+          what_changes_choice:,
+        },
       ).deliver_now
     end
 

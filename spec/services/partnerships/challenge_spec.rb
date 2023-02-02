@@ -59,8 +59,10 @@ RSpec.describe Partnerships::Challenge do
       notify_all_lead_providers = lead_provider_profiles.map do |lp_profile|
         have_enqueued_mail(LeadProviderMailer, :partnership_challenged_email)
           .with(
-            user: lp_profile.user,
-            partnership:,
+            {
+              user: lp_profile.user,
+              partnership:,
+            },
           )
       end
       notify_all_lead_providers = notify_all_lead_providers.inject do |expectations, expectation|

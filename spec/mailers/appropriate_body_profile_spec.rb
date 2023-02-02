@@ -8,7 +8,7 @@ RSpec.describe AppropriateBodyProfileMailer, type: :mailer do
   describe "#welcome" do
     let(:welcome_email) do
       AppropriateBodyProfileMailer.welcome(
-        appropriate_body_profile:,
+        appropriate_body_profile,
       ).deliver_now
     end
 

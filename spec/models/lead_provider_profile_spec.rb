@@ -35,9 +35,8 @@ RSpec.describe LeadProviderProfile, type: :model do
     it "sends an email to the new user" do
       allow(LeadProviderMailer).to receive(:welcome_email).and_call_original
       LeadProviderProfile.create_lead_provider_user(name, email, lead_provider, start_url)
-
       expect(LeadProviderMailer).to have_received(:welcome_email)
-                                .with(user: created_user, lead_provider_name: lead_provider.name, start_url:)
+                                .with({ user: created_user, lead_provider_name: lead_provider.name, start_url: })
     end
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe DeliveryPartnerProfileMailer, type: :mailer do
   describe "#welcome" do
     let(:welcome_email) do
       DeliveryPartnerProfileMailer.welcome(
-        delivery_partner_profile:,
+        delivery_partner_profile,
       ).deliver_now
     end
 

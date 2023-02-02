@@ -42,8 +42,10 @@ module Partnerships
     def send_notification_emails
       partnership.lead_provider.users.each do |lead_provider_user|
         LeadProviderMailer.partnership_challenged_email(
-          partnership:,
-          user: lead_provider_user,
+          {
+            partnership:,
+            user: lead_provider_user,
+          },
         ).deliver_later
       end
     end

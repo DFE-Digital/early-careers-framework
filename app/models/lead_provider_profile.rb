@@ -10,7 +10,8 @@ class LeadProviderProfile < ApplicationRecord
     ActiveRecord::Base.transaction do
       user = User.create!(full_name:, email:)
       LeadProviderProfile.create!(user:, lead_provider:)
-      LeadProviderMailer.welcome_email(user:, lead_provider_name: lead_provider.name, start_url:).deliver_now
+
+      LeadProviderMailer.welcome_email({ user:, lead_provider_name: lead_provider.name, start_url: }).deliver_now
     end
   end
 end

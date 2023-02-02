@@ -3,7 +3,7 @@
 class AppropriateBodyProfileMailer < ApplicationMailer
   WELCOME_TEMPLATE_ID = "0835a51f-dd7e-4a5e-b6e2-0b143de02eeb"
 
-  def welcome(appropriate_body_profile:)
+  def welcome(appropriate_body_profile)
     template_mail(
       WELCOME_TEMPLATE_ID,
       to: appropriate_body_profile.user.email,
