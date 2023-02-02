@@ -21,16 +21,19 @@ private
   end
 
   def relevant_induction_record?(record)
-    InductionRecord
-      .joins(:participant_profile, induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
-      .where(participant_profile: record.participant_profile)
-      .where(
-        induction_programme: {
-          partnerships: { lead_provider: record.cpd_lead_provider.lead_provider },
-        },
-        schedule: record.schedule,
-      )
-      .order(start_date: :desc)
-      .exists?
+    Induction::FindRelevantTo.call(participant_profile: record.participant_profile,
+                                   lead_provider: record.cpd_lead_provider.lead_provider,
+                                   schedule: record.schedule).present?
+    # InductionRecord
+    #   .joins(:participant_profile, induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
+    #   .where(participant_profile: record.participant_profile)
+    #   .where(
+    #     induction_programme: {
+    #       partnerships: { lead_provider: record.cpd_lead_provider.lead_provider },
+    #     },
+    #     schedule: record.schedule,
+    #   )
+    #   .order(start_date: :desc)
+    #   .exists?
   end
 end

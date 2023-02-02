@@ -98,12 +98,7 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def relevant_induction_record(lead_provider:)
-      induction_records
-        .joins(induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
-        .where(induction_programme: { partnerships: { lead_provider: } })
-        .where(induction_programme: { school_cohorts: { cohort: Cohort.where(start_year: 2021..) } })
-        .order(start_date: :desc)
-        .first
+      Induction::FindRelevantTo.call(participant_profile: self, lead_provider:)
     end
     alias_method :record_to_serialize_for, :relevant_induction_record
 

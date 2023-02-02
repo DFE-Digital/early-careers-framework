@@ -70,8 +70,8 @@ class InductionRecord < ApplicationRecord
 
   scope :for_school, ->(school) { joins(:school).where(school: { id: school.id }) }
 
-  scope :oldest_first, -> { order(created_at: :asc) }
-  scope :newest_first, -> { order(created_at: :desc) }
+  scope :oldest_first, -> { order(start_date: :asc, created_at: :asc) }
+  scope :newest_first, -> { order(start_date: :desc, created_at: :desc) }
 
   scope :oldest, -> { oldest_first.first }
 
