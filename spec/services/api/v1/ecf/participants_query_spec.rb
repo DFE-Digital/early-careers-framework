@@ -20,6 +20,37 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
       expect(subject.induction_records).to match_array([induction_record])
     end
 
+    context "with preferred identity" do
+      let(:preferred_email) { Faker::Internet.email }
+      let(:preferred_identity) { create(:participant_identity, :secondary, user: participant_profile.user, email: preferred_email) }
+      let!(:another_induction_record) { create(:induction_record, induction_programme:, participant_profile:, preferred_identity:) }
+      let(:external_identifier) { participant_profile.participant_identity.external_identifier }
+
+      it "returns the original external identifier of the participant identity" do
+        expect(subject.induction_records.first.external_identifier).to eq(external_identifier)
+      end
+
+      it "returns the preferred email" do
+        expect(subject.induction_records.first.preferred_identity_email).to eq(preferred_email)
+      end
+    end
+
+    context "with mentor profile" do
+      let(:mentor_participant_profile) { create(:mentor_participant_profile) }
+      let(:participant_profile) { create(:ect_participant_profile, mentor_profile_id: mentor_participant_profile.id) }
+      let(:mentor_external_identifier) { mentor_participant_profile.participant_identity.external_identifier }
+      let(:external_identifier) { participant_profile.participant_identity.external_identifier }
+      let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile:, mentor_profile_id: mentor_participant_profile.id) }
+
+      it "returns the mentor external identifier" do
+        expect(subject.induction_records.first.mentor_external_identifier).to eq(mentor_external_identifier)
+      end
+
+      it "returns the external identifier" do
+        expect(subject.induction_records.first.external_identifier).to eq(external_identifier)
+      end
+    end
+
     describe "cohort filter" do
       context "with correct value" do
         let(:params) { { filter: { cohort: cohort.display_name } } }

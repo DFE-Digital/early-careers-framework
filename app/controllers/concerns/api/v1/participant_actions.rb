@@ -29,12 +29,8 @@ module Api
 
     private
 
-      def serializer_class
-        ParticipantFromInductionRecordSerializer
-      end
-
       def serialized_response_for(service)
-        render_from_service(service, serializer_class, params: { lead_provider: })
+        render_from_service(service, ParticipantFromInductionRecordSerializer, params: { lead_provider: })
       end
 
       def permitted_params
