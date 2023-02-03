@@ -81,5 +81,26 @@ RSpec.describe Induction::FindRelevantTo, :with_default_schedules do
         end
       end
     end
+
+    context "when a schedule is supplied" do
+      let(:wrong_schedule) { create(:ecf_schedule_january) }
+      it "returns the latest induction record with that schedule" do
+        travel_to a_point_in_time do
+          expect(service.call(participant_profile:, schedule: participant_profile.schedule)).to eq induction_4
+          expect(service.call(participant_profile:, schedule: wrong_schedule)).to be_nil
+        end
+      end
+    end
+
+    context "when a date range is supplied" do
+      it "returns the latest induction record in that period" do
+        travel_to a_point_in_time do
+          expect(service.call(participant_profile:, date_range: Date.new(cohort.start_year, 9, 1)..Date.new(cohort.start_year, 9, 30))).to eq induction_1
+          expect(service.call(participant_profile:, date_range: Date.new(cohort.start_year, 11, 2)..)).to eq induction_4
+          expect(service.call(participant_profile:, date_range: ..Date.new(cohort.start_year, 11, 30))).to eq induction_3
+          expect(service.call(participant_profile:, date_range: Date.new(cohort.start_year + 1, 3, 22)..)).to be_nil
+        end
+      end
+    end
   end
 end
