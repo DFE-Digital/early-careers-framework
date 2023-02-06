@@ -12,7 +12,7 @@
         @appropriate_body_form.body_type_choices,
         :id, :name,
         legend: { text: title, tag: :h1, size: 'xl' },
-        caption: { text: appropriate_body_school_name, tag: :h1, size: 'xl' }) do %>
+        caption: { text: appropriate_body_school_name, size: 'xl' }) do %>
 
           <%= yield :pre_form %>
         <% end %>
