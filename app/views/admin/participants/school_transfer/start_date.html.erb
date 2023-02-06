@@ -4,15 +4,13 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <span class="govuk-caption-xl">Transferring school - <%= @school_transfer_form.participant_name %></span>
-        <h1 class="govuk-heading-xl"><%= title %></h1>
-
         <%= form_for @school_transfer_form, url: { action: :start_date }, method: :put do |f| %>
           <%= f.govuk_error_summary %>
           <%= f.govuk_date_field :start_date,
               start_date: true,
               width: "two-thirds",
-              legend: { text: "#{@school_transfer_form.participant_name} start date", class: "govuk-visually-hidden" },
+              legend: { text: title, tag: :h1, size: 'xl' },
+              caption: { text: "Transferring school - #{@school_transfer_form.participant_name}", size: 'xl' },
               hint: { text: "For example, 14 7 2023"}
           %>
           <%= f.govuk_submit "Continue" %>

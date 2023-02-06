@@ -99,15 +99,15 @@ RSpec.describe "transferring participants", with_feature_flags: { change_of_circ
       end
 
       def when_i_update_the_name_with(name)
-        fill_in "Full_name", with: name
+        fill_in "What’s this person’s full name?", with: name
       end
 
       def when_i_update_the_email_with(email)
-        fill_in "Email", with: email
+        fill_in "What’s #{@participant_data[:full_name]}’s email address?", with: email
       end
 
       def when_i_add_a_valid_trn
-        fill_in "Teacher reference number (TRN)", with: "1001000"
+        fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)?", with: "1001000"
       end
 
       def when_i_add_a_valid_date_of_birth

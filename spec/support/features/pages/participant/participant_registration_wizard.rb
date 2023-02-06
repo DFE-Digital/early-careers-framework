@@ -12,7 +12,7 @@ module Pages
     def complete_for_ect(full_name, date_of_birth, trn)
       setup_response_from_dqt full_name, date_of_birth, trn
 
-      add_teacher_reference_number trn
+      add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
     end
 
@@ -20,7 +20,7 @@ module Pages
       setup_response_from_dqt full_name, date_of_birth, trn
 
       confirm_have_trn
-      add_teacher_reference_number trn
+      add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
     end
 
@@ -38,8 +38,8 @@ module Pages
       self
     end
 
-    def add_teacher_reference_number(trn)
-      fill_in "Teacher reference number (TRN)", with: trn
+    def add_teacher_reference_number(_full_name, trn)
+      fill_in "What’s your teacher reference number (TRN)", with: trn
       click_on "Continue"
 
       self

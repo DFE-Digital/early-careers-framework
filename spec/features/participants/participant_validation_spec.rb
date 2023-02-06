@@ -51,7 +51,7 @@ RSpec.feature "Participant validation journey",
     click_on "Continue"
     then_i_see_an_error_message "Enter your teacher reference number (TRN)"
 
-    when_i_add_teacher_reference_number_to_the_participant_registration_wizard "1234567"
+    when_i_add_teacher_reference_number_to_the_participant_registration_wizard ect_full_name, "1234567"
     click_on "Continue"
     then_i_see_an_error_message "Enter your date of birth"
 
@@ -79,7 +79,7 @@ RSpec.feature "Participant validation journey",
     and_i_am_on_the_participant_registration_wizard
     then_the_page_is_accessible
 
-    when_i_add_teacher_reference_number_to_the_participant_registration_wizard "1234567"
+    when_i_add_teacher_reference_number_to_the_participant_registration_wizard ect_full_name, "1234567"
     then_the_page_is_accessible
 
     when_i_add_date_of_birth_to_the_participant_registration_wizard Date.new(1983, 2, 28)
@@ -122,7 +122,7 @@ RSpec.feature "Participant validation journey",
     and_i_am_on_the_mentor_registration_wizard
 
     when_i_confirm_have_trn_on_the_mentor_registration_wizard
-    and_i_add_teacher_reference_number_to_the_mentor_registration_wizard "7654321"
+    and_i_add_teacher_reference_number_to_the_mentor_registration_wizard ect_full_name, "7654321"
     and_i_add_date_of_birth_to_the_mentor_registration_wizard Date.new(1991, 11, 4)
     and_i_choose_add_your_national_insurance_number_to_the_mentor_registration_wizard
     and_i_add_national_insurance_number_to_the_mentor_registration_wizard "AB123456C"

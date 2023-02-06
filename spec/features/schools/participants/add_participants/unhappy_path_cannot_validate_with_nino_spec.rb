@@ -35,7 +35,7 @@ RSpec.describe "Add participants", with_feature_flags: { change_of_circumstances
     when_i_navigate_to_participants_dashboard
     and_i_choose_to_add_an_ect_or_mentor_on_the_school_participants_dashboard_page
     and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
-    and_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
+    and_i_add_mentor_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_confirm_details_and_continue_on_the_school_add_participant_wizard

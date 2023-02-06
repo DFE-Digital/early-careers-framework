@@ -1,0 +1,13 @@
+<%= f.govuk_collection_select(:body_id,
+  appropriate_bodies,
+  :id,
+  :name,
+  label: { text: title, tag: :h1, size: 'xl' },
+  caption: { text: appropriate_body_school_name, size: 'xl' },
+  options: { include_blank: true },
+  class: "autocomplete") do %>
+
+  <div class="govuk-inset-text">
+    Remember to contact the appropriate body directly to appoint them for your ECTs, if you have not done so already.
+  </div>
+<% end %>
