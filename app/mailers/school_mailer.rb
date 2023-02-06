@@ -28,6 +28,23 @@ class SchoolMailer < ApplicationMailer
   SIT_FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE = "48f63205-a8d9-49a2-a76c-93d48ec9b23b"
   SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
+  REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
+
+  def remind_sit_to_set_mentor_to_ects(sit:, ect_names:, campaign: nil)
+    campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
+
+    template_mail(
+      REMIND_TO_SETUP_MENTOR_TO_ECTS,
+      to: sit.email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        sit_name: sit.full_name,
+        ect_names:,
+        sign_in: new_user_session_url(**campaign_tracking),
+      },
+    ).tag(:sit_to_set_mentor_to_ects).associate_with(sit.induction_coordinator_profile)
+  end
 
   # This email is currently (30/09/2021) only used for manually sent chaser emails
   def remind_induction_coordinator_to_setup_cohort_email(induction_coordinator_profile:, school_name:, campaign: nil)
