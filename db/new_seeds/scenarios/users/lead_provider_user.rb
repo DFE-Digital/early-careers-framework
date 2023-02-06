@@ -16,6 +16,21 @@ module NewSeeds
           lead_provider_user = user || FactoryBot.create(:seed_user, **new_user_attributes)
 
           FactoryBot.create(:seed_lead_provider_profile, user: lead_provider_user, lead_provider:)
+
+          self
+        end
+
+        def add_delivery_partners
+          delivery_partner = DeliveryPartner.order(Arel.sql("RANDOM()")).first
+
+          Cohort.all.each do |cohort|
+            FactoryBot.create(
+              :seed_provider_relationship,
+              lead_provider:,
+              delivery_partner:,
+              cohort:,
+            )
+          end
         end
       end
     end

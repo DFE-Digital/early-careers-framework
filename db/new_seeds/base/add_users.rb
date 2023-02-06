@@ -24,6 +24,7 @@ Rails.logger.info("Building a lead provider user")
 NewSeeds::Scenarios::Users::LeadProviderUser
   .new(email: "lead-provider@example.com", full_name: "Lead provider user")
   .build
+  .add_delivery_partners
 
 Rails.logger.info("Building a CIP induction coordinator")
 NewSeeds::Scenarios::InductionCoordinator
