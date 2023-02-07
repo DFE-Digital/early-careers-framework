@@ -124,41 +124,87 @@ RSpec.describe DataStage::ProcessSchoolChanges do
         end
       end
 
-      context "when a successor school exists" do
-        let!(:live_school) { create(:school, urn: 20_001, name: "The Starship Children's Centre", school_status_code: 3, school_status_name: "Open, but proposed to close") }
-        let(:successor_school) { create(:school, urn: 10_001, name: "Starship Juniors School") }
-        let!(:staged_successor_school) { create(:staged_school, urn: 10_001, name: "Starship Juniors School", la_code: local_authority.code, administrative_district_code: local_authority_district.code, ukprn: "22334455") }
-        let(:school_cohort) { create(:school_cohort, :fip, school: live_school) }
-        let!(:induction_tutor) { create(:induction_coordinator_profile, schools: [live_school]) }
-        let!(:participants) { create_list(:ecf_participant_profile, 2, school_cohort:) }
-        let!(:partnership) { create(:partnership, school: live_school, cohort: school_cohort.cohort) }
-        let!(:school_link) { create(:staged_school_link, :successor, school: staged_school, link_urn: successor_school.urn) }
+      context "when a counterpart school exists" do
+        let!(:live_school) { create(:school, urn: 20_001, name: "The Starship Children's Centre", school_status_code: 3, school_status_name: "proposed_to_close") }
 
-        it "migrates the assets of the school to the successor" do
-          service.call
-          successor_school.reload
-          expect(successor_school.partnerships).to match_array [partnership]
-          expect(successor_school.school_cohorts).to match_array [school_cohort]
-
-          participants.each do |participant|
-            expect(participant.reload.teacher_profile.school).to eq successor_school
+        context "when no links are present" do
+          it "syncs the closed status" do
+            service.call
+            expect(live_school.reload.school_status_code).to eq 2
+            expect(live_school).to be_closed_status
           end
 
-          expect(induction_tutor.reload.schools).to match_array [successor_school]
+          it "marks the change as handled" do
+            service.call
+            expect(school_change.reload).to be_handled
+          end
+
+          context "when a school_cohort is present" do
+            let!(:school_cohort) { create(:school_cohort, :fip, school: live_school) }
+
+            it "does not update the counterpart school" do
+              service.call
+              expect(live_school.reload.school_status_code).to eq 3
+              expect(live_school).to be_proposed_to_close_status
+            end
+
+            it "does not mark the change as handled" do
+              service.call
+              expect(school_change.reload).not_to be_handled
+            end
+          end
+
+          context "when an induction coordinator is present" do
+            let!(:induction_tutor) { create(:induction_coordinator_profile, schools: [live_school]) }
+
+            it "does not update the counterpart school" do
+              service.call
+              expect(live_school.reload.school_status_code).to eq 3
+              expect(live_school).to be_proposed_to_close_status
+            end
+
+            it "does not mark the change as handled" do
+              service.call
+              expect(school_change.reload).not_to be_handled
+            end
+          end
         end
 
-        it "adds a successor school link" do
-          expect { service.call }.to change { SchoolLink.successor.count }.by(1)
+        context "when a successor school exists" do
+          let(:successor_school) { create(:school, urn: 10_001, name: "Starship Juniors School") }
+          let!(:staged_successor_school) { create(:staged_school, urn: 10_001, name: "Starship Juniors School", la_code: local_authority.code, administrative_district_code: local_authority_district.code, ukprn: "22334455") }
+          let(:school_cohort) { create(:school_cohort, :fip, school: live_school) }
+          let!(:induction_tutor) { create(:induction_coordinator_profile, schools: [live_school]) }
+          let!(:participants) { create_list(:ecf_participant_profile, 2, school_cohort:) }
+          let!(:partnership) { create(:partnership, school: live_school, cohort: school_cohort.cohort) }
+          let!(:school_link) { create(:staged_school_link, :successor, school: staged_school, link_urn: successor_school.urn) }
+
+          it "migrates the assets of the school to the successor" do
+            service.call
+            successor_school.reload
+            expect(successor_school.partnerships).to match_array [partnership]
+            expect(successor_school.school_cohorts).to match_array [school_cohort]
+
+            participants.each do |participant|
+              expect(participant.reload.teacher_profile.school).to eq successor_school
+            end
+
+            expect(induction_tutor.reload.schools).to match_array [successor_school]
+          end
+
+          it "adds a successor school link" do
+            expect { service.call }.to change { SchoolLink.successor.count }.by(1)
+          end
+
+          it "adds a predecessor school link" do
+            expect { service.call }.to change { SchoolLink.predecessor.count }.by(1)
+          end
         end
 
-        it "adds a predecessor school link" do
-          expect { service.call }.to change { SchoolLink.predecessor.count }.by(1)
+        it "marks the change as handled" do
+          service.call
+          expect(school_change.reload).to be_handled
         end
-      end
-
-      it "marks the change as handled" do
-        service.call
-        expect(school_change.reload).to be_handled
       end
     end
   end
