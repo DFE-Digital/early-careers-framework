@@ -107,7 +107,7 @@ Rails.application.routes.draw do
       end
 
       namespace :npq do
-        resources :users, only: %i[create update]
+        resources :users, only: %i[show create update]
       end
     end
 

@@ -4,6 +4,21 @@ module Api
   module V1
     module NPQ
       class UsersController < ApiController
+        def show
+          @user = Identity.find_user_by(id: params[:id])
+
+          if @user.present?
+            render_user(user: @user, status: :ok)
+          else
+            hash = {
+              status: "404",
+              error: "User not found",
+            }
+
+            render json: hash, status: :not_found
+          end
+        end
+
         def create
           creation_response = ::NPQ::Users::FindOrCreateBy.new(params: find_or_create_params).call
 
