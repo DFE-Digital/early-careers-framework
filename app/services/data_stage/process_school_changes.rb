@@ -72,6 +72,7 @@ module DataStage
 
       ActiveRecord::Base.transaction do
         successor_link = change.school.school_links.find_by(link_type: "Successor")
+        # only handle simple "Successor" cases here not mergers and splits etc.
         if successor_link.present?
           successor = find_or_create_successor!(successor_link.link_urn)
           move_assets_from!(school: change.school.counterpart, successor:)
@@ -79,6 +80,17 @@ module DataStage
           successor.school_links.predecessor.simple.create!(link_urn: change.school.urn)
           change.school.create_or_sync_counterpart!
           change.update!(handled: true)
+        elsif change.school.school_links.none?
+          # when there are no school_links, check if we can just close this school?
+          live_school = change.school.counterpart
+          if live_school.present?
+            if live_school.school_cohorts.none? && live_school.induction_coordinators.none?
+              change.school.create_or_sync_counterpart!
+              change.update!(handled: true)
+            end
+          else
+            change.update!(handled: true)
+          end
         end
       end
     end
