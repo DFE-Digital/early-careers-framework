@@ -480,13 +480,13 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
-    sentry-rails (5.7.0)
+    sentry-rails (5.8.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.7.0)
-    sentry-ruby (5.7.0)
+      sentry-ruby (~> 5.8.0)
+    sentry-ruby (5.8.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.7.0)
-      sentry-ruby (~> 5.7.0)
+    sentry-sidekiq (5.8.0)
+      sentry-ruby (~> 5.8.0)
       sidekiq (>= 3.0)
     shakapacker (6.5.5)
       activesupport (>= 5.2)
@@ -668,7 +668,7 @@ DEPENDENCIES
   scss_lint-govuk
   secure_headers
   selenium-webdriver
-  sentry-rails (~> 5.5)
+  sentry-rails (~> 5.8)
   sentry-ruby (~> 5.7)
   sentry-sidekiq
   shakapacker (~> 6.5.5)
