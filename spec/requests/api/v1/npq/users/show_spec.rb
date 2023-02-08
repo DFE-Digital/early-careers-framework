@@ -18,14 +18,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
       get url, headers: { "Content-Type" => "application/json" }
     end
 
-    def slice_relevant_user_data(user)
-      user.reload.slice(
-        :email,
-        :get_an_identity_id,
-        :full_name,
-      ).symbolize_keys
-    end
-
     shared_examples_for "correct response check" do
       let(:expected_response_body) { raise NotImplementedError }
       let(:expected_response_code) { raise NotImplementedError }
