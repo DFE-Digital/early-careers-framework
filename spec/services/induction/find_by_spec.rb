@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::FindRelevantTo, :with_default_schedules do
+RSpec.describe Induction::FindBy, :with_default_schedules do
   let(:cohort) { Cohort.current }
   # after all the dates in the induction records
   let!(:a_point_in_time) { Date.new(cohort.start_year + 1, 2, 1) }

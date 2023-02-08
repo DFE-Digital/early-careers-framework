@@ -156,7 +156,7 @@ private
   end
 
   def delivery_partner
-    Induction::FindRelevantTo.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
+    Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
       &.induction_programme
       &.partnership
       &.delivery_partner

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Induction::FindRelevantTo < BaseService
+class Induction::FindBy < BaseService
   def call
     query = participant_profile.induction_records
 

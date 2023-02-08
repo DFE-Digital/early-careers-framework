@@ -98,7 +98,7 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def relevant_induction_record(lead_provider:)
-      Induction::FindRelevantTo.call(participant_profile: self, lead_provider:)
+      Induction::FindBy.call(participant_profile: self, lead_provider:)
     end
     alias_method :record_to_serialize_for, :relevant_induction_record
 
