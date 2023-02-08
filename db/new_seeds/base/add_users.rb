@@ -19,6 +19,7 @@ Rails.logger.info("Building a delivery partner user with two delivery partners")
 NewSeeds::Scenarios::Users::DeliveryPartnerUser
   .new(number: 2, email: "delivery-partner@example.com", full_name: "Delivery partner user")
   .build
+  .add_mentors_and_ects
 
 Rails.logger.info("Building a lead provider user")
 NewSeeds::Scenarios::Users::LeadProviderUser
