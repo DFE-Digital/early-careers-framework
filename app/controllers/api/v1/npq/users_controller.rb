@@ -49,7 +49,6 @@ module Api
           hash = {
             errors: errors.map do |error|
               {
-                status: "400",
                 title: error.attribute,
                 detail: error.message,
               }

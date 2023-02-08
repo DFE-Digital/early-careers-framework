@@ -59,7 +59,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
             {
               "errors" => [
                 {
-                  "status" => "400",
                   "title" => "get_an_identity_id",
                   "detail" => "cannot be changed once set",
                 },
@@ -91,7 +90,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "get_an_identity_id",
                     "detail" => "has already been taken",
                   },
