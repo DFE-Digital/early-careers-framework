@@ -10,12 +10,7 @@ module Api
           if @user.present?
             render_user(user: @user, status: :ok)
           else
-            hash = {
-              status: "404",
-              error: "User not found",
-            }
-
-            render json: hash, status: :not_found
+            render json: { error: "User not found" }, status: :not_found
           end
         end
 

@@ -73,7 +73,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
           let(:expected_response_code) { 404 }
           let(:expected_response_body) do
             {
-              "status" => "404",
               "error" => "User not found",
             }
           end
