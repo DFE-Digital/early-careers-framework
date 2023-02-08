@@ -49,12 +49,12 @@ private
 
   def left_outer_joins
     [
-      :participant_identity,
+      :teacher_profile,
       :ecf_participant_eligibility,
       :ecf_participant_validation_data,
       :validation_decisions,
       { current_induction_records: :school },
-      { participant_identity: { user: :teacher_profile } },
+      { participant_identity: :user },
     ]
   end
 
