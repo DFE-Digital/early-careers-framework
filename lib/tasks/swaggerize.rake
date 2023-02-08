@@ -8,10 +8,24 @@ if defined?(RSpec)
   namespace :rswag do
     namespace :specs do
       desc "Generate Swagger JSON files from integration specs"
-      RSpec::Core::RakeTask.new("swaggerize") do |t|
-        t.pattern = "spec/docs/**/*_spec.rb"
+      RSpec::Core::RakeTask.new('swaggerize') do |t|
+        t.pattern = ENV.fetch(
+          'PATTERN',
+          'spec/docs/**/*_spec.rb'
+        )
 
-        t.rspec_opts = ["--format OpenApi::Rswag::Specs::SwaggerFormatter", "--order defined"]
+        additional_rspec_opts = ENV.fetch(
+          'ADDITIONAL_RSPEC_OPTS',
+          ''
+        )
+
+        t.rspec_opts = [additional_rspec_opts]
+
+        if Rswag::Specs.config.swagger_dry_run
+          t.rspec_opts += ['--format Rswag::Specs::SwaggerFormatter', '--dry-run', '--order defined']
+        else
+          t.rspec_opts += ['--format Rswag::Specs::SwaggerFormatter', '--order defined']
+        end
       end
     end
   end

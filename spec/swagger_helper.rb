@@ -66,19 +66,38 @@ RSpec.configure do |config|
   }
 end
 
-if defined?(OpenApi)
-  module OpenApi
-    module Rswag
-      module Specs
-        module ExampleGroupHelpersExtensions
-          def curl_example(hash)
-            metadata[:operation]["x-curl-examples"] ||= []
-            metadata[:operation]["x-curl-examples"] << hash
+if defined?(Rswag::Specs)
+  module Rswag
+    module Specs
+      module ExampleGroupHelpers
+        def schema(value, content_type: "application/json")
+          content_hash = { content_type => { schema: value } }
+          metadata[:response][:content] = content_hash
+        end
+
+        def request_body(attributes)
+          # can make this generic, and accept any incoming hash (like parameter method)
+          attributes.compact!
+
+          if metadata[:operation][:requestBody].blank?
+            metadata[:operation][:requestBody] = attributes
+          elsif metadata[:operation][:requestBody] && metadata[:operation][:requestBody][:content]
+            # merge in
+            content_hash = metadata[:operation][:requestBody][:content]
+            incoming_content_hash = attributes[:content]
+            content_hash.merge!(incoming_content_hash) if incoming_content_hash
           end
+        end
+      end
+
+      module ExampleGroupHelpersExtensions
+        def curl_example(hash)
+          metadata[:operation]["x-curl-examples"] ||= []
+          metadata[:operation]["x-curl-examples"] << hash
         end
       end
     end
   end
 
-  OpenApi::Rswag::Specs::ExampleGroupHelpers.include(OpenApi::Rswag::Specs::ExampleGroupHelpersExtensions)
+  Rswag::Specs::ExampleGroupHelpers.include(Rswag::Specs::ExampleGroupHelpersExtensions)
 end
