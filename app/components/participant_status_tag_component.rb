@@ -19,21 +19,34 @@ private
   attr_reader :profile, :induction_record
 
   def tag_attributes
-    return { text: "Withdrawn by provider", colour: "red" } if training_status_withdrawn?
-    return { text: "Eligible to start", colour: "green" } if eligible? && profile.single_profile?
-    return { text: "Eligible: Mentor at main school", colour: "green" } if eligible? && profile.primary_profile?
-    return { text: "Eligible: Mentor at additional school", colour: "green" } if ineligible? && mentor_with_duplicate_profile?
+    if training_status_withdrawn?
+      { text: "Withdrawn by provider", colour: "red" }
+    elsif eligible? && profile.single_profile?
+      { text: "Eligible to start", colour: "green" }
+    elsif eligible? && profile.primary_profile?
+      { text: "Eligible: Mentor at main school", colour: "green" }
+    elsif ineligible? && mentor_with_duplicate_profile?
+      { text: "Eligible: Mentor at additional school", colour: "green" }
 
-    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts?
-    return { text: "DfE checking eligibility", colour: "orange" } if profile.manual_check_needed?
-    return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligible?
-    return { text: "Eligible to start: ERO", colour: "green" } if ineligible? && mentor_was_in_early_rollout? && on_fip?
-    return { text: "Eligible to start", colour: "green" } if ineligible? && mentor_was_in_early_rollout?
-    return { text: "Not eligible", colour: "red" } if ineligible?
-    return { text: "Contacted for information", colour: "grey" } if latest_email&.delivered?
-    return { text: "Check email address", colour: "grey" } if latest_email&.failed?
-
-    { text: "Contacting for information", colour: "grey" }
+    elsif participant_has_no_qts?
+      { text: "Not eligible: No QTS", colour: "red" }
+    elsif profile.manual_check_needed?
+      { text: "DfE checking eligibility", colour: "orange" }
+    elsif nqt_plus_one? && ineligible?
+      { text: "Not eligible: NQT+1", colour: "red" }
+    elsif ineligible? && mentor_was_in_early_rollout? && on_fip?
+      { text: "Eligible to start: ERO", colour: "green" }
+    elsif ineligible? && mentor_was_in_early_rollout?
+      { text: "Eligible to start", colour: "green" }
+    elsif ineligible?
+      { text: "Not eligible", colour: "red" }
+    elsif latest_email&.delivered?
+      { text: "Contacted for information", colour: "grey" }
+    elsif latest_email&.failed?
+      { text: "Check email address", colour: "grey" }
+    else
+      { text: "Contacting for information", colour: "grey" }
+    end
   end
 
   def training_status_withdrawn?
