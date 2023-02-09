@@ -74,20 +74,6 @@ if defined?(Rswag::Specs)
           content_hash = { content_type => { schema: value } }
           metadata[:response][:content] = content_hash
         end
-
-        def request_body(attributes)
-          # can make this generic, and accept any incoming hash (like parameter method)
-          attributes.compact!
-
-          if metadata[:operation][:requestBody].blank?
-            metadata[:operation][:requestBody] = attributes
-          elsif metadata[:operation][:requestBody] && metadata[:operation][:requestBody][:content]
-            # merge in
-            content_hash = metadata[:operation][:requestBody][:content]
-            incoming_content_hash = attributes[:content]
-            content_hash.merge!(incoming_content_hash) if incoming_content_hash
-          end
-        end
       end
 
       module ExampleGroupHelpersExtensions

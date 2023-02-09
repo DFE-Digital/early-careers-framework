@@ -98,11 +98,9 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantDeferRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/ECFParticipantDeferRequest",
         },
       }
 
@@ -192,11 +190,9 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantResumeRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/ECFParticipantResumeRequest",
         },
       }
 
@@ -247,11 +243,9 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
         },
       }
 
@@ -344,11 +338,9 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
         },
       }
 

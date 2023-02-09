@@ -158,11 +158,9 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/NPQParticipantWithdrawRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/NPQParticipantWithdrawRequest",
         },
       }
 

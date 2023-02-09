@@ -82,11 +82,9 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/NPQOutcomeRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/NPQOutcomeRequest",
         },
       }
 

@@ -60,11 +60,9 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
       tags "ECF partnerships"
       security [bearerAuth: []]
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFPartnershipRequest",
-          },
+      request_body_example value: {
+        "schema": {
+          "$ref": "#/components/schemas/ECFPartnershipRequest",
         },
       }
 
