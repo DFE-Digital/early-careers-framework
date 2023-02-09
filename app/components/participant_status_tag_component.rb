@@ -35,7 +35,13 @@ private
     elsif nqt_plus_one? && ineligible?
       { text: "Not eligible: NQT+1", colour: "red" }
     elsif ineligible? && mentor_was_in_early_rollout? && on_fip?
-      { text: "Eligible to start: ERO", colour: "green" }
+      {
+        text: "Eligible to start: ERO",
+        colour: "green",
+        html_attributes: {
+          title: "Completed ECF training and are eligible to mentor an ECT but not eligible for further funded training",
+        },
+      }
     elsif ineligible? && mentor_was_in_early_rollout?
       { text: "Eligible to start", colour: "green" }
     elsif ineligible?
