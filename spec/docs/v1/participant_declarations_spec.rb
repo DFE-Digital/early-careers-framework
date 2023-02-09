@@ -10,6 +10,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
   let(:bearer_token)      { "Bearer #{token}" }
   let(:Authorization)     { bearer_token }
   let(:declaration_date)  { ect_profile.schedule.milestones.first.start_date }
+  let(:params)            {}
 
   path "/api/v1/participant-declarations" do
     post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do

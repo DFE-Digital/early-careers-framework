@@ -11,6 +11,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
   let(:participant_declaration) { create(:npq_participant_declaration, npq_course:, cpd_lead_provider:) }
   let(:participant_profile) { participant_declaration.participant_profile }
   let!(:participant_outcome) { create :participant_outcome, participant_declaration: }
+  let(:params) {}
 
   path "/api/v2/participants/npq/outcomes" do
     get "List all participant NPQ outcomes" do

@@ -10,6 +10,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
   let(:token)               { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token)        { "Bearer #{token}" }
   let(:Authorization)       { bearer_token }
+  let(:params)              {}
 
   path "/api/v2/participant-declarations" do
     post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
