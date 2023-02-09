@@ -108,7 +108,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
                   "errors" => [
                     {
                       "detail" => "Enter a full name",
-                      "status" => "400",
                       "title" => "full_name",
                     },
                   ],
@@ -191,7 +190,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "get_an_identity_id",
                     "detail" => "could not be persisted as user with matching email address already has a different get_an_identity_id",
                   },
@@ -221,7 +219,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "email",
                     "detail" => "is required",
                   },
@@ -309,7 +306,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "email",
                     "detail" => "could not be updated on user with get_an_identity_id as email taken on another user",
                   },
@@ -344,7 +340,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "email",
                     "detail" => "could not be updated on user with get_an_identity_id as email taken on another user",
                   },
@@ -425,7 +420,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "email",
                     "detail" => "is required",
                   },
@@ -498,7 +492,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
                   "errors" => [
                     {
                       "detail" => "Enter a full name",
-                      "status" => "400",
                       "title" => "full_name",
                     },
                   ],
@@ -581,7 +574,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "email",
                     "detail" => "lookup failed as user with matching email has get_an_identity_id and none was sent",
                   },
@@ -611,7 +603,6 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "status" => "400",
                     "title" => "email",
                     "detail" => "is required",
                   },

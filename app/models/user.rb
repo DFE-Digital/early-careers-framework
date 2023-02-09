@@ -40,6 +40,14 @@ class User < ApplicationRecord
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true, notify_email: true
+  validates :get_an_identity_id, uniqueness: { allow_blank: true }
+  validates :get_an_identity_id,
+            inclusion: {
+              in: ->(user) { [user.get_an_identity_id_was] },
+              message: "cannot be changed once set",
+            },
+            on: :update,
+            if: -> { get_an_identity_id_was.present? }
 
   # changed from has_many :npq_applications as these now live on participant_identities
   # and it is possible that there are applications on one or more of the user's
