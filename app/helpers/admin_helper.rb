@@ -47,7 +47,7 @@ module AdminHelper
     safe_join(parts.compact_blank, tag.br)
   end
 
-  def admin_participant_header_and_title(full_name:, role:, trn:, section:)
+  def admin_participant_header_and_title(full_name:, role:, trn:, cohort:, section:)
     content_for(:title) { "#{full_name} - #{section}" }
 
     caption = tag.span(role, class: "govuk-caption-xl")
@@ -61,6 +61,14 @@ module AdminHelper
           [
             tag.span("TRN: ", class: "govuk-body govuk-!-font-weight-bold"),
             trn,
+          ],
+        )
+      end,
+      tag.p do
+        safe_join(
+          [
+            tag.span("Cohort: ", class: "govuk-body govuk-!-font-weight-bold"),
+            cohort,
           ],
         )
       end,
