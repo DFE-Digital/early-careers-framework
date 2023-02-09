@@ -36,12 +36,6 @@ RSpec.shared_examples "JSON Participant resume documentation" do |url, request_s
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body_example value: {
-        "schema": {
-          "$ref": request_schema_ref,
-        },
-      }
-
       parameter name: :id,
                 in: :path,
                 type: :string,

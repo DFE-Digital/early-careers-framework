@@ -18,12 +18,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
       consumes "application/json"
       security [bearerAuth: []]
 
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ParticipantDeclaration",
-        },
-      }
-
       parameter name: :params,
                 in: :body,
                 schema: {

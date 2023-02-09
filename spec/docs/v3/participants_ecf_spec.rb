@@ -98,12 +98,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ECFParticipantDeferRequest",
-        },
-      }
-
       parameter name: :id,
                 in: :path,
                 type: :string,
@@ -190,12 +184,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ECFParticipantResumeRequest",
-        },
-      }
-
       parameter name: :id,
                 in: :path,
                 type: :string,
@@ -242,12 +230,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
-
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
-        },
-      }
 
       parameter name: :id,
                 in: :path,
@@ -337,12 +319,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       tags "ECF Participant"
       security [bearerAuth: []]
       consumes "application/json"
-
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
-        },
-      }
 
       parameter name: :id,
                 in: :path,

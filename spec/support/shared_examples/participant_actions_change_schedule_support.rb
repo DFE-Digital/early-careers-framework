@@ -85,12 +85,6 @@ RSpec.shared_examples "JSON Participant Change schedule documentation" do |url, 
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body_example value: {
-        "schema": {
-          "$ref": request_schema_ref,
-        },
-      }
-
       parameter name: :id,
                 in: :path,
                 type: :string,

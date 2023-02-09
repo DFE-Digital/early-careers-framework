@@ -476,16 +476,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -509,6 +499,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -526,16 +526,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantDeferRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -559,6 +549,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantDeferRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -576,16 +576,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -609,6 +599,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantResumeRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -626,16 +626,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQParticipantWithdrawRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -669,6 +659,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQParticipantWithdrawRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -686,15 +686,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ParticipantDeclaration"
-              }
-            }
-          }
-        },
         "parameters": [
 
         ],
@@ -736,6 +727,15 @@
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestResponse"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantDeclaration"
               }
             }
           }
@@ -1059,16 +1059,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQOutcomeRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "participant_id",
@@ -1103,6 +1093,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -1289,16 +1289,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -1322,6 +1312,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantDeferRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -1339,16 +1339,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -1372,6 +1362,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantResumeRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -1389,16 +1389,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -1422,6 +1412,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -1439,16 +1439,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "id",
@@ -1472,6 +1462,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     }

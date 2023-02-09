@@ -345,16 +345,6 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NPQOutcomeRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "parameters": [
           {
             "name": "participant_id",
@@ -389,6 +379,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NPQOutcomeRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },

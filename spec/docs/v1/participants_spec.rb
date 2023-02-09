@@ -41,12 +41,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
-        },
-      }
-
       parameter name: :id,
                 in: :path,
                 type: :string,

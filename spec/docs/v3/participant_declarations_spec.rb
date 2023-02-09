@@ -22,12 +22,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
       consumes "application/json"
       security [bearerAuth: []]
 
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/ParticipantDeclarationRequest",
-        },
-      }
-
       response 200, "Successful" do
         let(:attributes) do
           {

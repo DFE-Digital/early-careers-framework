@@ -82,12 +82,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body_example value: {
-        "schema": {
-          "$ref": "#/components/schemas/NPQOutcomeRequest",
-        },
-      }
-
       parameter name: :participant_id,
                 description: "The unique ID of the participant",
                 in: :path,
