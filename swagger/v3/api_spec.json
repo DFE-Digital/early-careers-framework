@@ -45,6 +45,7 @@
             "schema": {
               "$ref": "#/components/schemas/DeliveryPartnersFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -57,6 +58,7 @@
             "schema": {
               "$ref": "#/components/schemas/DeliveryPartnersSort"
             },
+            "type": "array",
             "style": "form",
             "explode": false,
             "required": false,
@@ -170,6 +172,7 @@
               "$ref": "#/components/schemas/PartnershipsFilter"
             },
             "in": "query",
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -182,6 +185,7 @@
             "schema": {
               "$ref": "#/components/schemas/PartnershipsSort"
             },
+            "type": "array",
             "style": "form",
             "explode": false,
             "required": false,
@@ -234,6 +238,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -296,6 +301,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -346,7 +352,8 @@
                 "$ref": "#/components/schemas/NPQOutcomeRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -406,6 +413,7 @@
             "schema": {
               "$ref": "#/components/schemas/StatementsFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,

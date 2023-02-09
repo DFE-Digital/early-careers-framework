@@ -45,6 +45,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -57,6 +58,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -109,6 +111,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -311,6 +314,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -363,6 +367,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -375,6 +380,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -477,7 +483,8 @@
                 "$ref": "#/components/schemas/NPQParticipantChangeScheduleRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -526,7 +533,8 @@
                 "$ref": "#/components/schemas/NPQParticipantDeferRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -575,7 +583,8 @@
                 "$ref": "#/components/schemas/NPQParticipantResumeRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -624,7 +633,8 @@
                 "$ref": "#/components/schemas/NPQParticipantWithdrawRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -751,6 +761,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilterDeclarations"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -763,6 +774,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -953,6 +965,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1053,7 +1066,8 @@
                 "$ref": "#/components/schemas/NPQOutcomeRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -1113,6 +1127,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1125,6 +1140,7 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1177,6 +1193,7 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
+            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1279,7 +1296,8 @@
                 "$ref": "#/components/schemas/ECFParticipantDeferRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -1328,7 +1346,8 @@
                 "$ref": "#/components/schemas/ECFParticipantResumeRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -1377,7 +1396,8 @@
                 "$ref": "#/components/schemas/ECFParticipantWithdrawRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
@@ -1426,7 +1446,8 @@
                 "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "parameters": [
           {
