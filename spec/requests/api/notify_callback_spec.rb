@@ -17,26 +17,17 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
 
   describe "POST /api/notify-callback" do
     context "when the email is a nomination email" do
+      let(:sent_at) { 1.hour.ago.to_s }
       let(:nomination_email) { create(:nomination_email) }
 
-      it "updates matching nomination email" do
-        post "/api/notify-callback", headers:, params: {
-          id: nomination_email.notify_id,
-          status: "failed",
-        }
-
-        expect(nomination_email.reload.notify_status).to eq "failed"
-      end
-
-      it "updates matching email record" do
-        email = Email.create!(id: nomination_email.notify_id)
-
-        post "/api/notify-callback", headers:, params: {
-          id: nomination_email.notify_id,
-          status: "failed",
-        }
-
-        expect(email.reload.status).to eq "failed"
+      it "creates a handle notify callback job" do
+        expect {
+          post "/api/notify-callback", headers:, params: {
+            id: nomination_email.notify_id,
+            status: "failed",
+            sent_at:,
+          }
+        }.to have_enqueued_job(HandleNotifyCallbackJob).with(email_id: nomination_email.notify_id, delivery_status: "failed", sent_at:)
       end
 
       context "when reference is nil" do
@@ -65,15 +56,6 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
     context "when the email is a partnership notification email" do
       let(:partnership_notification_email) { create(:partnership_notification_email) }
 
-      it "updates matching email" do
-        post "/api/notify-callback", headers:, params: {
-          id: partnership_notification_email.notify_id,
-          status: "failed",
-        }
-
-        expect(partnership_notification_email.reload.notify_status).to eq "failed"
-      end
-
       context "when id is nil" do
         it "returns successfully" do
           post "/api/notify-callback", headers:, params: {
@@ -92,7 +74,7 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
             status: "delivered",
           }
 
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(:no_content)
         end
       end
     end
