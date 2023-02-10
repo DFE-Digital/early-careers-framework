@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
   require scenario
 end
@@ -18,8 +19,8 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
   let(:induction_programme_1) { create(:seed_induction_programme, school_cohort: school_cohort_1, partnership: partnership_1) }
   let(:induction_programme_2) { create(:seed_induction_programme, school_cohort: school_cohort_2, partnership: partnership_2) }
   let(:induction_programme_3) { create(:seed_induction_programme, school_cohort: school_cohort_3, partnership: partnership_3) }
-  
-  let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_cohort_1).build } 
+
+  let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_cohort_1).build }
 
   let(:participant_profile) { ect.participant_profile }
 

@@ -12,7 +12,7 @@ module NewSeeds
             @new_user_attributes = { full_name:, email: }.compact
           end
 
-          def build(**profile_args)
+          def build(**_profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
 
             @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
