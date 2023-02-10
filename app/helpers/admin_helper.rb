@@ -51,7 +51,7 @@ module AdminHelper
     full_name = profile.full_name
     role = admin_participant_role_name(profile.class.name)
     trn = profile.teacher_profile.trn
-    cohort = profile.cohort.start_year
+    cohort = profile.cohort&.start_year
 
     visually_hidden = tag.span(" - #{section}", class: "govuk-visually-hidden")
 
