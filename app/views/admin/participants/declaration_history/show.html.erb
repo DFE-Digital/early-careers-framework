@@ -1,9 +1,6 @@
 <%=
   admin_participant_header_and_title(
-    full_name: @participant_profile.full_name,
-    role: admin_participant_role_name(@participant_profile.class.name),
-    trn: @participant_profile.teacher_profile.trn,
-    cohort: @participant_profile.cohort.start_year,
+    profile: @participant_profile,
     section: "Declaration history"
   )
 %>

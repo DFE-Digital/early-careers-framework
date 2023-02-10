@@ -47,14 +47,18 @@ module AdminHelper
     safe_join(parts.compact_blank, tag.br)
   end
 
-  def admin_participant_header_and_title(full_name:, role:, trn:, cohort:, section:)
-    content_for(:title) { "#{full_name} - #{section}" }
+  def admin_participant_header_and_title(profile:, section:)
+    full_name = profile.full_name
+    role = admin_participant_role_name(profile.class.name)
+    trn = profile.teacher_profile.trn
+    cohort = profile.cohort.start_year
 
-    caption = tag.span(role, class: "govuk-caption-xl")
     visually_hidden = tag.span(" - #{section}", class: "govuk-visually-hidden")
 
+    content_for(:title) { "#{full_name} - #{section}" }
+
     safe_join([
-      caption,
+      tag.span(role, class: "govuk-caption-xl"),
       tag.h1(class: "govuk-heading-xl") { safe_join([full_name, visually_hidden]) },
       tag.p do
         safe_join(
