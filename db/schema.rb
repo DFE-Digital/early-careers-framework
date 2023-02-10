@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_25_182955) do
+ActiveRecord::Schema.define(version: 2023_02_10_120533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -662,12 +662,27 @@ ActiveRecord::Schema.define(version: 2023_01_25_182955) do
     t.index ["user_id"], name: "index_participant_identities_on_user_id"
   end
 
+  create_table "participant_outcome_api_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "request_path"
+    t.integer "status_code"
+    t.jsonb "request_headers"
+    t.jsonb "request_body"
+    t.jsonb "response_body"
+    t.jsonb "response_headers"
+    t.uuid "participant_outcome_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_outcome_id"], name: "index_participant_outcome_api_requests_on_participant_outcome"
+  end
+
   create_table "participant_outcomes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "state", null: false
     t.date "completion_date", null: false
     t.uuid "participant_declaration_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "qualified_teachers_api_request_successful"
+    t.datetime "sent_to_qualified_teachers_api_at"
     t.index ["participant_declaration_id"], name: "index_declaration"
   end
 
@@ -1075,6 +1090,7 @@ ActiveRecord::Schema.define(version: 2023_01_25_182955) do
   add_foreign_key "participant_declarations", "participant_profiles"
   add_foreign_key "participant_declarations", "users"
   add_foreign_key "participant_identities", "users"
+  add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "participant_declarations"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"

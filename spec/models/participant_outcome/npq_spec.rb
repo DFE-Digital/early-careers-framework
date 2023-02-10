@@ -21,6 +21,8 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
       )
       expect(declaration.reload.outcomes).to include(new_outcome)
     end
+
+    it { is_expected.to have_many(:participant_outcome_api_requests) }
   end
 
   describe "state" do
