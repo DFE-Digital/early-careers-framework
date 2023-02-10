@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
+  require scenario
+end
 
 RSpec.describe Induction::FindBy, :with_default_schedules do
   let(:cohort) { Cohort.current }
@@ -15,14 +18,15 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
   let(:induction_programme_1) { create(:seed_induction_programme, school_cohort: school_cohort_1, partnership: partnership_1) }
   let(:induction_programme_2) { create(:seed_induction_programme, school_cohort: school_cohort_2, partnership: partnership_2) }
   let(:induction_programme_3) { create(:seed_induction_programme, school_cohort: school_cohort_3, partnership: partnership_3) }
-  let(:teacher_profile) { create(:seed_teacher_profile, :valid) }
-  let(:participant_identity) { create(:seed_participant_identity, user: teacher_profile.user) }
-  let(:participant_profile) { create(:seed_ect_participant_profile, :with_schedule, teacher_profile:, participant_identity:, school_cohort: school_cohort_3) }
+  
+  let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_cohort_1).build } 
 
-  let!(:induction_1) { create(:seed_induction_record, induction_programme: induction_programme_1, participant_profile:, schedule: participant_profile.schedule, start_date: Date.new(cohort.start_year, 9, 1), end_date: Date.new(cohort.start_year, 10, 1), induction_status: "leaving") }
-  let!(:induction_2) { create(:seed_induction_record, induction_programme: induction_programme_2, participant_profile:, schedule: participant_profile.schedule, start_date: Date.new(cohort.start_year, 10, 1), end_date: Date.new(cohort.start_year, 11, 1), induction_status: "leaving") }
-  let!(:induction_3) { create(:seed_induction_record, induction_programme: induction_programme_3, participant_profile:, schedule: participant_profile.schedule, start_date: Date.new(cohort.start_year, 11, 1), end_date: Date.new(cohort.start_year, 12, 1), induction_status: "changed") }
-  let!(:induction_4) { create(:seed_induction_record, induction_programme: induction_programme_3, participant_profile:, schedule: participant_profile.schedule, start_date: Date.new(cohort.start_year, 12, 1), end_date: Date.new(cohort.start_year + 1, 1, 1), induction_status: "leaving") }
+  let(:participant_profile) { ect.participant_profile }
+
+  let!(:induction_1) { ect.add_induction_record(induction_programme: induction_programme_1, start_date: Date.new(cohort.start_year, 9, 1), end_date: Date.new(cohort.start_year, 10, 1), induction_status: "leaving") }
+  let!(:induction_2) { ect.add_induction_record(induction_programme: induction_programme_2, start_date: Date.new(cohort.start_year, 10, 1), end_date: Date.new(cohort.start_year, 11, 1), induction_status: "leaving") }
+  let!(:induction_3) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(cohort.start_year, 11, 1), end_date: Date.new(cohort.start_year, 12, 1), induction_status: "changed") }
+  let!(:induction_4) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(cohort.start_year, 12, 1), end_date: Date.new(cohort.start_year + 1, 1, 1), induction_status: "leaving") }
 
   subject(:service) { described_class }
 
