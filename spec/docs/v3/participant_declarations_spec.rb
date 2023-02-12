@@ -146,7 +146,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 schema: {
                   "$ref": "#/components/schemas/ParticipantDeclarationsFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -161,7 +160,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -253,7 +251,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
                 description: "The ID of the participant declaration ID"
@@ -348,7 +345,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the declaration to void"

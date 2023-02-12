@@ -18,7 +18,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 schema: {
                   "$ref": "#/components/schemas/ListFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -30,7 +29,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -61,7 +59,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the ECF participant."
@@ -100,14 +97,12 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to defer"
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {
@@ -186,14 +181,12 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to resume"
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {
@@ -233,14 +226,12 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to withdraw"
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {
@@ -322,14 +313,12 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant"
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {

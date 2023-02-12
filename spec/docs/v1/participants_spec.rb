@@ -43,14 +43,12 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to withdraw"
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {

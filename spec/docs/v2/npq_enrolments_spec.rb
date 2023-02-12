@@ -21,7 +21,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 schema: {
                   "$ref": "#/components/schemas/ListFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,

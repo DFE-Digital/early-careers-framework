@@ -21,7 +21,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 schema: {
                   "$ref": "#/components/schemas/ListFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -33,7 +32,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -67,7 +65,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 schema: {
                   "$ref": "#/components/schemas/ListFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -98,7 +95,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the NPQ application."
@@ -130,7 +126,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the NPQ application to accept."
@@ -162,7 +157,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
                 description: "The ID of the NPQ application to reject."

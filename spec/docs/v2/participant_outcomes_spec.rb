@@ -24,7 +24,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -57,7 +56,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
 
       parameter name: :participant_id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The external ID of the participant"
@@ -95,7 +93,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {

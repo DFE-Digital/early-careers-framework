@@ -24,7 +24,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                 schema: {
                   "$ref": "#/components/schemas/DeliveryPartnersFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -40,7 +39,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                 schema: {
                   "$ref": "#/components/schemas/DeliveryPartnersSort",
                 },
-                type: :array,
                 style: :form,
                 explode: false,
                 required: false,
