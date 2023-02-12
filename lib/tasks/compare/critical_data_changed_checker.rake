@@ -113,7 +113,7 @@ Row = Struct.new(
       changed_schedule:,
       registration_year:,
       change_month:,
-      change_year:
+      change_year:,
     }
   end
 
