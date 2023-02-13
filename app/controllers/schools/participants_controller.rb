@@ -12,8 +12,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     if FeatureFlag.active?(:change_of_circumstances)
-      @mentor_categories = CocSetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::Mentor)
-      @ect_categories = CocSetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::ECT)
+      @mentor_categories, @ect_categories = CocSetParticipantCategories3.call(@school_cohort, current_user)
       @transferring_in = @ect_categories.transferring_in + @mentor_categories.transferring_in
       @transferring_out = @ect_categories.transferring_out + @mentor_categories.transferring_out
       @transferred = @ect_categories.transferred + @mentor_categories.transferred

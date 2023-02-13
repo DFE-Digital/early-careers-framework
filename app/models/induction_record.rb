@@ -63,11 +63,11 @@ class InductionRecord < ApplicationRecord
 
   scope :transferring_in, -> { active_induction_status.merge(start_date_in_future.and(school_transfer)) }
   scope :transferring_out, -> { leaving_induction_status.merge(end_date_in_future.and(school_transfer)) }
+  scope :claimed_by_another_school, -> { leaving_induction_status.merge(end_date_in_future.and(not_school_transfer)) }
+  scope :transferred, -> { leaving_induction_status.merge(end_date_in_past) }
 
   scope :current_or_transferring_in, -> { current.or(transferring_in) }
-
-  scope :claimed_by_another_school, -> { leaving_induction_status.merge(not_school_transfer.and(end_date_in_future)) }
-  scope :transferred, -> { leaving_induction_status.merge(end_date_in_past) }
+  scope :current_or_transferring_in_or_transferred, -> { current.or(transferring_in).or(transferred) }
 
   scope :mentors, -> { joins(:participant_profile).merge(ParticipantProfile.mentors) }
   scope :ects, -> { joins(:participant_profile).merge(ParticipantProfile.ects) }
@@ -86,15 +86,33 @@ class InductionRecord < ApplicationRecord
   # NOTE: these will return nil if the partnership is challenged
   delegate :lead_provider_name, to: :induction_programme
   delegate :delivery_partner_name, to: :induction_programme
+  delegate :full_name, to: :participant_profile, allow_nil: true, prefix: :participant
   delegate :full_name, to: :mentor, allow_nil: true, prefix: true
   delegate :email, to: :preferred_identity, allow_nil: true, prefix: "participant"
   delegate :name, :urn, to: :school, prefix: true
   delegate :name, to: :appropriate_body, allow_nil: true, prefix: true
   delegate :schedule_identifier, to: :schedule, allow_nil: true
   delegate :training_programme, to: :induction_programme
+  delegate :type, to: :participant_profile, allow_nil: true, prefix: :participant
   delegate :start_year, to: :cohort, prefix: true
 
   after_save :update_analytics
+
+  def active?
+    active_induction_status? && (unknown_end? || end_date_set_in_future?) && !transferring_in?
+  end
+
+  def claimed_by_another_school?
+    leaving_induction_status? && !school_transfer && end_date_set_in_future?
+  end
+
+  def end_date_set_in_future?
+    end_date > Time.current
+  end
+
+  def unknown_end?
+    end_date.nil?
+  end
 
   def enrolled_in_fip?
     induction_programme.full_induction_programme?
@@ -122,7 +140,7 @@ class InductionRecord < ApplicationRecord
   end
 
   def transferring_in?
-    active_induction_status? && start_date > Time.zone.now
+    active_induction_status? && start_date > Time.zone.now && school_transfer
   end
 
   def transferring_out?

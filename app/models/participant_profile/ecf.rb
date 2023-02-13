@@ -70,6 +70,7 @@ class ParticipantProfile < ApplicationRecord
     end
 
     delegate :ineligible_but_not_duplicated_or_previously_participated?,
+             :ineligible_and_duplicated_or_previously_participated?,
              to: :ecf_participant_eligibility,
              allow_nil: true
 
