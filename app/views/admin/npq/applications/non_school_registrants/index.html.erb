@@ -5,13 +5,17 @@
     table.head do |head|
       head.row do |row|
         row.cell(header: true, text: "Name")
+        row.cell(header: true, text: "Employer name")
+        row.cell(header: true, text: "NPQ course name")
       end
     end
 
     table.body do |body|
-      @participant_profiles.each do |pp|
+      @npq_applications.each do |na|
         body.row do |row|
-          row.cell(text: pp.user.full_name)
+          row.cell(text: na.user.full_name)
+          row.cell(text: na.employer_name)
+          row.cell(text: na.npq_course.name)
         end
       end
     end
