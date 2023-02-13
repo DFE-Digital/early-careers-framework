@@ -9,7 +9,12 @@ module Admin
 
         def index
           @participant_profiles = policy_scope(
-            NPQApplication.eager_load(participant_identity: :user)
+            NPQApplication
+              .does_not_work_in_school
+              .does_not_work_in_childcare
+              .not_eligible_for_funding
+              .no_institution
+              .eager_load(participant_identity: :user)
           ).all
         end
       end

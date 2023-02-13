@@ -40,6 +40,10 @@ class NPQApplication < ApplicationRecord
   }
 
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
+  scope :does_not_work_in_school, -> { where(works_in_school: false) }
+  scope :does_not_work_in_childcare, -> { where(works_in_childcare: false) }
+  scope :not_eligible_for_funding, -> { where(eligible_for_funding: false) }
+  scope :no_institution, -> { where(funding_eligiblity_status_code: "no_institution") }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 
