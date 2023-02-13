@@ -6,10 +6,13 @@ end
 
 RSpec.describe Induction::FindBy, :with_default_schedules do
   let(:cohort) { Cohort.current }
+  let(:current_year) { cohort.start_year }
+
   # after all the dates in the induction records
-  let!(:a_point_in_time) { Date.new(cohort.start_year + 1, 2, 1) }
+  let!(:a_point_in_time) { Date.new(current_year + 1, 2, 1) }
   # after the start_date but before the end_date of induction_4
-  let!(:an_earlier_point_in_time) { Date.new(cohort.start_year, 12, 25) }
+  let!(:an_earlier_point_in_time) { Date.new(current_year, 12, 25) }
+
   let(:school_cohort_1) { create(:seed_school_cohort, :with_school, cohort:) }
   let(:school_cohort_2) { create(:seed_school_cohort, :with_school, cohort:) }
   let(:school_cohort_3) { create(:seed_school_cohort, :with_school, cohort:) }
@@ -24,10 +27,10 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
 
   let(:participant_profile) { ect.participant_profile }
 
-  let!(:induction_1) { ect.add_induction_record(induction_programme: induction_programme_1, start_date: Date.new(cohort.start_year, 9, 1), end_date: Date.new(cohort.start_year, 10, 1), induction_status: "leaving") }
-  let!(:induction_2) { ect.add_induction_record(induction_programme: induction_programme_2, start_date: Date.new(cohort.start_year, 10, 1), end_date: Date.new(cohort.start_year, 11, 1), induction_status: "leaving") }
-  let!(:induction_3) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(cohort.start_year, 11, 1), end_date: Date.new(cohort.start_year, 12, 1), induction_status: "changed") }
-  let!(:induction_4) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(cohort.start_year, 12, 1), end_date: Date.new(cohort.start_year + 1, 1, 1), induction_status: "leaving") }
+  let!(:induction_1) { ect.add_induction_record(induction_programme: induction_programme_1, start_date: Date.new(current_year, 9, 1), end_date: Date.new(current_year, 10, 1), induction_status: "leaving") }
+  let!(:induction_2) { ect.add_induction_record(induction_programme: induction_programme_2, start_date: Date.new(current_year, 10, 1), end_date: Date.new(current_year, 11, 1), induction_status: "leaving") }
+  let!(:induction_3) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(current_year, 11, 1), end_date: Date.new(current_year, 12, 1), induction_status: "changed") }
+  let!(:induction_4) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(current_year, 12, 1), end_date: Date.new(current_year + 1, 1, 1), induction_status: "leaving") }
 
   subject(:service) { described_class }
 
@@ -100,10 +103,10 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
     context "when a date range is supplied" do
       it "returns the latest induction record in that period" do
         travel_to a_point_in_time do
-          expect(service.call(participant_profile:, date_range: Date.new(cohort.start_year, 9, 1)..Date.new(cohort.start_year, 9, 30))).to eq induction_1
-          expect(service.call(participant_profile:, date_range: Date.new(cohort.start_year, 11, 2)..)).to eq induction_4
-          expect(service.call(participant_profile:, date_range: ..Date.new(cohort.start_year, 11, 30))).to eq induction_3
-          expect(service.call(participant_profile:, date_range: Date.new(cohort.start_year + 1, 3, 22)..)).to be_nil
+          expect(service.call(participant_profile:, date_range: Date.new(current_year, 9, 1)..Date.new(current_year, 9, 30))).to eq induction_1
+          expect(service.call(participant_profile:, date_range: Date.new(current_year, 11, 2)..)).to eq induction_4
+          expect(service.call(participant_profile:, date_range: ..Date.new(current_year, 11, 30))).to eq induction_3
+          expect(service.call(participant_profile:, date_range: Date.new(current_year + 1, 3, 22)..)).to be_nil
         end
       end
     end
