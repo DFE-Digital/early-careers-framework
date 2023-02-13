@@ -1,0 +1,19 @@
+<h1>Non-school NPQ applicants</h1>
+
+<%=
+  govuk_table do |table|
+    table.head do |head|
+      head.row do |row|
+        row.cell(header: true, text: "Name")
+      end
+    end
+
+    table.body do |body|
+      @participant_profiles.each do |pp|
+        body.row do |row|
+          row.cell(text: pp.user.full_name)
+        end
+      end
+    end
+  end
+%>
