@@ -45,7 +45,6 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -58,7 +57,6 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -111,7 +109,6 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -314,7 +311,6 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilter"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -327,7 +323,6 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -708,7 +703,6 @@
             "schema": {
               "$ref": "#/components/schemas/ListFilterDeclarations"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -721,7 +715,6 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -912,7 +905,6 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1074,7 +1066,6 @@
             "schema": {
               "$ref": "#/components/schemas/ParticipantListFilter"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1087,7 +1078,6 @@
             "schema": {
               "$ref": "#/components/schemas/Pagination"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
@@ -1140,7 +1130,6 @@
             "schema": {
               "$ref": "#/components/schemas/ParticipantListFilter"
             },
-            "type": "object",
             "style": "deepObject",
             "explode": true,
             "required": false,
