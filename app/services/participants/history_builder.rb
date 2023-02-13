@@ -51,7 +51,7 @@ class Participants::HistoryBuilder
 
         record_school_cohort_events(profile.school_cohort) unless profile.school_cohort.nil?
         record_validation_events(profile.ecf_participant_validation_data) unless profile.ecf_participant_validation_data.nil?
-        record_validation_decision_events(profile.validation_decisions) unless profile.validation_decisions.nil?
+        record_validation_decision_events(profile.validation_decisions) unless profile.validation_decisions.empty?
         record_eligibility_events(profile.ecf_participant_eligibility) unless profile.ecf_participant_eligibility.nil?
 
         # not all ECF Participants have induction records !!
@@ -147,7 +147,8 @@ private
 
       version.object_changes&.each do |key, value|
         if key == "school_cohort_id"
-          record_school_cohort_events(value)
+          school_cohort = SchoolCohort.find value
+          record_school_cohort_events(school_cohort) unless school_cohort.nil?
         end
 
         next unless key != "created_at" && key != "updated_at" && key != "notes" && key != "school_ukprn" && key != "start_date" && key != "end_date" && !(key == "induction_status" && value == "changed")
