@@ -33,7 +33,6 @@ class User < ApplicationRecord
   # end: TODO
 
   has_many :npq_application_eligibility_imports
-  has_many :npq_application_exports
 
   before_validation :strip_whitespace
   after_update :sync_email_with_identity

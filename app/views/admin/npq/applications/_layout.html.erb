@@ -1,6 +1,9 @@
 <h1 class="govuk-heading-l"><%= t(".title") %></h1>
 
 <%= render SubnavComponent.new do |component| %>
+  <%= component.nav_item(path: admin_npq_applications_applications_path) do %>
+    <%= t(".applications") %>
+  <% end %>
   <%= component.nav_item(path: admin_npq_applications_exports_path) do %>
     <%= t(".exports") %>
   <% end %>

@@ -32,6 +32,9 @@ private
         .or(TeacherProfile.where(id: search_term))
         .or(User.where(id: search_term))
         .or(ParticipantIdentity.where(external_identifier: search_term))
+        .or(School.where(name: search_term))
+        .or(School.where(urn: search_term))
+        .or(NPQApplication.where(teacher_reference_number: search_term))
     else
       User.all
     end
@@ -53,6 +56,7 @@ private
       :validation_decisions,
       { current_induction_records: :school },
       { participant_identity: :user },
+      { participant_identity: :npq_applications },
     ]
   end
 

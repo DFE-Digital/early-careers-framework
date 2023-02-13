@@ -5,6 +5,8 @@ class NPQApplication < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
+  has_one :school, class_name: "School", foreign_key: :urn, primary_key: :school_urn
+  belongs_to :user
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :participant_identity
   belongs_to :npq_lead_provider
@@ -49,6 +51,10 @@ class NPQApplication < ApplicationRecord
 
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
+
+  # def school
+  #   School.find_by(urn: school_urn)
+  # end
 
   # this builds upon #eligible_for_funding
   # eligible_for_funding is solely based on what NPQ app knows

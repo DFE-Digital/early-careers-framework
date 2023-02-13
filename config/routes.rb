@@ -434,6 +434,7 @@ Rails.application.routes.draw do
         resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
 
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
+        resources :applications, only: %i[index show]
       end
     end
   end
