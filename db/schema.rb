@@ -642,7 +642,7 @@ ActiveRecord::Schema.define(version: 2023_02_10_120533) do
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying, 'clawed_back'::character varying])::text[]))"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text, ('clawed_back'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
@@ -1203,7 +1203,7 @@ ActiveRecord::Schema.define(version: 2023_02_10_120533) do
               count(*) AS count
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id) duplicates ON ((duplicates.user_id = participant_identities.user_id)))
        LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
        LEFT JOIN schedules ON ((latest_induction_records.schedule_id = schedules.id)))
@@ -1215,9 +1215,9 @@ ActiveRecord::Schema.define(version: 2023_02_10_120533) do
     WHERE ((participant_identities.user_id IN ( SELECT participant_identities_1.user_id
              FROM (participant_profiles participant_profiles_1
                JOIN participant_identities participant_identities_1 ON ((participant_identities_1.id = participant_profiles_1.participant_identity_id)))
-            WHERE ((participant_profiles_1.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[]))
+            WHERE ((participant_profiles_1.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text]))
             GROUP BY participant_profiles_1.type, participant_identities_1.user_id
-           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY ((ARRAY['ParticipantProfile::ECT'::character varying, 'ParticipantProfile::Mentor'::character varying])::text[])))
+           HAVING (count(*) > 1))) AND ((participant_profiles.type)::text = ANY (ARRAY[('ParticipantProfile::ECT'::character varying)::text, ('ParticipantProfile::Mentor'::character varying)::text])))
     ORDER BY participant_identities.external_identifier, (row_number() OVER (PARTITION BY participant_identities.user_id ORDER BY
           CASE
               WHEN (((latest_induction_records.training_status)::text = 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 1
