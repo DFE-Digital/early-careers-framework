@@ -7,7 +7,7 @@ module Admin::Participants
     def show
       @user = @participant_profile.user
 
-      events = Participants::HistoryBuilder.from_participant_profile(@participant_profile).events.sort(&:date).reverse
+      events = Participants::HistoryBuilder.from_participant_profile(@participant_profile).events.sort_by(&:date).reverse
       @event_list = events
     end
   end
