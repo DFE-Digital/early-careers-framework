@@ -63,7 +63,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the NPQ participant."
+                description: "The ID of the NPQ participant.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single NPQ participant" do
         let(:id) { npq_application.participant_identity.external_identifier }
@@ -159,7 +162,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to withdraw"
+                description: "The ID of the participant to withdraw",
+                schema: {
+                  type: "string",
+                }
 
       parameter name: :params,
                 in: :body,

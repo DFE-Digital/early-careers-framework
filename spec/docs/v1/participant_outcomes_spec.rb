@@ -58,7 +58,10 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The external ID of the participant"
+                description: "The external ID of the participant",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A list of participant outcomes" do
         schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })

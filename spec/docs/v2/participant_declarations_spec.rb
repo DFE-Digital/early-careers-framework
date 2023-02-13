@@ -164,7 +164,10 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 in: :path,
                 required: true,
                 example: "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
-                description: "The ID of the participant declaration ID"
+                description: "The ID of the participant declaration ID",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single participant declaration" do
         schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
@@ -201,7 +204,10 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the declaration to void"
+                description: "The ID of the declaration to void",
+                schema: {
+                  type: "string",
+                }
 
       response 200, "Successful" do
         let(:id) do

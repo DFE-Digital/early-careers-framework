@@ -97,7 +97,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the NPQ application."
+                description: "The ID of the NPQ application.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single NPQ application" do
         let(:id) { npq_application.id }
@@ -128,7 +131,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the NPQ application to accept."
+                description: "The ID of the NPQ application to accept.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "The NPQ application being accepted" do
         let(:id) { npq_application.id }
@@ -159,7 +165,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                 in: :path,
                 required: true,
                 example: "14b1b4ab-fa81-4f7a-b4b5-f632412e8c5c",
-                description: "The ID of the NPQ application to reject."
+                description: "The ID of the NPQ application to reject.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "The NPQ application being rejected" do
         let(:id) { npq_application.id }

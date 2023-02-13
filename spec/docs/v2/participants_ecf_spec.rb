@@ -97,7 +97,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the ECF participant."
+                description: "The ID of the ECF participant.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single ECF participant" do
         let(:id) { mentor_profile.user.id }
@@ -152,7 +155,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/api_sp
                 in: :path,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to withdraw"
+                description: "The ID of the participant to withdraw",
+                schema: {
+                  type: "string",
+                }
 
       parameter name: :params,
                 in: :body,
