@@ -52,6 +52,13 @@ FactoryBot.define do
       starting_in_2022
     end
 
+    trait(:needs_manual_review) do
+      company
+      works_in_childcare { false }
+      eligible_for_funding { false }
+      funding_eligiblity_status_code { "no_institution" }
+    end
+
     after(:build) do |npqa|
       if npqa.participant_identity&.persisted?
         Rails.logger.debug("seeded an npq application for #{npqa.participant_identity.user.full_name}")

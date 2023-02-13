@@ -22,6 +22,7 @@ module NewSeeds
         @application = FactoryBot.create(
           :seed_npq_application,
           :valid,
+          *application_scopes,
           participant_identity:,
           npq_lead_provider:,
           npq_course:,

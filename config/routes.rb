@@ -435,12 +435,8 @@ Rails.application.routes.draw do
         resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
 
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
-<<<<<<< HEAD
         resources :applications, only: %i[index show]
-=======
-
         resources :non_school_registrants, controller: "applications/non_school_registrants"
->>>>>>> 536f7e324 (Add basic controller for listing NPQ applications)
       end
     end
   end
