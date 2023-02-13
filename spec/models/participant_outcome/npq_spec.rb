@@ -96,4 +96,23 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
       expect(outcome.has_passed?).to eql(nil)
     end
   end
+
+  describe "#push_outcome_to_big_query" do
+    context "on create" do
+      it "pushes outcome to BigQuery" do
+        allow(NPQ::StreamBigQueryParticipantOutcomeJob).to receive(:perform_later).and_call_original
+        outcome
+        expect(NPQ::StreamBigQueryParticipantOutcomeJob).to have_received(:perform_later).with(participant_outcome_id: outcome.id)
+      end
+    end
+
+    context "on update" do
+      it "pushes outcome to BigQuery" do
+        allow(NPQ::StreamBigQueryParticipantOutcomeJob).to receive(:perform_later).and_call_original
+        outcome
+        outcome.update!(state: "voided")
+        expect(NPQ::StreamBigQueryParticipantOutcomeJob).to have_received(:perform_later).with(participant_outcome_id: outcome.id).twice
+      end
+    end
+  end
 end
