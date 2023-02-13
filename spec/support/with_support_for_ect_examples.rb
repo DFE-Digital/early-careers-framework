@@ -3,7 +3,7 @@
 RSpec.shared_context "with Support for ECTs example profiles", shared_context: :metadata do
   let!(:cohort) { Cohort.current || create(:cohort, :current) }
 
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Teach First") }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
 
   let(:core_induction_programme) { create(:core_induction_programme, name: lead_provider.name) }
