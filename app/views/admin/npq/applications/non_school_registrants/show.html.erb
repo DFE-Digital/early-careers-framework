@@ -1,1 +1,41 @@
 <h1><%= @npq_application.user.full_name %></h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: "Email address")
+      row.value(text: @npq_application.participant_identity.email)
+    end
+
+    sl.row do |row|
+      row.key(text: "Participant ID")
+      row.value(text: @npq_application.profile.id)
+    end
+
+    sl.row do |row|
+      row.key(text: "NPQ course name")
+      row.value(text: @npq_application.npq_course_name)
+    end
+
+    sl.row do |row|
+      row.key(text: "Eligibile for funding")
+      row.value(text: bool_to_tag(@npq_application.eligible_for_funding))
+    end
+
+    sl.row do |row|
+      row.key(text: "Funding eligibility status code")
+      row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
+    end
+
+    sl.row do |row|
+      row.key(text: "Employer name")
+      row.value(text: @npq_application.employer_name)
+    end
+
+    sl.row do |row|
+      row.key(text: "Employment role")
+      row.value(text: @npq_application.employment_role)
+    end
+  end
+%>
+
