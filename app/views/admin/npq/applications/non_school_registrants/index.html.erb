@@ -13,7 +13,7 @@
     table.body do |body|
       @npq_applications.each do |na|
         body.row do |row|
-          row.cell(text: na.user.full_name)
+          row.cell(text: govuk_link_to(na.user.full_name, admin_npq_applications_non_school_registrant_path(na)))
           row.cell(text: na.employer_name)
           row.cell(text: na.npq_course.name)
         end

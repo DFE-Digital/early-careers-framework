@@ -17,6 +17,12 @@ module Admin
               .eager_load(:npq_course, participant_identity: :user)
           ).all
         end
+
+        def show
+          authorize NPQApplication
+
+          @npq_application = NPQApplication.find(params[:id])
+        end
       end
     end
   end

@@ -9,6 +9,10 @@ class NPQApplicationPolicy < ApplicationPolicy
     admin?
   end
 
+  def show?
+    admin?
+  end
+
   def invalid_payments_analysis?
     admin?
   end
