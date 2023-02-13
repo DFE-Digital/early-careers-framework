@@ -1,0 +1,17 @@
+<h1><%= @npq_application.user.full_name %></h1>
+
+<%= form_for(@npq_application, url: admin_npq_applications_non_school_registrant_path(@npq_application), method: "PATCH") do |form| %>
+  <%= form.govuk_error_summary %>
+
+  <%=
+    form.govuk_collection_radio_buttons(
+      :eligible_for_funding,
+      @boolean_options,
+      :value,
+      :label,
+      legend: { text: "Eligible for funding" },
+    )
+  %>
+
+  <%= form.govuk_submit %>
+<% end %>

@@ -13,6 +13,14 @@ class NPQApplicationPolicy < ApplicationPolicy
     admin?
   end
 
+  def edit?
+    admin?
+  end
+
+  def update?
+    admin?
+  end
+
   def invalid_payments_analysis?
     admin?
   end
