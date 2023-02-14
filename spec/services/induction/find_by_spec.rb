@@ -13,9 +13,9 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
   # after the start_date but before the end_date of induction_4
   let!(:an_earlier_point_in_time) { Date.new(current_year, 12, 25) }
 
-  let(:school_1) { NewSeeds::Scenarios::Schools::FipSchool.new(cohort:).build }
-  let(:school_2) { NewSeeds::Scenarios::Schools::FipSchool.new(cohort:).build }
-  let(:school_3) { NewSeeds::Scenarios::Schools::FipSchool.new(cohort:).build }
+  let(:school_1) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
+  let(:school_2) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
+  let(:school_3) { NewSeeds::Scenarios::Schools::School.new.build.chosen_fip_and_partnered_in(cohort:) }
   let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_1.school_cohort).build }
 
   let(:participant_profile) { ect.participant_profile }
