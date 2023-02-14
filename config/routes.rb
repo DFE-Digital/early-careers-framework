@@ -436,7 +436,7 @@ Rails.application.routes.draw do
 
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
         resources :applications, only: %i[index show]
-        resources :non_school_registrants, controller: "applications/non_school_registrants"
+        resources :edge_cases, controller: "applications/edge_cases"
       end
     end
   end

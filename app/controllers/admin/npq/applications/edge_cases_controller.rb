@@ -3,7 +3,7 @@
 module Admin
   module NPQ
     module Applications
-      class NonSchoolRegistrantsController < Admin::BaseController
+      class EdgeCasesController < Admin::BaseController
         StatusOption = Struct.new(:value, :label)
 
         skip_after_action :verify_authorized, only: :index
@@ -25,10 +25,10 @@ module Admin
         def show; end
 
         def edit
-          @status_options = {
-            marked_funded_by_policy: "Marked funded by policy",
-            marked_ineligible_by_policy: "Marked ineligible by policy",
-          }.map { |k, v| StatusOption.new(k, v) }
+          @status_options = [
+            StatusOption.new(:marked_funded_by_policy, "Marked funded by policy"),
+            StatusOption.new(:marked_ineligible_by_policy, "Marked ineligible by policy"),
+          ]
         end
 
         def update
@@ -47,7 +47,7 @@ module Admin
               content: "#{name} has been marked '#{@npq_application.funding_eligiblity_status_code.humanize.downcase}' and is #{new_status ? 'eligible' : 'not eligible'} for funding",
             }
 
-            redirect_to admin_npq_applications_non_school_registrants_path
+            redirect_to admin_npq_applications_edge_cases_path
           else
             render(:edit)
           end
