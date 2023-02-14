@@ -25,16 +25,17 @@ module Admin
         def show; end
 
         def edit
-          @status_options =
-            Admin::NPQApplications::EligibilityImport::ApplicationUpdater::VALID_FUNDING_ELIGIBILITY_STATUS_CODES
-              .map { |code| StatusOption.new(code, code.humanize) }
+          @status_options = {
+            marked_funded_by_policy: "Marked funded by policy",
+            marked_ineligible_by_policy: "Marked ineligible by policy",
+          }.map { |k, v| StatusOption.new(k, v) }
         end
 
         def update
           @npq_application.assign_attributes(npq_application_params)
 
           if @npq_application.valid?
-            new_status = @npq_application.funding_eligiblity_status_code == "funded"
+            new_status = @npq_application.funding_eligiblity_status_code == "marked_funded_by_policy"
 
             @npq_application.eligible_for_funding = new_status
             @npq_application.save!
