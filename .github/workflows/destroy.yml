@@ -1,7 +1,7 @@
 name: Destroy
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
     types: [ closed ]
 
 jobs:
