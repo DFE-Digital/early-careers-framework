@@ -72,7 +72,7 @@ module NewSeeds
           relevant_school_cohort = school_cohorts[cohort.start_year]
 
           materials = FactoryBot.create(:seed_core_induction_programme) if materials.nil?
-          
+
           relevant_school_cohort.default_induction_programme.update!(core_induction_programme: materials)
           relevant_school_cohort.update!(core_induction_programme: materials)
 
