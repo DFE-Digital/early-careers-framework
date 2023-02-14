@@ -39,6 +39,7 @@ module NewSeeds
             # enrol the participant to the new programme (aka create an induction record)
             @relationship_induction_record = FactoryBot.create(:seed_induction_record,
                                                                participant_profile:,
+                                                               preferred_identity: @participant_identity,
                                                                induction_programme: relationship_induction_programme)
           end
         end

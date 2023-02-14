@@ -19,6 +19,7 @@ module NewSeeds
 
             FactoryBot.create(:seed_induction_record,
                               participant_profile:,
+                              preferred_identity: @participant_identity,
                               induction_programme: induction_programme_to)
           end
         end

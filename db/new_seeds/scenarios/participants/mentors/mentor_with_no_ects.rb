@@ -26,6 +26,7 @@ module NewSeeds
             FactoryBot.create(
               :seed_induction_record,
               induction_programme:,
+              preferred_identity: participant_identity,
               participant_profile: mentor_profile,
               schedule: Finance::Schedule::ECF.default,
             )

@@ -66,6 +66,7 @@ module NewSeeds
             @mentee_induction_records = mentees.each do |mentee|
               FactoryBot.create(:seed_induction_record,
                                 participant_profile: mentee.participant_profile,
+                                preferred_identity: mentee.participant_identity,
                                 mentor_profile: mentor.participant_profile,
                                 induction_programme:)
 
