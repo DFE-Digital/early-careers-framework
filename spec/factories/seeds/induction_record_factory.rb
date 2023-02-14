@@ -8,6 +8,7 @@ FactoryBot.define do
     trait(:with_participant_profile) { association(:participant_profile, factory: %i[seed_ect_participant_profile valid]) }
     trait(:with_induction_programme) { association(:induction_programme, factory: %i[seed_induction_programme valid]) }
     trait(:with_schedule) { association(:schedule, factory: %i[seed_finance_schedule valid]) }
+    trait(:with_preferred_identity) { association(:preferred_identity, factory: %i[seed_participant_identity valid]) }
 
     trait(:valid) do
       with_schedule
