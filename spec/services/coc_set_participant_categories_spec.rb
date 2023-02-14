@@ -256,12 +256,12 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       end
 
       it "only returns ECTs for the selected school cohort" do
-        ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
+        ect_categories = service.new(school_cohort, induction_coordinator.user).ect_categories
         expect(ect_categories.eligible).to match_array([cip_eligible_ect, cip_ineligible_ect, cip_ero_ect, cip_details_being_checked_ect, @ects.first, fip_transferring_in_participant, cip_transferring_in_participant, cip_ect_no_qts, cip_another_school_claimed_participant].map(&:current_induction_record).compact)
       end
 
       it "only returns mentors for the selected school cohort" do
-        mentor_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::Mentor)
+        mentor_categories = service.new(school_cohort, induction_coordinator.user).mentor_categories
 
         expect(mentor_categories.eligible).to match_array([cip_eligible_mentor, cip_ineligible_mentor, cip_ero_mentor, cip_details_being_checked_mentor, cip_primary_mentor, cip_secondary_mentor, cip_mentor_no_qts].map(&:current_induction_record))
       end
@@ -296,8 +296,8 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
       end
     end
 
-    @ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
-    @mentor_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::Mentor)
+    @ect_categories = service.new(school_cohort, induction_coordinator.user).ect_categories
+    @mentor_categories = service.new(school_cohort, induction_coordinator.user).mentor_categories
   end
 
   def setup_cip_participants
@@ -327,7 +327,7 @@ RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circ
         Participants::DetermineEligibilityStatus.call(ecf_participant_eligibility: profile.ecf_participant_eligibility)
       end
     end
-    @ect_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::ECT)
-    @mentor_categories = service.call(school_cohort, induction_coordinator.user, ParticipantProfile::Mentor)
+    @ect_categories = service.new(school_cohort, induction_coordinator.user).ect_categories
+    @mentor_categories = service.new(school_cohort, induction_coordinator.user).mentor_categories
   end
 end

@@ -12,7 +12,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     if FeatureFlag.active?(:change_of_circumstances)
-      @categories = CocSetParticipantCategories3.new(@school_cohort, current_user)
+      @categories = CocSetParticipantCategories.new(@school_cohort, current_user)
     else
       @categories = OpenStruct.new(
         ect_categories: SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::ECT),
