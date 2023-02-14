@@ -73,15 +73,27 @@ class Participants::HistoryBuilder
 private
 
   def record_user_events(user)
-    record_paper_trail_events(user)
+    if user.versions.empty?
+      record_created_event(user, user.school&.name)
+    else
+      record_paper_trail_events(user)
+    end
   end
 
   def record_teacher_record_events(teacher_record)
-    record_paper_trail_events(teacher_record)
+    if teacher_record.versions.empty?
+      record_created_event(teacher_record, teacher_record.user.school&.name)
+    else
+      record_paper_trail_events(teacher_record)
+    end
   end
 
   def record_profile_events(participant_profile)
-    record_paper_trail_events(participant_profile)
+    if participant_profile.versions.empty?
+      record_created_event(participant_profile, participant_profile.school&.name)
+    else
+      record_paper_trail_events(participant_profile)
+    end
   end
 
   def record_identity_events(identity)
@@ -139,6 +151,35 @@ private
 
   def record_validation_decision_events(decisions)
     decisions.each { |decision| record_paper_trail_events(decision) }
+  end
+
+  def record_created_event(entity, actor)
+    entity.attributes&.each do |key, value|
+      if key == "school_cohort_id"
+        school_cohort = SchoolCohort.find value
+        record_school_cohort_events(school_cohort) unless school_cohort.nil?
+      end
+
+      next unless key != "created_at" && key != "updated_at" && key != "notes" && key != "school_ukprn" && key != "start_date" && key != "end_date" && !(key == "induction_status" && value == "changed")
+
+      description = "#{entity.class}.#{key}"
+
+      return if value.nil?
+
+      # hide PII
+      value = "#{key}-hidden" if %w[full_name email date_of_birth nino].include?(key)
+      value = get_cohort_label(value) if key == "cohort_id"
+      value = get_schedule_label(value) if key == "schedule_id"
+      value = get_lead_provider_label(value) if key == "lead_provider_id"
+      value = get_delivery_partner_label(value) if key == "delivery_partner_id"
+      value = get_appropriate_body_label(value) if key == "appropriate_body_id"
+
+      if %w[induction_programme_id core_induction_programme_id default_induction_programme_id].include?(key)
+        value = get_induction_programme_label(value)
+      end
+
+      @events.push ParticipantEvent.new(@user.id, entity.updated_at, description, actor, value)
+    end
   end
 
   def record_paper_trail_events(entity)
