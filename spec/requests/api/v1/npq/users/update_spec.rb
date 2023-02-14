@@ -62,6 +62,34 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
           }
         end
 
+        context "when the email is blank" do
+          let(:email) { "" }
+
+          include_examples "correct response check" do
+            let(:expected_response_code) { 400 }
+            let(:expected_response_body) do
+              {
+                "errors" => [
+                  {
+                    "detail"=>"Enter an email",
+                    "title"=>"email",
+                  },
+                  {
+                    "detail"=>"Enter an email address in the correct format, like name@example.com",
+                    "title"=>"email",
+                  },
+                ],
+              }
+            end
+          end
+
+          it "does not update the user" do
+            expect {
+              send_request
+            }.to_not change(user, :as_json)
+          end
+        end
+
         context "when the email is in use" do
           before do
             create(:user, email:)
@@ -85,6 +113,39 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
             expect {
               send_request
             }.to_not change(user, :as_json)
+          end
+
+          context "when updating the name at the same time" do
+            let(:request_body) do
+              {
+                data: {
+                  attributes: {
+                    email:,
+                    full_name:,
+                  },
+                },
+              }
+            end
+
+            include_examples "correct response check" do
+              let(:expected_response_code) { 400 }
+              let(:expected_response_body) do
+                {
+                  "errors" => [
+                    {
+                      "title" => "email",
+                      "detail" => "This email address is already in use",
+                    },
+                  ],
+                }
+              end
+            end
+
+            it "does not update the user name either" do
+              expect {
+                send_request
+              }.to_not change(user, :as_json)
+            end
           end
         end
 
@@ -151,6 +212,30 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
             user.reload.full_name
           }.to(full_name)
         end
+
+        context "when the full name is blank" do
+          let(:full_name) { "" }
+
+          include_examples "correct response check" do
+            let(:expected_response_code) { 400 }
+            let(:expected_response_body) do
+              {
+                "errors" => [
+                  {
+                    "title" => "full_name",
+                    "detail" => "Enter a full name",
+                  },
+                ],
+              }
+            end
+          end
+
+          it "does not update the user" do
+            expect {
+              send_request
+            }.to_not change(user, :as_json)
+          end
+        end
       end
 
       context "updating the user's get_an_identity_id" do
@@ -187,6 +272,30 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
             expect {
               send_request
             }.to_not change(user, :as_json)
+          end
+
+          context "when the new get_an_identity_id is blank" do
+            let(:get_an_identity_id) { "" }
+
+            include_examples "correct response check" do
+              let(:expected_response_code) { 400 }
+              let(:expected_response_body) do
+                {
+                  "errors" => [
+                    {
+                      "title" => "get_an_identity_id",
+                      "detail" => "cannot be changed once set",
+                    },
+                  ],
+                }
+              end
+            end
+
+            it "does not update the user" do
+              expect {
+                send_request
+              }.to_not change(user, :as_json)
+            end
           end
         end
 
