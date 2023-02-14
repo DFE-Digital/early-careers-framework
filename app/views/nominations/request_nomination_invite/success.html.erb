@@ -1,17 +1,21 @@
 <% content_for :title, "New link sent" %>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds">
 
-        <%= govuk_panel title_text: "Your school has been sent a link", text: nil, classes: "govuk-!-margin-bottom-7" %>
+    <%= govuk_panel title_text: "Your school has been sent a link", text: nil, classes: "govuk-!-margin-bottom-7" %>
 
-        <h2 class="govuk-heading-m">What happens next</h2>
-        <p class="govuk-body">Use the link to sign in to our service and tell us whether or not you expect any early career teachers (ECTs) in the academic year ahead.</p>
-        <p class="govuk-body">If you do expect ECTs, you must nominate an induction tutor to report information about ECF-based training at your school.</p>
+    <p class="govuk-body">We’ve sent a link to the school’s email address at</p>
 
-        <h2 class="govuk-heading-m">If you do not get an email</h2>
-        <p class="govuk-body"><%= govuk_link_to "Sign in to the DfE", "https://services.signin.education.gov.uk/", class: "govuk-link govuk-link--no-visited-state"  %> and make sure that your school’s email address is up to date in GIAS.</p>
-        <p class="govuk-body">When this has been updated, you can <%= govuk_link_to "send your school a new link", choose_location_request_nomination_invite_path , class: "govuk-link govuk-link--no-visited-state"%>.</p>
+    <p><strong><%= EmailDecorator::new(@school_email) %></strong></p>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <ol class="govuk-list govuk-list--number">
+      <li>Check you have received the email.</li>
+      <li>Sign in to the service using the link in the email.</li>
+      <li>Nominate a new school induction tutor.</li>
+      <li>The new induction tutor will get an email with a link to sign in and start using the service.</li>
+    </ol>
 
   </div>
 </div>

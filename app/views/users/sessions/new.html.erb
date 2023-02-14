@@ -14,10 +14,7 @@
             <%= f.govuk_submit "Sign in" %>
         <% end %>
 
-        <h2 class="govuk-heading-m">How to access this service</h2>
-      	<p class="govuk-body">Enter your registered email address (the one we send emails to).</p>
-      	<p class="govuk-body">Do not use your DfE Sign-in details.</p>
-        <p class="govuk-body">If you’re not registered or need to nominate an induction tutor for your school, <%= govuk_link_to "find out how to get access", check_account_path, class: "govuk-link govuk-link--no-visited-state" %>.</p>
+        <p class="govuk-body"><%= govuk_link_to "Request a link to sign in or change the induction tutor", resend_email_request_nomination_invite_path, class: "govuk-link govuk-link--no-visited-state" %></p>
 
     </div>
 </div>

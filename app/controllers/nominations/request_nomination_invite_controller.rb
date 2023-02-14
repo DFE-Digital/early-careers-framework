@@ -53,6 +53,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
   def create
     @nomination_request_form.save!
+    session[:nomination_request_school_email] = @nomination_request_form.school.primary_contact_email
     session.delete(:nomination_request_form)
 
     redirect_to success_request_nomination_invite_path
@@ -60,7 +61,9 @@ class Nominations::RequestNominationInviteController < ApplicationController
     redirect_to limit_reached_request_nomination_invite_path
   end
 
-  def success; end
+  def success
+    @school_email = session[:nomination_request_school_email]
+  end
 
 private
 
