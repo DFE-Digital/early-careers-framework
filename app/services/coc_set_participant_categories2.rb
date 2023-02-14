@@ -31,7 +31,7 @@ private
   end
 
   def active_induction_records
-    @active_induction_records ||= current_induction_records.select do |induction_record|
+    @active_induction_records ||= induction_records.select do |induction_record|
       !induction_record.training_status_withdrawn? &&
         (induction_record.active? || induction_record.claimed_by_another_school?)
     end
@@ -50,8 +50,8 @@ private
     end
   end
 
-  def current_induction_records
-    @current_induction_records ||= InductionRecordPolicy::Scope.new(
+  def induction_records
+    @induction_records ||= InductionRecordPolicy::Scope.new(
       user,
       school_cohort
         .induction_records
@@ -100,19 +100,19 @@ private
   end
 
   def transferred_participants
-    @transferred_participants ||= current_induction_records.select(&:transferred?)
+    @transferred_participants ||= induction_records.select(&:transferred?)
   end
 
   def transferring_in_participants
-    @transferring_in_participants ||= current_induction_records.select(&:transferring_in?)
+    @transferring_in_participants ||= induction_records.select(&:transferring_in?)
   end
 
   def transferring_out_participants
-    @transferring_out_participants ||= current_induction_records.select(&:transferring_out?)
+    @transferring_out_participants ||= induction_records.select(&:transferring_out?)
   end
 
   def withdrawn_participants
-    @withdrawn_participants ||= current_induction_records.select do |induction_record|
+    @withdrawn_participants ||= induction_records.select do |induction_record|
       induction_record.training_status_withdrawn? &&
         !induction_record.transferring_in? &&
         !induction_record.transferred?

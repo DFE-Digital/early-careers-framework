@@ -1,26 +1,44 @@
 # frozen_string_literal: true
 
 class CocSetParticipantCategories3 < BaseService
-  ParticipantCategories = Struct.new(:eligible, :ineligible, :withdrawn, :contacted_for_info, :details_being_checked, :transferring_in, :transferring_out, :transferred, :no_qts_participants)
+  ParticipantCategories = Struct.new(
+    :eligible,
+    :contacted_for_info,
+    :details_being_checked,
+    :ineligible,
+    :no_qts_participants,
+    :transferred,
+    :transferring_in,
+    :transferring_out,
+    :withdrawn,
+  )
 
-  ECT = ParticipantProfile::ECT.name
-  MENTOR = ParticipantProfile::Mentor.name
+  def ect_categories
+    @ect_categories ||= categories(ParticipantProfile::ECT.name)
+  end
 
-  # replace [] in call back to transferring_out_participants method once
-  # transferring out journey is done
-  # transferring out ppts are being shown in active_induction_records for now
-  def call
-    [MENTOR, ECT].map do |profile_type|
-      ParticipantCategories.new(eligible_participants(profile_type),
-                                ineligible_participants(profile_type),
-                                withdrawn_participants(profile_type),
-                                contacted_for_info_participants(profile_type),
-                                details_being_checked(profile_type),
-                                transferring_in_participants(profile_type),
-                                transferring_out_participants(profile_type),
-                                transferred_participants(profile_type),
-                                no_qts_participants(profile_type))
-    end
+  def ineligible
+    @ineligible ||= ect_categories.ineligible + mentor_categories.ineligible
+  end
+
+  def mentor_categories
+    @mentor_categories ||= categories(ParticipantProfile::Mentor.name)
+  end
+
+  def transferred
+    @transferred ||= ect_categories.transferred + mentor_categories.transferred
+  end
+
+  def transferring_in
+    @transferring_in ||= ect_categories.transferring_in + mentor_categories.transferring_in
+  end
+
+  def transferring_out
+    @transferring_out ||= ect_categories.transferring_out + mentor_categories.transferring_out
+  end
+
+  def withdrawn
+    @withdrawn ||= ect_categories.withdrawn + mentor_categories.withdrawn
   end
 
 private
@@ -34,8 +52,22 @@ private
 
   # Query methods
   def active_induction_records
-    @active_induction_records ||= current_induction_records
+    @active_induction_records ||= induction_records
                                     .select { |induction_record| active_induction_record?(induction_record) }
+  end
+
+  def categories(profile_type)
+    ParticipantCategories.new(
+      eligible_participants(profile_type),
+      contacted_for_info_participants(profile_type),
+      details_being_checked(profile_type),
+      ineligible_participants(profile_type),
+      no_qts_participants(profile_type),
+      transferred_participants(profile_type),
+      transferring_in_participants(profile_type),
+      transferring_out_participants(profile_type),
+      withdrawn_participants(profile_type),
+    )
   end
 
   def cip_eligible_participants(profile_type)
@@ -54,13 +86,17 @@ private
     Array(@contacted_for_info_participants[profile_type])
   end
 
-  def current_induction_records
-    @current_induction_records ||= InductionRecordPolicy::Scope.new(
+  # Retrieve the relevant induction record for each participant in the school cohort:
+  # For participants transferring into the school cohort, get their transferring_in? induction_record.
+  # For participants transferred from another school, get their transferred? induction_record
+  # For the rest of participants, get their current induction record
+  def induction_records
+    @induction_records ||= InductionRecordPolicy::Scope.new(
       user,
       school_cohort
         .induction_records
         .current_or_transferring_in_or_transferred
-        .eager_load(induction_programme: %i[core_induction_programme lead_provider delivery_partner],
+        .eager_load(induction_programme: %i[school core_induction_programme lead_provider delivery_partner],
                     participant_profile: %i[user ecf_participant_eligibility ecf_participant_validation_data])
         .order("users.full_name"),
     ).resolve.to_a
@@ -112,7 +148,7 @@ private
   end
 
   def transferred_participants(profile_type)
-    @transferred_participants ||= current_induction_records
+    @transferred_participants ||= induction_records
                                     .select(&:transferred?)
                                     .group_by(&:participant_type)
 
@@ -120,7 +156,7 @@ private
   end
 
   def transferring_in_participants(profile_type)
-    @transferring_in_participants ||= current_induction_records
+    @transferring_in_participants ||= induction_records
                                         .select(&:transferring_in?)
                                         .group_by(&:participant_type)
 
@@ -128,7 +164,7 @@ private
   end
 
   def transferring_out_participants(profile_type)
-    @transferring_out_participants ||= current_induction_records
+    @transferring_out_participants ||= induction_records
                                          .select(&:transferring_out?)
                                          .group_by(&:participant_type)
 
@@ -136,7 +172,7 @@ private
   end
 
   def withdrawn_participants(profile_type)
-    @withdrawn_participants ||= current_induction_records
+    @withdrawn_participants ||= induction_records
                                   .select { |induction_record| withdrawn_participant?(induction_record) }
                                   .group_by(&:participant_type)
 

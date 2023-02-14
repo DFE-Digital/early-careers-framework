@@ -12,14 +12,12 @@ module Schools
       end
 
       def ineligible_participant?
-        ParticipantProfile::ECF.ineligible_status.exists?(id: induction_record.participant_profile_id)
+        induction_record.participant_profile.ineligible_but_not_duplicated_or_previously_participated?
       end
 
       def mentor_in_early_rollout?
-        ParticipantProfile::Mentor
-          .joins(:ecf_participant_eligibility)
-          .where(ecf_participant_eligibility: { reason: :previous_participation })
-          .exists?(id: induction_record.participant_profile_id)
+        induction_record.participant_profile.mentor? &&
+          induction_record.participant_profile.ecf_participant_eligibility&.previous_participation?
       end
 
       def participant_is_on_a_cip?

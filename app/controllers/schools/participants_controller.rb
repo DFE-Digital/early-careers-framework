@@ -12,18 +12,18 @@ class Schools::ParticipantsController < Schools::BaseController
 
   def index
     if FeatureFlag.active?(:change_of_circumstances)
-      @mentor_categories, @ect_categories = CocSetParticipantCategories3.call(@school_cohort, current_user)
-      @transferring_in = @ect_categories.transferring_in + @mentor_categories.transferring_in
-      @transferring_out = @ect_categories.transferring_out + @mentor_categories.transferring_out
-      @transferred = @ect_categories.transferred + @mentor_categories.transferred
+      @categories = CocSetParticipantCategories3.new(@school_cohort, current_user)
     else
-      @mentor_categories = SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::Mentor)
-      @ect_categories = SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::ECT)
-      @transferred = []
+      @categories = OpenStruct.new(
+        ect_categories: SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::ECT),
+        mentor_categories: SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::Mentor),
+        transferred: [],
+        transferring_in: [],
+        transferring_out: [],
+      )
+      @categories.withdrawn = @categories.ect_categories.withdrawn + @categories.mentor_categories.withdrawn
+      @categories.ineligible = @categories.ect_categories.ineligible + @categories.mentor_categories.ineligible
     end
-
-    @withdrawn = @ect_categories.withdrawn + @mentor_categories.withdrawn
-    @ineligible = @ect_categories.ineligible + @mentor_categories.ineligible
   end
 
   def show
