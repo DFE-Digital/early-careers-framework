@@ -9,7 +9,7 @@ on:
       ref:
         description: Git ref to deploy
         required: true
-        default: develop
+        default: main
 jobs:
   deploy-to-staging:
     runs-on: ubuntu-20.04
