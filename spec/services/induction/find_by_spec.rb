@@ -13,24 +13,17 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
   # after the start_date but before the end_date of induction_4
   let!(:an_earlier_point_in_time) { Date.new(current_year, 12, 25) }
 
-  let(:school_cohort_1) { create(:seed_school_cohort, :with_school, cohort:) }
-  let(:school_cohort_2) { create(:seed_school_cohort, :with_school, cohort:) }
-  let(:school_cohort_3) { create(:seed_school_cohort, :with_school, cohort:) }
-  let(:partnership_1) { create(:seed_partnership, :with_lead_provider, :with_delivery_partner, cohort:, school: school_cohort_1.school) }
-  let(:partnership_2) { create(:seed_partnership, :with_lead_provider, :with_delivery_partner, cohort:, school: school_cohort_2.school) }
-  let(:partnership_3) { create(:seed_partnership, :with_lead_provider, :with_delivery_partner, cohort:, school: school_cohort_3.school) }
-  let(:induction_programme_1) { create(:seed_induction_programme, school_cohort: school_cohort_1, partnership: partnership_1) }
-  let(:induction_programme_2) { create(:seed_induction_programme, school_cohort: school_cohort_2, partnership: partnership_2) }
-  let(:induction_programme_3) { create(:seed_induction_programme, school_cohort: school_cohort_3, partnership: partnership_3) }
-
-  let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_cohort_1).build }
+  let(:school_1) { NewSeeds::Scenarios::Schools::FipSchool.new(cohort:).build }
+  let(:school_2) { NewSeeds::Scenarios::Schools::FipSchool.new(cohort:).build }
+  let(:school_3) { NewSeeds::Scenarios::Schools::FipSchool.new(cohort:).build }
+  let(:ect) { NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_1.school_cohort).build }
 
   let(:participant_profile) { ect.participant_profile }
 
-  let!(:induction_1) { ect.add_induction_record(induction_programme: induction_programme_1, start_date: Date.new(current_year, 9, 1), end_date: Date.new(current_year, 10, 1), induction_status: "leaving") }
-  let!(:induction_2) { ect.add_induction_record(induction_programme: induction_programme_2, start_date: Date.new(current_year, 10, 1), end_date: Date.new(current_year, 11, 1), induction_status: "leaving") }
-  let!(:induction_3) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(current_year, 11, 1), end_date: Date.new(current_year, 12, 1), induction_status: "changed") }
-  let!(:induction_4) { ect.add_induction_record(induction_programme: induction_programme_3, start_date: Date.new(current_year, 12, 1), end_date: Date.new(current_year + 1, 1, 1), induction_status: "leaving") }
+  let!(:induction_1) { ect.add_induction_record(induction_programme: school_1.induction_programme, start_date: Date.new(current_year, 9, 1), end_date: Date.new(current_year, 10, 1), induction_status: "leaving") }
+  let!(:induction_2) { ect.add_induction_record(induction_programme: school_2.induction_programme, start_date: Date.new(current_year, 10, 1), end_date: Date.new(current_year, 11, 1), induction_status: "leaving") }
+  let!(:induction_3) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year, 11, 1), end_date: Date.new(current_year, 12, 1), induction_status: "changed") }
+  let!(:induction_4) { ect.add_induction_record(induction_programme: school_3.induction_programme, start_date: Date.new(current_year, 12, 1), end_date: Date.new(current_year + 1, 1, 1), induction_status: "leaving") }
 
   subject(:service) { described_class }
 
@@ -63,9 +56,9 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
     context "when a lead provider is supplied" do
       it "returns the latest induction record for that provider" do
         travel_to a_point_in_time do
-          expect(service.call(participant_profile:, lead_provider: partnership_1.lead_provider)).to eq induction_1
-          expect(service.call(participant_profile:, lead_provider: partnership_2.lead_provider)).to eq induction_2
-          expect(service.call(participant_profile:, lead_provider: partnership_3.lead_provider)).to eq induction_4
+          expect(service.call(participant_profile:, lead_provider: school_1.partnership.lead_provider)).to eq induction_1
+          expect(service.call(participant_profile:, lead_provider: school_2.partnership.lead_provider)).to eq induction_2
+          expect(service.call(participant_profile:, lead_provider: school_3.partnership.lead_provider)).to eq induction_4
         end
       end
     end
@@ -73,9 +66,9 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
     context "when a delivery partner is supplied" do
       it "returns the latest induction record for that partner" do
         travel_to a_point_in_time do
-          expect(service.call(participant_profile:, delivery_partner: partnership_1.delivery_partner)).to eq induction_1
-          expect(service.call(participant_profile:, delivery_partner: partnership_2.delivery_partner)).to eq induction_2
-          expect(service.call(participant_profile:, delivery_partner: partnership_3.delivery_partner)).to eq induction_4
+          expect(service.call(participant_profile:, delivery_partner: school_1.partnership.delivery_partner)).to eq induction_1
+          expect(service.call(participant_profile:, delivery_partner: school_2.partnership.delivery_partner)).to eq induction_2
+          expect(service.call(participant_profile:, delivery_partner: school_3.partnership.delivery_partner)).to eq induction_4
         end
       end
     end
@@ -83,9 +76,9 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
     context "when a school is supplied" do
       it "returns the latest induction record for that school" do
         travel_to a_point_in_time do
-          expect(service.call(participant_profile:, school: school_cohort_1.school)).to eq induction_1
-          expect(service.call(participant_profile:, school: school_cohort_2.school)).to eq induction_2
-          expect(service.call(participant_profile:, school: school_cohort_3.school)).to eq induction_4
+          expect(service.call(participant_profile:, school: school_1.school)).to eq induction_1
+          expect(service.call(participant_profile:, school: school_2.school)).to eq induction_2
+          expect(service.call(participant_profile:, school: school_3.school)).to eq induction_4
         end
       end
     end
