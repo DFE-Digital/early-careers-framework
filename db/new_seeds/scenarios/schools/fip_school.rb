@@ -4,7 +4,6 @@ module NewSeeds
   module Scenarios
     module Schools
       class FipSchool
-
         attr_reader :name, :urn, :cohort, :school_attributes, :school, :school_cohort, :partnership, :induction_programme
 
         def initialize(name: nil, urn: nil, cohort: nil)
@@ -14,7 +13,7 @@ module NewSeeds
           @school_attributes = { name:, urn: }.compact
         end
 
-        def build()
+        def build
           @school = FactoryBot.create(:seed_school, **school_attributes)
           @partnership = FactoryBot.create(:seed_partnership, :with_lead_provider, :with_delivery_partner, cohort:, school:)
 
