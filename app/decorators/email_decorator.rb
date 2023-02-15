@@ -14,7 +14,7 @@ class EmailDecorator < SimpleDelegator
 private
 
   def partial_email
-    unless @email.blank?
+    if @email.present?
       name, domain = @email.split("@")
       if name.length <= 2
         "#{'*' * name.length}@#{domain}"
