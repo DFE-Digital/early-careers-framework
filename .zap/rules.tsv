@@ -1,3 +1,11 @@
+*	OUTOFSCOPE	https://www.googletagmanager.com.*
+*	OUTOFSCOPE	https://mail.google.com.*
+*	OUTOFSCOPE	https://www.gov.uk.*
+*	OUTOFSCOPE	https://fonts.gstatic.com.*
+*	OUTOFSCOPE	https://cdn.nationalarchives.gov.uk.*
+*	OUTOFSCOPE	https://fonts.googleapis.com.*
+*	OUTOFSCOPE	https://www.nationalarchives.gov.uk.*
+
 10038	IGNORE	(Content Security Policy (CSP) Header Not Set)
 10063	IGNORE	(Feature Policy Header Not Set)
 40025	IGNORE	(Proxy Disclosure)

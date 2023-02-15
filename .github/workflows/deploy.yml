@@ -45,7 +45,7 @@ jobs:
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
@@ -67,8 +67,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: review
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -87,27 +89,42 @@ jobs:
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
   run_security_tests:
-    name: Run ZapScan security tests
+    name: Full ZapScan
     needs: [ deploy_review ]
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-security')
-    concurrency: run_zapscan_security_tests_${{ github.event.pull_request.number }}
-    environment:
-      name: production
+    concurrency: run_security_tests_${{ github.event.pull_request.number }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: ./.github/actions/test-security
         id: zapscan-security-testing
         with:
-          url: ${{ steps.deploy.outputs.url }}
-          notifySlackUsers: ${{ github.event_name != 'pull_request' }}
+          url: ${{ needs.deploy_review.outputs.url }}
+          notify-slack-users: ${{ github.event_name != 'pull_request' }}
+
+  run_api_security_tests:
+    name: API ZapScan
+    needs: [ deploy_review ]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-security')
+    concurrency: run_api_security_tests_${{ github.event.pull_request.number }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/test-api-security
+        id: zapscan-api-security-testing
+        with:
+          url: ${{ needs.deploy_review.outputs.url }}
+          notify-slack-users: ${{ github.event_name != 'pull_request' }}
 
   run_api_performance_tests:
     name: Run API performance tests
-    needs: [deploy_review]
+    needs: [docker]
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'test-performance')
     concurrency: run_api_performance_tests_${{ github.event.pull_request.number }}
@@ -116,7 +133,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: ./.github/actions/test-performance
         id: api-load-test
@@ -135,7 +152,7 @@ jobs:
     outputs:
       docker-image: ${{ needs.docker.outputs.docker-image }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -154,7 +171,7 @@ jobs:
       name: sandbox
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -173,7 +190,7 @@ jobs:
       name: migration
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -192,7 +209,7 @@ jobs:
       name: production
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy

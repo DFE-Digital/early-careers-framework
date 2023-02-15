@@ -1,5 +1,5 @@
-name: Test security
-description: Run full ZapScan security tests
+name: Test API security
+description: Run API ZapScan security tests
 
 inputs:
   url:
@@ -22,30 +22,31 @@ runs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_USERNAME: Zap2Docker
-        SLACK_TITLE: OWASP full scan starting!
-        SLACK_MESSAGE: Beginning OWasp full scan against ${{ inputs.url }}
+        SLACK_TITLE: OWASP API scan starting!
+        SLACK_MESSAGE: Beginning OWasp API scan against ${{ inputs.url }}
         SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
         MSG_MINIMAL: true
         SLACK_COLOR: ${{ job.status }}
         SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
 
-    - name: ZAP FULL Scan
-      uses: zaproxy/action-full-scan@v0.9.0
+    - name: ZAP API Scan
+      uses: zaproxy/action-api-scan@v0.7.0
       with:
-        target: ${{ inputs.url }}/sandbox
+        target: ${{ inputs.url }}/lead-providers/api-docs/v3/api_spec.yml
+        format: openapi
         rules_file_name: .zap/rules.tsv
-        cmd_options: -m 1 -adIjs
+        cmd_options: -m 1 -adIjs -O ${{ inputs.url }}
         allow_issue_writing: true
-        issue_title: ZapScan full Scan report
-        artifact_name: zapscan_report
+        issue_title: ZapScan API Scan report
+        artifact_name: zapscan_api_report
 
     - name: Notify Slack of Completion
       if: inputs.notify-slack-users == 'True'
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_USERNAME: Zap2Docker
-        SLACK_TITLE: OWASP full scan completed!
-        SLACK_MESSAGE: OWasp full scan completed against ${{ inputs.url }}
+        SLACK_TITLE: OWASP API scan completed!
+        SLACK_MESSAGE: OWasp API scan completed against ${{ inputs.url }}
         SLACK_ICON: https://avatars.githubusercontent.com/u/6716868?s=100&v=4
         MSG_MINIMAL: actions url
         SLACK_COLOR: ${{ job.status }}

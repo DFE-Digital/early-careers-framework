@@ -187,7 +187,7 @@ const summariseReport = (data) => {
 nunjucks.configure(
   [
     `${scriptPath}/views`,
-    `${scriptPath}/../node_modules/govuk-frontend/`,
+    `${scriptPath}/../node_modules/govuk-frontend/dist/`,
   ],
   {
     autoescape: true,

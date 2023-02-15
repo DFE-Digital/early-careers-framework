@@ -1,0 +1,26 @@
+name: "Security Testing"
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: The URL of the deployed environment.
+        default: https://sb.manage-training-for-early-career-teachers.education.gov.uk
+        required: true
+
+jobs:
+  run_security_tests:
+    name: Run ZapScan security tests
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/test-security
+        id: zapscan-security-testing
+        with:
+          url: ${{ inputs.url }}
+          notify-slack-users: "True"
