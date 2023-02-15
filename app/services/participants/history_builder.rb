@@ -37,7 +37,7 @@ class Participants::HistoryBuilder
     return if @user.nil?
 
     record_user_events @user
-    record_teacher_record_events @user.teacher_profile unless @user.teacher_profile.nil?
+    # record_teacher_record_events @user.teacher_profile unless @user.teacher_profile.nil?
 
     @user.participant_identities.each { |identity| record_identity_events(identity) } unless @user.participant_identities.empty?
 
@@ -49,7 +49,6 @@ class Participants::HistoryBuilder
         # the following are only relevant to ECF profiles
         next unless profile.ecf?
 
-        record_school_cohort_events(profile.school_cohort) unless profile.school_cohort.nil?
         record_validation_events(profile.ecf_participant_validation_data) unless profile.ecf_participant_validation_data.nil?
         record_validation_decision_events(profile.validation_decisions) unless profile.validation_decisions.empty?
         record_eligibility_events(profile.ecf_participant_eligibility) unless profile.ecf_participant_eligibility.nil?
@@ -59,7 +58,7 @@ class Participants::HistoryBuilder
       end
     end
 
-    @events.sort_by!(&:date)
+    @events.sort_by! { |ev| [ev.date.to_i, ev.predicate] }
   end
 
   def self.from_participant_profile(profile)
@@ -122,7 +121,11 @@ private
   end
 
   def record_school_cohort_events(school_cohort)
-    record_paper_trail_events(school_cohort)
+    if school_cohort.versions.empty?
+      record_created_event(school_cohort, school_cohort.school&.name)
+    else
+      record_paper_trail_events(school_cohort)
+    end
   end
 
   def record_partnership_events(partnership)
@@ -155,30 +158,7 @@ private
 
   def record_created_event(entity, actor)
     entity.attributes&.each do |key, value|
-      if key == "school_cohort_id"
-        school_cohort = SchoolCohort.find value
-        record_school_cohort_events(school_cohort) unless school_cohort.nil?
-      end
-
-      next unless key != "created_at" && key != "updated_at" && key != "notes" && key != "school_ukprn" && key != "start_date" && key != "end_date" && !(key == "induction_status" && value == "changed")
-
-      description = "#{entity.class}.#{key}"
-
-      return if value.nil?
-
-      # hide PII
-      value = "#{key}-hidden" if %w[full_name email date_of_birth nino].include?(key)
-      value = get_cohort_label(value) if key == "cohort_id"
-      value = get_schedule_label(value) if key == "schedule_id"
-      value = get_lead_provider_label(value) if key == "lead_provider_id"
-      value = get_delivery_partner_label(value) if key == "delivery_partner_id"
-      value = get_appropriate_body_label(value) if key == "appropriate_body_id"
-
-      if %w[induction_programme_id core_induction_programme_id default_induction_programme_id].include?(key)
-        value = get_induction_programme_label(value)
-      end
-
-      @events.push ParticipantEvent.new(@user.id, entity.updated_at, description, actor, value)
+      record_event(entity.updated_at, entity, key, value, actor)
     end
   end
 
@@ -187,36 +167,50 @@ private
       # TODO: if the version is of type "created" then we need to record the default values that were not overridden
 
       version.object_changes&.each do |key, value|
-        if key == "school_cohort_id"
-          school_cohort = SchoolCohort.find value
-          record_school_cohort_events(school_cohort) unless school_cohort.nil?
-        end
-
-        next unless key != "created_at" && key != "updated_at" && key != "notes" && key != "school_ukprn" && key != "start_date" && key != "end_date" && !(key == "induction_status" && value == "changed")
-
-        description = "#{entity.class}.#{key}"
-        actor = get_user_label(version.whodunnit)
-        value = value[1]
-
-        # hide PII
-        value = "#{key}-hidden" if %w[full_name email date_of_birth nino].include?(key)
-        value = get_cohort_label(value) if key == "cohort_id"
-        value = get_schedule_label(value) if key == "schedule_id"
-        value = get_lead_provider_label(value) if key == "lead_provider_id"
-        value = get_delivery_partner_label(value) if key == "delivery_partner_id"
-        value = get_appropriate_body_label(value) if key == "appropriate_body_id"
-
-        if %w[induction_programme_id core_induction_programme_id default_induction_programme_id].include?(key)
-          value = get_induction_programme_label(value)
-        end
-
-        @events.push ParticipantEvent.new(@user.id, version.created_at, description, actor, value)
+        record_event(version.created_at, entity, key, value, get_user_label(version.whodunnit))
       end
     end
   end
 
+  def record_event(date, entity, key, value, actor)
+    return if value.nil? || %w[created_at updated_at notes school_ukprn start_date end_date login_token login_token_valid_until].include?(key) || (key == "induction_status" && value == "changed")
+
+    description = "#{entity.class}.#{key}"
+    value = value.is_a?(Array) ? value[1] : value
+
+    if key == "school_cohort_id"
+      school_cohort = SchoolCohort.find value
+
+      unless school_cohort.nil?
+        record_school_cohort_events(school_cohort)
+      end
+    end
+
+    if key == "teacher_profile_id"
+      teacher_profile = TeacherProfile.find value
+
+      unless teacher_profile.nil?
+        record_teacher_record_events(teacher_profile)
+      end
+    end
+
+    # hide PII
+    value = "#{key}-hidden" if %w[full_name email date_of_birth nino].include?(key)
+    value = get_cohort_label(value) if key == "cohort_id"
+    value = get_schedule_label(value) if key == "schedule_id"
+    value = get_lead_provider_label(value) if key == "lead_provider_id"
+    value = get_delivery_partner_label(value) if key == "delivery_partner_id"
+    value = get_appropriate_body_label(value) if key == "appropriate_body_id"
+
+    if %w[induction_programme_id core_induction_programme_id default_induction_programme_id].include?(key)
+      value = get_induction_programme_label(value)
+    end
+
+    @events.push ParticipantEvent.new(@user.id, date, description, actor, value)
+  end
+
   def get_user_label(whodunnit)
-    user = User.find whodunnit
+    user = User.find whodunnit unless whodunnit.nil?
     return whodunnit || "Unknown" if user.nil?
 
     parts = user.email.split("@")
@@ -238,7 +232,7 @@ private
   end
 
   def get_schedule_label(schedule_id)
-    schedule = Schedule.find schedule_id
+    schedule = Finance::Schedule.find schedule_id
     return schedule_id if schedule.nil?
 
     schedule.schedule_identifier
