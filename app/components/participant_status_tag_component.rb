@@ -47,23 +47,23 @@ private
   end
 
   def eligible?
-    profile&.ecf_participant_eligibility&.eligible_status?
+    profile.eligible?
   end
 
   def ineligible?
-    profile&.ecf_participant_eligibility&.ineligible_status?
+    profile&.ineligible?
   end
 
   def mentor_was_in_early_rollout?
     return unless profile.mentor?
 
-    profile.ecf_participant_eligibility&.previous_participation_reason?
+    profile.previous_participation?
   end
 
   def mentor_with_duplicate_profile?
     return unless profile.mentor?
 
-    profile.ecf_participant_eligibility&.duplicate_profile_reason?
+    profile.duplicate?
   end
 
   def on_fip?
@@ -71,10 +71,10 @@ private
   end
 
   def nqt_plus_one?
-    profile&.ecf_participant_eligibility&.previous_induction_reason?
+    profile.previous_induction?
   end
 
   def participant_has_no_qts?
-    profile.ecf_participant_eligibility&.no_qts_reason?
+    profile.no_qts?
   end
 end

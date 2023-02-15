@@ -27,13 +27,13 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
   alias_method :update_appropriate_body?, :update?
 
   def update_validation_data?
-    admin? && record.training_status_active? && (record.ecf_participant_eligibility.blank? || !record.ecf_participant_eligibility.eligible_status?)
+    admin? && record.training_status_active? && (record.ecf_participant_eligibility.blank? || !record.eligible?)
   end
 
   def withdraw_record?
     return false if record.participant_declarations.not_voided.any?
     return false unless user.induction_coordinator? || admin?
-    return false if record.completed_validation_wizard? && !record.ecf_participant_eligibility&.ineligible_status?
+    return false if record.completed_validation_wizard? && !record.ineligible?
 
     admin? || same_school?
   end

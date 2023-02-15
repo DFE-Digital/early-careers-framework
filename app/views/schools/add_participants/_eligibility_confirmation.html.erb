@@ -6,7 +6,7 @@
   <%= render partial: 'schools/add_participants/eligibility_confirmation/previous_induction', locals: { profile: profile } %>
 <% elsif ineligible_mentor_in_early_rollout?(profile) %>
   <%= render partial: 'schools/add_participants/eligibility_confirmation/eligible_ero', locals: { profile: profile } %>
-<% elsif profile.ecf_participant_eligibility&.no_qts_reason? %>
+<% elsif profile.no_qts? %>
   <%= render partial: 'schools/add_participants/eligibility_confirmation/no_qts_reason', local: { profile: profile } %>
 <% elsif ineligible?(profile)%>
   <%= render partial: 'schools/add_participants/eligibility_confirmation/ineligible', local: { profile: profile } %>

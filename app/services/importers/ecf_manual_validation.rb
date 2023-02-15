@@ -22,7 +22,7 @@ class Importers::ECFManualValidation < BaseService
 
       if participant_profile.reload.ecf_participant_eligibility.nil?
         logger.warn "No match found #{row['id']}"
-      elsif !participant_profile.ecf_participant_eligibility.eligible_status?
+      elsif !participant_profile.eligible?
         logger.warn "#{participant_profile.ecf_participant_eligibility.reason} #{row['id']}"
       end
     end

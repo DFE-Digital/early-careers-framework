@@ -26,29 +26,32 @@
   </div>
   <div class="govuk-grid-column-full">
     <%= govuk_tabs(title: 'Contents') do |component| %>
-      <% if participants_active?(@ect_categories) %>
+      <% if participants_active?(@categories.ect_categories) %>
         <% component.tab(label: 'ECTs') do %>
-          <%= render partial: 'ects', locals: { ect_profiles: @ect_categories } %>
+          <%= render partial: 'ects', locals: { ect_profiles: @categories.ect_categories } %>
         <% end %>
       <% end %>
 
-      <% if participants_active?(@mentor_categories) %>
+      <% if participants_active?(@categories.mentor_categories) %>
         <% component.tab(label: 'Mentors') do %>
-          <%= render partial: 'mentors', locals: { mentor_profiles: @mentor_categories } %>
+          <%= render partial: 'mentors', locals: { mentor_profiles: @categories.mentor_categories } %>
         <% end %>
       <% end %>
 
       <% if FeatureFlag.active?(:change_of_circumstances) %>
-        <% if @transferring_in.any? || @transferring_out.any? %>
+        <% if @categories.transferring_in.any? || @categories.transferring_out.any? %>
           <% component.tab(label: 'Moving school') do %>
-            <%= render partial: 'moving_school', locals: { transferring_in: @transferring_in, transferring_out: @transferring_out } %>
+            <%= render partial: 'moving_school', locals: { transferring_in: @categories.transferring_in,
+                                                           transferring_out: @categories.transferring_out } %>
           <% end %>
         <% end %>
       <% end %>
 
-      <% if @withdrawn.any? || @ineligible.any? || @transferred.any? %>
+      <% if @categories.withdrawn.any? || @categories.ineligible.any? || @categories.transferred.any? %>
         <% component.tab(label: 'Not training') do %>
-          <%= render partial: 'not_training', locals: { withdrawn: @withdrawn, ineligible: @ineligible, transferred: @transferred } %>
+          <%= render partial: 'not_training', locals: { withdrawn: @categories.withdrawn,
+                                                        ineligible: @categories.ineligible,
+                                                        transferred: @categories.transferred } %>
         <% end %>
       <% end %>
     <% end %>

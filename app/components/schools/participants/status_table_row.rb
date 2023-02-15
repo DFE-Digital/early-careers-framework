@@ -12,14 +12,14 @@ module Schools
       def ineligible_participant?
         return false unless profile.ecf_participant_eligibility
 
-        profile.ecf_participant_eligibility.ineligible_status?
+        profile.ineligible?
       end
 
       def mentor_in_early_rollout?
         return unless profile.mentor?
         return false unless profile.ecf_participant_eligibility
 
-        profile.ecf_participant_eligibility.previous_participation_reason?
+        profile.previous_participation?
       end
 
       def participant_is_on_a_cip?

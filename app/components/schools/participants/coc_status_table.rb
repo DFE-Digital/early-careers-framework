@@ -8,7 +8,7 @@ module Schools
       end
 
       def ineligible_participants?
-        ParticipantProfile::ECF.ineligible_status.where(id: induction_records.map(&:participant_profile_id)).any?
+        induction_records.any?(&:participant_ineligible_but_not_duplicated_or_previously_participated?)
       end
 
       def transferring_out_participants?

@@ -46,9 +46,9 @@ module Analytics
     private
 
       def eligible_for_funding?(participant_profile)
-        return true if participant_profile.ecf_participant_eligibility&.eligible_status?
+        return true if participant_profile.eligible?
 
-        false if participant_profile.ecf_participant_eligibility&.ineligible_status?
+        false if participant_profile.ineligible?
       end
 
       def trn_verified?(participant_profile)

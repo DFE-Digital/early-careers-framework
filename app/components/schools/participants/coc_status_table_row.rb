@@ -12,18 +12,16 @@ module Schools
       end
 
       def ineligible_participant?
-        ParticipantProfile::ECF.ineligible_status.exists?(id: induction_record.participant_profile_id)
+        induction_record.participant_ineligible_but_not_duplicated_or_previously_participated?
       end
 
       def mentor_in_early_rollout?
-        ParticipantProfile::Mentor
-          .joins(:ecf_participant_eligibility)
-          .where(ecf_participant_eligibility: { reason: :previous_participation })
-          .exists?(id: induction_record.participant_profile_id)
+        induction_record.participant_is_a_mentor? &&
+          induction_record.participant_previous_participation?
       end
 
       def participant_is_on_a_cip?
-        induction_record.induction_programme.core_induction_programme?
+        induction_record.enrolled_in_cip?
       end
 
       # Add transferring_out? || transferred? back in once transfer out journey has been done.
@@ -38,7 +36,7 @@ module Schools
       end
 
       def path_ids
-        { school_id: induction_record.school, cohort_id: induction_record.cohort.start_year }
+        { school_id: induction_record.school, cohort_id: induction_record.cohort_start_year }
       end
 
     private

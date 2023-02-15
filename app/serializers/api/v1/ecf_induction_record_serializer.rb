@@ -76,7 +76,7 @@ module Api
       end
 
       attributes :registration_completed do |induction_record|
-        induction_record.participant_profile.completed_validation_wizard? unless is_consistently_withdrawn(induction_record)
+        induction_record.participant_completed_validation_wizard? unless is_consistently_withdrawn(induction_record)
       end
 
       attributes :cohort do |induction_record|
