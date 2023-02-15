@@ -74,8 +74,9 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
-  # eligible_status?
-  delegate :eligible_status?, to: :ecf_participant_eligibility, allow_nil: true
+  def eligible?
+    ecf_participant_eligibility&.eligible_status?
+  end
 
   # full_name
   delegate :full_name, :user_description, to: :user
@@ -84,8 +85,9 @@ class ParticipantProfile < ApplicationRecord
     false
   end
 
-  # ineligible_status?
-  delegate :ineligible_status?, to: :ecf_participant_eligibility, allow_nil: true
+  def ineligible?
+    ecf_participant_eligibility&.ineligible_status?
+  end
 
   def latest_current_induction_record
     current_induction_records.first

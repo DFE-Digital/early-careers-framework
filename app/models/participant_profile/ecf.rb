@@ -86,9 +86,7 @@ class ParticipantProfile < ApplicationRecord
              to: :ecf_participant_eligibility,
              allow_nil: true
 
-    def fundable?
-      ecf_participant_eligibility&.eligible_status?
-    end
+    alias_method :fundable?, :eligible?
 
     def manual_check_needed?
       ecf_participant_eligibility&.manual_check_status? ||

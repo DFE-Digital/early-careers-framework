@@ -12,7 +12,7 @@ module Schools
       def ineligible_participant?
         return false unless profile.ecf_participant_eligibility
 
-        profile.ineligible_status?
+        profile.ineligible?
       end
 
       def mentor_in_early_rollout?

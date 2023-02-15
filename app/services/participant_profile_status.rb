@@ -78,11 +78,11 @@ private
   end
 
   def eligible?
-    participant_profile.eligible_status?
+    participant_profile.eligible?
   end
 
   def ineligible?
-    participant_profile.ineligible_status?
+    participant_profile.ineligible?
   end
 
   def mentor_was_in_early_rollout?

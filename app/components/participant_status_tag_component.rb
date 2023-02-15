@@ -47,11 +47,11 @@ private
   end
 
   def eligible?
-    profile&.ecf_participant_eligibility&.eligible_status?
+    profile.eligible?
   end
 
   def ineligible?
-    profile&.ineligible_status?
+    profile&.ineligible?
   end
 
   def mentor_was_in_early_rollout?

@@ -2,11 +2,11 @@
 
 module SitValidateParticipantHelper
   def eligible?(profile)
-    profile.ecf_participant_eligibility&.eligible_status?
+    profile.eligible?
   end
 
   def ineligible?(profile)
-    profile.ineligible_status?
+    profile.ineligible?
   end
 
   def ineligible_mentor_at_additional_school?(profile)
