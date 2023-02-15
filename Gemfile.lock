@@ -681,7 +681,7 @@ DEPENDENCIES
   rails-controller-testing (~> 1.0.5)
   ransack
   rspec-default_http_header (~> 0.0.6)
-  rspec-rails (~> 6.0)
+  rspec-rails (~> 6.0.1)
   rswag-specs (~> 2.9)
   rubocop-govuk (>= 4.8)
   rubyzip (~> 2.3, >= 2.3.0)
