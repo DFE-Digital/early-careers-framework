@@ -3654,6 +3654,18 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
+          },
+          "lead_mentor": {
+            "description": "This field indicates whether the applicant is an ITT lead mentor.\n",
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "itt_provider": {
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "nullable": true,
+            "type": "string",
+            "example": "University of Southampton"
           }
         }
       },
