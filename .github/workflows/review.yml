@@ -233,6 +233,11 @@ jobs:
       - name: setup-inputs
         run: |
           echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+          
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run OWasp FULL vulnerability scan
         uses: ./.github/workflows/actions/owasp_full_scan
@@ -249,6 +254,11 @@ jobs:
       - name: setup-inputs
         run: |
           echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+          
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run OWasp API vulnerability scan
         uses: ./.github/workflows/actions/owasp_api_scan
