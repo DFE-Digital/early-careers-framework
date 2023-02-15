@@ -29,7 +29,7 @@
           Email address
         </dt>
         <dd class="govuk-summary-list__value">
-          <%= @induction_record.preferred_identity.email %>
+          <%= @induction_record.preferred_identity&.email || @profile.participant_identity&.email %>
         </dd>
           <dd class="govuk-summary-list__actions">
           <% if @profile.policy_class.new(current_user, @profile).edit_email? %>
