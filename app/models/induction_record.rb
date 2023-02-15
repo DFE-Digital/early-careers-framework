@@ -131,11 +131,38 @@ class InductionRecord < ApplicationRecord
   # mentor_full_name
   delegate :full_name, to: :mentor, allow_nil: true, prefix: true
 
+  # participant_completed_validation_wizard?
+  delegate :completed_validation_wizard?, to: :participant_profile, allow_nil: true, prefix: :participant
+
+  # participant_contacted_for_info?
+  delegate :contacted_for_info?, to: :participant_profile, allow_nil: true, prefix: :participant
+
   # participant_full_name
   delegate :full_name, to: :participant_profile, allow_nil: true, prefix: :participant
 
+  # participant_fundable?
+  delegate :fundable?, to: :participant_profile, allow_nil: true, prefix: :participant
+
+  # participant_ineligible_and_duplicated_or_previously_participated?
+  delegate :ineligible_and_duplicated_or_previously_participated?, to: :participant_profile, allow_nil: true, prefix: :participant
+
+  # participant_ineligible_but_not_duplicated_or_previously_participated?
+  delegate :ineligible_but_not_duplicated_or_previously_participated?, to: :participant_profile, allow_nil: true, prefix: :participant
+
+  # participant_is_a_mentor?
+  delegate :mentor?, to: :participant_profile, allow_nil: true, prefix: :participant_is_a
+
+  # participant_manual_check_needed?
+  delegate :manual_check_needed?, to: :participant_profile, allow_nil: true, prefix: :participant
+
+  # participant_no_qts?
+  delegate :no_qts?, to: :participant_profile, allow_nil: true, prefix: :participant
+
   # participant_preferred_identity
   delegate :email, to: :preferred_identity, allow_nil: true, prefix: :participant
+
+  # participant_previous_participation?
+  delegate :previous_participation?, to: :participant_profile, allow_nil: true, prefix: :participant
 
   # participant_type
   delegate :type, to: :participant_profile, allow_nil: true, prefix: :participant

@@ -6,7 +6,7 @@ module SitValidateParticipantHelper
   end
 
   def ineligible?(profile)
-    profile.ecf_participant_eligibility&.ineligible_status?
+    profile.ineligible_status?
   end
 
   def ineligible_mentor_at_additional_school?(profile)
@@ -20,13 +20,13 @@ module SitValidateParticipantHelper
   def mentor_was_in_early_rollout?(profile)
     return unless profile.mentor?
 
-    profile.ecf_participant_eligibility&.previous_participation_reason?
+    profile.previous_participation?
   end
 
   def mentor_with_duplicate_profile?(profile)
     return unless profile.mentor?
 
-    profile.ecf_participant_eligibility&.duplicate_profile_reason?
+    profile.duplicate?
   end
 
   def exempt_from_induction?(profile)
@@ -34,10 +34,10 @@ module SitValidateParticipantHelper
   end
 
   def previous_induction?(profile)
-    profile.ecf_participant_eligibility&.previous_induction_reason?
+    profile.previous_induction?
   end
 
   def participant_has_no_qts?(profile)
-    profile.ecf_participant_eligibility&.no_qts_reason?
+    profile.no_qts?
   end
 end

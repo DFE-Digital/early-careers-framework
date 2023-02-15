@@ -187,31 +187,31 @@ private
 
   def cip_eligible_participant?(induction_record)
     induction_record.enrolled_in_cip? &&
-      induction_record.participant_profile.completed_validation_wizard?
+      induction_record.participant_completed_validation_wizard?
   end
 
   def contacted_for_info_participant?(induction_record)
-    induction_record.participant_profile.contacted_for_info?
+    induction_record.participant_contacted_for_info?
   end
 
   def details_being_checked_participant?(induction_record)
     induction_record.enrolled_in_fip? &&
-      induction_record.participant_profile.manual_check_needed?
+      induction_record.participant_manual_check_needed?
   end
 
   def fip_eligible_participant?(induction_record)
     induction_record.enrolled_in_fip? &&
-      (induction_record.participant_profile.fundable? ||
-        induction_record.participant_profile.ineligible_and_duplicated_or_previously_participated?)
+      (induction_record.participant_fundable? ||
+        induction_record.participant_ineligible_and_duplicated_or_previously_participated?)
   end
 
   def ineligible_participant?(induction_record)
     induction_record.enrolled_in_fip? &&
-      induction_record.participant_profile.ineligible_but_not_duplicated_or_previously_participated?
+      induction_record.participant_ineligible_but_not_duplicated_or_previously_participated?
   end
 
   def no_qts_participant?(induction_record)
-    induction_record.participant_profile.ecf_participant_eligibility&.no_qts_reason?
+    induction_record.participant_no_qts?
   end
 
   def withdrawn_participant?(induction_record)

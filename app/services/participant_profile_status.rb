@@ -71,32 +71,30 @@ private
 
   attr_reader :participant_profile, :induction_record
 
-  delegate :school_cohort,
-           :ecf_participant_eligibility,
-           to: :participant_profile
+  delegate :school_cohort, to: :participant_profile
 
   def latest_email
     @latest_email ||= Email.associated_with(participant_profile).tagged_with(:request_for_details).latest
   end
 
   def eligible?
-    ecf_participant_eligibility&.eligible_status?
+    participant_profile.eligible_status?
   end
 
   def ineligible?
-    ecf_participant_eligibility&.ineligible_status?
+    participant_profile.ineligible_status?
   end
 
   def mentor_was_in_early_rollout?
     return unless participant_profile.mentor?
 
-    ecf_participant_eligibility&.previous_participation_reason?
+    participant_profile.previous_participation?
   end
 
   def mentor_with_duplicate_profile?
     return unless participant_profile.mentor?
 
-    ecf_participant_eligibility&.duplicate_profile_reason?
+    participant_profile.duplicate?
   end
 
   def on_fip?
@@ -104,11 +102,11 @@ private
   end
 
   def nqt_plus_one?
-    ecf_participant_eligibility&.previous_induction_reason?
+    participant_profile.previous_induction?
   end
 
   def participant_has_no_qts?
-    ecf_participant_eligibility&.no_qts_reason?
+    participant_profile.no_qts?
   end
 
   def training_status_withdrawn?

@@ -9,7 +9,7 @@ module Schools
       end
 
       def ineligible_participants?
-        participant_profiles.all? { |pp| pp.ecf_participant_eligibility&.ineligible_status? }
+        participant_profiles.all?(&:ineligible_status?)
       end
 
       attr_reader :participant_profiles, :school_cohort

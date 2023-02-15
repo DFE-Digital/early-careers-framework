@@ -3,9 +3,9 @@
 class ParticipantProfile < ApplicationRecord
   class ECF < ParticipantProfile
     self.ignored_columns = %i[school_id]
+
     VALID_EVIDENCE_HELD = %w[training-event-attended self-study-material-completed other].freeze
     COURSE_IDENTIFIERS = %w[ecf-mentor ecf-induction].freeze
-
     WITHDRAW_REASONS = %w[
       left-teaching-profession
       moved-school
@@ -15,39 +15,47 @@ class ParticipantProfile < ApplicationRecord
       other
     ].freeze
 
-    belongs_to :school_cohort
-    belongs_to :core_induction_programme, optional: true
-
-    has_one :school, through: :school_cohort
-    has_one :cohort, through: :school_cohort
-
-    belongs_to :mentor_profile, -> { where(id: 0) }, class_name: "Mentor", optional: true
-    has_one :mentor, through: :mentor_profile, source: :user
-
-    scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: %i[previous_participation duplicate_profile] }) }
-    scope :eligible_status, lambda {
-      joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
-        .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: %i[previous_participation duplicate_profile] }))
-    }
-    scope :current_cohort, -> { joins(:school_cohort).where(school_cohort: { cohort_id: Cohort.current.id }) }
-    scope :contacted_for_info, -> { where.missing(:ecf_participant_validation_data) }
-    scope :details_being_checked, -> { joins(:ecf_participant_validation_data).left_joins(:ecf_participant_eligibility).where("ecf_participant_eligibilities.id IS NULL OR ecf_participant_eligibilities.status = 'manual_check'") }
-
     enum profile_duplicity: {
       single: "single",
       primary: "primary",
       secondary: "secondary",
     }, _suffix: "profile"
 
+    # Associations
+    belongs_to :core_induction_programme, optional: true
+    belongs_to :mentor_profile, -> { where(id: 0) }, class_name: "Mentor", optional: true
+    belongs_to :school_cohort
+
+    has_one :cohort, through: :school_cohort
+    has_one :school, through: :school_cohort
+
+    has_one :mentor, through: :mentor_profile, source: :user
+
+    # Scopes
+    scope :contacted_for_info, -> { where.missing(:ecf_participant_validation_data) }
+    scope :current_cohort, -> { joins(:school_cohort).where(school_cohort: { cohort_id: Cohort.current.id }) }
+    scope :details_being_checked, -> { joins(:ecf_participant_validation_data).left_joins(:ecf_participant_eligibility).where("ecf_participant_eligibilities.id IS NULL OR ecf_participant_eligibilities.status = 'manual_check'") }
+    scope :eligible_status, lambda {
+      joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :eligible })
+        .or(joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible, reason: %i[previous_participation duplicate_profile] }))
+    }
+    scope :ineligible_status, -> { joins(:ecf_participant_eligibility).where(ecf_participant_eligibility: { status: :ineligible }).where.not(ecf_participant_eligibility: { reason: %i[previous_participation duplicate_profile] }) }
+
+    # Callbacks
     after_save :update_analytics
     after_update :sync_status_with_induction_record
 
-    def completed_validation_wizard?
-      ecf_participant_eligibility.present? || (ecf_participant_validation_data.present? && ecf_participant_validation_data.persisted?)
+    # Instance Methods
+    def active_for?(cpd_lead_provider:)
+      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
     end
 
     def contacted_for_info?
       ecf_participant_validation_data.nil?
+    end
+
+    def completed_validation_wizard?
+      ecf_participant_eligibility.present? || (ecf_participant_validation_data.present? && ecf_participant_validation_data.persisted?)
     end
 
     def current_induction_record
@@ -58,15 +66,19 @@ class ParticipantProfile < ApplicationRecord
       induction_records.current&.latest&.induction_programme
     end
 
+    def deferred_for?(cpd_lead_provider:)
+      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_deferred?
+    end
+
+    def ecf?
+      true
+    end
+
     def latest_induction_record_for(cpd_lead_provider:)
       induction_records
         .joins(induction_programme: { partnership: { lead_provider: [:cpd_lead_provider] } })
         .where(induction_programmes: { partnerships: { lead_providers: { cpd_lead_provider: } } })
         .latest
-    end
-
-    def ecf?
-      true
     end
 
     delegate :ineligible_but_not_duplicated_or_previously_participated?,
@@ -97,6 +109,19 @@ class ParticipantProfile < ApplicationRecord
     end
     alias_method :record_to_serialize_for, :relevant_induction_record
 
+    def relevant_induction_record_for(delivery_partner:)
+      induction_records.includes(induction_programme: [:partnership]).where(
+        induction_programme: {
+          partnerships: {
+            delivery_partner:,
+            challenged_at: nil,
+            challenge_reason: nil,
+            pending: false,
+          },
+        },
+      ).latest
+    end
+
     def schedule_for(cpd_lead_provider:)
       lead_provider = cpd_lead_provider.lead_provider
 
@@ -109,27 +134,6 @@ class ParticipantProfile < ApplicationRecord
 
     def withdrawn_for?(cpd_lead_provider:)
       !!latest_induction_record_for(cpd_lead_provider:)&.training_status_withdrawn?
-    end
-
-    def deferred_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_deferred?
-    end
-
-    def active_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
-    end
-
-    def relevant_induction_record_for(delivery_partner:)
-      induction_records.includes(induction_programme: [:partnership]).where(
-        induction_programme: {
-          partnerships: {
-            delivery_partner:,
-            challenged_at: nil,
-            challenge_reason: nil,
-            pending: false,
-          },
-        },
-      ).latest
     end
 
   private

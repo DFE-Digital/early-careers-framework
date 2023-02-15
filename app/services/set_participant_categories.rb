@@ -68,7 +68,7 @@ private
   end
 
   def no_qts_participants
-    details_being_checked_participants.select { |profile| profile.ecf_participant_eligibility&.no_qts_reason? }
+    details_being_checked_participants.select(&:no_qts?)
   end
 
   def fip_flag_active_ineligible_participants

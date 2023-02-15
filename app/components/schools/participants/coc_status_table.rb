@@ -8,9 +8,7 @@ module Schools
       end
 
       def ineligible_participants?
-        induction_records.any? do |induction_record|
-          induction_record.participant_profile.ineligible_but_not_duplicated_or_previously_participated?
-        end
+        induction_records.any?(&:participant_ineligible_but_not_duplicated_or_previously_participated?)
       end
 
       def transferring_out_participants?
