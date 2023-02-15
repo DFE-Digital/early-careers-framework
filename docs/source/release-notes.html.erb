@@ -9,6 +9,28 @@ weight: 8
   If you have any questions or comments about these notes, please contact DfE via Slack or email.
 </p>
 
+<h2 class="govuk-heading-l" id="15-2-2023">15th February 2023</h2>
+<p class="govuk-body-m">
+  Initial teacher training (ITT) lead mentors who are not employed by schools are now eligible for DfE funding.
+  </br>
+  </br>
+  During their registration journey, applicants for the leading teacher development NPQ will enter data to identify themselves as ITT lead mentors and validate their funding eligibility.
+  </br>
+  </br>
+  Providers will see two new data attributes when viewing application data via the endpoint <code>GET /api/v1/npq-applications</code>:
+</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>lead_mentor</code> - This signifies whether an applicant is a lead mentor (<code>"lead_mentor": true</code>) or not (<code>"lead_mentor": false</code>)</li>
+  <li><code>itt_provider</code> - This will show the name of the accredited provider</li>
+</ul>
+<p class="govuk-body-m">
+  Note, unlike other NPQ applicants, ITT lead mentors do not need to enter some information on their registration journey. The following attributes will have null values:
+</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><code>employer_name</code></li>
+  <li><code>employment_role</code></li>
+  <li><code>school_urn</code></li>
+</ul>
 <h2 class="govuk-heading-l" id="26-1-2023">26th January 2023</h2>
 <p class="govuk-body-m">
   Providers are now able to submit, view and update NPQ participant outcomes in the production environment.
