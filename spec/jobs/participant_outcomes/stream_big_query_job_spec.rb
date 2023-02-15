@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::StreamBigQueryParticipantOutcomeJob, :with_default_schedules do
+RSpec.describe ParticipantOutcomes::StreamBigQueryJob, :with_default_schedules do
   let(:participant_declaration) { create(:npq_participant_declaration) }
   let(:outcome) { create(:participant_outcome, participant_declaration:) }
 
@@ -28,6 +28,12 @@ RSpec.describe NPQ::StreamBigQueryParticipantOutcomeJob, :with_default_schedules
         created_at: outcome.created_at,
         updated_at: outcome.updated_at,
       }.stringify_keys], ignore_unknown: true)
+    end
+
+    it "queues job" do
+      expect {
+        described_class.perform_now(participant_outcome_id: outcome.id)
+      }.to have_enqueued_job.on_queue("participant_outcomes")
     end
   end
 end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-module NPQ
-  class StreamBigQueryParticipantOutcomeJob < ApplicationJob
+module ParticipantOutcomes
+  class StreamBigQueryJob < ApplicationJob
+    queue_as :participant_outcomes
+
     def perform(participant_outcome_id:)
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_participant_outcomes", skip_lookup: true
