@@ -3121,7 +3121,7 @@
             "example": [
               {
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                "type": "participant",
+                "type": "npq_application",
                 "attributes": {
                   "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
                   "full_name": "Isabelle MacDonald",
@@ -3134,7 +3134,9 @@
                   "headteacher_status": "no",
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
-                  "course_identifier": "npq-leading-teaching"
+                  "course_identifier": "npq-leading-teaching",
+                  "lead_mentor": null,
+                  "itt_provider": "University of Southampton"
                 }
               }
             ]
