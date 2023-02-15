@@ -38,14 +38,6 @@ RSpec.shared_examples "JSON Participant Deferral documentation" do |url, request
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": request_schema_ref,
-          },
-        },
-      }
-
       parameter name: :id,
                 in: :path,
                 type: :string,

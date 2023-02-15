@@ -10,6 +10,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
   let(:bearer_token)      { "Bearer #{token}" }
   let(:Authorization)     { bearer_token }
   let(:declaration_date)  { ect_profile.schedule.milestones.first.start_date }
+  let(:params)            {}
 
   path "/api/v1/participant-declarations" do
     post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
@@ -17,14 +18,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
       tags "Participant declarations"
       consumes "application/json"
       security [bearerAuth: []]
-
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ParticipantDeclaration",
-          },
-        },
-      }
 
       parameter name: :params,
                 in: :body,
@@ -99,7 +92,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 schema: {
                   "$ref": "#/components/schemas/ListFilterDeclarations",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -114,7 +106,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -173,10 +164,12 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
-                description: "The ID of the participant declaration ID"
+                description: "The ID of the participant declaration ID",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single participant declaration" do
         schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
@@ -211,10 +204,12 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the declaration to void"
+                description: "The ID of the declaration to void",
+                schema: {
+                  type: "string",
+                }
 
       response 200, "Successful" do
         let(:id) do

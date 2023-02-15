@@ -35,7 +35,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                 schema: {
                   "$ref": "#/components/schemas/StatementsFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,

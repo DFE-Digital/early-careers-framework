@@ -11,6 +11,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
   let(:participant_declaration) { create(:npq_participant_declaration, npq_course:, cpd_lead_provider:) }
   let(:participant_profile) { participant_declaration.participant_profile }
   let!(:participant_outcome) { create :participant_outcome, participant_declaration: }
+  let(:params) {}
 
   path "/api/v2/participants/npq/outcomes" do
     get "List all participant NPQ outcomes" do
@@ -23,7 +24,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -56,10 +56,12 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
 
       parameter name: :participant_id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The external ID of the participant"
+                description: "The external ID of the participant",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A list of participant outcomes" do
         schema({ "$ref": "#/components/schemas/NPQOutcomesResponse" })
@@ -82,14 +84,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/NPQOutcomeRequest",
-          },
-        },
-      }
-
       parameter name: :participant_id,
                 description: "The unique ID of the participant",
                 in: :path,
@@ -102,7 +96,6 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {

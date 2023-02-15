@@ -19,7 +19,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                   "$ref": "#/components/schemas/PartnershipsFilter",
                 },
                 in: :query,
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -31,7 +30,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                 schema: {
                   "$ref": "#/components/schemas/PartnershipsSort",
                 },
-                type: :array,
                 style: :form,
                 explode: false,
                 required: false,
@@ -59,14 +57,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
       operationId :partnerships_ecf_post
       tags "ECF partnerships"
       security [bearerAuth: []]
-
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFPartnershipRequest",
-          },
-        },
-      }
 
       response "200", "Create an ECF partnership" do
         schema({ "$ref": "#/components/schemas/ECFPartnershipResponse" })

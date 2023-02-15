@@ -20,7 +20,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 schema: {
                   "$ref": "#/components/schemas/ListFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -32,7 +31,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -63,10 +61,12 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the NPQ participant."
+                description: "The ID of the NPQ participant.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single NPQ participant" do
         let(:id) { npq_application.participant_identity.external_identifier }
@@ -158,24 +158,17 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/NPQParticipantWithdrawRequest",
-          },
-        },
-      }
-
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to withdraw"
+                description: "The ID of the participant to withdraw",
+                schema: {
+                  type: "string",
+                }
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {

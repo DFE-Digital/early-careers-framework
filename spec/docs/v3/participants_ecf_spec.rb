@@ -18,7 +18,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 schema: {
                   "$ref": "#/components/schemas/ListFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -30,7 +29,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -61,10 +59,12 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the ECF participant."
+                description: "The ID of the ECF participant.",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single ECF participant" do
         let(:id) { mentor_profile.user.id }
@@ -98,24 +98,17 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantDeferRequest",
-          },
-        },
-      }
-
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to defer"
+                description: "The ID of the participant to defer",
+                schema: {
+                  type: "string",
+                }
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {
@@ -192,24 +185,17 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantResumeRequest",
-          },
-        },
-      }
-
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant to resume"
+                description: "The ID of the participant to resume",
+                schema: {
+                  type: "string",
+                }
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {
@@ -247,24 +233,14 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantWithdrawRequest",
-          },
-        },
-      }
-
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
                 description: "The ID of the participant to withdraw"
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {
@@ -344,24 +320,17 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       security [bearerAuth: []]
       consumes "application/json"
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ECFParticipantChangeScheduleRequest",
-          },
-        },
-      }
-
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the participant"
+                description: "The ID of the participant",
+                schema: {
+                  type: "string",
+                }
 
       parameter name: :params,
                 in: :body,
-                type: :object,
                 style: :deepObject,
                 required: true,
                 schema: {

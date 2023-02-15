@@ -22,14 +22,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
       consumes "application/json"
       security [bearerAuth: []]
 
-      request_body content: {
-        "application/json": {
-          "schema": {
-            "$ref": "#/components/schemas/ParticipantDeclarationRequest",
-          },
-        },
-      }
-
       response 200, "Successful" do
         let(:attributes) do
           {
@@ -154,7 +146,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 schema: {
                   "$ref": "#/components/schemas/ParticipantDeclarationsFilter",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -169,7 +160,6 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                 schema: {
                   "$ref": "#/components/schemas/Pagination",
                 },
-                type: :object,
                 style: :deepObject,
                 explode: true,
                 required: false,
@@ -261,10 +251,12 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "9ed4612b-f8bd-44d9-b296-38ab103fadd2",
-                description: "The ID of the participant declaration ID"
+                description: "The ID of the participant declaration ID",
+                schema: {
+                  type: "string",
+                }
 
       response "200", "A single participant declaration" do
         schema({ "$ref": "#/components/schemas/SingleParticipantDeclarationResponse" })
@@ -356,10 +348,12 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
 
       parameter name: :id,
                 in: :path,
-                type: :string,
                 required: true,
                 example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the declaration to void"
+                description: "The ID of the declaration to void",
+                schema: {
+                  type: "string",
+                }
 
       response 200, "Successful" do
         let(:id) do
