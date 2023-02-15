@@ -30,6 +30,6 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 private
 
   def push_outcome_to_big_query
-    NPQ::StreamBigQueryParticipantOutcomeJob.perform_later(participant_outcome_id: id)
+    ParticipantOutcomes::StreamBigQueryJob.perform_later(participant_outcome_id: id)
   end
 end
