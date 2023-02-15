@@ -88,7 +88,7 @@ class InductionRecord < ApplicationRecord
   delegate :name, to: :appropriate_body, allow_nil: true, prefix: true
 
   def active?
-    active_induction_status? && (unknown_end? || end_date_in_future?) && !transferring_in?
+    active_induction_status? && (end_unknown? || end_date.future?) && !transferring_in?
   end
 
   def changing!(date_of_change = Time.zone.now)
@@ -96,7 +96,7 @@ class InductionRecord < ApplicationRecord
   end
 
   def claimed_by_another_school?
-    leaving_induction_status? && !school_transfer && end_date_in_future?
+    leaving_induction_status? && !school_transfer && end_date.future?
   end
 
   # cohort_start_year
@@ -119,8 +119,8 @@ class InductionRecord < ApplicationRecord
   # lead_provider_name. This will return nil if the partnership is challenged
   delegate :lead_provider_name, to: :induction_programme
 
+  # Set transferring_out to true if this action originates from the school the participant is leaving
   def leaving!(date_of_change = Time.zone.now, transferring_out: false)
-    # set transferring_out to true if this action originates from the school the participant is leaving
     update!(induction_status: :leaving, end_date: date_of_change, school_transfer: transferring_out)
   end
 
@@ -150,15 +150,15 @@ class InductionRecord < ApplicationRecord
   delegate :training_programme, to: :induction_programme
 
   def transferred?
-    leaving_induction_status? && end_date.present? && end_date_in_past?
+    leaving_induction_status? && end_date.present? && end_date.past?
   end
 
   def transferring_in?
-    active_induction_status? && start_date_in_future? && school_transfer
+    active_induction_status? && start_date.future? && school_transfer
   end
 
   def transferring_out?
-    leaving_induction_status? && end_date.present? && end_date_in_future? && school_transfer
+    leaving_induction_status? && end_date.present? && end_date.future? && school_transfer
   end
 
   def withdrawing!(date_of_change = Time.zone.now)
@@ -167,19 +167,7 @@ class InductionRecord < ApplicationRecord
 
 private
 
-  def end_date_in_future?
-    end_date > Time.current
-  end
-
-  def end_date_in_past?
-    end_date < Time.current
-  end
-
-  def start_date_in_future?
-    start_date > Time.current
-  end
-
-  def unknown_end?
+  def end_unknown?
     end_date.nil?
   end
 
