@@ -1,22 +1,20 @@
 # frozen_string_literal: true
 
-class ParticipantProfile < ApplicationRecord
-  class ECT < ECF
-    COURSE_IDENTIFIERS = %w[ecf-induction].freeze
+class ParticipantProfile::ECT < ParticipantProfile::ECF
+  COURSE_IDENTIFIERS = %w[ecf-induction].freeze
 
-    belongs_to :mentor_profile, class_name: "Mentor", optional: true
-    has_one :mentor, through: :mentor_profile, source: :user
+  belongs_to :mentor_profile, class_name: "Mentor", optional: true
+  has_one :mentor, through: :mentor_profile, source: :user
 
-    def ect?
-      true
-    end
+  def ect?
+    true
+  end
 
-    def participant_type
-      :ect
-    end
+  def participant_type
+    :ect
+  end
 
-    def role
-      "Early career teacher"
-    end
+  def role
+    "Early career teacher"
   end
 end
