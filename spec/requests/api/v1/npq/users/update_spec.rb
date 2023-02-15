@@ -13,7 +13,10 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
 
     let(:user) { create(:user) }
     let(:user_id) { user.id }
+
     let(:get_an_identity_id) { SecureRandom.uuid }
+    let(:email) { Faker::Internet.safe_email }
+    let(:full_name) { Faker::Name.name }
 
     let(:request_body) do
       {
@@ -48,41 +51,19 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
     context "when authorized" do
       let(:authorization_header) { bearer_token }
 
-      context "when the user has a get an identity ID already" do
-        before do
-          user.update(get_an_identity_id: SecureRandom.uuid)
+      context "updating the user's email" do
+        let(:request_body) do
+          {
+            data: {
+              attributes: {
+                email:,
+              },
+            },
+          }
         end
 
-        include_examples "correct response check" do
-          let(:expected_response_code) { 400 }
-          let(:expected_response_body) do
-            {
-              "errors" => [
-                {
-                  "title" => "get_an_identity_id",
-                  "detail" => "cannot be changed once set",
-                },
-              ],
-            }
-          end
-        end
-
-        it "does not update the user" do
-          expect {
-            send_request
-          }.to_not change(user, :as_json)
-        end
-      end
-
-      context "when the user has not got a get an identity ID" do
-        before do
-          user.update!(get_an_identity_id: nil)
-        end
-
-        context "when the get an identity ID is in use" do
-          before do
-            create(:user, get_an_identity_id:)
-          end
+        context "when the email is blank" do
+          let(:email) { "" }
 
           include_examples "correct response check" do
             let(:expected_response_code) { 400 }
@@ -90,8 +71,12 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "title" => "get_an_identity_id",
-                    "detail" => "has already been taken",
+                    "detail"=>"Enter an email",
+                    "title"=>"email",
+                  },
+                  {
+                    "detail"=>"Enter an email address in the correct format, like name@example.com",
+                    "title"=>"email",
                   },
                 ],
               }
@@ -105,7 +90,66 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
           end
         end
 
-        context "when the get an identity ID is not in use" do
+        context "when the email is in use" do
+          before do
+            create(:user, email:)
+          end
+
+          include_examples "correct response check" do
+            let(:expected_response_code) { 400 }
+            let(:expected_response_body) do
+              {
+                "errors" => [
+                  {
+                    "title" => "email",
+                    "detail" => "This email address is already in use",
+                  },
+                ],
+              }
+            end
+          end
+
+          it "does not update the user" do
+            expect {
+              send_request
+            }.to_not change(user, :as_json)
+          end
+
+          context "when updating the name at the same time" do
+            let(:request_body) do
+              {
+                data: {
+                  attributes: {
+                    email:,
+                    full_name:,
+                  },
+                },
+              }
+            end
+
+            include_examples "correct response check" do
+              let(:expected_response_code) { 400 }
+              let(:expected_response_body) do
+                {
+                  "errors" => [
+                    {
+                      "title" => "email",
+                      "detail" => "This email address is already in use",
+                    },
+                  ],
+                }
+              end
+            end
+
+            it "does not update the user name either" do
+              expect {
+                send_request
+              }.to_not change(user, :as_json)
+            end
+          end
+        end
+
+        context "when the email is not in use" do
           include_examples "correct response check" do
             let(:expected_response_code) { 200 }
             let(:expected_response_body) do
@@ -114,9 +158,9 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
                   "id" => user.id.to_s,
                   "type" => "user",
                   "attributes" => {
-                    "email" => user.email,
+                    "email" => email,
                     "full_name" => user.full_name,
-                    "get_an_identity_id" => get_an_identity_id,
+                    "get_an_identity_id" => user.get_an_identity_id,
                   },
                 },
               }
@@ -127,8 +171,190 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
             expect {
               send_request
             }.to change {
-              user.reload.get_an_identity_id
-            }.from(nil).to(get_an_identity_id)
+              user.reload.email
+            }.to(email)
+          end
+        end
+      end
+
+      context "updating the user's full name" do
+        let(:request_body) do
+          {
+            data: {
+              attributes: {
+                full_name:,
+              },
+            },
+          }
+        end
+
+        include_examples "correct response check" do
+          let(:expected_response_code) { 200 }
+          let(:expected_response_body) do
+            {
+              "data" => {
+                "id" => user.id.to_s,
+                "type" => "user",
+                "attributes" => {
+                  "email" => user.email,
+                  "full_name" => full_name,
+                  "get_an_identity_id" => user.get_an_identity_id,
+                },
+              },
+            }
+          end
+        end
+
+        it "updates the user" do
+          expect {
+            send_request
+          }.to change {
+            user.reload.full_name
+          }.to(full_name)
+        end
+
+        context "when the full name is blank" do
+          let(:full_name) { "" }
+
+          include_examples "correct response check" do
+            let(:expected_response_code) { 400 }
+            let(:expected_response_body) do
+              {
+                "errors" => [
+                  {
+                    "title" => "full_name",
+                    "detail" => "Enter a full name",
+                  },
+                ],
+              }
+            end
+          end
+
+          it "does not update the user" do
+            expect {
+              send_request
+            }.to_not change(user, :as_json)
+          end
+        end
+      end
+
+      context "updating the user's get_an_identity_id" do
+        let(:request_body) do
+          {
+            data: {
+              attributes: {
+                get_an_identity_id:,
+              },
+            },
+          }
+        end
+
+        context "when the user has a get_an_identity_id already" do
+          before do
+            user.update(get_an_identity_id: SecureRandom.uuid)
+          end
+
+          include_examples "correct response check" do
+            let(:expected_response_code) { 400 }
+            let(:expected_response_body) do
+              {
+                "errors" => [
+                  {
+                    "title" => "get_an_identity_id",
+                    "detail" => "cannot be changed once set",
+                  },
+                ],
+              }
+            end
+          end
+
+          it "does not update the user" do
+            expect {
+              send_request
+            }.to_not change(user, :as_json)
+          end
+
+          context "when the new get_an_identity_id is blank" do
+            let(:get_an_identity_id) { "" }
+
+            include_examples "correct response check" do
+              let(:expected_response_code) { 400 }
+              let(:expected_response_body) do
+                {
+                  "errors" => [
+                    {
+                      "title" => "get_an_identity_id",
+                      "detail" => "cannot be changed once set",
+                    },
+                  ],
+                }
+              end
+            end
+
+            it "does not update the user" do
+              expect {
+                send_request
+              }.to_not change(user, :as_json)
+            end
+          end
+        end
+
+        context "when the user has not got a get_an_identity_id" do
+          before do
+            user.update!(get_an_identity_id: nil)
+          end
+
+          context "when the get_an_identity_id is in use" do
+            before do
+              create(:user, get_an_identity_id:)
+            end
+
+            include_examples "correct response check" do
+              let(:expected_response_code) { 400 }
+              let(:expected_response_body) do
+                {
+                  "errors" => [
+                    {
+                      "title" => "get_an_identity_id",
+                      "detail" => "has already been taken",
+                    },
+                  ],
+                }
+              end
+            end
+
+            it "does not update the user" do
+              expect {
+                send_request
+              }.to_not change(user, :as_json)
+            end
+          end
+
+          context "when the get_an_identity_id is not in use" do
+            include_examples "correct response check" do
+              let(:expected_response_code) { 200 }
+              let(:expected_response_body) do
+                {
+                  "data" => {
+                    "id" => user.id.to_s,
+                    "type" => "user",
+                    "attributes" => {
+                      "email" => user.email,
+                      "full_name" => user.full_name,
+                      "get_an_identity_id" => get_an_identity_id,
+                    },
+                  },
+                }
+              end
+            end
+
+            it "updates the user" do
+              expect {
+                send_request
+              }.to change {
+                user.reload.get_an_identity_id
+              }.from(nil).to(get_an_identity_id)
+            end
           end
         end
       end

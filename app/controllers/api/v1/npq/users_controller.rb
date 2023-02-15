@@ -63,7 +63,7 @@ module Api
         end
 
         def update_params
-          params.require(:data).require(:attributes).permit(:get_an_identity_id)
+          params.require(:data).require(:attributes).permit(:email, :get_an_identity_id, :full_name)
         end
       end
     end
