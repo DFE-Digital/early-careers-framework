@@ -666,7 +666,7 @@ DEPENDENCIES
   lograge (~> 0.12.0)
   logstash-event
   mail-notify (~> 1.1)
-  mdl
+  mdl (~> 0.12.0)
   memory_profiler
   multi_json
   net-imap
