@@ -21,10 +21,23 @@ class ParticipantOutcome::NPQ < ApplicationRecord
     order(created_at: :desc).first
   end
 
+  def self.to_send_to_qualified_teachers_api
+    latest_outcome = latest
+    return latest_outcome if (latest_outcome.has_passed? && !latest_outcome.sent_to_qualified_teachers_api?) || (!latest_outcome.has_passed? && !latest_outcome.sent_to_qualified_teachers_api? && latest_outcome.previous_outcome.has_passed? && latest_outcome.previous_outcome.sent_to_qualified_teachers_api?)
+  end
+
   def has_passed?
     return nil if voided?
 
     passed?
+  end
+
+  def sent_to_qualified_teachers_api?
+    !sent_to_qualified_teachers_api_at.nil?
+  end
+
+  def previous_outcome
+    @previous_outcome ||= self.class.where.not(id:).where(participant_declaration:).where("created_at < ?", created_at).latest
   end
 
 private

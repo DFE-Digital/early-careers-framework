@@ -18,5 +18,13 @@ FactoryBot.define do
     trait :voided do
       state { :voided }
     end
+
+    trait :sent_to_qualified_teachers_api do
+      sent_to_qualified_teachers_api_at { Time.zone.now - 1.hour }
+    end
+
+    trait :not_sent_to_qualified_teachers_api do
+      sent_to_qualified_teachers_api_at { nil }
+    end
   end
 end

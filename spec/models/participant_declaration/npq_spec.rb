@@ -9,13 +9,50 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
     end
 
     describe "associations" do
-      let(:user) { create(:user) }
-      subject { described_class.new(user:) }
-      it {
-        is_expected.to have_many(:outcomes)
-          .class_name("ParticipantOutcome::NPQ")
-          .with_foreign_key("participant_declaration_id")
-      }
+      subject(:declaration) { create(:npq_participant_declaration) }
+
+      describe "outcomes" do
+        it {
+          is_expected.to have_many(:outcomes)
+            .class_name("ParticipantOutcome::NPQ")
+            .with_foreign_key("participant_declaration_id")
+        }
+
+        # Tests that returned outcomes are limited in scope to those associated with this participant declaration
+        describe "#to_send_to_qualified_teachers_api" do
+          subject(:outcomes) { declaration.outcomes.to_send_to_qualified_teachers_api }
+
+          context "with a passed outcome" do
+            context "not sent to the qualified teachers API" do
+              let!(:passed_outcome) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+              let!(:other_outcome) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api) }
+
+              it { is_expected.to eq(passed_outcome) }
+
+              context "with a subsequently failed outcome" do
+                let!(:failed_outcome) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+                let!(:other_failed_outcome) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api) }
+
+                it { is_expected.to be_nil }
+              end
+            end
+
+            context "sent to the qualified teachers API" do
+              let!(:passed_outcome) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+              let!(:other_outcome) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api) }
+
+              it { is_expected.to be_nil }
+
+              context "with a subsequently failed outcome" do
+                let!(:failed_outcome) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+                let!(:other_failed_outcome) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api) }
+
+                it { is_expected.to eq(failed_outcome) }
+              end
+            end
+          end
+        end
+      end
     end
 
     it "returns all records when not scoped" do
