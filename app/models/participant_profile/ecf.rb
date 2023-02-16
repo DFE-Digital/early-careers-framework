@@ -102,16 +102,7 @@ class ParticipantProfile < ApplicationRecord
     alias_method :record_to_serialize_for, :relevant_induction_record
 
     def relevant_induction_record_for(delivery_partner:)
-      induction_records.includes(induction_programme: [:partnership]).where(
-        induction_programme: {
-          partnerships: {
-            delivery_partner:,
-            challenged_at: nil,
-            challenge_reason: nil,
-            pending: false,
-          },
-        },
-      ).latest
+      Induction::FindBy.call(participant_profile: self, delivery_partner:, only_active_partnerships: true)
     end
 
     def schedule_for(cpd_lead_provider:)
