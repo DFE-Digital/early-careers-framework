@@ -21,6 +21,7 @@ module ParticipantOutcomes
 
     def outcomes
       @outcomes ||= ParticipantDeclaration::NPQ
+        .includes(:outcomes)
         .with_outcomes_not_sent_to_qualified_teachers_api
         .map { |declaration| declaration.outcomes.to_send_to_qualified_teachers_api }
         .flatten
