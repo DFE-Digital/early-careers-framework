@@ -61,6 +61,15 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
           expect(service.call(participant_profile:, lead_provider: school_3.partnership.lead_provider)).to eq induction_4
         end
       end
+
+      context "when only active partnerships should be considered" do
+        it "does not include records associated with challenged partnerships" do
+          travel_to a_point_in_time do
+            school_2.partnership.update!(challenged_at: 2.days.ago, challenge_reason: "mistake")
+            expect(service.call(participant_profile:, lead_provider: school_2.partnership.lead_provider, only_active_partnerships: true)).to be_nil
+          end
+        end
+      end
     end
 
     context "when a delivery partner is supplied" do
@@ -69,6 +78,15 @@ RSpec.describe Induction::FindBy, :with_default_schedules do
           expect(service.call(participant_profile:, delivery_partner: school_1.partnership.delivery_partner)).to eq induction_1
           expect(service.call(participant_profile:, delivery_partner: school_2.partnership.delivery_partner)).to eq induction_2
           expect(service.call(participant_profile:, delivery_partner: school_3.partnership.delivery_partner)).to eq induction_4
+        end
+      end
+
+      context "when only active partnerships should be considered" do
+        it "does not include records associated with challenged partnerships" do
+          travel_to a_point_in_time do
+            school_2.partnership.update!(challenged_at: 2.days.ago, challenge_reason: "mistake")
+            expect(service.call(participant_profile:, delivery_partner: school_2.partnership.delivery_partner, only_active_partnerships: true)).to be_nil
+          end
         end
       end
     end

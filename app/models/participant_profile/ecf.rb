@@ -75,10 +75,8 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def latest_induction_record_for(cpd_lead_provider:)
-      induction_records
-        .joins(induction_programme: { partnership: { lead_provider: [:cpd_lead_provider] } })
-        .where(induction_programmes: { partnerships: { lead_providers: { cpd_lead_provider: } } })
-        .latest
+      # FIXME: should this method return nil if cpd_lead_provider.nil? or call FindBy regardless (FindBy won't consider a nil lead_provider)
+      relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)
     end
 
     delegate :ineligible_but_not_duplicated_or_previously_participated?,
@@ -98,6 +96,7 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def relevant_induction_record(lead_provider:)
+      # FIXME: should this method return nil if lead_provider.nil? or call FindBy regardless (FindBy won't consider a nil lead_provider)
       Induction::FindBy.call(participant_profile: self, lead_provider:)
     end
     alias_method :record_to_serialize_for, :relevant_induction_record
@@ -116,13 +115,8 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def schedule_for(cpd_lead_provider:)
-      lead_provider = cpd_lead_provider.lead_provider
-
-      induction_records
-        .joins(induction_programme: { partnership: [:lead_provider] })
-        .where(induction_programmes: { partnerships: { lead_provider: } })
-        .latest
-        &.schedule
+      # FIXME: should this method return nil if cpd_lead_provider.nil? or call FindBy regardless (FindBy won't consider a nil lead_provider)
+      Induction::FindBy.call(participant_profile: self, lead_provider: cpd_lead_provider&.lead_provider)&.schedule
     end
 
     def withdrawn_for?(cpd_lead_provider:)
