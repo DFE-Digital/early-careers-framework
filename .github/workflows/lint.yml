@@ -32,14 +32,14 @@ jobs:
         run: bundle install
 
       - name: Lint Ruby
-        run: rubocop --format json --out=/app/out/rubocop-result.json
+        run: rubocop --format json --out=${{ github.workspace }}/rubocop-result.json
 
       - name: Keep Rubocop output
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: rubocop_results
-          path: ${{ github.workspace }}/out/rubocop-result.json
+          path: ${{ github.workspace }}/rubocop-result.json
 
       - name: Lint SCSS
         run: |-
