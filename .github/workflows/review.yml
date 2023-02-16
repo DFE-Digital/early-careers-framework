@@ -156,7 +156,7 @@ jobs:
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
 
       - name: comment on PR
-        uses: unsplash/comment-on-pr@v1.3.1
+        uses: unsplash/comment-on-pr@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -216,7 +216,7 @@ jobs:
         run: bundle exec rspec spec/smoke_tests/*_spec.rb --tag smoke_test
 
       - name: comment on PR
-        uses: unsplash/comment-on-pr@v1.3.1
+        uses: unsplash/comment-on-pr@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
