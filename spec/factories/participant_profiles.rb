@@ -7,18 +7,16 @@ FactoryBot.define do
       profile_traits { [] }
     end
 
-    factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
-      profile_duplicity { :single }
-      school_cohort { association :school_cohort, cohort: }
-      teacher_profile { association :teacher_profile, school: school_cohort.school }
-      schedule { Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort) || create(:ecf_schedule, cohort: school_cohort.cohort) }
-      after :build do |participant_profile|
-        participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
-      end
-
-      factory :ect_participant_profile, class: "ParticipantProfile::ECT"
-      factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
+    after :build do |participant_profile|
+      participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
     end
+
+    profile_duplicity { :single }
+    school_cohort { association :school_cohort, cohort: }
+    teacher_profile { association :teacher_profile, school: school_cohort.school }
+    schedule { Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort) || create(:ecf_schedule, cohort: school_cohort.cohort) }
+    factory :ect_participant_profile, class: "ParticipantProfile::ECT"
+    factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
 
     trait :ecf_participant_validation_data do
       ecf_participant_validation_data { association :ecf_participant_validation_data }
