@@ -44,6 +44,10 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
     .order(created_at: :desc)
   }
 
+  def self.with_outcomes_not_sent_to_qualified_teachers_api
+    where(id: ParticipantOutcome::NPQ.not_sent_to_qualified_teachers_api.select(:participant_declaration_id))
+  end
+
   def npq?
     true
   end

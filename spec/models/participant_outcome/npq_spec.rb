@@ -79,6 +79,16 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
       end
     end
 
+    describe "#not_sent_to_qualified_teachers_api" do
+      let!(:not_sent_outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+      let!(:sent_outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      subject(:result) { described_class.not_sent_to_qualified_teachers_api }
+
+      it { is_expected.to include(not_sent_outcome) }
+      it { is_expected.not_to include(sent_outcome) }
+    end
+
     describe ".to_send_to_qualified_teachers_api" do
       subject(:outcomes) { described_class.to_send_to_qualified_teachers_api }
 

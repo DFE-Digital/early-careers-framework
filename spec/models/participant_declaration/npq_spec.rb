@@ -74,5 +74,22 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
         expect(described_class.valid_to_have_outcome_for_lead_provider_and_course(participant_declaration.cpd_lead_provider, participant_declaration.course_identifier)).to match([participant_declaration])
       end
     end
+
+    describe "#with_outcomes_not_sent_to_qualified_teachers_api" do
+      let!(:declaration_1) { create(:npq_participant_declaration) }
+      let!(:declaration_2) { create(:npq_participant_declaration) }
+      let!(:declaration_3) { create(:npq_participant_declaration) }
+
+      before do
+        create(:participant_outcome, :not_sent_to_qualified_teachers_api, participant_declaration: declaration_1)
+        create(:participant_outcome, :sent_to_qualified_teachers_api, participant_declaration: declaration_2)
+      end
+
+      subject(:result) { described_class.with_outcomes_not_sent_to_qualified_teachers_api }
+
+      it { is_expected.to include(declaration_1) }
+      it { is_expected.not_to include(declaration_2) }
+      it { is_expected.not_to include(declaration_3) }
+    end
   end
 end
