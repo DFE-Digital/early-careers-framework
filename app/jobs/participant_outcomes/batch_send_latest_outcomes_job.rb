@@ -4,23 +4,24 @@ module ParticipantOutcomes
   class BatchSendLatestOutcomesJob < ApplicationJob
     queue_as :participant_outcomes
 
-    BATCH_SIZE = 200
+    DEFAULT_BATCH_SIZE = 200
     REQUEUE_DELAY = 2.minutes
 
-    def perform
+    def perform(batch_size = DEFAULT_BATCH_SIZE)
       return unless can_enqueue_jobs?
 
-      outcomes.each { |outcome| SendToQualifiedTeachersApiJob.perform_later(outcome.id) }
+      @batch_size = batch_size
 
-      set(wait_until: REQUEUE_DELAY.from_now).perform_later
+      outcomes.first(@batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(outcome.id) }
+
+      self.class.set(wait: REQUEUE_DELAY).perform_later if should_enqueue_again?
     end
 
   private
 
     def outcomes
-      ParticipantDeclaration::NPQ
+      @outcomes ||= ParticipantDeclaration::NPQ
         .with_outcomes_not_sent_to_qualified_teachers_api
-        .limit(BATCH_SIZE)
         .map { |declaration| declaration.outcomes.to_send_to_qualified_teachers_api }
         .flatten
     end
@@ -29,6 +30,10 @@ module ParticipantOutcomes
       ActiveJob::Base.queue_adapter.enqueued_jobs
         .select { |job| job[:job] == SendToQualifiedTeachersApiJob }
         .empty?
+    end
+
+    def should_enqueue_again?
+      outcomes.count > @batch_size
     end
   end
 end
