@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :participant_outcome, class: "ParticipantOutcome::NPQ" do
-    association :participant_declaration
+    association :participant_declaration, factory: :npq_participant_declaration
 
     completion_date { Date.yesterday }
     state { :passed }
