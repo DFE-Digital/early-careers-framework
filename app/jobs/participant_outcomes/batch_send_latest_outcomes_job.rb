@@ -3,7 +3,6 @@
 module ParticipantOutcomes
   class BatchSendLatestOutcomesJob < ApplicationJob
     queue_as :participant_outcomes
-    retry_on StandardError, attempts: 3
 
     BATCH_SIZE = 200
     REQUEUE_DELAY = 2.minutes
