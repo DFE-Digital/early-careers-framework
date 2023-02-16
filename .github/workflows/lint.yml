@@ -8,23 +8,34 @@ jobs:
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2.5.1
-        with:
-          node-version: '16.19.x'
-          cache: 'yarn'
-      - name: Yarn install
-        run: npm i -g yarn && yarn
+        name: Checkout Code
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1.138.0
         with:
-          ruby-version: 3.1.2
+          bundler-cache: true
+          ruby-version: '3.1.2'
+
+      - name: Set up Node
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: '16.19.x'
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: npm i -g yarn && yarn
+
       - name: Install dependencies
         run: bundle install
+
       - name: Lint ruby
         run: rubocop
+
       - name: Lint SCSS
         run: bundle exec rake lint:scss
+
       - name: Lint JS
         run: yarn lint

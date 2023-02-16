@@ -4,26 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version to deploy
+        description: Version to deploy ("vx.x.x")
         required: true
 
 jobs:
-  deploy:
+  deploy-to-sandbox:
     runs-on: ubuntu-20.04
+    concurrency:
+      group: deploy-to-sandbox
+
     steps:
-      - uses: softprops/turnstyle@v1
-        name: Check workflow concurrency
-        with:
-          poll-interval-seconds: 20
-          same-branch-only: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check tag format
+        run: |
+          echo ${{ github.event.inputs.version }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
 
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.version }}
 
       - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v1.4.0
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 0.14.0
 
