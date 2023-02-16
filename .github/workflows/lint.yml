@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  lint:
+  ruby_linting:
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
@@ -31,11 +31,25 @@ jobs:
       - name: Install dependencies
         run: bundle install
 
-      - name: Lint ruby
-        run: rubocop
+      - name: Lint Ruby
+        run: rubocop --format json --out=/app/out/rubocop-result.json
+
+      - name: Keep Rubocop output
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: rubocop_results
+          path: ${{ github.workspace }}/out/rubocop-result.json
 
       - name: Lint SCSS
-        run: bundle exec rake lint:scss
+        run: |-
+          bundle exec rake lint:scss
 
       - name: Lint JS
-        run: yarn lint
+        run: |-
+          yarn lint
+
+      - name: Lint ERB Templates
+        if: false
+        run: |-
+          bundle exec erblint --lint-all

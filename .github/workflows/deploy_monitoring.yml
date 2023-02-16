@@ -1,0 +1,76 @@
+name: Deploy monitoring stack
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Environment to deploy monitoring to
+        options:
+          - dev
+          - staging
+          - production
+        required: true
+
+jobs:
+  deploy-monitoring-dev:
+    name: deploy monitoring stack
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: deploy-monitoring-${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Environment Variables
+        id: variables
+        shell: bash
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "dev" ]
+          then
+              echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> !GITHUB_ENV
+              echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> !GITHUB_ENV
+              echo "TF_VAR_paas_user=${{ secrets.GOVPAAS_DEV_USERNAME }}" >> !GITHUB_ENV
+              echo "TF_VAR_paas_password=${{ secrets.GOVPAAS_DEV_PASSWORD }}" >> !GITHUB_ENV
+              echo "TF_VAR_grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD_DEV }}" >> !GITHUB_ENV
+
+              echo "bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" >> GITHUB_OUTPUT
+          fi
+
+          if [ "${{ github.event.inputs.environment }}" == "staging" ]
+          then
+              echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}" >> !GITHUB_ENV
+              echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}" >> !GITHUB_ENV
+              echo "TF_VAR_paas_user=${{ secrets.GOVPAAS_STAG_USERNAME }}" >> !GITHUB_ENV
+              echo "TF_VAR_paas_password=${{ secrets.GOVPAAS_STAG_PASSWORD }}" >> !GITHUB_ENV
+              echo "TF_VAR_grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD_STAGING }}" >> !GITHUB_ENV
+
+              echo "bucket=paas-s3-broker-prod-lon-e2123d0b-d394-4594-8056-315300e7d8a8" >> GITHUB_OUTPUT
+          fi
+
+          if [ "${{ github.event.inputs.environment }}" == "production" ]
+          then
+              echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}" >> !GITHUB_ENV
+              echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}" >> !GITHUB_ENV
+              echo "TF_VAR_paas_user=${{ secrets.GOVPAAS_PROD_USERNAME }}" >> !GITHUB_ENV
+              echo "TF_VAR_paas_password=${{ secrets.GOVPAAS_PROD_PASSWORD }}" >> !GITHUB_ENV
+              echo "TF_VAR_grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD_PRODUCTION }}" >> !GITHUB_ENV
+
+              echo "bucket=paas-s3-broker-prod-lon-037149fa-bf9a-4577-a066-f627d277d6c4" >> GITHUB_OUTPUT
+          fi
+
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v1.4.0
+        with:
+          terraform_version: 0.14.0
+
+      - name: Deploy monitoring ( ${{ github.event.inputs.environment }} )
+        run: |
+          cd terraform/monitoring
+          terraform init -reconfigure -input=false -backend-config="bucket=${{ steps.variables.outputs.bucket }}"
+          terraform apply -input=false -auto-approve -var-file ../workspace-variables/monitoring/${{ github.event.inputs.environment }}.tfvars
+        env:
+          TF_VAR_google_client_id: ${{ secrets.GOOGLE_CLIENT_ID }}
+          TF_VAR_google_client_secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          TF_VAR_alertmanager_slack_url: ${{ secrets.ALERTMANAGER_SLACK_URL }}

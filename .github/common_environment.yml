@@ -1,0 +1,4 @@
+DOCKER_REPOSITORY:     dfedigital/early-careers-framework
+APPLICATION:           Manage Teacher CPD Service
+DOMAIN:                london.cloudapps.digital
+REVIEW_APPLICATION:    ecf-review-pr

@@ -9,26 +9,18 @@ on:
       - 'documentation/**'
 
 jobs:
-  deploy-to-review-pr:
+  build-base:
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
-    concurrency:
-      group: deploy-to-review-pr-${{ github.event.number }}
 
     steps:
-      - name: setup-inputs
-        run: |
-          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
-
       - uses: actions/checkout@v3
         name: Checkout Code
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 0.14.0
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
@@ -47,9 +39,9 @@ jobs:
           target: builder
           context: .
           cache-from: |
-            dfedigital/early-careers-framework-dev:builder
+            ${{ env.DOCKER_REPOSITORY }}-dev:builder
           tags: |
-            dfedigital/early-careers-framework-dev:builder
+            ${{ env.DOCKER_REPOSITORY }}-dev:builder
           push: true
           provenance: false
           build-args: |
@@ -61,9 +53,9 @@ jobs:
           target: early-careers-framework-gems-node-modules
           context: .
           cache-from: |
-            dfedigital/early-careers-framework-dev:gems-node-modules
+            ${{ env.DOCKER_REPOSITORY }}-dev:gems-node-modules
           tags: |
-            dfedigital/early-careers-framework-dev:gems-node-modules
+            ${{ env.DOCKER_REPOSITORY }}-dev:gems-node-modules
           push: true
           build-args: |
             BUILDKIT_INLINE_CACHE=1
@@ -74,12 +66,41 @@ jobs:
           target: assets-precompile
           context: .
           cache-from: |
-            dfedigital/early-careers-framework-dev:assets-precompile
+            ${{ env.DOCKER_REPOSITORY }}-dev:assets-precompile
           tags: |
-            dfedigital/early-careers-framework-dev:assets-precompile
+            ${{ env.DOCKER_REPOSITORY }}-dev:assets-precompile
           push: true
           build-args: |
             BUILDKIT_INLINE_CACHE=1
+
+  build-review-pr:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-20.04
+    needs: [build-base]
+
+    steps:
+      - name: setup-inputs
+        run: |
+          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v3
+        name: Checkout Code
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+        with:
+          version: v0.9.1 # More recent buildx versions generate an OCI manifest
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
 
       - name: Build and push docker image from production target
         uses: docker/build-push-action@v4
@@ -87,16 +108,39 @@ jobs:
           target: production
           context: .
           cache-from: |
-            dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
-            dfedigital/early-careers-framework-dev:latest
+            ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
           tags: |
-            dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
-            dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
-            dfedigital/early-careers-framework-dev:latest
+            ${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
+            ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
           push: true
           build-args: |
             BUILDKIT_INLINE_CACHE=1
             SHA=${{ github.event.pull_request.head.sha }}
+
+  deploy-to-review-pr:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-20.04
+    needs: [build-review-pr]
+    concurrency:
+      group: deploy-to-review-pr-${{ github.event.number }}
+
+    steps:
+      - name: setup-inputs
+        run: |
+          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v3
+        name: Checkout Code
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
+
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 0.14.0
 
       - name: Deploy review app to dev
         env:
@@ -106,7 +150,7 @@ jobs:
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
           TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
         run: |
-          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
@@ -116,7 +160,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Created review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
+          msg: "Created review app at https://${{env.REVIEW_APPLICATION}}-${{ github.event.number }}.${{env.DOMAIN}}"
           check_for_duplicate_msg: true
           duplicate_msg_pattern: Created review app at*
 
@@ -148,10 +192,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: setup-inputs
-        run: |
-          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
-
       - name: Checkout code
         uses: actions/checkout@v3
         with:
