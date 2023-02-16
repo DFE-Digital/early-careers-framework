@@ -16,6 +16,7 @@ jobs:
   brakeman-scan:
     name: Brakeman Scan
     runs-on: ubuntu-latest
+
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
@@ -29,7 +30,7 @@ jobs:
 
     - name: Setup Brakeman
       env:
-        BRAKEMAN_VERSION: '5.1.1' # SARIF support is provided in Brakeman version 4.10+
+        BRAKEMAN_VERSION: '5.4.0' # SARIF support is provided in Brakeman version 4.10+
       run: |
         gem install brakeman --version $BRAKEMAN_VERSION
 
