@@ -130,7 +130,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
       context "when participant is a transfer" do
         let(:induction_programme) { create(:induction_programme, :fip, school_cohort: create(:school_cohort, cohort: participant_cohort)) }
         let(:ecf_participant_validation_data) { create(:ecf_participant_validation_data, trn: "3333333") }
-        let(:participant_profile) { create(:ecf_participant_profile, ecf_participant_validation_data:) }
+        let(:participant_profile) { create(:ect_participant_profile, ecf_participant_validation_data:) }
 
         before do
           Induction::Enrol.call(participant_profile:, induction_programme:)

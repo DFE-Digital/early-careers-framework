@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe ParticipantProfileStatus, :with_default_schedules do
-  let(:participant_profile) { create(:ecf_participant_profile) }
+  let(:participant_profile) { create(:ect_participant_profile) }
   let!(:induction_record) { create(:induction_record, participant_profile:) }
 
   let(:params) { { participant_profile:, induction_record: } }
@@ -165,7 +165,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         end
 
         context "when induction record does not exist" do
-          let(:participant_profile) { create(:ecf_participant_profile, training_status: "withdrawn") }
+          let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn") }
           let!(:induction_record) { nil }
 
           it "returns the correct status" do

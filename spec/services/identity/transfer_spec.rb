@@ -20,7 +20,7 @@ RSpec.describe Identity::Transfer do
     context "when participant profiles are attached to the user" do
       let(:school_cohort) { create(:school_cohort) }
       let(:teacher_profile1) { create(:teacher_profile, user: user1) }
-      let!(:participant_profile) { create(:ecf_participant_profile, teacher_profile: teacher_profile1, school_cohort:) }
+      let!(:participant_profile) { create(:ect_participant_profile, teacher_profile: teacher_profile1, school_cohort:) }
 
       context "when the receiver does not have a teacher_profile" do
         it "creates a teacher_profile for the user" do

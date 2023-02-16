@@ -7,7 +7,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:partnership) { create(:partnership, lead_provider:, cohort:) }
-  let(:participant_profile) { create(:ecf_participant_profile) }
+  let(:participant_profile) { create(:ect_participant_profile) }
   let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
   let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
 
@@ -63,7 +63,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
       context "with multiple values" do
         let(:another_cohort) { create(:cohort, start_year: "2050") }
         let!(:another_partnership) { create(:partnership, cohort: another_cohort, lead_provider:) }
-        let(:another_participant_profile) { create(:ecf_participant_profile) }
+        let(:another_participant_profile) { create(:ect_participant_profile) }
         let(:another_induction_programme) { create(:induction_programme, :fip, partnership: another_partnership) }
         let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
 
@@ -85,7 +85,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
 
     describe "updated_since filter" do
       context "with correct value" do
-        let(:another_participant_profile) { create(:ecf_participant_profile) }
+        let(:another_participant_profile) { create(:ect_participant_profile) }
         let(:another_induction_programme) { create(:induction_programme, :fip, partnership:) }
         let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
 
@@ -103,7 +103,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
   describe "#induction_record" do
     describe "id filter" do
       context "with correct value" do
-        let(:another_participant_profile) { create(:ecf_participant_profile) }
+        let(:another_participant_profile) { create(:ect_participant_profile) }
         let(:another_induction_programme) { create(:induction_programme, :fip, partnership:) }
         let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
 

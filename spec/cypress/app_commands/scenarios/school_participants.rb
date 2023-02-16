@@ -35,7 +35,7 @@ FactoryBot.create(
 )
 
 FactoryBot.create(
-  :ecf_participant_profile,
+  :ect_participant_profile,
   school_cohort:,
   mentor_profile:,
   user: FactoryBot.create(:user, full_name: "Joe Bloggs", email: "joe-bloggs@example.com"),

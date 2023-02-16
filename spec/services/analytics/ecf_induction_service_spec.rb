@@ -2,7 +2,7 @@
 
 describe Analytics::ECFInductionService do
   let(:induction_programme) { create(:induction_programme, :fip) }
-  let(:participant_profile) { create(:ecf_participant_profile, school_cohort: induction_programme.school_cohort) }
+  let(:participant_profile) { create(:ect_participant_profile, school_cohort: induction_programme.school_cohort) }
   let(:participant_identity) { participant_profile.participant_identity }
   let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile:, preferred_identity: participant_identity, start_date: Time.zone.now) }
 
