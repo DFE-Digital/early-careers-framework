@@ -70,6 +70,9 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
+      - name: Prepare assets
+        run: bin/rails test:prepare
+
       - name: Run tests
         run: bundle exec bin/rspec_ci
 
