@@ -6,19 +6,9 @@ on:
       - '**'
 
 jobs:
-  create-nonce:
-    name: Create nonce
-    runs-on: ubuntu-20.04
-    outputs:
-      nonce: ${{ steps.generate-nonce.outputs.nonce }}
-    steps:
-      - id: generate-nonce
-        run: echo "::set-output name=nonce::$(tr -dc 0-9 </dev/urandom | head -c 18 ; echo '')"
-
   backend-tests:
     name: Run rspec
     runs-on: ubuntu-20.04
-    needs: create-nonce
     strategy:
       fail-fast: false
       matrix:
@@ -76,7 +66,6 @@ jobs:
   e2e-scenarios:
     name: Run end to end scenarios
     runs-on: ubuntu-20.04
-    needs: create-nonce
     strategy:
       fail-fast: false
       matrix:
@@ -137,7 +126,6 @@ jobs:
   e2e-tests:
     name: Run Cypress
     runs-on: ubuntu-20.04
-    needs: create-nonce
     strategy:
       fail-fast: false
       matrix:
