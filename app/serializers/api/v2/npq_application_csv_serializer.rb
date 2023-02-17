@@ -48,6 +48,8 @@ module Api
           cohort
           ineligible_for_funding_reason
           targeted_delivery_funding_eligibility
+          itt_provider
+          lead_mentor
         ]
       end
 
@@ -76,6 +78,8 @@ module Api
           record.cohort.start_year,
           record.ineligible_for_funding_reason,
           record.targeted_delivery_funding_eligibility,
+          record.itt_provider,
+          record.lead_mentor,
         ]
       end
     end

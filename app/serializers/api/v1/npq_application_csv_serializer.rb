@@ -51,6 +51,8 @@ module Api
           teacher_catchment
           teacher_catchment_country
           teacher_catchment_iso_country_code
+          itt_provider
+          lead_mentor
         ]
       end
 
@@ -82,6 +84,8 @@ module Api
           teacher_catchment(record),
           record.teacher_catchment_country,
           record.teacher_catchment_iso_country_code,
+          record.itt_provider,
+          record.lead_mentor,
         ]
       end
 

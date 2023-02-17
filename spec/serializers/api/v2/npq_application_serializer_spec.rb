@@ -29,6 +29,8 @@ module Api
           expect(result[:data][:attributes][:status]).to eql(npq_application.lead_provider_approval_status)
           expect(result[:data][:attributes][:works_in_school]).to eql(npq_application.works_in_school)
           expect(result[:data][:attributes][:eligible_for_funding]).to eql(npq_application.eligible_for_dfe_funding)
+          expect(result[:data][:attributes][:itt_provider]).to eql(npq_application.itt_provider)
+          expect(result[:data][:attributes][:lead_mentor]).to eql(npq_application.lead_mentor)
           expect(result[:data][:attributes][:targeted_delivery_funding_eligibility]).to eql(npq_application.targeted_delivery_funding_eligibility)
         end
       end
