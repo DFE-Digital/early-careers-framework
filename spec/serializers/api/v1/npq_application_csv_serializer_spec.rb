@@ -35,6 +35,8 @@ module Api
           expect(rows[0]["teacher_catchment"]).to eq "true"
           expect(rows[0]["teacher_catchment_country"]).to eql("United Kingdom of Great Britain and Northern Ireland")
           expect(rows[0]["teacher_catchment_iso_country_code"]).to eql("GBR")
+          expect(rows[0]["itt_provider"]).to eql(npq_application.itt_provider)
+          expect(rows[0]["lead_mentor"]).to eql(npq_application.lead_mentor.to_s)
         end
       end
     end
