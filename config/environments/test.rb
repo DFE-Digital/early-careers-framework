@@ -89,4 +89,7 @@ Rails.application.configure do
 
   config.dqt_api_url = "https://dtqapi.example.com/dqt-crm"
   config.dqt_api_key = "some-apikey-guid"
+
+  config.qualified_teachers_api_url = "https://qualified-teachers-api.example.com"
+  config.qualified_teachers_api_key = "some-apikey-guid"
 end

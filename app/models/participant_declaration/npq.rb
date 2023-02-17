@@ -47,4 +47,8 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
   def npq?
     true
   end
+
+  def qualification_type
+    course_identifier&.scan(/(?<=-)\w/)&.join&.prepend("npq")&.upcase
+  end
 end
