@@ -54,10 +54,5 @@ module EarlyCareerFramework
     config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
     config.record_emails = true
-
-    # Avoid sassc-rails errors when compressing CSS.
-    # See https://github.com/alphagov/govuk-frontend/issues/1350
-    config.assets.css_compressor = nil
-    config.sass.style = :compressed
   end
 end

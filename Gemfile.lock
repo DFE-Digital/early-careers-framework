@@ -131,6 +131,8 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    cssbundling-rails (1.1.2)
+      railties (>= 6.0.0)
     cypress-on-rails (1.13.1)
       rack
     database_cleaner-active_record (2.0.1)
@@ -457,14 +459,6 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     savon (2.14.0)
       akami (~> 1.2)
       builder (>= 2.1.2)
@@ -614,6 +608,7 @@ DEPENDENCIES
   canonical-rails (~> 0.2.14)
   capybara (~> 3.38)
   countries (~> 5.3)
+  cssbundling-rails (~> 1.1)
   cypress-on-rails (~> 1.13)
   database_cleaner-active_record
   devise (>= 4.8.0)
@@ -665,7 +660,6 @@ DEPENDENCIES
   rswag-specs (~> 2.8)
   rubocop-govuk (>= 4.8)
   rubyzip (~> 2.3, >= 2.3.0)
-  sassc-rails
   savon (~> 2.14)
   scenic (~> 1.7)
   scss_lint-govuk
