@@ -181,7 +181,7 @@ jobs:
         run: bin/webpacker
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           start: bundle exec rails server -e test -p 5017
           wait-on: 'http://localhost:5017/'
