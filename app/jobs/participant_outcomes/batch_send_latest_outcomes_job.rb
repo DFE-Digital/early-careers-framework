@@ -29,8 +29,8 @@ module ParticipantOutcomes
 
     def can_enqueue_jobs?
       ActiveJob::Base.queue_adapter.enqueued_jobs
-        .select { |job| job[:job] == SendToQualifiedTeachersApiJob }
-        .empty?
+        .detect { |job| job[:job] == SendToQualifiedTeachersApiJob }
+        .nil?
     end
 
     def should_enqueue_again?
