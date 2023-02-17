@@ -41,8 +41,6 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
   def not_eligible; end
 
-  def already_nominated; end
-
   def limit_reached
     @limit = @nomination_request_form.reached_email_limit
   end
