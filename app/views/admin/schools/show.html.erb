@@ -21,6 +21,7 @@
         row.action(
           text: "Open in GIAS",
           href: "https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/#{@school.urn}",
+          html_attributes: { rel: "noreferrer noopener", target: "_blank" },
         )
       end
     end
