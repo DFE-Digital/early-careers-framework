@@ -58,6 +58,21 @@ RSpec.describe "Choosing how to continue with nominations", type: :request do
 
         expect(response).to render_template("nominations/choose_how_to_continue/new")
       end
+
+      context "when an induction tutor for the school has already been nominated" do
+        before do
+          school = nomination_email.school
+          create(:user, :induction_coordinator, schools: [school])
+        end
+
+        it "redirects to already-nominated" do
+          get "/nominations/choose-how-to-continue?token=#{token}"
+
+          expect(response).to redirect_to("/nominations/already-nominated")
+          follow_redirect!
+          expect(response).to render_template("nominations/request_nomination_invite/already_nominated")
+        end
+      end
     end
 
     context "with an expired token" do

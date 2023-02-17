@@ -63,6 +63,17 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
       end
     end
 
+    context "when given an eligible, already nominated school" do
+      before do
+        create(:user, :induction_coordinator, schools: [school])
+      end
+
+      it "redirects to already nominated" do
+        when_i_choose_the_school
+        expect(response).to redirect_to(already_nominated_request_nomination_invite_path)
+      end
+    end
+
     context "when sending an email would violate sendine limits" do
       before do
         allow_any_instance_of(NominationRequestForm).to receive(:reached_email_limit).and_return double
@@ -129,6 +140,13 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
     it "renders the email limit reached page" do
       get "/nominations/limit-reached"
       expect(response).to render_template(:limit_reached)
+    end
+  end
+
+  describe "already nominated" do
+    it "renders the already nominated page" do
+      get "/nominations/already-nominated"
+      expect(response).to render_template(:already_nominated)
     end
   end
 
