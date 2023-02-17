@@ -9,7 +9,7 @@ document.body.className = document.body.className
 import "es6-promise/auto";
 import "whatwg-fetch";
 
-import * as GOVUKFrontend from 'govuk-frontend'
+import * as GOVUKFrontend from "govuk-frontend";
 
 // Project JS
 import "./admin/supplier-users";
@@ -18,9 +18,8 @@ import "./cookie-banner";
 import "./nominations";
 import "./autocomplete";
 
-window.GOVUKFrontend = GOVUKFrontend
+window.GOVUKFrontend = GOVUKFrontend;
 
-window.onload = function () {
-  window.GOVUKFrontend.initAll()
-}
-
+window.onload = function init() {
+  window.GOVUKFrontend.initAll();
+};
