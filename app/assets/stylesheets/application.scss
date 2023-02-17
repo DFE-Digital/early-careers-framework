@@ -1,17 +1,9 @@
-@function frontend-font-url($filename) {
-  @return url("~assets/fonts/" + $filename);
-}
-
-@function frontend-image-url($filename) {
-  @return url("~assets/images/" + $filename);
-}
-
 $govuk-new-link-styles: true;
-$govuk-font-url-function: frontend-font-url;
-$govuk-image-url-function: frontend-image-url;
+$govuk-font-url-function: "font-url";
+$govuk-image-url-function: "image-url";
 
-@import "~govuk-frontend/govuk/all";
-@import "~accessible-autocomplete";
+@import "govuk-frontend/govuk/all";
+@import "accessible-autocomplete/src/autocomplete";
 
 @import "notification_banner";
 @import "app_task_list";

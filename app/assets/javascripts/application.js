@@ -5,13 +5,11 @@ document.body.className = document.body.className
   ? `${document.body.className} js-enabled`
   : "js-enabled";
 
-// Styling
-import "../styles/application.scss";
-
 // External dependencies
-import { initAll } from "govuk-frontend";
 import "es6-promise/auto";
 import "whatwg-fetch";
+
+import * as GOVUKFrontend from 'govuk-frontend'
 
 // Project JS
 import "./admin/supplier-users";
@@ -20,4 +18,9 @@ import "./cookie-banner";
 import "./nominations";
 import "./autocomplete";
 
-initAll();
+window.GOVUKFrontend = GOVUKFrontend
+
+window.onload = function () {
+  window.GOVUKFrontend.initAll()
+}
+

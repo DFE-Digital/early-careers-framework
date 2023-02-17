@@ -13,4 +13,3 @@ CypressOnRails::SmartFactoryWrapper.configure(
     Rails.root.join("spec/factories/**/*.rb"),
   ],
 )
-Webpacker.compile

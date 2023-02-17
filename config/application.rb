@@ -14,7 +14,7 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-# require "sprockets/railtie"
+require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 require "govuk/components"
@@ -54,5 +54,10 @@ module EarlyCareerFramework
     config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
 
     config.record_emails = true
+
+    # Avoid sassc-rails errors when compressing CSS.
+    # See https://github.com/alphagov/govuk-frontend/issues/1350
+    config.assets.css_compressor = nil
+    config.sass.style = :compressed
   end
 end

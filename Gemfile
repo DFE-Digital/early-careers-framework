@@ -34,9 +34,6 @@ gem "ar-uuid", "~> 0.2.3"
 # Use Puma as the app server
 gem "puma", "~> 5.6"
 
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem "shakapacker", "~> 6.5.6"
-
 # Soft delete
 gem "discard", "~> 1.2", ">= 1.2.0"
 
@@ -106,6 +103,11 @@ gem "net-pop", require: false
 gem "net-smtp", require: false
 
 gem "json-diff", "~> 0.4.1", require: false
+
+gem "jsbundling-rails"
+gem "sassc-rails"
+gem "sprockets", "~> 4.2.0"
+gem "sprockets-rails", require: "sprockets/railtie"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

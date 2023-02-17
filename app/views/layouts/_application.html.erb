@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
-    <% pack_tag_args = ['application'] %>
+    <% javascript_tag_args = ['application'] %>
 
     <%= tag :meta, charset: 'utf-8' %>
     <% if Rails.env.to_s.in?(Sentry.configuration.enabled_environments) && ENV['RAILS_ENV'] != 'test' %>
       <%= tag :meta, name: :release, content: Sentry.configuration.release %>
       <%= tag :meta, name: :"sentry-dsn", content: Sentry.configuration.dsn.to_s %>
       <%= tag :meta, name: :"sentry-trace", content: Sentry.get_current_scope&.span&.to_sentry_trace %>
-      <% pack_tag_args << 'sentry' %>
+      <% javascript_tag_args << 'sentry' %>
     <% end %>
 
     <title><%= (yield(:title) + " - " unless yield(:title).blank?).to_s + "Manage training for early career teachers" %></title>
@@ -16,16 +16,16 @@
     <%= csp_meta_tag %>
     <%= canonical_tag %>
     <%= tag :meta, name: 'viewport', content: 'width=device-width, initial-scale=1' %>
-    <%= tag :meta, property: 'og:image', content: asset_pack_path('static/govuk-frontend/govuk/assets/images/govuk-opengraph-image.png') %>
+    <%= tag :meta, property: 'og:image', content: image_path('govuk-opengraph-image.png') %>
     <%= tag :meta, name: 'theme-color', content: '#0b0c0c' %>
-    <%= favicon_link_tag asset_pack_path('static/govuk-frontend/govuk/assets/images/favicon.ico') %>
-    <%= favicon_link_tag asset_pack_path('static/govuk-frontend/govuk/assets/images/govuk-mask-icon.svg'), rel: 'mask-icon', type: 'image/svg', color: "#0b0c0c" %>
-    <%= favicon_link_tag asset_pack_path('static/govuk-frontend/govuk/assets/images/govuk-apple-touch-icon.png'), rel: 'apple-touch-icon', type: 'image/png' %>
-    <%= favicon_link_tag asset_pack_path('static/govuk-frontend/govuk/assets/images/govuk-apple-touch-icon-152x152.png'), rel: 'apple-touch-icon', type: 'image/png', size: '152x152' %>
-    <%= favicon_link_tag asset_pack_path('static/govuk-frontend/govuk/assets/images/govuk-apple-touch-icon-167x167.png'), rel: 'apple-touch-icon', type: 'image/png', size: '167x167' %>
-    <%= favicon_link_tag asset_pack_path('static/govuk-frontend/govuk/assets/images/govuk-apple-touch-icon-180x180.png'), rel: 'apple-touch-icon', type: 'image/png', size: '180x180' %>
-    <%= stylesheet_pack_tag 'application', media: 'all' %>
-    <%= javascript_pack_tag *pack_tag_args, defer: true unless params[:nojs] == "nojs" %>
+    <%= favicon_link_tag image_path('favicon.ico') %>
+    <%= favicon_link_tag image_path('govuk-mask-icon.svg'), rel: 'mask-icon', type: 'image/svg', color: "#0b0c0c" %>
+    <%= favicon_link_tag image_path('govuk-apple-touch-icon.png'), rel: 'apple-touch-icon', type: 'image/png' %>
+    <%= favicon_link_tag image_path('govuk-apple-touch-icon-152x152.png'), rel: 'apple-touch-icon', type: 'image/png', size: '152x152' %>
+    <%= favicon_link_tag image_path('govuk-apple-touch-icon-167x167.png'), rel: 'apple-touch-icon', type: 'image/png', size: '167x167' %>
+    <%= favicon_link_tag image_path('govuk-apple-touch-icon-180x180.png'), rel: 'apple-touch-icon', type: 'image/png', size: '180x180' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag *javascript_tag_args, defer: true unless params[:nojs] == "nojs" %>
 
     <script>
       dataLayer = <%= data_layer.to_json.html_safe %>;

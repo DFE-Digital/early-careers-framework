@@ -163,7 +163,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2.5.1
         with:
-          node-version: '16.19.x'
+          node-version: '18.12.x'
           cache: 'yarn'
 
       - name: Set up test database
