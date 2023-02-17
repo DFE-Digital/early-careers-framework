@@ -24,7 +24,7 @@ jobs:
         name: Checkout Code
 
       - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v1.4.0
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 0.14.0
 
