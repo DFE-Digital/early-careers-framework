@@ -8,7 +8,7 @@
 
 - Ruby 3.1.2
 - PostgreSQL (we deploy on 11.x)
-- NodeJS 16.17.1
+- NodeJS 16.19.1
 - Yarn 1.12.x
 - Docker
 - Redis 6.2
