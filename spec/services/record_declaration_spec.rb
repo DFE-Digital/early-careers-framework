@@ -372,7 +372,7 @@ RSpec.describe RecordDeclaration, :with_default_schedules do
       end
     end
 
-    context "when submitting completed", with_feature_flags: { participant_outcomes_feature: "active" } do
+    context "when submitting completed" do
       let(:declaration_type) { "completed" }
       let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date + 1.day }
 

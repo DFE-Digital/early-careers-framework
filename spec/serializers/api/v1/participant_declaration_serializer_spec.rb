@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V1::ParticipantDeclarationSerializer, :with_default_schedules, with_feature_flags: { participant_outcomes_feature: "active" } do
+RSpec.describe Api::V1::ParticipantDeclarationSerializer, :with_default_schedules do
   describe "#state" do
     let(:participant_declaration) do
       create(:ect_participant_declaration, :awaiting_clawback)

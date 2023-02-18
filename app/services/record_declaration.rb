@@ -209,7 +209,6 @@ private
   end
 
   def validate_has_passed?
-    return false unless FeatureFlag.active?(:participant_outcomes_feature)
     return false unless valid_course_identifier_for_participant_outcome?
 
     participant_profile&.npq? &&
