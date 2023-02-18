@@ -10,3 +10,11 @@ npq_lead_providers = NPQLeadProvider.all
     .accept_application
     .add_declaration
 end
+
+# Create rejected NPQ applications
+5.times do
+  NewSeeds::Scenarios::NPQ
+    .new(lead_provider: npq_lead_providers.sample)
+    .build
+    .reject_application
+end

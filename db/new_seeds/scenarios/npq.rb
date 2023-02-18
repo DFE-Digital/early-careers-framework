@@ -24,7 +24,7 @@ module NewSeeds
           :valid,
           participant_identity:,
           npq_lead_provider:,
-          npq_course:
+          npq_course:,
         )
 
         self
@@ -48,6 +48,10 @@ module NewSeeds
         application.update!(lead_provider_approval_status: "accepted")
 
         self
+      end
+
+      def reject_application
+        application.update!(lead_provider_approval_status: "rejected")
       end
 
       def add_declaration
