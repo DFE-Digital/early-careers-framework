@@ -19,32 +19,39 @@ module NewSeeds
         @participant_identity = user&.participant_identities&.sample ||
           FactoryBot.create(:seed_participant_identity, user:)
 
-        @participant_profile = FactoryBot.create(:seed_npq_participant_profile, user:, participant_identity:)
-
-        self
-      end
-
-      def add_application
-        raise(StandardError, "no participant_identity, call #build first") if participant_identity.blank?
-
         @application = FactoryBot.create(
           :seed_npq_application,
           :valid,
           participant_identity:,
           npq_lead_provider:,
-          npq_course:,
-
-          # it turns out that we don't find the NPQ application via the participant identity but
-          # instead by the `has_one` on participant profile. The id of the NPQ application needs
-          # to match the corresponding participant profile's id.
-          id: @participant_profile.id,
+          npq_course:
         )
 
         self
       end
 
+      def accept_application
+        raise(StandardError, "no npq application, call #build first") if application.blank?
+
+        @participant_profile = FactoryBot.create(
+          :seed_npq_participant_profile,
+          user:,
+          participant_identity:,
+          npq_application: application,
+
+          # it turns out that we don't find the NPQ application via the participant identity but
+          # instead by the `has_one` on participant profile. The id of the NPQ application needs
+          # to match the corresponding participant profile's id.
+          id: application.id,
+        )
+
+        application.update!(lead_provider_approval_status: "accepted")
+
+        self
+      end
+
       def add_declaration
-        raise(StandardError, "no user, call #build first") if user.blank?
+        raise(StandardError, "no participant_profile, call #accept_application first") if participant_profile.blank?
 
         FactoryBot.create(
           :seed_npq_participant_declaration,
