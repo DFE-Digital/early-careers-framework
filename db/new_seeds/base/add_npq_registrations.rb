@@ -2,7 +2,15 @@
 
 npq_lead_providers = NPQLeadProvider.all
 
-# Create accepted NPQ applications
+# Create pending NPQ applications
+5.times do
+  NewSeeds::Scenarios::NPQ
+    .new(lead_provider: npq_lead_providers.sample)
+    .build
+end
+
+# Create accepted NPQ applications with participant profiles
+# and a declaration
 10.times do
   NewSeeds::Scenarios::NPQ
     .new(lead_provider: npq_lead_providers.sample)
@@ -17,4 +25,24 @@ end
     .new(lead_provider: npq_lead_providers.sample)
     .build
     .reject_application
+end
+
+# Create pending NPQ applications to ASO NPQ course
+3.times do
+  NewSeeds::Scenarios::NPQ
+    .new(
+      lead_provider: npq_lead_providers.sample,
+      npq_course: NPQCourse.find_by(identifier: "npq-additional-support-offer"),
+    )
+    .build
+end
+
+# Create pending NPQ applications to EHCO NPQ course
+3.times do
+  NewSeeds::Scenarios::NPQ
+    .new(
+      lead_provider: npq_lead_providers.sample,
+      npq_course: NPQCourse.find_by(identifier: "npq-early-headship-coaching-offer"),
+    )
+    .build
 end
