@@ -42,10 +42,14 @@ FactoryBot.define do
       private_childcare_provider_urn { "EY#{SecureRandom.rand(100_000..999_999)}" }
     end
 
+    trait(:starting_in_2021) { cohort { Cohort.find_or_create_by!(start_year: 2021) } }
+    trait(:starting_in_2022) { cohort { Cohort.find_or_create_by!(start_year: 2022) } }
+
     trait(:valid) do
       with_participant_identity
       with_npq_lead_provider
       with_npq_course
+      starting_in_2022
     end
 
     after(:build) do |npqa|
