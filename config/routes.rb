@@ -627,17 +627,25 @@ Rails.application.routes.draw do
 
           resources :participants, only: %i[index show destroy] do
             collection do
-              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
-                get :cannot_add_mentor_without_trn
-                get :who, path: "who", controller: :add_participants
-                put :participant_type, path: "participant-type", controller: :add_participants
-                get :what_we_need, path: "what-we-need", controller: :add_participants
-                put "transfer", as: nil
-
-                appropriate_body_selection_routes :add_participants
-                get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
-              end
+              get "add", to: "add_participant_wizard#show", as: :add_participant_wizard_start, step: "who"
+              get "add/:step", to: "add_participant_wizard#show", as: :add_participant_wizard_show
+              get "add/:step/change", to: "add_participant_wizard#show", as: :add_participant_wizard_show_change, changing_answer: "1"
+              put "add/:step", to: "add_participant_wizard#update", as: :add_participant_wizard_update
+              put "add/:step/change", to: "add_participant_wizard#update", as: :add_participant_wizard_update_change, changing_answer: "1"
             end
+
+            # collection do
+            #   multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
+            #     get :cannot_add_mentor_without_trn
+            #     get :who, path: "who", controller: :add_participants
+            #     put :participant_type, path: "participant-type", controller: :add_participants
+            #     get :what_we_need, path: "what-we-need", controller: :add_participants
+            #     put "transfer", as: nil
+
+            #     appropriate_body_selection_routes :add_participants
+            #     get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
+            #   end
+            # end
 
             get :remove
             get :edit_name, path: "edit-name"

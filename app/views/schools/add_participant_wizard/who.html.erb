@@ -1,0 +1,23 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: schools_participants_path) %>
+
+<% content_for :title, "Who do you want to add?" %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+
+        <%= form_with model: @form, url: add_participant_wizard_update_schools_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+            <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
+                <% if @school_cohort.school_chose_fip? %>
+                    <%= f.govuk_radio_button :participant_type, :transfer, label: { text: "A teacher transferring from another school where they’ve started ECF-based training or mentoring" } %>
+                <% end %>
+                <%= f.govuk_radio_button :participant_type, :ect, label: { text: "A new ECT" } %>
+                <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "A new mentor" } %>
+                <% end %>
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+
+    </div>
+</div>
