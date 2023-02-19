@@ -85,7 +85,7 @@ private
   def relevant_induction_record
     return if user.blank? || participant_profile.blank?
 
-    @relevant_induction_record ||= Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
+    @relevant_induction_record ||= participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
 
   def not_already_withdrawn

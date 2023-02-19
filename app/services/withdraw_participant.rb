@@ -78,7 +78,7 @@ private
   end
 
   def relevant_induction_record
-    @relevant_induction_record ||= Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
+    @relevant_induction_record ||= participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
 
   def create_withdrawn_participant_profile_state!
