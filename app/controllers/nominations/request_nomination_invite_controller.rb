@@ -32,8 +32,6 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
     if !@nomination_request_form.school.can_access_service?
       redirect_to not_eligible_request_nomination_invite_path
-    elsif @nomination_request_form.school.registered?
-      redirect_to already_nominated_request_nomination_invite_path
     elsif @nomination_request_form.reached_email_limit.present?
       redirect_to limit_reached_request_nomination_invite_path
     else
