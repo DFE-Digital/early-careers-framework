@@ -46,10 +46,6 @@ class ParticipantProfile < ApplicationRecord
     after_update :sync_status_with_induction_record
 
     # Instance Methods
-    def active_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
-    end
-
     def contacted_for_info?
       ecf_participant_validation_data.nil?
     end
@@ -64,10 +60,6 @@ class ParticipantProfile < ApplicationRecord
 
     def current_induction_programme
       induction_records.current&.latest&.induction_programme
-    end
-
-    def deferred_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_deferred?
     end
 
     def ecf?
@@ -104,11 +96,19 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def schedule_for(cpd_lead_provider:)
-      Induction::FindBy.call(participant_profile: self, lead_provider: cpd_lead_provider&.lead_provider)&.schedule unless cpd_lead_provider.nil?
+      relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.schedule
+    end
+
+    def active_for?(cpd_lead_provider:)
+      !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_active?
+    end
+
+    def deferred_for?(cpd_lead_provider:)
+      !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_deferred?
     end
 
     def withdrawn_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_withdrawn?
+      !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_withdrawn?
     end
 
   private
