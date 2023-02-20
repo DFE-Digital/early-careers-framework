@@ -26,8 +26,6 @@ module NPQ
              to: :participant_declaration
 
     def create_participant_outcome?
-      return false unless FeatureFlag.active?(:participant_outcomes_feature)
-
       participant_profile&.npq? &&
         declaration_type == "completed" &&
         valid_course_identifier_for_participant_outcome?

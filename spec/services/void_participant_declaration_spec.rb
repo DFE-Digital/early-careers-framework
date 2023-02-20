@@ -112,7 +112,7 @@ RSpec.describe VoidParticipantDeclaration, :with_default_schedules do
       end
     end
 
-    context "when NPQ completed declaration thats paid", with_feature_flags: { participant_outcomes_feature: "active" } do
+    context "when NPQ completed declaration thats paid" do
       let(:schedule) { NPQCourse.schedule_for(npq_course:) }
       let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
       let(:npq_course) { create(:npq_leadership_course) }
