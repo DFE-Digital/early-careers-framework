@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NPQ::VoidParticipantOutcome, :with_default_schedules, with_feature_flags: { participant_outcomes_feature: "active" } do
+RSpec.describe NPQ::VoidParticipantOutcome, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:schedule) { NPQCourse.schedule_for(npq_course:) }
   let(:declaration_date) { schedule.milestones.find_by(declaration_type:).start_date }
