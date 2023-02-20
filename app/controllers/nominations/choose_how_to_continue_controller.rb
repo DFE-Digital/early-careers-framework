@@ -6,9 +6,13 @@ class Nominations::ChooseHowToContinueController < ApplicationController
   before_action :check_token_status, only: :new
 
   def new
-    @how_to_continue_form = NominateHowToContinueForm.new(token:,
+    if nomination_email.school.registered?
+      redirect_to start_nomination_nominate_induction_coordinator_path(token:)
+    else
+      @how_to_continue_form = NominateHowToContinueForm.new(token:,
                                                           school:,
                                                           cohort:)
+    end
   end
 
   def create
