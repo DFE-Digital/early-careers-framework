@@ -70,7 +70,7 @@ RSpec.describe "Requesting an invitation to nominate an induction tutor", type: 
 
       it "redirects to already nominated" do
         when_i_choose_the_school
-        expect(response).to redirect_to(already_nominated_request_nomination_invite_path)
+        expect(response).to redirect_to(review_request_nomination_invite_path)
       end
     end
 
