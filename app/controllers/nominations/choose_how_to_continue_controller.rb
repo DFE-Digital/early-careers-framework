@@ -10,8 +10,8 @@ class Nominations::ChooseHowToContinueController < ApplicationController
       redirect_to start_nomination_nominate_induction_coordinator_path(token:)
     else
       @how_to_continue_form = NominateHowToContinueForm.new(token:,
-                                                          school:,
-                                                          cohort:)
+                                                            school:,
+                                                            cohort:)
     end
   end
 
