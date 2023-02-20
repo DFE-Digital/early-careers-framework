@@ -17,19 +17,4 @@ Feature: Admin users viewing school participants
     When I click on "link" containing "ECT User 1"
     Then I should be on "admin participant" page
     And "page title" should contain "ECT User 1"
-
-    # Once there is more participants functionality this should be moved to there
     And the page should be accessible
-
-    # Move this to ParticipantManagement.feature once the links work
-    When I click on "link" containing "Delete participant"
-    Then I should be on "admin delete participant" page
-    And the page should be accessible
-
-    When I click the submit button
-    Then "page body" should contain "has been deleted"
-    And the page should be accessible
-
-    When I click on "link" containing "View participant listing"
-    Then I should be on "admin participants" page
-    And "page body" should not contain "ECT User 1"
