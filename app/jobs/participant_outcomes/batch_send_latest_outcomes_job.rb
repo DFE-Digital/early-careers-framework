@@ -9,7 +9,11 @@ module ParticipantOutcomes
     REQUEUE_DELAY = 2.minutes
 
     def perform(batch_size = DEFAULT_BATCH_SIZE)
-      return unless can_enqueue_jobs?
+      unless can_enqueue_jobs?
+        Rails.logger.info "BatchSendLatestOutcomesJob: Unable to proceed due to pending SendToQualifiedTeachersApiJob jobs; re-queueing to try again."
+        self.class.set(wait: REQUEUE_DELAY).perform_later
+        return
+      end
 
       @batch_size = batch_size
 

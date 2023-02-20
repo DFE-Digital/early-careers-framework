@@ -14,11 +14,11 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
   end
 
   describe "#perform" do
-    context "when there are already instances of the job in the queue" do
+    context "when there are already instances of SendToQualifiedTeachersApiJob in the job queue" do
       before { ParticipantOutcomes::SendToQualifiedTeachersApiJob.set(wait_until: 1.year.from_now).perform_later(1) }
 
-      it "does not requeue itself" do
-        expect { described_class.perform_now }.not_to have_enqueued_job(described_class)
+      it "requeues itself" do
+        expect { described_class.perform_now }.to have_enqueued_job(described_class)
       end
     end
 
