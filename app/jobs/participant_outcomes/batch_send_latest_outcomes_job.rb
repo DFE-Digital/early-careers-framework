@@ -3,6 +3,7 @@
 module ParticipantOutcomes
   class BatchSendLatestOutcomesJob < ApplicationJob
     queue_as :participant_outcomes
+    sidekiq_options retry: false
 
     DEFAULT_BATCH_SIZE = 200
     REQUEUE_DELAY = 2.minutes
