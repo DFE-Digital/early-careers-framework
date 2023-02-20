@@ -70,7 +70,7 @@ ENV GOVUK_APP_DOMAIN="http://localhost:3000" \
 WORKDIR /app
 COPY . .
 
-RUN yarn build && \
+RUN bundle exec rake assets:precompile && \
     apk del nodejs yarn && \
     rm -rf yarn.lock && \
     rm -rf tmp/* log/* node_modules /usr/local/share/.cache /tmp/*
