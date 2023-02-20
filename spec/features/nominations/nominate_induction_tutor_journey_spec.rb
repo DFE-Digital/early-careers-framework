@@ -56,7 +56,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
   scenario "Nomination Link was sent for which Induction Tutor was already nominated for the same school" do
     given_an_induction_tutor_has_already_been_nominated
     when_i_click_the_link_to_nominate_a_sit
-    then_i_should_be_redirected_to_the_induction_tutor_already_nominated_page
+    then_i_should_be_redirected_to_the_nominate_induction_tutor_page
     and_the_page_should_be_accessible
   end
 
