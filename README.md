@@ -6,9 +6,9 @@
 
 ### Prerequisites
 
-- Ruby 3.1.2
+- Ruby 3.1.3
 - PostgreSQL (we deploy on 11.x)
-- NodeJS 18.12.0 LTS
+- NodeJS 18.14.1
 - Yarn 1.12.x
 - Docker
 - Redis 6.2
