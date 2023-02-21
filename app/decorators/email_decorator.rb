@@ -11,8 +11,6 @@ class EmailDecorator < SimpleDelegator
     partial_email
   end
 
-private
-
   def partial_email
     if @email.present?
       name, domain = @email.split("@")
