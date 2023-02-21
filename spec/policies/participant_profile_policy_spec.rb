@@ -34,17 +34,22 @@ RSpec.describe ParticipantProfilePolicy, :with_default_schedules, type: :policy 
     end
 
     context "for an induction coordinator" do
-      let(:schools) { create_list :school, rand(2..3) }
-      let(:user) { create(:induction_coordinator_profile, schools:).user }
-      let(:ect_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :ect, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:mentor_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :mentor, school_cohort: create(:school_cohort, school: schools.sample) } }
-      let(:npq_profiles_for_stis_schools) { Array.new(rand(3..5)) { create :npq_participant_profile, school: schools.sample } }
-      let(:other_participant_profiles) { create_list :ect, rand(2..3) }
+      let(:induction_coordinator_profile_school) { FactoryBot.create(:seed_induction_coordinator_profiles_school, :valid) }
+      let(:induction_coordinator) { induction_coordinator_profile_school.induction_coordinator_profile }
+      let(:user) { induction_coordinator.user }
+      let(:school_cohort) { FactoryBot.create(:seed_school_cohort, :valid, school: induction_coordinator_profile_school.school) }
+      let(:induction_programme) { FactoryBot.create(:seed_induction_programme, school_cohort:) }
+      let(:induction_record) { FactoryBot.create(:seed_induction_record, :valid, induction_programme:) }
 
-      it { is_expected.to include(*ect_profiles_for_stis_schools) }
-      it { is_expected.to include(*mentor_profiles_for_stis_schools) }
-      it { is_expected.not_to include(*npq_profiles_for_stis_schools) }
-      it { is_expected.not_to include(*other_participant_profiles) }
+      let(:another_induction_record) { FactoryBot.create(:seed_induction_record, :valid) }
+
+      it "includes participant profiles linked to schools the user is a SIT at" do
+        expect(subject).to include(induction_record.participant_profile)
+      end
+
+      it "doesn't include participant profiles not linked to schools the user is a SIT at" do
+        expect(subject).not_to include(another_induction_record.participant_profile)
+      end
     end
 
     context "for a regular user" do
