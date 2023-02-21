@@ -32,14 +32,7 @@ jobs:
         run: bundle install
 
       - name: Lint Ruby
-        run: rubocop --format json --out=${{ github.workspace }}/rubocop-result.json
-
-      - name: Keep Rubocop output
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: rubocop_results
-          path: ${{ github.workspace }}/rubocop-result.json
+        run: bundle exec rubocop --format json --out=${{ github.workspace }}/rubocop-result.json
 
       - name: Lint SCSS
         run: |-
@@ -53,3 +46,10 @@ jobs:
         if: false
         run: |-
           bundle exec erblint --lint-all
+
+      - name: Keep Rubocop output
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: rubocop_results
+          path: ${{ github.workspace }}/rubocop-result.json
