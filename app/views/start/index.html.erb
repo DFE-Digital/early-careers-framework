@@ -1,45 +1,50 @@
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Manage training for early career teachers</h1>
 
-        <h1 class="govuk-heading-xl">Manage training for early career teachers</h1>
+    <p>Use this service to set up ECF-based training for your early career teachers (ECTs) or tell us about a change at your school.</p>
 
-        <p class="govuk-body">Use this service to set up ECF-based training for your early career teachers (ECTs) or tell us about a change at your school.</p>
+    <h2 class="govuk-heading-m">Set up and manage your training</h2>
 
-        <h2 class="govuk-heading-m">Set up your training</h2>
+    <p>Sign in to tell us:</p>
 
-        <p class="govuk-body">Sign in to tell us:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>how you want to run your training</li>
-            <li>which accredited materials or training provider you’ll use</li>
-            <li>which ECTs and mentors will take part</li>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>how you want to run your training</li>
+      <li>which accredited materials or training provider you’ll use</li>
+      <li>which ECTs and mentors will take part</li>
+    </ul>
+
+    <p>Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
+
+    <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
+
+    <p>Tell us about any changes, for example, nominating a new Induction tutor.</p>
+
+    <%= govuk_start_button text: "Sign in", href: new_user_session_path %>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <aside class="app-related-items" role="complementary">
+      <h2 class="govuk-heading-m" id="subsection-title">Guidance</h2>
+
+      <p>The following links open in a new tab.</p>
+
+      <nav role="navigation" aria-labelledby="subsection-title">
+        <ul class="govuk-list">
+          <li>
+            <%= govuk_link_to step_by_step_path, target: :_blank do %>
+              Read our step by step guidance <span class="govuk-visually-hidden">(opens in new tab)</span>
+            <% end %>
+            for more information about setting up your training.
+          </li>
+          <li>
+            <a href="https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects" target="_blank"> <span class="govuk-visually-hidden">(opens in new tab)</span>Read our guidance for early career teachers</a> for more information about the programme and your entitlements.
+          </li>
+          <li>
+            <a href="https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training">Read our guidance for mentors <span class="govuk-visually-hidden">(opens in new tab)</span></a> for more information about how to support early career teachers.
+          </li>
         </ul>
-        <p class="govuk-body">Your school must complete these steps before your ECTs can start their statutory induction programme.</p>
-
-        <h2 class="govuk-heading-m">Tell us about changes at your school</h2>
-        <p class="govuk-body">Tell us about any changes, for example, nominating a new Induction tutor.</p>
-
-        <%= govuk_start_button text: "Sign in", href: new_user_session_path %>
-
-    </div>
-
-    <div class="govuk-grid-column-one-third">
-        <section class='govuk-aside'>
-            <header class="govuk-aside__header">
-                <h2 class="govuk-heading-m" id="subsection-title">Related content</h2>
-            </header>
-            <nav role="navigation" aria-labelledby="subsection-title">
-                <ul class="govuk-list govuk-aside__links">
-                    <li><%= govuk_link_to "Induction, training and support for early career teachers (ECTs)",
-                        "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects",
-                        class: "govuk-link govuk-link--no-visited-state" %>
-                    </li>
-                    <li><%= govuk_link_to "Guidance for schools: how to manage ECF-based training",
-                    "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training",
-                    class: "govuk-link govuk-link--no-visited-state" %>
-                    </li>
-                </ul>
-            </nav>
-        </section>
-    </div>
-
+      </nav>
+    </aside>
+  </div>
 </div>
