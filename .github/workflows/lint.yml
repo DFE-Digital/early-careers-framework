@@ -18,28 +18,11 @@ jobs:
         with:
           ruby-version: '3.1.3'
 
-      - name: Set up Node
-        uses: actions/setup-node@v3.6.0
-        with:
-          node-version: '18.14.x'
-          cache: 'yarn'
-
-      - name: Yarn install
-        run: npm i -g yarn && yarn
-
       - name: Install dependencies
         run: bundle install
 
       - name: Lint Ruby
         run: bundle exec rubocop --format json --out=${{ github.workspace }}/rubocop-result.json
-
-      - name: Lint SCSS
-        run: |-
-          bundle exec rake lint:scss
-
-      - name: Lint JS
-        run: |-
-          yarn lint
 
       - name: Lint ERB Templates
         if: false
@@ -52,3 +35,69 @@ jobs:
         with:
           name: rubocop_results
           path: ${{ github.workspace }}/rubocop-result.json
+
+  js_linting:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Node
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: '18.14.x'
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: npm i -g yarn && yarn
+
+      - name: Lint JS
+        run: |-
+          yarn lint
+
+
+  scss_linting:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.138.0
+        with:
+          ruby-version: '3.1.3'
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint SCSS
+        run: |-
+          bundle exec rake lint:scss
+
+  erb_linting:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.138.0
+        with:
+          ruby-version: '3.1.3'
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint ERB Templates
+        if: false
+        run: |-
+          bundle exec erblint --lint-all
