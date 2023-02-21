@@ -202,12 +202,11 @@ RSpec.describe Api::V1::ECF::InductionRecordsQuery, :with_support_for_ect_exampl
 
     it "includes user with a corrupt induction record history" do
       included_records = [
-        cip_ect_with_corrupt_history.induction_records.filter { |ir| ir.end_date.nil? }.first,
+        cip_ect_with_corrupt_history.induction_records.latest,
       ]
 
-      # InductionRecord.current and InductionRecord.latest do not work for these sorts of records
+      # InductionRecord.current does not work for these sorts of records
       excluded_records = [
-        cip_ect_with_corrupt_history.induction_records.latest,
         cip_ect_with_corrupt_history.induction_records.current.first,
       ]
 
@@ -225,14 +224,12 @@ RSpec.describe Api::V1::ECF::InductionRecordsQuery, :with_support_for_ect_exampl
 
     it "includes a FIP ECT with a different identity for some induction records once only" do
       included_records = [
-        fip_ect_with_different_identity[:correct_profile].induction_records.filter { |ir| ir.end_date.nil? }.first,
+        fip_ect_with_different_identity[:correct_profile].induction_records.latest,
         # InductionRecord.latest works here as it is the only induction_record for this profile
         fip_ect_with_different_identity[:wrong_profile].induction_records.latest,
       ]
 
       excluded_records = [
-        # InductionRecord.latest does not work here as created_at order is mixed up
-        fip_ect_with_different_identity[:correct_profile].induction_records.latest,
         # InductionRecord.current does not work here as it is withdrawn
         fip_ect_with_different_identity[:wrong_profile].induction_records.current.first,
       ]
