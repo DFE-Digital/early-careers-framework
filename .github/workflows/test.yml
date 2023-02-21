@@ -70,6 +70,9 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
+      - name: Prepare assets
+        run: bin/rails test:prepare
+
       - name: Run tests
         run: bundle exec bin/rspec_ci
 
@@ -128,8 +131,8 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
-      - name: Webpacker
-        run: bin/webpacker
+      - name: Prepare assets
+        run: bin/rails test:prepare
 
       - name: Run tests
         run: bundle exec bin/scenarios_ci
@@ -189,8 +192,8 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
-      - name: Webpacker
-        run: bin/webpacker
+      - name: Prepare assets
+        run: bin/rails test:prepare
 
       - name: Run Cypress
         uses: cypress-io/github-action@v2

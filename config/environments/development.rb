@@ -109,4 +109,7 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.cip_resource_bucket = "https://paas-s3-broker-prod-lon-ac28a7a5-2bc2-4d3b-8d16-a88eaef65526.s3.amazonaws.com"
+
+  # Suppress logger output for asset requests.
+  config.assets.quiet = true
 end
