@@ -46,10 +46,6 @@ class ParticipantProfile < ApplicationRecord
     after_update :sync_status_with_induction_record
 
     # Instance Methods
-    def active_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_active?
-    end
-
     def contacted_for_info?
       ecf_participant_validation_data.nil?
     end
@@ -66,19 +62,12 @@ class ParticipantProfile < ApplicationRecord
       induction_records.current&.latest&.induction_programme
     end
 
-    def deferred_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_deferred?
-    end
-
     def ecf?
       true
     end
 
     def latest_induction_record_for(cpd_lead_provider:)
-      induction_records
-        .joins(induction_programme: { partnership: { lead_provider: [:cpd_lead_provider] } })
-        .where(induction_programmes: { partnerships: { lead_providers: { cpd_lead_provider: } } })
-        .latest
+      relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider) unless cpd_lead_provider.nil?
     end
 
     delegate :ineligible_but_not_duplicated_or_previously_participated?,
@@ -98,40 +87,28 @@ class ParticipantProfile < ApplicationRecord
     end
 
     def relevant_induction_record(lead_provider:)
-      induction_records
-        .joins(induction_programme: { school_cohort: [:cohort], partnership: [:lead_provider] })
-        .where(induction_programme: { partnerships: { lead_provider: } })
-        .where(induction_programme: { school_cohorts: { cohort: Cohort.where(start_year: 2021..) } })
-        .order(start_date: :desc)
-        .first
+      Induction::FindBy.call(participant_profile: self, lead_provider:) unless lead_provider.nil?
     end
     alias_method :record_to_serialize_for, :relevant_induction_record
 
     def relevant_induction_record_for(delivery_partner:)
-      induction_records.includes(induction_programme: [:partnership]).where(
-        induction_programme: {
-          partnerships: {
-            delivery_partner:,
-            challenged_at: nil,
-            challenge_reason: nil,
-            pending: false,
-          },
-        },
-      ).latest
+      Induction::FindBy.call(participant_profile: self, delivery_partner:, only_active_partnerships: true) unless delivery_partner.nil?
     end
 
     def schedule_for(cpd_lead_provider:)
-      lead_provider = cpd_lead_provider.lead_provider
+      relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.schedule
+    end
 
-      induction_records
-        .joins(induction_programme: { partnership: [:lead_provider] })
-        .where(induction_programmes: { partnerships: { lead_provider: } })
-        .latest
-        &.schedule
+    def active_for?(cpd_lead_provider:)
+      !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_active?
+    end
+
+    def deferred_for?(cpd_lead_provider:)
+      !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_deferred?
     end
 
     def withdrawn_for?(cpd_lead_provider:)
-      !!latest_induction_record_for(cpd_lead_provider:)&.training_status_withdrawn?
+      !!relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.training_status_withdrawn?
     end
 
   private
