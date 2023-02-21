@@ -21,27 +21,58 @@ class ParticipantOutcome::NPQ < ApplicationRecord
     order(created_at: :desc).first
   end
 
-  def self.not_sent_to_qualified_teachers_api
-    where(sent_to_qualified_teachers_api_at: nil)
+  def self.to_send_to_qualified_teachers_api
+    eligible_outcomes = for_completed_declarations
+      .not_sent_to_qualified_teachers_api
+      .where(id: latest_per_declaration.map(&:id))
+
+    eligible_outcomes.passed
+      .or(
+        eligible_outcomes
+          .not_passed
+          .where(participant_declaration_id: declarations_where_previous_outcome_passed_and_sent),
+      )
   end
 
-  def self.to_send_to_qualified_teachers_api
-    latest_outcome = latest
-    return latest_outcome if (latest_outcome.has_passed? && !latest_outcome.sent_to_qualified_teachers_api?) || (!latest_outcome.has_passed? && !latest_outcome.sent_to_qualified_teachers_api? && latest_outcome.previous_outcome.has_passed? && latest_outcome.previous_outcome.sent_to_qualified_teachers_api?)
+  class << self
+    def latest_per_declaration
+      select("DISTINCT ON(participant_declaration_id) *")
+        .order(:participant_declaration_id, created_at: :desc)
+    end
+
+    def for_completed_declarations
+      joins(:participant_declaration)
+        .where("participant_declarations.declaration_type='completed'")
+    end
+
+    def declarations_where_previous_outcome_passed_and_sent
+      latest_per_declaration
+        .passed
+        .sent_to_qualified_teachers_api
+        .map(&:participant_declaration_id)
+    end
+
+    def sent_to_qualified_teachers_api
+      where.not(sent_to_qualified_teachers_api_at: nil)
+    end
+
+    def not_sent_to_qualified_teachers_api
+      where(sent_to_qualified_teachers_api_at: nil)
+    end
+
+    def passed
+      where(state: :passed)
+    end
+
+    def not_passed
+      where.not(state: :passed)
+    end
   end
 
   def has_passed?
     return nil if voided?
 
     passed?
-  end
-
-  def sent_to_qualified_teachers_api?
-    !sent_to_qualified_teachers_api_at.nil?
-  end
-
-  def previous_outcome
-    @previous_outcome ||= self.class.where.not(id:).where(participant_declaration:).where("created_at < ?", created_at).latest
   end
 
 private

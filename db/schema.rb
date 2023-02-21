@@ -647,6 +647,7 @@ ActiveRecord::Schema.define(version: 2023_02_22_142649) do
     t.uuid "delivery_partner_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying, 'clawed_back'::character varying])::text[]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
+    t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
     t.index ["participant_profile_id"], name: "index_participant_declarations_on_participant_profile_id"
     t.index ["superseded_by_id"], name: "superseded_by_index"
@@ -686,7 +687,10 @@ ActiveRecord::Schema.define(version: 2023_02_22_142649) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "qualified_teachers_api_request_successful"
     t.datetime "sent_to_qualified_teachers_api_at"
+    t.index ["created_at"], name: "index_participant_outcomes_on_created_at"
     t.index ["participant_declaration_id"], name: "index_declaration"
+    t.index ["sent_to_qualified_teachers_api_at"], name: "index_participant_outcomes_on_sent_to_qualified_teachers_api_at"
+    t.index ["state"], name: "index_participant_outcomes_on_state"
   end
 
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

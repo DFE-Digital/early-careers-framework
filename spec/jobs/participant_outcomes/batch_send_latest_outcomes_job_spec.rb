@@ -5,12 +5,10 @@ require "rails_helper"
 RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
   let(:outcome_1) { double(id: 1) }
   let(:outcome_2) { double(id: 2) }
-  let(:declaration_1) { double(outcomes: double(to_send_to_qualified_teachers_api: [outcome_1])) }
-  let(:declaration_2) { double(outcomes: double(to_send_to_qualified_teachers_api: [outcome_2])) }
-  let(:declarations) { [declaration_1, declaration_2] }
+  let(:outcomes) { [outcome_1, outcome_2] }
 
   before do
-    allow(ParticipantDeclaration::NPQ).to receive(:with_outcomes_not_sent_to_qualified_teachers_api).and_return(declarations)
+    allow(ParticipantOutcome::NPQ).to receive(:to_send_to_qualified_teachers_api).and_return(outcomes)
   end
 
   describe "#perform" do
@@ -22,7 +20,7 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       end
     end
 
-    context "when there no more than than batch_size records" do
+    context "when there are no more than batch_size records" do
       let(:batch_size) { 2 }
 
       it "does not requeue itself" do
@@ -32,8 +30,8 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       it "enqueues the send job for each record" do
         described_class.perform_now
 
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.at_least(:once).with(1))
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.at_least(:once).with(2))
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.exactly(:once).with(1))
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.exactly(:once).with(2))
       end
     end
 
@@ -47,7 +45,7 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       it "only enqueues the send job for the first records up to the batch_size" do
         described_class.perform_now(batch_size)
 
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to have_been_enqueued.at_least(:once).with(1)
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to have_been_enqueued.exactly(:once).with(1)
         expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).not_to have_been_enqueued.with(2)
       end
     end

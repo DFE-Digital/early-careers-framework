@@ -78,59 +78,57 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
         expect(described_class.latest).to eql(another_outcome)
       end
     end
+  end
 
-    describe "#not_sent_to_qualified_teachers_api" do
-      let!(:not_sent_outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
-      let!(:sent_outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+  describe ".to_send_to_qualified_teachers_api" do
+    subject(:result) { described_class.to_send_to_qualified_teachers_api }
 
-      subject(:result) { described_class.not_sent_to_qualified_teachers_api }
+    context "when a declaration is not closed" do
+      let!(:declaration) { create(:npq_participant_declaration, declaration_type: "started") }
+      let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-      it { is_expected.to include(not_sent_outcome) }
-      it { is_expected.not_to include(sent_outcome) }
+      it { is_expected.to be_empty }
     end
 
-    describe ".to_send_to_qualified_teachers_api" do
-      subject(:outcomes) { described_class.to_send_to_qualified_teachers_api }
+    context "when a declaration is closed" do
+      let!(:declaration) { create(:npq_participant_declaration, declaration_type: "completed") }
 
-      context "when an outcome was passed" do
-        context "sent to the qualified teachers API" do
-          let!(:passed_outcome) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      context "when the latest outcome for a declaration has been sent to the qualified teachers API" do
+        let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_2) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-          it { is_expected.to be_nil }
+        it { is_expected.to be_empty }
+      end
 
-          context "when there is a subsequently failed outcome" do
-            context "not sent to to qualified teachers API" do
-              let!(:failed_outcome) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      context "when the latest outcome for a declaration has not been sent to the qualified teachers API but a previous outcome has been sent" do
+        let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-              it { is_expected.to eq(failed_outcome) }
-            end
+        it { is_expected.not_to include(outcome_1) }
+        it { is_expected.not_to include(outcome_2) }
+        it { is_expected.to include(outcome_3) }
+      end
 
-            context "already sent to to qualified teachers API" do
-              let!(:failed_outcome) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      context "when no outcomes for a declaration have been sent to the qualified teachers API" do
+        context "when the latest outcome is passed" do
+          let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+          let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+          let!(:outcome_3) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-              it { is_expected.to be_nil }
-            end
-          end
+          it { is_expected.not_to include(outcome_1) }
+          it { is_expected.not_to include(outcome_2) }
+          it { is_expected.to include(outcome_3) }
         end
 
-        context "not sent to the qualified teachers API" do
-          let!(:passed_outcome) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        context "when the latest outcome is not passed" do
+          let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+          let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+          let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-          it { is_expected.to eq(passed_outcome) }
-
-          context "when there is a subsequently failed outcome" do
-            context "not sent to to qualified teachers API" do
-              let!(:failed_outcome) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-
-              it { is_expected.to be_nil }
-            end
-
-            context "already sent to to qualified teachers API" do
-              let!(:failed_outcome) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
-
-              it { is_expected.to be_nil }
-            end
-          end
+          it { is_expected.not_to include(outcome_1) }
+          it { is_expected.not_to include(outcome_2) }
+          it { is_expected.not_to include(outcome_3) }
         end
       end
     end
@@ -150,50 +148,6 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
     it "returns nil if voided" do
       outcome = described_class.new(state: "voided")
       expect(outcome.has_passed?).to eql(nil)
-    end
-  end
-
-  describe "#sent_to_qualified_teachers_api" do
-    context "when sent to the qualified teachers API" do
-      subject(:outcome) { build(:participant_outcome, :sent_to_qualified_teachers_api) }
-
-      it { is_expected.to be_sent_to_qualified_teachers_api }
-    end
-
-    context "when not sent to the qualified teachers API" do
-      subject(:outcome) { build(:participant_outcome, :not_sent_to_qualified_teachers_api) }
-
-      it { is_expected.not_to be_sent_to_qualified_teachers_api }
-    end
-  end
-
-  describe "#previous_outcome" do
-    subject(:previous) { outcome.previous_outcome }
-
-    context "when there are no other outcomes" do
-      it { is_expected.to be_nil }
-    end
-
-    context "when there are other outcomes not associated with this declaration" do
-      before { create(:participant_outcome) }
-
-      it { is_expected.to be_nil }
-    end
-
-    context "when there are outcomes created after this one" do
-      before do
-        outcome
-        create(:participant_outcome, participant_declaration: declaration, created_at: Time.zone.now + 1.hour)
-      end
-
-      it { is_expected.to be_nil }
-    end
-
-    context "when there are multiple previous outcomes" do
-      let!(:previous_outcome_1) { create(:participant_outcome, participant_declaration: declaration) }
-      let!(:previous_outcome_2) { create(:participant_outcome, participant_declaration: declaration) }
-
-      it { is_expected.to eq(previous_outcome_2) }
     end
   end
 
