@@ -29,7 +29,7 @@
   <% if add_participant_form.date_of_birth %>
     <% summary_list.row do |row| %>
       <% row.key { "Date of birth" } %>
-      <% row.value { add_participant_form.date_of_birth.to_date.to_s(:govuk) } %>
+      <% row.value { add_participant_form.date_of_birth.to_date.to_fs(:govuk) } %>
       <% unless add_participant_form.dqt_record.present? %>
         <% row.action(text: "Change",
                       visually_hidden_text: "date of birth",
@@ -51,7 +51,7 @@
   <% if add_participant_form.start_date %>
     <% summary_list.row do |row| %>
       <% row.key { "Induction start" } %>
-      <% row.value { add_participant_form.start_date.to_date.to_s(:govuk) } %>
+      <% row.value { add_participant_form.start_date.to_date.to_fs(:govuk) } %>
       <% row.action(text: "Change",
                     visually_hidden_text: "induction start date",
                     href: url_for({ step: "start\-date" })) %>

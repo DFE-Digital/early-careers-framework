@@ -22,13 +22,13 @@
 
       <% summary_list.row do |row| %>
         <% row.key { "Date of birth" } %>
-        <% row.value { @transferring_participant_form.date_of_birth.to_date.to_s(:govuk) } %>
+        <% row.value { @transferring_participant_form.date_of_birth.to_date.to_fs(:govuk) } %>
         <% row.action(text: :none) %>
       <% end %>
 
       <% summary_list.row do |row| %>
         <% row.key { "Joining date" } %>
-        <% row.value { @transferring_participant_form.start_date.to_date.to_s(:govuk) } %>
+        <% row.value { @transferring_participant_form.start_date.to_date.to_fs(:govuk) } %>
         <% row.action(text: "Change",
                       visually_hidden_text: "joining date",
                       href: url_for({ action: :teacher_start_date})) %>

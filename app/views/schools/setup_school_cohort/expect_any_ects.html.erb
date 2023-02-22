@@ -23,7 +23,7 @@
                 <p class="govuk-body">Do not include:</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>ECTs who started training in the <%= Cohort.active_registration_cohort.previous.description %> academic year</li>
-                    <li>any other teachers who started or completed their statutory induction before <%= Cohort.active_registration_cohort.academic_year_start_date.to_date.to_s(:govuk) %></li>
+                    <li>any other teachers who started or completed their statutory induction before <%= Cohort.active_registration_cohort.academic_year_start_date.to_date.to_fs(:govuk) %></li>
                 </ul>
                 <p class="govuk-body">ECTs are teachers who have finished their initial teacher training.</p>
             <% end %>

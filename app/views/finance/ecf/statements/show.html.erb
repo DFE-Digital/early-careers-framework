@@ -48,7 +48,7 @@
               <strong class="govuk-body-s govuk-!-margin-bottom-0">Milestone cut off date</strong>
             </div>
             <div class="govuk-heading-m govuk-!-padding-top-0">
-              <%= @statement.deadline_date.to_s(:govuk) %>
+              <%= @statement.deadline_date.to_fs(:govuk) %>
             </div>
           </div>
 
@@ -57,7 +57,7 @@
               <strong class="govuk-body-s govuk-!-margin-bottom-0">Payment date</strong>
             </div>
             <div class="govuk-heading-m govuk-!-padding-top-0">
-              <%= @statement.payment_date.to_s(:govuk) %>
+              <%= @statement.payment_date.to_fs(:govuk) %>
             </div>
           </div>
         </div>

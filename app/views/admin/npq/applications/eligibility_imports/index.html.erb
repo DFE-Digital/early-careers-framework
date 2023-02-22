@@ -26,8 +26,8 @@
         <tr class="govuk-table__row">
           <td class="govuk-table__cell"><%= eligibility_import.filename %></td>
           <td class="govuk-table__cell"><%= t("npq_applications.eligibility_import.status.#{eligibility_import.status}") %></td>
-          <td class="govuk-table__cell"><%= eligibility_import.created_at.to_s(:govuk) %></td>
-          <td class="govuk-table__cell"><%= eligibility_import.processed_at&.to_s(:govuk) || "-" %></td>
+          <td class="govuk-table__cell"><%= eligibility_import.created_at.to_fs(:govuk) %></td>
+          <td class="govuk-table__cell"><%= eligibility_import.processed_at&.to_fs(:govuk) || "-" %></td>
           <td class="govuk-table__cell">
             <%=
               text = eligibility_import.failed? ? t(".table.show.failed") : t(".table.show.success")

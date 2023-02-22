@@ -37,7 +37,7 @@
       		<div class="govuk-summary-list__row">
         		<dt class="govuk-summary-list__key">Date of birth</dt>
         		<dd class="govuk-summary-list__value">
-          			<%= @transferring_participant_form.date_of_birth.to_date.to_s(:govuk) %>
+          			<%= @transferring_participant_form.date_of_birth.to_date.to_fs(:govuk) %>
         		</dd>
         		<dd class="govuk-summary-list__actions">
             		<%= govuk_link_to dob_schools_transferring_participant_path do %>

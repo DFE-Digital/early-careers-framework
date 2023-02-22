@@ -6,7 +6,7 @@
   <% elsif transferred? %>
 
     <td class="govuk-table__cell govuk-!-width-one-half"><%= govuk_link_to induction_record.participant_full_name, schools_participant_path(id: induction_record.participant_profile_id, **path_ids), class: "govuk-link--no-visited-state" %></td>
-    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= induction_record.end_date.to_date.to_s(:govuk) %></td>
+    <td class="govuk-table__cell govuk-!-width-one-quarter"><%= induction_record.end_date.to_date.to_fs(:govuk) %></td>
     <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
 
   <% else %>

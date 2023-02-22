@@ -19,12 +19,12 @@
 
   sl.row do |row|
     row.key(text: "Date of birth")
-    row.value(text: @participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
+    row.value(text: @participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_fs(:govuk))
   end
 
   sl.row do |row|
     row.key(text: "Induction start date")
-    row.value(text: @participant_profile&.induction_start_date&.to_s(:govuk))
+    row.value(text: @participant_profile&.induction_start_date&.to_fs(:govuk))
     # row.action(
     #   href: edit_admin_participant_change_induction_start_date_path(participant_profile),
     #   visually_hidden_text: "induction start date"

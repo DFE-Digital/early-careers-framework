@@ -32,7 +32,7 @@
 
             <% summary_list.row do |row| %>
                 <% row.key { "Date of birth" } %>
-                <% row.value { add_participant_form.date_of_birth.to_date.to_s(:govuk) } %>
+                <% row.value { add_participant_form.date_of_birth.to_date.to_fs(:govuk) } %>
                 <% row.action(text: "Change",
                     visually_hidden_text: "dob",
                     href: url_for({ step: :dob })) %>
