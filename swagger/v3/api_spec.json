@@ -1382,7 +1382,7 @@
     },
     "/api/v3/participants/ecf": {
       "get": {
-        "summary": "Retrieve multiple participants, replaces <code>/api/v3/participants</code>",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple participants, replaces <code>/api/v3/participants</code>",
         "operationId": "participants",
         "tags": [
           "ECF participants"
@@ -1446,7 +1446,7 @@
     },
     "/api/v3/participants/ecf/{id}": {
       "get": {
-        "summary": "Get a single ECF participant",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single ECF participant",
         "operationId": "ecf_participant",
         "tags": [
           "ECF participants"
@@ -1506,7 +1506,7 @@
     },
     "/api/v3/participants/ecf/{id}/defer": {
       "put": {
-        "summary": "Notify that an ECF participant is taking a break from their course",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course",
         "operationId": "ecf_participant_defer",
         "tags": [
           "ECF Participant"
@@ -1554,25 +1554,34 @@
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
                         "type": "participant",
                         "attributes": {
-                          "email": "jane.smith@some-school.example.com",
                           "full_name": "Jane Smith",
-                          "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-                          "school_urn": "106286",
-                          "participant_type": "ect",
-                          "cohort": "2021",
                           "teacher_reference_number": "1234567",
-                          "teacher_reference_number_validated": true,
-                          "eligible_for_funding": true,
-                          "pupil_premium_uplift": true,
-                          "sparsity_uplift": true,
-                          "training_status": "deferred",
-                          "schedule_identifier": "ecf-standard-january",
                           "updated_at": "2021-05-31T02:22:32.000Z",
-                          "withdrawal_date": null,
-                          "participant_status": "active",
-                          "validation_status": "eligible_to_start",
-                          "joining_date": "2022-05-09T16:07:10Z",
-                          "leaving_date": "2022-11-09T16:07:38Z"
+                          "ecf_enrolments": [
+                            {
+                              "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                              "email": "jane.smith@some-school.example.com",
+                              "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                              "school_urn": "106286",
+                              "participant_type": "ect",
+                              "cohort": "2021",
+                              "training_status": "deferred",
+                              "participant_status": "active",
+                              "teacher_reference_number_validated": true,
+                              "eligible_for_funding": true,
+                              "pupil_premium_uplift": true,
+                              "sparsity_uplift": true,
+                              "schedule_identifier": "ecf-standard-january",
+                              "validation_status": "eligible_to_start",
+                              "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                              "withdrawal": null,
+                              "deferral": {
+                                "reason": "other",
+                                "date": "2021-06-31T02:22:32.000Z"
+                              },
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ]
                         }
                       }
                     }
@@ -1586,7 +1595,7 @@
     },
     "/api/v3/participants/ecf/{id}/resume": {
       "put": {
-        "summary": "Notify that an ECF participant is resuming their course",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is resuming their course",
         "operationId": "ecf_participant_resume",
         "tags": [
           "ECF Participant"
@@ -1635,7 +1644,7 @@
     },
     "/api/v3/participants/ecf/{id}/withdraw": {
       "put": {
-        "summary": "Notify that an ECF participant has withdrawn from their course",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant has withdrawn from their course",
         "operationId": "participant",
         "tags": [
           "ECF Participant"
@@ -1683,25 +1692,34 @@
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
                         "type": "participant",
                         "attributes": {
-                          "email": "jane.smith@some-school.example.com",
                           "full_name": "Jane Smith",
-                          "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-                          "school_urn": "106286",
-                          "participant_type": "ect",
-                          "cohort": "2021",
                           "teacher_reference_number": "1234567",
-                          "teacher_reference_number_validated": true,
-                          "eligible_for_funding": true,
-                          "pupil_premium_uplift": true,
-                          "sparsity_uplift": true,
-                          "training_status": "withdrawn",
-                          "schedule_identifier": "ecf-standard-january",
                           "updated_at": "2021-05-31T02:22:32.000Z",
-                          "withdrawal_date": null,
-                          "participant_status": "withdrawn",
-                          "validation_status": "eligible_to_start",
-                          "joining_date": "2022-05-09T16:07:10Z",
-                          "leaving_date": "2022-11-09T16:07:38Z"
+                          "ecf_enrolments": [
+                            {
+                              "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                              "email": "jane.smith@some-school.example.com",
+                              "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                              "school_urn": "106286",
+                              "participant_type": "ect",
+                              "cohort": "2021",
+                              "training_status": "withdrawn",
+                              "participant_status": "active",
+                              "teacher_reference_number_validated": true,
+                              "eligible_for_funding": true,
+                              "pupil_premium_uplift": true,
+                              "sparsity_uplift": true,
+                              "schedule_identifier": "ecf-standard-january",
+                              "validation_status": "eligible_to_start",
+                              "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                              "deferral": null,
+                              "withdrawal": {
+                                "reason": "other",
+                                "date": "2021-06-31T02:22:32.000Z"
+                              },
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ]
                         }
                       }
                     }
@@ -1715,7 +1733,7 @@
     },
     "/api/v3/participants/ecf/{id}/change-schedule": {
       "put": {
-        "summary": "Notify that an ECF Participant is changing training schedule",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF Participant is changing training schedule",
         "operationId": "ecf_participant_change_schedule",
         "tags": [
           "ECF Participant"
@@ -2050,57 +2068,65 @@
           ]
         }
       },
-      "ECFParticipant": {
-        "description": "The details of a participant",
+      "ECFDeferral": {
+        "description": "The details of an ECF Participant deferral",
         "type": "object",
         "required": [
-          "id",
-          "type",
-          "attributes"
+          "reason",
+          "date"
         ],
         "properties": {
-          "id": {
-            "description": "The unique identifier of the participant record",
+          "reason": {
+            "description": "The reason a participant was deferred",
             "type": "string",
-            "format": "uuid",
-            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+            "example": null,
+            "enum": [
+              "bereavement",
+              "long-term-sickness",
+              "parental-leave",
+              "career-break",
+              "other"
+            ]
           },
-          "type": {
-            "description": "The data type",
+          "date": {
+            "description": "The date and time the participant was deferred",
             "type": "string",
-            "example": "participant"
-          },
-          "attributes": {
-            "$ref": "#/components/schemas/ECFParticipantAttributes"
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
-      "ECFParticipantAttributes": {
-        "description": "The data attributes associated with an ECF participant",
+      "ECFEnrolment": {
+        "description": "The details of an ECF Participant enrolment",
         "type": "object",
         "required": [
+          "training_record_id",
           "email",
-          "full_name",
           "school_urn",
           "participant_type",
           "cohort",
           "training_status",
+          "participant_status",
+          "teacher_reference_number_validated",
+          "eligible_for_funding",
+          "pupil_premium_uplift",
+          "sparsity_uplift",
           "schedule_identifier",
-          "updated_at",
-          "created_at",
-          "joining_date"
+          "validation_status",
+          "delivery_partner_id",
+          "created_at"
         ],
         "properties": {
+          "training_record_id": {
+            "description": "The unique identifier of the participant training record. Should the DfE dedupe a participant, this value will not change.",
+            "type": "string",
+            "format": "uuid",
+            "example": "000a97ff-d2a9-4779-a397-9bfd9063072e"
+          },
           "email": {
             "description": "The email address registered for this ECF participant",
             "type": "string",
-            "nullable": true,
             "example": "jane.smith@some-school.example.com"
-          },
-          "full_name": {
-            "description": "The full name of this ECF participant",
-            "type": "string",
-            "example": "Jane Smith"
           },
           "mentor_id": {
             "description": "The unique identifier of this ECF participants mentor",
@@ -2128,10 +2154,27 @@
             "type": "string",
             "example": "2021"
           },
-          "teacher_reference_number": {
-            "description": "The Teacher Reference Number (TRN) for this participant",
+          "training_status": {
+            "description": "The training status of the ECF participant",
             "type": "string",
-            "example": "1234567"
+            "example": "active",
+            "enum": [
+              "active",
+              "deferred",
+              "withdrawn"
+            ]
+          },
+          "participant_status": {
+            "description": "Replaces the old status field. Indicates if a SIT has advised DfE of a transfer or a withdrawal of the participant from the school",
+            "type": "string",
+            "enum": [
+              "active",
+              "joining",
+              "leaving",
+              "left",
+              "withdrawn"
+            ],
+            "example": "active"
           },
           "teacher_reference_number_validated": {
             "description": "Indicates whether the Teacher Reference Number (TRN) has been validated",
@@ -2154,55 +2197,10 @@
             "type": "boolean",
             "example": true
           },
-          "training_status": {
-            "description": "The training status of the ECF participant",
-            "type": "string",
-            "example": "active",
-            "enum": [
-              "active",
-              "deferred",
-              "withdrawn"
-            ]
-          },
           "schedule_identifier": {
-            "description": "The schedule of the ECF participant",
+            "description": "The schedule of the ECF participant. For the possible values please refer to the <a href=\"/ecf-usage.html#notifying-of-schedule-change\" class=\"govuk-link\">ECF change schedule guidance</a>.",
             "type": "string",
-            "example": "ecf-standard-january",
-            "enum": [
-              "ecf-standard-september",
-              "ecf-standard-january",
-              "ecf-standard-april"
-            ]
-          },
-          "updated_at": {
-            "description": "The date and time the ECF participant was last updated",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
-          },
-          "created_at": {
-            "description": "The date and time the ECF participant was created",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
-          },
-          "withdrawal_date": {
-            "description": "If the participant has been withdrawn by you, the date we have recorded for the withdrawal",
-            "type": "string",
-            "format": "date",
-            "nullable": true,
-            "example": "2021-06-13"
-          },
-          "participant_status": {
-            "description": "Replaces the old status field. Indicates if a SIT has advised DfE of a transfer or a withdrawal of the participant from the school",
-            "type": "string",
-            "enum": [
-              "joining",
-              "leaving",
-              "active",
-              "withdrawn"
-            ],
-            "example": "active"
+            "example": "ecf-standard-january"
           },
           "validation_status": {
             "description": "Indicates where a participant is in the DfE’s validation and eligibility process. Same detail shown to SITs and Delivery Partners.",
@@ -2216,22 +2214,88 @@
             ],
             "example": "eligible_to_start"
           },
-          "joining_date": {
-            "description": "The date the School Induction Tutor has told us the participant will begin their training with you",
-            "type": "string",
-            "example": "2022-05-09T16:07:10Z"
-          },
-          "leaving_date": {
-            "description": "If a participant is transferring from you, the date the School Induction Tutor has told us the participant will end their training with you",
-            "type": "string",
-            "nullable": true,
-            "example": "2022-11-09T16:07:38Z"
-          },
           "delivery_partner_id": {
             "description": "Unique ID of the delivery partner associated with the participant",
             "type": "string",
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "withdrawal": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/ECFWithdrawal" }
+            ]
+          },
+          "deferral": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/ECFDeferral" }
+            ]
+          },
+          "created_at": {
+            "description": "The date and time the ECF participant was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "ECFParticipant": {
+        "description": "<b>Note, this endpoint includes updated specifications.</b><br/>The details of a participant",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the participant record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantAttributes"
+          }
+        }
+      },
+      "ECFParticipantAttributes": {
+        "description": "The data attributes associated with an ECF participant",
+        "type": "object",
+        "required": [
+          "full_name",
+          "updated_at",
+          "npq_enrolments"
+        ],
+        "properties": {
+          "full_name": {
+            "description": "The full name of this ECF participant",
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this participant",
+            "type": "string",
+            "example": "1234567"
+          },
+          "updated_at": {
+            "description": "The date and time the ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "ecf_enrolments": {
+            "description": "Information about the course(s) the participant is enroled in",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ECFEnrolment"
+            }
           }
         }
       },
@@ -3030,6 +3094,35 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ECFPartnership"
+          }
+        }
+      },
+      "ECFWithdrawal": {
+        "description": "The details of an ECF Participant withdrawal",
+        "type": "object",
+        "required": [
+          "reason",
+          "date"
+        ],
+        "properties": {
+          "reason": {
+            "description": "The reason a participant was withdrawn",
+            "type": "string",
+            "example": "moved-school",
+            "enum": [
+              "left-teaching-profession",
+              "moved-school",
+              "mentor-no-longer-being-mentor",
+              "school-left-fip",
+              "started-in-error",
+              "other"
+            ]
+          },
+          "date": {
+            "description": "The date and time the participant was withdrawn",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },

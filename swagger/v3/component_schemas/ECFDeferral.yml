@@ -1,0 +1,21 @@
+description: "The details of an ECF Participant deferral"
+type: object
+required:
+  - reason
+  - date
+properties:
+  reason:
+    description: "The reason a participant was deferred"
+    type: string
+    example:
+    enum:
+      - bereavement
+      - long-term-sickness
+      - parental-leave
+      - career-break
+      - other
+  date:
+    description: The date and time the participant was deferred
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

@@ -8,7 +8,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   let(:Authorization) { bearer_token }
 
   path "/api/v3/participants/ecf" do
-    get "Retrieve multiple participants, replaces <code>/api/v3/participants</code>" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple participants, replaces <code>/api/v3/participants</code>" do
       operationId :participants
       tags "ECF participants"
       security [bearerAuth: []]
@@ -52,7 +52,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   end
 
   path "/api/v3/participants/ecf/{id}" do
-    get "Get a single ECF participant" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single ECF participant" do
       operationId :ecf_participant
       tags "ECF participants"
       security [bearerAuth: []]
@@ -92,7 +92,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   end
 
   path "/api/v3/participants/ecf/{id}/defer" do
-    put "Notify that an ECF participant is taking a break from their course" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course" do
       operationId "ecf_participant_defer"
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -144,25 +144,32 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
                       type: "participant",
                       attributes: {
-                        email: "jane.smith@some-school.example.com",
                         full_name: "Jane Smith",
-                        mentor_id: "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-                        school_urn: "106286",
-                        participant_type: "ect",
-                        cohort: "2021",
                         teacher_reference_number: "1234567",
-                        teacher_reference_number_validated: true,
-                        eligible_for_funding: true,
-                        pupil_premium_uplift: true,
-                        sparsity_uplift: true,
-                        training_status: "deferred",
-                        schedule_identifier: "ecf-standard-january",
                         updated_at: "2021-05-31T02:22:32.000Z",
-                        withdrawal_date: nil,
-                        participant_status: "active",
-                        validation_status: "eligible_to_start",
-                        joining_date: "2022-05-09T16:07:10Z",
-                        leaving_date: "2022-11-09T16:07:38Z",
+                        ecf_enrolments: {
+                          training_record_id: "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                          email: "jane.smith@some-school.example.com",
+                          mentor_id: "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                          school_urn: "106286",
+                          participant_type: "ect",
+                          cohort: "2021",
+                          training_status: "withdrawn",
+                          participant_status: "withdrawn",
+                          teacher_reference_number_validated: true,
+                          eligible_for_funding: true,
+                          pupil_premium_uplift: true,
+                          sparsity_uplift: true,
+                          schedule_identifier: "ecf-standard-january",
+                          validation_status: "eligible_to_start",
+                          delivery_partner_id: "cd3a12347-7308-4879-942a-c4a70ced400a",
+                          withdrawal: nil,
+                          deferral: {
+                            reason: "other",
+                            date: "2021-06-31T02:22:32.000Z",
+                          },
+                          created_at: "2022-11-09T16:07:38Z",
+                        },
                       },
                     },
                   }.to_json, symbolize_names: true),
@@ -179,7 +186,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   end
 
   path "/api/v3/participants/ecf/{id}/resume" do
-    put "Notify that an ECF participant is resuming their course" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is resuming their course" do
       operationId "ecf_participant_resume"
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -227,7 +234,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   end
 
   path "/api/v3/participants/ecf/{id}/withdraw" do
-    put "Notify that an ECF participant has withdrawn from their course" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant has withdrawn from their course" do
       operationId :participant
       tags "ECF Participant"
       security [bearerAuth: []]
@@ -279,25 +286,32 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
                       type: "participant",
                       attributes: {
-                        email: "jane.smith@some-school.example.com",
                         full_name: "Jane Smith",
-                        mentor_id: "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
-                        school_urn: "106286",
-                        participant_type: "ect",
-                        cohort: "2021",
                         teacher_reference_number: "1234567",
-                        teacher_reference_number_validated: true,
-                        eligible_for_funding: true,
-                        pupil_premium_uplift: true,
-                        sparsity_uplift: true,
-                        training_status: "withdrawn",
-                        schedule_identifier: "ecf-standard-january",
                         updated_at: "2021-05-31T02:22:32.000Z",
-                        withdrawal_date: nil,
-                        participant_status: "withdrawn",
-                        validation_status: "eligible_to_start",
-                        joining_date: "2022-05-09T16:07:10Z",
-                        leaving_date: "2022-11-09T16:07:38Z",
+                        ecf_enrolments: {
+                          training_record_id: "000a97ff-d2a9-4779-a397-9bfd9063072e",
+                          email: "jane.smith@some-school.example.com",
+                          mentor_id: "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+                          school_urn: "106286",
+                          participant_type: "ect",
+                          cohort: "2021",
+                          training_status: "withdrawn",
+                          participant_status: "withdrawn",
+                          teacher_reference_number_validated: true,
+                          eligible_for_funding: true,
+                          pupil_premium_uplift: true,
+                          sparsity_uplift: true,
+                          schedule_identifier: "ecf-standard-january",
+                          validation_status: "eligible_to_start",
+                          delivery_partner_id: "cd3a12347-7308-4879-942a-c4a70ced400a",
+                          withdrawal: {
+                            reason: "other",
+                            date: "2021-06-31T02:22:32.000Z",
+                          },
+                          deferral: nil,
+                          created_at: "2022-11-09T16:07:38Z",
+                        },
                       },
                     },
                   }.to_json, symbolize_names: true),
@@ -314,7 +328,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
   end
 
   path "/api/v3/participants/ecf/{id}/change-schedule" do
-    put "Notify that an ECF Participant is changing training schedule" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF Participant is changing training schedule" do
       operationId "ecf_participant_change_schedule"
       tags "ECF Participant"
       security [bearerAuth: []]

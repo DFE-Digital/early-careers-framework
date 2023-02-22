@@ -1,4 +1,4 @@
-description: "The details of a participant"
+description: "Note, this endpoint includes updated specifications. The details of a participant"
 type: object
 required:
   - id
