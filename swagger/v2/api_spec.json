@@ -1738,6 +1738,19 @@
         }
       },
       "ECFParticipantDeclarationAttributes": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+          }
+        ]
+      },
+      "ECFParticipantCompletedDeclarationAttributes": {
         "description": "The data attributes associated with a participant declaration response",
         "type": "object",
         "required": [
