@@ -38,3 +38,22 @@ Feature: Admin user managing participants
     And I click the submit button
     Then I should be on "admin participant" page
     And "page body" should contain "Participant task 'Identity' has been approved"
+
+  Scenario: Deleting a participant
+    When I click on "link" containing "ECT User 1"
+    Then I should be on "admin participant" page
+
+    # Move this to ParticipantManagement.feature once the links work
+    When I click on "link" containing "Delete participant"
+    Then I should be on "admin delete participant" page
+    And the page should be accessible
+
+    When I click the submit button
+    Then "page body" should contain "has been deleted"
+    And the page should be accessible
+
+    When I click on "link" containing "View participant listing"
+    Then I should be on "admin participants" page
+    # FIXME: Deleting doesn't actually delete, it removes them from a school
+    #        but they'll still be visible in the list of participants
+    And "page body" should contain "ECT User 1"

@@ -462,6 +462,7 @@ module ManageTrainingSteps
   def when_i_click_on_continue
     click_on("Continue")
   end
+  alias_method :and_i_click_on_continue, :when_i_click_on_continue
 
   def when_i_click_on_change
     click_on("Change")
@@ -517,6 +518,10 @@ module ManageTrainingSteps
 
   def when_i_click_on_check_what_each_role_needs_to_do
     click_on("Check what each role needs to do")
+  end
+
+  def when_i_decide_i_want_to_add_an_ect
+    choose("ECT")
   end
 
   def when_i_click_on_sign_up
@@ -672,12 +677,7 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_your_ect_and_mentors_page
     expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-    if FeatureFlag.active?(:change_of_circumstances)
-      expect(page).to have_link("Add an ECT or mentor")
-    else
-      expect(page).to have_link("Add a new ECT")
-      expect(page).to have_link("Add a new mentor")
-    end
+    expect(page).to have_link("Add an ECT or mentor")
     expect(page).to have_link("Add yourself as a mentor")
   end
 
@@ -692,6 +692,14 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_mentor_already_started_page
     expect(page).to have_selector("h1", text: "Has this person already started mentoring ECTs at another school?")
+  end
+
+  def then_i_am_taken_to_the_who_do_you_want_to_add_page
+    expect(page).to have_selector("h1", text: "Who do you want to add?")
+  end
+
+  def then_i_should_be_on_the_what_we_need_from_you_page
+    expect(page).to have_selector("h1", text: "What we need from you")
   end
 
   def then_i_am_taken_to_add_ect_name_page

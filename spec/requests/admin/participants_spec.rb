@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
   let(:admin_user) { create(:user, :admin) }
 
-  let!(:mentor_profile)               { create :mentor }
-  let!(:ect_profile)                  { create :ect, mentor_profile_id: mentor_profile.id }
+  let!(:mentor_profile)               { create(:mentor) }
+  let!(:ect_profile)                  { create(:ect, mentor_profile_id: mentor_profile.id) }
   let!(:npq_profile)                  { create(:npq_participant_profile) }
   let!(:withdrawn_ect_profile_record) { create(:ect, :withdrawn_record) }
   let!(:induction_programme)          { create(:induction_programme, :fip) }
@@ -21,24 +21,31 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
       expect(response).to render_template "admin/participants/index"
     end
 
-    it "only includes active participants" do
+    it "includes all participants" do
       get "/admin/participants"
-      expect(assigns(:participant_profiles)).to include ect_profile
-      expect(assigns(:participant_profiles)).to include mentor_profile
-      expect(assigns(:participant_profiles)).to include npq_profile
-      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
+
+      aggregate_failures do
+        expect(assigns(:participant_profiles)).to include ect_profile
+        expect(assigns(:participant_profiles)).to include mentor_profile
+        expect(assigns(:participant_profiles)).to include npq_profile
+        expect(assigns(:participant_profiles)).to include withdrawn_ect_profile_record
+      end
     end
 
     it "can filter by type" do
       get "/admin/participants?type=ParticipantProfile::NPQ"
-      expect(assigns(:participant_profiles)).not_to include ect_profile
-      expect(assigns(:participant_profiles)).not_to include mentor_profile
-      expect(assigns(:participant_profiles)).to include npq_profile
-      expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
+
+      aggregate_failures do
+        expect(assigns(:participant_profiles)).to include npq_profile
+
+        expect(assigns(:participant_profiles)).not_to include ect_profile
+        expect(assigns(:participant_profiles)).not_to include mentor_profile
+        expect(assigns(:participant_profiles)).not_to include withdrawn_ect_profile_record
+      end
     end
   end
 
-  context "when change of circumstances enabled", with_feature_flags: { change_of_circumstances: "active" } do
+  context "when change of circumstances enabled" do
     describe "GET /admin/participants" do
       it "renders the index participants template" do
         get "/admin/participants"

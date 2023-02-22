@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true do
+RSpec.describe "transferring participants", type: :feature, js: true do
   context "Attempting to transfer an ECT to a school" do
     context "ECT cannot be validated" do
       before do

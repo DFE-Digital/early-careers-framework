@@ -7,11 +7,7 @@
   </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.contacted_for_info) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.contacted_for_info, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.contacted_for_info) %>
   </table>
 <% end %>
 
@@ -24,11 +20,7 @@
     </div>
   </div>
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="details">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.details_being_checked) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.details_being_checked, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.details_being_checked) %>
   </table>
 <% end %>
 
@@ -47,10 +39,6 @@
   </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.eligible) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: mentor_profiles.eligible, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: mentor_profiles.eligible) %>
   </table>
 <% end %>

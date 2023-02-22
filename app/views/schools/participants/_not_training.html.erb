@@ -13,11 +13,7 @@
         </div>
     </div>
     <table class="govuk-table govuk-!-margin-bottom-9" data-test="withdrawn_ects">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-        <%= render Schools::Participants::CocStatusTable.new(induction_records: withdrawn) %>
-    <% else %>
-        <%= render Schools::Participants::StatusTable.new(participant_profiles: withdrawn, school_cohort: @school_cohort) %>
-    <% end %>
+      <%= render Schools::Participants::CocStatusTable.new(induction_records: withdrawn) %>
     </table>
 <% end %>
 
@@ -29,11 +25,7 @@
         </div>
     </div>
     <table class="govuk-table govuk-!-margin-bottom-9" data-test="ineligble_ects">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
       <%= render Schools::Participants::CocStatusTable.new(induction_records: ineligible) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: ineligible, school_cohort: @school_cohort) %>
-    <% end %>
     </table>
 <% end %>
 
@@ -45,6 +37,6 @@
         </div>
     </div>
     <table class="govuk-table govuk-!-margin-bottom-9" data-test="transferred">
-        <%= render Schools::Participants::CocStatusTable.new(induction_records: transferred) %>
+      <%= render Schools::Participants::CocStatusTable.new(induction_records: transferred) %>
     </table>
 <% end %>

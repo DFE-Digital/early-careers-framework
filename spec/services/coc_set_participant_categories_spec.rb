@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe CocSetParticipantCategories, with_feature_flags: { change_of_circumstances: "active" } do
+RSpec.describe CocSetParticipantCategories do
   describe "#run" do
     subject(:service) { described_class }
 

@@ -11,19 +11,7 @@ class Schools::ParticipantsController < Schools::BaseController
   helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
   def index
-    if FeatureFlag.active?(:change_of_circumstances)
-      @categories = CocSetParticipantCategories.new(@school_cohort, current_user)
-    else
-      @categories = OpenStruct.new(
-        ect_categories: SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::ECT),
-        mentor_categories: SetParticipantCategories.call(@school_cohort, current_user, ParticipantProfile::Mentor),
-        transferred: [],
-        transferring_in: [],
-        transferring_out: [],
-      )
-      @categories.withdrawn = @categories.ect_categories.withdrawn + @categories.mentor_categories.withdrawn
-      @categories.ineligible = @categories.ect_categories.ineligible + @categories.mentor_categories.ineligible
-    end
+    @categories = CocSetParticipantCategories.new(@school_cohort, current_user)
   end
 
   def show

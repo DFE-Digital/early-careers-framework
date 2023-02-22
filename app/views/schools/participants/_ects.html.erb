@@ -7,11 +7,7 @@
   </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="checked_ects">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.contacted_for_info) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.contacted_for_info, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.contacted_for_info) %>
   </table>
 <% end %>
 
@@ -25,11 +21,7 @@
   </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="details_ects">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.details_being_checked) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.details_being_checked, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.details_being_checked) %>
   </table>
 <% end %>
 
@@ -42,11 +34,7 @@
   </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="no_qts">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.no_qts_participants) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.no_qts_participants, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.no_qts_participants) %>
   </table>
 <% end %>
 
@@ -65,10 +53,6 @@
   </div>
 
   <table class="govuk-table govuk-!-margin-bottom-9" data-test="eligible_ects">
-    <% if FeatureFlag.active?(:change_of_circumstances) %>
-      <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.eligible) %>
-    <% else %>
-      <%= render Schools::Participants::StatusTable.new(participant_profiles: ect_profiles.eligible, school_cohort: @school_cohort) %>
-    <% end %>
+    <%= render Schools::Participants::CocStatusTable.new(induction_records: ect_profiles.eligible) %>
   </table>
 <% end %>
