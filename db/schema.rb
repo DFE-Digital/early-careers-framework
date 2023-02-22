@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_10_120533) do
+ActiveRecord::Schema.define(version: 2023_02_22_142649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -409,11 +409,14 @@ ActiveRecord::Schema.define(version: 2023_02_10_120533) do
     t.boolean "school_transfer", default: false, null: false
     t.uuid "appropriate_body_id"
     t.index ["appropriate_body_id"], name: "index_induction_records_on_appropriate_body_id"
+    t.index ["created_at"], name: "index_induction_records_on_created_at"
+    t.index ["end_date"], name: "index_induction_records_on_end_date"
     t.index ["induction_programme_id"], name: "index_induction_records_on_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_induction_records_on_mentor_profile_id"
     t.index ["participant_profile_id"], name: "index_induction_records_on_participant_profile_id"
     t.index ["preferred_identity_id"], name: "index_induction_records_on_preferred_identity_id"
     t.index ["schedule_id"], name: "index_induction_records_on_schedule_id"
+    t.index ["start_date"], name: "index_induction_records_on_start_date"
   end
 
   create_table "lead_provider_cips", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
