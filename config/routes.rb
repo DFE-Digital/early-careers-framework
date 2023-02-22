@@ -582,7 +582,7 @@ Rails.application.routes.draw do
             get "complete", to: "setup_school_cohort#complete"
           end
 
-          resource :transferring_participant, path: "transferring-participant", constraints: ->(_request) { FeatureFlag.active?(:change_of_circumstances) }, only: [] do
+          resource :transferring_participant, path: "transferring-participant" do
             get "check_transfer", to: "transferring_participants#check_transfer", as: :check_transfer
             put "check_transfer", to: "transferring_participants#check_transfer"
             get "what-we-need", to: "transferring_participants#what_we_need", as: :what_we_need
