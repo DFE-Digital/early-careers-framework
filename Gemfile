@@ -134,6 +134,9 @@ group :development, :test do
   gem "rswag-specs", "~> 2.8"
 
   gem "parallel_tests"
+
+  # Linting
+  gem "erb_lint", ">= 0.1.1", require: false
 end
 
 group :development, :deployed_development, :test, :sandbox do
