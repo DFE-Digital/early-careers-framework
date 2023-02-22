@@ -44,13 +44,24 @@ RSpec.describe QualifiedTeachersApiSender, :with_default_schedules do
       end
     end
 
-    context "when the participant outcome has already been sent to the API" do
+    context "when the participant outcome has already been successfully sent to the API" do
       let!(:participant_outcome) { create(:participant_outcome, participant_declaration:, qualified_teachers_api_request_successful: true) }
 
       it "is invalid and returns an error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:participant_outcome)).to include("This participant outcome has already been submitted to Qualified Teachers API (TRA)")
+        expect(service.errors.messages_for(:participant_outcome)).to include("This participant outcome has already been successfully submitted to Qualified Teachers API (TRA)")
+      end
+    end
+
+    context "when the participant outcome teacher with specified TRN was not found in the API" do
+      let(:participant_outcome) { create(:participant_outcome, participant_declaration:) }
+      let!(:participant_outcome_api_request) { create(:participant_outcome_api_request, :with_trn_not_found, participant_outcome:) }
+
+      it "is invalid and returns an error message" do
+        is_expected.to be_invalid
+
+        expect(service.errors.messages_for(:participant_outcome)).to include("Teacher with specified TRN was not found on Qualified Teachers (TRA)")
       end
     end
   end
@@ -101,18 +112,12 @@ RSpec.describe QualifiedTeachersApiSender, :with_default_schedules do
     end
 
     describe "when an exception is raised" do
-      before { allow_any_instance_of(QualifiedTeachers::Client).to receive(:send_record).with({ trn:, request_body: }).and_raise(ActiveRecord::Rollback) }
+      before { allow_any_instance_of(QualifiedTeachers::Client).to receive(:send_record).with({ trn:, request_body: }).and_raise(StandardError) }
 
       it "does nothing" do
-        expect { service.call }.not_to change { participant_outcome.reload.sent_to_qualified_teachers_api_at }
-      end
+        expect(Sentry).to receive(:capture_exception)
 
-      it "does nothing" do
-        expect { service.call }.not_to change { participant_outcome.reload.participant_outcome_api_requests.size }
-      end
-
-      it "does nothing" do
-        expect { service.call }.not_to change { participant_outcome.reload.qualified_teachers_api_request_successful? }
+        expect { service.call }.to raise_error(StandardError)
       end
     end
   end

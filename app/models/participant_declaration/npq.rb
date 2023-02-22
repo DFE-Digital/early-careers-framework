@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
 class ParticipantDeclaration::NPQ < ParticipantDeclaration
+  QUALIFICATION_TYPES = {
+    "npq-leading-teaching" => "NPQLT",
+    "npq-leading-behaviour-culture" => "NPQLBC",
+    "npq-leading-teaching-development" => "NPQLTD",
+    "npq-leading-literacy" => "NPQLL",
+    "npq-senior-leadership" => "NPQSL",
+    "npq-headship" => "NPQH",
+    "npq-executive-leadership" => "NPQEL",
+    "npq-early-years-leadership" => "NPQEYL",
+    "npq-additional-support-offer" => "NPQASO",
+    "npq-early-headship-coaching-offer" => "NPQEHCO",
+  }.freeze
+
   belongs_to :participant_profile, class_name: "ParticipantProfile::NPQ"
-
   has_one :npq_application, through: :participant_profile
-
   has_many :statements, class_name: "Finance::Statement::NPQ", through: :statement_line_items
-
   has_many :outcomes, class_name: "ParticipantOutcome::NPQ", foreign_key: "participant_declaration_id"
 
   scope :for_course, ->(course_identifier) { where(course_identifier:) }
@@ -49,6 +59,9 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
   end
 
   def qualification_type
-    course_identifier&.scan(/(?<=-)\w/)&.join&.prepend("npq")&.upcase
+    QUALIFICATION_TYPES.fetch(course_identifier)
+  rescue KeyError => e
+    Rails.logger.warn("A NPQ Qualification types mapping is missing: #{e.message}")
+    Sentry.capture_exception(e)
   end
 end

@@ -10,16 +10,15 @@ class QualifiedTeachersApiSender
 
   validates :participant_outcome_id, presence: { message: I18n.t("errors.participant_outcomes.missing_participant_outcome_id") }
   validates :participant_outcome, presence: { message: I18n.t("errors.participant_outcomes.missing_participant_outcome") }
-  validate :not_already_sent
+  validate :not_already_successfully_sent
+  validate :sent_with_trn_not_found
 
   def call
     return if invalid?
 
-    ActiveRecord::Base.transaction do
-      set_sent_to_qualified_teachers_api_at!
-      create_participant_outcome_api_request!
-      set_qualified_teachers_api_request_successful!
-    end
+    set_sent_to_qualified_teachers_api_at
+    create_participant_outcome_api_request!
+    set_qualified_teachers_api_request_successful!
     participant_outcome
   end
 
@@ -29,15 +28,21 @@ class QualifiedTeachersApiSender
 
 private
 
-  def not_already_sent
+  def not_already_successfully_sent
     return unless participant_outcome&.qualified_teachers_api_request_successful?
 
-    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_sent_to_api"))
+    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_successfully_sent_to_api"))
   end
 
-  def set_sent_to_qualified_teachers_api_at!
-    participant_outcome.update!(
-      sent_to_qualified_teachers_api_at: Time.zone.now,
+  def sent_with_trn_not_found
+    return unless participant_outcome&.participant_outcome_api_requests&.trn_not_found&.any?
+
+    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.trn_not_found"))
+  end
+
+  def set_sent_to_qualified_teachers_api_at
+    participant_outcome.update_column(
+      :sent_to_qualified_teachers_api_at, Time.zone.now
     )
   end
 
@@ -56,10 +61,8 @@ private
   end
 
   def set_qualified_teachers_api_request_successful!
-    return unless SUCCESS_CODES.include?(api_response.response.code)
-
     participant_outcome.update!(
-      qualified_teachers_api_request_successful: true,
+      qualified_teachers_api_request_successful: SUCCESS_CODES.include?(api_response.response.code),
     )
   end
 

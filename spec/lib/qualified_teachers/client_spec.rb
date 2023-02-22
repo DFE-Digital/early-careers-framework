@@ -59,7 +59,7 @@ RSpec.describe QualifiedTeachers::Client, :with_default_schedules do
       .to_return(status: 404, body: { "title": "Teacher with specified TRN not found", "status": 404, "errorCode": 10_001 }.to_json, headers: {})
   end
 
-  let(:stub_api_different_record_request) do
+  let(:stub_api_too_many_requests) do
     stub_request(:put, "https://qualified-teachers-api.example.com/v2/npq-qualifications?trn=1234567")
       .with(
         body: "{\"completionDate\":\"2023-02-20\",\"qualificationType\":\"NPQSL\"}",
@@ -73,6 +73,22 @@ RSpec.describe QualifiedTeachers::Client, :with_default_schedules do
         },
       )
       .to_return(status: 429, body: "", headers: {})
+  end
+
+  let(:stub_api_different_record_request) do
+    stub_request(:put, "https://qualified-teachers-api.example.com/v2/npq-qualifications?trn=1234567")
+      .with(
+        body: "{\"completionDate\":\"2023-02-20\",\"qualificationType\":\"NPQSL\"}",
+        headers: {
+          "Accept"=>"*/*",
+          "Accept-Encoding"=>"gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Authorization"=>"Bearer some-apikey-guid",
+          "Content-Type"=>"application/json",
+          "Host"=>"qualified-teachers-api.example.com",
+          "User-Agent"=>"Ruby",
+        },
+      )
+      .to_return(status: 400, body: "", headers: {})
   end
 
   describe "#send_record" do
@@ -98,12 +114,20 @@ RSpec.describe QualifiedTeachers::Client, :with_default_schedules do
       end
 
       context "when api had too many requests" do
+        it "raises an exception" do
+          stub_api_too_many_requests
+
+          expect { subject.send_record(trn:, request_body:) }.to raise_error(TooManyRequests)
+        end
+      end
+
+      context "when api had a different error code" do
         it "returns error code" do
           stub_api_different_record_request
 
           record = subject.send_record(trn:, request_body:)
 
-          expect(record.response.code).to eq("429")
+          expect(record.response.code).to eq("400")
         end
       end
     end

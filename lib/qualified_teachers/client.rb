@@ -4,7 +4,11 @@ require "net/http"
 
 module QualifiedTeachers
   class Client
+    THROTTLING_ERROR_CODES = %w[429 503].freeze
+
     def send_record(trn:, request_body:)
+      raise "Qualified Teachers API Key is not present" if api_key.blank?
+
       uri_for_record = uri(trn:)
 
       request = Net::HTTP::Put.new(uri_for_record)
@@ -14,6 +18,8 @@ module QualifiedTeachers
       response = Net::HTTP.start(uri_for_record.hostname, uri_for_record.port, use_ssl: true, read_timeout: 30) do |http|
         http.request(request, request_body.to_json)
       end
+
+      raise(TooManyRequests, "Too Many Requests") if THROTTLING_ERROR_CODES.include?(response.code)
 
       OpenStruct.new(
         request:,
@@ -32,3 +38,5 @@ module QualifiedTeachers
     end
   end
 end
+
+class TooManyRequests < StandardError; end

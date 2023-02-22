@@ -164,9 +164,10 @@ en:
       completed: "The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome"
     participant_outcomes:
       invalid_course_identifier: "Invalid course identifier for participant outcome"
-      already_sent_to_api: "This participant outcome has already been submitted to Qualified Teachers API (TRA)"
+      already_successfully_sent_to_api: "This participant outcome has already been successfully submitted to Qualified Teachers API (TRA)"
       missing_participant_outcome: "There's no participant outcome for the given ID"
       missing_participant_outcome_id: "The property '#/missing_participant_outcome_id' must be present"
+      trn_not_found: "Teacher with specified TRN was not found on Qualified Teachers (TRA)"
     participant_profile:
       blank: "Not registered"
       not_active: "Not active"
