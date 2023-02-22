@@ -11,7 +11,7 @@ RSpec.describe "Manage FIP partnered participants with no change of circumstance
   end
 end
 
-RSpec.describe "Manage FIP partnered participants with change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active", change_of_circumstances: "active" } do
+RSpec.describe "Manage FIP partnered participants with change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active" } do
   include ManageTrainingSteps
 
   context "active change of circumstances flag" do

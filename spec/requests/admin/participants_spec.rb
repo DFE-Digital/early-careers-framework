@@ -45,7 +45,7 @@ RSpec.describe "Admin::Participants", :with_default_schedules, type: :request do
     end
   end
 
-  context "when change of circumstances enabled", with_feature_flags: { change_of_circumstances: "active" } do
+  context "when change of circumstances enabled" do
     describe "GET /admin/participants" do
       it "renders the index participants template" do
         get "/admin/participants"
