@@ -41,6 +41,9 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     sign_in
 
     when_i_go_to_add_new_ect_page
+    and_i_go_through_the_who_do_you_want_to_add_page
+    and_i_go_through_the_what_we_need_from_you_page
+
     and_i_fill_in_all_info
     then_i_am_taken_to_the_confirm_appropriate_body_page
 
@@ -58,6 +61,9 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     sign_in
 
     when_i_go_to_add_new_ect_page
+    and_i_go_through_the_who_do_you_want_to_add_page
+    and_i_go_through_the_what_we_need_from_you_page
+
     and_i_fill_in_all_info
     then_i_am_taken_to_the_confirm_appropriate_body_page
 
@@ -75,6 +81,9 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     sign_in
 
     when_i_go_to_add_new_ect_page
+    and_i_go_through_the_who_do_you_want_to_add_page
+    and_i_go_through_the_what_we_need_from_you_page
+
     and_i_fill_in_all_info
     then_i_am_taken_to_the_confirm_appropriate_body_page
 
@@ -100,7 +109,18 @@ private
 
   def when_i_go_to_add_new_ect_page
     when_i_click_on_summary_row_action("ECTs and mentors", "Add")
-    click_on "Add a new ECT"
+    click_on "Add an ECT or mentor"
+  end
+
+  def and_i_go_through_the_who_do_you_want_to_add_page
+    expect(page).to have_selector("h1", text: "Who do you want to add?")
+    choose "ECT"
+    click_on "Continue"
+  end
+
+  def and_i_go_through_the_what_we_need_from_you_page
+    expect(page).to have_selector("h1", text: "What we need from you")
+    click_on "Continue"
   end
 
   def and_i_fill_in_all_info

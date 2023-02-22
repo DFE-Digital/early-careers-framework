@@ -17,8 +17,14 @@ RSpec.describe "Update participants details", js: true do
   scenario "Induction tutor can change ECT / mentor email from check details page" do
     set_dqt_validation_result
 
-    when_i_click_on_add_ect
-    then_i_am_taken_to_add_ect_name_page
+    when_i_click_to_add_a_new_ect_or_mentor
+    then_i_am_taken_to_the_who_do_you_want_to_add_page
+
+    when_i_decide_i_want_to_add_an_ect
+    and_i_click_on_continue
+
+    then_i_should_be_on_the_what_we_need_from_you_page
+    and_i_click_on_continue
 
     when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
@@ -44,8 +50,14 @@ RSpec.describe "Update participants details", js: true do
   scenario "Induction tutor can change ECTs mentor from check details page" do
     set_dqt_validation_result
 
-    when_i_click_on_add_ect
-    then_i_am_taken_to_add_ect_name_page
+    when_i_click_to_add_a_new_ect_or_mentor
+    then_i_am_taken_to_the_who_do_you_want_to_add_page
+
+    when_i_decide_i_want_to_add_an_ect
+    and_i_click_on_continue
+
+    then_i_should_be_on_the_what_we_need_from_you_page
+    and_i_click_on_continue
 
     when_i_add_full_name_to_the_school_add_participant_wizard @participant_data[:full_name]
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
