@@ -27,7 +27,8 @@ def add_school_to_local_authority(school:, local_authority:, lead_providers:, co
       scenarios.flat_map(&:mentees).map(&:participant_profile).each do |participant_profile|
         Rails.logger.debug("seeding eligibility for #{participant_profile.user.full_name}")
 
-        FactoryBot.create(:seed_ecf_participant_eligibilty, random_weighted_eligibility_trait, participant_profile:)
+        participant_profile.ecf_participant_eligibility&.destroy!
+        FactoryBot.create(:seed_ecf_participant_eligibility, random_weighted_eligibility_trait, participant_profile:)
       end
     end
 

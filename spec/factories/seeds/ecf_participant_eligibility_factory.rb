@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory(:seed_ecf_participant_eligibilty, class: "ECFParticipantEligibility") do
+  factory(:seed_ecf_participant_eligibility, class: "ECFParticipantEligibility") do
     trait(:with_participant_profile) do
       association(:participant_profile, factory: %i[seed_ect_participant_profile valid])
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# this is intended for use with the seed_ecf_participant_eligibilty factory
+# this is intended for use with the seed_ecf_participant_eligibility factory
 def random_weighted_eligibility_trait
   {
     eligible: 20,

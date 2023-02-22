@@ -10,7 +10,8 @@ module NewSeeds
             :teacher_profile,
             :participant_profile,
             :participant_identity,
-            :participant_validation_data,
+            :ecf_participant_validation_data,
+            :ecf_participant_eligibility,
             keyword_init: true,
           )
 
@@ -80,7 +81,7 @@ module NewSeeds
           end
 
           def build_mentee
-            build_person(mentor: false, validation_data: true)
+            build_person(mentor: false)
           end
 
         private
@@ -89,39 +90,24 @@ module NewSeeds
             Cohort.find_by!(start_year: year)
           end
 
-          def build_person(mentor: false, validation_data: false)
-            user = FactoryBot.create(:seed_user)
-
-            teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school:)
-
-            participant_identity = FactoryBot.create(:seed_participant_identity, user:)
-
-            participant_profile = if mentor
-                                    FactoryBot.create(:seed_mentor_participant_profile,
-                                                      participant_identity:,
-                                                      teacher_profile:,
-                                                      school_cohort:)
-                                  else
-                                    FactoryBot.create(:seed_ect_participant_profile,
-                                                      participant_identity:,
-                                                      teacher_profile:,
-                                                      school_cohort:)
-                                  end
-
-            participant_validation_data = if validation_data
-                                            FactoryBot.create(
-                                              :seed_ecf_participant_validation_data,
-                                              participant_profile:,
-                                              user:,
-                                            )
-                                          end
+          def build_person(mentor: false)
+            scenario = if mentor
+                         NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+                       else
+                         NewSeeds::Scenarios::Participants::Ects::Ect
+                       end
+            participant = scenario.new(school_cohort:)
+                                  .build
+                                  .chain_add_validation_data
+                                  .chain_add_eligibility
 
             Person.new(
-              user:,
-              teacher_profile:,
-              participant_identity:,
-              participant_profile:,
-              participant_validation_data:,
+              user: participant.user,
+              teacher_profile: participant.teacher_profile,
+              participant_identity: participant.participant_identity,
+              participant_profile: participant.participant_profile,
+              ecf_participant_validation_data: participant.ecf_participant_validation_data,
+              ecf_participant_eligibility: participant.ecf_participant_eligibility,
             )
           end
         end
