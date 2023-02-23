@@ -105,9 +105,16 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
         let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
         let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-        it { is_expected.not_to include(outcome_1) }
-        it { is_expected.not_to include(outcome_2) }
+        it { is_expected.not_to include(outcome_1, outcome_2) }
         it { is_expected.to include(outcome_3) }
+      end
+
+      context "when the latest outcome is sent but previous outcomes were not sent" do
+        let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_3) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+
+        it { is_expected.not_to include(outcome_1, outcome_2, outcome_3) }
       end
 
       context "when no outcomes for a declaration have been sent to the qualified teachers API" do
@@ -116,8 +123,7 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
           let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
           let!(:outcome_3) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-          it { is_expected.not_to include(outcome_1) }
-          it { is_expected.not_to include(outcome_2) }
+          it { is_expected.not_to include(outcome_1, outcome_2) }
           it { is_expected.to include(outcome_3) }
         end
 
@@ -126,9 +132,7 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
           let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
           let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-          it { is_expected.not_to include(outcome_1) }
-          it { is_expected.not_to include(outcome_2) }
-          it { is_expected.not_to include(outcome_3) }
+          it { is_expected.not_to include(outcome_1, outcome_2, outcome_3) }
         end
       end
     end
