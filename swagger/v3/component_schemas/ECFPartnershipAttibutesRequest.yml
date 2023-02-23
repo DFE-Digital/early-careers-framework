@@ -2,7 +2,7 @@ type: object
 required:
   - cohort
   - delivery_partner_id
-  - urn
+  - school_id
 properties:
   cohort:
     description: "The cohort for which you are reporting the partnership"
@@ -11,6 +11,10 @@ properties:
   delivery_partner_id:
     description: "The unique ID of the delivery partner you will work with for this school partnership"
     type: string
-  urn:
-    description: "The Unique Reference Number (URN) of the school you are partnering with"
+    format: uuid
+    example: cd3a12347-7308-4879-942a-c4a70ced400a
+  school_id:
+    description: "The Unique ID of the school you are partnering with"
     type: string
+    format: uuid
+    example: dd4s12347-7308-4879-942a-c4a70ced400a

@@ -151,7 +151,7 @@
     },
     "/api/v3/partnerships/ecf": {
       "get": {
-        "summary": "Retrieve multiple ECF partnerships",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF partnerships",
         "operationId": "partnerships_ecf_get",
         "tags": [
           "ECF partnerships"
@@ -213,7 +213,7 @@
         }
       },
       "post": {
-        "summary": "Create an ECF partnership with a school and delivery partner",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Create an ECF partnership with a school and delivery partner",
         "operationId": "partnerships_ecf_post",
         "tags": [
           "ECF partnerships"
@@ -225,15 +225,9 @@
             ]
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ECFPartnershipRequest"
-              }
-            }
-          }
-        },
+        "parameters": [
+
+        ],
         "responses": {
           "200": {
             "description": "Create an ECF partnership",
@@ -241,27 +235,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ECFPartnershipResponse"
-                },
-                "examples": {
-                  "create_partnership": {
-                    "value": {
-                      "data": {
-                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-                        "type": "partnership",
-                        "attributes": {
-                          "cohort": 2021,
-                          "urn": "123456",
-                          "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
-                          "status": "active",
-                          "challenged_reason": null,
-                          "induction_tutor_name": "John Doe",
-                          "induction_tutor_email": "john.doe@example.com",
-                          "updated_at": "2021-05-31T02:22:32.000Z",
-                          "created_at": "2021-05-31T02:22:32.000Z"
-                        }
-                      }
-                    }
-                  }
                 }
               }
             }
@@ -286,6 +259,132 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFPartnershipRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/v3/partnerships/ecf/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single ECF partnership",
+        "operationId": "partnerships_ecf_get",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single partnership",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Update a partnership’s delivery partner in an existing partnership in a cohort",
+        "operationId": "partnerships_ecf_put",
+        "tags": [
+          "ECF partnerships"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the partnership to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update an ECF partnership",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ECFPartnershipUpdateRequest"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
@@ -3464,7 +3563,7 @@
         "required": [
           "cohort",
           "delivery_partner_id",
-          "urn"
+          "school_id"
         ],
         "properties": {
           "cohort": {
@@ -3474,11 +3573,15 @@
           },
           "delivery_partner_id": {
             "description": "The unique ID of the delivery partner you will work with for this school partnership",
-            "type": "string"
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
           },
-          "urn": {
-            "description": "The Unique Reference Number (URN) of the school you are partnering with",
-            "type": "string"
+          "school_id": {
+            "description": "The Unique ID of the school you are partnering with",
+            "type": "string",
+            "format": "uuid",
+            "example": "dd4s12347-7308-4879-942a-c4a70ced400a"
           }
         }
       },
@@ -3487,6 +3590,7 @@
         "type": "object",
         "required": [
           "cohort",
+          "school_id",
           "urn",
           "delivery_partner_id",
           "status",
@@ -3504,11 +3608,22 @@
             "type": "string",
             "example": "123456"
           },
+          "school_id": {
+            "description": "The unique ID of the school you are partnered with",
+            "type": "string",
+            "format": "uuid",
+            "example": "dd4a11347-7308-4879-942a-c4a70ced400v"
+          },
           "delivery_partner_id": {
             "description": "The unique ID of the delivery partner you are working with for this partnership",
             "type": "string",
             "format": "uuid",
             "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "delivery_partner_name": {
+            "description": "The name of the delivery partner you are working with for this partnership",
+            "type": "string",
+            "example": "Delivery Partner Example"
           },
           "status": {
             "description": "The status of the partnership which includes active or challenged",
@@ -3531,6 +3646,12 @@
               "mistake"
             ],
             "example": "mistake"
+          },
+          "challenged_at": {
+            "description": "The date the partnership has been challenged",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           },
           "induction_tutor_name": {
             "description": "The name of the induction tutor at the school you are in partnership with",
@@ -3630,6 +3751,55 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ECFPartnership"
+          }
+        }
+      },
+      "ECFPartnershipUpdateAttibutesRequest": {
+        "type": "object",
+        "required": [
+          "delivery_partner_id"
+        ],
+        "properties": {
+          "delivery_partner_id": {
+            "description": "The unique ID of the delivery partner you will work with for this school partnership",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          }
+        }
+      },
+      "ECFPartnershipUpdateDataRequest": {
+        "description": "Update An ECF partnership",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ecf-partnership-update"
+            ]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFPartnershipUpdateAttibutesRequest"
+          }
+        }
+      },
+      "ECFPartnershipUpdateRequest": {
+        "description": "Update an ECF partnership",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ECFPartnershipUpdateDataRequest"
+          }
+        },
+        "example": {
+          "data": {
+            "type": "ecf-partnership-update",
+            "attributes": {
+              "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
+            }
           }
         }
       },

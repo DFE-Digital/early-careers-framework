@@ -1,0 +1,12 @@
+description: "Update an ECF partnership"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ECFPartnershipUpdateDataRequest"
+example:
+  data:
+    type: "ecf-partnership-update"
+    attributes:
+      delivery_partner_id: "db2fbf67-b7b7-454f-a1b7-0020411e2314"
