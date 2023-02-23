@@ -10,7 +10,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
   let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
   path "/api/v3/participants/npq" do
-    get "Retrieve multiple NPQ participants" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple NPQ participants" do
       operationId :npq_participants
       tags "NPQ participants"
       security [bearerAuth: []]
@@ -54,7 +54,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
   end
 
   path "/api/v3/participants/npq/{id}" do
-    get "Get a single NPQ participant" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single NPQ participant" do
       operationId :npq_participant
       tags "NPQ participants"
       security [bearerAuth: []]
@@ -152,7 +152,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
   end
 
   path "/api/v3/participants/npq/{id}/withdraw" do
-    put "Withdrawn a participant from a course" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Withdrawn a participant from a course" do
       operationId :npq_participants
       tags "NPQ Participant"
       security [bearerAuth: []]
@@ -203,6 +203,51 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
         schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
 
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success: {
+                  value: JSON.parse({
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "participant",
+                      attributes: {
+                        "full_name": "Isabelle MacDonald",
+                        "teacher_reference_number": "1234567",
+                        "npq_enrolments": [
+                          {
+                            "email": "isabelle.macdonald2@some-school.example.com",
+                            "course_identifier": "npq-senior-leadership",
+                            "schedule_identifier": "npq-leadership-autumn",
+                            "cohort": "2021",
+                            "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                            "eligible_for_funding": true,
+                            "training_status": "withdrawn",
+                            "school_urn": "123456",
+                            "targeted_delivery_funding_eligibility": true,
+                            "withdrawal": {
+                              reason: "insufficient-capacity",
+                              date: "2022-12-09T16:07:38Z",
+                            },
+                            "deferral": null,
+                            "created_at": "2021-05-31T02:22:32.000Z",
+                          },
+                        ],
+                        "updated_at": "2021-05-31T02:22:32.000Z",
+                      },
+                    },
+                  }.to_json, symbolize_names: true),
+                },
+              },
+            },
+          }
+
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
+
         run_test!
       end
 
@@ -211,6 +256,131 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:attributes) do
           {
             reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample,
+            course_identifier: "bogus-course-identifier",
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
+
+        schema({ "$ref": "#/components/schemas/ErrorResponse" })
+
+        run_test!
+      end
+    end
+  end
+
+  path "/api/v3/participants/npq/{id}/defer" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an NPQ participant is taking a break from their course" do
+      operationId :npq_participants
+      tags "NPQ Participant"
+      security [bearerAuth: []]
+      consumes "application/json"
+
+      parameter name: :id,
+                in: :path,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the participant to defer",
+                schema: {
+                  type: "string",
+                }
+
+      parameter name: :params,
+                in: :body,
+                style: :deepObject,
+                required: true,
+                schema: {
+                  "$ref": "#/components/schemas/NPQParticipantDeferRequest",
+                }
+
+      response "200", "The NPQ participant being deferred" do
+        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:attributes) do
+          {
+            reason: ParticipantProfile::NPQ::DEFERRAL_REASONS.sample,
+            course_identifier: npq_application.npq_course.identifier,
+          }
+        end
+
+        let(:params) do
+          {
+            "data": {
+              "type": "participant",
+              "attributes": attributes,
+            },
+          }
+        end
+
+        before do
+          participant_profile = npq_application.profile
+          user = npq_application.user
+          course_identifier = npq_application.npq_course.identifier
+
+          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
+        end
+
+        schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
+
+        after do |example|
+          content = example.metadata[:response][:content] || {}
+
+          example_spec = {
+            "application/json" => {
+              examples: {
+                success: {
+                  value: JSON.parse({
+                    data: {
+                      id: "db3a7848-7308-4879-942a-c4a70ced400a",
+                      type: "participant",
+                      attributes: {
+                        "full_name": "Isabelle MacDonald",
+                        "teacher_reference_number": "1234567",
+                        "npq_enrolments": [
+                          {
+                            "email": "isabelle.macdonald2@some-school.example.com",
+                            "course_identifier": "npq-senior-leadership",
+                            "schedule_identifier": "npq-leadership-autumn",
+                            "cohort": "2021",
+                            "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                            "eligible_for_funding": true,
+                            "training_status": "deferred",
+                            "school_urn": "123456",
+                            "targeted_delivery_funding_eligibility": true,
+                            "withdrawal": nil,
+                            "deferral": {
+                              reason: "other",
+                              date: "2022-12-09T16:07:38Z",
+                            },
+                            "created_at": "2021-05-31T02:22:32.000Z",
+                          },
+                        ],
+                        "updated_at": "2021-05-31T02:22:32.000Z",
+                      },
+                    },
+                  }.to_json, symbolize_names: true),
+                },
+              },
+            },
+          }
+
+          example.metadata[:response][:content] = content.deep_merge(example_spec)
+        end
+
+        run_test!
+      end
+
+      response "422", "Unprocessable entity" do
+        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:attributes) do
+          {
+            reason: ParticipantProfile::NPQ::DEFERRAL_REASONS.sample,
             course_identifier: "bogus-course-identifier",
           }
         end

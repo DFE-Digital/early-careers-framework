@@ -638,7 +638,7 @@
     },
     "/api/v3/participants/npq": {
       "get": {
-        "summary": "Retrieve multiple NPQ participants",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple NPQ participants",
         "operationId": "npq_participants",
         "tags": [
           "NPQ participants"
@@ -702,7 +702,7 @@
     },
     "/api/v3/participants/npq/{id}": {
       "get": {
-        "summary": "Get a single NPQ participant",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get a single NPQ participant",
         "operationId": "npq_participant",
         "tags": [
           "NPQ participants"
@@ -762,7 +762,7 @@
     },
     "/api/v3/participants/npq/{id}/change-schedule": {
       "put": {
-        "summary": "Notify that an NPQ participant is changing training schedule",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an NPQ participant is changing training schedule",
         "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
@@ -811,7 +811,7 @@
     },
     "/api/v3/participants/npq/{id}/defer": {
       "put": {
-        "summary": "Notify that an NPQ participant is taking a break from their course",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an NPQ participant is taking a break from their course",
         "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
@@ -851,6 +851,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQParticipantResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "npq-participant",
+                        "attributes": {
+                          "full_name": "Isabelle MacDonald",
+                          "teacher_reference_number": "1234567",
+                          "npq_enrolments": [
+                            {
+                              "email": "isabelle.macdonald2@some-school.example.com",
+                              "course_identifier": "npq-senior-leadership",
+                              "schedule_identifier": "npq-leadership-autumn",
+                              "cohort": "2021",
+                              "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "eligible_for_funding": true,
+                              "training_status": "deferred",
+                              "school_urn": "123456",
+                              "targeted_delivery_funding_eligibility": true,
+                              "withdrawal": null,
+                              "deferral": {
+                                "reason": "other",
+                                "date": "2022-12-09T16:07:38Z"
+                              },
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ],
+                          "updated_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -860,7 +894,7 @@
     },
     "/api/v3/participants/npq/{id}/resume": {
       "put": {
-        "summary": "Notify that an NPQ participant is resuming their course",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an NPQ participant is resuming their course",
         "operationId": "npq_participant",
         "tags": [
           "NPQ Participant"
@@ -909,7 +943,7 @@
     },
     "/api/v3/participants/npq/{id}/withdraw": {
       "put": {
-        "summary": "Withdrawn a participant from a course",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Withdrawn a participant from a course",
         "operationId": "npq_participants",
         "tags": [
           "NPQ Participant"
@@ -949,6 +983,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NPQParticipantResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                        "type": "npq-participant",
+                        "attributes": {
+                          "full_name": "Isabelle MacDonald",
+                          "teacher_reference_number": "1234567",
+                          "npq_enrolments": [
+                            {
+                              "email": "isabelle.macdonald2@some-school.example.com",
+                              "course_identifier": "npq-senior-leadership",
+                              "schedule_identifier": "npq-leadership-autumn",
+                              "cohort": "2021",
+                              "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+                              "eligible_for_funding": true,
+                              "training_status": "withdrawn",
+                              "school_urn": "123456",
+                              "targeted_delivery_funding_eligibility": true,
+                              "withdrawal": {
+                                "reason": "insufficient-capacity",
+                                "date": "2022-12-09T16:07:38Z"
+                              },
+                              "deferral": null,
+                              "created_at": "2021-05-31T02:22:32.000Z"
+                            }
+                          ],
+                          "updated_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -3618,6 +3686,7 @@
         "description": "The details of an NPQ Participant enrolment",
         "type": "object",
         "required": [
+          "email",
           "course_identifier",
           "schedule_identifier",
           "cohort",
@@ -3626,6 +3695,12 @@
           "training_status"
         ],
         "properties": {
+          "email": {
+            "description": "The email address registered for this NPQ participant",
+            "type": "string",
+            "nullable": true,
+            "example": "isabelle.macdonald2@some-school.example.com"
+          },
           "course_identifier": {
             "description": "The course the participant is enrolled in",
             "type": "string",
@@ -3695,6 +3770,52 @@
             "nullable": false,
             "type": "boolean",
             "example": true
+          },
+          "withdrawal": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/NPQWithdrawal" }
+            ]
+          },
+          "deferral": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/NPQDeferral" }
+            ]
+          },
+          "created_at": {
+            "description": "The date and time the NPQ participant was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "NPQDeferral": {
+        "description": "The details of an NPQ Participant deferral",
+        "type": "object",
+        "required": [
+          "reason",
+          "date"
+        ],
+        "properties": {
+          "reason": {
+            "description": "The reason a participant was deferred",
+            "type": "string",
+            "example": null,
+            "enum": [
+              "bereavement",
+              "long-term-sickness",
+              "parental-leave",
+              "career-break",
+              "other"
+            ]
+          },
+          "date": {
+            "description": "The date and time the participant was deferred",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -3920,7 +4041,6 @@
         "type": "object",
         "required": [
           "full_name",
-          "email",
           "npq_enrolments",
           "updated_at"
         ],
@@ -3929,12 +4049,6 @@
             "description": "The full name of this NPQ participant",
             "type": "string",
             "example": "Isabelle MacDonald"
-          },
-          "email": {
-            "description": "The email address registered for this NPQ participant",
-            "type": "string",
-            "nullable": true,
-            "example": "isabelle.macdonald2@some-school.example.com"
           },
           "teacher_reference_number": {
             "description": "The Teacher Reference Number (TRN) for this NPQ participant",
@@ -3954,13 +4068,6 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
-          },
-          "withdrawal_date": {
-            "description": "If the participant has been withdrawn by you, the date we have recorded for the withdrawal",
-            "type": "string",
-            "format": "date",
-            "nullable": true,
-            "example": "2021-06-13"
           }
         }
       },
@@ -4864,6 +4971,45 @@
               "reason": "quality-of-programme-other",
               "course_identifier": "npq-leading-teaching-development"
             }
+          }
+        }
+      },
+      "NPQWithdrawal": {
+        "description": "The details of an NPQ Participant withdrawal",
+        "type": "object",
+        "required": [
+          "reason",
+          "date"
+        ],
+        "properties": {
+          "reason": {
+            "description": "The reason a participant was withdrawn",
+            "type": "string",
+            "example": "moved-school",
+            "enum": [
+              "insufficient-capacity-to-undertake-programme",
+              "personal-reason-health-or-pregnancy-related",
+              "personal-reason-moving-school",
+              "personal-reason-other",
+              "insufficient-capacity",
+              "change-in-developmental-or-personal-priorities",
+              "change-in-school-circumstances",
+              "change-in-school-leadership",
+              "quality-of-programme-structure-not-suitable.",
+              "quality-of-programme-content-not-suitable",
+              "quality-of-programme-facilitation-not-effective",
+              "quality-of-programme-accessibility",
+              "quality-of-programme-other",
+              "programme-not-appropriate-for-role-and-cpd-needs",
+              "started-in-error",
+              "other"
+            ]
+          },
+          "date": {
+            "description": "The date and time the participant was withdrawn",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },

@@ -1,6 +1,7 @@
 description: "The details of an NPQ Participant enrolment"
 type: object
 required:
+  - email
   - course_identifier
   - schedule_identifier
   - cohort
@@ -8,6 +9,11 @@ required:
   - eligible_for_funding
   - training_status
 properties:
+  email:
+    description: "The email address registered for this NPQ participant"
+    type: string
+    nullable: true
+    example: "isabelle.macdonald2@some-school.example.com"
   course_identifier:
     description: "The course the participant is enrolled in"
     type: string
@@ -67,3 +73,14 @@ properties:
     nullable: false
     type: boolean
     example: true
+  withdrawal:
+    nullable: true
+    $ref: "#/components/schemas/NPQWithdrawal"
+  deferral:
+    nullable: true
+    $ref: "#/components/schemas/NPQDeferral"
+  created_at:
+    description: The date and time the NPQ participant was created
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
