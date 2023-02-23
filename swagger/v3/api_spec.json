@@ -477,7 +477,7 @@
     },
     "/api/v3/participants/npq/outcomes": {
       "get": {
-        "summary": "List all participant NPQ outcomes",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant NPQ outcomes",
         "operationId": "participant_outcomes",
         "tags": [
           "Participants Outcomes"
@@ -490,6 +490,18 @@
           }
         ],
         "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant outcomes to return.",
+            "example": "filter[cohort]=2022&filter[created_since]=2020-11-13T11:21:55Z"
+          },
           {
             "name": "page",
             "in": "query",

@@ -14,10 +14,21 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/
   let(:params) {}
 
   path "/api/v3/participants/npq/outcomes" do
-    get "List all participant NPQ outcomes" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant NPQ outcomes" do
       operationId :participant_outcomes
       tags "Participants Outcomes"
       security [bearerAuth: []]
+
+      parameter name: :filter,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/ListFilter",
+                },
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine participant outcomes to return.",
+                example: CGI.unescape({ filter: { cohort: 2022, created_since: "2020-11-13T11:21:55Z" } }.to_param)
 
       parameter name: :page,
                 in: :query,
