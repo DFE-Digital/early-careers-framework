@@ -388,6 +388,132 @@
         }
       }
     },
+    "/api/v3/schools/ecf": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF schools scoped to cohort",
+        "operationId": "school_ecf_get",
+        "tags": [
+          "ECF schools"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "schema": {
+              "$ref": "#/components/schemas/ECFSchoolsFilter"
+            },
+            "in": "query",
+            "style": "deepObject",
+            "explode": true,
+            "required": true,
+            "description": "Refine schools to return.",
+            "example": "filter[cohort]=2021"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ECFSchoolsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort schools being returned.",
+            "example": "sort=-updated_at"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of schools for the given cohort",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleECFSchoolsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/schools/ecf/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single ECF school scoped to cohort",
+        "operationId": "school_ecf_get",
+        "tags": [
+          "ECF schools"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "schema": {
+              "$ref": "#/components/schemas/ECFSchoolsFilter"
+            },
+            "in": "query",
+            "style": "deepObject",
+            "explode": true,
+            "required": true,
+            "description": "Refine schools to return.",
+            "example": "filter[cohort]=2021"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single school",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFSchoolResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/npq-applications": {
       "get": {
         "summary": "Retrieve multiple NPQ applications",
@@ -3799,6 +3925,133 @@
             "type": "ecf-partnership-update",
             "attributes": {
               "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
+            }
+          }
+        }
+      },
+      "ECFSchool": {
+        "description": "An ECF school",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the school",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "school"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFSchoolAttributes"
+          }
+        }
+      },
+      "ECFSchoolAttributes": {
+        "description": "The data attributes associated with an ECF school",
+        "type": "object",
+        "required": [
+          "name",
+          "urn",
+          "cohort",
+          "in_partnership",
+          "induction_programme_choice",
+          "updated_at"
+        ],
+        "properties": {
+          "name": {
+            "description": "The name of the school",
+            "type": "string",
+            "example": "School Example"
+          },
+          "urn": {
+            "description": "The Unique Reference Number (URN) of the school",
+            "type": "string",
+            "example": "123456"
+          },
+          "cohort": {
+            "description": "The cohort the school is in",
+            "type": "string",
+            "example": 2021
+          },
+          "in_partnership": {
+            "description": "Whether or not the school already has an active partnership, if it is doing a funded induction programme",
+            "type": "boolean",
+            "example": "false"
+          },
+          "induction_programme_choice": {
+            "description": "The induction programme the school offers",
+            "type": "string",
+            "example": "not_yet_known",
+            "enum": [
+              "core_induction_programme",
+              "funded_induction_programme",
+              "design_our_own",
+              "school_funded_fip",
+              "no_early_career_teachers",
+              "not_yet_known"
+            ]
+          },
+          "updated_at": {
+            "description": "The last time a change was made to this school record by the DfE",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "ECFSchoolResponse": {
+        "description": "A single ECF school",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ECFSchool"
+          }
+        }
+      },
+      "ECFSchoolsFilter": {
+        "description": "Filter schools to return more specific results",
+        "type": "object",
+        "properties": {
+          "cohort": {
+            "description": "Return schools within the specified cohort",
+            "type": "string",
+            "example": "2021"
+          }
+        }
+      },
+      "ECFSchoolsSort": {
+        "description": "Sort schools being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "updated_at",
+            "-updated_at"
+          ]
+        }
+      },
+      "MultipleECFSchoolsResponse": {
+        "description": "A list of schools for the given cohort",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ECFSchool"
             }
           }
         }
