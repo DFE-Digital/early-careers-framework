@@ -14,7 +14,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
   let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider:) }
 
   path "/api/v3/delivery-partners" do
-    get "Retrieve delivery partners" do
+    get "<b>Note, this endpoint is new.</b><br/>Retrieve delivery partners" do
       operationId :delivery_patrners_get
       tags "delivery partners"
       security [bearerAuth: []]
@@ -62,7 +62,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
   end
 
   path "/api/v3/delivery-partners/{id}" do
-    get "Retrieve a specific delivery partner" do
+    get "<b>Note, this endpoint is new.</b><br/>Retrieve a specific delivery partner" do
       operationId :delivery_patrner_get
       tags "delivery partners"
       security [bearerAuth: []]

@@ -26,7 +26,7 @@
   "paths": {
     "/api/v3/delivery-partners": {
       "get": {
-        "summary": "Retrieve delivery partners",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve delivery partners",
         "operationId": "delivery_patrners_get",
         "tags": [
           "delivery partners"
@@ -90,7 +90,7 @@
     },
     "/api/v3/delivery-partners/{id}": {
       "get": {
-        "summary": "Retrieve a specific delivery partner",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve a specific delivery partner",
         "operationId": "delivery_patrner_get",
         "tags": [
           "delivery partners"
@@ -2315,7 +2315,8 @@
         "description": "The data attributes associated with a delivery partner",
         "type": "object",
         "required": [
-          "name"
+          "name",
+          "updated_at"
         ],
         "properties": {
           "name": {
@@ -2334,6 +2335,12 @@
               "2021",
               "2022"
             ]
+          },
+          "updated_at": {
+            "description": "The date the delivery partner was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
