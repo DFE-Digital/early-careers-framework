@@ -45,6 +45,6 @@ private
   end
 
   def order
-    "npq_applications.updated_at ASC"
+    NPQApplication.arel_table[:updated_at].asc
   end
 end

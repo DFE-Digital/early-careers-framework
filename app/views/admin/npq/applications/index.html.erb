@@ -3,42 +3,44 @@
 <%= render "admin/npq/applications/layout", locals = { page: "applications" } %>
 
 <div class="admin-search-box">
-      <%= form_with method: :get do |f| %>
-        <%= f.govuk_text_field(
-            :query,
-            value: params[:query],
-            label: { text: "Search records", size: "s" },
-          )
-        %>
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :query,
+        value: params[:query],
+        label: { text: "Search records", size: "s" },
+      )
+    %>
 
-        <%= f.govuk_submit "Search" %>
-      <% end %>
-    </div>
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
 
-<table class="govuk-table">
-      <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Email</th>
-        <th scope="col" class="govuk-table__header">Course</th>
-        <th scope="col" class="govuk-table__header">Lead provider</th>
-        <th scope="col" class="govuk-table__header">School</th>
-        <th scope="col" class="govuk-table__header">Funding</th>
-        <th scope="col" class="govuk-table__header"></th>
-      </tr>
-      </thead>
+<%= govuk_table do |table|
+  table.with_caption(size: 'm', text: 'NPQ Application data')
 
-      <tbody class="govuk-table__body">
-        <% @applications.each do |application| %>
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><%= application.user.email %></td>
-            <td class="govuk-table__cell"><%= application.npq_course.name %></td>
-            <td class="govuk-table__cell"><%= application.npq_lead_provider.name %></td>
-            <td class="govuk-table__cell"><%= application.school_urn %></td>
-            <td class="govuk-table__cell"><%= boolean_red_green_tag(application.eligible_for_funding) %></td>
-            <td class="govuk-table__cell"><%= govuk_link_to("View", admin_npq_applications_application_path(application)) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+  table.with_head do |head|
+    head.with_row do |row|
+      row.with_cell(text: 'Email')
+      row.with_cell(text: 'Course')
+      row.with_cell(text: 'Lead provider')
+      row.with_cell(text: 'School')
+      row.with_cell(text: 'Funding')
 
-<%== govuk_pagination(pagy: @pagy) %>
+    end
+  end
+
+  table.with_body do |body|
+    @applications.each do |application|
+      body.with_row do |row|
+        row.with_cell(text: application.user.email)
+        row.with_cell(text: application.npq_course.name)
+        row.with_cell(text: application.npq_lead_provider.name)
+        row.with_cell(text: application.school_urn, numeric: true)
+        row.with_cell(text: boolean_red_green_tag(application.eligible_for_funding))
+        row.with_cell(text: govuk_link_to("View", admin_npq_applications_application_path(application)))
+      end
+    end
+  end
+end %>
+
+<%= govuk_pagination(pagy: @pagy) %>

@@ -3,55 +3,46 @@
     sl.row do |row|
       row.key(text: 'Application UUID')
       row.value(text: application.id || govuk_tag(text: "Missing", colour: "red"))
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'User UUID')
       row.value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'User Identity UUID')
       row.value(text: application.user.id || '-')
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Email')
       row.value(text: application.user.email)
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Name')
       row.value(text: application.user.full_name)
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'TRN')
       row.value(text: application.teacher_reference_number || '-')
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'TRN validated')
       row.value(text: application.teacher_reference_number_verified.to_s)
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Course')
       row.value(text: application.npq_course.name)
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Lead provider')
       row.value(text: application.npq_lead_provider.name)
-      row.action
     end
 
     sl.row do |row|
@@ -59,57 +50,47 @@
       row.value(text: application.school_urn || '-')
       if application.school.present?
         row.action(text: "View School", href: admin_school_path(application.school))
-      else
-        row.action
       end
     end
 
     sl.row do |row|
       row.key(text: 'School UKPRN')
       row.value(text: application.school_ukprn || "-")
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Private Childcare Provider URN')
       row.value(text: application.private_childcare_provider_urn || "-")
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Headteacher')
       row.value(text: application.headteacher_status)
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Funding eligibility')
       row.value(text: boolean_red_green_tag(application.eligible_for_funding))
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Funding eligibility status code')
       row.value(text: application.funding_eligiblity_status_code || "-")
-      row.action
     end
 
     sl.row do |row|
       row.key(text: "Targeted delivery funding eligibility")
       row.value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
-      row.action
     end
 
     sl.row do |row|
       row.key(text: 'Funding choice')
       row.value(text: application.funding_choice || "-")
-      row.action
     end
 
     sl.row do |row|
       row.key(text: "Created at")
       row.value { l application.created_at, format: :admin }
-      row.action
     end
 
     sl.row do |row|
@@ -119,7 +100,6 @@
       else
         row.value(text: "-" )
       end
-      row.action
     end
   end
 %>

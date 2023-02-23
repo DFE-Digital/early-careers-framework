@@ -5,35 +5,52 @@ require "rails_helper"
 RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedules do
   let(:search) { Admin::NPQApplications::ApplicationsSearch }
 
-  let!(:school) { create(:school) }
-  let!(:application_1) { create(:npq_application, school_urn: school.urn) }
-  let!(:application_2) { create(:npq_application, school_urn: school.urn) }
-  let!(:user) { application_1.user }
+  let(:school_1) { create(:school) }
+  let(:school_2) { create(:school) }
+  let!(:application_1) { create(:npq_application, school_urn: school_1.urn) }
+  let!(:application_2) { create(:npq_application, school_urn: school_2.urn) }
+  let(:user_1) { application_1.user }
 
   subject { described_class.new(query_string:) }
 
   describe "#call" do
     context "when partial email match" do
-      let(:query_string) { user.email.split("@").first }
+      let(:query_string) { user_1.email.split("@").first }
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
       end
     end
 
     context "when user#id match" do
-      let(:query_string) { user.id }
+      let(:query_string) { user_1.id }
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
       end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
     end
 
     context "when partial name match" do
-      let(:query_string) { user.full_name[0, 3] }
+      before do
+        user_1.update(full_name: Faker::Name.name)
+      end
+
+      let(:query_string) { user_1.full_name[0, 3] }
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
       end
     end
 
@@ -43,6 +60,10 @@ RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedul
       it "returns the hit" do
         expect(subject.call).to include(application_1)
       end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
     end
 
     context "when application#teacher_reference_number match" do
@@ -51,29 +72,49 @@ RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedul
       it "returns the hit" do
         expect(subject.call).to include(application_1)
       end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
     end
 
     context "when application#private_childcare_provider_urn match" do
-      let(:query_string) { application_1.private_childcare_provider_urn }
+      let(:query_string) { 548_675 }
+
+      before do
+        application_1.update(private_childcare_provider_urn: query_string)
+      end
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
       end
     end
 
     context "when partial school name match" do
-      let(:query_string) { school.name[0, 3] }
+      let(:query_string) { school_1.name[0, 3] }
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
       end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
+      end
     end
 
     context "when school urn match" do
-      let(:query_string) { school.urn }
+      let(:query_string) { school_1.urn }
 
       it "returns the hit" do
         expect(subject.call).to include(application_1)
+      end
+
+      it "does not return the other applications" do
+        expect(subject.call).not_to include(application_2)
       end
     end
   end

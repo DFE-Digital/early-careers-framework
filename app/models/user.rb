@@ -22,8 +22,6 @@ class User < ApplicationRecord
   has_many :appropriate_body_profiles, dependent: :destroy
   has_many :appropriate_bodies, through: :appropriate_body_profiles
 
-  has_many :npq_application_exports
-
   # TODO: Legacy associations, to be removed
   has_many :participant_profiles, through: :teacher_profile
   has_one :early_career_teacher_profile, through: :teacher_profile
@@ -33,6 +31,7 @@ class User < ApplicationRecord
   # end: TODO
 
   has_many :npq_application_eligibility_imports
+  has_many :npq_application_exports
 
   before_validation :strip_whitespace
   after_update :sync_email_with_identity

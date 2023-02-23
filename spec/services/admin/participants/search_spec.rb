@@ -134,34 +134,6 @@ RSpec.describe Admin::Participants::Search, :with_default_schedules do
         end
       end
 
-      # describe "matching by school name" do
-      #   let(:search_term) { school.urn }
-
-      #   let(:results) { search.call(ParticipantProfile, search_term:) }
-
-      #   it "returns matching participants" do
-      #     expect(results).to include(pp_1)
-      #   end
-
-      #   it "doesn't return non-matching participants" do
-      #     expect(results).not_to include(pp_2, pp_3)
-      #   end
-      # end
-
-      # describe "matching by school urn" do
-      #   let(:search_term) { school.name }
-
-      #   let(:results) { search.call(ParticipantProfile, search_term:) }
-
-      #   it "returns matching participants" do
-      #     expect(results).to include(pp_1)
-      #   end
-
-      #   it "doesn't return non-matching participants" do
-      #     expect(results).not_to include(pp_2, pp_3)
-      #   end
-      # end
-
       describe "matching by teacher reference number" do
         let(:search_term) { user_1.npq_applications.first.teacher_reference_number }
 
