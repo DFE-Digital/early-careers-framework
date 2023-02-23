@@ -81,60 +81,118 @@ RSpec.describe ParticipantOutcome::NPQ, :with_default_schedules, type: :model do
   end
 
   describe ".to_send_to_qualified_teachers_api" do
-    subject(:result) { described_class.to_send_to_qualified_teachers_api }
+    subject(:result) { described_class.to_send_to_qualified_teachers_api.map(&:id) }
 
-    context "when a declaration is not closed" do
-      let!(:declaration) { create(:npq_participant_declaration, declaration_type: "started") }
-      let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+    let!(:declaration) { create(:npq_participant_declaration, declaration_type: "completed") }
+
+    context "when the latest outcome for a declaration has been sent to the qualified teachers API" do
+      let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      let!(:outcome_2) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
       it { is_expected.to be_empty }
     end
 
-    context "when a declaration is closed" do
-      let!(:declaration) { create(:npq_participant_declaration, declaration_type: "completed") }
+    context "when the latest outcome for a declaration has not been sent to the qualified teachers API but a previous outcome has been sent" do
+      let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-      context "when the latest outcome for a declaration has been sent to the qualified teachers API" do
-        let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
-        let!(:outcome_2) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      it { is_expected.not_to include(outcome_1.id, outcome_2.id) }
+      it { is_expected.to include(outcome_3.id) }
+    end
 
-        it { is_expected.to be_empty }
+    context "when the latest outcome is sent but previous outcomes were not sent" do
+      let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      let!(:outcome_3) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+
+      it { is_expected.not_to include(outcome_1.id, outcome_2.id, outcome_3.id) }
+    end
+
+    context "when no outcomes for a declaration have been sent to the qualified teachers API" do
+      context "when the latest outcome is passed" do
+        let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+        let!(:outcome_3) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+
+        it { is_expected.not_to include(outcome_1.id, outcome_2.id) }
+        it { is_expected.to include(outcome_3.id) }
       end
 
-      context "when the latest outcome for a declaration has not been sent to the qualified teachers API but a previous outcome has been sent" do
-        let!(:outcome_1) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      context "when the latest outcome is not passed" do
+        let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
         let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
         let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
 
-        it { is_expected.not_to include(outcome_1, outcome_2) }
-        it { is_expected.to include(outcome_3) }
+        it { is_expected.not_to include(outcome_1.id, outcome_2.id, outcome_3.id) }
       end
+    end
 
-      context "when the latest outcome is sent but previous outcomes were not sent" do
-        let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-        let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-        let!(:outcome_3) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration) }
+    describe ".sent_to_qualified_teachers_api" do
+      let!(:outcome_1) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+      let!(:outcome_2) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
 
-        it { is_expected.not_to include(outcome_1, outcome_2, outcome_3) }
-      end
+      subject(:result) { described_class.sent_to_qualified_teachers_api.map(&:id) }
 
-      context "when no outcomes for a declaration have been sent to the qualified teachers API" do
-        context "when the latest outcome is passed" do
-          let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-          let!(:outcome_2) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-          let!(:outcome_3) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      it { is_expected.to include(outcome_1.id) }
+      it { is_expected.not_to include(outcome_2.id) }
+    end
 
-          it { is_expected.not_to include(outcome_1, outcome_2) }
-          it { is_expected.to include(outcome_3) }
-        end
+    describe ".not_sent_to_qualified_teachers_api" do
+      let!(:outcome_1) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+      let!(:outcome_2) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
 
-        context "when the latest outcome is not passed" do
-          let!(:outcome_1) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-          let!(:outcome_2) { create(:participant_outcome, :failed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
-          let!(:outcome_3) { create(:participant_outcome, :voided, :not_sent_to_qualified_teachers_api, participant_declaration: declaration) }
+      subject(:result) { described_class.not_sent_to_qualified_teachers_api.map(&:id) }
 
-          it { is_expected.not_to include(outcome_1, outcome_2, outcome_3) }
-        end
-      end
+      it { is_expected.to include(outcome_2.id) }
+      it { is_expected.not_to include(outcome_1.id) }
+    end
+
+    describe ".passed" do
+      let!(:outcome_1) { create(:participant_outcome, :passed) }
+      let!(:outcome_2) { create(:participant_outcome, :failed) }
+
+      subject(:result) { described_class.passed.map(&:id) }
+
+      it { is_expected.to include(outcome_1.id) }
+      it { is_expected.not_to include(outcome_2.id) }
+    end
+
+    describe ".not_passed" do
+      let!(:outcome_1) { create(:participant_outcome, :passed) }
+      let!(:outcome_2) { create(:participant_outcome, :failed) }
+
+      subject(:result) { described_class.not_passed.map(&:id) }
+
+      it { is_expected.to include(outcome_2.id) }
+      it { is_expected.not_to include(outcome_1.id) }
+    end
+
+    describe ".declarations_where_outcome_passed_and_sent" do
+      let!(:declaration_1) { create(:npq_participant_declaration, declaration_type: "completed") }
+      let!(:declaration_2) { create(:npq_participant_declaration, declaration_type: "completed") }
+      let!(:outcome_1) { create(:participant_outcome, :failed, :sent_to_qualified_teachers_api, participant_declaration: declaration_1) }
+      let!(:outcome_2) { create(:participant_outcome, :passed, :not_sent_to_qualified_teachers_api, participant_declaration: declaration_2) }
+      let!(:outcome_3) { create(:participant_outcome, :passed, :sent_to_qualified_teachers_api, participant_declaration: declaration_2) }
+      let!(:outcome_4) { create(:participant_outcome, :voided, :sent_to_qualified_teachers_api, participant_declaration: declaration_2) }
+
+      subject(:result) { described_class.declarations_where_outcome_passed_and_sent }
+
+      it { is_expected.not_to include(declaration_1.id) }
+      it { is_expected.to include(declaration_2.id) }
+    end
+
+    describe ".latest_per_declaration" do
+      let!(:declaration_1) { create(:npq_participant_declaration, declaration_type: "completed") }
+      let!(:declaration_2) { create(:npq_participant_declaration, declaration_type: "completed") }
+      let!(:outcome_1) { create(:participant_outcome, participant_declaration: declaration_1, created_at: 1.day.ago) }
+      let!(:outcome_2) { create(:participant_outcome, participant_declaration: declaration_1) }
+      let!(:outcome_3) { create(:participant_outcome, participant_declaration: declaration_2) }
+
+      subject(:result) { described_class.latest_per_declaration.map(&:id) }
+
+      it { is_expected.to include(outcome_2.id, outcome_3.id) }
+      it { is_expected.not_to include(outcome_1.id) }
     end
   end
 
