@@ -1036,7 +1036,7 @@
     },
     "/api/v3/participant-declarations": {
       "post": {
-        "summary": "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time.",
         "operationId": "participant_declarations",
         "tags": [
           "Participant declarations"
@@ -1070,7 +1070,7 @@
                     "value": {
                       "data": {
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "ecf-participant-declaration",
+                        "type": "participant-declaration",
                         "attributes": {
                           "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
                           "declaration_type": "started",
@@ -1084,7 +1084,8 @@
                           "clawback_statement_id": null,
                           "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true
+                          "uplift_paid": true,
+                          "evidence_held": "other"
                         }
                       }
                     }
@@ -1093,7 +1094,7 @@
                     "value": {
                       "data": {
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "npq-participant-declaration",
+                        "type": "participant-declaration",
                         "attributes": {
                           "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                           "declaration_type": "started",
@@ -1102,10 +1103,13 @@
                           "state": "eligible",
                           "updated_at": "2020-11-13T11:21:55Z",
                           "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
                           "ineligible_for_funding_reason": null,
-                          "uplift_paid": true
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null
                         }
                       }
                     }
@@ -1147,7 +1151,7 @@
         }
       },
       "get": {
-        "summary": "List all participant declarations",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant declarations",
         "operationId": "participant_declarations",
         "tags": [
           "participants declarations"
@@ -1199,7 +1203,7 @@
                       "data": [
                         {
                           "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                          "type": "ecf-participant-declaration",
+                          "type": "participant-declaration",
                           "attributes": {
                             "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
                             "declaration_type": "started",
@@ -1213,12 +1217,13 @@
                             "clawback_statement_id": null,
                             "ineligible_for_funding_reason": null,
                             "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                            "uplift_paid": true
+                            "uplift_paid": true,
+                            "evidence_held": "other"
                           }
                         },
                         {
                           "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                          "type": "npq-participant-declaration",
+                          "type": "participant-declaration",
                           "attributes": {
                             "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                             "declaration_type": "started",
@@ -1227,11 +1232,13 @@
                             "state": "eligible",
                             "updated_at": "2020-11-13T11:21:55Z",
                             "created_at": "2020-11-13T11:21:55Z",
+                            "delivery_partner_id": null,
                             "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                             "clawback_statement_id": null,
                             "ineligible_for_funding_reason": null,
-                            "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                            "uplift_paid": true
+                            "mentor_id": null,
+                            "uplift_paid": true,
+                            "evidence_held": null
                           }
                         }
                       ]
@@ -1256,7 +1263,7 @@
     },
     "/api/v3/participant-declarations/{id}": {
       "get": {
-        "summary": "Get single participant declaration",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration",
         "operationId": "participant_declarations",
         "tags": [
           "participants declaration"
@@ -1293,7 +1300,7 @@
                     "value": {
                       "data": {
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "ecf-participant-declaration",
+                        "type": "participant-declaration",
                         "attributes": {
                           "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
                           "declaration_type": "started",
@@ -1307,7 +1314,8 @@
                           "clawback_statement_id": null,
                           "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true
+                          "uplift_paid": true,
+                          "evidence_held": "other"
                         }
                       }
                     }
@@ -1316,7 +1324,7 @@
                     "value": {
                       "data": {
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "npq-participant-declaration",
+                        "type": "participant-declaration",
                         "attributes": {
                           "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                           "declaration_type": "started",
@@ -1325,11 +1333,13 @@
                           "state": "eligible",
                           "updated_at": "2020-11-13T11:21:55Z",
                           "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
                           "ineligible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null
                         }
                       }
                     }
@@ -1363,7 +1373,7 @@
     },
     "/api/v3/participant-declarations/{id}/void": {
       "put": {
-        "summary": "Void a declaration - it will not be soft-deleted",
+        "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Void a declaration - it will not be soft-deleted",
         "operationId": "participant_declarations",
         "tags": [
           "Participant declarations"
@@ -1400,7 +1410,7 @@
                     "value": {
                       "data": {
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "ecf-participant-declaration",
+                        "type": "participant-declaration",
                         "attributes": {
                           "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
                           "declaration_type": "started",
@@ -1414,7 +1424,8 @@
                           "clawback_statement_id": null,
                           "ineligible_for_funding_reason": null,
                           "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true
+                          "uplift_paid": true,
+                          "evidence_held": "other"
                         }
                       }
                     }
@@ -1423,7 +1434,7 @@
                     "value": {
                       "data": {
                         "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                        "type": "npq-participant-declaration",
+                        "type": "participant-declaration",
                         "attributes": {
                           "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                           "declaration_type": "started",
@@ -1432,11 +1443,13 @@
                           "state": "voided",
                           "updated_at": "2020-11-13T11:21:55Z",
                           "created_at": "2020-11-13T11:21:55Z",
+                          "delivery_partner_id": null,
                           "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           "clawback_statement_id": null,
                           "ineligible_for_funding_reason": null,
-                          "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
-                          "uplift_paid": true
+                          "mentor_id": null,
+                          "uplift_paid": true,
+                          "evidence_held": null
                         }
                       }
                     }
@@ -2566,6 +2579,16 @@
             "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
             "type": "boolean",
             "example": true
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ],
+            "example": "unknown"
           }
         }
       },
@@ -2638,9 +2661,9 @@
             "description": "The data type",
             "type": "string",
             "enum": [
-              "ecf-participant-declaration"
+              "participant-declaration"
             ],
-            "example": "ecf-participant-declaration"
+            "example": "participant-declaration"
           },
           "attributes": {
             "$ref": "#/components/schemas/ECFParticipantDeclarationAttributes"
@@ -4251,6 +4274,12 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           },
+          "delivery_partner_id": {
+            "description": "Unique ID of the delivery partner associated with the participant at the time the declaration was created",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
           "statement_id": {
             "description": "Unique ID of the statement the declaration will be paid as part of",
             "type": "string",
@@ -4273,6 +4302,12 @@
             ],
             "example": "unknown"
           },
+          "mentor_id": {
+            "description": "Unique ID of the ECT's mentor",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
           "uplift_paid": {
             "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
             "type": "boolean",
@@ -4282,19 +4317,29 @@
             "description": "Whether the participant has failed or passed",
             "type": "boolean",
             "example": true
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ],
+            "example": "unknown"
           }
         }
       },
       "NPQParticipantDeclarationAttributes": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/NPQParticipantDeclarationStartedAttributesRequest"
+            "$ref": "#/components/schemas/NPQParticipantStartedDeclarationAttributes"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantDeclarationRetainedAttributesRequest"
+            "$ref": "#/components/schemas/NPQParticipantRetainedDeclarationAttributes"
           },
           {
-            "$ref": "#/components/schemas/NPQParticipantDeclarationCompletedAttributesRequest"
+            "$ref": "#/components/schemas/NPQParticipantCompletedDeclarationAttributes"
           }
         ]
       },
@@ -4380,9 +4425,9 @@
             "description": "The data type",
             "type": "string",
             "enum": [
-              "npq-participant-declaration"
+              "participant-declaration"
             ],
-            "example": "npq-participant-declaration"
+            "example": "participant-declaration"
           },
           "attributes": {
             "$ref": "#/components/schemas/NPQParticipantDeclarationAttributes"
@@ -4746,6 +4791,12 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           },
+          "delivery_partner_id": {
+            "description": "Unique ID of the delivery partner associated with the participant at the time the declaration was created",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
           "statement_id": {
             "description": "Unique ID of the statement the declaration will be paid as part of",
             "type": "string",
@@ -4772,6 +4823,22 @@
             "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
             "type": "boolean",
             "example": true
+          },
+          "mentor_id": {
+            "description": "Unique ID of the ECT's mentor",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ],
+            "example": "unknown"
           }
         }
       },
@@ -4851,6 +4918,12 @@
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           },
+          "delivery_partner_id": {
+            "description": "Unique ID of the delivery partner associated with the participant at the time the declaration was created",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
           "statement_id": {
             "description": "Unique ID of the statement the declaration will be paid as part of",
             "type": "string",
@@ -4873,10 +4946,26 @@
             ],
             "example": "unknown"
           },
+          "mentor_id": {
+            "description": "Unique ID of the ECT's mentor",
+            "type": "string",
+            "format": "uuid",
+            "example": "cd3a12347-7308-4879-942a-c4a70ced400a"
+          },
           "uplift_paid": {
             "description": "If participant is eligible for uplift, whether it has been paid as part of this declaration",
             "type": "boolean",
             "example": true
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ],
+            "example": "unknown"
           }
         }
       },

@@ -63,6 +63,11 @@ properties:
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  delivery_partner_id:
+    description: "Unique ID of the delivery partner associated with the participant at the time the declaration was created"
+    type: string
+    format: uuid
+    nullable: true
   statement_id:
     description: "Unique ID of the statement the declaration will be paid as part of"
     type: string
@@ -81,6 +86,11 @@ properties:
       - be
       - determined
     example: unknown
+  mentor_id:
+    description: "Unique ID of the ECT's mentor"
+    type: string
+    format: uuid
+    nullable: true
   uplift_paid:
     description: "If participant is eligible for uplift, whether it has been paid as part of this declaration"
     type: boolean
@@ -89,3 +99,10 @@ properties:
     description: Whether the participant has failed or passed
     type: boolean
     example: true
+  evidence_held:
+    description: The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period
+    type: string
+    enum:
+      - training-event-attended
+      - self-study-material-completed
+      - other
