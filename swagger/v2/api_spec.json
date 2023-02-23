@@ -3155,7 +3155,7 @@
             "example": [
               {
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                "type": "participant",
+                "type": "npq_application",
                 "attributes": {
                   "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
                   "full_name": "Isabelle MacDonald",
@@ -3168,7 +3168,9 @@
                   "headteacher_status": "no",
                   "eligible_for_funding": true,
                   "funding_choice": "trust",
-                  "course_identifier": "npq-leading-teaching"
+                  "course_identifier": "npq-leading-teaching",
+                  "lead_mentor": null,
+                  "itt_provider": "University of Southampton"
                 }
               }
             ]
@@ -3498,6 +3500,18 @@
             "description": "This field identifies which non-UK country the participant has registered from.\nThe API uses <a href=\"https://www.iso.org/iso-3166-country-codes.html\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.\n",
             "type": "string",
             "example": "FRA"
+          },
+          "lead_mentor": {
+            "description": "This field indicates whether the applicant is an ITT lead mentor.\n",
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "itt_provider": {
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "nullable": true,
+            "type": "string",
+            "example": "University of Southampton"
           }
         }
       },
@@ -3640,6 +3654,18 @@
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
+          },
+          "lead_mentor": {
+            "description": "This field indicates whether the applicant is an ITT lead mentor.\n",
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "itt_provider": {
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "nullable": true,
+            "type": "string",
+            "example": "University of Southampton"
           }
         }
       },

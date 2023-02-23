@@ -147,6 +147,8 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               teacher_catchment
               teacher_catchment_country
               teacher_catchment_iso_country_code
+              itt_provider
+              lead_mentor
             ],
           )
         end
@@ -173,6 +175,8 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["works_in_school"]).to eql(application.works_in_school.to_s)
           expect(row["employer_name"]).to eql(application.employer_name)
           expect(row["employment_role"]).to eql(application.employment_role)
+          expect(row["itt_provider"]).to eql(application.itt_provider)
+          expect(row["lead_mentor"]).to eql(application.lead_mentor.to_s)
           expect(row["created_at"]).to eql(application.created_at.rfc3339)
           expect(row["updated_at"]).to eql(application.updated_at.rfc3339)
         end
@@ -378,6 +382,8 @@ def single_json_application(npq_application:)
       "teacher_catchment" => true,
       "teacher_catchment_country" => npq_application.teacher_catchment_country,
       "teacher_catchment_iso_country_code" => npq_application.teacher_catchment_iso_country_code,
+      "itt_provider" => npq_application.itt_provider,
+      "lead_mentor" => npq_application.lead_mentor,
     },
   }
 end

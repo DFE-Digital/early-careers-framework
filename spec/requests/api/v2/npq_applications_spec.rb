@@ -144,6 +144,8 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
               cohort
               ineligible_for_funding_reason
               targeted_delivery_funding_eligibility
+              itt_provider
+              lead_mentor
             ],
           )
         end
@@ -175,6 +177,8 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
           expect(row["cohort"]).to eql(application.cohort.start_year.to_s)
           expect(row["ineligible_for_funding_reason"]).to eql(application.ineligible_for_funding_reason)
           expect(row["targeted_delivery_funding_eligibility"]).to eql(application.targeted_delivery_funding_eligibility.to_s)
+          expect(row["itt_provider"]).to eql(application.itt_provider)
+          expect(row["lead_mentor"]).to eql(application.lead_mentor.to_s)
         end
       end
     end
@@ -378,6 +382,8 @@ def single_json_v2_application(npq_application:)
       "teacher_catchment" => true,
       "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
       "teacher_catchment_iso_country_code" => "GBR",
+      "itt_provider" => npq_application.itt_provider,
+      "lead_mentor" => npq_application.lead_mentor,
     },
   }
 end
