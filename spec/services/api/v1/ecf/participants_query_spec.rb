@@ -114,6 +114,54 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
         end
       end
 
+      context "with multiple induction records with no end date" do
+        let!(:latest_induction_record) do
+          travel_to(1.day.ago) do
+            create(:induction_record, induction_programme:, participant_profile:, end_date: nil)
+          end
+        end
+
+        let!(:induction_record) { create(:induction_record, :with_end_date, induction_programme:, participant_profile:) }
+
+        let(:params) { { id: participant_profile.participant_identity.external_identifier } }
+
+        it "returns the induction record with no end date" do
+          expect(subject.induction_record).to eql(latest_induction_record)
+        end
+      end
+
+      context "with multiple induction records starting at different times" do
+        let!(:induction_record) do
+          create(:induction_record, induction_programme:, participant_profile:, start_date: Time.zone.now)
+        end
+
+        let!(:latest_induction_record) do
+          create(:induction_record, :future_start_date, induction_programme:, participant_profile:)
+        end
+
+        let(:params) { { id: participant_profile.participant_identity.external_identifier } }
+
+        it "returns the induction record with the latest start date" do
+          expect(subject.induction_record).to eql(latest_induction_record)
+        end
+      end
+
+      context "with multiple induction records created at different times" do
+        let!(:induction_record) do
+          travel_to(1.day.ago) do
+            create(:induction_record, induction_programme:, participant_profile:)
+          end
+        end
+
+        let!(:latest_induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
+
+        let(:params) { { id: participant_profile.participant_identity.external_identifier } }
+
+        it "returns the induction record with the latest timestamp" do
+          expect(subject.induction_record).to eql(latest_induction_record)
+        end
+      end
+
       context "with incorrect value" do
         let(:params) { { id: SecureRandom.uuid } }
 
