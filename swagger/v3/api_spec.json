@@ -1597,6 +1597,130 @@
         }
       }
     },
+    "/api/v3/participants/ecf/transfers": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers",
+        "operationId": "participants",
+        "tags": [
+          "participant transfers"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine participant transfers to return.",
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of participant transfers."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of ECF participant transfers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleECFParticipantTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/participants/ecf/{id}/transfers": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers",
+        "operationId": "participant_transfers",
+        "tags": [
+          "participant transfers"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the ECF participant.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single participant's transfers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECFParticipantTransferResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/participants/ecf/{id}/defer": {
       "put": {
         "summary": "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course",
@@ -2978,6 +3102,184 @@
           }
         }
       },
+      "ECFParticipantTransfer": {
+        "description": "Note, this is a new endpoint. The details of an ECF participant transfer",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the mentor record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "participant-transfer"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/ECFParticipantTransferAttributes"
+          }
+        }
+      },
+      "ECFParticipantTransferAttributes": {
+        "description": "The data attributes associated with an ECF participant transfer",
+        "type": "object",
+        "required": [
+          "updated_at",
+          "transfers"
+        ],
+        "properties": {
+          "updated_at": {
+            "description": "The date and time the latest ECF participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "transfers": {
+            "description": "List of participant transfers",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ECFParticipantTransfers"
+            }
+          }
+        }
+      },
+      "ECFParticipantTransfers": {
+        "description": "The details of an ECF Participant enrolment",
+        "type": "object",
+        "required": [
+          "training_record_id",
+          "transfer_type",
+          "status",
+          "created_at"
+        ],
+        "properties": {
+          "training_record_id": {
+            "description": "The unique identifier of the participant training record",
+            "type": "string",
+            "format": "uuid",
+            "example": "000a97ff-d2a9-4779-a397-9bfd9063072e"
+          },
+          "transfer_type": {
+            "description": "The type of transfer between schools",
+            "type": "string",
+            "example": "new_provider",
+            "enum": [
+              "new_school",
+              "new_provider",
+              "unknown"
+            ]
+          },
+          "status": {
+            "description": "The status of the transfer, if both leaving and joining SIT have completed their journeys or only one has",
+            "type": "string",
+            "example": "complete",
+            "enum": [
+              "incomplete",
+              "complete"
+            ]
+          },
+          "leaving": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/ECFParticipantLeaving" }
+            ],
+            "example": {
+              "school_urn": "123456",
+              "provider": "Old Institute",
+              "date": "2021-05-31"
+            }
+          },
+          "joining": {
+            "nullable": true,
+            "anyOf": [
+              { "$ref": "#/components/schemas/ECFParticipantJoining" }
+            ],
+            "example": {
+              "school_urn": "654321",
+              "provider": "New Institute",
+              "date": "2021-06-01"
+            }
+          },
+          "created_at": {
+            "description": "The date and time the ECF participant transfer was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "ECFParticipantTransferResponse": {
+        "description": "An ECF participant transfer list",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ECFParticipantTransfer"
+          }
+        }
+      },
+      "ECFParticipantJoining": {
+        "description": "The details of an ECF Participant joining a school",
+        "type": "object",
+        "required": [
+          "school_urn",
+          "provider",
+          "date"
+        ],
+        "properties": {
+          "school_urn": {
+            "description": "The URN of the school the participant is joining",
+            "type": "string",
+            "example": 123456
+          },
+          "provider": {
+            "description": "The name of the provider the participant is joining",
+            "type": "string",
+            "example": "Example Institute"
+          },
+          "date": {
+            "description": "The date the participant will be joining the school",
+            "type": "string",
+            "format": "date",
+            "example": "2021-05-31"
+          }
+        }
+      },
+      "ECFParticipantLeaving": {
+        "description": "The details of an ECF Participant leaving a school",
+        "type": "object",
+        "required": [
+          "school_urn",
+          "provider"
+        ],
+        "properties": {
+          "school_urn": {
+            "description": "The URN of the school the participant is leaving",
+            "type": "string",
+            "example": 123456
+          },
+          "provider": {
+            "description": "The name of the provider the participant is leaving",
+            "type": "string",
+            "example": "Example Institute"
+          },
+          "date": {
+            "description": "The date the participant will be leaving the school",
+            "type": "string",
+            "format": "date",
+            "example": "2021-05-31"
+          }
+        }
+      },
       "ECFParticipantResponse": {
         "description": "An ECF Participant",
         "type": "object",
@@ -3417,6 +3719,21 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ECFParticipant"
+            }
+          }
+        }
+      },
+      "MultipleECFParticipantTransferResponse": {
+        "description": "A list of participant transfers",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ECFParticipantTransfer"
             }
           }
         }
