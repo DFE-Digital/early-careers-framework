@@ -78,7 +78,7 @@
 
     <%= yield(:nav_bar) %>
 
-    <%= render "layouts/phase_banner" %>
+    <%= render "layouts/phase_banner" unless params[:controller].starts_with?("admin") %>
 
     <% if current_user != true_user %>
       <div class="govuk-width-container">
