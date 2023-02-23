@@ -10,11 +10,8 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
     "npq-headship" => "NPQH",
     "npq-executive-leadership" => "NPQEL",
     "npq-early-years-leadership" => "NPQEYL",
-    "npq-additional-support-offer" => "NPQASO",
-    "npq-early-headship-coaching-offer" => "NPQEHCO",
   }.freeze
 
-  belongs_to :participant_profile, class_name: "ParticipantProfile::NPQ"
   has_one :npq_application, through: :participant_profile
   has_many :statements, class_name: "Finance::Statement::NPQ", through: :statement_line_items
   has_many :outcomes, class_name: "ParticipantOutcome::NPQ", foreign_key: "participant_declaration_id"

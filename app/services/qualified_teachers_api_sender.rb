@@ -11,14 +11,15 @@ class QualifiedTeachersApiSender
   validates :participant_outcome_id, presence: { message: I18n.t("errors.participant_outcomes.missing_participant_outcome_id") }
   validates :participant_outcome, presence: { message: I18n.t("errors.participant_outcomes.missing_participant_outcome") }
   validate :not_already_successfully_sent
-  validate :sent_with_trn_not_found
+  validate :not_already_unsuccessfully_sent
 
   def call
+    set_sent_to_qualified_teachers_api_at
+
     return if invalid?
 
-    set_sent_to_qualified_teachers_api_at
     create_participant_outcome_api_request!
-    set_qualified_teachers_api_request_successful!
+    set_qualified_teachers_api_request_successful
     participant_outcome
   end
 
@@ -34,10 +35,10 @@ private
     errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_successfully_sent_to_api"))
   end
 
-  def sent_with_trn_not_found
-    return unless participant_outcome&.participant_outcome_api_requests&.trn_not_found&.any?
+  def not_already_unsuccessfully_sent
+    return unless participant_outcome&.qualified_teachers_api_request_successful == false
 
-    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.trn_not_found"))
+    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_unsuccessfully_sent_to_api"))
   end
 
   def set_sent_to_qualified_teachers_api_at
@@ -60,9 +61,9 @@ private
     Sentry.capture_exception(e)
   end
 
-  def set_qualified_teachers_api_request_successful!
-    participant_outcome.update!(
-      qualified_teachers_api_request_successful: SUCCESS_CODES.include?(api_response.response.code),
+  def set_qualified_teachers_api_request_successful
+    participant_outcome.update_column(
+      :qualified_teachers_api_request_successful, SUCCESS_CODES.include?(api_response.response.code)
     )
   end
 

@@ -54,14 +54,13 @@ RSpec.describe QualifiedTeachersApiSender, :with_default_schedules do
       end
     end
 
-    context "when the participant outcome teacher with specified TRN was not found in the API" do
-      let(:participant_outcome) { create(:participant_outcome, participant_declaration:) }
-      let!(:participant_outcome_api_request) { create(:participant_outcome_api_request, :with_trn_not_found, participant_outcome:) }
+    context "when the participant outcome has already been unsuccessfully sent to the API" do
+      let!(:participant_outcome) { create(:participant_outcome, participant_declaration:, qualified_teachers_api_request_successful: false) }
 
       it "is invalid and returns an error message" do
         is_expected.to be_invalid
 
-        expect(service.errors.messages_for(:participant_outcome)).to include("Teacher with specified TRN was not found on Qualified Teachers (TRA)")
+        expect(service.errors.messages_for(:participant_outcome)).to include("This participant outcome has already been unsuccessfully submitted to Qualified Teachers API (TRA)")
       end
     end
   end
