@@ -9,6 +9,20 @@ weight: 8
   If you have any questions or comments about these notes, please contact DfE via Slack or email.
 </p>
 
+<h2 class="govuk-heading-l" id="24-2-2023">24th February 2023</h2>
+<p class="govuk-body-m">
+  When <a class="govuk-link" href="/api-reference/ecf-usage.html#declaring-that-an-ecf-participant-has-completed-their-course">submitting completed ECF declarations</a>, providers should note that <code>evidence_held</code> is a mandatory attribute and must be included in the request body. API documentation has been updated in line with contractual requirements.
+  </br>
+  </br>
+  Providers can only submit accepted <code>evidence_held</code> values. These signify the type of evidence held by a provider to demonstrate that a participant has met the retention criteria for the milestone period. The accepted values are:
+  </br>
+  <ul class="govuk-list govuk-list--bullet">
+    <li><code>"evidence_held": training-event-attended</code></li>
+    <li><code>"evidence_held": self-study-material-completed</code></li>
+    <li><code>"evidence_held": other</code></li>
+  </ul>
+  Note, other mandatory attributes to include in the request body for completed ECF declaration submissions are <code>participant_id</code>, <code>declaration_type</code>, <code>declaration_date</code> and <code>course_identifier</code>.
+</p>
 <h2 class="govuk-heading-l" id="23-2-2023">23rd February 2023</h2>
 <p class="govuk-body-m">
   Initial teacher training (ITT) lead mentors who are not employed by schools are now eligible for DfE funding.
