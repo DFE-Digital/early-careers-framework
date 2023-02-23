@@ -89,11 +89,34 @@ RSpec.describe AdminHelper, type: :helper do
   end
 
   describe "#admin_participant_header_and_title" do
-    subject { admin_participant_header_and_title(section: "ABC", full_name: "Joey", role: "Mentor") }
+    let(:profile) do
+      create(
+        :mentor_participant_profile,
+        user: create(:user, full_name: "Joey"),
+      )
+    end
+
+    subject do
+      admin_participant_header_and_title(
+        profile:,
+        section: "ABC",
+      )
+    end
 
     it "returns a h1 tag the section that has a caption containing the user name" do
       expect(subject).to have_css("h1", text: /Joey - ABC/)
+    end
+
+    it "returns a caption containing the user role" do
       expect(subject).to have_css(".govuk-caption-xl", text: "Mentor")
+    end
+
+    it "returns the TRN" do
+      expect(subject).to have_content(/TRN: \d+/)
+    end
+
+    it "returns the cohort" do
+      expect(subject).to have_content(/Cohort: \d+/)
     end
   end
 

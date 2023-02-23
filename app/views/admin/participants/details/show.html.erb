@@ -1,4 +1,9 @@
-<%= admin_participant_header_and_title(full_name: @user.full_name, role: admin_participant_role_name(@participant_profile.class.name), section: "Details") %>
+<%=
+  admin_participant_header_and_title(
+    profile: @participant_profile,
+    section: "Details"
+  )
+%>
 
 <% if @participant_profile.npq? %>
   <%= render partial: "show_npq" %>
