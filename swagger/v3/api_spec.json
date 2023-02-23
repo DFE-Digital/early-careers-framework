@@ -1873,6 +1873,130 @@
         }
       }
     },
+    "/api/v3/unfunded-mentors/ecf": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve multiple unfunded mentors",
+        "operationId": "participants",
+        "tags": [
+          "unfunded mentors"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListFilter"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "description": "Refine unfunded mentors to return.",
+            "example": "filter[updated_since]=2020-11-13T11:21:55Z"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Pagination"
+            },
+            "style": "deepObject",
+            "explode": true,
+            "required": false,
+            "example": "page[page]=1&page[per_page]=5",
+            "description": "Pagination options to navigate through the list of unfunded mentors."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of unfunded mentors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipleUnfundedMentorsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v3/unfunded-mentors/ecf/{id}": {
+      "get": {
+        "summary": "<b>Note, this endpoint is new.</b><br/>Get a single unfunded mentor",
+        "operationId": "unfunded_mentors",
+        "tags": [
+          "unfunded mentors"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "example": "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+            "description": "The ID of the unfunded mentor.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single unfunded mentor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnfundedMentorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorisedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v3/statements": {
       "get": {
         "summary": "Retrieve financial statements",
@@ -3398,6 +3522,21 @@
                 }
               }
             ]
+          }
+        }
+      },
+      "MultipleUnfundedMentorsResponse": {
+        "description": "A list of unfunded mentors",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnfundedMentor"
+            }
           }
         }
       },
@@ -5508,6 +5647,82 @@
             "items": {
               "$ref": "#/components/schemas/Statement"
             }
+          }
+        }
+      },
+      "UnfundedMentor": {
+        "description": "Note, this is a new endpoint. The details of an unfunded mentor",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "description": "The unique identifier of the mentor record",
+            "type": "string",
+            "format": "uuid",
+            "example": "db3a7848-7308-4879-942a-c4a70ced400a"
+          },
+          "type": {
+            "description": "The data type",
+            "type": "string",
+            "example": "unfunded-mentor"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/UnfundedMentorAttributes"
+          }
+        }
+      },
+      "UnfundedMentorAttributes": {
+        "description": "The data attributes associated with an unfunded mentor",
+        "type": "object",
+        "required": [
+          "full_name",
+          "email",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "full_name": {
+            "description": "The full name of this mentor",
+            "type": "string",
+            "example": "Jane Smith"
+          },
+          "email": {
+            "description": "The email address registered for this unfunded mentor",
+            "type": "string",
+            "example": "jane.smith@some-school.example.com"
+          },
+          "teacher_reference_number": {
+            "description": "The Teacher Reference Number (TRN) for this participant",
+            "type": "string",
+            "example": "1234567"
+          },
+          "created_at": {
+            "description": "The date and time the unfunded mentor was created",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
+          "updated_at": {
+            "description": "The date and time the unfunded mentor was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          }
+        }
+      },
+      "UnfundedMentorResponse": {
+        "description": "An unfunded mentor",
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UnfundedMentor"
           }
         }
       },

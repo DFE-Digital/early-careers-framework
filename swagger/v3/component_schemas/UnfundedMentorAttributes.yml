@@ -1,0 +1,30 @@
+description: "The data attributes associated with an unfunded mentor"
+type: object
+required:
+  - full_name
+  - email
+  - created_at
+  - updated_at
+properties:
+  full_name:
+    description: "The full name of this mentor"
+    type: string
+    example: "Jane Smith"
+  email:
+    description: "The email address registered for this unfunded mentor"
+    type: string
+    example: "jane.smith@some-school.example.com"
+  teacher_reference_number:
+    description: "The Teacher Reference Number (TRN) for this participant"
+    type: string
+    example: "1234567"
+  created_at:
+    description: The date and time the unfunded mentor was created
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  updated_at:
+    description: The date and time the unfunded mentor was last updated
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
