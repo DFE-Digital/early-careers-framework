@@ -19,17 +19,6 @@ module Admin
 
         set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
         redirect_to admin_school_path(@school)
-      elsif @induction_tutor_form.name_different?
-        render_name_different_page(
-          existing_name: @induction_tutor_form.existing_name,
-          new_name: @induction_tutor_form.full_name,
-          action_path: new_admin_school_induction_coordinator_path(@school),
-        )
-      elsif @induction_tutor_form.email_already_taken?
-        render_email_used_page(
-          email: @induction_tutor_form.email,
-          action_path: new_admin_school_induction_coordinator_path(@school),
-        )
       else
         render :new
       end
@@ -47,9 +36,6 @@ module Admin
                                         email: @induction_tutor_form.email)
         set_success_message(content: "Induction tutor details updated", title: "Success")
         redirect_to admin_school_path(@school)
-      elsif @induction_tutor_form.email_already_taken?
-        render_email_used_page(email: @induction_tutor_form.email,
-                               action_path: edit_admin_school_induction_coordinator_path(@school, @school.induction_tutor))
       else
         render :edit
       end
@@ -76,20 +62,6 @@ module Admin
 
     def school_using_this_email(email)
       Identity.find_user_by(email:).schools.first
-    end
-
-    def render_email_used_page(email:, action_path:)
-      @email_address = email
-      @another_school = school_using_this_email(email)
-      @action_path = action_path
-      render "email_used"
-    end
-
-    def render_name_different_page(existing_name:, new_name:, action_path:)
-      @existing_name = existing_name
-      @new_name = new_name
-      @action_path = action_path
-      render "name_different"
     end
 
     def tutor_form_params
