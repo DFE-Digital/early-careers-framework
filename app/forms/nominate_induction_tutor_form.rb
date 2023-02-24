@@ -37,6 +37,10 @@ class NominateInductionTutorForm
     existing_user.full_name
   end
 
+  def name_different?
+    existing_name.present? && existing_name != full_name
+  end
+
 private
 
   def email_is_not_in_use
@@ -62,10 +66,6 @@ private
 
   def name_matches
     errors.add(:full_name, :does_not_match) if name_different?
-  end
-
-  def name_different?
-    existing_name.present? && existing_name != full_name
   end
 
   def school_using_this_email(email)
