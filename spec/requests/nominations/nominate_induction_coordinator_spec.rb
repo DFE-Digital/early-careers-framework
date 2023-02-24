@@ -37,12 +37,10 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           create(:user, :induction_coordinator, schools: [school])
         end
 
-        it "redirects to already-nominated" do
+        it "it shows the choose new induction tutor page" do
           get "/nominations/start-nomination?token=#{token}"
 
-          expect(response).to redirect_to("/nominations/already-nominated")
-          follow_redirect!
-          expect(response).to render_template("nominations/request_nomination_invite/already_nominated")
+          expect(response).to render_template("nominations/nominate_induction_coordinator/start_nomination")
         end
       end
     end

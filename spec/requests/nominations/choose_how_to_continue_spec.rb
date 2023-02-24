@@ -68,9 +68,9 @@ RSpec.describe "Choosing how to continue with nominations", type: :request do
         it "redirects to already-nominated" do
           get "/nominations/choose-how-to-continue?token=#{token}"
 
-          expect(response).to redirect_to("/nominations/already-nominated")
+          expect(response).to redirect_to "/nominations/start-nomination?token=#{token}"
           follow_redirect!
-          expect(response).to render_template("nominations/request_nomination_invite/already_nominated")
+          expect(response).to render_template("nominations/nominate_induction_coordinator/start_nomination")
         end
       end
     end
