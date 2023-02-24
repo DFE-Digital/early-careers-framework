@@ -10,8 +10,7 @@ class QualifiedTeachersApiSender
 
   validates :participant_outcome_id, presence: { message: I18n.t("errors.participant_outcomes.missing_participant_outcome_id") }
   validates :participant_outcome, presence: { message: I18n.t("errors.participant_outcomes.missing_participant_outcome") }
-  validate :not_already_successfully_sent
-  validate :not_already_unsuccessfully_sent
+  validate :not_already_sent
 
   def call
     set_sent_to_qualified_teachers_api_at
@@ -29,16 +28,11 @@ class QualifiedTeachersApiSender
 
 private
 
-  def not_already_successfully_sent
-    return unless participant_outcome&.qualified_teachers_api_request_successful?
+  def not_already_sent
+    return if participant_outcome&.qualified_teachers_api_request_successful.nil?
 
-    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_successfully_sent_to_api"))
-  end
-
-  def not_already_unsuccessfully_sent
-    return unless participant_outcome&.qualified_teachers_api_request_successful == false
-
-    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_unsuccessfully_sent_to_api"))
+    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_successfully_sent_to_api")) if participant_outcome&.qualified_teachers_api_request_successful?
+    errors.add(:participant_outcome, I18n.t("errors.participant_outcomes.already_unsuccessfully_sent_to_api")) if participant_outcome&.qualified_teachers_api_request_successful == false
   end
 
   def set_sent_to_qualified_teachers_api_at
