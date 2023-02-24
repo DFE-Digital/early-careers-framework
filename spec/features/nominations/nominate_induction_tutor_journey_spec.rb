@@ -84,7 +84,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
     then_i_should_see_the_name_not_match_error
     and_the_page_should_be_accessible
 
-    click_on "Change the name"
+    click_on "Back"
     then_i_should_be_on_the_nominations_full_name_page
 
     when_i_fill_in_the_sits_name
