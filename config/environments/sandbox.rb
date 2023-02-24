@@ -74,6 +74,9 @@ Rails.application.configure do
   config.dqt_api_url = Rails.application.credentials.DQT_API_URL
   config.dqt_api_key = Rails.application.credentials.DQT_API_KEY
 
+  config.qualified_teachers_api_url = Rails.application.credentials.QUALIFIED_TEACHERS_API_URL
+  config.qualified_teachers_api_key = Rails.application.credentials.QUALIFIED_TEACHERS_API_KEY
+
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :notify
   config.action_mailer.notify_settings = {

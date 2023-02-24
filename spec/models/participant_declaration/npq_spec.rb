@@ -40,4 +40,16 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
       end
     end
   end
+
+  describe "instance methods" do
+    describe "#qualification_type" do
+      let(:identifier) { "npq-senior-leadership" }
+      let(:npq_course) { create(:npq_course, identifier:) }
+      let(:participant_declaration) { create(:npq_participant_declaration, npq_course:) }
+
+      it "returns the formatted qualification type" do
+        expect(participant_declaration.qualification_type).to eq("NPQSL")
+      end
+    end
+  end
 end

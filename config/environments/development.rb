@@ -43,6 +43,9 @@ Rails.application.configure do
   config.dqt_api_url = ENV["DQT_API_URL"]
   config.dqt_api_key = ENV["DQT_API_KEY"]
 
+  config.qualified_teachers_api_url = ENV["QUALIFIED_TEACHERS_API_URL"]
+  config.qualified_teachers_api_key = ENV["QUALIFIED_TEACHERS_API_KEY"]
+
   # Don't care if the mailer can't send.
   # config.action_mailer.raise_delivery_errors = true
 
