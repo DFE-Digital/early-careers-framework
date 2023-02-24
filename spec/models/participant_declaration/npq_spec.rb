@@ -9,13 +9,15 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
     end
 
     describe "associations" do
-      let(:user) { create(:user) }
-      subject { described_class.new(user:) }
-      it {
-        is_expected.to have_many(:outcomes)
-          .class_name("ParticipantOutcome::NPQ")
-          .with_foreign_key("participant_declaration_id")
-      }
+      subject(:declaration) { create(:npq_participant_declaration) }
+
+      describe "outcomes" do
+        it {
+          is_expected.to have_many(:outcomes)
+            .class_name("ParticipantOutcome::NPQ")
+            .with_foreign_key("participant_declaration_id")
+        }
+      end
     end
 
     it "returns all records when not scoped" do

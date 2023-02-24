@@ -17,8 +17,50 @@ class ParticipantOutcome::NPQ < ApplicationRecord
 
   after_commit :push_outcome_to_big_query
 
-  def self.latest
-    order(created_at: :desc).first
+  class << self
+    def latest
+      order(created_at: :desc).first
+    end
+
+    def to_send_to_qualified_teachers_api
+      eligible_outcomes = not_sent_to_qualified_teachers_api
+        .where(id: latest_per_declaration.map(&:id))
+
+      eligible_outcomes.passed
+        .or(
+          eligible_outcomes
+            .not_passed
+            .where(participant_declaration_id: declarations_where_outcome_passed_and_sent),
+        )
+    end
+
+    def latest_per_declaration
+      select("DISTINCT ON(participant_declaration_id) *")
+        .order(:participant_declaration_id, created_at: :desc)
+    end
+
+    def declarations_where_outcome_passed_and_sent
+      latest_per_declaration
+        .passed
+        .sent_to_qualified_teachers_api
+        .map(&:participant_declaration_id)
+    end
+
+    def sent_to_qualified_teachers_api
+      where.not(sent_to_qualified_teachers_api_at: nil)
+    end
+
+    def not_sent_to_qualified_teachers_api
+      where(sent_to_qualified_teachers_api_at: nil)
+    end
+
+    def passed
+      where(state: :passed)
+    end
+
+    def not_passed
+      where.not(state: :passed)
+    end
   end
 
   def has_passed?
