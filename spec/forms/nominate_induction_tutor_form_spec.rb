@@ -17,7 +17,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
       create(:ect, user: create(:user, email:))
       form = NominateInductionTutorForm.new(token:, full_name: name, email:)
       expect(form.valid?(:email)).to be false
-      expect(form.errors[:email].first).to eq("This email address is already in use")
+      expect(form.errors[:email].first).to eq("The email address #{email} is already in use")
       expect(form.email_already_taken?).to be_truthy
     end
 

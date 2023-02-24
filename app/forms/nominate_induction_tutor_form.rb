@@ -41,6 +41,10 @@ class NominateInductionTutorForm
     existing_name.present? && existing_name != full_name
   end
 
+  def email_already_taken?
+    ParticipantProfile.active_record.ects.joins(:user).where(user: { email: }).any?
+  end
+
 private
 
   def email_is_not_in_use
@@ -52,10 +56,6 @@ private
         errors.add(:email, "The email address #{email} is already in use")
       end
     end
-  end
-
-  def email_already_taken?
-    ParticipantProfile.active_record.ects.joins(:user).where(user: { email: }).any?
   end
 
   def different_name
