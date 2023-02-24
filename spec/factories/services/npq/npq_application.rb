@@ -23,6 +23,8 @@ FactoryBot.define do
     targeted_delivery_funding_eligibility { false }
     teacher_catchment                     { "england" }
     teacher_catchment_country             { nil }
+    itt_provider                          { "University of Southampton" }
+    lead_mentor                           { true }
 
     initialize_with do
       NPQ::BuildApplication.call(

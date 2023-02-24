@@ -17,11 +17,7 @@ class ParticipantProfilePolicy < ApplicationPolicy
       return scope.all if user.admin?
       return scope.none unless user.induction_coordinator?
 
-      if FeatureFlag.active?(:change_of_circumstances)
-        scope.where(id: InductionRecord.joins(:school).where(school: { id: user.schools.select(:id) }).select(:participant_profile_id))
-      else
-        scope.where(school_cohort_id: SchoolCohort.where(school: user.schools).select(:id))
-      end
+      scope.where(id: InductionRecord.joins(:school).where(school: { id: user.schools.select(:id) }).select(:participant_profile_id))
     end
   end
 end

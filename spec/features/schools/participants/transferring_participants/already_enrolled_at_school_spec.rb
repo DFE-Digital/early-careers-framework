@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Transferring participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true, rutabaga: false do
+RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: false do
   context "At transfer journey entry point" do
     context "Participant is already enrolled at the school" do
       before do

@@ -6,7 +6,7 @@ RSpec.describe Schools::SearchQuery do
   describe "#call" do
     let!(:school_a) { create(:school, name: "School A", urn: "090120", postcode: "M1 2WD") }
     let!(:school_b) { create(:school, name: "School B", urn: "090550", postcode: "M1 3BD") }
-    let!(:school_c) { create(:school, name: "School C", urn: "333333") }
+    let!(:school_c) { create(:school, name: "School C", urn: "333333", postcode: "L1 3BD") }
 
     subject { described_class.new(query:).call }
 

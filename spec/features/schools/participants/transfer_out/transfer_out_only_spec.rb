@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transfer out participants", with_feature_flags: { change_of_circumstances: "active" }, type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
+RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
   context "Transfer out an ECT" do
     before do
       set_participant_data

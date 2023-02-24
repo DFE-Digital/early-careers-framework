@@ -25,7 +25,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     end
   end
 
-  describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active" } do
+  describe "GET /schools/:school_id/cohorts/:cohort_id/participants/add/who" do
     context "when form has been set up in the session" do
       before do
         get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/who"
@@ -39,7 +39,7 @@ RSpec.describe "Schools::AddParticipant", type: :request do
     end
   end
 
-  describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/add/who", with_feature_flags: { change_of_circumstances: "active" } do
+  describe "PUT /schools/:school_id/cohorts/:cohort_id/participants/add/who" do
     context "when transfer in the active_registration_cohort" do
       before do
         put "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/add/participant-type", params: { schools_new_participant_or_transfer_form: { type: :transfer } }

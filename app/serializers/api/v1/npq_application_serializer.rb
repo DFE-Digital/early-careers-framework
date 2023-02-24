@@ -68,6 +68,8 @@ module Api
       attribute :teacher_catchment, &:in_uk_catchment_area?
       attribute :teacher_catchment_iso_country_code
       attribute :teacher_catchment_country
+      attribute :itt_provider
+      attribute :lead_mentor
     end
   end
 end

@@ -3,11 +3,10 @@
 module ParticipantOutcomes
   class SendToQualifiedTeachersApiJob < ApplicationJob
     queue_as :participant_outcomes
-    retry_on StandardError, attempts: 3
+    retry_on TooManyRequests, attempts: 3
 
-    def perform(_participant_outcome)
-      # TODO: needs to be implemented
-      "actioned"
+    def perform(participant_outcome_id:)
+      QualifiedTeachersApiSender.new(participant_outcome_id:).call
     end
   end
 end

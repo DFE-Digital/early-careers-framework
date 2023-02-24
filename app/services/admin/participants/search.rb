@@ -12,9 +12,7 @@ class Admin::Participants::Search < BaseService
   end
 
   def call
-    adjusted_scope = FeatureFlag.active?(:change_of_circumstances) ? scope : scope.active_record
-
-    adjusted_scope
+    scope
       .eager_load(*left_outer_joins)
       .merge(search_conditions)
       .merge(type_conditions)

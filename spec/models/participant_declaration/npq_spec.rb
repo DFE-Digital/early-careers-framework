@@ -9,13 +9,15 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
     end
 
     describe "associations" do
-      let(:user) { create(:user) }
-      subject { described_class.new(user:) }
-      it {
-        is_expected.to have_many(:outcomes)
-          .class_name("ParticipantOutcome::NPQ")
-          .with_foreign_key("participant_declaration_id")
-      }
+      subject(:declaration) { create(:npq_participant_declaration) }
+
+      describe "outcomes" do
+        it {
+          is_expected.to have_many(:outcomes)
+            .class_name("ParticipantOutcome::NPQ")
+            .with_foreign_key("participant_declaration_id")
+        }
+      end
     end
 
     it "returns all records when not scoped" do
@@ -35,6 +37,18 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
 
       it "returns only valid declarations" do
         expect(described_class.valid_to_have_outcome_for_lead_provider_and_course(participant_declaration.cpd_lead_provider, participant_declaration.course_identifier)).to match([participant_declaration])
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#qualification_type" do
+      let(:identifier) { "npq-senior-leadership" }
+      let(:npq_course) { create(:npq_course, identifier:) }
+      let(:participant_declaration) { create(:npq_participant_declaration, npq_course:) }
+
+      it "returns the formatted qualification type" do
+        expect(participant_declaration.qualification_type).to eq("NPQSL")
       end
     end
   end

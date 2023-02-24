@@ -104,6 +104,13 @@ GEM
     backport (1.2.0)
     bcrypt (3.1.17)
     benchmark (0.2.1)
+    better_html (2.0.1)
+      actionview (>= 6.0)
+      activesupport (>= 6.0)
+      ast (~> 2.0)
+      erubi (~> 1.4)
+      parser (>= 2.4)
+      smart_properties
     bindex (0.8.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
@@ -131,6 +138,8 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    cssbundling-rails (1.1.2)
+      railties (>= 6.0.0)
     cypress-on-rails (1.13.1)
       rack
     database_cleaner-active_record (2.1.0)
@@ -157,6 +166,13 @@ GEM
       railties (>= 3.2)
     dumb_delegator (1.0.0)
     e2mmap (0.1.0)
+    erb_lint (0.3.1)
+      activesupport
+      better_html (>= 2.0.1)
+      parser (>= 2.7.1.4)
+      rainbow
+      rubocop
+      smart_properties
     erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo
@@ -235,6 +251,8 @@ GEM
     ice_nine (0.11.2)
     jaro_winkler (1.5.4)
     jmespath (1.6.2)
+    jsbundling-rails (1.1.1)
+      railties (>= 6.0.0)
     json (2.6.3)
     json-diff (0.4.1)
     json-schema (2.8.1)
@@ -338,8 +356,6 @@ GEM
       rack (>= 1.0, < 3)
     rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
-    rack-proxy (0.7.6)
-      rack
     rack-test (2.0.2)
       rack (>= 1.3)
     rails (6.1.7.2)
@@ -478,7 +494,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    semantic_range (3.0.0)
     sentry-rails (5.8.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.8.0)
@@ -487,11 +502,6 @@ GEM
     sentry-sidekiq (5.8.0)
       sentry-ruby (~> 5.8.0)
       sidekiq (>= 3.0)
-    shakapacker (6.5.6)
-      activesupport (>= 5.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     sidekiq (6.5.8)
@@ -517,6 +527,7 @@ GEM
       capybara (~> 3.15)
       site_prism-all_there (>= 0.3.1, < 1.0)
     site_prism-all_there (0.3.2)
+    smart_properties (1.17.0)
     solargraph (0.48.0)
       backport (~> 1.2)
       benchmark
@@ -612,11 +623,13 @@ DEPENDENCIES
   canonical-rails (~> 0.2.14)
   capybara (~> 3.38)
   countries (~> 5.3)
+  cssbundling-rails (~> 1.1)
   cypress-on-rails (~> 1.13)
   database_cleaner-active_record
   devise (>= 4.8.0)
   discard (~> 1.2, >= 1.2.0)
   dotenv-rails (~> 2.8.1)
+  erb_lint (>= 0.1.1)
   factory_bot_rails (~> 6.2.0)
   faker
   foreman
@@ -627,6 +640,7 @@ DEPENDENCIES
   govuk-components (~> 3.3)
   govuk_design_system_formbuilder (~> 3.3)
   httpclient (~> 2.8, >= 2.8.3)
+  jsbundling-rails
   json-diff (~> 0.4.1)
   json-schema (>= 2.8.1)
   jsonapi-rspec
@@ -670,7 +684,6 @@ DEPENDENCIES
   sentry-rails (~> 5.5)
   sentry-ruby (~> 5.7)
   sentry-sidekiq
-  shakapacker (~> 6.5.6)
   shoulda-matchers (~> 5.3)
   sidekiq
   sidekiq-cron
@@ -679,6 +692,8 @@ DEPENDENCIES
   solargraph
   spring
   spring-watcher-listen (~> 2.1)
+  sprockets (~> 4.2.0)
+  sprockets-rails
   stackprof
   strong_migrations (~> 1.4)
   timecop

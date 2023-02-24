@@ -32,6 +32,8 @@ module Api
           expect(rows[0]["works_in_school"]).to eql(npq_application.works_in_school.to_s)
           expect(rows[0]["eligible_for_funding"]).to eql(npq_application.eligible_for_dfe_funding.to_s)
           expect(rows[0]["targeted_delivery_funding_eligibility"]).to eql(npq_application.targeted_delivery_funding_eligibility.to_s)
+          expect(rows[0]["itt_provider"]).to eql(npq_application.itt_provider)
+          expect(rows[0]["lead_mentor"]).to eql(npq_application.lead_mentor.to_s)
         end
       end
     end

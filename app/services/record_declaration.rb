@@ -156,14 +156,10 @@ private
   end
 
   def delivery_partner
-    relevant_induction_record
+    Induction::FindBy.call(participant_profile:, lead_provider: cpd_lead_provider.lead_provider)
       &.induction_programme
       &.partnership
       &.delivery_partner
-  end
-
-  def relevant_induction_record
-    participant_profile.latest_induction_record_for(cpd_lead_provider:)
   end
 
   def validate_evidence_held?

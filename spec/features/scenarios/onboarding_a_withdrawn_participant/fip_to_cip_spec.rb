@@ -21,10 +21,7 @@ def when_context(scenario)
 end
 
 RSpec.feature "FIP to CIP - Onboarding a withdrawn participant",
-              with_feature_flags: {
-                eligibility_notifications: "active",
-                change_of_circumstances: "active",
-              },
+              with_feature_flags: { eligibility_notifications: "active" },
               type: :feature,
               end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps

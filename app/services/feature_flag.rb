@@ -17,7 +17,6 @@ class FeatureFlag
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
     eligibility_notifications
-    change_of_circumstances
     api_v3
     appropriate_bodies
   ].freeze

@@ -4,28 +4,35 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version to deploy
+        description: Version to deploy ("vx.x.x")
         required: true
 
 jobs:
-  deploy:
+  validate-inputs:
     runs-on: ubuntu-20.04
-    steps:
-      - uses: softprops/turnstyle@v1
-        name: Check workflow concurrency
-        with:
-          poll-interval-seconds: 20
-          same-branch-only: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    steps:
+      - name: Check tag format
+        run: |
+          echo ${{ github.event.inputs.version }} | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$'
+
+  deploy-to-production:
+    runs-on: ubuntu-20.04
+    needs: [validate-inputs]
+    concurrency:
+      group: deploy-to-production
+
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.version }}
 
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
+
       - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v1.4.0
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 0.14.0
 
@@ -37,7 +44,7 @@ jobs:
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_PROD_PASSWORD }}
           TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
         run: |
-          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-prod:${{ github.event.inputs.version }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKER_REPOSITORY }}-prod:${{ github.event.inputs.version }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-037149fa-bf9a-4577-a066-f627d277d6c4"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/production.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_PRODUCTION}}", "RELEASE_VERSION":"${{github.event.inputs.version}}"}' -var 'logstash_url=${{secrets.SYSLOG_DRAIN_URL}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'

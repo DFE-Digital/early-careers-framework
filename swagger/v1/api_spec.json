@@ -1882,6 +1882,19 @@
         }
       },
       "ECFParticipantDeclarationAttributes": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationStartedAttributesRequest"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationRetainedAttributesRequest"
+          },
+          {
+            "$ref": "#/components/schemas/ECFParticipantDeclarationCompletedAttributesRequest"
+          }
+        ]
+      },
+      "ECFParticipantCompletedDeclarationAttributes": {
         "description": "The data attributes associated with a participant declaration response",
         "type": "object",
         "required": [
@@ -2002,7 +2015,8 @@
           "participant_id",
           "declaration_type",
           "declaration_date",
-          "course_identifier"
+          "course_identifier",
+          "evidence_held"
         ],
         "properties": {
           "participant_id": {
@@ -2032,6 +2046,15 @@
               "ecf-mentor"
             ],
             "example": "ecf-induction"
+          },
+          "evidence_held": {
+            "description": "The type of evidence that the lead provider holds on their platform to demonstrate that the participant has met the retention criteria for the current milestone period",
+            "type": "string",
+            "enum": [
+              "training-event-attended",
+              "self-study-material-completed",
+              "other"
+            ]
           }
         }
       },
@@ -3294,7 +3317,7 @@
             "example": [
               {
                 "id": "db3a7848-7308-4879-942a-c4a70ced400a",
-                "type": "participant",
+                "type": "npq_application",
                 "attributes": {
                   "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
                   "full_name": "Isabelle MacDonald",
@@ -3310,7 +3333,9 @@
                   "funding_choice": "trust",
                   "course_identifier": "npq-leading-teaching",
                   "employer_name": null,
-                  "employment_role": null
+                  "employment_role": null,
+                  "lead_mentor": null,
+                  "itt_provider": "University of Southampton"
                 }
               }
             ]
@@ -3624,6 +3649,18 @@
             "nullable": true,
             "type": "string",
             "example": "FRA"
+          },
+          "lead_mentor": {
+            "description": "This field indicates whether the applicant is an ITT lead mentor.\n",
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "itt_provider": {
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "nullable": true,
+            "type": "string",
+            "example": "University of Southampton"
           }
         }
       },
@@ -3771,6 +3808,18 @@
             "description": "The start year of the cohort this application belongs to",
             "type": "string",
             "example": "2021"
+          },
+          "lead_mentor": {
+            "description": "This field indicates whether the applicant is an ITT lead mentor.\n",
+            "nullable": true,
+            "type": "boolean",
+            "example": true
+          },
+          "itt_provider": {
+            "description": "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
+            "nullable": true,
+            "type": "string",
+            "example": "University of Southampton"
           }
         }
       },

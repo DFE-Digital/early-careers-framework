@@ -44,13 +44,9 @@ class ParticipantProfile::ECFPolicy < ParticipantProfilePolicy
 private
 
   def same_school?
-    if FeatureFlag.active?(:change_of_circumstances)
-      InductionRecord.joins(:school)
-        .where(school: { id: user.induction_coordinator_profile.schools.select(:id) })
-        .where(participant_profile_id: record.id)
-        .any?
-    else
-      user.induction_coordinator_profile.schools.include?(record.school)
-    end
+    InductionRecord.joins(:school)
+      .where(school: { id: user.induction_coordinator_profile.schools.select(:id) })
+      .where(participant_profile_id: record.id)
+      .any?
   end
 end

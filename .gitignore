@@ -55,3 +55,6 @@ tokens
 /spec/examples.txt
 
 /public/api-reference
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
