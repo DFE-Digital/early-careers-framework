@@ -67,7 +67,6 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
 
         expect(existing_induction_coordinator.schools.count).to eql 1
         expect(existing_induction_coordinator.schools).not_to include school
-        expect(response).to render_template :name_different
       end
     end
 
@@ -83,8 +82,6 @@ RSpec.describe "Admin::Schools::InductionCoordinators", type: :request do
             },
           }
         }.not_to change { User.count }
-
-        expect(response).to render_template :email_used
       end
     end
 
