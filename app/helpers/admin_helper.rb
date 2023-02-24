@@ -59,8 +59,8 @@ module AdminHelper
 
     safe_join([
       tag.span(role, class: "govuk-caption-xl"),
-      tag.h1(class: "govuk-heading-xl") { safe_join([full_name, visually_hidden]) },
-      tag.p do
+      tag.h1(class: "govuk-heading-xl govuk-!-margin-bottom-4") { safe_join([full_name, visually_hidden]) },
+      tag.p(class: "govuk-!-margin-top-1 govuk-!-margin-bottom-1") do
         safe_join(
           [
             tag.span("TRN: ", class: "govuk-body govuk-!-font-weight-bold"),
@@ -68,7 +68,7 @@ module AdminHelper
           ],
         )
       end,
-      tag.p do
+      tag.p(class: "govuk-!-margin-top-1 govuk-!-margin-bottom-3") do
         safe_join(
           [
             tag.span("Cohort: ", class: "govuk-body govuk-!-font-weight-bold"),
