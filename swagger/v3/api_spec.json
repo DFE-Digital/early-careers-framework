@@ -2348,7 +2348,7 @@
     },
     "/api/v3/statements": {
       "get": {
-        "summary": "Retrieve financial statements",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve financial statements",
         "operationId": "statements_get",
         "tags": [
           "statements"
@@ -2400,7 +2400,7 @@
     },
     "/api/v3/statements/{id}": {
       "get": {
-        "summary": "Retrieve specific financial statement",
+        "summary": "<b>Note, this endpoint is new.</b><br/>Retrieve specific financial statement",
         "operationId": "statement_get",
         "tags": [
           "statements"
