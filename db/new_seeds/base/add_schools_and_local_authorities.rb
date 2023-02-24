@@ -16,18 +16,14 @@ def add_school_to_local_authority(school:, local_authority:, lead_providers:, co
 
       scenarios = Random.rand(1..4).times.map do
         NewSeeds::Scenarios::Participants::Mentors::MentoringMultipleEctsWithSameProvider
-          .new(
-            school:,
-            lead_provider:,
-            number: Random.rand(1..4), # number of mentees
-          )
+          .new(school:, lead_provider:)
           .build
+          .add_mentees(Random.rand(1..4), with_eligibility: false, with_validation_data: true)
       end
 
       scenarios.flat_map(&:mentees).map(&:participant_profile).each do |participant_profile|
         Rails.logger.debug("seeding eligibility for #{participant_profile.user.full_name}")
 
-        participant_profile.ecf_participant_eligibility&.destroy!
         FactoryBot.create(:seed_ecf_participant_eligibility, random_weighted_eligibility_trait, participant_profile:)
       end
     end

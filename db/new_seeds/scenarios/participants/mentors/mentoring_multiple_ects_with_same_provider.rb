@@ -19,7 +19,6 @@ module NewSeeds
                         :mentees,
                         :mentee_induction_records,
                         :school,
-                        :number,
                         :user,
                         :school_cohort,
                         :partnership,
@@ -27,11 +26,10 @@ module NewSeeds
                         :lead_provider,
                         :induction_programme
 
-          def initialize(school: nil, mentor: nil, lead_provider: nil, delivery_partner: nil, number: 2)
+          def initialize(school: nil, mentor: nil, lead_provider: nil, delivery_partner: nil)
             Rails.logger.info("################# seeding scenario MentoringMultipleEctsWithSameProvider")
             @school           = school
             @mentor           = mentor
-            @number           = number
             @lead_provider    = lead_provider
             @delivery_partner = delivery_partner
           end
@@ -57,11 +55,17 @@ module NewSeeds
                                                      school_cohort:,
                                                      partnership:)
 
-            # set up mentor
             @mentor ||= build_mentor
 
+            self
+          end
+
+          def add_mentees(number, with_eligibility: true, with_validation_data: true)
+            raise(StandardError, "A mentor is required before mentees are added") if @mentor.blank?
+
             # set up ECTs
-            @mentees = number.times.map { build_mentee }
+            Rails.logger.info("seeding #{number} mentees with eligibility: #{with_eligibility}, validation_data: #{with_validation_data}")
+            @mentees = number.times.map { build_mentee(with_eligibility:, with_validation_data:) }
 
             # assign ECTs to mentor
             @mentee_induction_records = mentees.each do |mentee|
@@ -77,11 +81,11 @@ module NewSeeds
           end
 
           def build_mentor
-            build_person(mentor: true)
+            build_person(mentor: true, with_validation_data: false, with_eligibility: false)
           end
 
-          def build_mentee
-            build_person(mentor: false)
+          def build_mentee(with_eligibility:, with_validation_data:)
+            build_person(mentor: false, with_eligibility:, with_validation_data:)
           end
 
         private
@@ -90,16 +94,17 @@ module NewSeeds
             Cohort.find_by!(start_year: year)
           end
 
-          def build_person(mentor: false)
+          def build_person(mentor:, with_validation_data:, with_eligibility:)
             scenario = if mentor
                          NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
                        else
                          NewSeeds::Scenarios::Participants::Ects::Ect
                        end
-            participant = scenario.new(school_cohort:)
-                                  .build
-                                  .chain_add_validation_data
-                                  .chain_add_eligibility
+
+            participant = scenario.new(school_cohort:).build
+
+            participant.chain_add_eligibility if with_eligibility
+            participant.chain_add_validation_data if with_validation_data
 
             Person.new(
               user: participant.user,
