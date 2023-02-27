@@ -1,0 +1,9 @@
+type: object
+required:
+  - delivery_partner_id
+properties:
+  delivery_partner_id:
+    description: "The unique ID of the delivery partner you will work with for this school partnership"
+    type: string
+    format: uuid
+    example: cd3a12347-7308-4879-942a-c4a70ced400a

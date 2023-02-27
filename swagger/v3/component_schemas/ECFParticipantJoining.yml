@@ -1,0 +1,20 @@
+description: "The details of an ECF Participant joining a school"
+type: object
+required:
+  - school_urn
+  - provider
+  - date
+properties:
+  school_urn:
+    description: "The URN of the school the participant is joining"
+    type: string
+    example: 123456
+  provider:
+    description: "The name of the provider the participant is joining"
+    type: string
+    example: Example Institute
+  date:
+    description: The date the participant will be joining the school
+    type: string
+    format: date
+    example: "2021-05-31"

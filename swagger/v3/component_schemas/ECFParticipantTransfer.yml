@@ -1,4 +1,4 @@
-description: "Note, this endpoint includes updated specifications. The details of a participant"
+description: "Note, this is a new endpoint. The details of an ECF participant transfer"
 type: object
 required:
   - id
@@ -13,6 +13,6 @@ properties:
   type:
     description: "The data type"
     type: string
-    example: participant
+    example: participant-transfer
   attributes:
-    $ref: "#/components/schemas/ECFParticipantAttributes"
+    $ref: "#/components/schemas/ECFParticipantTransferAttributes"

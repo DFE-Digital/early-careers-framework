@@ -1,0 +1,22 @@
+description: "The details of an ECF Participant withdrawal"
+type: object
+required:
+  - reason
+  - date
+properties:
+  reason:
+    description: "The reason a participant was withdrawn"
+    type: string
+    example: moved-school
+    enum:
+      - left-teaching-profession
+      - moved-school
+      - mentor-no-longer-being-mentor
+      - school-left-fip
+      - started-in-error
+      - other
+  date:
+    description: The date and time the participant was withdrawn
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

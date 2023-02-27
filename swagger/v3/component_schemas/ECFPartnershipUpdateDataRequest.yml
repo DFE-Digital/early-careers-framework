@@ -1,0 +1,9 @@
+description: "Update An ECF partnership"
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - ecf-partnership-update
+  attributes:
+    $ref: "#/components/schemas/ECFPartnershipUpdateAttibutesRequest"

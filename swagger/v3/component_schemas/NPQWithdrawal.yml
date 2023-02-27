@@ -1,0 +1,32 @@
+description: "The details of an NPQ Participant withdrawal"
+type: object
+required:
+  - reason
+  - date
+properties:
+  reason:
+    description: "The reason a participant was withdrawn"
+    type: string
+    example: moved-school
+    enum:
+      - insufficient-capacity-to-undertake-programme
+      - personal-reason-health-or-pregnancy-related
+      - personal-reason-moving-school
+      - personal-reason-other
+      - insufficient-capacity
+      - change-in-developmental-or-personal-priorities
+      - change-in-school-circumstances
+      - change-in-school-leadership
+      - quality-of-programme-structure-not-suitable.
+      - quality-of-programme-content-not-suitable
+      - quality-of-programme-facilitation-not-effective
+      - quality-of-programme-accessibility
+      - quality-of-programme-other
+      - programme-not-appropriate-for-role-and-cpd-needs
+      - started-in-error
+      - other
+  date:
+    description: The date and time the participant was withdrawn
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

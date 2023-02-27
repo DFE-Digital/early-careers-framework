@@ -1,0 +1,7 @@
+description: "An ECF participant transfer"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ECFParticipantTransfer"

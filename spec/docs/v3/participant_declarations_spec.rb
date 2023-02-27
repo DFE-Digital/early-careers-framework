@@ -16,7 +16,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
   end
 
   path "/api/v3/participant-declarations" do
-    post "Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
+    post "<b>Note, this endpoint includes updated specifications.</b><br/>Declare a participant has reached a milestone. Idempotent endpoint - submitting exact copy of a request will return the same response body as submitting it the first time." do
       operationId :participant_declarations
       tags "Participant declarations"
       consumes "application/json"
@@ -53,7 +53,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                   value: {
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "ecf-participant-declaration",
+                      type: "participant-declaration",
                       attributes: {
                         participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
                         declaration_type: "started",
@@ -68,6 +68,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                         ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
+                        evidence_held: "other",
                       },
                     },
                   },
@@ -76,7 +77,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                   value: {
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "npq-participant-declaration",
+                      type: "participant-declaration",
                       attributes: {
                         participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                         declaration_type: "started",
@@ -85,10 +86,13 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                         state: "eligible",
                         updated_at: "2020-11-13T11:21:55Z",
                         created_at: "2020-11-13T11:21:55Z",
+                        delivery_partner_id: nil,
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
                         ineligible_for_funding_reason: nil,
+                        mentor_id: nil,
                         uplift_paid: true,
+                        evidence_held: nil,
                       },
                     },
                   },
@@ -136,7 +140,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
   end
 
   path "/api/v3/participant-declarations" do
-    get "List all participant declarations" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>List all participant declarations" do
       operationId :participant_declarations
       tags "participants declarations"
       security [bearerAuth: []]
@@ -180,7 +184,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                     data: [
                       {
                         id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                        type: "ecf-participant-declaration",
+                        type: "participant-declaration",
                         attributes: {
                           participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
                           declaration_type: "started",
@@ -195,11 +199,12 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                           ineligible_for_funding_reason: nil,
                           mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                           uplift_paid: true,
+                          evidence_held: "other",
                         },
                       },
                       {
                         id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                        type: "npq-participant-declaration",
+                        type: "participant-declaration",
                         attributes: {
                           participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                           declaration_type: "started",
@@ -211,8 +216,9 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                           statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                           clawback_statement_id: nil,
                           ineligible_for_funding_reason: nil,
-                          mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                          mentor_id: nil,
                           uplift_paid: true,
+                          evidence_held: "other",
                         },
                       },
                     ],
@@ -244,7 +250,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
              cpd_lead_provider:).id
     end
 
-    get "Get single participant declaration" do
+    get "<b>Note, this endpoint includes updated specifications.</b><br/>Get single participant declaration" do
       operationId :participant_declarations
       tags "participants declaration"
       security [bearerAuth: []]
@@ -271,7 +277,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                   value: {
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "ecf-participant-declaration",
+                      type: "participant-declaration",
                       attributes: {
                         participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
                         declaration_type: "started",
@@ -286,6 +292,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                         ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
+                        evidence_held: "other",
                       },
                     },
                   },
@@ -294,7 +301,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                   value: {
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "npq-participant-declaration",
+                      type: "participant-declaration",
                       attributes: {
                         participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                         declaration_type: "started",
@@ -303,11 +310,13 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                         state: "eligible",
                         updated_at: "2020-11-13T11:21:55Z",
                         created_at: "2020-11-13T11:21:55Z",
+                        delivery_partner_id: nil,
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
                         ineligible_for_funding_reason: nil,
-                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        mentor_id: nil,
                         uplift_paid: true,
+                        evidence_held: nil,
                       },
                     },
                   },
@@ -340,7 +349,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
   end
 
   path "/api/v3/participant-declarations/{id}/void" do
-    put "Void a declaration - it will not be soft-deleted" do
+    put "<b>Note, this endpoint includes updated specifications.</b><br/>Void a declaration - it will not be soft-deleted" do
       operationId :participant_declarations
       tags "Participant declarations"
       consumes "application/json"
@@ -373,7 +382,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                   value: {
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "ecf-participant-declaration",
+                      type: "participant-declaration",
                       attributes: {
                         participant_id: "08d78829-f864-417f-8a30-cb7655714e28",
                         declaration_type: "started",
@@ -388,6 +397,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                         ineligible_for_funding_reason: nil,
                         mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
                         uplift_paid: true,
+                        evidence_held: "other",
                       },
                     },
                   },
@@ -396,7 +406,7 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                   value: {
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "npq-participant-declaration",
+                      type: "participant-declaration",
                       attributes: {
                         participant_id: "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
                         declaration_type: "started",
@@ -405,11 +415,13 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
                         state: "voided",
                         updated_at: "2020-11-13T11:21:55Z",
                         created_at: "2020-11-13T11:21:55Z",
+                        delivery_partner_id: nil,
                         statement_id: "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
                         clawback_statement_id: nil,
                         ineligible_for_funding_reason: nil,
-                        mentor_id: "907f61ed-5770-4d38-b22c-1a4265939378",
+                        mentor_id: nil,
                         uplift_paid: true,
+                        evidence_held: nil,
                       },
                     },
                   },
