@@ -71,5 +71,4 @@ private
   def school_using_this_email(email)
     Identity.find_user_by(email:).schools.first
   end
-
 end
