@@ -5,21 +5,9 @@ module NewSeeds
     module Participants
       module Mentors
         class MentoringMultipleEctsWithSameProvider
-          Person = Struct.new(
-            :user,
-            :teacher_profile,
-            :participant_profile,
-            :participant_identity,
-            :ecf_participant_validation_data,
-            :ecf_participant_eligibility,
-            keyword_init: true,
-          )
-
           attr_accessor :mentor,
                         :mentees,
-                        :mentee_induction_records,
                         :school,
-                        :user,
                         :school_cohort,
                         :partnership,
                         :delivery_partner,
@@ -28,24 +16,24 @@ module NewSeeds
 
           def initialize(school: nil, mentor: nil, lead_provider: nil, delivery_partner: nil)
             Rails.logger.info("################# seeding scenario MentoringMultipleEctsWithSameProvider")
-            @school           = school
-            @mentor           = mentor
-            @lead_provider    = lead_provider
-            @delivery_partner = delivery_partner
+            @school            = school
+            @mentor            = mentor
+            @lead_provider     = lead_provider
+            @delivery_partner  = delivery_partner
           end
 
-          def build
+          def build(number_of_mentees: Random.rand(1..4), with_eligibility: true, with_validation_data: true)
             # set up school with cohort, lead provider, delivery partner and induction programme
-
             # we'll probably be doing a lot of this, might make sense to move it somewhere communal
             @school ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
             @lead_provider ||= FactoryBot.create(:seed_lead_provider)
             @delivery_partner ||= FactoryBot.create(:seed_delivery_partner)
 
-            @school_cohort = @school.school_cohorts.find_by(cohort: cohort(2022)) || FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school:)
+            cohort = cohort(2022)
+            @school_cohort = @school.school_cohorts.find_by(cohort:) || FactoryBot.create(:seed_school_cohort, cohort:, school:)
 
             @partnership = FactoryBot.create(:seed_partnership,
-                                             cohort: cohort(2022),
+                                             cohort:,
                                              school:,
                                              delivery_partner:,
                                              lead_provider:)
@@ -57,63 +45,42 @@ module NewSeeds
 
             @mentor ||= build_mentor
 
-            self
+            add_mentees(number_of_mentees, with_eligibility:, with_validation_data:)
           end
 
-          def add_mentees(number, with_eligibility: true, with_validation_data: true)
+        private
+
+          def build_mentor
+            NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+              .new(school_cohort:)
+              .build
+              .with_induction_record(induction_programme:)
+              .participant_profile
+          end
+
+          def build_mentee(with_eligibility:, with_validation_data:)
+            NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort:).build.tap do |ect|
+              ect.with_eligibility if with_eligibility
+              ect.with_validation_data if with_validation_data
+              ect.with_induction_record(induction_programme:, mentor_profile: mentor)
+            end
+          end
+
+          def add_mentees(number, with_eligibility:, with_validation_data:)
             raise(StandardError, "A mentor is required before mentees are added") if @mentor.blank?
 
-            # set up ECTs
             Rails.logger.info("seeding #{number} mentees with eligibility: #{with_eligibility}, validation_data: #{with_validation_data}")
-            @mentees = number.times.map { build_mentee(with_eligibility:, with_validation_data:) }
-
-            # assign ECTs to mentor
-            @mentee_induction_records = mentees.each do |mentee|
-              FactoryBot.create(:seed_induction_record,
-                                participant_profile: mentee.participant_profile,
-                                mentor_profile: mentor.participant_profile,
-                                induction_programme:)
-
-              Rails.logger.info("seeded induction record where #{mentor.user.full_name} is mentoring #{mentee.user.full_name}")
+            @mentees = number.times.map do
+              build_mentee(with_eligibility:, with_validation_data:).participant_profile.tap do |mentee|
+                Rails.logger.info("seeded induction record where #{mentor.full_name} is mentoring #{mentee.full_name}")
+              end
             end
 
             self
           end
 
-          def build_mentor
-            build_person(mentor: true, with_validation_data: false, with_eligibility: false)
-          end
-
-          def build_mentee(with_eligibility:, with_validation_data:)
-            build_person(mentor: false, with_eligibility:, with_validation_data:)
-          end
-
-        private
-
           def cohort(year)
             Cohort.find_by!(start_year: year)
-          end
-
-          def build_person(mentor:, with_validation_data:, with_eligibility:)
-            scenario = if mentor
-                         NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-                       else
-                         NewSeeds::Scenarios::Participants::Ects::Ect
-                       end
-
-            participant = scenario.new(school_cohort:).build
-
-            participant.chain_add_eligibility if with_eligibility
-            participant.chain_add_validation_data if with_validation_data
-
-            Person.new(
-              user: participant.user,
-              teacher_profile: participant.teacher_profile,
-              participant_identity: participant.participant_identity,
-              participant_profile: participant.participant_profile,
-              ecf_participant_validation_data: participant.ecf_participant_validation_data,
-              ecf_participant_eligibility: participant.ecf_participant_eligibility,
-            )
           end
         end
       end

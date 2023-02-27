@@ -84,7 +84,7 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
     .build(
       schedule: mentor_params.schedule,
     )
-    .chain_add_validation_data
-    .chain_add_eligibility
+    .with_validation_data
+    .with_eligibility
     .add_induction_record(induction_programme: mentor_params.induction_programme)
 end

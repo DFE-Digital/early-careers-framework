@@ -5,14 +5,7 @@ module NewSeeds
     module Participants
       module Ects
         class Ect
-          attr_reader :new_user_attributes,
-                      :participant_identity,
-                      :participant_profile,
-                      :school_cohort,
-                      :teacher_profile,
-                      :user
-
-          delegate :ecf_participant_eligibility, :ecf_participant_validation_data, to: :participant_profile
+          attr_reader :participant_profile
 
           def initialize(school_cohort:, full_name: nil, email: nil)
             @school_cohort = school_cohort
@@ -21,22 +14,25 @@ module NewSeeds
 
           def build(**_profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
-            @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
             @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school)
-            @participant_profile = FactoryBot.create(:seed_ect_participant_profile, participant_identity:, teacher_profile:, school_cohort:)
+            @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
+                                                     participant_identity: FactoryBot.create(:seed_participant_identity, user:),
+                                                     teacher_profile:,
+                                                     school_cohort:)
 
             self
           end
 
-          def chain_add_induction_record(**induction_args)
+          def with_induction_record(**induction_args)
             add_induction_record(**induction_args)
             self
           end
 
-          def add_induction_record(induction_programme:, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active")
+          def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active")
             FactoryBot.create(
               :seed_induction_record,
               induction_programme:,
+              mentor_profile:,
               participant_profile:,
               schedule: Finance::Schedule::ECF.default_for(cohort: induction_programme.cohort),
               start_date:,
@@ -46,7 +42,7 @@ module NewSeeds
             )
           end
 
-          def chain_add_validation_data(**args)
+          def with_validation_data(**args)
             add_validation_data(**args)
 
             self
@@ -62,7 +58,7 @@ module NewSeeds
             FactoryBot.create(:seed_ecf_participant_validation_data, **validation_data.compact)
           end
 
-          def chain_add_eligibility(**args)
+          def with_eligibility(**args)
             add_eligibility(**args)
 
             self
@@ -80,6 +76,13 @@ module NewSeeds
 
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
           end
+
+        private
+
+          attr_reader :new_user_attributes,
+                      :school_cohort,
+                      :teacher_profile,
+                      :user
         end
       end
     end

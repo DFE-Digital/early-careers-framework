@@ -35,13 +35,6 @@ module NewSeeds
             @school_to = to_school
           end
 
-          delegate :ecf_participant_eligibility,
-                   :ecf_participant_validation_data,
-                   :participant_identity,
-                   :teacher_profile,
-                   :user,
-                   to: :participant_profile
-
         private
 
           def setup
@@ -50,13 +43,6 @@ module NewSeeds
             @school_to ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
             @school_cohort_from = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school: school_from)
             @school_cohort_to = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school: school_to)
-
-            # a teacher to transfer
-            @participant_profile = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: school_cohort_from)
-                                                                               .build
-                                                                               .chain_add_validation_data
-                                                                               .chain_add_eligibility
-                                                                               .participant_profile
 
             # create two lead providers
             @lead_provider_from = FactoryBot.create(:seed_lead_provider)
@@ -89,6 +75,15 @@ module NewSeeds
                                                         :fip,
                                                         school_cohort: school_cohort_to,
                                                         partnership: partnership_to)
+
+            # a teacher to transfer
+            @participant_profile = NewSeeds::Scenarios::Participants::Ects::Ect
+                                     .new(school_cohort: school_cohort_from)
+                                     .build
+                                     .with_validation_data
+                                     .with_eligibility
+                                     .with_induction_record(induction_programme: induction_programme_from)
+                                     .participant_profile
           end
 
           def cohort(year)

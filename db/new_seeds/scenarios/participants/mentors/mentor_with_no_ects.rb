@@ -5,14 +5,7 @@ module NewSeeds
     module Participants
       module Mentors
         class MentorWithNoEcts
-          attr_reader :new_user_attributes,
-                      :participant_identity,
-                      :participant_profile,
-                      :school_cohort,
-                      :teacher_profile,
-                      :user
-
-          delegate :ecf_participant_eligibility, :ecf_participant_validation_data, to: :participant_profile
+          attr_reader :participant_profile
 
           def initialize(school_cohort: nil, full_name: nil, email: nil)
             @school_cohort = school_cohort
@@ -21,14 +14,17 @@ module NewSeeds
 
           def build(**profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
-            @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
             @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school)
-            @participant_profile = FactoryBot.create(:seed_mentor_participant_profile, :valid, participant_identity:, **profile_args)
+            @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
+                                                     participant_identity: FactoryBot.create(:seed_participant_identity, user:),
+                                                     school_cohort:,
+                                                     teacher_profile:,
+                                                     **profile_args)
 
             self
           end
 
-          def chain_add_induction_record(**induction_args)
+          def with_induction_record(**induction_args)
             add_induction_record(**induction_args)
             self
           end
@@ -46,7 +42,7 @@ module NewSeeds
             )
           end
 
-          def chain_add_validation_data(**args)
+          def with_validation_data(**args)
             add_validation_data(**args)
             self
           end
@@ -57,10 +53,11 @@ module NewSeeds
                                 date_of_birth: args[:date_of_birth],
                                 nino: args[:nino],
                                 participant_profile: }
+
             FactoryBot.create(:seed_ecf_participant_validation_data, **validation_data.compact)
           end
 
-          def chain_add_eligibility(**args)
+          def with_eligibility(**args)
             add_eligibility(**args)
             self
           end
@@ -77,6 +74,13 @@ module NewSeeds
 
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
           end
+
+        private
+
+          attr_reader :new_user_attributes,
+                      :school_cohort,
+                      :teacher_profile,
+                      :user
         end
       end
     end
