@@ -160,6 +160,9 @@ group :development do
   gem "rack-mini-profiler"
   gem "stackprof"
 
+  # detect n+1 queries or unnecessary eager loading
+  gem "bullet"
+
   gem "nokogiri"
 end
 
