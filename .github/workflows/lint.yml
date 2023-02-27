@@ -22,7 +22,7 @@ jobs:
         run: bundle install
 
       - name: Lint Ruby
-        run: bundle exec rubocop --format json --out=${{ github.workspace }}/rubocop-result.json
+        run: bundle exec rubocop --format progress --format json --out=${{ github.workspace }}/rubocop-result.json
 
       - name: Lint ERB Templates
         if: false
