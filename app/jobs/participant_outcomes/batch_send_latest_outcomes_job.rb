@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require Rails.root.join "lib/active_job/queue_adapters/sidekiq_adapter_patch"
-
 module ParticipantOutcomes
   class BatchSendLatestOutcomesJob < ApplicationJob
     queue_as :participant_outcomes
@@ -31,8 +29,8 @@ module ParticipantOutcomes
     end
 
     def can_enqueue_jobs?
-      ActiveJob::Base.queue_adapter.enqueued_jobs
-        .detect { |job| job[:job] == SendToQualifiedTeachersApiJob }
+      Sidekiq::Queue.new("participant_outcomes")
+        .detect { |job| job.display_class == "ParticipantOutcomes::SendToQualifiedTeachersApiJob" }
         .nil?
     end
 

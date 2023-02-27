@@ -8,14 +8,18 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
   let(:outcomes) { [outcome_1, outcome_2] }
   let(:default_batch_size) { described_class::DEFAULT_BATCH_SIZE }
   let(:default_delay) { described_class::DEFAULT_REQUEUE_DELAY }
+  let(:queue_double) { double(detect: nil) }
 
   before do
     allow(ParticipantOutcome::NPQ).to receive(:to_send_to_qualified_teachers_api).and_return(outcomes)
+    allow(Sidekiq::Queue).to receive(:new).with("participant_outcomes").and_return(queue_double)
   end
 
   describe "#perform" do
     context "when there are already instances of SendToQualifiedTeachersApiJob in the job queue" do
-      before { ParticipantOutcomes::SendToQualifiedTeachersApiJob.set(wait_until: 1.year.from_now).perform_later(participant_outcome_id: 1) }
+      before do
+        allow(queue_double).to receive(:detect).and_yield(double(display_class: "ParticipantOutcomes::SendToQualifiedTeachersApiJob"))
+      end
 
       it "requeues itself" do
         expect { described_class.perform_now }.to have_enqueued_job(described_class).with(default_batch_size, default_delay)
