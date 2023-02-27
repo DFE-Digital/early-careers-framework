@@ -19,7 +19,7 @@ module ParticipantOutcomes
 
       @batch_size = batch_size
 
-      outcomes.first(@batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(outcome.id) }
+      outcomes.first(@batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(participant_outcome_id: outcome.id) }
 
       self.class.set(wait: REQUEUE_DELAY).perform_later if should_enqueue_again?
     end

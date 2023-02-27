@@ -13,7 +13,7 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
 
   describe "#perform" do
     context "when there are already instances of SendToQualifiedTeachersApiJob in the job queue" do
-      before { ParticipantOutcomes::SendToQualifiedTeachersApiJob.set(wait_until: 1.year.from_now).perform_later(1) }
+      before { ParticipantOutcomes::SendToQualifiedTeachersApiJob.set(wait_until: 1.year.from_now).perform_later(participant_outcome_id: 1) }
 
       it "requeues itself" do
         expect { described_class.perform_now }.to have_enqueued_job(described_class)
@@ -30,8 +30,8 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       it "enqueues the send job for each record" do
         described_class.perform_now
 
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.exactly(:once).with(1))
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.exactly(:once).with(2))
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.exactly(:once).with(participant_outcome_id: 1))
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to(have_been_enqueued.exactly(:once).with(participant_outcome_id: 2))
       end
     end
 
@@ -45,8 +45,8 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       it "only enqueues the send job for the first records up to the batch_size" do
         described_class.perform_now(batch_size)
 
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to have_been_enqueued.exactly(:once).with(1)
-        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).not_to have_been_enqueued.with(2)
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).to have_been_enqueued.exactly(:once).with(participant_outcome_id: 1)
+        expect(ParticipantOutcomes::SendToQualifiedTeachersApiJob).not_to have_been_enqueued.with(participant_outcome_id: 2)
       end
     end
   end
