@@ -13,7 +13,7 @@ module ParticipantOutcomes
     def perform(batch_size = DEFAULT_BATCH_SIZE, delay = DEFAULT_REQUEUE_DELAY)
       unless can_enqueue_jobs?
         Rails.logger.info "BatchSendLatestOutcomesJob: Unable to proceed due to pending SendToQualifiedTeachersApiJob jobs; re-queueing to try again."
-        self.class.set(wait: delay).perform_later
+        self.class.set(wait: delay).perform_later(batch_size, delay)
         return
       end
 
@@ -21,7 +21,7 @@ module ParticipantOutcomes
 
       outcomes.first(@batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(participant_outcome_id: outcome.id) }
 
-      self.class.set(wait: delay).perform_later if should_enqueue_again?
+      self.class.set(wait: delay).perform_later(batch_size, delay) if should_enqueue_again?
     end
 
   private

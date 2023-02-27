@@ -6,6 +6,8 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
   let(:outcome_1) { double(id: 1) }
   let(:outcome_2) { double(id: 2) }
   let(:outcomes) { [outcome_1, outcome_2] }
+  let(:default_batch_size) { described_class::DEFAULT_BATCH_SIZE }
+  let(:default_delay) { described_class::DEFAULT_REQUEUE_DELAY }
 
   before do
     allow(ParticipantOutcome::NPQ).to receive(:to_send_to_qualified_teachers_api).and_return(outcomes)
@@ -16,7 +18,7 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       before { ParticipantOutcomes::SendToQualifiedTeachersApiJob.set(wait_until: 1.year.from_now).perform_later(participant_outcome_id: 1) }
 
       it "requeues itself" do
-        expect { described_class.perform_now }.to have_enqueued_job(described_class)
+        expect { described_class.perform_now }.to have_enqueued_job(described_class).with(default_batch_size, default_delay)
       end
     end
 
@@ -39,7 +41,7 @@ RSpec.describe ParticipantOutcomes::BatchSendLatestOutcomesJob do
       let(:batch_size) { 1 }
 
       it "requeues itself" do
-        expect { described_class.perform_now(batch_size) }.to have_enqueued_job(described_class)
+        expect { described_class.perform_now(batch_size) }.to have_enqueued_job(described_class).with(batch_size, default_delay)
       end
 
       it "only enqueues the send job for the first records up to the batch_size" do
