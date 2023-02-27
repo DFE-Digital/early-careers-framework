@@ -67,9 +67,13 @@ private
 
   def request_body
     @request_body ||= {
-      completionDate: participant_outcome.completion_date.to_s,
+      completionDate: completion_date,
       qualificationType: participant_outcome.participant_declaration.qualification_type,
     }
+  end
+
+  def completion_date
+    participant_outcome.completion_date.to_s if participant_outcome.passed?
   end
 
   def trn
