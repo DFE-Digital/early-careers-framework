@@ -32,8 +32,8 @@ module Admin
       @induction_tutor_form = NominateInductionTutorForm.new(school_induction_tutor_attributes.merge(tutor_form_params))
 
       if @induction_tutor_form.valid?(%i[full_name email])
-        UpdateInductionTutor.call(school:,
-                                  full_name:@induction_tutor_form.full_name,
+        UpdateInductionTutor.call(school: @school,
+                                  full_name: @induction_tutor_form.full_name,
                                   email: @induction_tutor_form.email)
         set_success_message(content: "Induction tutor details updated", title: "Success")
         redirect_to admin_school_path(@school)

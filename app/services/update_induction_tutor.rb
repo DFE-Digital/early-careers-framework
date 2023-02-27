@@ -11,8 +11,8 @@ class UpdateInductionTutor < BaseService
 
   def call
     ActiveRecord::Base.transaction do
-      @school.induction_tutor.update!(full_name: @induction_tutor_form.full_name,
-                                      email: @induction_tutor_form.email)
+      @school.induction_tutor.update!(full_name: @full_name,
+                                      email: @email)
     end
   end
 end
