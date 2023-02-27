@@ -3834,7 +3834,7 @@
             "type": "ecf-partnership",
             "attributes": {
               "cohort": "2021",
-              "urn": "123456",
+              "school_id": "24b61d1c-ad95-4000-aee0-afbdd542294a",
               "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
             }
           }
