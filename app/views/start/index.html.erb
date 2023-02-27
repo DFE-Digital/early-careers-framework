@@ -38,10 +38,16 @@
             for more information about setting up your training.
           </li>
           <li>
-            <a href="https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects" target="_blank"> <span class="govuk-visually-hidden">(opens in new tab)</span>Read our guidance for early career teachers</a> for more information about the programme and your entitlements.
+            <%= govuk_link_to "https://www.gov.uk/government/collections/induction-training-and-support-for-early-career-teachers-ects", target: :_blank, rel: "noopener noreferrer" do %>
+              Read our guidance for early career teachers <span class="govuk-visually-hidden">(opens in new tab)</span>
+            <% end %>
+            for more information about the programme and your entitlements.
           </li>
           <li>
-            <a href="https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training">Read our guidance for mentors <span class="govuk-visually-hidden">(opens in new tab)</span></a> for more information about how to support early career teachers.
+            <%= govuk_link_to "https://www.gov.uk/guidance/guidance-for-schools-how-to-manage-ecf-based-training", target: :_blank, rel: "noopener noreferrer" do %>
+              Read our guidance for mentors <span class="govuk-visually-hidden">(opens in new tab)</span>
+            <% end %>
+            for more information about how to support early career teachers.
           </li>
         </ul>
       </nav>
