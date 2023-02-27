@@ -22,10 +22,13 @@ describe Analytics::ECFInductionService do
 
     described_class.upsert_record(induction_record)
 
-    record = Analytics::ECFInduction.find_by(induction_record_id: induction_record.id)
-    expect(record.induction_status).to eq "leaving"
-    expect(record.end_date).to be_within(1.second).of end_date
-    expect(record.cohort_id).to eq induction_programme.school_cohort.cohort.id
-    expect(record.induction_record_created_at).to eq induction_record.created_at
+    aggregate_failures do
+      record = Analytics::ECFInduction.find_by(induction_record_id: induction_record.id)
+      expect(record.induction_status).to eq "leaving"
+      expect(record.end_date).to be_within(1.second).of end_date
+      expect(record.cohort_id).to eq induction_programme.school_cohort.cohort.id
+      expect(record.induction_record_created_at).to eq induction_record.created_at
+      expect(record.partnership_id).to eq induction_record.partnership_id
+    end
   end
 end
