@@ -1,0 +1,41 @@
+<%= govuk_summary_list do |summary_list| %>
+  <% summary_list.row do |row| %>
+    <% row.key { "Name" } %>
+    <% row.value { form.full_name } %>
+    <% unless form.found_participant_in_dqt? %>
+      <% row.action(text: "Change",
+                    visually_hidden_text: "name",
+                    href: add_participant_wizard_show_change_schools_participants_path(step: :name)) %>
+      <% else %>
+        <% row.action() %>
+      <% end %>
+  <% end %>
+
+  <% if form.trn %>
+    <% summary_list.row do |row| %>
+      <% row.key { "TRN" } %>
+      <% row.value { form.trn } %>
+      <% unless form.found_participant_in_dqt? %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "TRN",
+                      href: add_participant_wizard_show_change_schools_participants_path(step: :trn)) %>
+      <% else %>
+        <% row.action() %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if form.date_of_birth %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Date of birth" } %>
+      <% row.value { form.date_of_birth.to_date.to_s(:govuk) } %>
+      <% unless form.found_participant_in_dqt? %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "date of birth",
+                      href: add_participant_wizard_show_change_schools_participants_path(step: :date_of_birth)) %>
+      <% else %>
+        <% row.action() %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

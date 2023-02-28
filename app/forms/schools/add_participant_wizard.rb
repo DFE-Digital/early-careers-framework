@@ -6,7 +6,10 @@ module Schools
 
     class InvalidStep < StandardError; end
 
-    attr_reader :current_step, :submitted_params, :current_state, :request, :current_user
+    attr_reader :current_step, :submitted_params, :current_state, :current_user
+
+    delegate :before_render, to: :form
+    delegate :after_render, to: :form
 
     def initialize(current_step:, current_state:, current_user:, submitted_params: {})
       set_current_step(current_step)
@@ -15,6 +18,8 @@ module Schools
       @current_state = current_state
       @submitted_params = submitted_params
 
+      @return_point = nil
+
       load_current_user_into_current_state
     end
 
@@ -22,36 +27,61 @@ module Schools
       "Schools::AddParticipantWizardSteps::#{step.to_s.camelcase}Step".constantize.permitted_params
     end
 
-    def before_render
-      form.before_render
+    def set_current_state(state)
+      @current_state = state
+      @form = build_form
     end
 
-    def after_render
-      form.after_render
+    def return_point
+      (current_state["return_point"] ||= "").to_s.dasherize
+    end
+
+    def set_return_point(step)
+      current_state["return_point"] = step
     end
 
     def form
       @form ||= build_form
     end
 
-    def save!
-      form.attributes.each do |k, v|
-        current_state[k.to_s] = v
-      end
+    def changing_answer(is_changing)
+      current_state["changing_answer"] = is_changing ? "1" : "0"
+    end
 
-      form.after_save
+    def changing_answer?
+      current_state["changing_answer"] == "1"
+    end
+
+    def save!
+      save_progress!
+
+      if form.journey_complete?
+        add_participant!
+      end
     end
 
     def next_step_path
-      form.next_step.to_s.dasherize
+      if changing_answer?
+        if dqt_record(force_recheck: true).present?
+          if email.present?
+            "check-answers"
+          else
+            "email"
+          end
+        else
+          "cannot-find-their-details"
+        end
+      else
+        form.next_step.to_s.dasherize
+      end
     end
 
     def previous_step_path
-      form.previous_step.to_s.dasherize
-    end
-
-    def skip_step?
-      form.skip_step?
+      if changing_answer?
+        return_point
+      else
+        form.previous_step.to_s.dasherize
+      end
     end
 
     def form_for_step(step)
@@ -61,11 +91,126 @@ module Schools
       step_form_class.new(hash)
     end
 
+    def possessive_name
+      if sit_mentor?
+        "your"
+      else
+        # FIXME: do something better here
+        ApplicationController.helpers.possessive_name(full_name)
+      end
+    end
+
+    def full_name
+      if sit_mentor?
+        current_user.full_name
+      else
+        current_state["full_name"]
+      end
+    end
+
+    def trn
+      current_state["trn"]
+    end
+
+    def date_of_birth
+      current_state["date_of_birth"]
+    end
+
+    def start_date
+      current_state["start_date"]
+    end
+
+    def email
+      if sit_mentor?
+        current_user.email
+      else
+        current_state["email"]
+      end
+    end
+
+    def nino
+      current_state["nino"]
+    end
+
     def ect_participant?
       current_state["participant_type"] == "ect"
     end
 
+    def sit_mentor?
+      current_state["participant_type"] == "self"
+    end
+
+    def found_participant_in_dqt?
+      check_for_dqt_record? && dqt_record.present?
+    end
+
+    def participant_exists?
+      check_for_dqt_record? && dqt_record.present? && TeacherProfile.where(trn: formatted_trn).participant_profiles.active_record.any?
+    end
+
+    def mentor_options
+      @mentor_options ||= school_cohort.school.mentors
+    end
+
+    def mentor
+      @mentor ||= selected_mentor
+    end
+
+    def selected_mentor
+      mentor_id = current_state["mentor_id"]
+
+      if mentor_id && mentor_id != "later"
+        User.find(mentor_id)
+      end
+    end
+
+    def appropriate_body_selected
+      # TODO: chosen AB
+    end
+
+    def check_for_dqt_record?
+      full_name.present? && trn.present? && date_of_birth.present?
+    end
+
+    def reset_form
+      current_state["participant_type"] = nil
+      current_state["full_name"] = nil
+      current_state["trn"] = nil
+      current_state["date_of_birth"] = nil
+      current_state["nino"] = nil
+      current_state["mentor_id"] = nil
+      current_state["start_date"] = nil
+    end
+
   private
+
+    def save_progress!
+      form.before_save
+
+      form.attributes.each do |k, v|
+        current_state[k.to_s] = v
+      end
+
+      form.after_save
+    end
+
+    def add_participant!
+      # TODO: create the record
+    end
+
+    def dqt_record(force_recheck: false)
+      @dqt_record = nil if force_recheck
+
+      @dqt_record ||= ParticipantValidationService.validate(
+        full_name:,
+        trn: formatted_trn,
+        date_of_birth:,
+        nino: formatted_nino,
+        config: {
+          check_first_name_only: true,
+        },
+      )
+    end
 
     def load_current_user_into_current_state
       current_state["current_user"] = current_user
@@ -97,10 +242,29 @@ module Schools
       raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
     end
 
+    def formatted_nino
+      NationalInsuranceNumber.new(nino).formatted_nino
+    end
+
+    def formatted_trn
+      TeacherReferenceNumber.new(trn).formatted_trn
+    end
+
     def steps
       %i[
         who
+        yourself
         what_we_need
+        name
+        trn
+        cannot_add_mentor_without_trn
+        date_of_birth
+        cannot_find_their_details
+        nino
+        still_cannot_find_their_details
+        email
+        start_date
+        choose_mentor
         check_answers
         confirmation
       ]

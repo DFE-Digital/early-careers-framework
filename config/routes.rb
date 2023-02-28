@@ -628,6 +628,7 @@ Rails.application.routes.draw do
           resources :participants, only: %i[index show destroy] do
             collection do
               get "add", to: "add_participant_wizard#show", as: :add_participant_wizard_start, step: "who"
+              get "add", to: "add_participant_wizard#show", as: :add_participant_wizard_start_sit_mentor, step: "yourself"
               get "add/:step", to: "add_participant_wizard#show", as: :add_participant_wizard_show
               get "add/:step/change", to: "add_participant_wizard#show", as: :add_participant_wizard_show_change, changing_answer: "1"
               put "add/:step", to: "add_participant_wizard#update", as: :add_participant_wizard_update

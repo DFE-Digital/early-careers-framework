@@ -2,13 +2,13 @@
 
 module Schools
   module AddParticipantWizardSteps
-    class WhatWeNeedStep < ::WizardStep
+    class CannotAddMentorWithoutTrnStep < ::WizardStep
       def next_step
-        :name
+        # cannot proceed from here
       end
 
       def previous_step
-        :who
+        :trn
       end
     end
   end

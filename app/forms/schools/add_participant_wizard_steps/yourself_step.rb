@@ -2,10 +2,8 @@
 
 module Schools
   module AddParticipantWizardSteps
-    class WhoStep < ::WizardStep
+    class YourselfStep < ::WizardStep
       attr_accessor :participant_type
-
-      validates :participant_type, presence: true, inclusion: { in: %w[ect mentor self transfer] }
 
       def self.permitted_params
         %i[
@@ -14,7 +12,7 @@ module Schools
       end
 
       def next_step
-        :what_we_need
+        :trn
       end
 
       def previous_step
@@ -23,6 +21,10 @@ module Schools
 
       def before_render
         wizard.reset_form
+      end
+
+      def before_save
+        @participant_type = "self"
       end
     end
   end

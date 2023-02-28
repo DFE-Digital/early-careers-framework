@@ -2,6 +2,7 @@
 
 class WizardStep
   include ActiveModel::Model
+  include ActiveRecord::AttributeAssignment
   include ActiveModel::Validations::Callbacks
 
   attr_accessor :wizard
@@ -18,9 +19,15 @@ class WizardStep
     raise NotImplementedError
   end
 
+  def complete?
+    false
+  end
+
   def before_render; end
-  def after_save; end
   def after_render; end
+
+  def before_save; end
+  def after_save; end
 
   def attributes
     self.class.permitted_params.index_with do |key|

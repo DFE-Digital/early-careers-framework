@@ -2,13 +2,13 @@
 
 module Schools
   module AddParticipantWizardSteps
-    class WhatWeNeedStep < ::WizardStep
+    class StillCannotFindTheirDetailsStep < ::WizardStep
       def next_step
-        :name
+        :abort
       end
 
       def previous_step
-        :who
+        :nino
       end
     end
   end
