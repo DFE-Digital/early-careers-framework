@@ -34,7 +34,7 @@ module NewSeeds
                                                                   school_cohort: school_cohort_to,
                                                                   partnership: relationship)
 
-            Rails.logger.info("seeded transfer of #{user.full_name} from #{school_from.name} to #{school_to.name} while keeping their original training provider")
+            Rails.logger.info("seeded transfer of #{participant_profile.full_name} from #{school_from.name} to #{school_to.name} while keeping their original training provider")
 
             # enrol the participant to the new programme (aka create an induction record)
             @relationship_induction_record = FactoryBot.create(:seed_induction_record,
