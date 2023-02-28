@@ -60,5 +60,7 @@ class ParticipantDeclaration::NPQ < ParticipantDeclaration
   rescue KeyError => e
     Rails.logger.warn("A NPQ Qualification types mapping is missing: #{e.message}")
     Sentry.capture_exception(e)
+
+    nil
   end
 end
