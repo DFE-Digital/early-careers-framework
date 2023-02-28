@@ -45,31 +45,28 @@
   <% end %>
 <% end %>
 
-<h4>Declaration State History</h4>
+<%=
+  govuk_table do |table|
+    table.with_caption(size: 's', text: "Declaration State History", classes: "govuk-heading-s")
 
-<div class="nhsuk-table-container">
-  <table data-test="admin-participants-table" class="govuk-table nhsuk-table-responsive">
-    <thead  class="nhsuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">State</th>
-        <th scope="col" class="govuk-table__header">Changed at</th>
-        <th scope="col" class="govuk-table__header">Reason</th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body nhsuk-table__body">
-      <% declaration.declaration_states.each do |declaration_state| %>
-        <tr class="govuk-table__row nhsuk-table__row">
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <%= declaration_state.state %>
-          </td>
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <%= declaration_state.created_at.to_s(:govuk) %>
-          </td>
-          <td class="govuk-table__cell nhsuk-table__cell">
-            <%= declaration_state.state_reason || 'N/A' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    table.with_head do |head|
+      head.with_row do |row|
+        row.with_cell(header: true, text: 'State')
+        row.with_cell(header: true, text: 'Changed at')
+        row.with_cell(header: true, text: 'Reason', numeric: true)
+      end
+    end
+
+    table.with_body do |body|
+      declaration.declaration_states.each do |declaration_state|
+        body.with_row do |row|
+          row.with_cell(text: declaration_state.state)
+          row.with_cell(text: declaration_state.created_at.to_s(:govuk))
+          row.with_cell(text: declaration_state.state_reason || 'N/A', numeric: true)
+        end
+      end
+    end
+  end
+%>
+
+<%= render Finance::NPQ::ParticipantOutcomes::Table.new(participant_declaration: declaration) %>
