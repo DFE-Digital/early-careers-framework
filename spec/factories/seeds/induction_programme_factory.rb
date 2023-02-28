@@ -7,7 +7,7 @@ FactoryBot.define do
     trait(:fip) { training_programme { "full_induction_programme" } }
     trait(:cip) { training_programme { "core_induction_programme" } }
     trait(:design_our_own) { training_programme { "design_our_own" } }
-    trait(:school_funnded_fip) { training_programme { "school_funnded_fip" } }
+    trait(:school_funded_fip) { training_programme { "school_funded_fip" } }
 
     trait(:with_school_cohort) { association(:school_cohort, factory: %i[seed_school_cohort valid]) }
     trait(:with_school) { association(:school, factory: :seed_school) }

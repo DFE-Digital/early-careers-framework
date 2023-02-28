@@ -38,10 +38,10 @@ module NewSeeds
                                              delivery_partner:,
                                              lead_provider:)
 
-            @induction_programme = FactoryBot.create(:seed_induction_programme,
-                                                     :fip,
-                                                     school_cohort:,
-                                                     partnership:)
+            @induction_programme = NewSeeds::Scenarios::InductionProgrammes::Fip
+                                     .new(school_cohort:, partnership:)
+                                     .build
+                                     .induction_programme
 
             @mentor ||= build_mentor
 
