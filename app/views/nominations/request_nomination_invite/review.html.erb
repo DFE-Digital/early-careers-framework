@@ -6,8 +6,6 @@
 
         <h1 class="govuk-heading-xl">Confirm this is your school</h1>
 
-        <h2 class="govuk-heading-m">Personal details</h2>
-
         <%= render partial: 'nominations/school_details', locals: { school: @nomination_request_form.school, title: "Your school" }  %>
 
         <%= form_for :confirmation, url: review_request_nomination_invite_path, method: :post do |f| %>

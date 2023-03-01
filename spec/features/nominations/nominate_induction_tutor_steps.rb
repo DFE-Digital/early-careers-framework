@@ -125,10 +125,6 @@ module NominateInductionTutorSteps
     expect(page).to have_text("Your school has already nominated an induction tutor to use our service.")
   end
 
-  def then_i_should_be_redirected_to_the_nominate_induction_tutor_page
-    expect(page).to have_selector("h1", text: "Nominate an induction tutor for your school")
-  end
-
   def then_i_should_be_on_the_email_already_used_page
     expect(page).to have_selector("h1", text: "The email address is being used by another school")
   end
