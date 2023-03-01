@@ -2,6 +2,8 @@
 
 module NPQ
   class StreamBigQueryProfileJob < ApplicationJob
+    queue_as :big_query
+
     def perform(profile_id:)
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_registration", skip_lookup: true

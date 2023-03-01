@@ -29,6 +29,9 @@ module ParticipantOutcomes
     end
 
     def can_enqueue_jobs?
+      # TODO: An adapter interface would be useful here so that we can use this
+      # job in the spec suite without stubbing, and simulate jobs on the queue
+      # simply by enqueueing them
       Sidekiq::Queue.new("participant_outcomes")
         .detect { |job| job.display_class == "ParticipantOutcomes::SendToQualifiedTeachersApiJob" }
         .nil?
