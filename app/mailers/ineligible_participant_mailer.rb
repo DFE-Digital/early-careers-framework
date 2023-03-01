@@ -77,7 +77,6 @@ class IneligibleParticipantMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         ineligible_ECT_name: participant_profile.user.full_name,
-        "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.slug),
       },
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
@@ -92,7 +91,6 @@ class IneligibleParticipantMailer < ApplicationMailer
       personalisation: {
         SIT_name: sit.full_name,
         ineligible_ECT_name: participant_profile.user.full_name,
-        "NQT+1_materials_link": start_schools_year_2020_url(school_id: participant_profile.school.slug),
       },
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
