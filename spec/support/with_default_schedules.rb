@@ -15,7 +15,7 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
       npq_specialist_schedule: %w[npq-specialist-spring npq-specialist-autumn],
       npq_leadership_schedule: %w[npq-leadership-spring npq-leadership-autumn],
       npq_aso_schedule:        %w[npq-aso-december],
-      npq_ehco_schedule:       %w[npq-ehco-december],
+      npq_ehco_schedule:       %w[npq-ehco-november npq-ehco-december npq-ehco-march npq-ehco-june],
     }.each do |schedule_type, schedule_identifiers|
       schedule_identifiers.each do |schedule_identifier|
         Finance::Schedule.find_by(cohort:, schedule_identifier:) || create(schedule_type, cohort:, schedule_identifier:)
