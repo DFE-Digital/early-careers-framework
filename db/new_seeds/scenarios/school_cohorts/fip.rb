@@ -24,8 +24,9 @@ module NewSeeds
         # Optionally sets it as the default induction programme of the school cohort. Default: true.
         def with_programme(default_induction_programme: true, partnership: nil)
           tap do
-            NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:, partnership:)
+            NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:)
                                                          .build(default_induction_programme:)
+                                                         .with_partnership(partnership:)
           end
         end
 

@@ -10,18 +10,22 @@ module NewSeeds
       class Cip
         attr_accessor :induction_programme
 
-        def initialize(school_cohort:, core_induction_programme: nil)
+        def initialize(school_cohort:)
           @school_cohort = school_cohort
-          @core_induction_programme = core_induction_programme
         end
 
-        def build(default_induction_programme: true, default_core_induction_programme: true)
+        def build(default_induction_programme: true)
           tap do
-            @induction_programme = FactoryBot.create(:seed_induction_programme,
-                                                     :cip,
-                                                     school_cohort:,
-                                                     core_induction_programme:)
-            set_defaults!(default_induction_programme:, default_core_induction_programme:)
+            @induction_programme = FactoryBot.create(:seed_induction_programme, :cip, school_cohort:)
+            set_default_induction_programme! if default_induction_programme
+          end
+        end
+
+        def with_core_induction_programme(core_induction_programme: nil, default_core_induction_programme: true)
+          tap do
+            core_induction_programme ||= FactoryBot.create(:seed_core_induction_programme)
+            induction_programme.update!(core_induction_programme:)
+            set_default_core_induction_programme! if default_core_induction_programme
           end
         end
 
@@ -29,20 +33,14 @@ module NewSeeds
 
         attr_reader :school_cohort
 
-        def core_induction_programme
-          return if with_no_core_induction_programme?
+        delegate :core_induction_programme, to: :induction_programme
 
-          @core_induction_programme ||= FactoryBot.create(:seed_core_induction_programme)
+        def set_default_induction_programme!
+          school_cohort.update!(default_induction_programme: induction_programme)
         end
 
-        def set_defaults!(default_induction_programme:, default_core_induction_programme:)
-          defaults = default_core_induction_programme ? { core_induction_programme: } : {}
-          defaults.merge!(default_induction_programme: induction_programme) if default_induction_programme
-          school_cohort.update!(**defaults) if defaults.present?
-        end
-
-        def with_no_core_induction_programme?
-          @with_no_core_induction_programme ||= @core_induction_programme == :none
+        def set_default_core_induction_programme!
+          school_cohort.update!(core_induction_programme:)
         end
       end
     end

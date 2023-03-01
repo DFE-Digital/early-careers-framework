@@ -10,15 +10,21 @@ module NewSeeds
       class Fip
         attr_reader :induction_programme
 
-        def initialize(school_cohort:, partnership: nil)
+        def initialize(school_cohort:)
           @school_cohort = school_cohort
-          @partnership = partnership
         end
 
         def build(default_induction_programme: true)
           tap do
-            @induction_programme = FactoryBot.create(:seed_induction_programme, :fip, school_cohort:, partnership:)
+            @induction_programme = FactoryBot.create(:seed_induction_programme, :fip, school_cohort:)
             set_default_induction_programme! if default_induction_programme
+          end
+        end
+
+        def with_partnership(partnership: nil)
+          tap do
+            partnership ||= FactoryBot.create(:seed_partnership, cohort:, school:, delivery_partner:, lead_provider:)
+            induction_programme.update!(partnership:)
           end
         end
 
@@ -36,18 +42,8 @@ module NewSeeds
           @lead_provider ||= FactoryBot.create(:seed_lead_provider)
         end
 
-        def partnership
-          return if with_no_partnership?
-
-          @partnership ||= FactoryBot.create(:seed_partnership, cohort:, school:, delivery_partner:, lead_provider:)
-        end
-
         def set_default_induction_programme!
           school_cohort.update!(default_induction_programme: induction_programme)
-        end
-
-        def with_no_partnership?
-          @with_no_partnership ||= @partnership == :none
         end
       end
     end

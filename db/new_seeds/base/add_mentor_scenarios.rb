@@ -10,38 +10,44 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
 
 school_cohort_one = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2021)
 induction_programme_one = NewSeeds::Scenarios::InductionProgrammes::Cip
-                            .new(school_cohort: school_cohort_one, core_induction_programme: ambition)
+                            .new(school_cohort: school_cohort_one)
                             .build
+                            .with_core_induction_programme(core_induction_programme: ambition)
                             .induction_programme
 
 school_cohort_two = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2021)
 induction_programme_two = NewSeeds::Scenarios::InductionProgrammes::Cip
-                            .new(school_cohort: school_cohort_two, core_induction_programme: edt)
+                            .new(school_cohort: school_cohort_two)
                             .build
+                            .with_core_induction_programme(core_induction_programme: edt)
                             .induction_programme
 
 school_cohort_three = FactoryBot.create(:seed_school_cohort, :fip, :valid, :starting_in_2021)
 induction_programme_three = NewSeeds::Scenarios::InductionProgrammes::Fip
                               .new(school_cohort: school_cohort_three)
                               .build
+                              .with_partnership
                               .induction_programme
 
 school_cohort_four = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2022)
 induction_programme_four = NewSeeds::Scenarios::InductionProgrammes::Cip
-                             .new(school_cohort: school_cohort_four, core_induction_programme: ambition)
+                             .new(school_cohort: school_cohort_four)
                              .build
+                             .with_core_induction_programme(core_induction_programme: ambition)
                              .induction_programme
 
 school_cohort_five = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2022)
 induction_programme_five = NewSeeds::Scenarios::InductionProgrammes::Cip
-                             .new(school_cohort: school_cohort_five, core_induction_programme: ucl)
+                             .new(school_cohort: school_cohort_five)
                              .build
+                             .with_core_induction_programme(core_induction_programme: ucl)
                              .induction_programme
 
 school_cohort_six = FactoryBot.create(:seed_school_cohort, :fip, :valid, :starting_in_2022)
 induction_programme_six = NewSeeds::Scenarios::InductionProgrammes::Fip
                             .new(school_cohort: school_cohort_six)
                             .build
+                            .with_partnership
                             .induction_programme
 
 # first some generic mentors

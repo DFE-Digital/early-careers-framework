@@ -28,8 +28,9 @@ module NewSeeds
                            default_core_induction_programme: true)
           tap do
             NewSeeds::Scenarios::InductionProgrammes::Cip
-              .new(school_cohort:, core_induction_programme:)
-              .build(default_induction_programme:, default_core_induction_programme:)
+              .new(school_cohort:)
+              .build(default_induction_programme:)
+              .with_core_induction_programme(core_induction_programme:, default_core_induction_programme:)
           end
         end
 

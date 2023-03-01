@@ -39,8 +39,9 @@ module NewSeeds
                                              lead_provider:)
 
             @induction_programme = NewSeeds::Scenarios::InductionProgrammes::Fip
-                                     .new(school_cohort:, partnership:)
+                                     .new(school_cohort:)
                                      .build
+                                     .with_partnership(partnership:)
                                      .induction_programme
 
             @mentor ||= build_mentor
