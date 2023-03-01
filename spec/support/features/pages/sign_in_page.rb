@@ -18,6 +18,12 @@ module Pages
     set_url "/users/sign_in"
     set_primary_heading "Sign in"
 
+    def find_out_how_to_get_access
+      click_on "find out how to get access"
+
+      Pages::CheckAccountPage.loaded
+    end
+
     def add_email_address(email_address)
       fill_in "Email address", with: email_address
       click_on "Sign in"
