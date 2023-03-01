@@ -10,7 +10,7 @@ module Pages
     element :start_now_button, "a.govuk-button--start", text: "Start now"
 
     def start_now
-      click_on "Sign in"
+      click_on "Start now"
 
       Pages::SignInPage.loaded
     end
