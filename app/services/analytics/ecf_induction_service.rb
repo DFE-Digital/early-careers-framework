@@ -28,6 +28,7 @@ module Analytics
         record.user_id = participant_profile.user_id
         record.participant_type = participant_profile.type
         record.induction_record_created_at = induction_record.created_at
+        record.partnership_id = induction_record.induction_programme.partnership_id
 
         record.save!
       end
