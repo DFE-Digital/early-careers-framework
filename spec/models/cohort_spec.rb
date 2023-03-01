@@ -9,6 +9,22 @@ RSpec.describe Cohort, type: :model do
   let!(:cohort_2023) { Cohort.find_by(start_year: 2023) || create(:cohort, start_year: 2023) }
   let!(:cohort_2024) { Cohort.find_by(start_year: 2024) || create(:cohort, start_year: 2024) }
 
+  describe "scopes" do
+    describe ".between_years" do
+      it "generates a BETWEEN clause with the given years" do
+        expected = %(WHERE "cohorts"."start_year" BETWEEN 1 AND 5)
+        expect(Cohort.between_years(1, 5).to_sql).to include(expected)
+      end
+    end
+
+    describe ".between_2021_and" do
+      it "generates a BETWEEN clause with 2021 and the given year" do
+        expected = %(WHERE "cohorts"."start_year" BETWEEN 2021 AND 2030)
+        expect(Cohort.between_2021_and(2030).to_sql).to include(expected)
+      end
+    end
+  end
+
   describe ".current" do
     describe "when the current date matches the academic year start date" do
       it "returns the cohort with start_year the current year" do

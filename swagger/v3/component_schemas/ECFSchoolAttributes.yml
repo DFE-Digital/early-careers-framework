@@ -1,0 +1,42 @@
+description: "The data attributes associated with an ECF school"
+type: object
+required:
+  - name
+  - urn
+  - cohort
+  - in_partnership
+  - induction_programme_choice
+  - updated_at
+properties:
+  name:
+    description: The name of the school
+    type: string
+    example: School Example
+  urn:
+    description: "The Unique Reference Number (URN) of the school"
+    type: string
+    example: "123456"
+  cohort:
+    description: "The cohort the school is in"
+    type: string
+    example: 2021
+  in_partnership:
+    description: "Whether or not the school already has an active partnership, if it is doing a funded induction programme"
+    type: boolean
+    example: false
+  induction_programme_choice:
+    description: The induction programme the school offers
+    type: string
+    example: not_yet_known
+    enum:
+      - core_induction_programme
+      - funded_induction_programme
+      - design_our_own
+      - school_funded_fip
+      - no_early_career_teachers
+      - not_yet_known
+  updated_at:
+    description: "The last time a change was made to this school record by the DfE"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

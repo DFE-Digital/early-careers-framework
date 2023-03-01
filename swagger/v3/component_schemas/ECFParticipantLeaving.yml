@@ -1,0 +1,19 @@
+description: "The details of an ECF Participant leaving a school"
+type: object
+required:
+  - school_urn
+  - provider
+properties:
+  school_urn:
+    description: "The URN of the school the participant is leaving"
+    type: string
+    example: 123456
+  provider:
+    description: "The name of the provider the participant is leaving"
+    type: string
+    example: Example Institute
+  date:
+    description: The date the participant will be leaving the school
+    type: string
+    format: date
+    example: "2021-05-31"

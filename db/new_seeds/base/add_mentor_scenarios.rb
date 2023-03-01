@@ -80,10 +80,11 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   ),
 ].each do |mentor_params|
   NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-    .new(full_name: mentor_params.full_name)
+    .new(school_cohort: mentor_params.school_cohort, full_name: mentor_params.full_name)
     .build(
-      school_cohort: mentor_params.school_cohort,
       schedule: mentor_params.schedule,
     )
+    .with_validation_data
+    .with_eligibility
     .add_induction_record(induction_programme: mentor_params.induction_programme)
 end

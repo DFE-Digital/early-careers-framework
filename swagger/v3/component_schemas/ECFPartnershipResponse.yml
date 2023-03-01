@@ -1,4 +1,4 @@
-description: "A list of ECF partnerships"
+description: "An ECF partnership"
 type: object
 required:
   - data

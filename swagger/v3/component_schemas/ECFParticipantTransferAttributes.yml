@@ -1,0 +1,16 @@
+description: "The data attributes associated with an ECF participant transfer"
+type: object
+required:
+  - updated_at
+  - transfers
+properties:
+  updated_at:
+    description: The date and time the latest ECF participant was last updated
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
+  transfers:
+    description: "List of participant transfers"
+    type: array
+    items:
+      $ref: "#/components/schemas/ECFParticipantTransfers"

@@ -15,7 +15,7 @@ module NewSeeds
           def build
             setup
 
-            Rails.logger.info("seeded transfer of #{user.full_name} from #{school_from.name} to #{school_to.name} using the new school's training provider")
+            Rails.logger.info("seeded transfer of #{participant_profile.full_name} from #{school_from.name} to #{school_to.name} using the new school's training provider")
 
             FactoryBot.create(:seed_induction_record,
                               participant_profile:,

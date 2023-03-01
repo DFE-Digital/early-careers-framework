@@ -14,7 +14,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.138.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           ruby-version: '3.1.3'
 
@@ -22,7 +22,7 @@ jobs:
         run: bundle install
 
       - name: Lint Ruby
-        run: bundle exec rubocop --format json --out=${{ github.workspace }}/rubocop-result.json
+        run: bundle exec rubocop --format progress --format json --out=${{ github.workspace }}/rubocop-result.json
 
       - name: Lint ERB Templates
         if: false
@@ -69,7 +69,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.138.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           ruby-version: '3.1.3'
 
@@ -90,7 +90,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.138.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           ruby-version: '3.1.3'
 

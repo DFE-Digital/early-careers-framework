@@ -6,20 +6,20 @@ module ParticipantOutcomes
     sidekiq_options retry: false
 
     DEFAULT_BATCH_SIZE = 200
-    REQUEUE_DELAY = 2.minutes
+    DEFAULT_REQUEUE_DELAY = 2.minutes
 
-    def perform(batch_size = DEFAULT_BATCH_SIZE)
+    def perform(batch_size = DEFAULT_BATCH_SIZE, delay = DEFAULT_REQUEUE_DELAY)
       unless can_enqueue_jobs?
         Rails.logger.info "BatchSendLatestOutcomesJob: Unable to proceed due to pending SendToQualifiedTeachersApiJob jobs; re-queueing to try again."
-        self.class.set(wait: REQUEUE_DELAY).perform_later
+        self.class.set(wait: delay).perform_later(batch_size, delay)
         return
       end
 
       @batch_size = batch_size
 
-      outcomes.first(@batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(outcome.id) }
+      outcomes.first(@batch_size).each { |outcome| SendToQualifiedTeachersApiJob.perform_later(participant_outcome_id: outcome.id) }
 
-      self.class.set(wait: REQUEUE_DELAY).perform_later if should_enqueue_again?
+      self.class.set(wait: delay).perform_later(batch_size, delay) if should_enqueue_again?
     end
 
   private
@@ -29,8 +29,8 @@ module ParticipantOutcomes
     end
 
     def can_enqueue_jobs?
-      ActiveJob::Base.queue_adapter.enqueued_jobs
-        .detect { |job| job[:job] == SendToQualifiedTeachersApiJob }
+      Sidekiq::Queue.new("participant_outcomes")
+        .detect { |job| job.display_class == "ParticipantOutcomes::SendToQualifiedTeachersApiJob" }
         .nil?
     end
 

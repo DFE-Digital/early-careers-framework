@@ -1,0 +1,9 @@
+description: "A list of schools for the given cohort"
+type: object
+required:
+  - data
+properties:
+  data:
+    type: array
+    items:
+      $ref: "#/components/schemas/ECFSchool"

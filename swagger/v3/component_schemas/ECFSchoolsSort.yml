@@ -1,0 +1,7 @@
+description: "Sort schools being returned"
+type: array
+items:
+  type: string
+  enum:
+    - updated_at
+    - -updated_at
