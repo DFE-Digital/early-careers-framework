@@ -20,6 +20,21 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
     )
   end
 
+  # We aren't including ASO and EHCO in this list as they have a special interaction
+  # and are tested separately
+  let(:npq_course_identifiers) do
+    [
+      Finance::Schedule::NPQLeadership::IDENTIFIERS,
+      Finance::Schedule::NPQSpecialist::IDENTIFIERS,
+    ].flatten.uniq
+  end
+
+  let(:npq_course_identifier) { npq_course_identifiers.sample }
+  let(:npq_course) { create(:npq_course, identifier: npq_course_identifier) }
+
+  let(:other_npq_course_identifier) { (npq_course_identifiers - [npq_course_identifier]).sample }
+  let(:other_npq_course) { create(:npq_course, identifier: other_npq_course_identifier) }
+
   let(:trn) { nil }
   let(:get_an_identity_id) { nil }
 
@@ -30,11 +45,11 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             lead_provider_approval_status: "accepted",
             eligible_for_funding: false,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         it "returns falsey for previously_funded" do
           expect(subject.call[:previously_funded]).to be_falsey
@@ -94,11 +109,11 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -118,13 +133,12 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
           )
         end
-        let(:npq_application_course) { application.npq_course }
-        # Making sure they are completely separate courses
-        let(:npq_course) { create(:npq_course, identifier: npq_application_course.identifier.reverse) }
+        let(:course_for_lookup) { other_npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -144,12 +158,12 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
             targeted_delivery_funding_eligibility: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -170,15 +184,13 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
-            npq_course:,
           )
         end
 
         let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
-
-        let(:course_identifier_for_subject) { ehco_npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -198,11 +210,11 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         before do
           create(:teacher_profile, trn:)
@@ -223,12 +235,12 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
             targeted_delivery_funding_eligibility: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         it "returns falsey for previously_funded" do
           expect(subject.call[:previously_funded]).to be_falsey
@@ -241,7 +253,6 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       context "when trn does not yield any teachers" do
         let(:trn) { "0000000" }
-        let(:npq_course) { create(:npq_course) }
 
         it "returns falsey for previously_funded" do
           expect(subject.call[:previously_funded]).to be_falsey
@@ -261,12 +272,12 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             user:,
             lead_provider_approval_status: "accepted",
             eligible_for_funding: false,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         it "returns falsey for previously_funded" do
           expect(subject.call[:previously_funded]).to be_falsey
@@ -281,12 +292,12 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             user:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -308,11 +319,10 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
             user:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
+            npq_course:,
           )
         end
-        let(:npq_application_course) { application.npq_course }
-        # Making sure they are completely separate courses
-        let(:npq_course) { create(:npq_course, identifier: npq_application_course.identifier.reverse) }
+        let(:course_for_lookup) { other_npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -331,13 +341,13 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         let(:application) do
           create(
             :npq_application,
+            npq_course:,
             user:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
             targeted_delivery_funding_eligibility: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         before do
           NPQ::Application::Accept.new(npq_application: application).call
@@ -366,8 +376,6 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
         let!(:ehco_npq_course) { create(:npq_course, identifier: "npq-early-headship-coaching-offer") }
 
-        let(:course_identifier_for_subject) { ehco_npq_course }
-
         before do
           NPQ::Application::Accept.new(npq_application: application).call
         end
@@ -386,12 +394,12 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
           create(
             :npq_application,
             user:,
+            npq_course:,
             eligible_for_funding: true,
             teacher_reference_number_verified: true,
             targeted_delivery_funding_eligibility: true,
           )
         end
-        let(:npq_course) { application.npq_course }
 
         it "returns falsey for previously_funded" do
           expect(subject.call[:previously_funded]).to be_falsey
@@ -404,7 +412,6 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
 
       context "when GAI ID does not yield any teachers" do
         let(:get_an_identity_id) { SecureRandom.uuid }
-        let(:npq_course) { create(:npq_course) }
 
         it "returns falsey for previously_funded" do
           expect(subject.call[:previously_funded]).to be_falsey
