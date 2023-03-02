@@ -122,6 +122,3 @@ private
     induction_record&.update!(mentor_profile:) if saved_change_to_mentor_profile_id?
   end
 end
-
-require "participant_profile/ect"
-require "participant_profile/mentor"
