@@ -4,27 +4,100 @@ on:
   push:
 
 jobs:
-  lint:
+  ruby_linting:
     env:
       GOVUK_NOTIFY_API_KEY: Test
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2.5.1
-        with:
-          node-version: '16.17.x'
-          cache: 'yarn'
-      - name: Yarn install
-        run: npm i -g yarn && yarn
+        name: Checkout Code
+
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
-          ruby-version: 3.2.1
+          ruby-version: '3.2.1'
+
       - name: Install dependencies
         run: bundle install
-      - name: Lint ruby
-        run: rubocop
-      - name: Lint SCSS
-        run: bundle exec rake lint:scss
+
+      - name: Lint Ruby
+        run: bundle exec rubocop --format progress --format json --out=${{ github.workspace }}/rubocop-result.json
+
+      - name: Lint ERB Templates
+        if: false
+        run: |-
+          bundle exec erblint --lint-all
+
+      - name: Keep Rubocop output
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: rubocop_results
+          path: ${{ github.workspace }}/rubocop-result.json
+
+  js_linting:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Node
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: '18.14.x'
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: npm i -g yarn && yarn
+
       - name: Lint JS
-        run: yarn lint
+        run: |-
+          yarn lint
+
+
+  scss_linting:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.139.0
+        with:
+          ruby-version: '3.2.1'
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint SCSS
+        run: |-
+          bundle exec rake lint:scss
+
+  erb_linting:
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1.139.0
+        with:
+          ruby-version: '3.2.1'
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Lint ERB Templates
+        if: false
+        run: |-
+          bundle exec erblint --lint-all

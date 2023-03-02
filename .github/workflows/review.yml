@@ -1,24 +1,84 @@
 name: Create Review App
+
 on:
   pull_request:
-    branches: [ develop ]
+    branches:
+      - main
     types: [ opened, synchronize, reopened ]
     paths-ignore:
       - 'documentation/**'
 
 jobs:
-  deploy:
+  build-base:
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
-    steps:
-      - uses: softprops/turnstyle@v1
-        name: Check workflow concurrency
-        with:
-          poll-interval-seconds: 20
-          same-branch-only: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout Code
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          version: v0.9.1 # More recent buildx versions generate an OCI manifest
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+
+      - name: Build and push docker image from builder target
+        uses: docker/build-push-action@v4
+        with:
+          target: builder
+          context: .
+          cache-from: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:builder
+          tags: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:builder
+          push: true
+          provenance: false
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Build and push docker image from early-careers-framework-gems-node-modules target
+        uses: docker/build-push-action@v4
+        with:
+          target: early-careers-framework-gems-node-modules
+          context: .
+          cache-from: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:gems-node-modules
+          tags: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:gems-node-modules
+          push: true
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Build and push docker image from assets-precompile target
+        uses: docker/build-push-action@v4
+        with:
+          target: assets-precompile
+          context: .
+          cache-from: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:assets-precompile
+          tags: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:assets-precompile
+          push: true
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+  build-review-pr:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-20.04
+    needs: [build-base]
+
+    steps:
       - name: setup-inputs
         run: |
           echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
@@ -28,72 +88,59 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Pin Terraform version
-        uses: hashicorp/setup-terraform@v1.4.0
-        with:
-          terraform_version: 0.14.0
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
         with:
           version: v0.9.1 # More recent buildx versions generate an OCI manifest
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_DEV_PASSWORD }}
 
-      - name: Build and push docker image from builder target
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          build-args: BUILDKIT_INLINE_CACHE=1
-          cache-from: |
-            dfedigital/early-careers-framework-dev:builder
-          push: true
-          tags: dfedigital/early-careers-framework-dev:builder
-          target: builder
-          provenance: false
-
-      - name: Build and push docker image from early-careers-framework-gems-node-modules target
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          build-args: BUILDKIT_INLINE_CACHE=1
-          cache-from: |
-            dfedigital/early-careers-framework-dev:gems-node-modules
-          push: true
-          tags: dfedigital/early-careers-framework-dev:gems-node-modules
-          target: early-careers-framework-gems-node-modules
-
-      - name: Build and push docker image from assets-precompile target
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          build-args: BUILDKIT_INLINE_CACHE=1
-          cache-from: |
-            dfedigital/early-careers-framework-dev:assets-precompile
-          push: true
-          tags: dfedigital/early-careers-framework-dev:assets-precompile
-          target: assets-precompile
-
       - name: Build and push docker image from production target
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
+          target: production
           context: .
+          cache-from: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
+          tags: |
+            ${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
+            ${{ env.DOCKER_REPOSITORY }}-dev:${{ env.ENVIRONMENT }}
+          push: true
           build-args: |
             BUILDKIT_INLINE_CACHE=1
             SHA=${{ github.event.pull_request.head.sha }}
-          cache-from: |
-            dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
-            dfedigital/early-careers-framework-dev:latest
-          push: true
-          tags: |
-            dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
-            dfedigital/early-careers-framework-dev:${{ env.ENVIRONMENT }}
-            dfedigital/early-careers-framework-dev:latest
-          target: production
+
+  deploy-to-review-pr:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-20.04
+    needs: [build-review-pr]
+    concurrency:
+      group: deploy-to-review-pr-${{ github.event.number }}
+
+    steps:
+      - name: setup-inputs
+        run: |
+          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v3
+        name: Checkout Code
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: set-up-environment
+        uses: DFE-Digital/github-actions/set-up-environment@master
+
+      - name: Pin Terraform version
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 0.14.0
 
       - name: Deploy review app to dev
         env:
@@ -103,7 +150,7 @@ jobs:
           TF_VAR_paas_password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
           TF_VAR_statuscake_api_token: ${{ secrets.STATUSCAKE_API_TOKEN }}
         run: |
-          export TF_VAR_paas_app_docker_image=dfedigital/early-careers-framework-dev:${{ github.event.pull_request.head.sha }}
+          export TF_VAR_paas_app_docker_image=${{ env.DOCKER_REPOSITORY }}-dev:${{ github.event.pull_request.head.sha }}
           cd terraform/app
           terraform init -reconfigure -input=false -backend-config="bucket=paas-s3-broker-prod-lon-7f2ca242-9929-4662-a79c-c454ea56ea7b" -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate"
           terraform apply -input=false -auto-approve -var-file ../workspace-variables/review.tfvars -var='secret_paas_app_env_values={"RAILS_MASTER_KEY":"${{secrets.RAILS_MASTER_KEY_DEV}}"}' -var='environment=${{env.ENVIRONMENT}}' -var 'docker_username=${{ secrets.DOCKER_USERNAME }}' -var 'docker_password=${{ secrets.DOCKER_DEV_PASSWORD }}'
@@ -113,14 +160,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Created review app at https://ecf-review-pr-${{ github.event.number }}.london.cloudapps.digital"
+          msg: "Created review app at https://${{env.REVIEW_APPLICATION}}-${{ github.event.number }}.${{env.DOMAIN}}"
           check_for_duplicate_msg: true
           duplicate_msg_pattern: Created review app at*
 
   smoke-test:
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
-    needs: [deploy]
+    needs: [deploy-to-review-pr]
     # Our rspec is deeply coupled with a database. I had a go at decoupling it for smoke tests, and gave up.
     # This database is provided as a hacky way to get rspec to run, and should not be populated in smoke tests.
     env:
@@ -150,20 +197,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: setup-inputs
-        run: |
-          echo "ENVIRONMENT=review-pr-${{ github.event.number }}" >> $GITHUB_ENV
-
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           bundler-cache: true
           ruby-version: '3.2.1'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3.6.0
         with:
-          node-version: '16.17.x'
+          node-version: '18.14.x'
           cache: 'yarn'
 
       - name: Set up test database

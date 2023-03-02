@@ -6,19 +6,9 @@ on:
       - '**'
 
 jobs:
-  create-nonce:
-    name: Create nonce
-    runs-on: ubuntu-20.04
-    outputs:
-      nonce: ${{ steps.generate-nonce.outputs.nonce }}
-    steps:
-      - id: generate-nonce
-        run: echo "::set-output name=nonce::$(tr -dc 0-9 </dev/urandom | head -c 18 ; echo '')"
-
   backend-tests:
     name: Run rspec
     runs-on: ubuntu-20.04
-    needs: create-nonce
     strategy:
       fail-fast: false
       matrix:
@@ -53,15 +43,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           bundler-cache: true
           ruby-version: '3.2.1'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3.6.0
         with:
-          node-version: '16.17.x'
+          node-version: '18.14.x'
           cache: 'yarn'
 
       - name: Install node.js dependencies
@@ -70,13 +60,15 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
+      - name: Prepare assets
+        run: bin/rails test:prepare
+
       - name: Run tests
         run: bundle exec bin/rspec_ci
 
   e2e-scenarios:
     name: Run end to end scenarios
     runs-on: ubuntu-20.04
-    needs: create-nonce
     strategy:
       fail-fast: false
       matrix:
@@ -111,15 +103,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           bundler-cache: true
           ruby-version: '3.2.1'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3.6.0
         with:
-          node-version: '16.17.x'
+          node-version: '18.14.x'
           cache: 'yarn'
 
       - name: Install node.js dependencies
@@ -128,8 +120,8 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
-      - name: Webpacker
-        run: bin/webpacker
+      - name: Prepare assets
+        run: bin/rails test:prepare
 
       - name: Run tests
         run: bundle exec bin/scenarios_ci
@@ -137,7 +129,6 @@ jobs:
   e2e-tests:
     name: Run Cypress
     runs-on: ubuntu-20.04
-    needs: create-nonce
     strategy:
       fail-fast: false
       matrix:
@@ -172,15 +163,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.134.0
+        uses: ruby/setup-ruby@v1.139.0
         with:
           bundler-cache: true
           ruby-version: '3.2.1'
 
       - name: Set up Node
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3.6.0
         with:
-          node-version: '16.17.x'
+          node-version: '18.14.x'
           cache:  'yarn'
 
       - name: Install node.js dependencies
@@ -189,11 +180,11 @@ jobs:
       - name: Set up test database
         run: bin/rails db:create db:schema:load
 
-      - name: Webpacker
-        run: bin/webpacker
+      - name: Prepare assets
+        run: bin/rails test:prepare
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           start: bundle exec rails server -e test -p 5017
           wait-on: 'http://localhost:5017/'
