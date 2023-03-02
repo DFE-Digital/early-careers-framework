@@ -27,6 +27,7 @@ jobs:
       ANALYTICS_DB_PORT: 5432
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+      CI: true
 
     services:
       postgres:
@@ -87,6 +88,7 @@ jobs:
       ANALYTICS_DB_PORT: 5432
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+      CI: true
 
     services:
       postgres:
@@ -147,6 +149,7 @@ jobs:
       ANALYTICS_DB_PORT: 5432
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+      CI: true
 
     services:
       postgres:
