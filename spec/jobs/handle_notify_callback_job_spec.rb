@@ -18,6 +18,7 @@ RSpec.describe(HandleNotifyCallbackJob, :with_default_schedules) do
         email_id: notify_email.notify_id,
         delivery_status: "delivered",
         sent_at: one_hour_ago.to_s,
+        template_id: "123456",
       )
 
       notify_email.reload
@@ -41,6 +42,7 @@ RSpec.describe(HandleNotifyCallbackJob, :with_default_schedules) do
         email_id: notify_email.notify_id,
         delivery_status: "delivered",
         sent_at: one_hour_ago.to_s,
+        template_id: "123456",
       )
 
       notify_email.reload
@@ -49,6 +51,23 @@ RSpec.describe(HandleNotifyCallbackJob, :with_default_schedules) do
       expect(notify_email.notify_status).to eq("delivered")
       expect(email.status).to eq("delivered")
       expect(email.delivered_at).to eq(one_hour_ago.to_s)
+    end
+  end
+
+  context "when there is no matching email" do
+    let!(:email) {}
+
+    it "logs a warning" do
+      allow(Rails.logger).to receive(:warn)
+
+      HandleNotifyCallbackJob.new.perform(
+        email_id: "123456",
+        delivery_status: "delivered",
+        sent_at: one_hour_ago.to_s,
+        template_id: "123456",
+      )
+
+      expect(Rails.logger).to have_received(:warn)
     end
   end
 end

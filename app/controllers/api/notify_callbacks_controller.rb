@@ -10,7 +10,7 @@ class Api::NotifyCallbacksController < Api::ApiController
 
     log_email if failed_email?
 
-    HandleNotifyCallbackJob.perform_later(email_id: params[:id], delivery_status: params[:status], sent_at: params[:sent_at])
+    HandleNotifyCallbackJob.perform_later(email_id: params[:id], delivery_status: params[:status], sent_at: params[:sent_at], template_id: params[:template_id])
 
     head :no_content
   end

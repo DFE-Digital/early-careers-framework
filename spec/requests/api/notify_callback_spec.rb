@@ -26,8 +26,9 @@ RSpec.describe "Nominations::NotifyCallbacks", type: :request do
             id: nomination_email.notify_id,
             status: "failed",
             sent_at:,
+            template_id: "123",
           }
-        }.to have_enqueued_job(HandleNotifyCallbackJob).with(email_id: nomination_email.notify_id, delivery_status: "failed", sent_at:)
+        }.to have_enqueued_job(HandleNotifyCallbackJob).with(email_id: nomination_email.notify_id, delivery_status: "failed", sent_at:, template_id: "123")
       end
 
       context "when reference is nil" do
