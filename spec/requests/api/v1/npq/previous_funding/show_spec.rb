@@ -61,6 +61,20 @@ RSpec.describe "NPQ Funding API", type: :request do
           expect(parsed_response).to eq(stubbed_response)
         end
 
+        context "with get_an_identity_id" do
+          it "returns correct response" do
+            stubbed_response = stub_funding_eligibility_response(
+              trn:,
+              get_an_identity_id:,
+              npq_course_identifier: "npq-leading-literacy",
+            )
+
+            get "#{base_url}?trn=#{trn}&get_an_identity_id=#{get_an_identity_id}&npq_course_identifier=#{npq_course_identifier}"
+
+            expect(parsed_response).to eq(stubbed_response)
+          end
+        end
+
         context "with no npq_course_identifier" do
           it "returns an error" do
             get "#{base_url}?trn=#{trn}"
