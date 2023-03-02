@@ -43,7 +43,7 @@ RSpec.describe "NPQ Funding API", type: :request do
           get "#{base_url}?npq_course_identifier=#{npq_course_identifier}"
 
           expect(parsed_response).to eq({
-            "error" => "No identifier provided. Valid identifier params: trn or get_an_identity_id",
+            "error" => "No user identifier provided. Valid identifier params: trn or get_an_identity_id",
           })
           expect(response.status).to eq 400
         end

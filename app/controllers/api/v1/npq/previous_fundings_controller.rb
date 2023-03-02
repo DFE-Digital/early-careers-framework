@@ -4,7 +4,7 @@ module Api
   module V1
     module NPQ
       class PreviousFundingsController < ApiController
-        before_action :ensure_identifier_present, only: :show
+        before_action :ensure_user_identifier_present, only: :show
         before_action :ensure_npq_course_present, only: :show
 
         def show
@@ -25,10 +25,10 @@ module Api
           params[:npq_course_identifier]
         end
 
-        def ensure_identifier_present
+        def ensure_user_identifier_present
           return if trn.present? || get_an_identity_id.present?
 
-          error_body = { error: "No identifier provided. Valid identifier params: trn or get_an_identity_id" }
+          error_body = { error: "No user identifier provided. Valid identifier params: trn or get_an_identity_id" }
           render json: error_body, status: :bad_request
         end
 
