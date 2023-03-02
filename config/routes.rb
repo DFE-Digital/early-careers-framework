@@ -446,6 +446,8 @@ Rails.application.routes.draw do
         resources :notes, controller: "applications/notes", only: %i[edit update]
       end
     end
+
+    resource :super_user, only: %i[show], path: "super-user"
   end
 
   namespace :finance do

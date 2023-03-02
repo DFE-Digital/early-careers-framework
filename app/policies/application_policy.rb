@@ -63,5 +63,10 @@ private
     !!user&.admin?
   end
 
+  def super_user_only
+    admin_only && user.admin_profile.super_user?
+  end
+
   alias_method :admin?, :admin_only
+  alias_method :super_user?, :super_user_only
 end
