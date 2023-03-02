@@ -7,7 +7,7 @@ RSpec.describe Admin::ApplicationExportJob do
     subject { described_class.new.perform(npq_application_export) }
 
     let(:npq_application_export) do
-      NPQApplicationExport.create(start_date:, end_date:, user: create(:user))
+      NPQApplications::Export.create(start_date:, end_date:, user: create(:user))
     end
 
     let(:start_date) { Date.new(2019, 1, 1) }
