@@ -6,9 +6,9 @@ class ParticipantProfile::Mentor < ParticipantProfile::ECF
   COURSE_IDENTIFIERS = %w[ecf-mentor].freeze
 
   has_many :mentee_profiles,
-            class_name: "ParticipantProfile::ECT",
-            foreign_key: :mentor_profile_id,
-            dependent: :nullify
+           class_name: "ParticipantProfile::ECT",
+           foreign_key: :mentor_profile_id,
+           dependent: :nullify
   has_many :mentees, through: :mentee_profiles, source: :user
 
   has_many :school_mentors, dependent: :destroy, foreign_key: :participant_profile_id
