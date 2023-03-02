@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "multistep/builder"
-require_dependency "multistep/step"
-require_dependency "multistep/date_attribute"
-
 module Multistep
   module Form
     extend ActiveSupport::Concern
