@@ -31,7 +31,7 @@ class User < ApplicationRecord
   # end: TODO
 
   has_many :npq_application_eligibility_imports, class_name: "NPQApplications::EligibilityImport"
-  has_many :npq_application_exports
+  has_many :npq_application_exports, class_name: "NPQApplications::Export"
 
   before_validation :strip_whitespace
   after_update :sync_email_with_identity
