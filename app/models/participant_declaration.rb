@@ -178,6 +178,3 @@ private
     declaration_states.build(state:)
   end
 end
-
-require "participant_declaration/ecf"
-require "participant_declaration/npq"
