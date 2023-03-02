@@ -45,17 +45,22 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
         end
 
         context "with a get_an_identity_id" do
-          let(:get_an_identity_id) { SecureRandom.uuid }
-          let(:user) { create(:user, get_an_identity_id:) }
+          let(:get_an_identity_id) { get_an_identity_id_application.user.get_an_identity_id }
+          let(:get_an_identity_id_application) do
+            create(
+              :npq_application,
+              lead_provider_approval_status: "accepted",
+              eligible_for_funding: get_an_identity_id_application_funding,
+              teacher_reference_number_verified: true,
+              targeted_delivery_funding_eligibility: true,
+              npq_course:,
+              user: create(:user, :with_get_an_identity_id),
+            )
+          end
+          let(:get_an_identity_id_application_funding) { raise NotImplementedError }
 
           context "that is not previously funded" do
-            before do
-              create(
-                :npq_application,
-                lead_provider_approval_status: "accepted",
-                eligible_for_funding: false,
-              )
-            end
+            let(:get_an_identity_id_application_funding) { false }
 
             it "returns falsey for previously_funded" do
               expect(subject.call[:previously_funded]).to be_falsey
@@ -67,16 +72,10 @@ RSpec.describe NPQ::FundingEligibility, :with_default_schedules do
           end
 
           context "that is previously funded" do
+            let(:get_an_identity_id_application_funding) { true }
+
             before do
-              get_an_identity_application = create(
-                :npq_application,
-                user:,
-                eligible_for_funding: true,
-                teacher_reference_number_verified: true,
-                targeted_delivery_funding_eligibility: true,
-                npq_course:,
-              )
-              NPQ::Application::Accept.new(npq_application: get_an_identity_application).call
+              NPQ::Application::Accept.new(npq_application: get_an_identity_id_application).call
             end
 
             it "returns truthy for previously_funded" do

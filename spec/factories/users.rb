@@ -67,5 +67,9 @@ FactoryBot.define do
     trait :random_name do
       full_name { Faker::Name.name }
     end
+
+    trait :with_get_an_identity_id do
+      get_an_identity_id { SecureRandom.uuid }
+    end
   end
 end
