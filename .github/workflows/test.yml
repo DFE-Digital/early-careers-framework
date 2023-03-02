@@ -28,6 +28,7 @@ jobs:
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
       CI: true
+      DISABLE_SPRING: true
 
     services:
       postgres:
@@ -89,6 +90,7 @@ jobs:
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
       CI: true
+      DISABLE_SPRING: true
 
     services:
       postgres:
@@ -150,6 +152,7 @@ jobs:
       CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
       CI_NODE_INDEX: ${{ matrix.ci_node_index }}
       CI: true
+      DISABLE_SPRING: true
 
     services:
       postgres:
