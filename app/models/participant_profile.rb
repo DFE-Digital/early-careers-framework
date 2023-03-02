@@ -167,6 +167,3 @@ class ParticipantProfile < ApplicationRecord
     decision || validation_decisions.build(validation_step: name)
   end
 end
-
-require "participant_profile/npq"
-require "participant_profile/ecf"
