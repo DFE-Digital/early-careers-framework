@@ -21,10 +21,12 @@ class IneligibleParticipantMailer < ApplicationMailer
 
   ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE = "ceca360c-985c-4518-aaf9-a9963fd39f45"
 
-  def ect_active_flags_email(induction_tutor_email:, participant_profile:)
+  def ect_active_flags_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       ACTIVE_FLAGS_TEMPLATES[:ect],
-      to: induction_tutor_email,
+      to: params[:induction_tutor_email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -33,10 +35,12 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def mentor_active_flags_email(induction_tutor_email:, participant_profile:)
+  def mentor_active_flags_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       ACTIVE_FLAGS_TEMPLATES[:mentor],
-      to: induction_tutor_email,
+      to: params[:induction_tutor_email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -45,10 +49,12 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_no_qts_email(induction_tutor_email:, participant_profile:)
+  def ect_no_qts_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       NO_QTS_TEMPLATES[:ect],
-      to: induction_tutor_email,
+      to: params[:induction_tutor_email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -57,10 +63,12 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def mentor_no_qts_email(induction_tutor_email:, participant_profile:)
+  def mentor_no_qts_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       NO_QTS_TEMPLATES[:mentor],
-      to: induction_tutor_email,
+      to: params[:induction_tutor_email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -69,10 +77,12 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_previous_induction_email(induction_tutor_email:, participant_profile:)
+  def ect_previous_induction_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       ECT_PREVIOUS_INDUCTION_TEMPLATE,
-      to: induction_tutor_email,
+      to: params[:induction_tutor_email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -81,11 +91,13 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_previous_induction_email_previously_eligible(induction_tutor_email:, participant_profile:)
+  def ect_previous_induction_email_previously_eligible
+    participant_profile = params[:participant_profile]
+
     sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_PREVIOUS_INDUCTION_PREVIOUSLY_ELIGIBLE_TEMPLATE,
-      to: induction_tutor_email,
+      to: params[:induction_tutor_email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
@@ -95,7 +107,10 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_exempt_from_induction_email(induction_tutor_email:, participant_profile:)
+  def ect_exempt_from_induction_email
+    participant_profile = params[:participant_profile]
+    induction_tutor_email = params[:induction_tutor_email]
+
     sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_EXEMPT_FROM_INDUCTION_TEMPLATE,
@@ -109,7 +124,9 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_exempt_from_induction_email_to_ect(participant_profile:)
+  def ect_exempt_from_induction_email_to_ect
+    participant_profile = params[:participant_profile]
+
     template_mail(
       ECT_EXEMPT_FROM_INDUCTION_TO_ECT_TEMPLATE,
       to: participant_profile.user.email,
@@ -122,7 +139,10 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant_to_ect).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_exempt_from_induction_email_previously_eligible(induction_tutor_email:, participant_profile:)
+  def ect_exempt_from_induction_email_previously_eligible
+    participant_profile = params[:participant_profile]
+    induction_tutor_email = params[:induction_tutor_email]
+
     sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_EXEMPT_FROM_INDUCTION_PREVIOUSLY_ELIGIBLE_TEMPLATE,
@@ -136,7 +156,9 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile:)
+  def ect_exempt_from_induction_email_to_ect_previously_eligible
+    participant_profile = params[:participant_profile]
+
     template_mail(
       ECT_EXEMPT_FROM_INDUCTION_TO_ECT_PREVIOUSLY_ELIGIBLE_TEMPLATE,
       to: participant_profile.user.email,
@@ -149,7 +171,10 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:ineligible_participant_to_ect).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_now_eligible_previous_induction_email(induction_tutor:, participant_profile:)
+  def ect_now_eligible_previous_induction_email
+    participant_profile = params[:participant_profile]
+    induction_tutor = params[:induction_tutor]
+
     template_mail(
       ECT_NOW_ELIGIBLE_PREVIOUS_INDUCTION_TEMPLATE,
       to: induction_tutor.email,
@@ -163,7 +188,10 @@ class IneligibleParticipantMailer < ApplicationMailer
     ).tag(:now_eligible_previous_induction).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def ect_no_induction_email(induction_tutor_email:, participant_profile:)
+  def ect_no_induction_email
+    participant_profile = params[:participant_profile]
+    induction_tutor_email = params[:induction_tutor_email]
+
     sit = Identity.find_user_by(email: induction_tutor_email)
     template_mail(
       ECT_NO_INDUCTION_TEMPLATE,

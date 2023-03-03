@@ -33,7 +33,7 @@ module EarlyCareerTeachers
       end
 
       unless sit_validation
-        ParticipantMailer.participant_added(participant_profile: profile).deliver_later
+        ParticipantMailer.with(participant_profile: profile).participant_added.deliver_later
         profile.update_column(:request_for_details_sent_at, Time.zone.now)
         ParticipantDetailsReminderJob.schedule(profile)
       end

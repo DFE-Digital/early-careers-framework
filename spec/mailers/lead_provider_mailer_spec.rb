@@ -9,9 +9,7 @@ RSpec.describe LeadProviderMailer, type: :mailer do
     let(:start_url) { "https://ecf-dev.london.cloudapps" }
 
     let(:nomination_confirmation_email) do
-      LeadProviderMailer.welcome_email(
-        { user:, lead_provider_name: lead_provider.name, start_url: },
-      ).deliver_now
+      LeadProviderMailer.with(user:, lead_provider_name: lead_provider.name, start_url:).welcome_email.deliver_now
     end
 
     it "renders the right headers" do
@@ -25,12 +23,7 @@ RSpec.describe LeadProviderMailer, type: :mailer do
     let(:partnership) { create :partnership, :challenged }
 
     let(:nomination_confirmation_email) do
-      LeadProviderMailer.partnership_challenged_email(
-        {
-          user:,
-          partnership:,
-        },
-      ).deliver_now
+      LeadProviderMailer.with(user:, partnership:).partnership_challenged_email.deliver_now
     end
 
     it "renders the right headers" do
@@ -46,14 +39,12 @@ RSpec.describe LeadProviderMailer, type: :mailer do
     let(:what_changes_choice) { "change_lead_provider" }
 
     let(:programme_changed_email) do
-      LeadProviderMailer.programme_changed_email(
-        {
-          user:,
-          partnership:,
-          cohort_year:,
-          what_changes_choice:,
-        },
-      ).deliver_now
+      LeadProviderMailer.with(
+        user:,
+        partnership:,
+        cohort_year:,
+        what_changes_choice:,
+      ).programme_changed_email.deliver_now
     end
 
     it "renders the right headers" do

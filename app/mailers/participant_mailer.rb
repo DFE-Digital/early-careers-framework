@@ -21,7 +21,9 @@ class ParticipantMailer < ApplicationMailer
     sit_contact_address_bounce: "c414ed7d-a3ef-43f0-a452-ee1a5f376fcc",
   }.freeze
 
-  def participant_added(participant_profile:)
+  def participant_added
+    participant_profile = params[:participant_profile]
+
     template_mail(
       PARTICIPANT_TEMPLATES[template_type_for participant_profile],
       to: participant_profile.user.email,
@@ -38,7 +40,10 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def participant_removed_by_sit(participant_profile:, sit_name:)
+  def participant_removed_by_sit
+    participant_profile = params[:participant_profile]
+    sit_name = params[:sit_name]
+
     template_mail(
       PARTICIPANT_REMOVED_BY_SIT,
       to: participant_profile.user.email,
@@ -53,7 +58,9 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:participant_removed).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def add_details_reminder(participant_profile:)
+  def add_details_reminder
+    participant_profile = params[:participant_profile]
+
     template_mail(
       PARTICIPANT_TEMPLATES[template_type_for participant_profile],
       to: participant_profile.user.email,
@@ -70,7 +77,9 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:request_for_details).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def preterm_reminder(induction_coordinator_profile:)
+  def preterm_reminder
+    induction_coordinator_profile = params[:induction_coordinator_profile]
+
     template_mail(
       PARTICIPANT_TEMPLATES[:preterm_reminder],
       to: induction_coordinator_profile.user.email,
@@ -83,7 +92,9 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:preterm_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def preterm_reminder_unconfirmed_for_2022(induction_coordinator_profile:)
+  def preterm_reminder_unconfirmed_for_2022
+    induction_coordinator_profile = params[:induction_coordinator_profile]
+
     template_mail(
       PARTICIPANT_TEMPLATES[:preterm_reminder_unconfirmed_for_2022],
       to: induction_coordinator_profile.user.email,
@@ -96,7 +107,10 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:preterm_reminder_unconfirmed_for_2022).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def fip_register_participants_reminder(induction_coordinator_profile:, school_name:)
+  def fip_register_participants_reminder
+    induction_coordinator_profile = params[:induction_coordinator_profile]
+    school_name = params[:school_name]
+
     template_mail(
       PARTICIPANT_TEMPLATES[:fip_register_participants_reminder],
       to: induction_coordinator_profile.user.email,
@@ -110,7 +124,10 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:fip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def cip_register_participants_reminder(induction_coordinator_profile:, school_name:)
+  def cip_register_participants_reminder
+    induction_coordinator_profile = params[:induction_coordinator_profile]
+    school_name = params[:school_name]
+
     template_mail(
       PARTICIPANT_TEMPLATES[:cip_register_participants_reminder],
       to: induction_coordinator_profile.user.email,
@@ -124,7 +141,10 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:cip_register_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
   end
 
-  def sit_contact_address_bounce(induction_coordinator_profile:, school:)
+  def sit_contact_address_bounce
+    induction_coordinator_profile = params[:induction_coordinator_profile]
+    school = params[:school]
+
     email_address = school.primary_contact_email || school.secondary_contact_email
 
     template_mail(
@@ -139,7 +159,10 @@ class ParticipantMailer < ApplicationMailer
     ).tag(:sit_contact_address_bounce).associate_with(school, as: :school)
   end
 
-  def sit_has_added_and_validated_participant(participant_profile:, school_name:)
+  def sit_has_added_and_validated_participant
+    participant_profile = params[:participant_profile]
+    school_name = params[:school_name]
+
     template_mail(
       PARTICIPANT_TEMPLATES[sit_validation_template participant_profile],
       to: participant_profile.user.email,

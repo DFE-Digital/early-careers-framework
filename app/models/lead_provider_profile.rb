@@ -11,7 +11,7 @@ class LeadProviderProfile < ApplicationRecord
       user = User.create!(full_name:, email:)
       LeadProviderProfile.create!(user:, lead_provider:)
 
-      LeadProviderMailer.welcome_email({ user:, lead_provider_name: lead_provider.name, start_url: }).deliver_now
+      LeadProviderMailer.with(user:, lead_provider_name: lead_provider.name, start_url:).welcome_email.deliver_now
     end
   end
 end

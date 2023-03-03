@@ -9,12 +9,12 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:nomination_email) do
-      SchoolMailer.nomination_email(
+      SchoolMailer.with(
         recipient: primary_contact_email,
         nomination_url:,
         school:,
         expiry_date: "1/1/2000",
-      ).deliver_now
+      ).nomination_email.deliver_now
     end
 
     it "renders the right headers" do
@@ -28,11 +28,11 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:cip_only_invite_email) do
-      SchoolMailer.cip_only_invite_email(
+      SchoolMailer.with(
         recipient: primary_contact_email,
         nomination_url:,
         school_name: "Great Ouse Academy",
-      ).deliver_now
+      ).cip_only_invite_email.deliver_now
     end
 
     it "renders the right headers" do
@@ -46,11 +46,11 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:section_41_invite_email) do
-      SchoolMailer.section_41_invite_email(
+      SchoolMailer.with(
         recipient: primary_contact_email,
         nomination_url:,
         school_name: "Great Ouse Academy",
-      ).deliver_now
+      ).section_41_invite_email.deliver_now
     end
 
     it "renders the right headers" do
@@ -65,12 +65,12 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:start_url) { "https://ecf-dev.london.cloudapps" }
 
     let(:nomination_confirmation_email) do
-      SchoolMailer.nomination_confirmation_email(
+      SchoolMailer.with(
         sit_profile:,
         school:,
         start_url:,
         step_by_step_url: start_url,
-      ).deliver_now
+      ).nomination_confirmation_email.deliver_now
     end
 
     it "renders the right headers" do
@@ -86,12 +86,12 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:partnership) { build_stubbed :partnership }
 
     let(:partnership_notification_email) do
-      SchoolMailer.coordinator_partnership_notification_email(
+      SchoolMailer.with(
         coordinator:,
         partnership:,
         sign_in_url:,
         challenge_url:,
-      )
+      ).coordinator_partnership_notification_email
     end
 
     it "renders the right headers" do
@@ -107,12 +107,12 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:partnership) { build_stubbed :partnership }
 
     let(:partnership_notification_email) do
-      SchoolMailer.school_partnership_notification_email(
+      SchoolMailer.with(
         partnership:,
         recipient:,
         nominate_url:,
         challenge_url:,
-      )
+      ).school_partnership_notification_email
     end
 
     it "renders the right headers" do
@@ -127,11 +127,11 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:campaign) { :remind_fip_sit_to_complete_steps }
 
     let(:reminder_email) do
-      SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
+      SchoolMailer.with(
         induction_coordinator:,
         campaign:,
         school_name:,
-      )
+      ).remind_fip_induction_coordinators_to_add_ects_and_mentors_email
     end
     it "renders the right headers" do
       expect(reminder_email.from).to eq(["mail@example.com"])
@@ -141,10 +141,10 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "nqt_plus_one_sitless_invite" do
     let(:email) do
-      SchoolMailer.nqt_plus_one_sitless_invite(
+      SchoolMailer.with(
         recipient: "hello@example.com",
         start_url: "www.example.com",
-      ).deliver_now
+      ).nqt_plus_one_sitless_invite.deliver_now
     end
 
     it "renders the right headers" do
@@ -155,11 +155,11 @@ RSpec.describe SchoolMailer, type: :mailer do
 
   describe "nqt_plus_one_sit_invite" do
     let(:email) do
-      SchoolMailer.nqt_plus_one_sit_invite(
+      SchoolMailer.with(
         school: create(:school),
         recipient: "hello@example.com",
         start_url: "www.example.com",
-      ).deliver_now
+      ).nqt_plus_one_sit_invite.deliver_now
     end
 
     it "renders the right headers" do
@@ -174,11 +174,11 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:sign_in_url) { "https://www.example.com/sign-in" }
 
     let(:email) do
-      SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
+      SchoolMailer.with(
         induction_coordinator_profile:,
         sign_in_url:,
         school_name:,
-      )
+      ).sit_new_ambition_ects_and_mentors_added_email
     end
 
     it "renders the right headers" do
@@ -193,10 +193,10 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
 
     let(:email) do
-      SchoolMailer.fip_provider_has_withdrawn_a_participant(
+      SchoolMailer.with(
         withdrawn_participant: participant_profile,
         induction_coordinator: sit_profile,
-      )
+      ).fip_provider_has_withdrawn_a_participant
     end
 
     it "sets the right sender and recipient addresses" do

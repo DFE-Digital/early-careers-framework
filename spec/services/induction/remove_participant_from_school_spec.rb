@@ -64,10 +64,14 @@ RSpec.describe Induction::RemoveParticipantFromSchool do
       end
 
       it "notify the participant" do
-        expect {
-          service.call(participant_profile:, school:, sit_name:)
-        }.to have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
-               .with(participant_profile:, sit_name:)
+        expect { service.call(participant_profile:, school:, sit_name:) }.to
+        have_enqueued_mail(ParticipantMailer, :participant_removed_by_sit)
+          .with(
+            params: {
+              participant_profile:, sit_name:
+            },
+            args: [],
+          )
       end
     end
 

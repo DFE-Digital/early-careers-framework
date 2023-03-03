@@ -49,9 +49,9 @@ class InviteSchools
             .joins(school: :induction_coordinators)
             .select(:user_id),
     ).find_each do |user|
-      SchoolMailer.diy_wordpress_notification(
+      SchoolMailer.with(
         user:,
-      ).deliver_later
+      ).diy_wordpress_notification.deliver_later
     end
   end
 
@@ -106,21 +106,21 @@ private
   end
 
   def send_nomination_email(nomination_email)
-    notify_id = SchoolMailer.nomination_email(
+    notify_id = SchoolMailer.with(
       recipient: nomination_email.sent_to,
       school: nomination_email.school,
       nomination_url: nomination_email.nomination_url,
       expiry_date: email_expiry_date,
-    ).deliver_now.delivery_method.response.id
+    ).nomination_email.deliver_now.delivery_method.response.id
 
     nomination_email.update!(notify_id:)
   end
 
   def send_ministerial_letter(recipient)
-    SchoolMailer.ministerial_letter_email(recipient:).deliver_now
+    SchoolMailer.with(recipient:).ministerial_letter_email.deliver_now
   rescue Notifications::Client::RateLimitError
     sleep(1)
-    SchoolMailer.ministerial_letter_email(recipient:).deliver_now
+    SchoolMailer.with(recipient:).ministerial_letter_email.deliver_now
   end
 
   def email_expiry_date

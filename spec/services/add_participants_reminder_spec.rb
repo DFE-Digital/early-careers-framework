@@ -28,11 +28,15 @@ RSpec.describe AddParticipantsReminder do
 
   describe "#fip_register_participants_reminder" do
     it "sends the reminder email" do
-      expect(ParticipantMailer).to receive(:fip_register_participants_reminder).with(
-        hash_including(induction_coordinator_profile:, school_name: school.name),
-      ).and_call_original
-
-      add_participants_reminder.fip_register_participants_reminder
+      expect { add_participants_reminder.fip_register_participants_reminder }
+        .to have_enqueued_mail(ParticipantMailer, :fip_register_participants_reminder)
+          .with(
+            params: {
+              induction_coordinator_profile:,
+              school_name: school.name,
+            },
+            args: [],
+          )
     end
 
     context "with an induction profile that has already received the email" do
@@ -41,9 +45,7 @@ RSpec.describe AddParticipantsReminder do
       end
 
       it "does not send the email again" do
-        expect(ParticipantMailer).to receive(:fip_register_participants_reminder).never
-
-        add_participants_reminder.fip_register_participants_reminder
+        expect { add_participants_reminder.fip_register_participants_reminder }.not_to have_enqueued_mail(ParticipantMailer, :fip_register_participants_reminder)
       end
     end
 
@@ -51,20 +53,22 @@ RSpec.describe AddParticipantsReminder do
       before { create :ect_participant_profile, school_cohort: }
 
       it "does not send the email" do
-        expect(ParticipantMailer).to receive(:fip_register_participants_reminder).never
-
-        add_participants_reminder.fip_register_participants_reminder
+        expect { add_participants_reminder.fip_register_participants_reminder }.not_to have_enqueued_mail(ParticipantMailer, :fip_register_participants_reminder)
       end
     end
   end
 
   describe "#cip_register_participants_reminder" do
     it "sends the reminder email" do
-      expect(ParticipantMailer).to receive(:cip_register_participants_reminder).with(
-        hash_including(induction_coordinator_profile: induction_coordinator_profile_school_two, school_name: school_two.name),
-      ).and_call_original
-
-      add_participants_reminder.cip_register_participants_reminder
+      expect { add_participants_reminder.cip_register_participants_reminder }
+        .to have_enqueued_mail(ParticipantMailer, :cip_register_participants_reminder)
+          .with(
+            params: {
+              induction_coordinator_profile: induction_coordinator_profile_school_two,
+              school_name: school_two.name,
+            },
+            args: [],
+          )
     end
 
     context "with an induction profile that has already received the email" do
@@ -73,9 +77,8 @@ RSpec.describe AddParticipantsReminder do
       end
 
       it "does not send the email again" do
-        expect(ParticipantMailer).to receive(:cip_register_participants_reminder).never
-
-        add_participants_reminder.fip_register_participants_reminder
+        expect { add_participants_reminder.cip_register_participants_reminder }
+          .not_to have_enqueued_mail(ParticipantMailer, :cip_register_participants_reminder)
       end
     end
 
@@ -83,9 +86,8 @@ RSpec.describe AddParticipantsReminder do
       before { create :ect_participant_profile, school_cohort: school_two_cohort }
 
       it "does not send the email" do
-        expect(ParticipantMailer).to receive(:cip_register_participants_reminder).never
-
-        add_participants_reminder.cip_register_participants_reminder
+        expect { add_participants_reminder.cip_register_participants_reminder }
+          .not_to have_enqueued_mail(ParticipantMailer, :cip_register_participants_reminder)
       end
     end
   end

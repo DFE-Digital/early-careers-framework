@@ -24,12 +24,12 @@ class CreateInductionTutor < BaseService
         InductionCoordinatorProfile.create!(user:, schools: [school])
       end
 
-      SchoolMailer.nomination_confirmation_email(
+      SchoolMailer.with(
         sit_profile: user.induction_coordinator_profile,
         school:,
         start_url:,
         step_by_step_url:,
-      ).deliver_later
+      ).nomination_confirmation_email.deliver_later
     end
   end
 

@@ -19,10 +19,13 @@ RSpec.describe CreateInductionTutor do
 
       expect { service.call }.to have_enqueued_mail(SchoolMailer, :nomination_confirmation_email)
         .with(
-          sit_profile: an_instance_of(InductionCoordinatorProfile),
-          school:,
-          start_url: service.start_url,
-          step_by_step_url: service.step_by_step_url,
+          params: {
+            sit_profile: an_instance_of(InductionCoordinatorProfile),
+            school:,
+            start_url: service.start_url,
+            step_by_step_url: service.step_by_step_url,
+          },
+          args: [],
         )
       service.call
     end
@@ -157,10 +160,13 @@ RSpec.describe CreateInductionTutor do
         expect { service.call }.to not_change { User.count }
           .and have_enqueued_mail(SchoolMailer, :nomination_confirmation_email)
           .with(
-            sit_profile:,
-            school:,
-            start_url: service.start_url,
-            step_by_step_url: service.step_by_step_url,
+            params: {
+              sit_profile:,
+              school:,
+              start_url: service.start_url,
+              step_by_step_url: service.step_by_step_url,
+            },
+            args: [],
           )
         sit_profile.reload
         expect(sit_profile.schools.count).to eql 2

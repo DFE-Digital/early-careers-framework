@@ -228,11 +228,6 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
     end
 
     context "Participant has been added" do
-      before do
-        allow(ParticipantMailer).to receive(:participant_added).and_call_original
-        allow(ParticipantMailer).to receive(:sit_has_added_and_validated_participant).and_call_original
-      end
-
       context "When participant details validated against the DQT" do
         it "creates new participant record" do
           expect { form.save! }.to change(ParticipantProfile::ECF, :count).by 1
@@ -242,28 +237,33 @@ RSpec.describe Schools::AddParticipantForm, type: :model do
           expect { form.save! }.to change(ECFParticipantValidationData, :count).by 1
         end
 
-        it "sends a participant the added and validated" do
-          form.save!
-          profile = ECFParticipantValidationData.find_by(trn: form.trn).participant_profile
-          expect(ParticipantMailer).not_to have_received(:participant_added)
-          expect(ParticipantMailer).to have_received(:sit_has_added_and_validated_participant)
-                                         .with(participant_profile: profile, school_name: school_cohort.school.name)
+        it "does not send a participant added mail" do
+          expect { form.save! }.not_to have_enqueued_mail(ParticipantMailer, :participant_added)
+        end
+
+        it "sends the SIT an email saying they have been added and validated" do
+          expect { form.save! }
+            .to have_enqueued_mail(ParticipantMailer, :sit_has_added_and_validated_participant)
+              .with(
+                params: {
+                  school_name: school_cohort.school.name,
+                },
+                args: [],
+              )
         end
       end
 
       context "A SIT is adding themselves as a mentor and type is not self" do
         it "does not send the SIT an email saying they have been added and validated" do
           create(:induction_coordinator_profile, user:)
-          form.save!
-          expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
+          expect { form.save! }.not_to have_enqueued_mail(ParticipantMailer, :sit_has_added_and_validated_participant)
         end
       end
 
       context "A SIT is adding themselves as a mentor and type is set to self" do
         it "does not send the SIT an email saying they have been added and validated" do
           form.type = :self
-          form.save!
-          expect(ParticipantMailer).not_to have_received(:sit_has_added_and_validated_participant)
+          expect { form.save! }.not_to have_enqueued_mail(ParticipantMailer, :sit_has_added_and_validated_participant)
         end
       end
     end

@@ -30,7 +30,9 @@ class ParticipantTransferMailer < ApplicationMailer
   # there are minor copy changes between the templates.
   #
   # Reference: 1, 2
-  def participant_transfer_out_notification(induction_record:)
+  def participant_transfer_out_notification
+    induction_record = params[:induction_record]
+
     participant_profile = induction_record.participant_profile
     preferred_identity_email = induction_record.preferred_identity.email
 
@@ -56,7 +58,9 @@ class ParticipantTransferMailer < ApplicationMailer
   # there are minor copy changes between the templates.
   #
   # Reference: 3, 4
-  def participant_transfer_in_notification(induction_record:)
+  def participant_transfer_in_notification
+    induction_record = params[:induction_record]
+
     participant_profile = induction_record.participant_profile
     preferred_identity_email = induction_record.preferred_identity.email
 
@@ -82,7 +86,10 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to the *outgoing* lead provider, when it changes.
   #
   # Reference: 5
-  def provider_transfer_out_notification(induction_record:, lead_provider_profile:)
+  def provider_transfer_out_notification
+    induction_record = params[:induction_record]
+    lead_provider_profile = params[:lead_provider_profile]
+
     template_mail(
       TRANSFER_OUT_FOR_PROVIDER_TEMPLATE,
       to: lead_provider_profile.user.email,
@@ -98,7 +105,10 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to the *incoming* lead provider, when it has changed.
   #
   # Reference: 6
-  def provider_transfer_in_notification(induction_record:, lead_provider_profile:)
+  def provider_transfer_in_notification
+    induction_record = params[:induction_record]
+    lead_provider_profile = params[:lead_provider_profile]
+
     template_mail(
       TRANSFER_IN_FOR_PROVIDER_TEMPLATE,
       to: lead_provider_profile.user.email,
@@ -115,7 +125,10 @@ class ParticipantTransferMailer < ApplicationMailer
   # current lead provider.
   #
   # Reference: 7
-  def provider_new_school_transfer_notification(induction_record:, lead_provider_profile:)
+  def provider_new_school_transfer_notification
+    induction_record = params[:induction_record]
+    lead_provider_profile = params[:lead_provider_profile]
+
     template_mail(
       NEW_SCHOOL_TRANSFER_FOR_PROVIDER,
       to: lead_provider_profile.user.email,
@@ -131,7 +144,10 @@ class ParticipantTransferMailer < ApplicationMailer
   # Sent to when the LP is already the *outgoing* and *incoming* lead provider at both schools.
   #
   # Reference: 8
-  def provider_existing_school_transfer_notification(induction_record:, lead_provider_profile:)
+  def provider_existing_school_transfer_notification
+    induction_record = params[:induction_record]
+    lead_provider_profile = params[:lead_provider_profile]
+
     template_mail(
       EXISTING_SCHOOL_TRANSFER_FOR_PROVIDER,
       to: lead_provider_profile.user.email,
@@ -151,7 +167,9 @@ class ParticipantTransferMailer < ApplicationMailer
   # to be sent *after* the transfer has happened.
   #
   # Reference: 9, 10
-  def induction_coordinator_participant_transfer_out_notification(induction_record:, induction_coordinator_profile:)
+  def induction_coordinator_participant_transfer_out_notification
+    induction_record = params[:induction_record]
+    induction_coordinator_profile = params[:induction_coordinator_profile]
     participant_profile = induction_record.participant_profile
 
     template_id = if participant_profile.ect?

@@ -27,7 +27,12 @@ RSpec.describe ParticipantDetailsReminderJob, :with_default_schedules do
     context "when participant is not withdrawn and haven't submit their validation details" do
       it "enqueues reminder email" do
         expect { subject }.to have_enqueued_mail(ParticipantMailer, :add_details_reminder)
-          .with(participant_profile:)
+          .with(
+            params: {
+              participant_profile:,
+            },
+            args: [],
+          )
       end
 
       it "reschedules self" do

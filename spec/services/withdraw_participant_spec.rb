@@ -112,8 +112,11 @@ RSpec.shared_examples "withdrawing an ECF participant" do
       service.call
     }.to have_enqueued_mail(SchoolMailer, :fip_provider_has_withdrawn_a_participant)
       .with(
-        withdrawn_participant: participant_profile,
-        induction_coordinator:,
+        params: {
+          withdrawn_participant: participant_profile,
+          induction_coordinator:,
+        },
+        args: [],
       ).once
   end
 

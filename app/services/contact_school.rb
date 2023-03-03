@@ -16,7 +16,7 @@ class ContactSchool
       next unless induction_coordinator_profile.schools.any?
 
       user.induction_coordinator_profile.schools.each do |school|
-        ParticipantMailer.sit_contact_address_bounce(induction_coordinator_profile:, school:).deliver_later
+        ParticipantMailer.with(induction_coordinator_profile:, school:).sit_contact_address_bounce.deliver_later
       end
     end
   end

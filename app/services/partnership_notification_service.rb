@@ -51,14 +51,14 @@ class PartnershipNotificationService
             partnership_notification_email: notification_email,
           )
 
-          notify_id = SchoolMailer.partnered_school_invite_sit_email(
+          notify_id = SchoolMailer.with(
             recipient: notification_email.sent_to,
             school:,
             lead_provider_name: notification_email.lead_provider.name,
             delivery_partner_name: notification_email.delivery_partner.name,
             nominate_url: nomination_email.nomination_url(utm_source: :partnered_invite_sit_reminder),
             challenge_url: challenge_url(notification_email.token, utm_source: :partnered_invite_sit_reminder),
-          ).deliver_now.delivery_method.response.id
+          ).partnered_school_invite_sit_email.deliver_now.delivery_method.response.id
 
           # This would usually be two weeks, but we don't want providers to be able challenge after the first milestone date.
           partnership.update!(challenge_deadline: Date.parse("Oct 31 2021").end_of_day)
@@ -86,18 +86,18 @@ private
       partnership_notification_email: notification_email,
     )
 
-    notify_id = SchoolMailer.school_partnership_notification_email(
+    notify_id = SchoolMailer.with(
       recipient: notification_email.sent_to,
       partnership: notification_email.partnership,
       nominate_url: nomination_email.nomination_url,
       challenge_url: challenge_url(notification_email.token),
-    ).deliver_now.delivery_method.response.id
+    ).school_partnership_notification_email.deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id:)
   end
 
   def send_notification_email_to_coordinator(notification_email, coordinator)
-    notify_id = SchoolMailer.coordinator_partnership_notification_email(
+    notify_id = SchoolMailer.with(
       coordinator:,
       partnership: notification_email.partnership,
       sign_in_url: Rails.application.routes.url_helpers.new_user_session_url(
@@ -105,7 +105,7 @@ private
         **UTMService.email(:partnership_notification, :partnership_notification),
       ),
       challenge_url: challenge_url(notification_email.token),
-    ).deliver_now.delivery_method.response.id
+    ).coordinator_partnership_notification_email.deliver_now.delivery_method.response.id
 
     notification_email.update!(notify_id:)
   end

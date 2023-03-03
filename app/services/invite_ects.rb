@@ -15,7 +15,7 @@ class InviteEcts
         # Already chosen a programme this cohort
         next if school.chosen_programme?(Cohort.current)
 
-        ParticipantMailer.preterm_reminder_unconfirmed_for_2022(induction_coordinator_profile: sit).deliver_later
+        ParticipantMailer.with(induction_coordinator_profile: sit).preterm_reminder_unconfirmed_for_2022.deliver_later
       end
     end
   end
@@ -26,7 +26,7 @@ class InviteEcts
     School.includes(:induction_coordinators).eligible.reject { |s| s.chosen_programme?(cohort) }.each do |school|
       next if school.induction_coordinators.any? || Email.associated_with(school).tagged_with(:school_preterm_reminder).any?
 
-      SchoolMailer.school_preterm_reminder(school:, season:).deliver_later
+      SchoolMailer.with(school:, season:).school_preterm_reminder.deliver_later
     end
   end
 end
