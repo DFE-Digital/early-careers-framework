@@ -22,12 +22,15 @@ module NewSeeds
         # Optionally links it to the provided partnership or a fresh new one with new lead provided and delivery partner
         #   unless partnership: :none received. Default: create a new one.
         # Optionally sets it as the default induction programme of the school cohort. Default: true.
-        def with_programme(default_induction_programme: true, partnership: nil)
-          tap do
-            NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:)
-                                                         .build(default_induction_programme:)
-                                                         .with_partnership(partnership:)
-          end
+        def with_programme(**args)
+          tap { add_programme(**args) }
+        end
+
+        def add_programme(default_induction_programme: true, partnership: nil)
+          NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:)
+                                                       .build(default_induction_programme:)
+                                                       .with_partnership(partnership:)
+                                                       .induction_programme
         end
 
       private

@@ -28,6 +28,17 @@ module NewSeeds
           end
         end
 
+        def with_relationship(lead_provider:, delivery_partner:)
+          tap do
+            induction_programme.update!(partnership: FactoryBot.create(:seed_partnership,
+                                                                       :relationship,
+                                                                       cohort:,
+                                                                       school:,
+                                                                       lead_provider:,
+                                                                       delivery_partner:))
+          end
+        end
+
       private
 
         attr_reader :school_cohort
