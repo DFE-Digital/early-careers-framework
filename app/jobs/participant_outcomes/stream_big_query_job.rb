@@ -2,7 +2,7 @@
 
 module ParticipantOutcomes
   class StreamBigQueryJob < ApplicationJob
-    queue_as :participant_outcomes
+    queue_as :big_query
 
     def perform(participant_outcome_id:)
       bigquery = Google::Cloud::Bigquery.new

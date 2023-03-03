@@ -33,7 +33,7 @@ RSpec.describe ParticipantOutcomes::StreamBigQueryJob, :with_default_schedules d
     it "queues job" do
       expect {
         described_class.perform_now(participant_outcome_id: outcome.id)
-      }.to have_enqueued_job.on_queue("participant_outcomes")
+      }.to have_enqueued_job(described_class).on_queue("big_query")
     end
   end
 end

@@ -128,7 +128,7 @@ Rails.application.routes.draw do
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
           get ":participant_id/outcomes", to: "participant_outcomes#index"
-          post ":participant_id/outcomes", to: "participant_outcomes#create"
+          post ":participant_id/outcomes", to: "participant_outcomes#create", as: :create_outcome
         end
       end
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"

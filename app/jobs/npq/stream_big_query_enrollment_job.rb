@@ -2,6 +2,8 @@
 
 module NPQ
   class StreamBigQueryEnrollmentJob < ApplicationJob
+    queue_as :big_query
+
     def perform(npq_application_id:)
       bigquery = Google::Cloud::Bigquery.new
       dataset = bigquery.dataset "npq_registration", skip_lookup: true
