@@ -5,6 +5,7 @@ class NPQApplication < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
+  has_one :school, class_name: "School", foreign_key: :urn, primary_key: :school_urn
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :participant_identity
   belongs_to :npq_lead_provider

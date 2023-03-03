@@ -6,7 +6,16 @@ RSpec.describe Admin::Participants::Search, :with_default_schedules do
   let(:search) { Admin::Participants::Search }
 
   describe "searching" do
-    let!(:user_1) { create(:user, full_name: "Andrew Armstrong", email: "aaaa@example.com") }
+    let!(:school) { user_1.school }
+
+    let!(:npq_application) { create(:npq_application, user: user_1) }
+
+    let!(:user_1) do
+      create(:user,
+             :induction_coordinator,
+             full_name: "Andrew Armstrong",
+                 email: "aaaa@example.com")
+    end
     let!(:user_2) { create(:user, full_name: "Bonnie Benson", email: "bbbb@example.com") }
     let!(:user_3) { create(:user, full_name: "Charles Cross", email: "cccc@example.com") }
 
@@ -113,6 +122,20 @@ RSpec.describe Admin::Participants::Search, :with_default_schedules do
 
       describe "matching by user id" do
         let(:search_term) { pp_1.participant_identity.external_identifier }
+
+        let(:results) { search.call(ParticipantProfile, search_term:) }
+
+        it "returns matching participants" do
+          expect(results).to include(pp_1)
+        end
+
+        it "doesn't return non-matching participants" do
+          expect(results).not_to include(pp_2, pp_3)
+        end
+      end
+
+      describe "matching by teacher reference number" do
+        let(:search_term) { user_1.npq_applications.first.teacher_reference_number }
 
         let(:results) { search.call(ParticipantProfile, search_term:) }
 

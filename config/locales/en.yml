@@ -1,4 +1,7 @@
 en:
+  time:
+    formats:
+      admin: "%R on %d/%m/%Y"
   currency: "£"
   event_types:
     started: Started
@@ -583,7 +586,14 @@ en:
   admin:
     npq:
       applications:
+        index:
+          title: NPQ Applications
+        show:
+          title: NPQ Application
+          details: Details
+          tabs: Tabs
         layout:
+          applications: Applications
           title: NPQ Applications
           exports: Application Exports
           eligibility_imports: Eligibility Imports
