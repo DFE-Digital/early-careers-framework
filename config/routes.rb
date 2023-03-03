@@ -108,6 +108,7 @@ Rails.application.routes.draw do
 
       namespace :npq do
         resources :users, only: %i[show create update]
+        resource :previous_funding, only: [:show]
       end
     end
 
