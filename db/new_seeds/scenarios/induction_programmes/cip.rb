@@ -15,18 +15,18 @@ module NewSeeds
         end
 
         def build(default_induction_programme: true)
-          tap do
-            @induction_programme = FactoryBot.create(:seed_induction_programme, :cip, school_cohort:)
-            set_default_induction_programme! if default_induction_programme
-          end
+          @induction_programme = FactoryBot.create(:seed_induction_programme, :cip, school_cohort:)
+          set_default_induction_programme! if default_induction_programme
+
+          self
         end
 
         def with_core_induction_programme(core_induction_programme: nil, default_core_induction_programme: true)
-          tap do
-            core_induction_programme ||= FactoryBot.create(:seed_core_induction_programme)
-            induction_programme.update!(core_induction_programme:)
-            set_default_core_induction_programme! if default_core_induction_programme
-          end
+          core_induction_programme ||= FactoryBot.create(:seed_core_induction_programme)
+          induction_programme.update!(core_induction_programme:)
+          set_default_core_induction_programme! if default_core_induction_programme
+
+          self
         end
 
       private

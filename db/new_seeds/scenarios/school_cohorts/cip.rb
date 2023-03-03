@@ -13,9 +13,15 @@ module NewSeeds
         end
 
         def build
-          tap do
-            @school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school:, cohort:)
-          end
+          @school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school:, cohort:)
+
+          self
+        end
+
+        def with_programme(**args)
+          add_programme(**args)
+
+          self
         end
 
         # Adds a FIP induction programme to the school cohort.
@@ -23,15 +29,13 @@ module NewSeeds
         #   unless core_induction_programme: :none received. Default: create a new one.
         # Optionally sets it as the default induction programme of the school cohort. Default: true.
         # Optionally sets the core induction programme as the default for the school cohort. Default: true.
-        def with_programme(core_induction_programme: nil,
-                           default_induction_programme: true,
-                           default_core_induction_programme: true)
-          tap do
-            NewSeeds::Scenarios::InductionProgrammes::Cip
-              .new(school_cohort:)
-              .build(default_induction_programme:)
-              .with_core_induction_programme(core_induction_programme:, default_core_induction_programme:)
-          end
+        def add_programme(core_induction_programme: nil,
+                          default_induction_programme: true,
+                          default_core_induction_programme: true)
+          NewSeeds::Scenarios::InductionProgrammes::Cip
+            .new(school_cohort:)
+            .build(default_induction_programme:)
+            .with_core_induction_programme(core_induction_programme:, default_core_induction_programme:)
         end
 
       private

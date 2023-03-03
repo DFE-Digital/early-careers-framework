@@ -15,28 +15,27 @@ module NewSeeds
         end
 
         def build(default_induction_programme: true)
-          tap do
-            @induction_programme = FactoryBot.create(:seed_induction_programme, :fip, school_cohort:)
-            set_default_induction_programme! if default_induction_programme
-          end
+          @induction_programme = FactoryBot.create(:seed_induction_programme, :fip, school_cohort:)
+          set_default_induction_programme! if default_induction_programme
+
+          self
         end
 
         def with_partnership(partnership: nil)
-          tap do
-            partnership ||= FactoryBot.create(:seed_partnership, cohort:, school:, delivery_partner:, lead_provider:)
-            induction_programme.update!(partnership:)
-          end
+          partnership ||= FactoryBot.create(:seed_partnership, cohort:, school:, delivery_partner:, lead_provider:)
+          induction_programme.update!(partnership:)
+
+          self
         end
 
         def with_relationship(lead_provider:, delivery_partner:)
-          tap do
-            induction_programme.update!(partnership: FactoryBot.create(:seed_partnership,
-                                                                       :relationship,
-                                                                       cohort:,
-                                                                       school:,
-                                                                       lead_provider:,
-                                                                       delivery_partner:))
-          end
+          induction_programme.update!(partnership: FactoryBot.create(:seed_partnership,
+                                                                     :relationship,
+                                                                     cohort:,
+                                                                     school:,
+                                                                     lead_provider:,
+                                                                     delivery_partner:))
+          self
         end
 
       private

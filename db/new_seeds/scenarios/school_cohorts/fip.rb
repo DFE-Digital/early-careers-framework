@@ -13,19 +13,21 @@ module NewSeeds
         end
 
         def build
-          tap do
-            @school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school:, cohort:)
-          end
+          @school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school:, cohort:)
+
+          self
+        end
+
+        def with_programme(**args)
+          add_programme(**args)
+
+          self
         end
 
         # Adds a FIP induction programme to the school cohort.
         # Optionally links it to the provided partnership or a fresh new one with new lead provided and delivery partner
         #   unless partnership: :none received. Default: create a new one.
         # Optionally sets it as the default induction programme of the school cohort. Default: true.
-        def with_programme(**args)
-          tap { add_programme(**args) }
-        end
-
         def add_programme(default_induction_programme: true, partnership: nil)
           NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:)
                                                        .build(default_induction_programme:)

@@ -48,11 +48,11 @@ module NewSeeds
         # will also add a partnership to that cohort and induction programme
         ###
         def chosen_fip_and_partnered_in(cohort:, partnership: nil)
-          tap do
-            fip = NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:).build.with_programme(partnership:)
-            partnerships[cohort.start_year] = fip.school_cohort.default_induction_programme.partnership
-            school_cohorts[cohort.start_year] = fip.school_cohort
-          end
+          fip = NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:).build.with_programme(partnership:)
+          partnerships[cohort.start_year] = fip.school_cohort.default_induction_programme.partnership
+          school_cohorts[cohort.start_year] = fip.school_cohort
+
+          self
         end
 
         ###
@@ -60,13 +60,12 @@ module NewSeeds
         # will also add CIP materials to that school_cohort and induction programme
         ###
         def chosen_cip_with_materials_in(cohort:, materials: nil)
-          tap do
-            school_cohorts[cohort.start_year] = NewSeeds::Scenarios::SchoolCohorts::Cip
-                                                  .new(cohort:, school:)
-                                                  .build
-                                                  .with_programme(core_induction_programme: materials)
-                                                  .school_cohort
-          end
+          school_cohorts[cohort.start_year] = NewSeeds::Scenarios::SchoolCohorts::Cip
+                                                .new(cohort:, school:)
+                                                .build
+                                                .with_programme(core_induction_programme: materials)
+                                                .school_cohort
+          self
         end
 
         ###
