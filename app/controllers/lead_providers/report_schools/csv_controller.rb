@@ -19,6 +19,7 @@ module LeadProviders
             cohort_id: report_schools_form.cohort_id,
             lead_provider_id: current_user.lead_provider_profile.lead_provider.id,
             delivery_partner_id: report_schools_form.delivery_partner_id,
+            uploaded_urns: upload_params[:csv].read.lines(chomp: true),
           ),
         )
 
