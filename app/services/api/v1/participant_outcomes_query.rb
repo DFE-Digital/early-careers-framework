@@ -32,7 +32,7 @@ module Api
       end
 
       def participant_scope
-        ParticipantIdentity.where(external_identifier: participant_external_id)
+        ParticipantIdentity.where(user_id: participant_external_id)
       end
     end
   end

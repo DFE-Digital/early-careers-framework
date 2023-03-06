@@ -47,7 +47,7 @@ module Api
 
         def induction_record
           induction_records
-            .find_by!(participant_profile: { participant_identities: { external_identifier: params[:id] } })
+            .find_by!(participant_profile: { participant_identities: { user_id: params[:id] } })
         end
 
       private
@@ -150,7 +150,7 @@ module Api
 
         def participant_identity_fields
           [
-            "participant_identities.external_identifier as external_identifier",
+            "participant_identities.user_id as external_identifier",
             "participant_identities.updated_at AS participant_identity_updated_at",
             "preferred_identities.email AS preferred_identity_email",
             "participant_identities_mentor_profiles.external_identifier AS mentor_external_identifier",

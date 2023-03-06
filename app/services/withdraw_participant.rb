@@ -38,7 +38,7 @@ class WithdrawParticipant
   end
 
   def participant_identity
-    @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+    @participant_identity ||= ParticipantIdentity.find_by(user_id: participant_id)
   end
 
   def participant_profile

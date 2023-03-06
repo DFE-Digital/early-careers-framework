@@ -65,7 +65,7 @@ module Api
       end
 
       def npq_application
-        @npq_application ||= npq_lead_provider.npq_applications.includes(:participant_identity, :npq_course).find(params[:id])
+        @npq_application ||= npq_lead_provider.npq_applications.includes(:cohort, :npq_course, participant_identity: [:user]).find(params[:id])
       end
     end
   end
