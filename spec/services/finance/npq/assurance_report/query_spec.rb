@@ -28,7 +28,7 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules do
 
     it "surfaces the preferred external identifier" do
       participant_declarations = query.participant_declarations
-      expect(participant_declarations.first.participant_id).to eq(participant_identity.external_identifier)
+      expect(participant_declarations.first.participant_id).to eq(participant_identity.new_external_identifier)
     end
 
     context "with multiple participant identities" do
@@ -53,7 +53,7 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules do
 
       it "surfaces the preferred external identifier" do
         participant_declarations = query.participant_declarations
-        expect(participant_declarations.first.participant_id).to eq(participant_identity.external_identifier)
+        expect(participant_declarations.first.participant_id).to eq(participant_identity.new_external_identifier)
       end
     end
   end

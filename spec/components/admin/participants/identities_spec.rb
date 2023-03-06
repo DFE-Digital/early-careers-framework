@@ -30,7 +30,7 @@ RSpec.describe Admin::Participants::Identities, :with_default_schedules, type: :
         expect(rendered_content).to include(
           "Additional",
           identity.user_id,
-          identity.external_identifier,
+          identity.new_external_identifier,
           identity.email,
           identity.origin,
         )
