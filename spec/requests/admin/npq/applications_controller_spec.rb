@@ -13,15 +13,15 @@ RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, ty
   end
 
   describe "GET (Index) /admin/npq/applications/applications" do
-    let(:index_request) { get("/admin/npq/applications/applications", params: params) }
+    let(:index_request) { get("/admin/npq/applications/applications", params:) }
 
     it "renders the index template for applications" do
       index_request
       expect(response).to render_template "admin/npq/applications/index"
     end
 
-    context 'with users split over two pages' do
-      let(:params) { { per_page: 2, page: page } }
+    context "with users split over two pages" do
+      let(:params) { { per_page: 2, page: } }
       let(:page) { 2 }
 
       before do
@@ -30,8 +30,7 @@ RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, ty
         end
       end
 
-
-      it 'can return paginated data' do
+      it "can return paginated data" do
         index_request
 
         # TOO FIX
@@ -39,7 +38,6 @@ RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, ty
 
         # expect(response).to render_template "admin/npq/applications/index"
       end
-
     end
   end
 
