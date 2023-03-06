@@ -51,8 +51,12 @@ RSpec.describe "Lead Provider school reporting: uploading csv", type: :request d
         expect(response).to redirect_to errors_lead_providers_report_schools_csv_path
 
         expect(PartnershipCsvUpload.count).to eq 1
-        expect(PartnershipCsvUpload.last.lead_provider_id).to eq(user.lead_provider_profile.lead_provider.id)
-        expect(PartnershipCsvUpload.last.delivery_partner_id).to eq(delivery_partner.id)
+
+        PartnershipCsvUpload.last.tap do |upload|
+          expect(upload.lead_provider_id).to eq(user.lead_provider_profile.lead_provider.id)
+          expect(upload.delivery_partner_id).to eq(delivery_partner.id)
+          expect(upload.uploaded_urns).to eql(file_fixture("school_urns.csv").read.lines(chomp: true))
+        end
       end
 
       it "redirects to the confirm page when there are no errors" do

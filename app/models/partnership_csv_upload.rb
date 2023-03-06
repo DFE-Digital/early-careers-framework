@@ -30,6 +30,16 @@ class PartnershipCsvUpload < ApplicationRecord
                  .uniq
   end
 
+  # NOTE: this method is intended for short term use while we migrate the urn
+  # lists from ActiveStorage to Postgres arrays
+  def sync_uploaded_urns
+    uploaded_urns = csv.download.lines(chomp: true)
+
+    return if uploaded_urns.blank?
+
+    update!(uploaded_urns:)
+  end
+
 private
 
   def csv_validation
