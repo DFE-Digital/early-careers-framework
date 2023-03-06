@@ -19,8 +19,8 @@ RSpec.describe Admin::Participants::Search, :with_default_schedules do
     let!(:user_2) { create(:user, full_name: "Bonnie Benson", email: "bbbb@example.com") }
     let!(:user_3) { create(:user, full_name: "Charles Cross", email: "cccc@example.com") }
 
-    let!(:pp_1) { create(:ecf_participant_profile, user: user_1) }
-    let!(:pp_2) { create(:ecf_participant_profile, user: user_2) }
+    let!(:pp_1) { create(:ect_participant_profile, user: user_1) }
+    let!(:pp_2) { create(:ect_participant_profile, user: user_2) }
     let!(:pp_3) { create(:npq_participant_profile, user: user_3) }
 
     context "when searching with a string" do

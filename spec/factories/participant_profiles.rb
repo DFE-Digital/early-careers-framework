@@ -7,18 +7,19 @@ FactoryBot.define do
       profile_traits { [] }
     end
 
-    factory :ecf_participant_profile, class: "ParticipantProfile::ECF" do
+    trait(:ecf) do
       profile_duplicity { :single }
       school_cohort { association :school_cohort, cohort: }
       teacher_profile { association :teacher_profile, school: school_cohort.school }
       schedule { Finance::Schedule::ECF.default_for(cohort: school_cohort.cohort) || create(:ecf_schedule, cohort: school_cohort.cohort) }
+
       after :build do |participant_profile|
         participant_profile.participant_identity = Identity::Create.call(user: participant_profile.user)
       end
-
-      factory :ect_participant_profile, class: "ParticipantProfile::ECT"
-      factory :mentor_participant_profile, class: "ParticipantProfile::Mentor"
     end
+
+    factory(:ect_participant_profile, class: "ParticipantProfile::ECT") { ecf }
+    factory(:mentor_participant_profile, class: "ParticipantProfile::Mentor") { ecf }
 
     trait :ecf_participant_validation_data do
       ecf_participant_validation_data { association :ecf_participant_validation_data }

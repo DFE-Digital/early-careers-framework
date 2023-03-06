@@ -213,7 +213,8 @@ module Schools
     end
 
     def check_for_existing_profile
-      self.existing_participant_profile = ParticipantProfile::ECF
+      self.existing_participant_profile = ParticipantProfile
+                                            .ecf
                                             .joins(:ecf_participant_validation_data)
                                             .where(ecf_participant_validation_data: { trn: formatted_trn })
                                             .first

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :ecf_participant_validation_data, class: ECFParticipantValidationData do
-    association :participant_profile, factory: :ecf_participant_profile
+    association :participant_profile, factory: :ect_participant_profile
 
     full_name { Faker::Name.name }
     trn { sprintf("%07i", Random.random_number(9_999_999)) }
