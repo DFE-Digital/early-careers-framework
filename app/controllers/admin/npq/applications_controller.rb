@@ -9,8 +9,11 @@ module Admin
       def index
         query_string = params[:query]
 
-        @applications = Admin::NPQApplications::ApplicationsSearch
+        results = Admin::NPQApplications::ApplicationsSearch
           .new(policy_scope(NPQApplication), query_string:).call
+        @pagy, @applications = pagy_array(results, page: params[:page], items: 20)
+        @page = @pagy.page
+        @total_pages = @pagy.pages
       end
 
       def show
