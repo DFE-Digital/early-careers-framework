@@ -28,6 +28,7 @@ module NPQ
       ActiveRecord::Base.transaction do
         if profile
           profile.participant_profile_states.destroy_all
+          profile.participant_profile_schedules.destroy_all
           profile.participant_declarations.destroy_all
           profile.destroy!
         end
