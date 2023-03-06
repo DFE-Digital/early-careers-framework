@@ -20,7 +20,7 @@ module Finance
           <<~EOSQL
             SELECT
               pd.id                                                            AS id,
-              pi.external_identifier                                           AS participant_id,
+              pi.user_id                                                       AS participant_id,
               u.full_name                                                      AS participant_name,
               tp.trn                                                           AS trn,
               pp.type                                                          AS participant_type,

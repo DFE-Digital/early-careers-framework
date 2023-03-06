@@ -28,7 +28,7 @@
           @participant_profiles.each do |participant_profile|
             body.row do |row|
               row.cell(text: participant_profile.profile_type)
-              row.cell(text: participant_profile.external_identifier)
+              row.cell(text: participant_profile.user_id)
               row.cell(text: participant_profile.id)
               row.cell(text: participant_profile.cohort)
               row.cell(text: participant_profile.schedule_identifier)

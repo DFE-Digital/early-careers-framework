@@ -8,7 +8,7 @@ module Analytics
 
         record = Analytics::ECFParticipant.find_or_initialize_by(participant_profile_id: participant_profile.id)
         record.user_id = participant_profile.user.id
-        record.external_id = participant_profile.participant_identity.external_identifier
+        record.external_id = participant_profile.participant_identity.new_external_identifier
         record.user_created_at = participant_profile.user.created_at
         record.trn_verified = trn_verified?(participant_profile)
         record.school_urn = participant_profile.school_cohort.school.urn

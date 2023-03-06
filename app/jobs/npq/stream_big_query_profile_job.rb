@@ -16,7 +16,7 @@ module NPQ
         {
           profile_id: profile.id,
           user_id: profile.participant_identity.user_id,
-          external_id: profile.participant_identity.external_identifier,
+          external_id: profile.participant_identity.new_external_identifier,
           application_ecf_id: profile.npq_application&.id,
           status: profile.status,
           training_status: profile.training_status,

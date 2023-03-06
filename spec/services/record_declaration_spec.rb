@@ -224,8 +224,13 @@ RSpec.shared_examples "creates participant declaration attempt" do
     let(:participant_identity) { create(:participant_identity, :secondary) }
     let(:opts) { { participant_identity: } }
 
-    it "creates the relevant participant declaration" do
-      expect { subject.call }.to change(ParticipantDeclarationAttempt, :count).by(1)
+    it "does not create the relevant participant declaration" do
+      expect { subject.call }.not_to change(ParticipantDeclarationAttempt, :count)
+    end
+
+    it "has meaningful error message", :aggregate_failures do
+      expect(service).to be_invalid
+      expect(service.errors.messages_for(:participant_id)).to eq(["The property '#/participant_id' must be a valid Participant ID"])
     end
   end
 

@@ -29,10 +29,7 @@ module Api
       set_type :participant
 
       set_id :id do |induction_record|
-        # NOTE: using this will retain the original ID exposed to provider
-        induction_record.participant_profile.participant_identity.external_identifier
-        # NOTE: use this instead to use new (de-duped) ID
-        # induction_record.participant_profile.user.id
+        induction_record.participant_profile.participant_identity.new_external_identifier
       end
 
       attribute :email do |induction_record|
