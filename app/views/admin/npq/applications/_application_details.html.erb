@@ -1,3 +1,4 @@
+<h2 class="govuk-heading-m">Application details</h2>
 <%=
   govuk_summary_list do |sl|
     sl.row do |row|
@@ -6,13 +7,24 @@
     end
 
     sl.row do |row|
-      row.key(text: 'User UUID')
+      row.key(text: 'User UUID/ Participant UUID')
       row.value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
     end
 
     sl.row do |row|
-      row.key(text: 'User Identity UUID')
-      row.value(text: application.user.id || '-')
+      row.key(text: 'Proflie UUID')
+      row.value(text: application.profile.id || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'Identity UUID')
+      row.value(text: application.participant_identity.id || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'GAI UUID')
+      row.value(text: '-')
+      # NEED TO CONFIRM
     end
 
     sl.row do |row|
@@ -21,7 +33,7 @@
     end
 
     sl.row do |row|
-      row.key(text: 'Name')
+      row.key(text: 'Preferred name')
       row.value(text: application.user.full_name)
     end
 
@@ -46,60 +58,9 @@
     end
 
     sl.row do |row|
-      row.key(text: 'School URN')
-      row.value(text: application.school_urn || '-')
-      if application.school.present?
-        row.action(text: "View School", href: admin_school_path(application.school))
-      end
+      row.key(text: 'Lead Provider approval status')
+      row.value(text: application.lead_provider_approval_status)
     end
 
-    sl.row do |row|
-      row.key(text: 'School UKPRN')
-      row.value(text: application.school_ukprn || "-")
-    end
-
-    sl.row do |row|
-      row.key(text: 'Private Childcare Provider URN')
-      row.value(text: application.private_childcare_provider_urn || "-")
-    end
-
-    sl.row do |row|
-      row.key(text: 'Headteacher')
-      row.value(text: application.headteacher_status)
-    end
-
-    sl.row do |row|
-      row.key(text: 'Funding eligibility')
-      row.value(text: boolean_red_green_tag(application.eligible_for_funding))
-    end
-
-    sl.row do |row|
-      row.key(text: 'Funding eligibility status code')
-      row.value(text: application.funding_eligiblity_status_code || "-")
-    end
-
-    sl.row do |row|
-      row.key(text: "Targeted delivery funding eligibility")
-      row.value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
-    end
-
-    sl.row do |row|
-      row.key(text: 'Funding choice')
-      row.value(text: application.funding_choice || "-")
-    end
-
-    sl.row do |row|
-      row.key(text: "Created at")
-      row.value { l application.created_at, format: :admin }
-    end
-
-    sl.row do |row|
-      row.key(text: "Cohort")
-      if application.cohort.present?
-        row.value(text: application.cohort.try(:start_year).to_s)
-      else
-        row.value(text: "-" )
-      end
-    end
   end
 %>
