@@ -54,8 +54,7 @@ class Partnership < ApplicationRecord
     challenged_at.nil? && challenge_reason.nil? && pending == false
   end
 
-  def unchallenge!(**attrs)
-    assign_attributes(attrs)
+  def unchallenge!
     update!(challenged_at: nil, challenge_reason: nil, challenge_deadline: cohort_challenge_deadline)
   end
 

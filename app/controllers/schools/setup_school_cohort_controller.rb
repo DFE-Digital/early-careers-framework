@@ -180,12 +180,26 @@ module Schools
     end
 
     def use_the_same_training_programme!
-      new_partnership = @school.active_partnerships.find_by(cohort: previous_cohort, relationship: false).dup
-      lead_provider = new_partnership.lead_provider
-      delivery_partner = new_partnership.delivery_partner
-      existing_partnership = school.partnerships.find_by(cohort:, lead_provider:, delivery_partner:)
-      existing_partnership ? existing_partnership.unchallenge! : new_partnership.unchallenge!(cohort_id: cohort.id)
+      new_partnership = build_partnership_with_previous_training_programme
+      existing_partnership = find_partnership_with_same_training_programme(new_partnership)
+      (existing_partnership || new_partnership).unchallenge!
       set_cohort_induction_programme!("full_induction_programme")
+    end
+
+    def build_partnership_with_previous_training_programme
+      school.active_partnerships
+            .find_by(cohort: previous_cohort, relationship: false)
+            .dup
+            .tap do |partnership|
+        partnership.cohort_id = cohort.id
+      end
+    end
+
+    def find_partnership_with_same_training_programme(partnerhip)
+      school.partnerships
+            .find_by(cohort:,
+                     lead_provider: partnerhip.lead_provider,
+                     delivery_partner: partnerhip.delivery_partner)
     end
 
     def active_partnership?
