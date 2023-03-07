@@ -2,29 +2,32 @@
 <%=
   govuk_summary_list do |sl|
     sl.row do |row|
-      row.key(text: 'Application UUID')
+      row.key(text: 'Application ID')
       row.value(text: application.id || govuk_tag(text: "Missing", colour: "red"))
     end
 
     sl.row do |row|
-      row.key(text: 'User UUID/ Participant UUID')
+      row.key(text: 'User ID / Participant ID')
       row.value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
     end
 
     sl.row do |row|
-      row.key(text: 'Proflie UUID')
-      row.value(text: application.profile.id || '-')
-    end
-
-    sl.row do |row|
-      row.key(text: 'Identity UUID')
+      row.key(text: 'GAI ID')
       row.value(text: application.participant_identity.id || '-')
     end
 
     sl.row do |row|
-      row.key(text: 'GAI UUID')
-      row.value(text: '-')
-      # NEED TO CONFIRM
+      row.key(text: 'External ID')
+      row.value(text: application.participant_identity.external_identifier || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'Proflie ID')
+      if application.profile.present?
+        row.value(text: application.try(:profile).try(:id))
+      else
+        row.value(text: '-')
+      end
     end
 
     sl.row do |row|

@@ -32,7 +32,11 @@
 
     sl.row do |row|
       row.key(text: 'Schedule identifier')
-      row.value(text: application.profile.schedule.schedule_identifier || "-")
+      if application.profile.present?
+        row.value(text: application.profile.schedule.schedule_identifier)
+      else
+        row.value(text: '-')
+      end
     end
 
     sl.row do |row|
