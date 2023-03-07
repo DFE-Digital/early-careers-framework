@@ -37,6 +37,8 @@ private
 
   def left_outer_joins
     [
+      :npq_course,
+      :npq_lead_provider,
       :participant_identity,
       :school,
       { participant_identity: :user },
