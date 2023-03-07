@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedules do
   let(:search) { Admin::NPQApplications::ApplicationsSearch }
 
-  let(:school_1) { create(:school) }
-  let(:school_2) { create(:school) }
+  let(:school_1) { create(:school, name: "Greendale School") }
+  let(:school_2) { create(:school, name: "Westview School") }
   let!(:application_1) { create(:npq_application, school_urn: school_1.urn) }
   let!(:application_2) { create(:npq_application, school_urn: school_2.urn) }
   let(:user_1) { application_1.user }
