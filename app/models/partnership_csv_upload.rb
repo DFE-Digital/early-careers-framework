@@ -33,7 +33,7 @@ class PartnershipCsvUpload < ApplicationRecord
   # NOTE: this method is intended for short term use while we migrate the urn
   # lists from ActiveStorage to Postgres arrays
   def sync_uploaded_urns
-    uploaded_urns = csv.download.lines(chomp: true)
+    uploaded_urns = csv.download.force_encoding("UTF-8").lines(chomp: true)
 
     return if uploaded_urns.blank?
 
