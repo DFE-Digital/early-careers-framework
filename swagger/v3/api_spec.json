@@ -3790,13 +3790,13 @@
             "example": "john.doe@example.com"
           },
           "updated_at": {
-            "description": "The date the partnership was reported by you",
+            "description": "The date the partnership was last updated",
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           },
           "created_at": {
-            "description": "The date the partnership was last updated",
+            "description": "The date the partnership was reported by you",
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
