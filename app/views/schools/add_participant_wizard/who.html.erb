@@ -3,21 +3,21 @@
 <% content_for :title, "Who do you want to add?" %>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds">
 
-        <span class="govuk-caption-xl"><%= @school.name %></span>
+    <span class="govuk-caption-xl"><%= @school.name %></span>
 
-        <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
-            <%= f.govuk_error_summary %>
-            <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
-                <% if @school_cohort.school_chose_fip? %>
-                    <%= f.govuk_radio_button :participant_type, :transfer, label: { text: "A teacher transferring from another school where they’ve started ECF-based training or mentoring" } %>
-                <% end %>
-                <%= f.govuk_radio_button :participant_type, :ect, label: { text: "A new ECT" } %>
-                <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "A new mentor" } %>
-                <% end %>
-            <%= f.govuk_submit "Continue" %>
-        <% end %>
+    <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
+        <p class="govuk-body govuk-!-margin-top-4">
+          This could be a new teacher or a teacher transferring from another school where they’ve started ECF-based training or mentoring.
+        </p>
+        <%= f.govuk_radio_button :participant_type, :ect, label: { text: "ECT" } %>
+        <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "Mentor" } %>
+      <% end %>
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
 
-    </div>
+  </div>
 </div>
