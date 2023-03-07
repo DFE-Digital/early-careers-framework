@@ -14,8 +14,10 @@ module Schools
       end
 
       def next_step
-        if wizard.ect_participant? && wizard.mentor_options.any?
+        if wizard.needs_to_choose_a_mentor?
           :choose_mentor
+        elsif wizard.needs_to_confirm_appropriate_body?
+          :confirm_appropriate_body
         else
           :check_answers
         end

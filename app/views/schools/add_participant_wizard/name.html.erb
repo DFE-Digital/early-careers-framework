@@ -12,7 +12,7 @@
           end
         %>
 
-        <%= form_with model: @form, url: add_participant_wizard_update_schools_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+        <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
             <%= f.govuk_error_summary %>
             <%= f.govuk_text_field :full_name, width: "three-quarters",
                 label: { text: full_name_label, tag: :h1, size: 'xl' },

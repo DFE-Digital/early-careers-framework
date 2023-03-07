@@ -15,7 +15,7 @@ module Schools
         :start_date
       end
 
-      def complete?
+      def journey_complete?
         true
       end
     end

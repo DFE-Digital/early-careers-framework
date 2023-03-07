@@ -16,7 +16,7 @@
       <li>put safeguards in place so that your role as an ECT’s mentor is kept separate from your role in their assessment</li>
     </ul>
 
-    <%= form_with model: @form, url: add_participant_wizard_update_schools_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+    <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
       <%= f.govuk_submit "Confirm" %>
     <% end %>
   </div>

@@ -15,7 +15,11 @@ module Schools
       end
 
       def next_step
-        :confirm_answers
+        if wizard.needs_to_confirm_appropriate_body?
+          :confirm_appropriate_body
+        else
+          :check_answers
+        end
       end
 
       def previous_step

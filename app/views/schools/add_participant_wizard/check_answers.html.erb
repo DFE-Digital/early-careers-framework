@@ -13,7 +13,7 @@
       <%= render partial: 'ect_or_mentor_answers', locals: { form: @wizard } %>
     <% end %>
 
-    <%= form_with model: @form, url: add_participant_wizard_update_schools_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+    <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
       <%= f.govuk_submit "Confirm and add" %>
     <% end %>
   </div>

@@ -5,7 +5,7 @@
     <% unless form.found_participant_in_dqt? %>
       <% row.action(text: "Change",
                     visually_hidden_text: "name",
-                    href: add_participant_wizard_show_change_schools_participants_path(step: :name)) %>
+                    href: show_change_schools_add_participants_path(step: :name)) %>
     <% else %>
       <% row.action() %>
     <% end %>
@@ -18,7 +18,7 @@
        <% unless form.found_participant_in_dqt? %>
          <% row.action(text: "Change",
                        visually_hidden_text: "TRN",
-                       href: add_participant_wizard_show_change_schools_participants_path(step: :trn)) %>
+                       href: show_change_schools_add_participants_path(step: :trn)) %>
        <% else %>
          <% row.action() %>
        <% end %>
@@ -32,7 +32,7 @@
       <% unless form.found_participant_in_dqt? %>
         <% row.action(text: "Change",
                       visually_hidden_text: "date of birth",
-                      href: add_participant_wizard_show_change_schools_participants_path(step: :date_of_birth)) %>
+                      href: show_change_schools_add_participants_path(step: :date_of_birth)) %>
       <% else %>
         <% row.action() %>
       <% end %>
@@ -44,7 +44,7 @@
     <% row.value { form.email } %>
     <% row.action(text: "Change",
                  visually_hidden_text: "email address",
-                 href: add_participant_wizard_show_change_schools_participants_path(step: :email)) %>
+                 href: show_change_schools_add_participants_path(step: :email)) %>
   <% end %>
 
   <% if form.start_date %>
@@ -53,7 +53,7 @@
       <% row.value { form.start_date.to_date.to_s(:govuk) } %>
       <% row.action(text: "Change",
                     visually_hidden_text: "induction start date",
-                    href: add_participant_wizard_show_change_schools_participants_path(step: :"start-date")) %>
+                    href: show_change_schools_add_participants_path(step: :"start-date")) %>
     <% end %>
   <% end %>
 
@@ -64,7 +64,7 @@
       <% if !form.sit_mentor? && form.mentor_options.any? %>
         <% row.action(text: "Change",
                       visually_hidden_text: "mentor",
-                      href: add_participant_wizard_show_change_schools_participants_path(step: :"choose-mentor")) %>
+                      href: show_change_schools_add_participants_path(step: :"choose-mentor")) %>
       <% else %>
         <% row.action() %>
       <% end %>
@@ -79,11 +79,11 @@
       <% end %>
       <% row.action(text: "Change",
                     visually_hidden_text: "mentor",
-                    href: add_participant_wizard_show_change_schools_participants_path(step: :"appropriate-body")) %>
+                    href: show_change_schools_add_participants_path(step: :"appropriate-body")) %>
     <% end %>
   <% end %>
 
-  <% if @school_cohort.default_induction_programme %>
+  <% if @school_cohort.default_induction_programme && @school_cohort.default_induction_programme.partnership&.active? %>
     <% summary_list.row do |row| %>
       <% row.key { "Training with" } %>
       <% row.value do %>

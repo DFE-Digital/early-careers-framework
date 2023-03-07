@@ -19,7 +19,7 @@ class WizardStep
     raise NotImplementedError
   end
 
-  def complete?
+  def journey_complete?
     false
   end
 

@@ -9,7 +9,7 @@
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <%= form_with model: @form, url: add_participant_wizard_update_schools_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+    <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,

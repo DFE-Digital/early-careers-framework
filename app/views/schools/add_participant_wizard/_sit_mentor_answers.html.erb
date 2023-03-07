@@ -5,7 +5,7 @@
     <% unless form.found_participant_in_dqt? %>
       <% row.action(text: "Change",
                     visually_hidden_text: "name",
-                    href: add_participant_wizard_show_change_schools_participants_path(step: :name)) %>
+                    href: show_change_schools_add_participants_path(step: :name)) %>
       <% else %>
         <% row.action() %>
       <% end %>
@@ -18,7 +18,7 @@
       <% unless form.found_participant_in_dqt? %>
         <% row.action(text: "Change",
                       visually_hidden_text: "TRN",
-                      href: add_participant_wizard_show_change_schools_participants_path(step: :trn)) %>
+                      href: show_change_schools_add_participants_path(step: :trn)) %>
       <% else %>
         <% row.action() %>
       <% end %>
@@ -32,7 +32,7 @@
       <% unless form.found_participant_in_dqt? %>
         <% row.action(text: "Change",
                       visually_hidden_text: "date of birth",
-                      href: add_participant_wizard_show_change_schools_participants_path(step: :date_of_birth)) %>
+                      href: show_change_schools_add_participants_path(step: :date_of_birth)) %>
       <% else %>
         <% row.action() %>
       <% end %>

@@ -3,19 +3,21 @@
 module Schools
   class AddParticipantWizard
     include ActiveModel::Model
+    include Rails.application.routes.url_helpers
 
     class InvalidStep < StandardError; end
 
-    attr_reader :current_step, :submitted_params, :current_state, :current_user
+    attr_reader :current_step, :submitted_params, :current_state, :current_user, :school_cohort
 
     delegate :before_render, to: :form
     delegate :after_render, to: :form
 
-    def initialize(current_step:, current_state:, current_user:, submitted_params: {})
+    def initialize(current_step:, current_state:, current_user:, school_cohort:, submitted_params: {})
       set_current_step(current_step)
 
       @current_user = current_user
       @current_state = current_state
+      @school_cohort = school_cohort
       @submitted_params = submitted_params
 
       @return_point = nil
@@ -84,6 +86,10 @@ module Schools
       end
     end
 
+    def abandon_path
+      schools_participants_path
+    end
+
     def form_for_step(step)
       step_form_class = form_class_for(step)
       hash = current_state.slice(*step_form_class.permitted_params.map(&:to_s))
@@ -145,7 +151,11 @@ module Schools
     end
 
     def participant_exists?
-      check_for_dqt_record? && dqt_record.present? && TeacherProfile.where(trn: formatted_trn).participant_profiles.active_record.any?
+      check_for_dqt_record? && dqt_record.present? && TeacherProfile.joins(:ecf_profiles).where(trn: formatted_trn).any?
+    end
+
+    def needs_to_choose_a_mentor?
+      ect_participant? && mentor_id.blank? && mentor_options.any?
     end
 
     def mentor_options
@@ -153,19 +163,43 @@ module Schools
     end
 
     def mentor
-      @mentor ||= selected_mentor
+      @mentor ||= (User.find(mentor_id) if mentor_id && mentor_id != "later")
     end
 
-    def selected_mentor
-      mentor_id = current_state["mentor_id"]
+    def mentor_id
+      current_state["mentor_id"]
+    end
 
-      if mentor_id && mentor_id != "later"
-        User.find(mentor_id)
-      end
+    def mentor_profile_id
+      mentor&.mentor_profile&.id
+    end
+
+    def needs_to_confirm_appropriate_body?
+      ect_participant? && school_cohort.appropriate_body.present?
+    end
+
+    def appropriate_body_confirmed=(confirmed)
+      current_state["appropriate_body_confirmed"] = (confirmed ? "1" : "0")
+    end
+
+    def appropriate_body_confirmed?
+      current_state["appropriate_body_confirmed"] == "1"
+    end
+
+    def appropriate_body_id
+      current_state["appropriate_body_id"]
+    end
+
+    def appropriate_body_id=(value)
+      current_state["appropriate_body_id"] = value
     end
 
     def appropriate_body_selected
-      # TODO: chosen AB
+      if appropriate_body_confirmed?
+        school_cohort.appropriate_body
+      elsif appropriate_body_id
+        AppropriateBody.find(appropriate_body_id)
+      end
     end
 
     def check_for_dqt_record?
@@ -178,8 +212,11 @@ module Schools
       current_state["trn"] = nil
       current_state["date_of_birth"] = nil
       current_state["nino"] = nil
+      current_state["email"] = nil
       current_state["mentor_id"] = nil
       current_state["start_date"] = nil
+      current_state["appropriate_body_id"] = nil
+      current_state["appropriate_body_confirmed"] = nil
     end
 
   private
@@ -195,7 +232,49 @@ module Schools
     end
 
     def add_participant!
-      # TODO: create the record
+      profile = nil
+
+      ActiveRecord::Base.transaction do
+        profile = if ect_participant?
+                    EarlyCareerTeachers::Create.call(**participant_create_args)
+                  else
+                    Mentors::Create.call(**participant_create_args)
+                  end
+
+        store_validation_result!(profile)
+      end
+
+      send_added_and_validated_email(profile) if profile && profile.ecf_participant_validation_data.present? && !sit_mentor?
+
+      profile
+    end
+
+    def store_validation_result!(profile)
+      ::Participants::ParticipantValidationForm.call(
+        profile,
+        data: {
+          trn: formatted_trn,
+          nino: formatted_nino,
+          date_of_birth:,
+          full_name:,
+        },
+      )
+    end
+
+    def send_added_and_validated_email(profile)
+      ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
+    end
+
+    def participant_create_args
+      {
+        full_name:,
+        email:,
+        school_cohort:,
+        mentor_profile_id:,
+        start_date:,
+        sit_validation: true,
+        appropriate_body_id:,
+      }
     end
 
     def dqt_record(force_recheck: false)
@@ -265,6 +344,7 @@ module Schools
         email
         start_date
         choose_mentor
+        confirm_appropriate_body
         check_answers
         confirmation
       ]
