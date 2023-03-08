@@ -121,8 +121,8 @@ RSpec.describe InviteSchools do
           hash_including(
             school:,
             nomination_url: String,
-            ),
-          ).and_call_original
+          ),
+        ).and_call_original
 
         invite_schools.perform [school.urn]
       end
