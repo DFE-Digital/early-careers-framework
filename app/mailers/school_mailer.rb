@@ -106,9 +106,9 @@ class SchoolMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         school_name: school.name,
-        nomination_link:,
+        nomination_url:,
       },
-      ).tag(:school_signin_link).associate_with(school)
+    ).tag(:school_signin_link).associate_with(school)
   end
 
   # This email is sent to the school which has been reported by the lead provider and which hasn't yet nominated SIT
