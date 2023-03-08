@@ -112,20 +112,19 @@ RSpec.describe InviteSchools do
   end
 
   context "when the school already has an induction tutor assigned" do
+    let(:school) { create(:school) }
     let(:user) { create(:user) }
-    let(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school], user:) }
+    let!(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school], user:) }
 
     it "sends the change tutor email" do
-      travel_to(Time.utc(2000, 1, 1)) do
-        expect(SchoolMailer).to receive(:school_requested_signin_link_from_gias_email).with(
-          hash_including(
-            school:,
-            nomination_url: String,
-          ),
-        ).and_call_original
+      expect(SchoolMailer).to receive(:school_requested_signin_link_from_gias_email).with(
+        hash_including(
+          school:,
+          nomination_url: String,
+        ),
+      ).and_call_original
 
-        invite_schools.perform [school.urn]
-      end
+      invite_schools.perform [school.urn]
     end
   end
 
