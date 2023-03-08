@@ -30,7 +30,7 @@ Feature: Report Schools flow
     Then I should be on "csv errors" page
     And the page should be accessible
 
-    When I click on "input" containing "Continue"
+    When I click on "button" containing "Continue"
     Then I should be on "confirm partnerships" page
 
     When I click on "link" containing "Re-upload CSV"
@@ -47,6 +47,6 @@ Feature: Report Schools flow
     And the table should have 1 rows
     And "notification banner" should contain "Success"
 
-    When I click on "input" containing "Confirm"
+    When I click on "button" containing "Confirm"
     Then I should be on "partnerships success" page
     And the page should be accessible
