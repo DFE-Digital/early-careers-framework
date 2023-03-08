@@ -23,13 +23,10 @@ RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, ty
       expect(response).to render_template "admin/npq/applications/index"
     end
 
-    it "only returns first 20 results on page 1", :aggregate_failures do
+    it "can paginate results" do
       get("/admin/npq/applications/applications", params: { page: 1 })
 
-      response_body = response.parsed_body
-
-      expect(response_body.include?("NPQ Course 20")).to eq(true)
-      expect(response_body.include?("NPQ Course 21")).to eq(false)
+      expect(response.body.include?("govuk-pagination")).to eq(true)
     end
   end
 

@@ -7,7 +7,7 @@
     end
 
     sl.row do |row|
-      row.key(text: 'User ID / Participant ID')
+      row.key(text: 'User ID')
       row.value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
     end
 
@@ -24,7 +24,7 @@
     sl.row do |row|
       row.key(text: 'Proflie ID')
       if application.profile.present?
-        row.value(text: application.try(:profile).try(:id))
+        row.value(text: application.profile_id)
       else
         row.value(text: '-')
       end
