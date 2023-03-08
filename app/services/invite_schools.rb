@@ -22,9 +22,9 @@ class InviteSchools
       )
 
       if school.registered?
-        send_nomination_email(nomination_email)
-      else
         send_replace_tutor_email(nomination_email)
+      else
+        send_nomination_email(nomination_email)
       end
     rescue Notifications::Client::RateLimitError
       sleep(1)
