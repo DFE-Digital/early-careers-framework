@@ -9,7 +9,7 @@ module Analytics
         record = Analytics::ECFInduction.find_or_initialize_by(induction_record_id: induction_record.id)
         participant_profile = induction_record.participant_profile
 
-        record.external_id = participant_profile.participant_identity.new_external_identifier
+        record.external_id = participant_profile.participant_identity.external_identifier
         record.participant_profile_id = participant_profile.id
         record.induction_programme_id = induction_record.induction_programme_id
         record.induction_programme_type = induction_record.induction_programme.training_programme

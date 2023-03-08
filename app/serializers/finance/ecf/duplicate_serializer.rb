@@ -37,7 +37,7 @@ module Finance
       end
 
       attribute :external_identifier do |object|
-        object.participant_identity&.new_external_identifier
+        object.participant_identity&.external_identifier
       end
 
       attribute :email do |object|

@@ -115,7 +115,7 @@ RSpec.shared_examples "resuming an ECF participant" do
   end
 end
 
-RSpec.describe ResumeParticipant, :with_default_schedules do
+RSpec.describe ResumeParticipant, :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:params) do
     {

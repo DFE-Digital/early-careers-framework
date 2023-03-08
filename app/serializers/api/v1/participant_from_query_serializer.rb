@@ -28,7 +28,7 @@ module Api
 
       set_type :participant
 
-      set_id :id, &:external_identifier
+      set_id :id, &:user_id
 
       attribute :email do |induction_record|
         induction_record.preferred_identity_email ||

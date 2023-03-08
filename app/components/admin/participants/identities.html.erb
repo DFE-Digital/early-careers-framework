@@ -13,7 +13,7 @@
 
     <% summary_list.row do |row| %>
       <% row.key(text: "External ID" ) %>
-      <% row.value(text: tag.code(identity.new_external_identifier) ) %>
+      <% row.value(text: tag.code(identity.external_identifier) ) %>
     <% end %>
 
     <% summary_list.row do |row| %>

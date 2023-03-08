@@ -2,16 +2,17 @@
 
 module Transfers
   class NPQParticipants
-    attr_reader :external_identifier, :new_npq_lead_provider_id, :course_identifier
+    attr_reader :external_identifier, :current_npq_lead_provider_id, :new_npq_lead_provider_id, :course_identifier
 
-    def initialize(external_identifier:, new_npq_lead_provider_id:, course_identifier:)
+    def initialize(external_identifier:, current_npq_lead_provider_id:, new_npq_lead_provider_id:, course_identifier:)
       @external_identifier = external_identifier
+      @current_npq_lead_provider_id = current_npq_lead_provider_id
       @new_npq_lead_provider_id = new_npq_lead_provider_id
       @course_identifier = course_identifier
     end
 
     def call
-      return unless npq_lead_provider && participant_identity
+      return unless new_npq_lead_provider && npq_application
 
       transfer_participant
     end
@@ -19,14 +20,18 @@ module Transfers
   private
 
     def transfer_participant
-      return unless participant_profile && npq_application
+      return unless npq_application
 
-      npq_application.update!(npq_lead_provider:)
-      Rails.logger.info "Participant (#{external_identifier}) was transferred to (#{npq_lead_provider.name}) successfully"
+      npq_application.update!(npq_lead_provider: new_npq_lead_provider)
+      Rails.logger.info "Participant (#{external_identifier}) was transferred to (#{new_npq_lead_provider.name}) successfully"
     end
 
-    def npq_lead_provider
-      @npq_lead_provider ||= NPQLeadProvider.find_by!(id: new_npq_lead_provider_id)
+    def new_npq_lead_provider
+      @new_npq_lead_provider ||= NPQLeadProvider.find_by!(id: new_npq_lead_provider_id)
+    end
+
+    def current_npq_lead_provider
+      @current_npq_lead_provider ||= NPQLeadProvider.find_by!(id: current_npq_lead_provider_id)
     end
 
     def participant_profile
@@ -38,7 +43,12 @@ module Transfers
     end
 
     def participant_identity
-      @participant_identity ||= ParticipantIdentity.find_by!(external_identifier:)
+      @participant_identity ||= ParticipantIdentityResolver
+                                  .call(
+                                    user_id: external_identifier,
+                                    course_identifier:,
+                                    cpd_lead_provider: current_npq_lead_provider.cpd_lead_provider,
+                                  )
     end
 
     def npq_application

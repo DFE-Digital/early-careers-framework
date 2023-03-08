@@ -244,7 +244,7 @@ RSpec.shared_examples "creates participant declaration attempt" do
   end
 end
 
-RSpec.describe RecordDeclaration, :with_default_schedules do
+RSpec.describe RecordDeclaration, :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
   let(:cpd_lead_provider)     { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider) }
   let(:another_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider, name: "Unknown") }
   let(:declaration_type)      { "started" }

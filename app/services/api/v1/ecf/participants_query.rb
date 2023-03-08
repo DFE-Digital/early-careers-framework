@@ -150,7 +150,7 @@ module Api
 
         def participant_identity_fields
           [
-            "participant_identities.user_id as external_identifier",
+            "participant_identities.user_id as user_id",
             "participant_identities.updated_at AS participant_identity_updated_at",
             "preferred_identities.email AS preferred_identity_email",
             "participant_identities_mentor_profiles.external_identifier AS mentor_external_identifier",

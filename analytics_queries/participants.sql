@@ -1,6 +1,6 @@
 \copy (
     SELECT u.id                                                   as participant_id,
-          pi.user_id                                              as external_id,
+          pi.external_identifier                                  as external_id,
           pp.created_at                                           as added_at,
           sch.urn                                                 as school_urn,
           u.full_name                                             as name,

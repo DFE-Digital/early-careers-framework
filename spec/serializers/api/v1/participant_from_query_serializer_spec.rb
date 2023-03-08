@@ -18,11 +18,11 @@ module Api
       subject { described_class.new(query_result) }
 
       describe "#id" do
-        let(:external_identifier) { Faker::Internet.uuid }
-        let(:fields) { { external_identifier: } }
+        let(:user_id) { Faker::Internet.uuid }
+        let(:fields) { { user_id: } }
 
-        it "returns the external identifier" do
-          expect(subject.serializable_hash[:data][:id]).to eql(external_identifier)
+        it "returns the user id" do
+          expect(subject.serializable_hash[:data][:id]).to eql(user_id)
         end
       end
 
