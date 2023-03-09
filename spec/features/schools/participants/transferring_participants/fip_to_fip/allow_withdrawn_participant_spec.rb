@@ -12,7 +12,7 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_selected_my_cohort_tab
     when_i_click_to_view_ects_and_mentors
-    then_i_am_taken_to_your_ect_and_mentors_page
+    then_i_am_taken_to_manage_mentors_and_ects_page
   end
 
   scenario "SIT can transfer a withdrawn participant" do
@@ -89,11 +89,11 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
   # when
 
   def when_i_click_to_view_ects_and_mentors
-    click_on("Manage participants")
+    click_on("Manage mentors and ECTs")
   end
 
   def when_i_click_to_add_a_new_ect_or_mentor
-    click_on "Add an ECT or mentor"
+    click_on "Add ECT or mentor"
   end
 
   def when_i_select_the_ect_option
@@ -133,11 +133,6 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
   end
 
   # then
-
-  def then_i_am_taken_to_your_ect_and_mentors_page
-    expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-    expect(page).to have_text("Add an ECT or mentor")
-  end
 
   def then_i_am_taken_to_a_dashboard_page
     expect(page).to have_selector("h1", text: "Manage your training")

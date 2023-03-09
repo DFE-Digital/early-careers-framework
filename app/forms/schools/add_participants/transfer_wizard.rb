@@ -102,7 +102,6 @@ module Schools
       def transfer_participant!
         profile = existing_participant_profile
         data_store.set(:was_withdrawn_participant, withdrawn_participant?)
-
         new_induction_record = if transfer_has_the_same_provider? || was_withdrawn_participant?
                                  data_store.set(:same_provider, true)
                                  transfer_fip_participant_to_schools_programme(profile)

@@ -75,6 +75,8 @@ class ParticipantProfile < ApplicationRecord
              to: :ecf_participant_eligibility,
              allow_nil: true
 
+    delegate :trn, to: :teacher_profile
+
     alias_method :fundable?, :eligible?
 
     def manual_check_needed?

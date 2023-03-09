@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class EditSchoolParticipantEmailPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/edit-email"
+    set_url "/schools/{slug}/participants/{participant_id}/edit-email"
     set_primary_heading(/\AWhat’s (.*)’s correct email address\?\z/)
 
     def confirm_the_participant(name:)
