@@ -32,7 +32,8 @@
 
     <p class="govuk-body">
       <%= govuk_link_to "Add a new #{participant_type(@profile, downcase: true)}",
-        start_schools_who_to_add_participants_path(cohort_id: @school_cohort.start_year, school_id: @school.slug), class: "govuk-link--no-visited-state" %>
+                        start_schools_who_to_add_participants_path(cohort_id: Cohort.current, school_id: @school.slug),
+                        class: "govuk-link--no-visited-state" %>
     </p>
   </div>
 </div>

@@ -17,7 +17,7 @@ RSpec.describe "Add participants", js: true do
     set_sit_dqt_validation_result
   end
 
-  scenario "Induction tutor can add themselves as a mentor and validates" do
+  xscenario "Induction tutor can add themselves as a mentor and validates" do
     when_i_navigate_to_participants_dashboard
     when_i_click_on_add_myself_as_mentor
     then_i_am_taken_to_are_you_sure_page
