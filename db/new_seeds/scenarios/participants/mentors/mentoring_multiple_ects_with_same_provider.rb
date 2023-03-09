@@ -56,6 +56,8 @@ module NewSeeds
             NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
               .new(school_cohort:)
               .build
+              .with_validation_data
+              .with_eligibility
               .with_induction_record(induction_programme:)
               .participant_profile
           end

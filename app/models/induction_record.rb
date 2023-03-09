@@ -86,6 +86,7 @@ class InductionRecord < ApplicationRecord
   # Instance Methods
   # appropriate_body_name
   delegate :name, to: :appropriate_body, allow_nil: true, prefix: true
+  delegate :ect?, :mentor?, :trn, to: :participant_profile
 
   def active?
     active_induction_status? && (end_unknown? || end_date.future?) && !transferring_in?

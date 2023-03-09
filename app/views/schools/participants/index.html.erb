@@ -5,48 +5,119 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <h1 class="govuk-heading-xl">Your ECTs and mentors</h1>
+    <h1 class="govuk-heading-xl">Manage mentors and ECTs</h1>
 
-    <p class="govuk-body">We’ll check your early career teacher (ECTs) and mentors details with the Teaching Regulation Agency to make sure they’re eligible for funding for the programme.</p>
-    <p class="govuk-body">In the meantime ECTs can begin training with their training provider.</p>
+    <%= govuk_button_link_to(
+          "Add ECT or mentor",
+          start_schools_who_to_add_participants_path(cohort_id: @school.school_cohorts.dashboard_cohorts.first.start_year),
+          class: "govuk-link--no-visited-state",
+        ) %>
 
-    <div class="govuk-inset-text">
-      <ul class="govuk-list">
-          <li><%= govuk_link_to "Add an ECT or mentor", start_schools_who_to_add_participants_path(cohort_id: @school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %></li>
-        <% unless current_user.mentor? %>
-          <li><%= govuk_link_to "Add yourself as a mentor", sit_start_schools_who_to_add_participants_path, class: "govuk-link--no-visited-state" %></li>
+    <% if actions?(@participants) %>
+      <hr>
+      <h2 class="govuk-heading-m">Actions</h2>
+
+      <% if @participants.orphan_ects.any? %>
+        <%= govuk_warning_text(text: "Your school has ECTs with unassigned mentors.") %>
+        <h4 class="govuk-heading-s">ECTs with unassigned mentors</h4>
+        <% @participants.orphan_ects.each do |ect| %>
+          <%= govuk_warning_text(text: govuk_link_to(ect.participant_full_name,
+                                                     schools_participant_path(id: ect.participant_profile_id,
+                                                                              school_id: @school,
+                                                                              cohort_id: ect.cohort_start_year),
+                                                     no_visited_state: true),
+                                 classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
         <% end %>
-      </ul>
-    </div>
-  </div>
-  <div class="govuk-grid-column-full">
-    <% if @categories.any? %>
-      <%= govuk_tabs(title: 'Contents') do |component| %>
-        <% if participants_active?(@categories.ect_categories) %>
-          <% component.tab(label: 'ECTs') do %>
-            <%= render partial: 'ects', locals: { ect_profiles: @categories.ect_categories } %>
+        <br>
+      <% end %>
+
+      <% if @participants.orphan_mentors.any? %>
+        <%= govuk_warning_text(text: "Your school has mentors with unassigned ECTs.") %>
+        <h4 class="govuk-heading-s">Mentors with unassigned ECTs</h4>
+        <% @participants.orphan_mentors.each do |mentor| %>
+          <%= govuk_warning_text(text: govuk_link_to("Mentor - #{mentor.participant_full_name}",
+                                                     schools_participant_path(id: mentor.participant_profile_id,
+                                                                              school_id: @school,
+                                                                              cohort_id: mentor.cohort_start_year),
+                                                     no_visited_state: true),
+                                 classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
+        <% end %>
+        <br>
+      <% end %>
+
+      <% if @participants.no_induction_start_date.any? %>
+        <%= govuk_warning_text(text: "Your school has participants with no induction start date.") %>
+        <h4 class="govuk-heading-s">Participants with no induction start date</h4>
+        <% @participants.no_induction_start_date.each do |ecf| %>
+          <%= govuk_warning_text(text: govuk_link_to(ecf.participant_full_name,
+                                                     schools_participant_path(id: ecf.participant_profile_id,
+                                                                              school_id: @school,
+                                                                              cohort_id: ecf.cohort_start_year),
+                                                     no_visited_state: true),
+                                 classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
+        <% end %>
+        <br>
+      <% end %>
+
+      <% if @participants.no_qts.any? %>
+        <%= govuk_warning_text(text: "Your school has participants with no QTS.") %>
+        <h4 class="govuk-heading-s">Participants with no QTS</h4>
+        <% @participants.no_qts.each do |ecf| %>
+          <%= govuk_warning_text(text: govuk_link_to(ecf.participant_full_name,
+                                                     schools_participant_path(id: ecf.participant_profile_id,
+                                                                              school_id: @school,
+                                                                              cohort_id: ecf.cohort_start_year),
+                                                     no_visited_state: true),
+                                 classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
+        <% end %>
+        <br>
+      <% end %>
+    <% end %>
+
+    <% @participants.mentors.each do |mentor, ects| %>
+      <hr>
+      <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
+        <% list.row do |row| %>
+          <% row.key(text: govuk_link_to("Mentor - #{mentor.participant_full_name}",
+                                         schools_participant_path(id: mentor.participant_profile_id,
+                                                                  school_id: @school,
+                                                                  cohort_id: mentor.cohort_start_year),
+                                         no_visited_state: true),
+                     classes: ["govuk-\!-width-one-half"]) %>
+          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile, induction_record: mentor))) %>
+        <% end %>
+
+        <% list.row do |row| %>
+          <% row.key(text: "ECTs") %>
+        <% end %>
+
+        <% ects.each do |ect| %>
+          <% list.row do |row| %>
+            <% row.key(text: govuk_link_to("#{ect.participant_full_name}",
+                                           schools_participant_path(id: ect.participant_profile_id,
+                                                                    school_id: @school,
+                                                                    cohort_id: ect.cohort_start_year),
+                                           no_visited_state: true),
+                       classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
+            <% row.value(text: render(ParticipantStatusTagComponent.new(profile: ect.participant_profile,
+                                                                        induction_record: ect)),
+                         classes: ["govuk-\!-padding-bottom-static-0"]) %>
           <% end %>
         <% end %>
+      <% end %>
+    <% end %>
 
-        <% if participants_active?(@categories.mentor_categories) %>
-          <% component.tab(label: 'Mentors') do %>
-            <%= render partial: 'mentors', locals: { mentor_profiles: @categories.mentor_categories } %>
-          <% end %>
-        <% end %>
-
-        <% if @categories.transferring_in.any? || @categories.transferring_out.any? %>
-          <% component.tab(label: 'Moving school') do %>
-            <%= render partial: 'moving_school', locals: { transferring_in: @categories.transferring_in,
-                                                            transferring_out: @categories.transferring_out } %>
-          <% end %>
-        <% end %>
-
-        <% if @categories.withdrawn.any? || @categories.ineligible.any? || @categories.transferred.any? %>
-          <% component.tab(label: 'Not training') do %>
-            <%= render partial: 'not_training', locals: { withdrawn: @categories.withdrawn,
-                                                          ineligible: @categories.ineligible,
-                                                          transferred: @categories.transferred } %>
-          <% end %>
+    <% @participants.orphan_mentors.each do |mentor| %>
+      <hr>
+      <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
+        <% list.row do |row| %>
+          <% row.key(text: govuk_link_to("Mentor - #{mentor.participant_full_name}",
+                                         schools_participant_path(id: mentor.participant_profile_id,
+                                                                  school_id: @school,
+                                                                  cohort_id: mentor.cohort_start_year),
+                                         no_visited_state: true),
+                     classes: ["govuk-\!-width-one-half"]) %>
+          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile, induction_record: mentor))) %>
         <% end %>
       <% end %>
     <% end %>

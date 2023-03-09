@@ -18,7 +18,8 @@ module NewSeeds
             @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
                                                      participant_identity: FactoryBot.create(:seed_participant_identity, user:),
                                                      teacher_profile:,
-                                                     school_cohort:)
+                                                     school_cohort:,
+                                                     induction_start_date: school_cohort.cohort.academic_year_start_date)
 
             self
           end
