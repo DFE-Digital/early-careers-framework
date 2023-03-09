@@ -8,13 +8,15 @@
     <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.hidden_field :mentor_id, value: '' %>
-      <%= f.govuk_radio_buttons_fieldset :mentor_id, legend: { text: title, tag: 'h1', size: 'xl' }, caption: { text: @school.name, size: 'xl' } do %>
+      <%= f.govuk_radio_buttons_fieldset :mentor_id,
+                                         legend: { text: title, tag: 'h1', size: 'xl' },
+                                         caption: { text: @school.name, size: 'xl' } do %>
         <% @wizard.mentor_options.each_with_index do |mentor, i| %>
           <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
         <% end %>
 
         <%= f.govuk_radio_divider %>
-        <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
+        <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
       <% end %>
 
       <%= f.govuk_submit "Continue" %>

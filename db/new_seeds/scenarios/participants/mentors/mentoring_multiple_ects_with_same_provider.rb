@@ -30,7 +30,7 @@ module NewSeeds
             @delivery_partner ||= FactoryBot.create(:seed_delivery_partner)
 
             cohort = cohort(2022)
-            @school_cohort = @school.school_cohorts.find_by(cohort:) || FactoryBot.create(:seed_school_cohort, cohort:, school:)
+            @school_cohort = @school.school_cohorts.find_by(cohort:) || FactoryBot.create(:seed_school_cohort, :fip, cohort:, school:)
 
             @partnership = FactoryBot.create(:seed_partnership,
                                              cohort:,
@@ -56,6 +56,8 @@ module NewSeeds
             NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
               .new(school_cohort:)
               .build
+              .with_validation_data
+              .with_eligibility
               .with_induction_record(induction_programme:)
               .participant_profile
           end

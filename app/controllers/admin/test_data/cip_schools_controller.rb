@@ -13,6 +13,7 @@ module Admin::TestData
         .joins(:induction_coordinator_profiles_schools, school_cohorts: :cohort)
         .merge(SchoolCohort.core_induction_programme)
         .where(school_cohorts: { cohort: Cohort.current })
+        .distinct
         .order(:urn)
     end
   end

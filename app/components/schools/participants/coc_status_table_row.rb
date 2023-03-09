@@ -16,8 +16,7 @@ module Schools
       end
 
       def mentor_in_early_rollout?
-        induction_record.participant_is_a_mentor? &&
-          induction_record.participant_previous_participation?
+        induction_record.mentor? && induction_record.participant_previous_participation?
       end
 
       def participant_is_on_a_cip?
@@ -36,7 +35,7 @@ module Schools
       end
 
       def path_ids
-        { school_id: induction_record.school, cohort_id: induction_record.cohort_start_year }
+        { school_id: induction_record.school }
       end
 
     private
