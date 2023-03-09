@@ -63,11 +63,8 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
 
     scenario "Induction coordinator can view participants that have completed their transfer out" do
       given_i_am_taken_to_fip_induction_dashboard
-      when_i_navigate_to_participants_dashboard(action: "Add")
-      click_on "Not training"
-      then_i_can_view_transferred_from_your_school_participants
-
-      when_i_go_to_manage_the_participant_named "Eligible ect"
+      when_i_navigate_to_participants_dashboard
+      when_i_click_on_the_participants_name "Eligible ect"
       then_i_am_taken_to_view_details_page
     end
   end
@@ -79,8 +76,8 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
       and_an_ect_has_been_withdrawn_by_the_provider
       and_i_am_signed_in_as_an_induction_coordinator
       then_i_can_view_the_fip_induction_dashboard_without_partnership_details(displayed_value: "")
+
       when_i_navigate_to_participants_dashboard
-      click_on "Not training"
     }.not_to raise_error
   end
 end

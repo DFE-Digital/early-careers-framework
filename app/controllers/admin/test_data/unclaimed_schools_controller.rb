@@ -26,6 +26,7 @@ module Admin::TestData
       policy_scope(School)
         .where.missing(:induction_coordinator_profiles_schools)
         .includes(:nomination_emails)
+        .distinct
         .order(:urn)
     end
 
