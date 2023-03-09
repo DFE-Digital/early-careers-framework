@@ -1,0 +1,29 @@
+<% content_for :title, "Manage training" %>
+
+<% if breadcrumbs.any? %>
+  <% content_for :before_content, govuk_breadcrumbs(breadcrumbs: breadcrumbs) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl">Manage your training</h1>
+
+    <%= govuk_tabs(title: "Cohorts") do |component| %>
+      <% if set_up_new_cohort? %>
+        <% component.tab(label: TabLabelDecorator.new(Cohort.active_registration_cohort.description)) do %>
+          <%= render partial: "setup_school_cohort" %>
+        <% end %>
+      <% end %>
+      <% @school_cohorts.each do |school_cohort| %>
+        <% component.tab(label: TabLabelDecorator.new(school_cohort.description)) do %>
+          <% if school_cohort.induction_programme_choice == "no_early_career_teachers" %>
+            <%= render partial: "no_ects_cohort_details", locals: { school_cohort: school_cohort } %>
+          <% else %>
+            <%= render partial: "school_cohort_details", locals: { school_cohort: school_cohort } %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

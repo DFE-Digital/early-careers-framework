@@ -541,6 +541,8 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
+      resources :participants, only: %i[index]
+
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice
