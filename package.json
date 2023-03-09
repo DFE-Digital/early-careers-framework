@@ -22,7 +22,7 @@
     "es6-promise": "^4.2.8",
     "file-loader": "^6.2.0",
     "govuk-frontend": "^4.4.1",
-    "mini-css-extract-plugin": "^2.7.2",
+    "mini-css-extract-plugin": "^2.7.3",
     "sass": "^1.58.3",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
