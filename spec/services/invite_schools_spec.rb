@@ -120,7 +120,7 @@ RSpec.describe InviteSchools do
       expect(SchoolMailer).to receive(:school_requested_signin_link_from_gias_email).with(
         hash_including(
           school:,
-          nomination_url: String,
+          nomination_link: String,
         ),
       ).and_call_original
 

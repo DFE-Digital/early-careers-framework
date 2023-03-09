@@ -123,7 +123,7 @@ private
   def send_replace_tutor_email(nomination_email)
     notify_id = SchoolMailer.school_requested_signin_link_from_gias_email(
       school: nomination_email.school,
-      nomination_url: nomination_email.nomination_url,
+      nomination_link: nomination_email.nomination_url,
     ).deliver_now.delivery_method.response.id
 
     nomination_email.update!(notify_id:)
