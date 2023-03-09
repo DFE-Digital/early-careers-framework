@@ -109,7 +109,7 @@ private
   end
 
   def when_i_go_to_the_teacher_profile_page
-    and_i_click_on_summary_row_action("ECTs and mentors", "Manage")
+    click_on "Manage mentors and ECTs"
     click_on "Sally Teacher"
   end
 

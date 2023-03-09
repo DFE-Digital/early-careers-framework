@@ -20,7 +20,7 @@ class SchoolPolicy < ApplicationPolicy
       return scope.eligible_or_cip_only if user.admin?
 
       if user.induction_coordinator?
-        scope.where(id: user.schools.select(:id))
+        scope.where(id: user.school_ids)
       else
         scope.none
       end
