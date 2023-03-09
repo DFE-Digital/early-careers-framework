@@ -19,7 +19,7 @@ class SchoolPolicy < ApplicationPolicy
     def resolve
       return scope.eligible_or_cip_only if user.admin?
 
-      scope.none
+      scope.where(id: user.school_ids)
     end
   end
 end

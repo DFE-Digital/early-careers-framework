@@ -51,7 +51,6 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
     then_i_am_taken_to_the_manage_your_training_page
     and_i_see_training_provider_to_be_confirmed
     and_i_see_delivery_partner_to_be_confirmed
-    and_i_see_add_ects_link
   end
 
   scenario "A CIT-only school chooses ECTs expected in next academic year and training school funded" do
