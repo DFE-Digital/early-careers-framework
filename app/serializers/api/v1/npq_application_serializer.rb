@@ -53,7 +53,12 @@ module Api
       end
 
       attribute :updated_at do |object|
-        object.updated_at.rfc3339
+        [
+          object.profile&.updated_at,
+          object.user.updated_at,
+          object.participant_identity.updated_at,
+          object.updated_at,
+        ].compact.max.rfc3339
       end
 
       attribute(:status, &:lead_provider_approval_status)
