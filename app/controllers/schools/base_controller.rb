@@ -53,6 +53,10 @@ private
     Cohort.find_by(start_year: params[:cohort_id]) if params[:cohort_id].present?
   end
 
+  def set_school
+    @school ||= policy_scope(School).friendly.find(params[:school_id]) if params[:school_id].present?
+  end
+
   def set_school_cohort(cohort: active_cohort)
     @cohort = cohort
     @school = active_school

@@ -128,6 +128,12 @@ class InductionRecord < ApplicationRecord
     appropriate_body_id == school_cohort.appropriate_body_id
   end
 
+  # ect?
+  delegate :ect?, to: :participant_profile, allow_nil: true
+
+  # mentor?
+  delegate :mentor?, to: :participant_profile, allow_nil: true
+
   # mentor_full_name
   delegate :full_name, to: :mentor, allow_nil: true, prefix: true
 
@@ -148,9 +154,6 @@ class InductionRecord < ApplicationRecord
 
   # participant_ineligible_but_not_duplicated_or_previously_participated?
   delegate :ineligible_but_not_duplicated_or_previously_participated?, to: :participant_profile, allow_nil: true, prefix: :participant
-
-  # participant_is_a_mentor?
-  delegate :mentor?, to: :participant_profile, allow_nil: true, prefix: :participant_is_a
 
   # participant_manual_check_needed?
   delegate :manual_check_needed?, to: :participant_profile, allow_nil: true, prefix: :participant
@@ -187,6 +190,9 @@ class InductionRecord < ApplicationRecord
   def transferring_out?
     leaving_induction_status? && end_date.present? && end_date.future? && school_transfer
   end
+
+  # trn
+  delegate :trn, to: :participant_profile, allow_nil: true
 
   def withdrawing!(date_of_change = Time.zone.now)
     update!(induction_status: :withdrawn, end_date: date_of_change)
