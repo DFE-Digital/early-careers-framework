@@ -3,9 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, type: :request do
-  before(:all) do
-    create_list(:npq_application, 21)
-  end
+  before { create_list(:npq_application, 2) }
 
   let(:application) { NPQApplication.first }
   let(:admin_user) { create :user, :admin }
@@ -21,10 +19,13 @@ RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, ty
       expect(response).to render_template "admin/npq/applications/index"
     end
 
-    it "can paginate results" do
-      get("/admin/npq/applications/applications", params: { page: 1 })
+    context "when there is more than one page of results" do
+      before { create_list(:npq_application, 21) }
+      it "can paginate results" do
+        get("/admin/npq/applications/applications", params: { page: 1 })
 
-      expect(response.body.include?("govuk-pagination")).to eq(true)
+        expect(response.body.include?("govuk-pagination")).to eq(true)
+      end
     end
   end
 
