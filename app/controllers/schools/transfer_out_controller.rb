@@ -3,7 +3,7 @@
 module Schools
   class TransferOutController < ::Schools::BaseController
     before_action :load_transfer_out_form, except: %i[check_transfer]
-    before_action :set_school_cohort
+    before_action :set_school
     before_action :set_participant
     before_action :validate_request_or_render, except: %i[check_transfer]
 
@@ -51,7 +51,7 @@ module Schools
     end
 
     def set_participant
-      @profile = ParticipantProfile.find(params[:transfer_out_participant_id])
+      @profile = ParticipantProfile.find(params[:participant_id])
       @induction_record = @profile.induction_records.for_school(@school).latest
     end
 
