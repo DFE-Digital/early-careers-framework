@@ -14,7 +14,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
 
     scenario "Old induction tutor only sees the transfer once the end date has passed" do
       when_i_click_to_view_ects_and_mentors
-      then_i_am_taken_to_your_ect_and_mentors_page
+      then_i_am_taken_to_manage_mentors_and_ects_page
       then_i_should_still_see_the_participant_in_my_ects
       and_i_should_not_see_any_transferring_participants
 
@@ -43,7 +43,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     # when
 
     def when_i_click_to_view_ects_and_mentors
-      click_on "Manage"
+      click_on("Manage mentors and ECTs")
     end
 
     def when_i_select(option)
@@ -52,10 +52,9 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
 
     # then
 
-    def then_i_am_taken_to_your_ect_and_mentors_page
-      expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-      expect(page).to have_text("Add an ECT or mentor")
-      expect(page).to have_text("Add yourself as a mentor")
+    def then_i_am_taken_to_manage_mentors_and_ects_page
+      expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+      expect(page).to have_text("Add ECT or mentor")
     end
 
     def and_i_should_not_see_any_transferring_participants

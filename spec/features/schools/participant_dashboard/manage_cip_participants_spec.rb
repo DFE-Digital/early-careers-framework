@@ -21,12 +21,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-      and_the_action_required_is_remove
-
       when_i_click_on_the_participants_name "Ineligible With-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:failed_induction)
     end
   end
 
@@ -40,11 +37,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "Ineligible Without-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:failed_induction)
     end
   end
 
@@ -58,11 +53,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "Ineligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:failed_induction)
     end
   end
 
@@ -76,11 +69,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "ero mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:statutory_induction_completed)
     end
   end
 
@@ -95,11 +86,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "Eligible With-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:training)
     end
   end
 
@@ -113,11 +102,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "Eligible Without-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:training)
     end
   end
 
@@ -131,11 +118,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "Eligible mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:not_mentoring)
     end
   end
 
@@ -150,11 +135,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_contacted_for_info_participants
-
       when_i_click_on_the_participants_name "CFI With-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_contacted_for_info_status
+      then_i_can_view_participant_with_status(:contacted_for_info)
     end
   end
 
@@ -168,11 +151,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_contacted_for_info_participants
-
       when_i_click_on_the_participants_name "CFI Without-mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_contacted_for_info_bounced_email_status
+      then_i_can_view_participant_with_status(:check_email_address)
     end
   end
 
@@ -186,11 +167,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_contacted_for_info_participants
-
       when_i_click_on_the_participants_name "CFI Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_contacted_for_info_status
+      then_i_can_view_participant_with_status(:contacted_for_info)
     end
   end
 
@@ -205,12 +184,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      click_on "Mentors"
-      then_i_can_view_contacted_for_info_participants
-
       when_i_click_on_the_participants_name "CFI Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_contacted_for_info_status
+      then_i_can_view_participant_with_status(:contacted_for_info)
     end
   end
 
@@ -224,11 +200,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "DBC Without-Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:pending)
     end
   end
 
@@ -242,11 +216,9 @@ RSpec.describe "Manage CIP participants", js: true, with_feature_flags: { eligib
       given_i_am_on_the_cip_induction_dashboard
       and_i_click_on("2021 to 2022")
       when_i_navigate_to_participants_dashboard
-      then_i_can_view_cip_eligible_participants
-
       when_i_click_on_the_participants_name "DBC Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_eligible_cip_status
+      then_i_can_view_participant_with_status(:pending)
     end
   end
 end
