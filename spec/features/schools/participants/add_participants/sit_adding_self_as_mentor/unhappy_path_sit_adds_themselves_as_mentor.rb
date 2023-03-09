@@ -20,7 +20,7 @@ RSpec.describe "Add participants", js: true do
     when_i_click_on_add_your_early_career_teacher_and_mentor_details
     then_i_am_taken_to_roles_page
     when_i_click_on_continue
-    then_i_am_taken_to_your_ect_and_mentors_page
+    then_i_am_taken_to_manage_mentors_and_ects_page
 
     when_i_click_on_add_myself_as_mentor
     then_i_am_taken_to_are_you_sure_page

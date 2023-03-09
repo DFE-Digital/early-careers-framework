@@ -58,7 +58,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         and_the_schools_current_provider_is_notified_with(:provider_existing_school_transfer_notification)
 
         click_on "View your ECTs and mentors"
-        then_i_am_taken_to_your_ect_and_mentors_page
+        then_i_am_taken_to_manage_mentors_and_ects_page
       end
 
       # given
@@ -87,12 +87,12 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       # when
 
       def when_i_click_to_add_a_new_ect_or_mentor
-        click_on "Add an ECT or mentor"
+        click_on "Add ECT or mentor"
       end
 
-      def when_i_navigate_to_participants_dashboard(action: "Manage")
-        when_i_click_on_summary_row_action("ECTs and mentors", action)
-        then_i_am_taken_to_your_ect_and_mentors_page
+      def when_i_navigate_to_participants_dashboard
+        click_on("Manage mentors and ECTs")
+        then_i_am_taken_to_manage_mentors_and_ects_page
       end
 
       def when_i_select_the_mentor_option
@@ -129,10 +129,9 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       # then
 
-      def then_i_am_taken_to_your_ect_and_mentors_page
-        expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-        expect(page).to have_text("Add an ECT or mentor")
-        expect(page).to have_text("Add yourself as a mentor")
+      def then_i_am_taken_to_manage_mentors_and_ects_page
+        expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+        expect(page).to have_text("Add ECT or mentor")
       end
 
       def then_i_should_be_on_what_we_need_page

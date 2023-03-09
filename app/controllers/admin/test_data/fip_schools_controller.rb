@@ -14,6 +14,7 @@ module Admin::TestData
         .includes(partnerships: %i[lead_provider delivery_partner])
         .merge(SchoolCohort.full_induction_programme)
         .where(school_cohorts: { cohort: Cohort.current })
+        .distinct
         .order(:urn)
     end
   end

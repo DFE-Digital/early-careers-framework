@@ -26,7 +26,6 @@
         If <%= @profile.full_name %> should not have been registered, you need to
         <%= govuk_link_to "remove all their information from this service.",
                           schools_participant_remove_path(school_id: @induction_record.school,
-                                                          cohort_id: @induction_record.cohort,
                                                           participant_id: @profile) %>
       </p>
     <% end %>
