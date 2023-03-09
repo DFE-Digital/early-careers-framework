@@ -12,6 +12,8 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <%= render "application_details", application: @application %>
+        <%= render "employment_details", application: @application %>
+        <%= render "funding_eligibility", application: @application %>
       </div>
     </div>
   <% end %>
