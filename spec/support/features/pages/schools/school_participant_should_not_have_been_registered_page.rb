@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolParticipantShouldNotHaveBeenRegisteredPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/edit-name"
+    set_url "/schools/{slug}/participants/{participant_id}/edit-name"
     set_primary_heading(/\AYou cannot make that change by editing (.*)’s name\z/)
 
     def cant_edit_the_participant_name(name)

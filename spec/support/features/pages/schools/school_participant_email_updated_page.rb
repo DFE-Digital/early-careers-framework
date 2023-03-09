@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolParticipantEmailUpdatedPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/update-email"
+    set_url "/schools/{slug}/participants/{participant_id}/update-email"
     set_primary_heading(/\A(.*)’s email address has been updated\z/)
 
     def see_a_confirmation_message(name:)

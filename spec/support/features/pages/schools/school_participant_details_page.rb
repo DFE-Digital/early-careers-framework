@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolParticipantDetailsPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}"
+    set_url "/schools/{slug}/participants/{participant_id}"
     # this is a hack as the participants name is the page title
     set_primary_heading(/^.*$/)
 

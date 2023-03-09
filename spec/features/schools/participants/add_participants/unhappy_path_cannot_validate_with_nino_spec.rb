@@ -28,7 +28,7 @@ RSpec.describe "Add participants", js: true do
     then_i_am_on_the_school_add_participant_still_cannot_find_their_details_page
     then_the_page_should_be_accessible
     then_i_cant_add_participant_on_the_school_add_participant_still_cannot_find_their_details_page
-    then_i_can_view_my_etcs_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
+    then_i_can_view_my_ects_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
   end
 
   scenario "Induction tutor cannot add new mentor participant when dqt returns no match" do
@@ -43,6 +43,6 @@ RSpec.describe "Add participants", js: true do
     then_i_am_on_the_school_add_participant_still_cannot_find_their_details_page
     then_the_page_should_be_accessible
     then_i_cant_add_participant_on_the_school_add_participant_still_cannot_find_their_details_page
-    then_i_can_view_my_etcs_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
+    then_i_can_view_my_ects_and_mentors_on_the_school_add_participant_still_cannot_find_their_details_page
   end
 end

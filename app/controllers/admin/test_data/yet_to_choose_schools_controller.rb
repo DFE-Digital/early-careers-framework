@@ -13,6 +13,7 @@ module Admin::TestData
         .joins(:induction_coordinator_profiles_schools)
         .left_joins(school_cohorts: :cohort)
         .where.not(id: SchoolCohort.where(cohort: Cohort.current).select(:school_id))
+        .distinct
         .order(:urn)
     end
   end
