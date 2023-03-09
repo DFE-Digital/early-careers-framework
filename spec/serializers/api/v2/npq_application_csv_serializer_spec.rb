@@ -4,7 +4,7 @@ require "rails_helper"
 
 module Api
   module V2
-    RSpec.describe NPQApplicationCsvSerializer do
+    RSpec.describe NPQApplicationCsvSerializer, :with_default_schedules do
       describe "serialization" do
         let(:npq_application) { create(:npq_application, targeted_delivery_funding_eligibility: true) }
 
@@ -34,6 +34,73 @@ module Api
           expect(rows[0]["targeted_delivery_funding_eligibility"]).to eql(npq_application.targeted_delivery_funding_eligibility.to_s)
           expect(rows[0]["itt_provider"]).to eql(npq_application.itt_provider)
           expect(rows[0]["lead_mentor"]).to eql(npq_application.lead_mentor.to_s)
+        end
+      end
+
+      describe "#updated_at" do
+        let(:npq_application) { create(:npq_application, targeted_delivery_funding_eligibility: true) }
+        let(:profile) { npq_application.profile }
+        let(:user) { npq_application.user }
+        let(:participant_identity) { npq_application.participant_identity }
+        let(:updated_at_attribute) { CSV.parse(subject, headers: true)[0]["updated_at"] }
+        subject { described_class.new([npq_application]).call }
+
+        context "when npq application touched" do
+          before do
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 10.days.ago)
+              participant_identity.update!(updated_at: 1.day.ago)
+            end
+          end
+
+          it "considers updated_at of the npq application" do
+            expect(Time.zone.parse(updated_at_attribute)).to be_within(1.minute).of(Time.zone.now)
+          end
+        end
+
+        context "when user touched" do
+          before do
+            ActiveRecord::Base.no_touching do
+              participant_identity.update!(updated_at: 10.days.ago)
+              npq_application.update!(updated_at: 5.days.ago)
+              user.update!(updated_at: 1.day.ago)
+            end
+          end
+
+          it "considers updated_at of user" do
+            expect(Time.zone.parse(updated_at_attribute)).to be_within(1.minute).of(1.day.ago)
+          end
+        end
+
+        context "when profile touched" do
+          let(:npq_application) { create(:npq_application, :accepted) }
+
+          before do
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 10.days.ago)
+              participant_identity.update!(updated_at: 10.days.ago)
+              npq_application.update!(updated_at: 5.days.ago)
+              profile.update!(updated_at: 1.day.ago)
+            end
+          end
+
+          it "considers updated_at of profile" do
+            expect(Time.zone.parse(updated_at_attribute)).to be_within(1.minute).of(1.day.ago)
+          end
+        end
+
+        context "when identity touched" do
+          before do
+            ActiveRecord::Base.no_touching do
+              user.update!(updated_at: 10.days.ago)
+              npq_application.update!(updated_at: 5.days.ago)
+              participant_identity.update!(updated_at: 1.day.ago)
+            end
+          end
+
+          it "considers updated_at of identity" do
+            expect(Time.zone.parse(updated_at_attribute)).to be_within(1.minute).of(1.day.ago)
+          end
         end
       end
     end
