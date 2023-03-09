@@ -460,6 +460,7 @@ Rails.application.routes.draw do
       end
       namespace :npq do
         resource :change_training_status, only: %i[new create]
+        resource :change_lead_provider, only: %i[new create update]
       end
     end
     resources :npq_applications, only: [] do
