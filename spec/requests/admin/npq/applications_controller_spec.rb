@@ -4,9 +4,7 @@ require "rails_helper"
 
 RSpec.describe "Admin::NPQ::ApplicationsController", :with_default_schedules, type: :request do
   before(:all) do
-    21.times do
-      create(:npq_application)
-    end
+    create_list(:npq_application, 21)
   end
 
   let(:application) { NPQApplication.first }

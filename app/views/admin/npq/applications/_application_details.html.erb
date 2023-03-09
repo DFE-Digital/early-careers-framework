@@ -13,7 +13,7 @@
 
     sl.row do |row|
       row.key(text: 'GAI ID')
-      row.value(text: application.participant_identity.id || '-')
+      row.value(text: application.user.get_an_identity_id || '-')
     end
 
     sl.row do |row|
