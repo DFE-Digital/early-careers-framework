@@ -74,13 +74,22 @@ module Api
           record.employer_name,
           record.employment_role,
           record.created_at.rfc3339,
-          record.updated_at.rfc3339,
+          updated_at(record),
           record.cohort.start_year,
           record.ineligible_for_funding_reason,
           record.targeted_delivery_funding_eligibility,
           record.itt_provider,
           record.lead_mentor,
         ]
+      end
+
+      def updated_at(record)
+        [
+          record.profile&.updated_at,
+          record.user.updated_at,
+          record.participant_identity.updated_at,
+          record.updated_at,
+        ].compact.max.rfc3339
       end
     end
   end
