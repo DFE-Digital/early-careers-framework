@@ -10,18 +10,14 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">We cannot find <%= @wizard.possessive_name %> record</h1>
 
-    <p class="govuk-body">Check the information you’ve entered is correct.</p>
-    <p class="govuk-body">We need to find <%= @wizard.full_name %> in the Teaching Regulation Agency records to make sure they’re eligible for this funded programme.</p>
+    <p class="govuk-body">Check the information you entered is correct.</p>
+    <p class="govuk-body">
+      We need to find <%= @wizard.full_name %> in the Teaching Regulation Agency records to make sure
+      they’re eligible for this funded programme.
+      When participants move school, we need to find their record so it can be transferred to your school.
+    </p>
 
     <%= govuk_summary_list do |summary_list| %>
-      <% summary_list.row do |row| %>
-        <% row.key { "Name" } %>
-        <% row.value { @wizard.full_name } %>
-        <% row.action(text: "Change",
-                      visually_hidden_text: "name",
-                      href: show_change_schools_add_participants_path(step: :name)) %>
-      <% end %>
-
       <% summary_list.row do |row| %>
         <% row.key { "TRN" } %>
         <% row.value { @wizard.trn } %>
@@ -39,7 +35,8 @@
       <% end %>
     <% end %>
 
-    <h3 class="govuk-heading-s">If you are sure this information is correct</h3>
-    <p class="govuk-body">We may be able to <%= govuk_link_to "find their record using their National Insurance number", show_schools_add_participants_path(step: :nino) %>.</p>
+    <h3 class="govuk-heading-m">If this information is correct</h3>
+    <p class="govuk-body">We may be able to find their record using their National Insurance number.</p>
+    <%= govuk_button_link_to "Continue", url_for(step: :nino) %>
   </div>
 </div>

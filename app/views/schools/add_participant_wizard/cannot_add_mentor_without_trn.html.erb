@@ -6,7 +6,7 @@
   <div class="govuk-grid-column-two-thirds">
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">
-      You cannot add <%= @wizard.full_name %> as a mentor without their TRN
+      You cannot add <%= @wizard.full_name %> without their TRN
     </h1>
 
     <p class="govuk-body">If they:</p>
@@ -17,7 +17,7 @@
                           target: :_blank,
                           class: "govuk-link govuk-link--no-visited-state" %>
       </li>
-      <li>have never had one, you’ll need to
+      <li>have never had one, they’ll need to
         <%= govuk_link_to "get a TRN (opens in new tab)",
                           get_a_trn_participants_start_registrations_path,
                           target: :_blank,
@@ -25,7 +25,7 @@
       </li>
     </ul>
 
-    <%= govuk_link_to "View your ECTs and mentors",
+    <%= govuk_link_to "Return to your ECTs and mentors",
                       schools_participants_path,
                       class: "govuk-link govuk-link--no-visited-state" %>
 

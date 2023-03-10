@@ -10,14 +10,7 @@ module Schools
     # before_action :verify_session, except: :complete
     before_action :initialize_wizard, except: :complete
 
-    # form_class Schools::AddParticipantWizard
-    # entry_points %i[who yourself]
-    # abandon_journey_path { schools_participants_path }
-
     def show
-      @wizard.changing_answer(params["changing_answer"] == "1")
-      @form = @wizard.form
-
       @wizard.before_render
 
       render @wizard.current_step
@@ -26,8 +19,6 @@ module Schools
     end
 
     def update
-      @form = @wizard.form
-
       if @form.valid?
         @wizard.save!
 
@@ -71,10 +62,18 @@ module Schools
 
     def initialize_wizard
       if request.get?
-        @wizard = AddParticipantWizard.new(current_step: step_name, current_state:, current_user:, school_cohort: @school_cohort)
+        @wizard = AddParticipantWizard.new(current_step: step_name,
+                                           current_state:,
+                                           current_user:,
+                                           school_cohort: @school_cohort)
+
         @wizard.changing_answer(params["changing_answer"] == "1")
       else
-        @wizard = AddParticipantWizard.new(current_step: step_name, current_state:, current_user:, school_cohort: @school_cohort, submitted_params:)
+        @wizard = AddParticipantWizard.new(current_step: step_name,
+                                           current_state:,
+                                           current_user:,
+                                           school_cohort: @school_cohort,
+                                           submitted_params:)
       end
       @form = @wizard.form
     end

@@ -47,11 +47,11 @@ module Schools
     end
 
     def changing_answer(is_changing)
-      current_state["changing_answer"] = is_changing ? "1" : "0"
+      current_state["changing_answer"] = is_changing
     end
 
     def changing_answer?
-      current_state["changing_answer"] == "1"
+      current_state["changing_answer"] == true
     end
 
     def save!

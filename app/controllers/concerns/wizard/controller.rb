@@ -16,7 +16,7 @@ module Wizard
 
     def update
       if @wizard.valid?
-      # if @form.valid?
+        # if @form.valid?
         @wizard.save!
 
         redirect_to @wizard.next_step_path

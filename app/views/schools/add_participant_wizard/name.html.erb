@@ -6,16 +6,16 @@
     <div class="govuk-grid-column-two-thirds">
         <%
           full_name_label = if @wizard.ect_participant?
-            'What’s this person’s full name?'
+            'What’s this ECT’s full name?'
           else
-            'What’s the full name of this mentor?'
+            'What’s this mentor’s full name?'
           end
         %>
 
         <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
             <%= f.govuk_error_summary %>
             <%= f.govuk_text_field :full_name, width: "three-quarters",
-                label: { text: full_name_label, tag: :h1, size: 'xl' },
+                label: { text: full_name_label, tag: :h1, size: 'xl', class: "govuk-!-margin-bottom-8" },
                 caption: { text: @school.name, size: 'xl' } %>
             <%= f.govuk_submit "Continue" %>
         <% end %>

@@ -16,11 +16,8 @@ class ParticipantValidationService
   end
 
   def validate
-    if magic_date_criteria_met?
-      return magic_response
-    end
+    validated_record = matching_record
 
-    validated_record = matching_record(trn:, nino:, full_name:, dob: date_of_birth)
     return if validated_record.nil?
 
     {
@@ -35,22 +32,6 @@ class ParticipantValidationService
   end
 
 private
-
-  def magic_date_criteria_met?
-    (Rails.env.development? || Rails.env.deployed_development?) && date_of_birth == Date.new(1900, 1, 1)
-  end
-
-  def magic_response
-    {
-      trn: TeacherReferenceNumber.new(trn:).formatted_trn,
-      qts: true,
-      active_alert: false,
-      previous_participation: false,
-      previous_induction: false,
-      no_induction: false,
-      exempt_from_induction: false,
-    }
-  end
 
   def previous_participation?(validation_data)
     CheckParticipantPreviousParticipation.call(trn: validation_data["trn"])
@@ -69,46 +50,10 @@ private
     config[:check_first_name_only]
   end
 
-  def dqt_record(trn, nino)
-    full_dqt_client.get_record(trn:, birthdate: date_of_birth, nino:)
-  end
+  def matching_record
+    result = DqtRecordCheck.call(trn:, nino:, full_name:, date_of_birth:, check_first_name_only: check_first_name_only?)
+    return if result.dqt_record.nil?
 
-  def full_dqt_client
-    @full_dqt_client ||= FullDQT::Client.new
-  end
-
-  def matching_record(trn:, nino:, full_name:, dob:)
-    return if trn.blank? && nino.blank?
-
-    trn ||= "1"
-
-    padded_trn = trn.rjust(7, "0")
-    dqt_record = dqt_record(padded_trn, nino)
-    return if dqt_record.nil? || dqt_record["state_name"] != "Active"
-
-    matches = 0
-    trn_matches = padded_trn == dqt_record["trn"]
-    matches += 1 if trn_matches
-
-    name_matches = if check_first_name_only?
-                     full_name.split(" ").first.downcase == dqt_record["name"].split(" ").first.downcase
-                   else
-                     full_name.downcase == dqt_record["name"].downcase
-                   end
-
-    matches += 1 if name_matches
-
-    dob_matches = dob == dqt_record["dob"]
-    matches += 1 if dob_matches
-    nino_matches = nino.present? && nino.downcase == dqt_record["ni_number"]&.downcase
-    matches += 1 if nino_matches
-
-    return dqt_record if matches >= 3
-
-    # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
-    # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
-    if trn_matches && trn != "1"
-      matching_record(trn: "1", nino:, full_name:, dob:)
-    end
+    return result.dqt_record if result.total_matched >= 3
   end
 end

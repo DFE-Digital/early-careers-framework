@@ -25,7 +25,7 @@
                 <%= f.govuk_submit "Continue" %>
                 <% unless @wizard.ect_participant? %>
                   <%= govuk_link_to "#{@wizard.sit_mentor? ? "I" : "They"} do not have a TRN",
-                                      add_participant_wizard_show_schools_participants_path(step: :cannot_add_mentor_without_trn),
+                                      show_schools_add_participants_path(step: :cannot_add_mentor_without_trn),
                                       class: "govuk-link govuk-link--no-visited-state" %>
                 <% end %>
             </div>
