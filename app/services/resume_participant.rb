@@ -28,7 +28,7 @@ class ResumeParticipant
   def participant_identity
     @participant_identity ||= ParticipantIdentityResolver
                                 .call(
-                                  user_id: participant_id,
+                                  participant_id:,
                                   course_identifier:,
                                   cpd_lead_provider:,
                                 )

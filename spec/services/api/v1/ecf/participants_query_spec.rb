@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Api::V1::ECF::ParticipantsQuery, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+RSpec.describe Api::V1::ECF::ParticipantsQuery do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
@@ -24,10 +24,15 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery, with_feature_flags: { external_i
       let(:preferred_email) { Faker::Internet.email }
       let(:preferred_identity) { create(:participant_identity, :secondary, user: participant_profile.user, email: preferred_email) }
       let!(:another_induction_record) { create(:induction_record, induction_programme:, participant_profile:, preferred_identity:) }
+      let(:external_identifier) { participant_profile.participant_identity.external_identifier }
       let(:user_id) { participant_profile.participant_identity.user_id }
 
       it "returns the user id of the participant identity" do
         expect(subject.induction_records.first.user_id).to eq(user_id)
+      end
+
+      it "returns the original external identifier of the participant identity" do
+        expect(subject.induction_records.first.external_identifier).to eq(external_identifier)
       end
 
       it "returns the preferred email" do
@@ -39,6 +44,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery, with_feature_flags: { external_i
       let(:mentor_participant_profile) { create(:mentor_participant_profile) }
       let(:participant_profile) { create(:ect_participant_profile, mentor_profile_id: mentor_participant_profile.id) }
       let(:mentor_external_identifier) { mentor_participant_profile.participant_identity.external_identifier }
+      let(:external_identifier) { participant_profile.participant_identity.external_identifier }
       let(:user_id) { participant_profile.participant_identity.user_id }
       let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile:, mentor_profile_id: mentor_participant_profile.id) }
 
@@ -48,6 +54,10 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery, with_feature_flags: { external_i
 
       it "returns the user id" do
         expect(subject.induction_records.first.user_id).to eq(user_id)
+      end
+
+      it "returns the external identifier" do
+        expect(subject.induction_records.first.external_identifier).to eq(external_identifier)
       end
     end
 

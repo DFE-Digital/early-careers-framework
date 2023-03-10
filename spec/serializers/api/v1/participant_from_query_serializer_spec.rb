@@ -18,11 +18,22 @@ module Api
       subject { described_class.new(query_result) }
 
       describe "#id" do
-        let(:user_id) { Faker::Internet.uuid }
-        let(:fields) { { user_id: } }
+        context "when feature flag is off", with_feature_flags: { external_identifier_to_user_id_lookup: nil } do
+          let(:external_identifier) { Faker::Internet.uuid }
+          let(:fields) { { external_identifier: } }
 
-        it "returns the user id" do
-          expect(subject.serializable_hash[:data][:id]).to eql(user_id)
+          it "returns the user id" do
+            expect(subject.serializable_hash[:data][:id]).to eql(external_identifier)
+          end
+        end
+
+        context "when feature flag is on", with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+          let(:user_id) { Faker::Internet.uuid }
+          let(:fields) { { user_id: } }
+
+          it "returns the user id" do
+            expect(subject.serializable_hash[:data][:id]).to eql(user_id)
+          end
         end
       end
 

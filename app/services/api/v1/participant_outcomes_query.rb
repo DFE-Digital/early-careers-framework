@@ -32,7 +32,11 @@ module Api
       end
 
       def participant_scope
-        ParticipantIdentity.where(user_id: participant_external_id)
+        if FeatureFlag.active?(:external_identifier_to_user_id_lookup)
+          ParticipantIdentity.where(user_id: participant_external_id)
+        else
+          ParticipantIdentity.where(external_identifier: participant_external_id)
+        end
       end
     end
   end

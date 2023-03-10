@@ -28,7 +28,13 @@ module Api
 
       set_type :participant
 
-      set_id :id, &:user_id
+      set_id :id do |induction_record|
+        if FeatureFlag.active?(:external_identifier_to_user_id_lookup)
+          induction_record.user_id
+        else
+          induction_record.external_identifier
+        end
+      end
 
       attribute :email do |induction_record|
         induction_record.preferred_identity_email ||

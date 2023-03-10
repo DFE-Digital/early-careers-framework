@@ -11,7 +11,7 @@ RSpec.shared_examples "a participant identity resolver service" do
 
     context "for npq course" do
       let(:course_identifier) { npq_application.npq_course.identifier }
-      let(:user_id) { another_participant_identity.user_id_or_external_identifier }
+      let(:participant_id) { another_participant_identity.user_id_or_external_identifier }
 
       it "correctly selects npq participant identity" do
         result = subject.call
@@ -21,7 +21,7 @@ RSpec.shared_examples "a participant identity resolver service" do
     end
 
     context "for ect course" do
-      let(:user_id) { participant_identity.user_id_or_external_identifier }
+      let(:participant_id) { participant_identity.user_id_or_external_identifier }
 
       it "correctly selects ect participant identity" do
         result = subject.call
@@ -74,17 +74,17 @@ RSpec.describe ParticipantIdentityResolver, :with_default_schedules, :with_suppo
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider, npq_lead_provider:) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:user) { create(:user) }
-  let(:user_id) { user.id }
+  let(:participant_id) { user.id }
   let(:teacher_profile) { create(:teacher_profile, user:) }
   let(:course_identifier) { "ecf-induction" }
 
-  let(:params) { { user_id:, course_identifier:, cpd_lead_provider: } }
+  let(:params) { { participant_id:, course_identifier:, cpd_lead_provider: } }
 
   subject { described_class.new(**params) }
 
   describe "#initialize" do
     it "sets it to the injected params if provided" do
-      expect(subject.instance_variable_get(:@user_id)).to eq(user_id)
+      expect(subject.instance_variable_get(:@participant_id)).to eq(participant_id)
     end
 
     it "sets it to the injected params if provided" do
@@ -97,7 +97,7 @@ RSpec.describe ParticipantIdentityResolver, :with_default_schedules, :with_suppo
   end
 
   describe "#call" do
-    context "when feature flag is off", with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+    context "when feature flag is on", with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
       it_behaves_like "a participant identity resolver service"
     end
 

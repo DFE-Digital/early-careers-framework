@@ -39,7 +39,7 @@ module NPQ
     def participant_identity
       @participant_identity ||= ParticipantIdentityResolver
                                   .call(
-                                    user_id: participant_external_id,
+                                    participant_id: participant_external_id,
                                     course_identifier:,
                                     cpd_lead_provider:,
                                   )

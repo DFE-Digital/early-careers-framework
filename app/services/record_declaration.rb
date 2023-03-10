@@ -60,7 +60,7 @@ class RecordDeclaration
   def participant_identity
     @participant_identity ||= ParticipantIdentityResolver
                                 .call(
-                                  user_id: participant_id,
+                                  participant_id:,
                                   course_identifier:,
                                   cpd_lead_provider:,
                                 )
@@ -233,7 +233,7 @@ private
     NPQ::CreateParticipantOutcome.new(
       cpd_lead_provider:,
       course_identifier:,
-      participant_external_id: participant_identity.external_identifier,
+      participant_external_id: participant_identity.user_id_or_external_identifier,
       completion_date: declaration_date,
       state: participant_outcome_state,
     ).call
