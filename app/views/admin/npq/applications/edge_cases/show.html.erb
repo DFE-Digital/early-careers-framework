@@ -1,46 +1,87 @@
-<h1><%= @npq_application.user.full_name %></h1>
+<h1><%= @application.user.full_name %></h1>
 
 <%=
   govuk_summary_list do |sl|
     sl.row do |row|
-      row.key(text: "Email address")
-      row.value(text: @npq_application.participant_identity.email)
+      row.key(text: "Participant ID")
+      row.value(text: @application.profile_id)
     end
 
     sl.row do |row|
-      row.key(text: "Participant ID")
-      row.value(text: @npq_application.profile.id)
+      row.key(text: "Application ID")
+      row.value(text: @application.id)
     end
 
     sl.row do |row|
       row.key(text: "NPQ course name")
-      row.value(text: @npq_application.npq_course_name)
+      row.value(text: @application.npq_course_name)
     end
 
     sl.row do |row|
-      row.key(text: "Eligibile for funding")
-      row.value(text: bool_to_tag(@npq_application.eligible_for_funding))
+      row.key(text: "Lead provider")
+      row.value(text: @application.npq_lead_provider.name)
+    end
+
+    sl.row do |row|
+      row.key(text: "Eligible for funding")
+      row.value(text: bool_to_tag(@application.eligible_for_funding))
     end
 
     sl.row do |row|
       row.key(text: "Funding eligibility status code")
-      row.value(text: @npq_application.funding_eligiblity_status_code&.humanize)
+      row.value(text: @application.funding_eligiblity_status_code&.humanize)
     end
 
     sl.row do |row|
-      row.key(text: "Employer name")
-      row.value(text: @npq_application.employer_name)
+      row.key(text: "Employment type")
+      row.value(text: @application.employer_type)
+    end
+
+    sl.row do |row|
+      row.key(text: "Employment name")
+      row.value(text: @application.employer_name)
     end
 
     sl.row do |row|
       row.key(text: "Employment role")
-      row.value(text: @npq_application.employment_role)
+      row.value(text: @application.employer_role)
+    end
+
+    sl.row do |row|
+      row.key(text: "Created at")
+      row.value(text: @application.created_at)
+    end
+
+    sl.row do |row|
+      row.key(text: "Updated at")
+      row.value(text: @application.updated_at)
+    end
+
+    sl.row do |row|
+      row.key(text: "Notes")
+
+      notes_present = @application.notes.present?
+      row.value do
+        if notes_present
+          simple_format(@application.notes, class: "govuk-body")
+        else
+          "No notes"
+        end
+      end
+
+      user = @application.user
+
+      row.action(
+        text: notes_present ? "Change notes" : "Add notes",
+        href: edit_admin_npq_applications_note_path(@application),
+        visually_hidden_text: notes_present ? "on #{user.full_name}'s profile" : "to #{user.full_name}'s profile",
+      )
     end
   end
 %>
 
 <%= govuk_button_link_to(
   "Set eligibility status",
-  edit_admin_npq_applications_non_school_registrant_path(@npq_application),
+  edit_admin_npq_applications_edge_case_path(@application),
   secondary: true,
 ) %>

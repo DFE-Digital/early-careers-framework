@@ -1,6 +1,6 @@
 <h1><%= @npq_application.user.full_name %></h1>
 
-<%= form_for(@npq_application, url: admin_npq_applications_non_school_registrant_path(@npq_application), method: "PATCH") do |form| %>
+<%= form_for(@npq_application, url: admin_npq_applications_edge_case_path(@npq_application), method: "PATCH") do |form| %>
   <%= form.govuk_error_summary %>
 
   <%=
