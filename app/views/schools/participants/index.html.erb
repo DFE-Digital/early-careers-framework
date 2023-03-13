@@ -15,32 +15,20 @@
 
     <% if actions?(@participants) %>
       <hr>
-      <h2 class="govuk-heading-m">Actions</h2>
-
       <% if @participants.orphan_ects.any? %>
-        <%= govuk_warning_text(text: "Your school has ECTs with unassigned mentors.") %>
-        <h4 class="govuk-heading-s">ECTs with unassigned mentors</h4>
-        <% @participants.orphan_ects.each do |ect| %>
-          <%= govuk_warning_text(text: govuk_link_to(ect.participant_full_name,
-                                                     schools_participant_path(id: ect.participant_profile_id,
-                                                                              school_id: @school,
-                                                                              cohort_id: ect.cohort_start_year),
-                                                     no_visited_state: true),
-                                 classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
-        <% end %>
+        <%= govuk_warning_text(text: "You need to assign a mentor to these ECTs.") %>
+        <ul class="govuk-list">
+          <% @participants.orphan_ects.each do |ect| %>
+            <li>
+              <%= govuk_link_to(ect.participant_full_name, schools_participant_path(id: ect.participant_profile_id,
+                                                                                    school_id: @school,
+                                                                                    cohort_id: ect.cohort_start_year),
+                                no_visited_state: true,
+                                classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
+            </li>
+          <% end %>
+        </ul>
         <br>
-      <% end %>
-
-      <% if @participants.orphan_mentors.any? %>
-        <%= govuk_warning_text(text: "Your school has mentors with unassigned ECTs.") %>
-      <% end %>
-
-      <% if @participants.no_induction_start_date.any? %>
-        <%= govuk_warning_text(text: "Your school has participants with no induction start date.") %>
-      <% end %>
-
-      <% if @participants.no_qts.any? %>
-        <%= govuk_warning_text(text: "Your school has participants with no QTS.") %>
       <% end %>
     <% end %>
 
