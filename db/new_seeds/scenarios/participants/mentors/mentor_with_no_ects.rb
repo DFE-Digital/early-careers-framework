@@ -89,7 +89,7 @@ module NewSeeds
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
           end
 
-        private
+          private
 
           attr_reader :new_user_attributes,
                       :school_cohort,
