@@ -93,7 +93,7 @@ class ParticipantStatusTagComponent < BaseComponent
   end
 
   def has_no_trn?
-    profile&.teacher_profile&.trn == nil
+    profile&.teacher_profile&.trn.blank?
   end
 
   def active_flags_need_checking?
