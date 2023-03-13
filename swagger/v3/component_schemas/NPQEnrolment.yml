@@ -43,7 +43,7 @@ properties:
       - npq-aso-march
       - npq-aso-june
   cohort:
-    description: "The start year of the cohort the participant is enrolled in"
+    description: "The value indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Providers may change an NPQ participant's cohort up until the point of submitting a started declaration."
     type: string
     example: "2021"
   npq_application_id:
