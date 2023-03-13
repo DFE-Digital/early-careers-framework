@@ -45,7 +45,11 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile_type == "ParticipantProfile::ECT"
-          induction_record.mentor_external_identifier
+          if FeatureFlag.active?(:external_identifier_to_user_id_lookup)
+            induction_record.mentor_user_id
+          else
+            induction_record.mentor_external_identifier
+          end
         end
       end
 

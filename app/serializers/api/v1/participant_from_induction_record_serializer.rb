@@ -43,7 +43,7 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          induction_record.mentor_profile&.participant_identity&.external_identifier
+          induction_record.mentor_profile&.participant_identity&.user_id_or_external_identifier
         end
       end
 

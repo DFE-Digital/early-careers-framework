@@ -46,10 +46,15 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
       let(:mentor_external_identifier) { mentor_participant_profile.participant_identity.external_identifier }
       let(:external_identifier) { participant_profile.participant_identity.external_identifier }
       let(:user_id) { participant_profile.participant_identity.user_id }
+      let(:mentor_user_id) { mentor_participant_profile.participant_identity.user_id }
       let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile:, mentor_profile_id: mentor_participant_profile.id) }
 
       it "returns the mentor external identifier" do
         expect(subject.induction_records.first.mentor_external_identifier).to eq(mentor_external_identifier)
+      end
+
+      it "returns the mentor user id" do
+        expect(subject.induction_records.first.mentor_user_id).to eq(mentor_user_id)
       end
 
       it "returns the user id" do
