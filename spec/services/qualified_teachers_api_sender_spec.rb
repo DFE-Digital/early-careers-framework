@@ -10,7 +10,7 @@ RSpec.describe QualifiedTeachersApiSender, :with_default_schedules do
   let(:teacher_profile) { create(:teacher_profile, user:, trn: "1234567") }
   let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, teacher_profile:, user:) }
   let(:participant_declaration) { create(:npq_participant_declaration, npq_course:, cpd_lead_provider:, participant_profile:) }
-  let(:participant_outcome) { create(:participant_outcome, participant_declaration:, completion_date: Time.zone.local(2023, 2, 20, 17, 30, 0).rfc3339) }
+  let(:participant_outcome) { create(:participant_outcome, :passed, participant_declaration:) }
   let!(:participant_outcome_id) { participant_outcome.id }
 
   let(:params) do
@@ -77,15 +77,7 @@ RSpec.describe QualifiedTeachersApiSender, :with_default_schedules do
     before do
       stub_request(:put, "https://qualified-teachers-api.example.com/v2/npq-qualifications?trn=1234567")
         .with(
-          body: "{\"completionDate\":\"2023-02-20\",\"qualificationType\":\"NPQSL\"}",
-          headers: {
-            "Accept"=>"*/*",
-            "Accept-Encoding"=>"gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-            "Authorization"=>"Bearer some-apikey-guid",
-            "Content-Type"=>"application/json",
-            "Host"=>"qualified-teachers-api.example.com",
-            "User-Agent"=>"Ruby",
-          },
+          body: request_body,
         )
         .to_return(status: 204, body: "", headers: {})
     end
@@ -107,6 +99,34 @@ RSpec.describe QualifiedTeachersApiSender, :with_default_schedules do
 
       it "returns the participant outcome" do
         expect(service.call).to eq(participant_outcome)
+      end
+
+      context "with failed outcome" do
+        let(:participant_outcome) { create(:participant_outcome, :failed, participant_declaration:) }
+        let(:request_body) do
+          {
+            completionDate: nil,
+            qualificationType: participant_outcome.participant_declaration.qualification_type,
+          }
+        end
+
+        it "sends a request without a completion date" do
+          expect { service.call }.to change { participant_outcome.reload.qualified_teachers_api_request_successful? }.from(false).to(true)
+        end
+      end
+
+      context "with voided outcome" do
+        let(:participant_outcome) { create(:participant_outcome, :voided, participant_declaration:) }
+        let(:request_body) do
+          {
+            completionDate: nil,
+            qualificationType: participant_outcome.participant_declaration.qualification_type,
+          }
+        end
+
+        it "sends a request without a completion date" do
+          expect { service.call }.to change { participant_outcome.reload.qualified_teachers_api_request_successful? }.from(false).to(true)
+        end
       end
     end
 

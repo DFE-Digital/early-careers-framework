@@ -1,0 +1,7 @@
+description: "Filter schools to return more specific results"
+type: object
+properties:
+  cohort:
+    description: "Return schools within the specified cohort"
+    type: string
+    example: "2021"

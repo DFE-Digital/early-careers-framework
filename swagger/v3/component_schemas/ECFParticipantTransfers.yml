@@ -1,0 +1,47 @@
+description: "The details of an ECF Participant enrolment"
+type: object
+required:
+  - training_record_id
+  - transfer_type
+  - status
+  - created_at
+properties:
+  training_record_id:
+    description: "The unique identifier of the participant training record"
+    type: string
+    format: uuid
+    example: "000a97ff-d2a9-4779-a397-9bfd9063072e"
+  transfer_type:
+    description: "The type of transfer between schools"
+    type: string
+    example: new_provider
+    enum:
+      - new_school
+      - new_provider
+      - unknown
+  status:
+    description: "The status of the transfer, if both leaving and joining SIT have completed their journeys or only one has"
+    type: string
+    example: complete
+    enum:
+      - incomplete
+      - complete
+  leaving:
+    nullable: true
+    $ref: "#/components/schemas/ECFParticipantLeaving"
+    example:
+      school_urn: "123456"
+      provider: "Old Institute"
+      date: "2021-05-31"
+  joining:
+    nullable: true
+    $ref: "#/components/schemas/ECFParticipantJoining"
+    example:
+      school_urn: "654321"
+      provider: "New Institute"
+      date: "2021-06-01"
+  created_at:
+    description: The date and time the ECF participant transfer was created
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"

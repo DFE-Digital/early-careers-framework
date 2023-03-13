@@ -1,0 +1,7 @@
+description: "A single ECF school"
+type: object
+required:
+  - data
+properties:
+  data:
+    $ref: "#/components/schemas/ECFSchool"

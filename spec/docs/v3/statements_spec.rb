@@ -25,7 +25,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
   end
 
   path "/api/v3/statements" do
-    get "Retrieve financial statements" do
+    get "<b>Note, this endpoint is new.</b><br/>Retrieve financial statements" do
       operationId :statements_get
       tags "statements"
       security [bearerAuth: []]
@@ -63,7 +63,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
   end
 
   path "/api/v3/statements/{id}" do
-    get "Retrieve specific financial statement" do
+    get "<b>Note, this endpoint is new.</b><br/>Retrieve specific financial statement" do
       operationId :statement_get
       tags "statements"
       security [bearerAuth: []]

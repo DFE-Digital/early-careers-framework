@@ -119,6 +119,7 @@ private
 
   def then_i_should_have_been_signed_out_of_the_service
     expect(page).to have_selector("h1", text: "Sign in")
+    expect(page).to have_text("How to access this service")
     expect(current_path).to eq("/users/sign_in")
   end
 

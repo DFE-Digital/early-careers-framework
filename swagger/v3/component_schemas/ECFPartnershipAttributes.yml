@@ -2,6 +2,7 @@ description: "The data attributes associated with an ECF partnership"
 type: object
 required:
   - cohort
+  - school_id
   - urn
   - delivery_partner_id
   - status
@@ -16,11 +17,20 @@ properties:
     description: "The Unique Reference Number (URN) of the school you are partnered with"
     type: string
     example: "123456"
+  school_id:
+    description: The unique ID of the school you are partnered with
+    type: string
+    format: uuid
+    example: dd4a11347-7308-4879-942a-c4a70ced400v
   delivery_partner_id:
     description: The unique ID of the delivery partner you are working with for this partnership
     type: string
     format: uuid
     example: cd3a12347-7308-4879-942a-c4a70ced400a
+  delivery_partner_name:
+    description: The name of the delivery partner you are working with for this partnership
+    type: string
+    example: Delivery Partner Example
   status:
     description: "The status of the partnership which includes active or challenged"
     type: string
@@ -39,6 +49,11 @@ properties:
       - no_ects
       - mistake
     example: mistake
+  challenged_at:
+    description: "The date the partnership has been challenged"
+    type: string
+    format: date-time
+    example: "2021-05-31T02:22:32.000Z"
   induction_tutor_name:
     description: "The name of the induction tutor at the school you are in partnership with"
     type: string

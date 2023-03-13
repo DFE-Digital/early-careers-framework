@@ -5,48 +5,35 @@ module NewSeeds
     module Participants
       module Mentors
         class MentoringMultipleEctsWithSameProvider
-          Person = Struct.new(
-            :user,
-            :teacher_profile,
-            :participant_profile,
-            :participant_identity,
-            :participant_validation_data,
-            keyword_init: true,
-          )
-
           attr_accessor :mentor,
                         :mentees,
-                        :mentee_induction_records,
                         :school,
-                        :number,
-                        :user,
                         :school_cohort,
                         :partnership,
                         :delivery_partner,
                         :lead_provider,
                         :induction_programme
 
-          def initialize(school: nil, mentor: nil, lead_provider: nil, delivery_partner: nil, number: 2)
+          def initialize(school: nil, mentor: nil, lead_provider: nil, delivery_partner: nil)
             Rails.logger.info("################# seeding scenario MentoringMultipleEctsWithSameProvider")
-            @school           = school
-            @mentor           = mentor
-            @number           = number
-            @lead_provider    = lead_provider
-            @delivery_partner = delivery_partner
+            @school            = school
+            @mentor            = mentor
+            @lead_provider     = lead_provider
+            @delivery_partner  = delivery_partner
           end
 
-          def build
+          def build(number_of_mentees: Random.rand(1..4), with_eligibility: true, with_validation_data: true)
             # set up school with cohort, lead provider, delivery partner and induction programme
-
             # we'll probably be doing a lot of this, might make sense to move it somewhere communal
             @school ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
             @lead_provider ||= FactoryBot.create(:seed_lead_provider)
             @delivery_partner ||= FactoryBot.create(:seed_delivery_partner)
 
-            @school_cohort = @school.school_cohorts.find_by(cohort: cohort(2022)) || FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school:)
+            cohort = cohort(2022)
+            @school_cohort = @school.school_cohorts.find_by(cohort:) || FactoryBot.create(:seed_school_cohort, cohort:, school:)
 
             @partnership = FactoryBot.create(:seed_partnership,
-                                             cohort: cohort(2022),
+                                             cohort:,
                                              school:,
                                              delivery_partner:,
                                              lead_provider:)
@@ -56,73 +43,44 @@ module NewSeeds
                                                      school_cohort:,
                                                      partnership:)
 
-            # set up mentor
             @mentor ||= build_mentor
 
-            # set up ECTs
-            @mentees = number.times.map { build_mentee }
+            add_mentees(number_of_mentees, with_eligibility:, with_validation_data:)
+          end
 
-            # assign ECTs to mentor
-            @mentee_induction_records = mentees.each do |mentee|
-              FactoryBot.create(:seed_induction_record,
-                                participant_profile: mentee.participant_profile,
-                                mentor_profile: mentor.participant_profile,
-                                induction_programme:)
+        private
 
-              Rails.logger.info("seeded induction record where #{mentor.user.full_name} is mentoring #{mentee.user.full_name}")
+          def build_mentor
+            NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+              .new(school_cohort:)
+              .build
+              .with_induction_record(induction_programme:)
+              .participant_profile
+          end
+
+          def build_mentee(with_eligibility:, with_validation_data:)
+            NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort:).build.tap do |ect|
+              ect.with_eligibility if with_eligibility
+              ect.with_validation_data if with_validation_data
+              ect.with_induction_record(induction_programme:, mentor_profile: mentor)
+            end
+          end
+
+          def add_mentees(number, with_eligibility:, with_validation_data:)
+            raise(StandardError, "A mentor is required before mentees are added") if @mentor.blank?
+
+            Rails.logger.info("seeding #{number} mentees with eligibility: #{with_eligibility}, validation_data: #{with_validation_data}")
+            @mentees = number.times.map do
+              build_mentee(with_eligibility:, with_validation_data:).participant_profile.tap do |mentee|
+                Rails.logger.info("seeded induction record where #{mentor.full_name} is mentoring #{mentee.full_name}")
+              end
             end
 
             self
           end
 
-          def build_mentor
-            build_person(mentor: true)
-          end
-
-          def build_mentee
-            build_person(mentor: false, validation_data: true)
-          end
-
-        private
-
           def cohort(year)
             Cohort.find_by!(start_year: year)
-          end
-
-          def build_person(mentor: false, validation_data: false)
-            user = FactoryBot.create(:seed_user)
-
-            teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school:)
-
-            participant_identity = FactoryBot.create(:seed_participant_identity, user:)
-
-            participant_profile = if mentor
-                                    FactoryBot.create(:seed_mentor_participant_profile,
-                                                      participant_identity:,
-                                                      teacher_profile:,
-                                                      school_cohort:)
-                                  else
-                                    FactoryBot.create(:seed_ect_participant_profile,
-                                                      participant_identity:,
-                                                      teacher_profile:,
-                                                      school_cohort:)
-                                  end
-
-            participant_validation_data = if validation_data
-                                            FactoryBot.create(
-                                              :seed_ecf_participant_validation_data,
-                                              participant_profile:,
-                                              user:,
-                                            )
-                                          end
-
-            Person.new(
-              user:,
-              teacher_profile:,
-              participant_identity:,
-              participant_profile:,
-              participant_validation_data:,
-            )
           end
         end
       end
