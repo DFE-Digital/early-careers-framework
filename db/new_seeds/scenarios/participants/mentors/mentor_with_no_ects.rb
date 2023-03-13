@@ -17,7 +17,7 @@ module NewSeeds
 
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
             @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school:)
-            participant_identity = FactoryBot.create(:seed_participant_identity, :with_user, user:)
+            participant_identity = FactoryBot.create(:seed_participant_identity, user:, email: user.email)
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
                                                      participant_identity:,
                                                      school_cohort:,
@@ -37,7 +37,7 @@ module NewSeeds
           end
 
           def add_induction_record(induction_programme:, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active", preferred_identity: nil, appropriate_body: nil)
-            preferred_identity ||= FactoryBot.create(:seed_participant_identity, user: participant_profile.user)
+            preferred_identity ||= participant_profile.participant_identity
 
             FactoryBot.create(
               :seed_induction_record,
@@ -86,7 +86,7 @@ module NewSeeds
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
           end
 
-        private
+          private
 
           attr_reader :new_user_attributes,
                       :school_cohort,
