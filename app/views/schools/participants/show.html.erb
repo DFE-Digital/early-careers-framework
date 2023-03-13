@@ -138,7 +138,7 @@
             <%= @induction_record.appropriate_body_name %>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <% if @profile.policy_class.new(current_user, @profile).add_appropriate_body? %>
+            <% if @profile.policy_class.new(current_user, @profile).add_appropriate_body? && can_appropriate_body_be_changed? %>
               <%= govuk_link_to (participant_has_appropriate_body? ? "Change" : "Add"), { action: :add_appropriate_body, participant_id: @profile } %>
             <% end %>
           </dd>
