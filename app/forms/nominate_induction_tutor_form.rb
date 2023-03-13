@@ -42,7 +42,7 @@ class NominateInductionTutorForm
   end
 
   def email_already_taken?
-    ParticipantProfile.active_record.ects.joins(:user).where(user: { email: }).any?
+    Identity.find_user_by(email:).present?
   end
 
 private
