@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request, with_feature_flags: { api_v3: "active" } do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
-  let(:cohort) { Cohort.current || create(:cohort, :current) }
+  let(:cohort) { Cohort.current }
   let(:delivery_partner) { create(:delivery_partner, name: "First Delivery Partner") }
   let(:school) { create(:school, urn: "123456", name: "My first High School") }
   let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
@@ -87,7 +87,7 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
         end
       end
 
-      context "when ordering by name" do
+      context "when ordering by updated_at" do
         it "returns an ordered list of partnership" do
           get "/api/v3/partnerships/ecf", params: { sort: "updated_at" }
 

@@ -4,6 +4,7 @@ module Api
   module V3
     module ECF
       class PartnershipsQuery
+        ParameterInvalid = Class.new(RuntimeError)
         attr_reader :lead_provider, :params
 
         def initialize(lead_provider:, params:)
@@ -18,6 +19,8 @@ module Api
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
           scope = scope.order("partnerships.updated_at DESC") if params[:sort].blank?
           scope
+        rescue ParameterInvalid
+          Partnership.none
         end
 
       private
@@ -33,9 +36,9 @@ module Api
         def updated_since
           return if filter[:updated_since].blank?
 
-          Time.iso8601(filter[:updated_since])
-        rescue ArgumentError
           Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+        rescue ArgumentError
+          raise ParameterInvalid, "Parameter is invalid (should be ISO8601): updated_since"
         end
 
         def with_cohorts

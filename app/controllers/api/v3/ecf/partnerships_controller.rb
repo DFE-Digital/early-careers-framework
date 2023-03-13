@@ -6,7 +6,6 @@ module Api
       class PartnershipsController < Api::ApiController
         include ApiTokenAuthenticatable
         include ApiPagination
-        include ApiFilter
         include ApiOrderable
 
         # Returns a list of partnerships
