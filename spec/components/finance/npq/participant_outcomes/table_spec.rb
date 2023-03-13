@@ -17,7 +17,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, :with_default_schedules
       is_expected.to have_table_row_count(1)
       is_expected.to have_table_text("failed", col: 1)
       is_expected.to have_table_text(participant_outcome.completion_date.to_s(:govuk), col: 2)
-      is_expected.to have_table_text("N/A", col: 3)
+      is_expected.to have_table_text(participant_outcome.created_at.to_s(:govuk), col: 3)
+      is_expected.to have_table_text("", col: 4)
     end
   end
 
@@ -27,8 +28,9 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, :with_default_schedules
     it "renders correctly" do
       is_expected.to have_table_row_count(1)
       is_expected.to have_table_text("voided", col: 1)
-      is_expected.to have_table_text(participant_outcome.updated_at.to_s(:govuk), col: 2)
-      is_expected.to have_table_text("", col: 3)
+      is_expected.to have_table_text(participant_outcome.completion_date.to_s(:govuk), col: 2)
+      is_expected.to have_table_text(participant_outcome.created_at.to_s(:govuk), col: 3)
+      is_expected.to have_table_text("", col: 4)
     end
   end
 
@@ -40,7 +42,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, :with_default_schedules
         is_expected.to have_table_row_count(1)
         is_expected.to have_table_text("passed", col: 1)
         is_expected.to have_table_text(participant_outcome.completion_date.to_s(:govuk), col: 2)
-        is_expected.to have_table_text("", col: 3)
+        is_expected.to have_table_text(participant_outcome.created_at.to_s(:govuk), col: 3)
+        is_expected.to have_table_text("", col: 4)
       end
     end
 
@@ -52,7 +55,8 @@ RSpec.describe Finance::NPQ::ParticipantOutcomes::Table, :with_default_schedules
         is_expected.to have_table_row_count(1)
         is_expected.to have_table_text("passed", col: 1)
         is_expected.to have_table_text(participant_outcome.completion_date.to_s(:govuk), col: 2)
-        is_expected.to have_table_text(tra_datetime.to_s(:govuk), col: 3)
+        is_expected.to have_table_text(participant_outcome.created_at.to_s(:govuk), col: 3)
+        is_expected.to have_table_text(tra_datetime.to_s(:govuk), col: 4)
       end
     end
   end
