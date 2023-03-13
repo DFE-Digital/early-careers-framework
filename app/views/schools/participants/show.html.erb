@@ -103,7 +103,7 @@
             Status
           </dt>
           <dd class="govuk-summary-list__value">
-            <%= render Schools::Participants::Status.new(participant_profile: @profile) %>
+            <%= render Schools::Participants::Status.new(induction_record: @induction_record, mentees: @ects) %>
           </dd>
           <dd class="govuk-summary-list__actions"></dd>
         </div>
