@@ -157,14 +157,14 @@ weight: 8
       The API uses <a href="https://www.iso.org/iso-3166-country-codes.html" class="govuk-link" rel="noreferrer noopener" target="_blank">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.
     </li>
     <li>
-      <code>teacher_catchment_country</code> - This field shows the text entered by the participant during their  NPQ online registration.
+      <code>teacher_catchment_country</code> - This field shows the text entered by the participant during their NPQ online registration.
     </li>
   </ol>
   <div>Example: A teacher from a country outside the UK uses the DfE’s digital service to register for an NPQ. The provider wants to identify the country the participant is registering from, so checks the API and finds:</div>
   </br>
   <ul class="govuk-list govuk-list--bullet">
-    <li><code>"teacher_catchment": false</code>  This means the participant is not UK-based.</li>
-    <li><code>"teacher_catchment_iso_country_code": "FRA"</code>  The provider investigates the result and identifies the participant is based in France. </li>
+    <li><code>"teacher_catchment": false</code> This means the participant is not UK-based.</li>
+    <li><code>"teacher_catchment_iso_country_code": "FRA"</code> The provider investigates the result and identifies the participant is based in France. </li>
     <li><code>"teacher_catchment_country": "France"</code> The provider views the text the participant has entered in their online registration.</li>
   </ul>
 </p>
