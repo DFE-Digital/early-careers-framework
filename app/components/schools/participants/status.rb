@@ -3,14 +3,14 @@
 module Schools
   module Participants
     class Status < BaseComponent
-      def initialize(induction_record:, mentees: [])
+      def initialize(induction_record:, has_mentees: false)
         @induction_record = induction_record
-        @mentees = mentees
+        @has_mentees = has_mentees
       end
 
       private
 
-      attr_reader :induction_record, :mentees
+      attr_reader :induction_record, :has_mentees
 
       delegate :participant_profile, to: :induction_record
       delegate :delivery_partner, to: :induction_record
@@ -51,8 +51,8 @@ module Schools
         return :training_completed if participant_completed?
         return :leaving_your_school if participant_leaving?
         return :joining_your_school if participant_joining?
-        return :mentoring if participant_profile.mentor?
         return :not_mentoring if participant_not_mentoring?
+        return :mentoring if participant_profile.mentor?
 
         :training
       end
@@ -119,7 +119,7 @@ module Schools
       end
 
       def participant_not_mentoring?
-        induction_record.mentor? && mentees.none?
+        induction_record.mentor? && !has_mentees
       end
 
       def participant_withdrawn?

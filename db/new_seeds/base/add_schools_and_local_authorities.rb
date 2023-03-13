@@ -184,7 +184,7 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                                                                  email: "Susanna.Pelo@school.com")
                                                             .build(induction_start_date: Date.new(2022, 9, 5))
                                                             .tap do |ect|
-    ect.with_eligibility
+    ect.with_eligibility(qts: false, reason: "no_qts", status: "manual_check")
     ect.with_validation_data(full_name: "Susanna Pelo", trn: "1234567", date_of_birth: Date.new(2000, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2022,
                               mentor_profile: mentor_jan,

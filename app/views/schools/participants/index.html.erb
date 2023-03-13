@@ -42,7 +42,9 @@
                                                                   cohort_id: mentor.cohort_start_year),
                                          no_visited_state: true),
                      classes: ["govuk-\!-width-one-half"]) %>
-          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile, induction_record: mentor))) %>
+          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
+                                                                      induction_record: mentor,
+                                                                      has_mentees: true))) %>
         <% end %>
 
         <% list.row do |row| %>
@@ -75,7 +77,8 @@
                                                                   cohort_id: mentor.cohort_start_year),
                                          no_visited_state: true),
                      classes: ["govuk-\!-width-one-half"]) %>
-          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile, induction_record: mentor))) %>
+          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
+                                                                      induction_record: mentor))) %>
         <% end %>
       <% end %>
     <% end %>

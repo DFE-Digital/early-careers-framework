@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class ParticipantStatusTagComponent < BaseComponent
-  def initialize(profile:, induction_record: nil)
+  def initialize(profile:, induction_record: nil, has_mentees: false)
     @profile = profile
     @induction_record = induction_record
+    @has_mentees = has_mentees
   end
 
   def call
@@ -16,7 +17,7 @@ class ParticipantStatusTagComponent < BaseComponent
 
   private
 
-  attr_reader :profile, :induction_record
+  attr_reader :profile, :induction_record, :has_mentees
 
   def tag_attributes
     # withdrawn trumps everything
@@ -47,12 +48,11 @@ class ParticipantStatusTagComponent < BaseComponent
     return { text: "Training deferred", colour: "grey" } if training_status_deferred?
     return { text: "Training completed", colour: "grey" } if participant_completed?
 
-
     # return { text: "Leaving your school", colour: "grey" } if participant_leaving? # check date on IR
     return { text: "No longer being trained", colour: "grey" } if participant_leaving?
     # return { text: "Joining your school", colour: "grey" } if participant_leaving? # check date on IR
 
-    # TODO: if number of ECTs < 1 then "Not Mentoring", colour: "blue"
+    return { text: "Not Mentoring", colour: "blue" } if participant_not_mentoring?
     return { text: "Mentoring", colour: "green" } if profile&.mentor?
 
     { text: "Training", colour: "green" }
@@ -68,6 +68,10 @@ class ParticipantStatusTagComponent < BaseComponent
 
   def participant_completed?
     induction_record&.completed_induction_status?
+  end
+
+  def participant_not_mentoring?
+    profile&.mentor? && !has_mentees
   end
 
   def participant_withdrawn_from_training?
