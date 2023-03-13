@@ -3,10 +3,7 @@
 module Schools
   module DashboardHelper
     def actions?(participants)
-      participants.orphan_mentors.any? ||
-        participants.orphan_ects.any? ||
-        participants.no_qts.any? ||
-        participants.no_induction_start_date.any?
+      participants.orphan_ects.any?
     end
 
     def ect_count(school_cohorts)
