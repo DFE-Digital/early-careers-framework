@@ -85,12 +85,15 @@ ur_school = FactoryBot.create(:seed_school,
                              name: "UR School",
                              primary_contact_email: "ur_school@digital.education.gov.uk")
 ur_local_authority = local_authorities.sample
+fhtsh_ab = AppropriateBody.find_by(name: "Flying High Teaching School Hub")
+nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
+
 ur_cohorts = cohorts
 ur_cohort_2021 = ur_cohorts.detect { |cohort| cohort.start_year == 2021 }
 ur_cohort_2022 = ur_cohorts.detect { |cohort| cohort.start_year == 2022 }
-ur_cohorts.each { |cohort| FactoryBot.create(:seed_school_cohort, school: ur_school, cohort:) }
-ur_school_cohort_2021 = ur_school.school_cohorts.for_year(2021).first
-ur_school_cohort_2022 = ur_school.school_cohorts.for_year(2022).first
+
+ur_school_cohort_2021 = FactoryBot.create(:seed_school_cohort, school: ur_school, cohort: ur_cohort_2021, appropriate_body: nta_ab)
+ur_school_cohort_2022 = FactoryBot.create(:seed_school_cohort, school: ur_school, cohort: ur_cohort_2022, appropriate_body: fhtsh_ab)
 
 ambition = LeadProvider.find_by(name: "Ambition Institute")
 ucl = LeadProvider.find_by(name: "UCL Institute of Education")
@@ -131,9 +134,6 @@ ur_induction_programme_2022 = NewSeeds::Scenarios::InductionProgrammes::Fip
                                 .build
                                 .with_partnership(partnership: ur_partnership_2022)
                                 .induction_programme
-
-fhtsh_ab = AppropriateBody.find_by(name: "Flying High Teaching School Hub")
-nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
 
 FactoryBot.create(:seed_school_local_authority, school: ur_school, local_authority: ur_local_authority)
 FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induction_coordinator_profile|
