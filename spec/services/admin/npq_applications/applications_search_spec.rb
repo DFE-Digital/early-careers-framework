@@ -7,9 +7,10 @@ RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedul
 
   let(:school_1) { create(:school, name: "Greendale School") }
   let(:school_2) { create(:school, name: "Westview School") }
-  let!(:application_1) { create(:npq_application, school_urn: school_1.urn) }
-  let!(:application_2) { create(:npq_application, school_urn: school_2.urn) }
-  let(:user_1) { application_1.user }
+  let!(:application_1) { create(:npq_application, user: user_1, school_urn: school_1.urn) }
+  let!(:application_2) { create(:npq_application, user: user_2, school_urn: school_2.urn) }
+  let(:user_1) { create(:user, full_name: "John Doe") }
+  let(:user_2) { create(:user, full_name: "Jane Doe") }
 
   subject { described_class.new(query_string:) }
 
@@ -39,10 +40,6 @@ RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedul
     end
 
     context "when partial name match" do
-      before do
-        user_1.update(full_name: Faker::Name.name)
-      end
-
       let(:query_string) { user_1.full_name[0, 3] }
 
       it "returns the hit" do
