@@ -15,13 +15,13 @@ module NewSeeds
           def build(induction_start_date: school_cohort.cohort.academic_year_start_date, **_profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
             @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school)
-            @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
+            @participant_identity = FactoryBot.create(:seed_participant_identity, user:, email: user.email)
             @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
                                                      participant_identity:,
                                                      teacher_profile:,
                                                      school_cohort:,
-                                                     induction_start_date:)
-
+                                                     induction_start_date:,
+                                                     **profile_args)
             self
           end
 
@@ -30,8 +30,10 @@ module NewSeeds
             self
           end
 
-          def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active", preferred_identity: nil, appropriate_body: nil)
-            preferred_identity ||= FactoryBot.create(:seed_participant_identity, user: participant_profile.user)
+          def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil,
+                                   induction_status: "active", training_status: "active", preferred_identity: nil,
+                                   appropriate_body: nil)
+            preferred_identity ||= participant_profile.participant_identity
 
             FactoryBot.create(
               :seed_induction_record,

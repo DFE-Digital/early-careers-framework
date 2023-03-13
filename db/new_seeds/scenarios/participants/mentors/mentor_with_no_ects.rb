@@ -18,7 +18,7 @@ module NewSeeds
             school = school_cohort.school
             @user = @supplied_participant_identity&.user || FactoryBot.create(:seed_user, **new_user_attributes)
             @teacher_profile = @supplied_teacher_profile || FactoryBot.create(:seed_teacher_profile, user:, school:)
-            participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:)
+            @participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:)
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
                                                      participant_identity:,
                                                      school_cohort:,
@@ -94,6 +94,7 @@ module NewSeeds
           attr_reader :new_user_attributes,
                       :school_cohort,
                       :teacher_profile,
+                      :participant_identity,
                       :user
         end
       end
