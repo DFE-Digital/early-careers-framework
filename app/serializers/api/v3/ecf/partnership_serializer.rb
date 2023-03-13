@@ -13,11 +13,11 @@ module Api
         set_type :'partnership-confirmation'
 
         attribute :cohort do |partnership|
-          partnership.cohort.start_year
+          partnership.cohort.display_name
         end
 
         attribute :urn do |partnership|
-          partnership.school&.urn
+          partnership.school.urn
         end
 
         attributes :delivery_partner_id
@@ -27,8 +27,7 @@ module Api
         end
 
         attribute :status do |partnership|
-          "active" if partnership.active?
-          "challenged" if partnership.challenged?
+          partnership.challenged? ? "challenged" : "active"
         end
 
         attribute :challenged_reason, &:challenge_reason
@@ -41,12 +40,12 @@ module Api
           partnership.school&.contact_email
         end
 
-        attribute :updated_at do |partnership|
-          partnership.updated_at.rfc3339
-        end
-
         attribute :created_at do |partnership|
           partnership.created_at.rfc3339
+        end
+
+        attribute :updated_at do |partnership|
+          partnership.updated_at.rfc3339
         end
       end
     end
