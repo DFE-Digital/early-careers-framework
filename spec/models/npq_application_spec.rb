@@ -19,7 +19,7 @@ RSpec.describe NPQApplication, type: :model do
       it "fires NPQ::StreamBigQueryEnrollmentJob" do
         expect {
           subject
-        }.to change(enqueued_jobs, :count).by(1)
+        }.to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob).once
       end
     end
 
@@ -29,7 +29,19 @@ RSpec.describe NPQApplication, type: :model do
 
         expect {
           subject.update(lead_provider_approval_status: "accepted")
-        }.to change(enqueued_jobs, :count).by(1)
+        }.to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob).once
+      end
+    end
+
+    context "when cohort_id is modified" do
+      let(:cohort) { create(:cohort) }
+
+      it "fires NPQ::StreamBigQueryEnrollmentJob" do
+        subject
+
+        expect {
+          subject.update(cohort:)
+        }.to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob).once
       end
     end
 
@@ -39,7 +51,7 @@ RSpec.describe NPQApplication, type: :model do
 
         expect {
           subject.touch
-        }.not_to change(enqueued_jobs, :count)
+        }.not_to have_enqueued_job(NPQ::StreamBigQueryEnrollmentJob)
       end
     end
   end
