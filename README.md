@@ -12,6 +12,7 @@
 - Yarn 1.12.x
 - Docker
 - Redis 6.2
+- entr (available via [Homebrew](https://formulae.brew.sh/formula/entr))
 
 ### Without docker
 
