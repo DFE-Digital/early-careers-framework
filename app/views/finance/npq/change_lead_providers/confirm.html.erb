@@ -18,7 +18,7 @@
     </div>
 
     <h2 class="govuk-heading-m">Now save this change</h2>
-    <p class="govuk-body">By submitting this request, you are confirming that this change has been approved by the lead providers and DfE contract management.</p>
+    <p class="govuk-body">By submitting this request, you are confirming that this change has been approved by lead providers and DfE contract management.</p>
 
     <%= form_for @change_lead_provider_form, url: finance_participant_profile_npq_change_lead_provider_path(@participant_profile), method: :put do |f| %>
       <%= f.hidden_field :lead_provider_id %>

@@ -15,7 +15,7 @@
     <%= form_for @change_lead_provider_form, url: finance_participant_profile_npq_change_lead_provider_path(@participant_profile) do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_collection_select(:lead_provider_id, @change_lead_provider_form.lead_provider_options, :id, :name, label: { text: "Select the new lead provider", tag: 'h2', size: "m"}, options: { include_blank: true }) %>
+      <%= f.govuk_collection_select(:lead_provider_id, @change_lead_provider_form.lead_provider_options, :id, :name, label: { text: "Select a new lead provider", tag: 'h2', size: "m"}, options: { include_blank: true }) %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>
