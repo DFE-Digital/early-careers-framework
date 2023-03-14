@@ -26,7 +26,15 @@
   <% summary_list.row do |row| %>
     <% row.key { "Lead provider" } %>
     <% row.value { pp.npq_application&.npq_lead_provider&.name } %>
-    <% row.action(text: :none) %>
+    <% if Finance::NPQ::ChangeLeadProviderForm.new(participant_profile: pp).change_lead_provider? %>
+      <% row.action(
+        text: "Change",
+        visually_hidden_text: "lead provider",
+        href: new_finance_participant_profile_npq_change_lead_provider_path(pp))
+      %>
+    <% else %>
+      <% row.action(text: :none) %>
+    <% end %>
   <% end %>
 
   <% summary_list.row do |row| %>

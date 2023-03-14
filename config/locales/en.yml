@@ -385,6 +385,10 @@ en:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
+        finance/npq/change_lead_provider_form:
+          attributes:
+            lead_provider_id:
+              inclusion: Select a valid lead provider
         finance/change_lead_provider_approval_status_form:
           attributes:
             confirmation:
