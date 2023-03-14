@@ -17,7 +17,7 @@ properties:
       - ecf-mentor
     example: ecf-induction
   cohort:
-    description: "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified"
+    description: "Providers may not change the current value for ECF participants. Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year."
     type: string
     example: "2021"
 required:

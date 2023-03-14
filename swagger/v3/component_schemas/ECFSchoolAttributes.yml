@@ -17,7 +17,7 @@ properties:
     type: string
     example: "123456"
   cohort:
-    description: "The cohort the school is in"
+    description: "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year."
     type: string
     example: 2021
   in_partnership:
