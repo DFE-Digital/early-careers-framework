@@ -32,8 +32,6 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
     if !@nomination_request_form.school.can_access_service?
       redirect_to not_eligible_request_nomination_invite_path
-    elsif @nomination_request_form.school.registered?
-      redirect_to already_nominated_request_nomination_invite_path
     elsif @nomination_request_form.reached_email_limit.present?
       redirect_to limit_reached_request_nomination_invite_path
     else
@@ -53,6 +51,7 @@ class Nominations::RequestNominationInviteController < ApplicationController
 
   def create
     @nomination_request_form.save!
+    session[:nomination_request_school_email] = @nomination_request_form.school.primary_contact_email
     session.delete(:nomination_request_form)
 
     redirect_to success_request_nomination_invite_path
@@ -60,7 +59,9 @@ class Nominations::RequestNominationInviteController < ApplicationController
     redirect_to limit_reached_request_nomination_invite_path
   end
 
-  def success; end
+  def success
+    @school_email = session[:nomination_request_school_email]
+  end
 
 private
 

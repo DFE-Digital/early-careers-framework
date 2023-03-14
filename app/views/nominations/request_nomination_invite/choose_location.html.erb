@@ -17,9 +17,8 @@
                 options: { include_blank: true },
                 class: ["js-location-select"]) do %>
 
-                <p class="govuk-body">This is the authority or council in your area. For example, Gloucestershire or Barnet. Not sure?
-                <%= govuk_link_to "Find your school on our register (opens in a new tab)", "https://get-information-schools.service.gov.uk/", target: :_blank, rel: "noopener noreferrer", class: "govuk-link govuk-link--no-visited-state" %>
-                <% end %>
+            <p class="govuk-hint">This is the local authority or council in your area.</p>
+    <% end %>
 
         <%= f.govuk_submit "Continue" %>
         <% end %>
