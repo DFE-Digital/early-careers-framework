@@ -13,7 +13,7 @@ module NPQ
       rows = [
         {
           "application_ecf_id" => npq_application.id,
-          "cohort" => npq_application.cohort.start_year,
+          "cohort" => npq_application.cohort&.start_year,
           "status" => npq_application.lead_provider_approval_status,
           "updated_at" => npq_application.updated_at,
           "employer_name" => npq_application.employer_name,

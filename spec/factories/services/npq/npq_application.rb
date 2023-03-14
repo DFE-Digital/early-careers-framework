@@ -46,7 +46,7 @@ FactoryBot.define do
           funding_eligiblity_status_code:,
           itt_provider:,
           lead_mentor:,
-          cohort: cohort.start_year,
+          cohort: cohort&.start_year,
         },
         npq_course_id: npq_course.id,
         npq_lead_provider_id: npq_lead_provider.id,

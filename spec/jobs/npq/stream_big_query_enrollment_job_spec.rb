@@ -32,5 +32,22 @@ RSpec.describe NPQ::StreamBigQueryEnrollmentJob do
         "employment_role" => employment_role,
       }], ignore_unknown: true)
     end
+
+    context "when there is no cohort" do
+      let(:npq_application) { create(:npq_application, cohort: nil, employment_role:, employer_name:) }
+
+      it "sends correct data to BigQuery" do
+        described_class.perform_now(npq_application_id: npq_application.id)
+
+        expect(table).to have_received(:insert).with([{
+          "application_ecf_id" => npq_application.id,
+          "cohort" => nil,
+          "status" => "pending",
+          "updated_at" => npq_application.updated_at,
+          "employer_name" => employer_name,
+          "employment_role" => employment_role,
+        }], ignore_unknown: true)
+      end
+    end
   end
 end
