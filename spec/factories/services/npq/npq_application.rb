@@ -7,7 +7,6 @@ FactoryBot.define do
     end
     npq_course                            { create(:npq_course) }
     npq_lead_provider                     { create(:cpd_lead_provider, :with_npq_lead_provider).npq_lead_provider }
-    cohort                                { Cohort.current || create(:cohort, :current) }
     headteacher_status                    { NPQApplication.headteacher_statuses.keys.sample }
     funding_choice                        { NPQApplication.funding_choices.keys.sample }
     works_in_school                       { true }
@@ -26,6 +25,8 @@ FactoryBot.define do
     itt_provider                          { "University of Southampton" }
     lead_mentor                           { true }
 
+    association :cohort, factory: %i[cohort current]
+
     initialize_with do
       NPQ::BuildApplication.call(
         npq_application_params: {
@@ -42,11 +43,15 @@ FactoryBot.define do
           teacher_reference_number_verified:,
           teacher_catchment:,
           teacher_catchment_country:,
+          funding_eligiblity_status_code:,
+          itt_provider:,
+          lead_mentor:,
+          cohort: cohort.start_year,
         },
         npq_course_id: npq_course.id,
         npq_lead_provider_id: npq_lead_provider.id,
         user_id: user.id,
-      ).tap(&:save!)
+      )
     end
 
     trait :funded do

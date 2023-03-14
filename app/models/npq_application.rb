@@ -90,7 +90,7 @@ private
   end
 
   def push_enrollment_to_big_query
-    if (saved_changes.keys & %w[id lead_provider_approval_status]).present?
+    if (saved_changes.keys & %w[cohort_id id lead_provider_approval_status]).present?
       NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
     end
   end
