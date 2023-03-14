@@ -2,14 +2,19 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let!(:partnership) { create(:partnership, lead_provider:) }
+
+  let(:params) {}
+
   path "/api/v3/partnerships/ecf" do
-    get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF partnerships" do
+    get "Retrieve multiple ECF partnerships" do
       operationId :partnerships_ecf_get
       tags "ECF partnerships"
       security [bearerAuth: []]
@@ -50,8 +55,10 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
         run_test!
       end
     end
+  end
 
-    post "<b>Note, this endpoint is new.</b><br/>Create an ECF partnership with a school and delivery partner" do
+  path "/api/v3/partnerships/ecf", api_v3: true do
+    post "Create an ECF partnership with a school and delivery partner" do
       operationId :partnerships_ecf_post
       tags "ECF partnerships"
       security [bearerAuth: []]
@@ -121,8 +128,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
     end
   end
 
-  path "/api/v3/partnerships/ecf/{id}" do
-    get "<b>Note, this endpoint is new.</b><br/>Get a single ECF partnership" do
+  path "/api/v3/partnerships/ecf/{id}", api_v3: true do
+    get "Get a single ECF partnership" do
       operationId :partnerships_ecf_get
       tags "ECF partnerships"
       security [bearerAuth: []]
@@ -148,7 +155,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
       end
     end
 
-    put "<b>Note, this endpoint is new.</b><br/>Update a partnership’s delivery partner in an existing partnership in a cohort" do
+    put "Update a partnership’s delivery partner in an existing partnership in a cohort" do
       operationId :partnerships_ecf_put
       tags "ECF partnerships"
       security [bearerAuth: []]

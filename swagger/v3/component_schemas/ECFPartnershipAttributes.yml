@@ -58,6 +58,7 @@ properties:
     description: "The name of the induction tutor at the school you are in partnership with"
     type: string
     example: "John Doe"
+    nullable: true
   induction_tutor_email:
     description: "The email address of the induction tutor at the school you are in partnership with"
     type: string

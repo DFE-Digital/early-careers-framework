@@ -70,10 +70,10 @@ if defined?(Rswag::Specs)
   module Rswag
     module Specs
       module ExampleGroupHelpers
-        def schema(value, content_type: "application/json")
-          content_hash = { content_type => { schema: value } }
-          metadata[:response][:content] = content_hash
-        end
+        # def schema(value, content_type: "application/json")
+        #   content_hash = { content_type => { schema: value } }
+        #   metadata[:response][:content] = content_hash
+        # end
       end
 
       module ExampleGroupHelpersExtensions
