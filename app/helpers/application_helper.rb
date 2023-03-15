@@ -75,6 +75,13 @@ module ApplicationHelper
     "#{name}#{name[-1] == 's' ? '’' : '’s'}"
   end
 
+  def simple_yes_no_options
+    [
+      OpenStruct.new(id: "yes", name: "Yes"),
+      OpenStruct.new(id: "no", name: "No"),
+    ]
+  end
+
 private
 
   def post_2020_ecf_participant?(user)

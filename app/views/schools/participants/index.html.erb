@@ -12,9 +12,9 @@
 
     <div class="govuk-inset-text">
       <ul class="govuk-list">
-          <li><%= govuk_link_to "Add an ECT or mentor", start_schools_add_participants_path(cohort_id: @school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %></li>
+          <li><%= govuk_link_to "Add an ECT or mentor", who_to_add_start_schools_participants_path(cohort_id: @school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %></li>
         <% unless current_user.mentor? %>
-          <li><%= govuk_link_to "Add yourself as a mentor", start_sit_mentor_schools_add_participants_path(cohort_id: @school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %></li>
+          <li><%= govuk_link_to "Add yourself as a mentor", "#", class: "govuk-link--no-visited-state" %></li>
         <% end %>
       </ul>
     </div>

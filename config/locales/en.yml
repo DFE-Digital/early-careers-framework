@@ -318,6 +318,10 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
+        schools/who_to_add_form:
+          attributes:
+            participant_type:
+              inclusion: "Select whether to add an ECT or a Mentor"
         schools/transferring_participant_form:
           attributes:
             full_name:

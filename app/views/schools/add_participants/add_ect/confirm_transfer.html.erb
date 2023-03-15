@@ -1,0 +1,25 @@
+<% title = "Confirm #{@wizard.full_name} is moving from another school" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <p class="govuk-body govuk-!-margin-bottom-7">
+      Our records show this person is already registered on an ECF-based training progamme at a different school.
+    </p>
+
+    <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.hidden_field :transfer_confirmed, value: "1" %>
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Confirm" %> <%= govuk_link_to("They’re not moving school", @wizard.show_path_for(step: :cannot_add)) %>
+      </div>
+    <% end %>
+  </div>
+</div>

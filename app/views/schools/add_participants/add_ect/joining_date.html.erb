@@ -1,0 +1,28 @@
+<% title = "When is #{@wizard.full_name} moving to your school?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+
+    <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_date_field :start_date,
+        width: "two-thirds",
+        legend: { text: title, tag: "h1", size: "xl", class: "govuk-heading-xl" },
+        hint: { text: "For example, 14 7 2023" } do %>
+
+        <p class="govuk-body">
+          This is the date when <%= @wizard.full_name %> started, or will start, at your school.
+          This is not when their training programme formally started.
+        </p>
+      <% end %>
+
+      <%= f.govuk_submit "Continue" %>
+    <% end %>
+  </div>
+</div>

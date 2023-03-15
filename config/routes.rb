@@ -635,14 +635,24 @@ Rails.application.routes.draw do
               # put "add/:step/change", to: "add_participant_wizard#update", as: :add_participant_wizard_update_change, changing_answer: "1"
               # get "add/complete/:participant_profile_id", to: "add_participant_wizard#complete", as: :complete
 
-              wizard_scope :add_participant_wizard, :add do
-                get "/", to: "add_participant_wizard#show", as: :start, step: "who"
-                get "/", to: "add_participant_wizard#show", as: :start_sit_mentor, step: "yourself"
-                get "complete/:participant_profile_id", to: "add_participant_wizard#complete", as: :complete
-              end
+              scope module: :add_participants do
+                get "add", to: "who_to_add#new", as: :who_to_add_start
+                post "add", to: "who_to_add#create", as: :chosen_who_to_add_start
 
-              appropriate_body_selection_routes :add_participant_wizard
-              get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participant_wizard
+                wizard_scope :add_ect do
+                  get "/", to: "add_ect#show", as: :start, step: "what_we_need"
+                  get "complete/:participant_profile_id", to: "add_ect#complete", as: :complete
+                  appropriate_body_selection_routes :add_ect
+                  get :change_appropriate_body, path: "change-appropriate-body", controller: :add_ect
+                end
+
+                wizard_scope :add_mentor do
+                  get "/", to: "add_mentor#show", as: :start, step: "what_we_need"
+                  get "complete/:participant_profile_id", to: "add_mentor#complete", as: :complete
+                  appropriate_body_selection_routes :add_mentor
+                  get :change_appropriate_body, path: "change-appropriate-body", controller: :add_mentor
+                end
+              end
             end
 
             # collection do

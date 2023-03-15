@@ -23,6 +23,10 @@ class WizardStep
     false
   end
 
+  def revisit_next_step?
+    false
+  end
+
   def before_render; end
   def after_render; end
 
