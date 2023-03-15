@@ -1,4 +1,6 @@
-<h1><%= @application.user.full_name %></h1>
+<h1 class="govuk-heading-xl"><%= @application.user.full_name %></h1>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_npq_applications_edge_cases_path) %>
 
 <%=
   govuk_summary_list do |sl|
@@ -23,28 +25,45 @@
     end
 
     sl.row do |row|
+      row.key(text: "Lead provider approval status")
+      row.value(text: @application.lead_provider_approval_status)
+    end
+
+    sl.row do |row|
       row.key(text: "Eligible for funding")
-      row.value(text: bool_to_tag(@application.eligible_for_funding))
+      row.value(text: boolean_red_green_tag(@application.eligible_for_funding))
+      row.action(
+        text: 'edit',
+        href: edit_admin_npq_applications_eligible_for_funding_path(@application)
+      )
     end
 
     sl.row do |row|
       row.key(text: "Funding eligibility status code")
-      row.value(text: @application.funding_eligiblity_status_code&.humanize)
+      if @application.eligible_for_funding?
+        row.value(text: @application.funding_eligiblity_status_code&.humanize)
+      else
+        row.value(text: @application.funding_eligiblity_status_code&.humanize)
+        row.action(
+          text: 'edit',
+          href: edit_admin_npq_applications_eligibility_status_path(@application)
+        )
+      end
     end
 
     sl.row do |row|
       row.key(text: "Employment type")
-      row.value(text: @application.employer_type)
+      row.value(text: @application.employment_type || "-")
     end
 
     sl.row do |row|
       row.key(text: "Employment name")
-      row.value(text: @application.employer_name)
+      row.value(text: @application.employer_name || "-")
     end
 
     sl.row do |row|
       row.key(text: "Employment role")
-      row.value(text: @application.employer_role)
+      row.value(text: @application.employment_role || "-")
     end
 
     sl.row do |row|
@@ -79,9 +98,3 @@
     end
   end
 %>
-
-<%= govuk_button_link_to(
-  "Set eligibility status",
-  edit_admin_npq_applications_edge_case_path(@application),
-  secondary: true,
-) %>

@@ -436,8 +436,10 @@ Rails.application.routes.draw do
 
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
         resources :applications, only: %i[index show]
-        resources :edge_cases, controller: "applications/edge_cases"
-        resources :notes, only: %i[edit update]
+        resources :edge_cases, controller: "applications/edge_cases", only: %i[index show]
+        resources :eligible_for_funding, controller: "applications/eligible_for_funding", only: %i[edit update]
+        resources :eligibility_status, controller: "applications/eligibility_status", only: %i[edit update]
+        resources :notes, controller: "applications/notes", only: %i[edit update]
       end
     end
   end

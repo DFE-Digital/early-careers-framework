@@ -44,6 +44,13 @@ class NPQApplication < ApplicationRecord
   scope :does_not_work_in_childcare, -> { where(works_in_childcare: false) }
   scope :not_eligible_for_funding, -> { where(eligible_for_funding: false) }
   scope :no_institution, -> { where(funding_eligiblity_status_code: "no_institution") }
+  scope :edge_case_statuses, lambda {
+                               where(funding_eligiblity_status_code: %w[re_register
+                                                                        no_institution
+                                                                        awaiting_more_information
+                                                                        marked_ineligible_by_policy
+                                                                        marked_funded_by_policy])
+                             }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 

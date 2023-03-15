@@ -596,6 +596,11 @@ en:
           title: NPQ Application
           details: Details
           tabs: Tabs
+        edge_cases:
+          index:
+            title: NPQ Applications
+          show:
+            title: NPQ Applications
         layout:
           applications: Applications
           title: NPQ Applications
