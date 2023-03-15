@@ -25,6 +25,11 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
       let(:preferred_identity) { create(:participant_identity, :secondary, user: participant_profile.user, email: preferred_email) }
       let!(:another_induction_record) { create(:induction_record, induction_programme:, participant_profile:, preferred_identity:) }
       let(:external_identifier) { participant_profile.participant_identity.external_identifier }
+      let(:user_id) { participant_profile.participant_identity.user_id }
+
+      it "returns the user id of the participant identity" do
+        expect(subject.induction_records.first.user_id).to eq(user_id)
+      end
 
       it "returns the original external identifier of the participant identity" do
         expect(subject.induction_records.first.external_identifier).to eq(external_identifier)
@@ -40,10 +45,20 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
       let(:participant_profile) { create(:ect_participant_profile, mentor_profile_id: mentor_participant_profile.id) }
       let(:mentor_external_identifier) { mentor_participant_profile.participant_identity.external_identifier }
       let(:external_identifier) { participant_profile.participant_identity.external_identifier }
+      let(:user_id) { participant_profile.participant_identity.user_id }
+      let(:mentor_user_id) { mentor_participant_profile.participant_identity.user_id }
       let!(:induction_record) { create(:induction_record, induction_programme:, participant_profile:, mentor_profile_id: mentor_participant_profile.id) }
 
       it "returns the mentor external identifier" do
         expect(subject.induction_records.first.mentor_external_identifier).to eq(mentor_external_identifier)
+      end
+
+      it "returns the mentor user id" do
+        expect(subject.induction_records.first.mentor_user_id).to eq(mentor_user_id)
+      end
+
+      it "returns the user id" do
+        expect(subject.induction_records.first.user_id).to eq(user_id)
       end
 
       it "returns the external identifier" do

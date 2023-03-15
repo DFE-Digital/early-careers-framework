@@ -19,6 +19,7 @@ class FeatureFlag
     eligibility_notifications
     api_v3
     appropriate_bodies
+    external_identifier_to_user_id_lookup
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

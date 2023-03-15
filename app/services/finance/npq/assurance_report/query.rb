@@ -20,7 +20,7 @@ module Finance
           <<~EOSQL
             SELECT
               pd.id                                   AS id,
-              pi.external_identifier                  AS participant_id,
+              #{user_id_or_external_identifier}       AS participant_id,
               u.full_name                             AS participant_name,
               tp.trn                                  AS trn,
               c.identifier                            AS course_identifier,
@@ -65,6 +65,12 @@ module Finance
 
         def where_values
           ParticipantDeclaration::NPQ.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
+        end
+
+        def user_id_or_external_identifier
+          return "pi.external_identifier" unless FeatureFlag.active?(:external_identifier_to_user_id_lookup)
+
+          "pi.user_id"
         end
       end
     end

@@ -74,6 +74,18 @@ RSpec.shared_examples "validating a participant for a change schedule" do
       expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is already on the profile")
     end
   end
+
+  context "when the participant has a different user ID to external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+
+    before { participant_profile.update!(participant_identity:) }
+
+    it "is invalid and returns an error message" do
+      is_expected.to be_invalid
+
+      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
+    end
+  end
 end
 
 RSpec.shared_examples "validating a participant is not already withdrawn for a change schedule" do
@@ -111,7 +123,7 @@ RSpec.shared_examples "changing the schedule of a participant" do
   end
 end
 
-RSpec.describe ChangeSchedule, :with_default_schedules do
+RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
   let(:participant_id) { participant_profile.participant_identity.external_identifier }
   let(:params) do
     {

@@ -18,11 +18,22 @@ module Api
       subject { described_class.new(query_result) }
 
       describe "#id" do
-        let(:external_identifier) { Faker::Internet.uuid }
-        let(:fields) { { external_identifier: } }
+        context "when feature flag is off", with_feature_flags: { external_identifier_to_user_id_lookup: nil } do
+          let(:external_identifier) { Faker::Internet.uuid }
+          let(:fields) { { external_identifier: } }
 
-        it "returns the external identifier" do
-          expect(subject.serializable_hash[:data][:id]).to eql(external_identifier)
+          it "returns the external identifier" do
+            expect(subject.serializable_hash[:data][:id]).to eql(external_identifier)
+          end
+        end
+
+        context "when feature flag is on", with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+          let(:user_id) { Faker::Internet.uuid }
+          let(:fields) { { user_id: } }
+
+          it "returns the user id" do
+            expect(subject.serializable_hash[:data][:id]).to eql(user_id)
+          end
         end
       end
 
@@ -64,31 +75,63 @@ module Api
       end
 
       describe "#mentor_id" do
-        let(:external_identifier) { Faker::Internet.uuid }
+        context "when feature flag is off", with_feature_flags: { external_identifier_to_user_id_lookup: nil } do
+          let(:external_identifier) { Faker::Internet.uuid }
 
-        context "when participant is an ECT" do
-          let(:fields) do
-            {
-              mentor_external_identifier: external_identifier,
-              participant_profile_type: "ParticipantProfile::ECT",
-            }
+          context "when participant is an ECT" do
+            let(:fields) do
+              {
+                mentor_external_identifier: external_identifier,
+                participant_profile_type: "ParticipantProfile::ECT",
+              }
+            end
+
+            it "returns the mentor external identifier" do
+              expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to eql(external_identifier)
+            end
           end
 
-          it "returns the mentor external identifier" do
-            expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to eql(external_identifier)
+          context "when participant is a Mentor" do
+            let(:fields) do
+              {
+                mentor_external_identifier: external_identifier,
+                participant_profile_type: "ParticipantProfile::Mentor",
+              }
+            end
+
+            it "returns nil" do
+              expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to be_nil
+            end
           end
         end
 
-        context "when participant is a Mentor" do
-          let(:fields) do
-            {
-              mentor_external_identifier: external_identifier,
-              participant_profile_type: "ParticipantProfile::Mentor",
-            }
+        context "when feature flag is on", with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+          let(:user_id) { Faker::Internet.uuid }
+
+          context "when participant is an ECT" do
+            let(:fields) do
+              {
+                mentor_user_id: user_id,
+                participant_profile_type: "ParticipantProfile::ECT",
+              }
+            end
+
+            it "returns the mentor user id" do
+              expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to eql(user_id)
+            end
           end
 
-          it "returns preferred identity email" do
-            expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to be_nil
+          context "when participant is a Mentor" do
+            let(:fields) do
+              {
+                mentor_user_id: user_id,
+                participant_profile_type: "ParticipantProfile::Mentor",
+              }
+            end
+
+            it "returns nil" do
+              expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to be_nil
+            end
           end
         end
       end

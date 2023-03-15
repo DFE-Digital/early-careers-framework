@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::ECF::AssuranceReport::Query, :with_default_schedules do
+RSpec.describe Finance::ECF::AssuranceReport::Query, :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:statement)         { create(:ecf_statement, cpd_lead_provider:) }
 
@@ -29,7 +29,7 @@ RSpec.describe Finance::ECF::AssuranceReport::Query, :with_default_schedules do
 
     it "surfaces the preferred external identifier" do
       participant_declarations = query.participant_declarations
-      expect(participant_declarations.first.participant_id).to eq(participant_identity.external_identifier)
+      expect(participant_declarations.first.participant_id).to eq(participant_identity.user_id_or_external_identifier)
     end
 
     context "with multiple participant identities" do
@@ -48,7 +48,7 @@ RSpec.describe Finance::ECF::AssuranceReport::Query, :with_default_schedules do
 
       it "surfaces the preferred external identifier" do
         participant_declarations = query.participant_declarations
-        expect(participant_declarations.first.participant_id).to eq(participant_identity.external_identifier)
+        expect(participant_declarations.first.participant_id).to eq(participant_identity.user_id_or_external_identifier)
       end
     end
   end

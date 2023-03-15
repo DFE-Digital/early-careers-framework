@@ -9,6 +9,25 @@ weight: 8
   If you have any questions or comments about these notes, please contact DfE via Slack or email.
 </p>
 
+<h2 class="govuk-heading-l" id="15-3-2023">15th March 2023</h2>
+<p class="govuk-body-m">
+  Providers will see reduced errors and inconsistencies associated with <code>participant_id</code> values.
+  </br>
+  </br>
+  Providers have previously reported seeing different <code>participant_id</code> values associated with a single participant. For example, an NPQ provider may have seen a <code>participant_id</code> value of XXX via the applications endpoint, but when submitting a declaration for the same participant, the response body returned a participant_id value of YYY.
+  </br>
+  </br>
+  These types of inconsistencies were appearing because the API was exposing the underpinning ECF and NPQ programme data models. The DfE has now updated the API logic to align <code>participant_id</code> values across various API endpoints and prevent related issues.
+  </br>
+  </br>
+  Note, providers may need to update IDs held on their systems. The DfE will contact providers with further instruction if:
+  </br>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>they need to reconcile multiple <code>participant_ids</code> into a single true <code>participant_id</code></li>
+    <li>they need to replace a <code>participant_id</code> as a result of this API release</li>
+  </ul>
+  While the expected volume of future instances is expected to be very low (where single participants are registered with multiple <code>participant_ids</code>), providers who identify issues should contact the DfE via existing support channels. The DfE will fix errors by 'retiring' one of the IDs, then associating all records and data under the remaining ID. The DfE will inform providers as to which <code>participant_id</code> they will need to record on their systems.
+</p>
 <h2 class="govuk-heading-l" id="14-3-2023">14th March 2023</h2>
 <p class="govuk-body-m">
   DfE has updated the definition of the cohort attribute in the API guidance and schema definitions for ECF and NPQ. Note, this update is limited to definitions and guidance. There has been no change to API functionality or business rules.
@@ -42,9 +61,9 @@ weight: 8
     <li><b>New endpoints will become available</b> - To address feedback from providers, DfE will avoid adding new attributes to existing endpoints (and their response bodies) where possible, and will instead create new endpoints to meet provider needs.</code></li>
     <li><b>ECF providers will receive nested participant responses</b> - To support the need to see participant details for those that train as an ECT and/then as a mentor with the same provider, the API will present nested data for ECF participant responses.</li>
     <li><b>ECF providers will be able to view transfer details</b> - New endpoints will allow providers to view details for any participants (who they train or will train) who have transferred to new schools. Existing ECF participant endpoints will present a <code>participant_status</code> attribute which will identify participants that are leaving or joining.</li>
-    <li><b>ECF providers will be able to view details for ‘unfunded’ mentors</b> - New endpoints will allow providers to view details for mentors linked to ECTs, but who are not eligible for DfE funding.</li>
+    <li><b>ECF providers will be able to view details for 'unfunded' mentors</b> - New endpoints will allow providers to view details for mentors linked to ECTs, but who are not eligible for DfE funding.</li>
     <li><b>ECF providers will be able to identify schools they could partner with</b> - New endpoints will allow providers to view details for schools they could contact to partner with.</li>
-    <li><b>ECF and NPQ providers will see new attributes when using declaration endpoints</b> - The API will continue to support NPQ and ECF declarations via existing endpoints. Providers may therefore see <code>null</code> values for attributes that do not apply to their declaration’s course type. For example, the <code>delivery_partner_id</code> attribute for an NPQ declaration will always be <code>null</code>.</li>
+    <li><b>ECF and NPQ providers will see new attributes when using declaration endpoints</b> - The API will continue to support NPQ and ECF declarations via existing endpoints. Providers may therefore see <code>null</code> values for attributes that do not apply to their declaration's course type. For example, the <code>delivery_partner_id</code> attribute for an NPQ declaration will always be <code>null</code>.</li>
   </ul>
 </p>
 <h2 class="govuk-heading-l" id="24-2-2023">24th February 2023</h2>
@@ -175,7 +194,7 @@ weight: 8
       <code>teacher_catchment_country</code> - This field shows the text entered by the participant during their NPQ online registration.
     </li>
   </ol>
-  <div>Example: A teacher from a country outside the UK uses the DfE’s digital service to register for an NPQ. The provider wants to identify the country the participant is registering from, so checks the API and finds:</div>
+  <div>Example: A teacher from a country outside the UK uses the DfE's digital service to register for an NPQ. The provider wants to identify the country the participant is registering from, so checks the API and finds:</div>
   </br>
   <ul class="govuk-list govuk-list--bullet">
     <li><code>"teacher_catchment": false</code> This means the participant is not UK-based.</li>
@@ -249,7 +268,7 @@ weight: 8
 <h2 class="govuk-heading-l" id="2-8-2022">2nd August 2022</h2>
 <p class="govuk-body-m">
   <ul class="govuk-list govuk-list--bullet">
-    <li>Removed the logic where the API would nullify the <code>email</code> field on the ECF and NPQ participant responses where the <code>status</code> is withdrawn. Now, where <code>status</code> is withdrawn, we will continue to display the participant’s <code>email</code>. Generally, the <code>status</code> will show withdrawn when a School Induction Tutor has withdrawn or “deleted” a participant in the schools user interface or “portal”. Where <code>email</code> was nullified, they will now be visible again.</li>
+    <li>Removed the logic where the API would nullify the <code>email</code> field on the ECF and NPQ participant responses where the <code>status</code> is withdrawn. Now, where <code>status</code> is withdrawn, we will continue to display the participant's <code>email</code>. Generally, the <code>status</code> will show withdrawn when a School Induction Tutor has withdrawn or “deleted” a participant in the schools user interface or “portal”. Where <code>email</code> was nullified, they will now be visible again.</li>
   </ul>
 </p>
 

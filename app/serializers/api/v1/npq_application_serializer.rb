@@ -27,7 +27,7 @@ module Api
                  :works_in_school
 
       attribute(:participant_id) do |object|
-        object.participant_identity.external_identifier
+        object.participant_identity.user_id_or_external_identifier
       end
 
       attribute(:teacher_reference_number_validated, &:teacher_reference_number_verified)

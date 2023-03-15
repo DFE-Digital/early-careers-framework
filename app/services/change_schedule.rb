@@ -43,7 +43,12 @@ class ChangeSchedule
   end
 
   def participant_identity
-    @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+    @participant_identity ||= ParticipantIdentityResolver
+                                .call(
+                                  participant_id:,
+                                  course_identifier:,
+                                  cpd_lead_provider:,
+                                )
   end
 
   def participant_profile
