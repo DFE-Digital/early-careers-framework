@@ -133,9 +133,10 @@ RSpec.describe "Participant Declarations", :with_default_schedules, type: :reque
       operationId :ecf_participant_declarations_csv
       tags "Participant declarations"
       security [bearerAuth: []]
+      produces "text/csv"
 
       response "200", "A CSV file of participant declarations" do
-        schema({ "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse" }, content_type: "text/csv")
+        schema "$ref": "#/components/schemas/MultipleParticipantDeclarationsCsvResponse"
 
         run_test!
       end
