@@ -8,7 +8,7 @@ module Api
       RSpec.describe PartnershipSerializer do
         describe "serialization" do
           let(:cohort) { build(:cohort, start_year: 2021) }
-          let(:school) { build(:school, urn: "123456", name: "My first High School") }
+          let(:school) { create(:school, urn: "123456", name: "My first High School") }
           let(:delivery_partner) { partnership.delivery_partner }
 
           let(:induction_coordinator) { create(:user, full_name: "John Doe", email: "induction_coordinator@example.com") }
@@ -28,6 +28,10 @@ module Api
 
           it "returns the cohort start year" do
             expect(subject.serializable_hash[:data][:attributes][:cohort]).to eq("2021")
+          end
+
+          it "returns the school ID" do
+            expect(subject.serializable_hash[:data][:attributes][:school_id]).to eq(school.id)
           end
 
           it "returns the school urn" do
@@ -68,6 +72,10 @@ module Api
             it "returns no challenged_reason" do
               expect(subject.serializable_hash[:data][:attributes][:challenged_reason]).to be_nil
             end
+
+            it "returns no challenged_at" do
+              expect(subject.serializable_hash[:data][:attributes][:challenged_at]).to be_nil
+            end
           end
 
           context "when partnership challenged" do
@@ -79,6 +87,10 @@ module Api
 
             it "returns the challenged_reason" do
               expect(subject.serializable_hash[:data][:attributes][:challenged_reason]).to eq("mistake")
+            end
+
+            it "returns the challenged_at timestamp" do
+              expect(subject.serializable_hash[:data][:attributes][:challenged_at]).to eq(partnership.challenged_at)
             end
           end
         end
