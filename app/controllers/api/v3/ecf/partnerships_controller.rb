@@ -18,6 +18,10 @@ module Api
           render json: serializer_class.new(paginate(ecf_partnerships)).serializable_hash.to_json
         end
 
+        def show
+          render json: serializer_class.new(ecf_partnership).serializable_hash.to_json
+        end
+
       private
 
         def lead_provider
@@ -26,6 +30,10 @@ module Api
 
         def ecf_partnerships
           @ecf_partnerships ||= ecf_partnerships_query.partnerships.order(sort_params(params))
+        end
+
+        def ecf_partnership
+          ecf_partnerships_query.partnership
         end
 
         def ecf_partnerships_query
@@ -38,7 +46,7 @@ module Api
         def ecf_partnership_params
           params
             .with_defaults({ sort: "", filter: { delivery_partner_id: "", updated_since: "", cohort: "" } })
-            .permit(:sort, filter: %i[cohort updated_since delivery_partner_id])
+            .permit(:id, :sort, filter: %i[cohort updated_since delivery_partner_id])
         end
 
         def access_scope

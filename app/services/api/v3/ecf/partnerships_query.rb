@@ -20,6 +20,10 @@ module Api
           scope
         end
 
+        def partnership
+          lead_provider.partnerships.includes(:school, :cohort, :delivery_partner).find(params[:id])
+        end
+
       private
 
         def filter

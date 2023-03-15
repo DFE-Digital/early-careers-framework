@@ -90,4 +90,39 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
       end
     end
   end
+
+  describe "#partnership" do
+    context "when partnership ID belongs to CPD lead provider" do
+      let(:params) { { id: partnership.id } }
+
+      it "returns the partnership with the id" do
+        expect(subject.partnership).to eq(partnership)
+      end
+    end
+
+    context "when partnership ID belongs to another CPD lead provider" do
+      let(:partnership) { create(:partnership, cohort:) }
+      let(:params) { { id: partnership.id } }
+
+      it "does not return the partnership" do
+        expect { subject.partnership }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "with non-existing ID" do
+      let(:params) { { id: "does-not-exist" } }
+
+      it "raises an exception" do
+        expect { subject.partnership }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "with no ID" do
+      let(:params) { {} }
+
+      it "raises an exception" do
+        expect { subject.partnership }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 end
