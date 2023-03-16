@@ -90,7 +90,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
           run_test!
         end
 
-        response "404", "Not Found" do
+        response "404", "Not Found", exceptions_app: true do
           let(:id) { "test" }
 
           schema({ "$ref": "#/components/schemas/NotFoundResponse" })
