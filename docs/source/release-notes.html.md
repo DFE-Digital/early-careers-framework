@@ -151,7 +151,7 @@ Invalid entries include: spelling errors, unrecognised values not included in th
 Example: When updating a participant record, an ECF provider enters an invalid `course_identifier`.
 
 * A provider enters `"course_identifier": "ecf-induction"` when the participant is actually an `ecf-mentor`
-* >The API will check the `course_identifier` is valid against the `participant_id`
+* The API will check the `course_identifier` is valid against the `participant_id`
 * This will identify whether or not the participant is registered for the given training
 * The API will recognise that the `course_identifier` entered by the provider is invalid (as it should be `"course_identifier": "ecf-mentor"`)
 * The API will return a 422 error message: `“The property '#/course_identifier' must be an available course to '#/participant_id'”`
