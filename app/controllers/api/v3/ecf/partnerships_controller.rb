@@ -18,6 +18,11 @@ module Api
           render json: serializer_class.new(paginate(ecf_partnerships)).serializable_hash.to_json
         end
 
+        # Returns a specific ECF partnership given its ID
+        # Providers can see a specific ECF partnership and which cohorts it applies to via this endpoint
+        #
+        # GET /api/v1/partnerships/ecf/:id
+        #
         def show
           render json: serializer_class.new(ecf_partnership).serializable_hash.to_json
         end
