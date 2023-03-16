@@ -53,11 +53,20 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
       it "has correct attributes" do
         get "/api/v3/partnerships/ecf"
 
-        expect(parsed_response["data"][0]).to have_jsonapi_attributes(:cohort,
-                                                                      :urn,
-                                                                      :delivery_partner_id,
-                                                                      :delivery_partner_name,
-                                                                      :status, :challenged_reason, :induction_tutor_name, :induction_tutor_email, :updated_at, :created_at).exactly
+        expect(parsed_response["data"][0]).to have_jsonapi_attributes(
+          :cohort,
+          :urn,
+          :delivery_partner_id,
+          :delivery_partner_name,
+          :school_id,
+          :status,
+          :challenged_at,
+          :challenged_reason,
+          :induction_tutor_name,
+          :induction_tutor_email,
+          :updated_at,
+          :created_at,
+        ).exactly
       end
 
       it "returns the right number of partnerships per page" do

@@ -20,6 +20,10 @@ module Api
           partnership.school.urn
         end
 
+        attribute :school_id do |partnership|
+          partnership.school.id
+        end
+
         attributes :delivery_partner_id
 
         attribute :delivery_partner_name do |partnership|
@@ -31,6 +35,8 @@ module Api
         end
 
         attribute :challenged_reason, &:challenge_reason
+
+        attribute :challenged_at, &:challenged_at
 
         attribute :induction_tutor_name do |partnership|
           partnership.school&.induction_tutor&.full_name
