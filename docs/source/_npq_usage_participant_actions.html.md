@@ -90,24 +90,10 @@ NPQ courses (for example. npq-leading-teaching) can vary in their length and the
 
 For example, if a participant is starting their NPQ in Specialist Leadership in February 2022, the provider needs to make sure the participant’s schedule is npq-leadership-spring and the cohort is 2021.
 
-<table>
-  <thead>
-    <tr>
-      <th>NPQ Course</th>
-      <th>Available schedules</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>NPQSL<br />NPQH<br />NPQEL</td>
-      <td>npq-leadership-autumn<br />npq-leadership-spring</td>
-    </tr>
-    <tr>
-      <td>NPQLTD<br />NPQLT<br />NPQLBC</td>
-      <td>npq-specialist-autumn<br />npq-specialist-spring</td>
-    </tr>
-  </tbody>
-</table>
+| NPQ Course        | Available schedules                        |
+| ----------------- | ------------------------------------------ |
+| NPQSLNPQHNPQEL    | npq-leadership-autumnnpq-leadership-spring |
+| NPQLTDNPQLTNPQLBC | npq-specialist-autumnnpq-specialist-spring |
 
 ### Additional Support Offer (ASO) schedule
 
