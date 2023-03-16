@@ -148,7 +148,8 @@ See [retrieve multiple NPQ participants](/api-reference/reference-v1#api-v1-part
 
 Get filtered NPQ participant records.
 
-``` GET /api/v1/participants/npq?filter[updated_since]=2021-05-13T11:21:55Z
+```
+GET /api/v1/participants/npq?filter[updated_since]=2021-05-13T11:21:55Z
 ```
 
 This will return [multiple NPQ participant records](/api-reference/reference-v1#schema-multiplenpqparticipantsresponse) with the updates to the record included.
