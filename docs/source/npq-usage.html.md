@@ -5,25 +5,6 @@ weight: 3
 
 # NPQ usage
 
-## Contents
-
-* [Continuing the NPQ registration process](#continuing-the-npq-registration-process)
-* [About accepting or rejecting an NPQ application](#about-accept-reject-npq-application)
-* [Accepting an NPQ application](#accept-npq-application)
-* [Rejecting an NPQ application](#reject-npq-application)
-* [Handling deferrals](#handling-deferrals)
-* [Notifying that an NPQ participant is resuming their course](#resuming-npq-participant)
-* [Tell  the DfE that a  participant is changing training schedule on their NPQ course](#notifying-of-npq-schedule-change)
-* [Handling applications with changes in circumstances](#handling-changes-circumstances)
-* [Retrieving the list of NPQ participant records](#retrieving-npq-participants)
-* [Declaring that an NPQ participant has started their course](#declaring-that-an-npq-participant-has-started-their-course)
-* [Declaring that an NPQ participant has reached a retained milestone](#declaring-that-an-npq-participant-has-retained-their-course)
-* [Declaring that an NPQ participant has completed their course](#declaring-that-an-npq-participant-has-completed-their-course)
-* [Declaring that an NPQ participant has withdrawn from their course](#declaring-that-an-npq-participant-has-withdrawn-of-their-course)
-* [Removing a declaration submitted in error](#removing-participant-declaration)
-* [Listing NPQ participant outcomes](#listing-npq-participant-outcomes)
-* [Updating NPQ participant outcomes](#updating-npq-participant-outcomes)
-
 The scenarios on this page show example request URLs and payloads clients can use to take actions via this API. The examples are only concerned with business logic and are missing details necessary for real-world usage. For example, authentication is completely left out.
 
 ## Continuing the NPQ registration process
