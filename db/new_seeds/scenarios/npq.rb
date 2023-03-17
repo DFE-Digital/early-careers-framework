@@ -75,6 +75,7 @@ module NewSeeds
                             employment_type: employment_type.sample,
                             employment_role: employment_role.sample,
                             employer_name: employer_name.sample,
+                            eligible_for_funding: false,
                             funding_eligiblity_status_code: "no_institution")
       end
 
