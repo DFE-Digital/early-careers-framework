@@ -75,23 +75,23 @@ module NPQ
     end
 
     def cohort
-      @cohort ||= Cohort.find_by(start_year: npq_application_params[:cohort])
+      @cohort ||= Cohort.active_npq_registration_cohort
     end
 
     def npq_course
-      NPQCourse.find_by(id: npq_course_id)
+      @npq_course ||= NPQCourse.find_by(id: npq_course_id)
     end
 
     def npq_lead_provider
-      NPQLeadProvider.find_by(id: npq_lead_provider_id)
+      @npq_lead_provider ||= NPQLeadProvider.find_by(id: npq_lead_provider_id)
     end
 
     def user
-      Identity.find_user_by(id: user_id)
+      @user ||= Identity.find_user_by(id: user_id)
     end
 
     def participant_identity
-      Identity::Create.call(user:, origin: :npq) if user_id.present?
+      @participant_identity ||= Identity::Create.call(user:, origin: :npq) if user_id.present?
     end
   end
 end

@@ -95,7 +95,6 @@ module Api
             :employment_role,
             :employment_type,
             :targeted_delivery_funding_eligibility,
-            :cohort,
             :works_in_nursery,
             :works_in_childcare,
             :kind_of_nursery,
