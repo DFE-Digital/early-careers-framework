@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_04_184644) do
+ActiveRecord::Schema.define(version: 2023_03_14_120416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 2023_03_04_184644) do
     t.integer "start_year", limit: 2, null: false
     t.datetime "registration_start_date"
     t.datetime "academic_year_start_date"
+    t.datetime "npq_registration_start_date"
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
