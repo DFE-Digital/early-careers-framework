@@ -95,11 +95,16 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
           context "with filter[cohort]" do
             let(:next_cohort) { Cohort.next || create(:cohort, :next) }
-            let!(:next_cohort_npq_applications) { create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
 
-            it "returns npq applications only for the 2022 cohort" do
+            before do
+              next_cohort.update!(npq_registration_start_date: 20.days.ago)
+              @npq_applications_list = create_list(:npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort)
+            end
+
+            it "returns npq applications only for the next cohort" do
               get "/api/v1/npq-applications", params: { filter: { cohort: next_cohort.start_year } }
               expect(parsed_response["data"].size).to eq(2)
+              expect(parsed_response["data"].pluck("id")).to match_array(@npq_applications_list.pluck("id"))
             end
           end
         end

@@ -33,7 +33,6 @@ module Seeds
           kind_of_nursery:,
           private_childcare_provider_urn:,
           funding_eligiblity_status_code:,
-          cohort: "2022",
         },
         npq_course_id: NPQCourse.all.sample.id,
         npq_lead_provider_id: npq_lead_provider.id,

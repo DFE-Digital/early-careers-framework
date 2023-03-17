@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Finance::ChangeLeadProviderApprovalStatusForm, type: :model do
+RSpec.describe Finance::ChangeLeadProviderApprovalStatusForm, :with_default_schedules, type: :model do
   subject(:form) { described_class.new(params) }
 
   let(:params) { { npq_application:, change_status_to_pending: "yes" } }
