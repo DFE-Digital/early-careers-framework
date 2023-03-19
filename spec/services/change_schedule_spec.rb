@@ -155,6 +155,13 @@ RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { ex
 
     describe ".call" do
       it_behaves_like "changing the schedule of a participant"
+
+      it "updates the schedule on the relevant induction record" do
+        service.call
+        relevant_induction_record = participant_profile.current_induction_record
+
+        expect(relevant_induction_record.schedule).to eq(schedule)
+      end
     end
   end
 
@@ -175,6 +182,13 @@ RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { ex
 
     describe ".call" do
       it_behaves_like "changing the schedule of a participant"
+
+      it "updates the schedule on the relevant induction record" do
+        service.call
+        relevant_induction_record = participant_profile.current_induction_record
+
+        expect(relevant_induction_record.schedule).to eq(schedule)
+      end
     end
   end
 
