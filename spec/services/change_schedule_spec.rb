@@ -118,7 +118,7 @@ RSpec.shared_examples "changing the schedule of a participant" do
 
     expect(latest_participant_profile_schedule).to have_attributes(
       participant_profile_id: participant_profile.id,
-      schedule_id: Finance::Schedule.where(schedule_identifier:, cohort: Cohort.current).first.id,
+      schedule_id: Finance::Schedule.where(schedule_identifier:, cohort: new_cohort).first.id,
     )
   end
 end
@@ -133,6 +133,7 @@ RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { ex
       schedule_identifier:,
     }
   end
+  let(:new_cohort) { Cohort.current }
 
   subject(:service) do
     described_class.new(params)
@@ -212,6 +213,33 @@ RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { ex
 
     describe ".call" do
       it_behaves_like "changing the schedule of a participant"
+
+      it "does not update the npq application cohort" do
+        expect { service.call }.not_to change(participant_profile.npq_application, :cohort)
+      end
+    end
+
+    context "when cohort is changed" do
+      let(:new_cohort) { Cohort.previous }
+      let(:new_schedule) { create(:npq_leadership_schedule, cohort: new_cohort) }
+      let(:params) do
+        {
+          cpd_lead_provider:,
+          participant_id:,
+          course_identifier:,
+          schedule_identifier:,
+          cohort: new_cohort.start_year,
+        }
+      end
+
+      describe ".call" do
+        it_behaves_like "changing the schedule of a participant"
+      end
+
+      it "updates the cohort on the npq application" do
+        service.call
+        expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+      end
     end
   end
 end
