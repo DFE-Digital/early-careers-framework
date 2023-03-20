@@ -2,12 +2,13 @@
 
 class DetermineTrainingRecordState < BaseService
   def call
-    return :withdrawn_from_programme if withdrawn_from_programme?
-    return :withdrawn_from_training if withdrawn_from_training?
+    return :has_withdrawn_from_programme if withdrawn_from_programme?
+    return :has_withdrawn_from_training if withdrawn_from_training?
+    return :has_deferred_their_training if deferred_their_training?
 
-    return :mentoring if @participant_profile.mentor?
+    return :is_mentoring if @participant_profile.mentor?
 
-    :training
+    :is_training
   end
 
 private
@@ -27,6 +28,10 @@ private
 
   def withdrawn_from_training?
     @induction_record&.training_status_withdrawn? || @participant_profile.training_status_withdrawn?
+  end
+
+  def deferred_their_training?
+    @induction_record&.training_status_deferred? || @participant_profile.training_status_deferred?
   end
 
   def withdrawn_from_programme?
