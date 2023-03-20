@@ -2,19 +2,23 @@
 
 require "swagger_helper"
 
-RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
+  let(:cohort) { create(:cohort, start_year: 2021) }
+  let!(:school_cohort) { create(:school_cohort, cohort:) }
 
-  path "/api/v3/schools/ecf" do
+  path "/api/v3/schools/ecf", with_feature_flags: { api_v3: "active" } do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF schools scoped to cohort" do
+      let("filter[cohort]") { cohort.start_year }
+
       operationId :school_ecf_get
       tags "ECF schools"
       security [bearerAuth: []]
 
-      parameter name: :filter,
+      parameter name: "filter[cohort]",
                 schema: {
                   "$ref": "#/components/schemas/ECFSchoolsFilter",
                 },
@@ -52,7 +56,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: t
     end
   end
 
-  path "/api/v3/schools/ecf/{id}" do
+  path "/api/v3/schools/ecf/{id}", api_v3: true do
     get "<b>Note, this endpoint is new.</b><br/>Get a single ECF school scoped to cohort" do
       operationId :school_ecf_get
       tags "ECF schools"

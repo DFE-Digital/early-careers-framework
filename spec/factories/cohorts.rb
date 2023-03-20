@@ -16,10 +16,6 @@ FactoryBot.define do
 
     trait :current do
       start_year { Date.current.year - (Date.current.month < 9 ? 1 : 0) }
-
-      initialize_with do
-        Cohort.find_by(start_year:) || new(**attributes)
-      end
     end
 
     trait :next do
@@ -28,6 +24,10 @@ FactoryBot.define do
 
     trait :consecutive_years do
       start_year { generate(:base_year) }
+    end
+
+    initialize_with do
+      Cohort.find_by(start_year:) || new(**attributes)
     end
   end
 end
