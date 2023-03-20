@@ -657,33 +657,6 @@ en:
         show:
           title: "Banding tracker for %{provider_name}"
 
-  participant_profile_status:
-    status:
-      contacted_for_information:
-        title: "Contacted for information"
-        description: "We need this to check their eligibility with the Teaching Regulation Agency."
-      dfe_checking_eligibility:
-        title: "DfE checking eligibility"
-        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
-      checking_qts:
-        title: "Checking QTS"
-        description: "These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training. We’ll keep checking their status and notify you if something changes."
-      training_or_eligible_for_training:
-        title: "Training or eligible for training"
-        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
-      no_longer_being_trained:
-        title: "No longer being trained"
-        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
-      not_eligible_for_funded_training:
-        title: "Not eligible for funded training"
-        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
-      transferring_to_your_school:
-        title: "Transferring to your school"
-        description: ""
-      transferring_from_your_school:
-        title: "Transferring from your school"
-        description: ""
-
   admin:
     npq:
       applications:
