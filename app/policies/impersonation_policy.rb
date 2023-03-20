@@ -8,6 +8,7 @@ class ImpersonationPolicy < ApplicationPolicy
   def destroy?
     admin_only && !self_impersonation && !admin_impersonation
   end
+  alias_method :show?, :destroy?
 
   class Scope < Scope
     def resolve
