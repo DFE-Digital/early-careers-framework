@@ -14,10 +14,10 @@ module DeliveryPartners
       end
 
       def status_name(participant_profile, delivery_partner)
-        ParticipantProfileStatus.new(
+        StatusTags::DeliveryPartnerParticipantStatusTag.new(
           participant_profile:,
           induction_record: induction_record(participant_profile, delivery_partner),
-        ).status_name
+        ).id
       end
     end
 
@@ -59,7 +59,10 @@ module DeliveryPartners
     end
 
     attribute :status do |participant_profile, params|
-      I18n.t("participant_profile_status.status.#{status_name(participant_profile, params[:delivery_partner])}.title")
+      StatusTags::DeliveryPartnerParticipantStatusTag.new(
+        participant_profile:,
+        induction_record: induction_record(participant_profile, params[:delivery_partner]),
+      ).label
     end
   end
 end
