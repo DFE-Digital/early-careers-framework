@@ -24,18 +24,6 @@ module DeliveryPartners
         @delivery_partner = delivery_partner
       end
 
-      def status_tag
-        title = t("participant_profile_status.status.#{status_name}.title")
-        description = t("participant_profile_status.status.#{status_name}.description")
-
-        if description.present?
-          content_tag(:strong, title) +
-            content_tag(:p, description, class: "govuk-body-s")
-        else
-          content_tag(:strong, title)
-        end
-      end
-
       def lead_provider_name
         induction_record&.induction_programme&.partnership&.lead_provider&.name
       end
@@ -50,13 +38,6 @@ module DeliveryPartners
 
       def induction_record
         @induction_record ||= participant_profile.relevant_induction_record_for(delivery_partner:)
-      end
-
-      def status_name
-        @status_name ||= ParticipantProfileStatus.new(
-          participant_profile:,
-          induction_record:,
-        ).status_name
       end
     end
   end
