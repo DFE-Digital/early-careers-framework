@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+SEED_QUANTITIES = YAML.load_file(Rails.root.join("config/seed_quantities.yml"), aliases: true).fetch(Rails.env).freeze
+
 Faker::Config.locale = "en-GB"
 
 Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
@@ -13,6 +15,12 @@ def load_base_file(file)
 end
 
 Rails.logger.info("Seeding database")
+
+def seed_quantity(key)
+  name = key.to_s
+
+  ENV.fetch("SEED_#{name.upcase}") { SEED_QUANTITIES.fetch(name) }
+end
 
 [
   "add_cohorts.rb",
