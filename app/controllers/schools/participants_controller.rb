@@ -66,11 +66,23 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
 
     if @mentor_form.valid?
-      Induction::ChangeMentor.call(induction_record: @profile.induction_records.for_school(@school).latest,
-                                   mentor_profile: @mentor_form.mentor&.mentor_profile)
+      induction_record = @profile.induction_records.for_school(@school).latest
+      new_mentor_profile = @mentor_form.mentor&.mentor_profile
+      Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
 
-      flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
-      redirect_to schools_participant_path(id: @profile)
+      if params[:from_mentor].present?
+        old_mentor_profile = ParticipantProfile::Mentor.find(params[:from_mentor])
+        if new_mentor_profile&.id != old_mentor_profile.id
+          heading = "#{@profile.full_name} is not being mentored by #{old_mentor_profile.full_name} anymore"
+        else
+          heading = "#{@profile.full_name} still being mentored by #{old_mentor_profile.full_name}"
+        end
+        flash[:success] = { title: "Success", heading: }
+        redirect_to schools_participant_path(id: params[:from_mentor])
+      else
+        flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
+        redirect_to schools_participant_path(id: @profile)
+      end
     else
       render :edit_mentor
     end
