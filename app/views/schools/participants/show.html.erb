@@ -159,8 +159,8 @@
                   ect.participant_profile.policy_class.new(current_user, ect.participant_profile).update_mentor? %>
               <% row.action(text: "Change",
                             visually_hidden_text: "mentor",
-                            href: schools_participant_edit_mentor_path(participant_id: ect.participant_profile_id),
-                            ) %>
+                            href: schools_participant_edit_mentor_path(participant_id: ect.participant_profile_id,
+                                                                       from_mentor: @profile.id)) %>
             <% end %>
           <% end %>
         <% end %>

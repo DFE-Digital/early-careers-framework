@@ -10,7 +10,10 @@
 
         <span class="govuk-caption-xl"><%= @school.name %></span>
 
-        <%= form_with model: @mentor_form, url: schools_participant_update_mentor_path(participant_id: @profile), method: :put, id: "school-cohort-participant-update-mentor" do |f| %>
+        <%= form_with model: @mentor_form, url: schools_participant_update_mentor_path(participant_id: @profile,
+                                                                                       from_mentor: params[:from_mentor]),
+                      method: :put,
+                      id: "school-cohort-participant-update-mentor" do |f| %>
         <%= f.govuk_error_summary %>
 
             <%= f.govuk_radio_buttons_fieldset :mentor_id,
