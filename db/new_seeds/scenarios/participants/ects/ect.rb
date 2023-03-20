@@ -16,9 +16,9 @@ module NewSeeds
             @new_user_attributes = { full_name:, email: }.compact
           end
 
-          def build(induction_start_date: school_cohort.cohort.academic_year_start_date, **profile_args)
+          def build(induction_start_date: school_cohort.cohort.academic_year_start_date, teacher_profile_args: {}, **profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
-            @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school)
+            @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school, **teacher_profile_args)
             @participant_identity = FactoryBot.create(:seed_participant_identity, user:, email: user.email)
             @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
                                                      participant_identity:,
@@ -36,22 +36,21 @@ module NewSeeds
 
           def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil,
                                    induction_status: "active", training_status: "active", preferred_identity: nil,
-                                   appropriate_body: nil)
+                                   appropriate_body: nil, school_transfer: false)
             preferred_identity ||= participant_profile.participant_identity
 
-            FactoryBot.create(
-              :seed_induction_record,
-              induction_programme:,
-              mentor_profile:,
-              participant_profile:,
-              preferred_identity:,
-              schedule: Finance::Schedule::ECF.default_for(cohort: induction_programme.cohort),
-              start_date:,
-              end_date:,
-              induction_status:,
-              training_status:,
-              appropriate_body:,
-            )
+            FactoryBot.create(:seed_induction_record,
+                              induction_programme:,
+                              mentor_profile:,
+                              participant_profile:,
+                              preferred_identity:,
+                              schedule: Finance::Schedule::ECF.default_for(cohort: induction_programme.cohort),
+                              start_date:,
+                              end_date:,
+                              induction_status:,
+                              training_status:,
+                              appropriate_body:,
+                              school_transfer:)
           end
 
           def with_validation_data(**args)
@@ -65,6 +64,7 @@ module NewSeeds
                                 trn: args[:trn] || teacher_profile.trn,
                                 date_of_birth: args[:date_of_birth],
                                 nino: args[:nino],
+                                api_failure: args[:api_failure],
                                 participant_profile: }
 
             FactoryBot.create(:seed_ecf_participant_validation_data, **validation_data.compact)
@@ -100,6 +100,25 @@ module NewSeeds
               .with_validation_data
               .with_eligibility
               .with_induction_record(induction_programme: mentor_induction_programme)
+          end
+
+          def with_request_for_details_email(**args)
+            args[:tags] = [:request_for_details]
+            add_email(**args)
+
+            self
+          end
+
+          def add_email(**args)
+            email_data = {
+              tags: args[:tags],
+              status: args[:status],
+              to: @participant_profile.participant_identity&.email,
+              delivered_to: args[:delivered_to],
+            }
+
+            email = FactoryBot.create(:seed_email, **email_data.compact)
+            email.create_association_with(@participant_profile)
           end
 
         private

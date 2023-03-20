@@ -70,12 +70,12 @@ module DeliveryPartners
 
     def filter_status(scoped, status)
       ids = []
-      scoped.each do |pp|
-        ir = pp.relevant_induction_record_for(delivery_partner: params[:delivery_partner])
+      scoped.each do |participant_profile|
+        induction_record = participant_profile.relevant_induction_record_for(delivery_partner: params[:delivery_partner])
 
-        pps = ParticipantProfileStatus.new(participant_profile: pp, induction_record: ir)
-        if pps.is_status?(status)
-          ids << pp.id
+        status_tag = StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:, induction_record:)
+        if status_tag.id == status
+          ids << participant_profile.id
         end
       end
 
@@ -99,9 +99,7 @@ module DeliveryPartners
 
     def status_options
       [OpenStruct.new(id: "", name: "")] +
-        ParticipantProfileStatus.status_options.map do |c|
-          OpenStruct.new(id: c[0], name: c[1])
-        end
+        I18n.t("status_tags.delivery_partner_participant_status").map { |_k, v| OpenStruct.new(id: v[:id], name: v[:label]) }.uniq
     end
   end
 end

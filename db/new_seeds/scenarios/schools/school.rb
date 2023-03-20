@@ -60,6 +60,21 @@ module NewSeeds
         end
 
         ###
+        # adds a school_cohort and a default induction programme (FIP) for the given cohort
+        # but does not add a partnership to that cohort and induction programme
+        ###
+        def chosen_fip_but_not_partnered(cohort:)
+          fip = NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:)
+                                                       .build
+          NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort: fip.school_cohort)
+                                                       .build(default_induction_programme: true)
+
+          school_cohorts[cohort.start_year] = fip.school_cohort
+
+          self
+        end
+
+        ###
         # adds a school_cohort and a default induction programme (CIP) for the given cohort
         # will also add CIP materials to that school_cohort and induction programme
         ###
