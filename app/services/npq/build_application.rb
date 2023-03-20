@@ -75,7 +75,7 @@ module NPQ
     end
 
     def cohort
-      @cohort ||= Cohort.active_npq_registration_cohort
+      @cohort ||= Cohort.find_by(start_year: npq_application_params[:cohort]).presence || Cohort.active_npq_registration_cohort
     end
 
     def npq_course

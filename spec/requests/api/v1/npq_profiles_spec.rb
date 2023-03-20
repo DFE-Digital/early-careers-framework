@@ -13,7 +13,6 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
-  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
 
   describe "#show" do
@@ -154,7 +153,6 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               eligible_for_funding: true,
               funding_choice: "school",
               targeted_delivery_funding_eligibility: true,
-              cohort: cohort_2022.start_year,
               employer_name: "Local Authority",
               employment_role: "manager",
               employment_type: "local_authority_virtual_school",
@@ -196,50 +194,52 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       let(:json) { json_hash.to_json }
 
       it "creates the npq validation data" do
-        expect { post "/api/v1/npq-profiles", params: json }
-          .to change(NPQApplication, :count).by(1)
+        Timecop.freeze(Date.new(2023, 3, 20)) do
+          expect { post "/api/v1/npq-profiles", params: json }
+            .to change(NPQApplication, :count).by(1)
 
-        npq_application = NPQApplication.order(created_at: :desc).first
+          npq_application = NPQApplication.order(created_at: :desc).first
 
-        application_as_json = npq_application.as_json(except: %i[
-          id
-          created_at
-          updated_at
-          participant_identity_id
-          targeted_support_funding_eligibility
-        ])
+          application_as_json = npq_application.as_json(except: %i[
+            id
+            created_at
+            updated_at
+            participant_identity_id
+            targeted_support_funding_eligibility
+          ])
 
-        expect(application_as_json).to match({
-          "npq_lead_provider_id" => npq_lead_provider.id,
-          "date_of_birth" => "1990-12-13",
-          "nino" => "AB123456C",
-          "teacher_reference_number" => "1234567",
-          "teacher_reference_number_verified" => true,
-          "active_alert" => true,
-          "school_urn" => "123456",
-          "school_ukprn" => "12345678",
-          "headteacher_status" => "no",
-          "npq_course_id" => npq_course.id,
-          "eligible_for_funding" => true,
-          "funding_choice" => "school",
-          "lead_provider_approval_status" => "pending",
-          "targeted_delivery_funding_eligibility" => true,
-          "cohort_id" => cohort_2022.id,
-          "employer_name" => "Local Authority",
-          "employment_role" => "manager",
-          "employment_type" => "local_authority_virtual_school",
-          "works_in_school" => true,
-          "works_in_nursery" => false,
-          "works_in_childcare" => false,
-          "kind_of_nursery" => nil,
-          "private_childcare_provider_urn" => nil,
-          "funding_eligiblity_status_code" => "funded",
-          "teacher_catchment" => "other",
-          "teacher_catchment_country" => "United Kingdom",
-          "teacher_catchment_iso_country_code" => "GBR",
-          "itt_provider" => nil,
-          "lead_mentor" => false,
-        })
+          expect(application_as_json).to match({
+            "npq_lead_provider_id" => npq_lead_provider.id,
+            "date_of_birth" => "1990-12-13",
+            "nino" => "AB123456C",
+            "teacher_reference_number" => "1234567",
+            "teacher_reference_number_verified" => true,
+            "active_alert" => true,
+            "school_urn" => "123456",
+            "school_ukprn" => "12345678",
+            "headteacher_status" => "no",
+            "npq_course_id" => npq_course.id,
+            "eligible_for_funding" => true,
+            "funding_choice" => "school",
+            "lead_provider_approval_status" => "pending",
+            "targeted_delivery_funding_eligibility" => true,
+            "cohort_id" => cohort_2022.id,
+            "employer_name" => "Local Authority",
+            "employment_role" => "manager",
+            "employment_type" => "local_authority_virtual_school",
+            "works_in_school" => true,
+            "works_in_nursery" => false,
+            "works_in_childcare" => false,
+            "kind_of_nursery" => nil,
+            "private_childcare_provider_urn" => nil,
+            "funding_eligiblity_status_code" => "funded",
+            "teacher_catchment" => "other",
+            "teacher_catchment_country" => "United Kingdom",
+            "teacher_catchment_iso_country_code" => "GBR",
+            "itt_provider" => nil,
+            "lead_mentor" => false,
+          })
+        end
       end
 
       it "returns a 201" do
