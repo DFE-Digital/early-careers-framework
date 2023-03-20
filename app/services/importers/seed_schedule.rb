@@ -17,10 +17,7 @@ class Importers::SeedSchedule
       next unless row["schedule-identifier"]
 
       year = row["schedule-cohort-year"].to_i
-      cohort = Cohort.find_or_create_by!(start_year: year) do |c|
-        c.registration_start_date = Date.new(year, 5, 10)
-        c.academic_year_start_date = Date.new(year, 9, 1)
-      end
+      cohort = Cohort.find_by!(start_year: year)
 
       schedule = klass.find_or_initialize_by(
         schedule_identifier: row["schedule-identifier"],
