@@ -47,6 +47,8 @@ class User < ApplicationRecord
             on: :update,
             if: -> { get_an_identity_id_was.present? }
 
+  self.filter_attributes += %i[email full_name]
+
   # changed from has_many :npq_applications as these now live on participant_identities
   # and it is possible that there are applications on one or more of the user's
   # participant_identity records

@@ -4,6 +4,8 @@ class ECFParticipantValidationData < ApplicationRecord
   belongs_to :participant_profile, class_name: "ParticipantProfile", touch: true
   validate :belongs_to_ecf_participant
 
+  self.filter_attributes += %i[full_name trn]
+
   def can_validate_participant?
     date_of_birth.present? && (trn.present? || nino.present?)
   end

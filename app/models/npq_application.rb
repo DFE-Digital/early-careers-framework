@@ -51,6 +51,8 @@ class NPQApplication < ApplicationRecord
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
 
+  self.filter_attributes += [:teacher_reference_number]
+
   # this builds upon #eligible_for_funding
   # eligible_for_funding is solely based on what NPQ app knows
   # eg school, course etc
