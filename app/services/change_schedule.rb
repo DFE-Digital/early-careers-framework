@@ -151,6 +151,14 @@ private
   def change_with_a_different_schedule
     return unless new_schedule && participant_profile && new_schedule == participant_profile.schedule
 
+    return if relevant_induction_record_has_different_schedule
+
     errors.add(:schedule_identifier, I18n.t(:schedule_already_on_the_profile))
+  end
+
+  def relevant_induction_record_has_different_schedule
+    return unless relevant_induction_record
+
+    new_schedule != relevant_induction_record.schedule
   end
 end
