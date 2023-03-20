@@ -68,13 +68,13 @@ module AppropriateBodies
 
     def filter_status(scoped, status)
       ids = []
-      scoped.each do |ir|
-        pp = ir.participant_profile
-        next unless pp
+      scoped.each do |induction_record|
+        participant_profile = induction_record.participant_profile
+        next unless participant_profile
 
-        pps = ParticipantProfileStatus.new(participant_profile: pp, induction_record: ir)
-        if pps.is_status?(status)
-          ids << ir.id
+        status_tag = StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:)
+        if status_tag.id == status
+          ids << induction_record.id
         end
       end
 
@@ -98,9 +98,7 @@ module AppropriateBodies
 
     def status_options
       [OpenStruct.new(id: "", name: "")] +
-        ParticipantProfileStatus.status_options.map do |c|
-          OpenStruct.new(id: c[0], name: c[1])
-        end
+        I18n.t("status_tags.appropriate_body_participant_status").map { |_k, v| OpenStruct.new(id: v[:id], name: v[:label]) }.uniq
     end
   end
 end

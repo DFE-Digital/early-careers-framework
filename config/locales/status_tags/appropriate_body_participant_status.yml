@@ -1,0 +1,192 @@
+en:
+  status_tags:
+    appropriate_body_participant_status:
+      validation_not_started:
+        id: "contacted_for_information"
+        label: "Contacted for information"
+        description: "We need this to check their eligibility with the Teaching Regulation Agency."
+
+      request_for_details_submitted:
+        id: "contacted_for_information"
+        label: "Contacted for information"
+        description: "We need this to check their eligibility with the Teaching Regulation Agency."
+
+      request_for_details_delivered:
+        id: "contacted_for_information"
+        label: "Contacted for information"
+        description: "We need this to check their eligibility with the Teaching Regulation Agency."
+
+      request_for_details_failed:
+        id: "contacted_for_information"
+        label: "Contacted for information"
+        description: "We need this to check their eligibility with the Teaching Regulation Agency."
+
+      internal_error:
+        id: "dfe_checking_eligibility"
+        label: "DfE checking eligibility"
+        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      tra_record_not_found:
+        id: "dfe_checking_eligibility"
+        label: "DfE checking eligibility"
+        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      active_flags:
+        id: "dfe_checking_eligibility"
+        label: "DfE checking eligibility"
+        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      different_trn:
+        id: "dfe_checking_eligibility"
+        label: "DfE checking eligibility"
+        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      checks_not_complete:
+        id: "dfe_checking_eligibility"
+        label: "DfE checking eligibility"
+        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      no_induction_start:
+        id: "dfe_checking_eligibility"
+        label: "DfE checking eligibility"
+        description: "We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      not_allowed:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      duplicate_profile:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      exempt_from_induction:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      previous_participation:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      previous_induction:
+        id: "not_eligible_for_funded_training"
+        label: "Not eligible for funded training"
+        description: "We’ve checked these people’s details and found they’re not eligible for this programme."
+
+      not_qualified:
+        id: "checking_qts"
+        label: "Checking QTS"
+        description: "These ECTs do not have qualified teacher status (QTS) yet. They need this to be eligible for funded training. We’ll keep checking their status and notify you if something changes."
+
+      registered_for_fip_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_fip_no_partner:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_cip_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_no_partner:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      previous_participation_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_primary:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_primary_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_secondary:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_secondary_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_duplicate:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_training_duplicate_ero:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_fip_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_cip_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      leaving:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      joining:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      deferred_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      completed_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      withdrawn_programme:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      withdrawn_training:
+        id: "no_longer_being_trained"
+        label: "No longer being trained"
+        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
+
+      left:
+        id: "no_longer_being_trained"
+        label: "No longer being trained"
+        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
