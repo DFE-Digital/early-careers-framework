@@ -28,20 +28,6 @@ module AppropriateBodies
         @induction_record = induction_record
       end
 
-      def status_tag
-        return unless status_name
-
-        title = t("participant_profile_status.status.#{status_name}.title")
-        description = t("participant_profile_status.status.#{status_name}.description")
-
-        if description.present?
-          tag.strong(title) +
-            tag.p(description, class: "govuk-body-s")
-        else
-          tag.strong(title)
-        end
-      end
-
       def email
         induction_record.preferred_identity&.email || user.email
       end
@@ -49,13 +35,6 @@ module AppropriateBodies
     private
 
       attr_reader :induction_record
-
-      def status_name
-        @status_name ||= ParticipantProfileStatus.new(
-          participant_profile:,
-          induction_record:,
-        ).status_name
-      end
     end
   end
 end
