@@ -45,7 +45,7 @@ Declaration submissions are made by providers in line with contractual milestone
 
 To test the integration more thoroughly, a custom JSON header can be used when making declarations in the sandbox.
 
-This header, X-With-Server-Date, is set as a standard JSON header to simulate declaration submissions against future milestone date periods.
+This header, `X-With-Server-Date`, is set as a standard JSON header to simulate declaration submissions against future milestone date periods.
 
 It lets you see what would happen when submitting declarations for that time, which would not be valid for the current milestone period, for example, forward declarations, but simulated as current declarations for a later milestone.
 
@@ -54,6 +54,7 @@ This header is only valid on the sandbox system.
 Trying to submit future declarations on production systems or without this header would be rejected as part of normal validation.
 
 To set the header:
-1. Select header (in Postman)
-2. Key = X-With-Server-Date
-3. Value = date you choose in ISO8601 Date with time and Timezone (i.e. RFC3339 format) 2022-01-10T10:42:00Z
+
+1. Select header in Postman
+2. Set the key to `X-With-Server-Date`
+3. Enter the value for your chosen date in ISO8601 'Date with time and Timezone' format, for example `2022-01-10T10:42:00Z`

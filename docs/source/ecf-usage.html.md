@@ -69,6 +69,7 @@ This functionality allows the provider to inform the DfE that a participant has 
 ### Provider resumes a participant
 
 Submit the resumed notification to the following endpoint
+
 ```
 PUT /api/v1/participants/{id}/resume
 ```
@@ -84,6 +85,7 @@ This operation allows the provider to tell the DfE that a participant has change
 ### Provider changes a participant's schedule
 
 Submit the change of schedule notification to the following endpoint.
+
 ```
 PUT /api/v1/participants/ecf/{id}/change-schedule
 ```
@@ -101,6 +103,7 @@ Providers will still be expected to evidence any declarations and why a particip
 ### Standard induction
 
 A usual 2 year induction covers 6 terms (3 in each academic year). The payment model for those following a standard induction is therefore equal to 1 milestone payment for each of the 6 terms you are supporting a participant. We are allowing functionality for providers to switch participants onto the following standard schedules:
+
 * `ecf-standard-september`
 * `ecf-standard-january`
 * `ecf-standard-april`
@@ -155,13 +158,9 @@ We are allowing functionality for providers to switch participants onto the foll
 * `ecf-extended-september`
 * `ecf-extended-january`
 * `ecf-extended-april`
-
-
 * `ecf-reduced-september`
 * `ecf-reduced-january`
 * `ecf-reduced-april`
-
-
 * `ecf-replacement-september`
 * `cf-replacement-january`
 * `ecf-replacement-april`
@@ -269,7 +268,7 @@ POST /api/v1/participant-declarations
 
 With a [request body containing an ECF participant completed declaration](/api-reference/reference-v1#schema-ecfparticipantstarteddeclaration).
 
-This returns <[participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
 
 See [confirm ECF participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
 
@@ -302,7 +301,9 @@ This section lets you review all of the declarations you have made.
 
 All of your submitted declarations are listed.
 
-`GET /api/v1/participant-declarations`
+```
+GET /api/v1/participant-declarations
+```
 
 This returns [participant declarations](/api-reference/reference-v1#schema-participantdeclarationresponse).
 
@@ -310,6 +311,8 @@ This returns [participant declarations](/api-reference/reference-v1#schema-parti
 
 This section lets you review a single declaration you have made.
 
-`GET /api/v1/participant-declarations/{id}`
+```
+GET /api/v1/participant-declarations/{id}
+```
 
 This returns a [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).

@@ -229,10 +229,35 @@ NPQ courses (for example. npq-leading-teaching) can vary in their length and the
 
 For example, if a participant is starting their NPQ in Specialist Leadership in February 2022, the provider needs to make sure the participant’s schedule is npq-leadership-spring and the cohort is 2021.
 
-| NPQ Course        | Available schedules                        |
-| ----------------- | ------------------------------------------ |
-| NPQSLNPQHNPQEL    | npq-leadership-autumnnpq-leadership-spring |
-| NPQLTDNPQLTNPQLBC | npq-specialist-autumnnpq-specialist-spring |
+<table>
+  <thead>
+    <tr><th>NPQ course</th><th>Available schedules</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        NPQSL<br/>
+        NPQH<br/>
+        NPQEL
+      </td>
+      <td>
+        npq-leadership-autumn<br/>
+        npq-leadership-spring
+      </td>
+    </tr>
+    <tr>
+      <td>
+          NPQLTD<br/>
+          NPQLT<br/>
+          NPQLBC
+      </td>
+      <td>
+        npq-specialist-autumn<br/>
+        npq-specialist-spring
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### Additional Support Offer (ASO) schedule
 
@@ -420,7 +445,9 @@ This section lets you review all of the declarations you have made.
 
 All of your submitted declarations are listed.
 
-`GET /api/v1/participant-declarations`
+```
+GET /api/v1/participant-declarations
+```
 
 This returns [participant declarations](/api-reference/reference-v1#schema-participantdeclarationresponse).
 
@@ -428,6 +455,8 @@ This returns [participant declarations](/api-reference/reference-v1#schema-parti
 
 This section lets you review a single declaration you have made.
 
-`GET /api/v1/participant-declarations/{id}`
+```
+GET /api/v1/participant-declarations/{id}
+```
 
 This returns a [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
