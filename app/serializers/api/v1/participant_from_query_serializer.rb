@@ -28,13 +28,7 @@ module Api
 
       set_type :participant
 
-      set_id :id do |induction_record|
-        if FeatureFlag.active?(:external_identifier_to_user_id_lookup)
-          induction_record.user_id
-        else
-          induction_record.external_identifier
-        end
-      end
+      set_id :id, &:user_id
 
       attribute :email do |induction_record|
         induction_record.preferred_identity_email ||
@@ -45,11 +39,7 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile_type == "ParticipantProfile::ECT"
-          if FeatureFlag.active?(:external_identifier_to_user_id_lookup)
-            induction_record.mentor_user_id
-          else
-            induction_record.mentor_external_identifier
-          end
+          induction_record.mentor_user_id
         end
       end
 

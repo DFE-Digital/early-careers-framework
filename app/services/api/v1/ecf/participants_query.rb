@@ -46,13 +46,8 @@ module Api
         end
 
         def induction_record
-          if FeatureFlag.active?(:external_identifier_to_user_id_lookup)
-            induction_records
-              .find_by!(participant_profile: { participant_identities: { user_id: params[:id] } })
-          else
-            induction_records
-              .find_by!(participant_profile: { participant_identities: { external_identifier: params[:id] } })
-          end
+          induction_records
+            .find_by!(participant_profile: { participant_identities: { user_id: params[:id] } })
         end
 
       private
