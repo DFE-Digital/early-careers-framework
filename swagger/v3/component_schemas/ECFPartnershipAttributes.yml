@@ -52,11 +52,13 @@ properties:
   challenged_at:
     description: "The date the partnership has been challenged"
     type: string
+    nullable: true
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
   induction_tutor_name:
     description: "The name of the induction tutor at the school you are in partnership with"
     type: string
+    nullable: true
     example: "John Doe"
   induction_tutor_email:
     description: "The email address of the induction tutor at the school you are in partnership with"

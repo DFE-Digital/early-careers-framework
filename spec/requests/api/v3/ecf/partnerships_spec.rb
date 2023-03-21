@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request, with_feature_flags: { api_v3: "active" } do
+RSpec.describe "API ECF Partnerships", :with_default_schedules, type: :request do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:lead_provider) { cpd_lead_provider.lead_provider }
   let(:cohort) { Cohort.current || create(:cohort, :current) }
@@ -15,7 +15,7 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
 
   let!(:another_cohort) { create(:cohort, start_year: "2050") }
 
-  describe "#index" do
+  describe "#index", with_feature_flags: { api_v3: "active" } do
     before do
       another_delivery_partner = create(:delivery_partner, name: "Second Delivery Partner")
       create(:partnership, school:, cohort: another_cohort, delivery_partner: another_delivery_partner, lead_provider:)
@@ -132,6 +132,70 @@ RSpec.describe "API ECF Partinerships", :with_default_schedules, type: :request,
         get "/api/v3/partnerships/ecf"
 
         expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "GET /api/v3/partnerships/ecf/:id" do
+    let(:partnership_id) { partnership.id }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers[:CONTENT_TYPE] = "application/json"
+    end
+
+    context "with API V3 flag disabled" do
+      it "returns a 404" do
+        expect { get("/api/v3/partnerships/ecf/#{partnership_id}") }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context "with API V3 flag active", with_feature_flags: { api_v3: "active" } do
+      before { get("/api/v3/partnerships/ecf/#{partnership_id}") }
+
+      it "returns correct jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "returns partnership with the corresponding id" do
+        expect(parsed_response["data"]["id"]).to eq(partnership_id)
+      end
+
+      it "returns correct type" do
+        expect(parsed_response["data"]).to have_type("partnership-confirmation")
+      end
+
+      it "has correct attributes" do
+        expect(parsed_response["data"]).to have_jsonapi_attributes(
+          :cohort,
+          :urn,
+          :delivery_partner_id,
+          :delivery_partner_name,
+          :school_id,
+          :status,
+          :challenged_at,
+          :challenged_reason,
+          :induction_tutor_name,
+          :induction_tutor_email,
+          :updated_at,
+          :created_at,
+        ).exactly
+      end
+
+      context "when partnership id is incorrect", exceptions_app: true do
+        let(:partnership_id) { "incorrect-id" }
+
+        it "returns 404" do
+          expect(response.status).to eq 404
+        end
+      end
+
+      context "when unauthorized" do
+        let(:token) { "incorrect-token" }
+
+        it "returns 401" do
+          expect(response.status).to eq 401
+        end
       end
     end
   end
