@@ -1,26 +1,27 @@
 # frozen_string_literal: true
 
-RSpec.describe Importers::SeedStatements do
+RSpec.describe Importers::CreateStatements do
   let!(:cpd_lead_provider) do
     create(:cpd_lead_provider, :with_lead_provider, :with_npq_lead_provider)
   end
 
-  let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
-  let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+  let!(:cohort_2021) { create(:cohort, start_year: 2021) }
+  let!(:cohort_2022) { create(:cohort, start_year: 2022) }
+  let!(:cohort_2023) { create(:cohort, start_year: 2023) }
 
   describe "#call" do
     it "creates ECF statements idempotently" do
       expect {
         subject.call
         subject.call
-      }.to change(Finance::Statement::ECF, :count).by(60)
+      }.to change(Finance::Statement::ECF, :count).by(91)
     end
 
     it "creates NPQ statements idempotently" do
       expect {
         subject.call
         subject.call
-      }.to change(Finance::Statement::NPQ, :count).by(72)
+      }.to change(Finance::Statement::NPQ, :count).by(108)
     end
 
     it "populates statements correctly" do
@@ -49,6 +50,17 @@ RSpec.describe Importers::SeedStatements do
       ).to be_present
 
       expect(
+        Finance::Statement::ECF.find_by(
+          name: "November 2023",
+          cohort: cohort_2023,
+          deadline_date: Date.new(2023, 10, 31),
+          payment_date: Date.new(2023, 11, 25),
+          contract_version: "0.0.1",
+          output_fee: false,
+        ),
+      ).to be_present
+
+      expect(
         Finance::Statement::NPQ.find_by(
           name: "January 2023",
           cohort: cohort_2021,
@@ -67,6 +79,17 @@ RSpec.describe Importers::SeedStatements do
           payment_date: Date.new(2023, 1, 25),
           contract_version: "0.0.1",
           output_fee: true,
+        ),
+      ).to be_present
+
+      expect(
+        Finance::Statement::NPQ.find_by(
+          name: "January 2024",
+          cohort: cohort_2023,
+          deadline_date: Date.new(2023, 12, 25),
+          payment_date: Date.new(2024, 1, 25),
+          contract_version: "0.0.1",
+          output_fee: false,
         ),
       ).to be_present
     end

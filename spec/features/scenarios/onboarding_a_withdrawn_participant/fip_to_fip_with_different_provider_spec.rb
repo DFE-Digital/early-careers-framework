@@ -82,7 +82,7 @@ RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn parti
 
         travel_to(milestone_started.milestone_date - 2.months) do
           Seeds::CallOffContracts.new.call
-          Importers::SeedStatements.new.call
+          Importers::CreateStatements.new.call
         end
 
         and_sit_at_pupil_premium_school_reported_programme "Original SIT", "FIP"
