@@ -14,5 +14,5 @@
 
   Rails.logger.info("importing '#{file}'")
 
-  Importers::SeedSchedule.new(klass:, path_to_csv:).call
+  Importers::CreateSchedule.new(klass:, path_to_csv:).call
 end
