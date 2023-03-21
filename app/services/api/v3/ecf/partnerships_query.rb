@@ -12,7 +12,7 @@ module Api
         end
 
         def partnerships
-          scope = lead_provider.partnerships.includes(:school, :cohort, :delivery_partner)
+          scope = lead_provider.partnerships.includes(:cohort, :delivery_partner, school: :induction_coordinators)
           scope = scope.where(partnerships: { cohort:  with_cohorts }) if filter[:cohort].present?
           scope = scope.where("partnerships.updated_at > ?", updated_since) if updated_since.present?
           scope = scope.where(partnerships: { delivery_partner: [delivery_partner_id_filter] }) if delivery_partner_id_filter.present?
@@ -21,7 +21,7 @@ module Api
         end
 
         def partnership
-          lead_provider.partnerships.includes(:school, :cohort, :delivery_partner).find(params[:id])
+          lead_provider.partnerships.includes(:cohort, :delivery_partner, school: :induction_coordinators).find(params[:id])
         end
 
       private
