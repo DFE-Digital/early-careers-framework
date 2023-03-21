@@ -1,9 +1,9 @@
 ---
-title: About
+title: About the API
 weight: 1
 ---
 
-# About
+# About the API
 
 This is API documentation for the Department for Education (DfE)’s new Manage teacher continuing professional development service.
 

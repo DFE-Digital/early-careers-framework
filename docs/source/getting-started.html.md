@@ -1,9 +1,9 @@
 ---
-title: Developing on the API
-weight: 4
+title: Getting started
+weight: 2
 ---
 
-# Developing on the API
+# Getting started
 
 The OpenAPI spec from which this documentation is generated is [available in YAML format](/lead-providers/api-docs/v1/api_spec.yml).
 
