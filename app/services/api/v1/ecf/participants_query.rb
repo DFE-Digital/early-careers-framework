@@ -47,7 +47,12 @@ module Api
 
         def induction_record
           induction_records
-            .find_by!(participant_profile: { participant_identities: { user_id: params[:id] } })
+            .where(participant_profile: { id: params[:id], type: ParticipantProfile::ECT.name })
+            .or(
+              induction_records
+                .where(participant_profile: { participant_identities: { user_id: params[:id] } }),
+            )
+            .first
         end
 
       private

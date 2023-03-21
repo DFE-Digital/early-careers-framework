@@ -392,13 +392,13 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     end
   end
 
-  describe "GET /api/v2/participants/ecf/:id", :with_default_schedules do
+  describe "GET /api/v2/participants/ecf/:id", :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before do
       default_headers[:Authorization] = bearer_token
       travel_to Time.zone.local(2022, 7, 22, 11, 30, 0) do
-        get "/api/v2/participants/ecf/#{early_career_teacher_profile.user.id}"
+        get "/api/v2/participants/ecf/#{early_career_teacher_profile.id}"
       end
     end
 
