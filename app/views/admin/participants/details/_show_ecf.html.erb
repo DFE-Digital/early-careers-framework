@@ -31,6 +31,11 @@
     # )
   end
 
+  sl.row do |row|
+    row.key(text: "Training status")
+    row.value(text: @participant_profile.training_status)
+  end
+
   if @participant_profile.teacher_profile
     sl.row do |row|
       row.key(text: "TRN")
