@@ -9,9 +9,9 @@ RSpec.describe Importers::NPQContracts do
   let!(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider, name: "Ambition Institute") }
   let!(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
   let!(:cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
-  let!(:npq_specialist_course) { create(:npq_specialist_course, name: "NPQ Leading Teaching (NPQLT)") }
-  let!(:npq_leadership_course) { create(:npq_leadership_course, name: "NPQ for Headship (NPQH)") }
-  let!(:npq_ehco_course)       { create(:npq_ehco_course, name: "The Early Headship Coaching Offer") }
+  let!(:npq_specialist_course) { create(:npq_specialist_course, name: "NPQ Leading Teaching (npq-leading-teaching)", identifier: "npq-leading-teaching") }
+  let!(:npq_leadership_course) { create(:npq_leadership_course, name: "NPQ for Headship (npq-headship)", identifier: "npq-headship") }
+  let!(:npq_ehco_course)       { create(:npq_ehco_course, name: "The Early Headship Coaching Offer", identifier: "npq-early-headship-coaching-offer") }
 
   subject { described_class.new(path_to_csv:) }
 
@@ -37,9 +37,9 @@ RSpec.describe Importers::NPQContracts do
 
     context "when new contract" do
       before do
-        csv.write "provider_name,cohort_year,course_name,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,NPQ Leading Teaching,123,456.78,13"
+        csv.write "Ambition Institute,2022,npq-leading-teaching,123,456.78,13"
         csv.write "\n"
         csv.close
       end
@@ -58,14 +58,15 @@ RSpec.describe Importers::NPQContracts do
         expect(contract.per_participant).to eql(456.78)
         expect(contract.number_of_payment_periods).to eql(3)
         expect(contract.cohort).to eql(cohort)
+        expect(contract.version).to eql("0.0.1")
       end
     end
 
     context "code is run more than once" do
       before do
-        csv.write "provider_name,cohort_year,course_name,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,NPQ Leading Teaching,123,456.78,13"
+        csv.write "Ambition Institute,2022,npq-leading-teaching,123,456.78,13"
         csv.write "\n"
         csv.close
       end
@@ -80,9 +81,9 @@ RSpec.describe Importers::NPQContracts do
 
     context "when existing contract" do
       before do
-        csv.write "provider_name,cohort_year,course_name,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,NPQ Leading Teaching,123,456.78,13"
+        csv.write "Ambition Institute,2022,npq-leading-teaching,123,456.78,13"
         csv.write "\n"
         csv.close
 
@@ -113,9 +114,9 @@ RSpec.describe Importers::NPQContracts do
 
     context "when a leadership course" do
       before do
-        csv.write "provider_name,cohort_year,course_name,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,NPQ for Headship,321,654.87,14"
+        csv.write "Ambition Institute,2022,npq-headship,321,654.87,14"
         csv.write "\n"
         csv.close
       end
@@ -139,9 +140,9 @@ RSpec.describe Importers::NPQContracts do
 
     context "when EHCO course" do
       before do
-        csv.write "provider_name,cohort_year,course_name,recruitment_target,per_participant,service_fee_installments"
+        csv.write "provider_name,cohort_year,course_identifier,recruitment_target,per_participant,service_fee_installments"
         csv.write "\n"
-        csv.write "Ambition Institute,2022,The Early Headship Coaching Offer,789,111.22,15"
+        csv.write "Ambition Institute,2022,npq-early-headship-coaching-offer,789,111.22,15"
         csv.write "\n"
         csv.close
       end
