@@ -32,7 +32,7 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
         end
 
         it "returns an error message" do
-          expect(parsed_response["errors"]["detail"]).to eq("cohort filter must be supplied")
+          expect(parsed_response["errors"][0]["detail"]).to eq("cohort filter must be supplied")
         end
       end
 

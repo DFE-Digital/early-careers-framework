@@ -32,6 +32,10 @@ module Api
         def serializer_class
           Api::V3::ECF::SchoolCohortSerializer
         end
+
+        def required_filter_params
+          [:cohort]
+        end
       end
     end
   end

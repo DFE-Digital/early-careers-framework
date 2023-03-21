@@ -10,14 +10,24 @@ module ApiFilter
 private
 
   def validate_filter_param
-    unless filter.as_json.is_a?(Hash)
-      error_factory = Api::ParamErrorFactory.new(params: ["Filter must be a hash"], error: I18n.t(:bad_parameter))
+    errors = []
+    errors << "Filter must be a hash" unless filter.as_json.is_a?(Hash)
+    missing_filter_params.each { |param| errors << "#{param} filter must be supplied" }
+
+    if errors.any?
+      error_factory = Api::ParamErrorFactory.new(params: errors, error: I18n.t(:bad_parameter))
       render json: { errors: error_factory.call }, status: :bad_request
     end
   end
 
   def filter
     params[:filter] ||= {}
+  end
+
+  def missing_filter_params
+    return required_filter_params.map(&:to_s) - filter.keys if defined?(required_filter_params)
+
+    []
   end
 
   def updated_since
