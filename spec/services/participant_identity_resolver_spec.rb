@@ -11,7 +11,7 @@ RSpec.shared_examples "a participant identity resolver service" do
 
     context "for npq course" do
       let(:course_identifier) { npq_application.npq_course.identifier }
-      let(:participant_id) { another_participant_identity.user_id_or_external_identifier }
+      let(:participant_id) { another_participant_identity.user_id }
 
       it "correctly selects npq participant identity" do
         result = subject.call
@@ -21,7 +21,7 @@ RSpec.shared_examples "a participant identity resolver service" do
     end
 
     context "for ect course" do
-      let(:participant_id) { participant_identity.user_id_or_external_identifier }
+      let(:participant_id) { participant_identity.user_id }
 
       it "correctly selects ect participant identity" do
         result = subject.call

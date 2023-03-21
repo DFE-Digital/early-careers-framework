@@ -29,7 +29,7 @@ module Api
       set_type :participant
 
       set_id :id do |induction_record|
-        induction_record.participant_profile.participant_identity.user_id_or_external_identifier
+        induction_record.participant_profile.participant_identity.user_id
       end
 
       attribute :email do |induction_record|
@@ -43,7 +43,7 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          induction_record.mentor_profile&.participant_identity&.user_id_or_external_identifier
+          induction_record.mentor_profile&.participant_identity&.user_id
         end
       end
 

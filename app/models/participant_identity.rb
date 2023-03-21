@@ -45,10 +45,4 @@ class ParticipantIdentity < ApplicationRecord
   def additional_identity?
     secondary_identity? && participant_profiles.blank?
   end
-
-  def user_id_or_external_identifier
-    return self[:external_identifier] unless FeatureFlag.active?(:external_identifier_to_user_id_lookup)
-
-    self[:user_id]
-  end
 end

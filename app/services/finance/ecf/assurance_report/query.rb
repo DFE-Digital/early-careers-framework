@@ -20,7 +20,7 @@ module Finance
           <<~EOSQL
             SELECT
               pd.id                                                            AS id,
-              #{user_id_or_external_identifier}                                AS participant_id,
+              pi.user_id                                                       AS participant_id,
               u.full_name                                                      AS participant_name,
               tp.trn                                                           AS trn,
               pp.type                                                          AS participant_type,
@@ -87,12 +87,6 @@ module Finance
 
         def where_values
           ParticipantDeclaration::ECF.sanitize_sql_for_conditions(["clp.id = ? AND s.id = ?", statement.cpd_lead_provider_id, statement.id])
-        end
-
-        def user_id_or_external_identifier
-          return "pi.external_identifier" unless FeatureFlag.active?(:external_identifier_to_user_id_lookup)
-
-          "pi.user_id"
         end
       end
     end
