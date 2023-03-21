@@ -98,6 +98,25 @@ module NewSeeds
               .with_induction_record(induction_programme: mentor_induction_programme)
           end
 
+          def with_request_for_details_email(**args)
+            args[:tags] = [:request_for_details]
+            add_email(**args)
+
+            self
+          end
+
+          def add_email(**args)
+            email_data = {
+              tags: args[:tags],
+              status: args[:status],
+              to: @participant_profile.participant_identity&.email,
+              delivered_to: args[:delivered_to],
+            }
+
+            email = FactoryBot.create(:seed_email, **email_data.compact)
+            email.create_association_with(@participant_profile)
+          end
+
         private
 
           attr_reader :new_user_attributes
