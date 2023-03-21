@@ -94,6 +94,8 @@ module Api
 
       attribute :training_status, &:training_status
 
+      attribute :training_record_id, &:participant_profile_id
+
       attribute :schedule_identifier do |induction_record|
         induction_record.schedule&.schedule_identifier
       end
