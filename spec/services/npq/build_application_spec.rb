@@ -103,5 +103,36 @@ RSpec.describe NPQ::BuildApplication do
         expect(npq_application.participant_identity.user).to eq user
       end
     end
+
+    describe "with correct cohort" do
+      let!(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
+      let!(:cohort_2021) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
+      let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+      let!(:cohort_2023) { Cohort.find_by(start_year: 2023) || create(:cohort, start_year: 2023) }
+      let!(:cohort_2024) { Cohort.find_by(start_year: 2024) || create(:cohort, start_year: 2024) }
+
+      context "when cohort active npq registration datetime is not set" do
+        it "sets cohort to the current one" do
+          Timecop.freeze(Date.new(2023, 3, 16)) do
+            expect(npq_application.cohort).to eq(cohort_2022)
+          end
+        end
+      end
+
+      context "when cohort active npq registration datetime is set" do
+        before do
+          cohort_2021.update!(npq_registration_start_date: Date.new(2021, 3, 15))
+          cohort_2022.update!(npq_registration_start_date: Date.new(2022, 3, 15))
+          cohort_2023.update!(npq_registration_start_date: Date.new(2023, 3, 15))
+          cohort_2024.update!(npq_registration_start_date: Date.new(2024, 3, 15))
+        end
+
+        it "sets cohort to the cohort open for registration" do
+          Timecop.freeze(Date.new(2023, 3, 16)) do
+            expect(npq_application.cohort).to eq(cohort_2023)
+          end
+        end
+      end
+    end
   end
 end

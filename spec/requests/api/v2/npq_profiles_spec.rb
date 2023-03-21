@@ -13,6 +13,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
   let(:token) { NPQRegistrationApiToken.create_with_random_token! }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
+  let!(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
 
   describe "#show" do
     before do
@@ -159,26 +160,29 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
       let(:json) { json_hash.to_json }
 
       it "creates the npq validation data" do
-        expect { post "/api/v2/npq-profiles", params: json }
-          .to change(NPQApplication, :count).by(1)
+        Timecop.freeze(Date.new(2023, 3, 20)) do
+          expect { post "/api/v2/npq-profiles", params: json }
+            .to change(NPQApplication, :count).by(1)
 
-        npq_application = NPQApplication.order(created_at: :desc).first
+          npq_application = NPQApplication.order(created_at: :desc).first
 
-        expect(npq_application.user).to eql(user)
+          expect(npq_application.user).to eql(user)
 
-        expect(npq_application.npq_lead_provider).to eql(npq_lead_provider)
-        expect(npq_application.date_of_birth).to eql(Date.new(1990, 12, 13))
-        expect(npq_application.nino).to eql("AB123456C")
-        expect(npq_application.teacher_reference_number).to eql("1234567")
-        expect(npq_application.teacher_reference_number_verified).to be_truthy
-        expect(npq_application.active_alert).to be_truthy
-        expect(npq_application.school_urn).to eql("123456")
-        expect(npq_application.school_ukprn).to eql("12345678")
-        expect(npq_application.headteacher_status).to eql("no")
-        expect(npq_application.npq_course).to eql(npq_course)
-        expect(npq_application.eligible_for_funding).to eql(true)
-        expect(npq_application.funding_choice).to eql("school")
-        expect(npq_application.lead_provider_approval_status).to eql("pending")
+          expect(npq_application.npq_lead_provider).to eql(npq_lead_provider)
+          expect(npq_application.date_of_birth).to eql(Date.new(1990, 12, 13))
+          expect(npq_application.nino).to eql("AB123456C")
+          expect(npq_application.teacher_reference_number).to eql("1234567")
+          expect(npq_application.teacher_reference_number_verified).to be_truthy
+          expect(npq_application.active_alert).to be_truthy
+          expect(npq_application.school_urn).to eql("123456")
+          expect(npq_application.school_ukprn).to eql("12345678")
+          expect(npq_application.headteacher_status).to eql("no")
+          expect(npq_application.npq_course).to eql(npq_course)
+          expect(npq_application.eligible_for_funding).to eql(true)
+          expect(npq_application.funding_choice).to eql("school")
+          expect(npq_application.lead_provider_approval_status).to eql("pending")
+          expect(npq_application.cohort_id).to eql(cohort_2022.id)
+        end
       end
 
       it "returns a 201" do
