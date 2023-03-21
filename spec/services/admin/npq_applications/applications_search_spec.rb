@@ -5,12 +5,12 @@ require "rails_helper"
 RSpec.describe Admin::NPQApplications::ApplicationsSearch, :with_default_schedules do
   let(:search) { Admin::NPQApplications::ApplicationsSearch }
 
-  let(:school_1) { create(:school, name: "Greendale School") }
-  let(:school_2) { create(:school, name: "Westview School") }
+  let(:school_1) { create(:school, name: "Greendale School", urn: "123456") }
+  let(:school_2) { create(:school, name: "Westview School", urn: "654321") }
   let!(:application_1) { create(:npq_application, user: user_1, school_urn: school_1.urn) }
   let!(:application_2) { create(:npq_application, user: user_2, school_urn: school_2.urn) }
-  let(:user_1) { create(:user, full_name: "John Doe") }
-  let(:user_2) { create(:user, full_name: "Jane Doe") }
+  let(:user_1) { create(:user, full_name: "John Doe", email: "john-doe@example.com") }
+  let(:user_2) { create(:user, full_name: "Alaric Smithee", email: "alaric@example.com") }
 
   subject { described_class.new(query_string:) }
 
