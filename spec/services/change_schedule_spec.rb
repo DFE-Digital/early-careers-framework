@@ -66,7 +66,7 @@ RSpec.shared_examples "validating a participant for a change schedule" do
   end
 
   context "when the schedule identifier change of the same type again" do
-    before { service.call }
+    before { described_class.new(params).call }
 
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
@@ -163,6 +163,17 @@ RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { ex
 
         expect(relevant_induction_record.schedule).to eq(schedule)
       end
+
+      context "when profile schedule is not the same as the induction record" do
+        let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, schedule:) }
+
+        it "updates the schedule on the relevant induction record" do
+          service.call
+          relevant_induction_record = participant_profile.current_induction_record
+
+          expect(relevant_induction_record.schedule).to eq(schedule)
+        end
+      end
     end
   end
 
@@ -189,6 +200,17 @@ RSpec.describe ChangeSchedule, :with_default_schedules, with_feature_flags: { ex
         relevant_induction_record = participant_profile.current_induction_record
 
         expect(relevant_induction_record.schedule).to eq(schedule)
+      end
+
+      context "when profile schedule is not the same as the induction record" do
+        before { participant_profile.update!(schedule:) }
+
+        it "updates the schedule on the relevant induction record" do
+          service.call
+          relevant_induction_record = participant_profile.current_induction_record
+
+          expect(relevant_induction_record.schedule).to eq(schedule)
+        end
       end
     end
   end
