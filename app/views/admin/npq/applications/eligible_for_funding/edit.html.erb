@@ -1,6 +1,5 @@
 <h1><%= @npq_application.user.full_name %></h1>
 
-
 <% content_for :before_content, govuk_back_link(text: "Back", href: admin_npq_applications_edge_case_path(@npq_application)) %>
 
 <%= form_for(@npq_application, url: admin_npq_applications_eligible_for_funding_path(@npq_application), method: "PATCH") do |form| %>

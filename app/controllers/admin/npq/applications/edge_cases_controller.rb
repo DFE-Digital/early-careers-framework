@@ -25,11 +25,7 @@ module Admin
           @total_pages = @pagy.pages
         end
 
-        def show
-          @npq_application = NPQApplication.includes(:participant_identity)
-                                     .joins({ participant_identity: :user })
-                                     .find(params[:id])
-        end
+        def show; end
 
       private
 

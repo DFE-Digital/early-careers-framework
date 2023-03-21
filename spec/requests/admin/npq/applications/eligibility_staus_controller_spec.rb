@@ -44,5 +44,20 @@ RSpec.describe "Admin::NPQ::Applications::EligibilityStatusController", :with_de
       expect(application.funding_eligiblity_status_code).to eq("re_register")
       expect(application.eligible_for_funding?).to eq(false)
     end
+
+    context "when the npq_applciation fails to save" do
+      before do
+        allow_any_instance_of(NPQApplication).to receive(:save).and_return(false)
+      end
+
+      it "returns to the edit page", :aggregate_failures do
+        patch("/admin/npq/applications/eligibility_status/#{application.id}", params:)
+        expect(flash[:alert]).not_to be_empty
+        expect(response).to redirect_to "/admin/npq/applications/edge_cases/#{application_id}"
+        application.reload
+        expect(application.funding_eligiblity_status_code).to eq("no_institution")
+        expect(application.eligible_for_funding?).to eq(false)
+      end
+    end
   end
 end

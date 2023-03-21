@@ -43,7 +43,6 @@ class NPQApplication < ApplicationRecord
   scope :does_not_work_in_school, -> { where(works_in_school: false) }
   scope :does_not_work_in_childcare, -> { where(works_in_childcare: false) }
   scope :not_eligible_for_funding, -> { where(eligible_for_funding: false) }
-  scope :no_institution, -> { where(funding_eligiblity_status_code: "no_institution") }
   scope :edge_case_statuses, lambda {
                                where(funding_eligiblity_status_code: %w[re_register
                                                                         no_institution

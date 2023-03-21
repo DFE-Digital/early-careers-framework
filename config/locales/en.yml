@@ -596,11 +596,15 @@ en:
           title: NPQ Application
           details: Details
           tabs: Tabs
-        edge_cases:
-          index:
-            title: NPQ Applications
-          show:
-            title: NPQ Applications
+        eligible_for_funding:
+          edit:
+            true: "Yes"
+            false: "No"
+        eligibility_status:
+          edit:
+            marked_ineligible_by_policy: "Not eligible for funding"
+            awaiting_more_information: "Awaiting more information"
+            re_register: "Needs to re-register"
         layout:
           applications: Applications
           title: NPQ Applications

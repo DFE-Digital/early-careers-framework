@@ -1,5 +1,3 @@
-<h1 class="govuk-heading-l"><% content_for :title, t(".title") %></h1>
-
 <%= render "admin/npq/applications/layout", locals = { page: "applications" } %>
 
 <%=
@@ -21,11 +19,11 @@
         body.row do |row|
           row.cell(text: govuk_link_to(application.user.full_name, admin_npq_applications_edge_case_path(application)))
           row.cell(text: boolean_red_green_tag(application.eligible_for_funding))
-          row.cell(text: application.funding_eligiblity_status_code.humanize.downcase)
-          row.cell(text: application.employment_type.try(:humanize) || '-')
+          row.cell(text: application.funding_eligiblity_status_code&.humanize&.downcase)
+          row.cell(text: application.employment_type&.humanize || '-')
           row.cell(text: application.employer_name || '-')
-          row.cell(text: application.employment_role.try(:humanize).downcase || '-')
-          row.cell(text: application.created_at)
+          row.cell(text: application.employment_role&.humanize&.downcase || '-')
+          row.cell(text: application.created_at.to_s(:govuk_short))
         end
       end
     end
