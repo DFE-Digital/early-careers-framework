@@ -182,7 +182,7 @@ module Pages
     end
 
     def choose_mentor_later
-      choose "Assign mentor later"
+      choose "Add or assign mentor later"
       click_on "Continue"
 
       self
