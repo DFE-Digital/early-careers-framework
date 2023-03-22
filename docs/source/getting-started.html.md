@@ -5,56 +5,82 @@ weight: 2
 
 # Getting started
 
-The OpenAPI spec from which this documentation is generated is [available in YAML format](/lead-providers/api-docs/v1/api_spec.yml).
+Providers can connect to the API by integrating their local systems with it. 
 
-## Environments
+Provider development teams can access the OpenAPI spec [in YAML format](/lead-providers/api-docs/v1/api_spec.yml).
 
-We have a production environment and a sandbox environment.
+## Connecting to the API
 
-The **Lead Provider sandbox** is for testing your integration. When we set you up with an API key, we’ll create a test provider as well.
+To connect to the API providers will need a unique authentication token.
+
+Each token is associated with a single provider. The authentication token will grant providers access to CPD participant data. 
+
+### Request an authentication token
+
+Providers should [contact us](/api-reference/help) to request a token for production and sandbox environments.
+
+DfE will send each provider a unique authentication token via secure email. 
+
+### How to use an authentication token
+
+An authentication token must be included in all requests to the API. 
+
+Providers should accompany all requests with an `Authorization` request header (not as part of the URL) in the following format: 
 
 ```
-https://ecf-sandbox.london.cloudapps.digital/api/v1
+Authorization: Bearer {token}
 ```
 
-The **Production** environment is the real environment. Do not perform testing here.
+Unauthenticated requests will receive an `UnauthorizedResponse` with a `401` error code.
+
+## Production and sandbox environments
+
+The API is available via production (live) and sandbox (testing) environments.
+
+### Production environment
+
+The production environment is the live environment which processes real data. 
+
+Do not perform testing in the production environment as real participant and payment data may be affected.
 
 ```
 https://manage-training-for-early-career-teachers.education.gov.uk/api/v1
 ```
 
+```
+https://manage-training-for-early-career-teachers.education.gov.uk/api/v2
+```
+
+```
+https://manage-training-for-early-career-teachers.education.gov.uk/api/v3
+```
+
+### Sandbox environment
+
+The sandbox environment is used by lead providers to: 
+
+* test API integrations without affecting real data 
+* become familiar with the service
+
+```
+API v1: 
+https://ecf-sandbox.london.cloudapps.digital/api/v1
+```
+
+```
+API v2:
+https://ecf-sandbox.london.cloudapps.digital/api/v2
+```
+
+```
+API v3: 
+https://ecf-sandbox.london.cloudapps.digital/api/v3
+```
+
+Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf) and [NPQ](/api-reference/npq). 
+
 ## Rate limits
 
-You are limited to 1000 requests per 5 minutes.
+Providers are limited to 1000 requests per 5 minutes when using the API in the production environment. If the limit is exceeded, providers will see `429` HTTP status codes.
 
-This limit is calculated on a rolling basis, per API key. If you exceed the limit, you will see `429` HTTP status codes.
-
-## Authentication
-
-All requests must be accompanied by an `Authorization` request header (not as part of the URL) in the following format: `Authorization: Bearer {token}`
-
-Unauthenticated requests will receive an [UnauthorizedResponse](#unauthorizedresponse-object) with a `401` status code.
-
-## Custom API Headers for Sandbox testing
-
-The sandbox environment supports the following custom header to enable testing: `X-With-Server-Date`
-
-### Using the X-With-Server-Date header
-
-Declaration submissions are made by providers in line with contractual milestones. These are required to fall into specific date periods.
-
-To test the integration more thoroughly, a custom JSON header can be used when making declarations in the sandbox.
-
-This header, `X-With-Server-Date`, is set as a standard JSON header to simulate declaration submissions against future milestone date periods.
-
-It lets you see what would happen when submitting declarations for that time, which would not be valid for the current milestone period, for example, forward declarations, but simulated as current declarations for a later milestone.
-
-This header is only valid on the sandbox system.
-
-Trying to submit future declarations on production systems or without this header would be rejected as part of normal validation.
-
-To set the header:
-
-1. Select header in Postman
-2. Set the key to `X-With-Server-Date`
-3. Enter the value for your chosen date in ISO8601 'Date with time and Timezone' format, for example `2022-01-10T10:42:00Z`
+This limit on requests for each authentication key is calculated on a rolling basis. 
