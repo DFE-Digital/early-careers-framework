@@ -92,7 +92,7 @@ class School < ApplicationRecord
   }
 
   def partnered?(cohort)
-    partnerships.unchallenged.where(cohort:).any?
+    partnerships.detect { |partnership| partnership.challenged_at.nil? && partnership.challenge_reason.nil? && partnership.cohort_id == cohort.id }.present?
   end
 
   def lead_provider(year)

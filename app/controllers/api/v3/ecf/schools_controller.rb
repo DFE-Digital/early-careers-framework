@@ -20,7 +20,7 @@ module Api
       private
 
         def ecf_schools
-          @ecf_schools ||= SchoolCohort.includes(:cohort, :school)
+          @ecf_schools ||= SchoolCohort.includes(:cohort, school: :partnerships)
                              .where(cohort: { start_year: params[:filter][:cohort] })
                              .order(sort_params(params))
         end
