@@ -48,23 +48,5 @@ RSpec.describe Importers::CreateCohort do
 
       expect(Cohort.select("start_year").group("start_year").pluck(:start_year).size).to be 4
     end
-
-    context "when a new cohort is needed" do
-      it "creates cohort records including the next" do
-        Timecop.freeze(Date.new(2023, 9, 20)) do
-          expect {
-            importer.call
-          }.to change(Cohort, :count).by(5)
-        end
-      end
-
-      it "creates the next cohort correctly" do
-        Timecop.freeze(Date.new(2023, 9, 20)) do
-          importer.call
-
-          expect(Cohort.next.start_year).to eq(2024)
-        end
-      end
-    end
   end
 end

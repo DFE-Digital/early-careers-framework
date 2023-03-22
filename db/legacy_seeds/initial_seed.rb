@@ -1,9 +1,21 @@
 # frozen_string_literal: true
 
-Importers::CreateCohort.new(path_to_csv: Rails.root.join("db/data/cohorts/cohorts.csv")).call
+registration_month = 5
+registration_day = 10
+academic_year_start_month = 9
+academic_year_start_day = 1
 
-cohorts = (2021..Cohort.next.start_year).to_a.map do |start_year|
-  Cohort.find_by!(start_year:)
+# Make sure Cohort 2020 exists
+Cohort.find_or_create_by!(start_year: 2020,
+                          registration_start_date: Date.new(2020, registration_month, registration_day),
+                          academic_year_start_date: Date.new(2020, academic_year_start_month, academic_year_start_day))
+
+# Create cohorts since 2021 until Cohort.next
+next_cohort_start_year = Date.current.year + (Date.current.month < academic_year_start_month ? 0 : 1)
+cohorts = (2021..next_cohort_start_year).to_a.map do |start_year|
+  Cohort.find_or_create_by!(start_year:,
+                            registration_start_date: Date.new(start_year, registration_month, registration_day),
+                            academic_year_start_date: Date.new(start_year, academic_year_start_month, academic_year_start_day))
 end
 
 ambition_cip = CoreInductionProgramme.find_or_create_by!(name: "Ambition Institute")
