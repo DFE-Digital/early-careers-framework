@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
-# We want to make sure Cohort exists for the seed
-[2021, 2022].each do |year|
-  Cohort.find_or_create_by!(start_year: year) do |c|
-    c.registration_start_date = Date.new(year, 5, 10)
-    c.academic_year_start_date = Date.new(year, 9, 1)
-  end
-end
+Importers::CreateCohort.new(path_to_csv: Rails.root.join("db/data/cohorts/cohorts.csv")).call
 
 ActiveRecord::Base.transaction do
   Importers::CreateSchedule.new(
