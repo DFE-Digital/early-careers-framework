@@ -573,7 +573,7 @@ module ManageTrainingSteps
   end
 
   def when_i_choose_assign_mentor_later
-    choose("Assign mentor later", allow_label_click: true)
+    choose("Add or assign mentor later", allow_label_click: true)
   end
 
   def when_i_add_ect_or_mentor_updated_name
