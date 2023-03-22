@@ -34,7 +34,7 @@ RSpec.describe NPQApplication, type: :model do
     end
 
     context "when cohort_id is modified" do
-      let(:cohort) { create(:cohort) }
+      let(:cohort) { create(:cohort, start_year: 2020) }
 
       it "fires NPQ::StreamBigQueryEnrollmentJob" do
         subject
