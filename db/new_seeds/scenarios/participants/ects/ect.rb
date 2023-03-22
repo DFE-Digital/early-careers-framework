@@ -16,14 +16,15 @@ module NewSeeds
             @new_user_attributes = { full_name:, email: }.compact
           end
 
-          def build(**_profile_args)
+          def build(teacher_profile_args: {}, **profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
-            @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school)
+            @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school, **teacher_profile_args)
             @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
             @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
                                                      participant_identity:,
                                                      teacher_profile:,
-                                                     school_cohort:)
+                                                     school_cohort:,
+                                                     **profile_args)
 
             self
           end
