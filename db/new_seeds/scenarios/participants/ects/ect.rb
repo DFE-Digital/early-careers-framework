@@ -62,6 +62,7 @@ module NewSeeds
                                 trn: args[:trn] || teacher_profile.trn,
                                 date_of_birth: args[:date_of_birth],
                                 nino: args[:nino],
+                                api_failure: args[:api_failure],
                                 participant_profile: }
 
             FactoryBot.create(:seed_ecf_participant_validation_data, **validation_data.compact)
