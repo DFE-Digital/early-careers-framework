@@ -17,8 +17,8 @@ Once an ECF or NPQ participant has been registered to the service, their partici
 
 Providers can integrate with the API to view, submit and update various kinds of data. For example, providers can view a list of all participants registered with them, update their details, or notify DfE of the training provided to them for a given milestone by submitting a declaration.
 
-* [How to use the API for ECF](LINK NEEDED) 
-* [How to use the API for NPQ](LINK NEEDED)
+* [How to use the API for ECF](/api-reference/ecf) 
+* [How to use the API for NPQ](/api-reference/npq)
 
 ## API versions and updates
 
