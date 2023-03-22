@@ -13,7 +13,7 @@ module NewSeeds
         end
 
         def build
-          @school_cohort = FactoryBot.create(:seed_school_cohort, :fip, school:, cohort:)
+          @school_cohort = FactoryBot.create(:seed_school_cohort, :cip, school:, cohort:)
 
           self
         end
@@ -24,7 +24,7 @@ module NewSeeds
           self
         end
 
-        # Adds a FIP induction programme to the school cohort.
+        # Adds a CIP induction programme to the school cohort.
         # Optionally links it to the provided core_induction_programme or a fresh new one,
         #   unless core_induction_programme: :none received. Default: create a new one.
         # Optionally sets it as the default induction programme of the school cohort. Default: true.
