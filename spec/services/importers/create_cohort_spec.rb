@@ -18,7 +18,7 @@ RSpec.describe Importers::CreateCohort do
       csv.write "\n"
       csv.write "2022,2022/05/10,2022/09/01,"
       csv.write "\n"
-      csv.write "2023,,,"
+      csv.write "2023,2023/05/10,2023/09/01,"
       csv.write "\n"
       csv.close
     end
@@ -47,6 +47,24 @@ RSpec.describe Importers::CreateCohort do
       importer.call
 
       expect(Cohort.select("start_year").group("start_year").pluck(:start_year).size).to be 4
+    end
+
+    context "when a new cohort is needed" do
+      it "creates cohort records including the next" do
+        Timecop.freeze(Date.new(2023, 9, 20)) do
+          expect {
+            importer.call
+          }.to change(Cohort, :count).by(5)
+        end
+      end
+
+      it "creates the next cohort correctly" do
+        Timecop.freeze(Date.new(2023, 9, 20)) do
+          importer.call
+
+          expect(Cohort.next.start_year).to eq(2024)
+        end
+      end
     end
   end
 end

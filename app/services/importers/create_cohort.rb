@@ -8,9 +8,14 @@ module Importers
       check_headers!
 
       logger.info "CreateCohort: Started!"
-      rows.each do |row|
-        create_cohort(row)
+
+      ActiveRecord::Base.transaction do
+        rows.each do |row|
+          create_cohort(row)
+        end
       end
+      create_next_cohort
+
       logger.info "CreateCohort: Finished!"
     end
 
@@ -34,6 +39,28 @@ module Importers
       end
 
       logger.info "CreateCohort: Cohort for starting year #{start_year} successfully created"
+    end
+
+    def create_next_cohort
+      latest_cohort = Cohort.order(start_year: :desc).first
+
+      return if latest_cohort.blank?
+
+      academic_year_start_month = latest_cohort.academic_year_start_date.month
+      next_cohort_start_year = Date.current.year + (Date.current.month < academic_year_start_month ? 0 : 1)
+      if next_cohort_start_year > latest_cohort.start_year
+        (latest_cohort.start_year..next_cohort_start_year).drop(1).to_a.each do |start_year|
+          logger.info "CreateCohort: Creating next cohort for starting year #{start_year}"
+
+          Cohort.find_or_create_by!(start_year:) do |c|
+            c.registration_start_date = latest_cohort.registration_start_date + 1.year if latest_cohort.registration_start_date
+            c.academic_year_start_date = latest_cohort.academic_year_start_date + 1.year if latest_cohort.academic_year_start_date
+            c.npq_registration_start_date = latest_cohort.npq_registration_start_date + 1.year if latest_cohort.npq_registration_start_date
+          end
+
+          logger.info "CreateCohort: Next cohort for starting year #{start_year} successfully created"
+        end
+      end
     end
 
     def safe_parse(date)
