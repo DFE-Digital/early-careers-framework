@@ -126,7 +126,7 @@ private
   def and_i_fill_in_all_info
     allow(ParticipantValidationService).to receive(:validate).and_return(
       {
-        trn: "AB123445A",
+        trn: "5234457",
         full_name: "George ECT",
         nino: nil,
         dob: Date.new(1998, 11, 22),
@@ -136,7 +136,7 @@ private
 
     fill_in "schools_add_participant_form[full_name]", with: "George ECT"
     click_on "Continue"
-    fill_in "schools_add_participant_form[trn]", with: "AB123445A"
+    fill_in "schools_add_participant_form[trn]", with: "5234457"
     click_on "Continue"
     fill_in_date("What’s George ECT’s date of birth?", with: "1998-11-22")
     click_on "Continue"

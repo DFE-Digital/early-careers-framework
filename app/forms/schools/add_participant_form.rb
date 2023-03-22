@@ -213,11 +213,10 @@ module Schools
     end
 
     def check_for_existing_profile
-      self.existing_participant_profile = ParticipantProfile
-                                            .ecf
-                                            .joins(:ecf_participant_validation_data)
-                                            .where(ecf_participant_validation_data: { trn: formatted_trn })
-                                            .first
+      self.existing_participant_profile = ParticipantProfile.ecf
+                                                            .joins(:teacher_profile)
+                                                            .where(teacher_profile: { trn: formatted_trn })
+                                                            .first
     end
 
     def validate_dqt_record
