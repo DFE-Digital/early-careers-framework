@@ -5,44 +5,37 @@ weight: 1
 
 # About the API
 
-This is API documentation for the Department for Education (DfE)’s new Manage teacher continuing professional development service.
+The Department of Education (DfE) has developed an API for the Manage teacher continuing professional development service. 
 
-## What this API is for
+The API enables lead providers to view, submit and update data associated with Early Career Framework (ECF) based training and national professional qualifications (NPQs). 
 
-Once a participant has been added by a school induction tutor, the participant record will become available via the API.
+The data submitted is then used to facilitate appropriate payment from the DfE to providers.
 
-Providers can then use the API for:
+## What does the API do? 
 
-- [Retrieving a list of ECF participants](/api-reference/reference-v1#api-v1-participants-ecf-get)
-- [Retrieving a CSV file of ECF participants](/api-reference/reference-v1#api-v1-participants-ecf-csv-get)
-- [Declaring the progress of an ECF or NPQ participant against milestone](/api-reference/reference-v1#api-v1-participant-declarations-post)
-- [Retrieving a list of NPQ applications](/api-reference/reference-v1#api-v1-npq-applications-get)
-- [Retrieving a CSV file of NPQ applications](/api-reference/reference-v1#api-v1-npq-applications-csv-get)
+Once an ECF or NPQ participant has been registered to the service, their participant data becomes available via the API. 
 
-## How do I connect to this API?
+Providers can integrate with the API to view, submit and update various kinds of data. For example, providers can view a list of all participants registered with them, update their details, or notify DfE of the training provided to them for a given milestone by submitting a declaration.
 
-### Authentication and authorisation
+* [How to use the API for ECF](LINK NEEDED) 
+* [How to use the API for NPQ](LINK NEEDED)
 
-Requests to the API must be accompanied by an authentication token.
+## API versions and updates
 
-Each token is associated with a single provider. It will grant access to participants for courses offered by that provider. You can get a token by writing to [continuing-professional-development@digital.education.gov.uk](href="mailto:continuing-professional-development@digital.education.gov.uk).
+The DfE works to continually improve the API service and new functionality occasionally becomes available. 
 
-For instructions on how to authenticate see the [API reference](/api-reference/developing-on-the-api.html#authentication).
+If the API changes in a way that is backwards-incompatible, a new version of the API will be published. This is specified in the URL `/api/v{n}/`. For example, `/api/v1/` or  `/api/v2/` and so on. 
 
-### Versioning
+When the DfE publishes a new API version, only one previous version will remain supported. For example, when a `v4` is released then `v2` will be discontinued.
 
-The version of the API is specified in the URL `/api/v{n}/`. For example: `/api/v1/`, `/api/v2/`, `/api/v3/`, ...
+Note, there will be an exception to this rule for API `v3`. DfE will support `v1` for an extended period whilst working with providers on transition plans.
 
-When the API changes in a way that is backwards-incompatible, a new version number of the API will be published.
+When non-breaking updates (sometimes referred to as backwards compatible updates) are made to the API, it will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
 
-When a new version, for example `/api/v2`, is published, both the previous **v1** and the current **v2** versions will be available.
+Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
 
-We, however, only support one version back, so if the **v3** is published, the **v1** will be discontinued.
+## Who is this guidance for?
 
-When non-breaking changes are made to the API, this will not result in a version bump. An example of a non-breaking change could be the introduction of a new field without removing an existing field.
+This guidance has been created for ECF and NPQ providers who have systems integrated with the API. 
 
-Information about deprecations (for instance attributes/endpoints that will be modified/removed) will be included in the API response through a ‘Warning’ header.
-
-## Testing
-
-To get familiar with our system and perform testing, you can use [our sandbox environment](https://ecf-sandbox.london.cloudapps.digital).
+It is reviewed and updated as necessary. [Contact us](/api-reference/help) if you have any questions.
