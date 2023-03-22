@@ -56,7 +56,7 @@ module Api
       def to_row(record)
         [
           record.id,
-          record.participant_identity.user_id_or_external_identifier,
+          record.participant_identity.user_id,
           record.participant_identity.user.full_name,
           record.participant_identity.email,
           true,

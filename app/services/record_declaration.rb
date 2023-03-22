@@ -233,7 +233,7 @@ private
     NPQ::CreateParticipantOutcome.new(
       cpd_lead_provider:,
       course_identifier:,
-      participant_external_id: participant_identity.user_id_or_external_identifier,
+      participant_external_id: participant_identity.user_id,
       completion_date: declaration_date,
       state: participant_outcome_state,
     ).call

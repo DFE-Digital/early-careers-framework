@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
   let(:statement)         { create(:npq_statement, cpd_lead_provider:) }
 
@@ -28,7 +28,7 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules, wi
 
     it "surfaces the preferred external identifier" do
       participant_declarations = query.participant_declarations
-      expect(participant_declarations.first.participant_id).to eq(participant_identity.user_id_or_external_identifier)
+      expect(participant_declarations.first.participant_id).to eq(participant_identity.user_id)
     end
 
     context "with multiple participant identities" do
@@ -53,7 +53,7 @@ RSpec.describe Finance::NPQ::AssuranceReport::Query, :with_default_schedules, wi
 
       it "surfaces the preferred external identifier" do
         participant_declarations = query.participant_declarations
-        expect(participant_declarations.first.participant_id).to eq(participant_identity.user_id_or_external_identifier)
+        expect(participant_declarations.first.participant_id).to eq(participant_identity.user_id)
       end
     end
   end

@@ -13,7 +13,6 @@ class ParticipantIdentityResolver
 
   def call
     return if participant_id.blank?
-    return participant_identity unless FeatureFlag.active?(:external_identifier_to_user_id_lookup)
 
     if ParticipantProfile::ECT::COURSE_IDENTIFIERS.include?(course_identifier)
       ParticipantIdentity
@@ -40,8 +39,4 @@ class ParticipantIdentityResolver
 private
 
   attr_reader :participant_id, :course_identifier, :cpd_lead_provider
-
-  def participant_identity
-    @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
-  end
 end
