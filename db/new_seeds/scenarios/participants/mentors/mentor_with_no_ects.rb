@@ -14,12 +14,11 @@ module NewSeeds
             @supplied_participant_identity = participant_identity
           end
 
-          def build(**profile_args)
+          def build(teacher_profile_args: {}, **profile_args)
             school = school_cohort.school
             @user = @supplied_participant_identity&.user || FactoryBot.create(:seed_user, **new_user_attributes)
             @participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:)
 
-            @teacher_profile = @supplied_teacher_profile || FactoryBot.create(:seed_teacher_profile, user:, school:)
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
                                                      participant_identity:,
                                                      school_cohort:,
