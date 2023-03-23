@@ -55,7 +55,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
         end
 
         context "when the school is in a partnership" do
-          before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
+          before { allow(component).to receive(:record_state).and_return(:eligible_fip) }
 
           subject! { render_inline(component) }
 
@@ -126,7 +126,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
 
         context "when the school is in a partnership" do
           let!(:partnership) { create(:partnership, school: school_cohort.school, cohort: school_cohort.cohort) }
-          before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
+          before { allow(component).to receive(:record_state).and_return(:eligible_fip) }
 
           subject! { render_inline(component) }
 
@@ -175,7 +175,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
 
         context "when the school is in a partnership" do
           let!(:partnership) { create(:partnership, school: school_cohort.school, cohort: school_cohort.cohort) }
-          before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
+          before { allow(component).to receive(:record_state).and_return(:eligible_fip) }
 
           subject! { render_inline(component) }
 
