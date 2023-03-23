@@ -22,7 +22,7 @@ private
     case record_state
     when :withdrawn_training
       { text: "Withdrawn by provider", colour: "red" }
-    when :registered_for_fip_training || :registered_for_cip_training
+    when :registered_for_fip_training, :registered_for_cip_training
       { text: "Eligible to start", colour: "green" }
     when :registered_for_mentor_training
       { text: "Eligible: Mentor at main school", colour: "green" }
