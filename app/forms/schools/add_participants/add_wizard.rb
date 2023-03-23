@@ -131,20 +131,6 @@ module Schools
           appropriate_body_id:,
         }
       end
-
-      # def dqt_record(force_recheck: false)
-      #   @dqt_record = nil if force_recheck
-
-      #   @dqt_record ||= ParticipantValidationService.validate(
-      #     full_name:,
-      #     trn: formatted_trn,
-      #     date_of_birth:,
-      #     nino: formatted_nino,
-      #     config: {
-      #       check_first_name_only: true,
-      #     },
-      #   )
-      # end
     end
   end
 end
