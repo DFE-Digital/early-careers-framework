@@ -12,7 +12,7 @@ private
   def validate_filter_param
     errors = []
     errors << "Filter must be a hash" unless filter.as_json.is_a?(Hash)
-    missing_filter_params.each { |param| errors << "#{param} filter must be supplied" }
+    missing_filter_params.each { |param| errors << "The filter '#/#{param}' must be included in your request" }
 
     if errors.any?
       error_factory = Api::ParamErrorFactory.new(params: errors, error: I18n.t(:bad_parameter))
