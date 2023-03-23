@@ -1,8 +1,10 @@
 <% if manual_removal_possible? %>
-  <%= govuk_link_to "Remove #{name} from this cohort", schools_participant_remove_path(school_id: induction_record.school, cohort_id: induction_record.school_cohort.cohort, participant_id: induction_record.participant_profile) %>
+  <%= govuk_link_to "Remove #{name}", schools_participant_remove_path(school_id: induction_record.school,
+                                                                      cohort_id: induction_record.school_cohort.cohort,
+                                                                      participant_id: induction_record.participant_profile) %>
 <% elsif fip? %>
   <% if lead_provider %>
-    Contact <%= lead_provider.name %> if you want to remove <%= name %> from this cohort.
+    Contact your training provider if you wish to remove this participant.
   <% else %>
     If <%= name %> should not be in this cohort, contact your training provider to remove them.
   <% end %>
