@@ -27,6 +27,6 @@
   </td>
   <td class="govuk-table__cell nhsuk-table__cell">
     <span class="nhsuk-table-responsive__heading">Validation status</span>
-    <%= render ParticipantStatusTagComponent.new(profile: profile, induction_record: induction_record) %>
+    <%= render StatusTags::ParticipantStatusTag.new(profile: profile, induction_record: induction_record) %>
   </td>
 </tr>
