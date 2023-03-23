@@ -132,8 +132,14 @@ private
     return :leaving if leaving_training?
 
     return :registered_for_mentor_training if @participant_profile.mentor?
-    return :registered_for_fip_training if on_fip?
-    return :registered_for_cip_training if on_cip?
+
+    if manual_check_no_induction?
+      return :registered_for_fip_training if on_fip?
+      return :registered_for_cip_training if on_cip?
+    else
+      return :active_fip_training if on_fip?
+      return :active_cip_training if on_cip?
+    end
 
     :registered
   end
