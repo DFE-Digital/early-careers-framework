@@ -243,11 +243,12 @@ private
   end
 
   def withdrawn_training?
-    @induction_record&.training_status_withdrawn? || @participant_profile.training_status_withdrawn?
+    @induction_record.present? ? @induction_record&.training_status_withdrawn? : @participant_profile.training_status_withdrawn?
   end
 
   def deferred_training?
-    @induction_record&.training_status_deferred? || @participant_profile.training_status_deferred?
+    # only use `participant_profile.training_status` if no `induction_record` is present
+    @induction_record.present? ? @induction_record&.training_status_deferred? : @participant_profile.training_status_deferred?
   end
 
   def withdrawn_participant?

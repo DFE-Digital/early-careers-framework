@@ -669,4 +669,494 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
       end
     end
   end
+
+  context "as a mimic of ParticipantProfileStatus" do
+    let(:participant_profile) { create(:ect_participant_profile) }
+    let!(:induction_record) { create(:induction_record, participant_profile:) }
+
+    let(:params) { { participant_profile:, induction_record: } }
+
+    subject { described_class.call(**params) }
+
+    describe "#record_state" do
+      context "when the request for details has not been sent yet" do
+        it "returns the correct status" do
+          response = subject.record_state
+          expect(response).to eq :checks_not_complete # "contacted_for_information"
+        end
+      end
+
+      context "with a request for details email record" do
+        let!(:email) { create(:email, tags: %i[request_for_details], associated_with: participant_profile, status: email_status) }
+
+        context "which has been successfully delivered" do
+          let(:email_status) { :delivered }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :request_for_details_delivered # "contacted_for_information"
+          end
+        end
+
+        context "which has failed to be deliver" do
+          let(:email_status) { Email::FAILED_STATUSES.sample }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :request_for_details_failed # "contacted_for_information"
+          end
+        end
+
+        context "which is still pending" do
+          let(:email_status) { :submitted }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :request_for_details_submitted # "contacted_for_information"
+          end
+        end
+      end
+
+      context "mentor with multiple profiles" do
+        let(:school_cohort) { create(:school_cohort) }
+
+        context "when the primary profile is eligible" do
+          let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :registered_for_mentor_training # "training_or_eligible_for_training"
+          end
+        end
+
+        context "when the secondary profile is ineligible because it is a duplicate" do
+          let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
+
+          # TODO: this needs working through
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :duplicate_profile # "training_or_eligible_for_training"
+          end
+        end
+      end
+
+      context "full induction programme participant" do
+        context "has submitted validation data" do
+          let(:school_cohort) { create(:school_cohort, :fip) }
+          let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :registered_for_fip_training # "training_or_eligible_for_training"
+          end
+        end
+
+        context "was a participant in early roll out" do
+          let(:school_cohort) { create(:school_cohort, :fip) }
+          let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :registered_for_mentor_training # "training_or_eligible_for_training"
+          end
+        end
+      end
+
+      context "core induction programme participant" do
+        context "has submitted validation data" do
+          let(:school_cohort) { create(:school_cohort, :cip) }
+          let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :not_qualified # "dfe_checking_eligibility"
+          end
+        end
+
+        context "has a previous induction reason" do
+          let(:school_cohort) { create(:school_cohort, :cip) }
+          let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :previous_induction # "not_eligible_for_funded_training"
+          end
+        end
+
+        context "has no QTS reason" do
+          let(:school_cohort) { create(:school_cohort, :cip) }
+          let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :not_qualified # "checking_qts"
+          end
+        end
+
+        context "has an ineligible status" do
+          let(:school_cohort) { create(:school_cohort, :cip) }
+          let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :exempt_from_induction_state, participant_profile:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :exempt_from_induction # "not_eligible_for_funded_training"
+          end
+        end
+
+        context "has a withdrawn status" do
+          let(:school_cohort) { create(:school_cohort, :fip) }
+          let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
+          let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+          let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+          let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
+
+          it "returns the correct status" do
+            response = subject.record_state
+            expect(response).to eq :registered_for_fip_training # "training_or_eligible_for_training"
+          end
+
+          context "when induction record does not exist" do
+            let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn") }
+            let!(:induction_record) { nil }
+
+            it "returns the correct status" do
+              response = subject.record_state
+              expect(response).to eq :withdrawn_training # "no_longer_being_trained"
+            end
+          end
+        end
+      end
+    end
+  end
+
+  context "as a mimic of ParticipantStatusTagComponent" do
+    let!(:participant_profile) { create :ect_participant_profile }
+
+    subject { described_class.call(participant_profile:).record_state }
+
+    context "when the request for details has not been sent yet" do
+      it { is_expected.to eq :checks_not_complete } # "Contacting for information"
+    end
+
+    context "with a request for details email record" do
+      let!(:email) { create :email, tags: %i[request_for_details], associated_with: participant_profile, status: email_status }
+
+      context "which has been successfully delivered" do
+        let(:email_status) { :delivered }
+
+        it { is_expected.to eq :request_for_details_delivered } # "Contacted for information"
+      end
+
+      context "which has failed to be deliver" do
+        let(:email_status) { Email::FAILED_STATUSES.sample }
+
+        it { is_expected.to eq :request_for_details_failed } # "Check email address"
+      end
+
+      context "which is still pending" do
+        let(:email_status) { :submitted }
+
+        it { is_expected.to eq :request_for_details_submitted } # "Contacting for information"
+      end
+    end
+
+    context "mentor with multiple profiles" do
+      let(:school_cohort) { create(:school_cohort) }
+
+      context "when the primary profile is eligible" do
+        let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+        before do
+          participant_profile.reload
+        end
+
+        it { is_expected.to eq :registered_for_mentor_training } # "Eligible: Mentor at main school" }
+      end
+
+      context "when the secondary profile is ineligible because it is a duplicate" do
+        let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
+
+        before do
+          participant_profile.reload
+        end
+
+        it { is_expected.to eq :duplicate_profile } # "Eligible: Mentor at additional school"
+      end
+    end
+
+    context "full induction programme participant" do
+      context "has submitted validation data" do
+        let(:school_cohort) { create(:school_cohort, :fip) }
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+        it { is_expected.to eq :registered_for_fip_training } # "Eligible to start"
+      end
+
+      context "was a participant in early roll out" do
+        let(:school_cohort) { create(:school_cohort, :fip) }
+        let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
+
+        # TODO: we don't currently identify ERO
+        it { is_expected.to eq :registered_for_mentor_training } # "Eligible to start: ERO"
+      end
+    end
+
+    context "core induction programme participant" do
+      context "has submitted validation data" do
+        let(:school_cohort) { create(:school_cohort, :cip) }
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
+
+        it { is_expected.to eq :active_flags } # "DfE checking eligibility"
+      end
+
+      context "has a previous induction reason" do
+        let(:school_cohort) { create(:school_cohort, :cip) }
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
+
+        it { is_expected.to eq :previous_induction } # "Not eligible: NQT+1" - TODO: will this always be NQT+1 ?
+      end
+
+      context "has no QTS reason" do
+        let(:school_cohort) { create(:school_cohort, :cip) }
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
+
+        it { is_expected.to eq :not_qualified } # "Not eligible: No QTS"
+      end
+
+      context "has an ineligible status" do
+        let(:school_cohort) { create(:school_cohort, :cip) }
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
+
+        it { is_expected.to eq :previous_induction } # "Not eligible"
+      end
+
+      context "has a withdrawn status" do
+        let(:school_cohort) { create(:school_cohort, :fip) }
+        let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
+        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+        context "when there is not induction record to use" do
+          it { is_expected.to eq :withdrawn_training } # "Withdrawn by provider"
+        end
+
+        context "when an active induction record is available" do
+          let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+          let(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
+
+          subject { described_class.call(participant_profile:, induction_record:).record_state }
+
+          it { is_expected.to eq :registered_for_fip_training } # "Eligible to start" }
+        end
+      end
+    end
+  end
+
+  context "as a mimic of Schools::Participants::Status" do
+    subject { described_class.call(participant_profile:).record_state }
+
+    context "when an email has been sent but the participant has not validated" do
+      let(:participant_profile) { create(:ect_participant_profile, :email_sent) }
+
+      it { is_expected.to eq :request_for_details_delivered } # "details_required"
+    end
+
+    context "when an email bounced" do
+      let(:participant_profile) { create(:ect_participant_profile, :email_bounced) }
+
+      it { is_expected.to eq :request_for_details_failed } #  "request_for_details_failed"
+    end
+
+    context "when no email has been sent" do
+      let(:participant_profile) { create(:ect_participant_profile) }
+
+      it { is_expected.to eq :checks_not_complete } #  request_to_be_sent
+    end
+
+    context "when the participant is doing FIP" do
+      let(:school_cohort) { create(:school_cohort, :fip) }
+
+      context "when the participant is an ECT" do
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
+
+        context "when the participant is eligible" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_fip_training } #  eligible_fip_no_partner
+
+          context "when the school is in a partnership", skip: "cannot override status in new service" do
+            before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
+
+            it { is_expected.to eq :registered_for_fip_training } # eligible_fip
+          end
+        end
+
+        context "when the participant has no QTS" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
+
+          it { is_expected.to eq :not_qualified } # fip_ect_no_qts
+        end
+
+        context "when the participant has a previous induction" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
+
+          it { is_expected.to eq :previous_induction } # ineligible_previous_induction
+        end
+
+        context "when the participant has a TRN mismatch" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
+
+          it { is_expected.to eq :different_trn } #  checking_eligibility
+        end
+
+        context "when the participant has active flags and manual check status" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
+
+          it { is_expected.to eq :active_flags } #  checking_eligibility
+        end
+      end
+
+      context "when the participant is a mentor" do
+        let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+        let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
+
+        context "when the participant is eligible" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_mentor_training } #  eligible_fip_no_partner
+
+          context "when the school is in a partnership", skip: "cannot override status in new service" do
+            let!(:partnership) { create(:partnership, school: school_cohort.school, cohort: school_cohort.cohort) }
+            before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
+
+            it { is_expected.to eq :registered_for_mentor_training } #  eligible_fip
+          end
+        end
+
+        context "when the participant has a previous participation (ERO)" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_mentor_training } #  ero_mentor - TODO: does this check mentor participation
+        end
+
+        context "when the participant has a TRN mismatch" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
+
+          it { is_expected.to eq :different_trn } #  checking_eligibility
+        end
+
+        context "when the participant is a duplicate profile" do
+          let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
+          let!(:eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
+
+          before { participant_profile.reload }
+
+          it { is_expected.to eq :duplicate_profile } #  eligible_fip_no_partner
+
+          context "when the school is in a partnership", skip: "cannot override status in new service" do
+            let!(:partnership) { create(:partnership, school: school_cohort.school, cohort: school_cohort.cohort) }
+            before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
+
+            it { is_expected.to eq :registered_for_fip_training } #  eligible_fip
+          end
+        end
+
+        context "when the participant has active flags and manual check status" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
+
+          it { is_expected.to eq :active_flags } #  checking_eligibility
+        end
+      end
+    end
+
+    context "when the participant is doing CIP" do
+      let(:school_cohort) { create(:school_cohort, :cip) }
+
+      context "when the participant is an ECT" do
+        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+        let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
+
+        context "when the participant is eligible" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_cip_training } #  eligible_cip
+        end
+
+        context "when the participant has no QTS" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
+
+          it { is_expected.to eq :not_qualified } #  eligible_cip
+        end
+
+        context "when the participant has a previous induction" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
+
+          it { is_expected.to eq :previous_induction } #  eligible_cip
+        end
+
+        context "when the participant has a TRN mismatch" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
+
+          it { is_expected.to eq :different_trn } #  eligible_cip
+        end
+
+        context "when the participant has active flags and manual check status" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
+
+          it { is_expected.to eq :active_flags } #  eligible_cip
+        end
+      end
+
+      context "when the participant is a mentor" do
+        let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+        let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
+
+        context "when the participant is eligible" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_mentor_training } #  eligible_cip
+        end
+
+        context "when the participant has no QTS" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_mentor_training } #  eligible_cip
+        end
+
+        context "when the participant has a previous participation (ERO)" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
+
+          it { is_expected.to eq :registered_for_mentor_training } #  eligible_cip
+        end
+
+        context "when the participant has a TRN mismatch" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
+
+          it { is_expected.to eq :different_trn } #  eligible_cip
+        end
+
+        context "when the participant has active flags and manual check status" do
+          let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
+
+          it { is_expected.to eq :active_flags } #  eligible_cip
+        end
+      end
+    end
+  end
 end
