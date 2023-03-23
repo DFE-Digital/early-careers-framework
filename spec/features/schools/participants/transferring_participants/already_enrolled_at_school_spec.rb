@@ -200,8 +200,12 @@ RSpec.describe "Transferring participants", type: :feature, js: true, rutabaga: 
   end
 
   def and_they_have_already_added_this_ect
-    @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_one)
+    @participant_profile_ect = create(:ect_participant_profile,
+                                      user: create(:user, full_name: "Sally Teacher"),
+                                      school_cohort: @school_cohort_one,
+                                      teacher_profile: create(:teacher_profile, trn: "1001000"))
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
+
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_one)
   end
 
