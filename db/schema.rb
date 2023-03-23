@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_14_120416) do
+ActiveRecord::Schema.define(version: 2023_03_21_181937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -890,6 +890,7 @@ ActiveRecord::Schema.define(version: 2023_03_14_120416) do
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["default_induction_programme_id"], name: "index_school_cohorts_on_default_induction_programme_id"
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
+    t.index ["updated_at"], name: "index_school_cohorts_on_updated_at"
   end
 
   create_table "school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
