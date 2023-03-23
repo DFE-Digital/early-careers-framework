@@ -161,6 +161,11 @@ RSpec.describe Admin::SchoolTransferForm, type: :model do
         form.new_school_urn = school.urn
         expect(form.valid?(:select_school)).to be true
       end
+
+      it "checks the urn provided is from a new school" do
+        form.new_school_urn = participant_profile.school.urn
+        expect(form.valid?(:select_school)).to be false
+      end
     end
 
     context "when :start_date step" do

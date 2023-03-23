@@ -18,11 +18,11 @@ module Api
       subject { described_class.new(query_result) }
 
       describe "#id" do
-        let(:external_identifier) { Faker::Internet.uuid }
-        let(:fields) { { external_identifier: } }
+        let(:user_id) { Faker::Internet.uuid }
+        let(:fields) { { user_id: } }
 
-        it "returns the external identifier" do
-          expect(subject.serializable_hash[:data][:id]).to eql(external_identifier)
+        it "returns the user id" do
+          expect(subject.serializable_hash[:data][:id]).to eql(user_id)
         end
       end
 
@@ -64,30 +64,30 @@ module Api
       end
 
       describe "#mentor_id" do
-        let(:external_identifier) { Faker::Internet.uuid }
+        let(:user_id) { Faker::Internet.uuid }
 
         context "when participant is an ECT" do
           let(:fields) do
             {
-              mentor_external_identifier: external_identifier,
+              mentor_user_id: user_id,
               participant_profile_type: "ParticipantProfile::ECT",
             }
           end
 
-          it "returns the mentor external identifier" do
-            expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to eql(external_identifier)
+          it "returns the mentor user id" do
+            expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to eql(user_id)
           end
         end
 
         context "when participant is a Mentor" do
           let(:fields) do
             {
-              mentor_external_identifier: external_identifier,
+              mentor_user_id: user_id,
               participant_profile_type: "ParticipantProfile::Mentor",
             }
           end
 
-          it "returns preferred identity email" do
+          it "returns nil" do
             expect(subject.serializable_hash[:data][:attributes][:mentor_id]).to be_nil
           end
         end

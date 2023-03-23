@@ -40,6 +40,42 @@ RSpec.describe NPQ::ChangeToPending, :with_default_schedules do
       end
     end
 
+    context "when application has a schedule changed" do
+      let(:application_status) { :accepted }
+
+      before do
+        participant_profile.participant_profile_schedules.create!(schedule: participant_profile.schedule)
+        described_class.new(npq_application:).call
+      end
+
+      it "changes to pending" do
+        subject.call
+
+        npq_application.reload
+        expect(npq_application).to be_pending
+        expect(npq_application.profile).to be_nil
+        expect(ParticipantProfileSchedule.where(participant_profile_id: participant_profile.id)).to be_empty
+      end
+    end
+
+    context "when application has it's state changed" do
+      let(:application_status) { :accepted }
+
+      before do
+        participant_profile.participant_profile_states.create!(state: "active")
+        described_class.new(npq_application:).call
+      end
+
+      it "changes to pending" do
+        subject.call
+
+        npq_application.reload
+        expect(npq_application).to be_pending
+        expect(npq_application.profile).to be_nil
+        expect(ParticipantProfileState.where(participant_profile_id: participant_profile.id)).to be_empty
+      end
+    end
+
     # Should fail
     %w[eligible payable paid awaiting_clawback].each do |dec_state|
       context "accepted application with #{dec_state} declaration" do

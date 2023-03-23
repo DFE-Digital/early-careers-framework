@@ -66,12 +66,24 @@ RSpec.shared_examples "validating a participant for a change schedule" do
   end
 
   context "when the schedule identifier change of the same type again" do
-    before { service.call }
+    before { described_class.new(params).call }
 
     it "is invalid and returns an error message" do
       is_expected.to be_invalid
 
       expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is already on the profile")
+    end
+  end
+
+  context "when the participant has a different user ID to external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+
+    before { participant_profile.update!(participant_identity:) }
+
+    it "is invalid and returns an error message" do
+      is_expected.to be_invalid
+
+      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
     end
   end
 end
@@ -106,7 +118,7 @@ RSpec.shared_examples "changing the schedule of a participant" do
 
     expect(latest_participant_profile_schedule).to have_attributes(
       participant_profile_id: participant_profile.id,
-      schedule_id: Finance::Schedule.where(schedule_identifier:, cohort: Cohort.current).first.id,
+      schedule_id: Finance::Schedule.where(schedule_identifier:, cohort: new_cohort).first.id,
     )
   end
 end
@@ -121,6 +133,7 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
       schedule_identifier:,
     }
   end
+  let(:new_cohort) { Cohort.current }
 
   subject(:service) do
     described_class.new(params)
@@ -143,6 +156,24 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
 
     describe ".call" do
       it_behaves_like "changing the schedule of a participant"
+
+      it "updates the schedule on the relevant induction record" do
+        service.call
+        relevant_induction_record = participant_profile.current_induction_record
+
+        expect(relevant_induction_record.schedule).to eq(schedule)
+      end
+
+      context "when profile schedule is not the same as the induction record" do
+        let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, schedule:) }
+
+        it "updates the schedule on the relevant induction record" do
+          service.call
+          relevant_induction_record = participant_profile.current_induction_record
+
+          expect(relevant_induction_record.schedule).to eq(schedule)
+        end
+      end
     end
   end
 
@@ -163,6 +194,24 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
 
     describe ".call" do
       it_behaves_like "changing the schedule of a participant"
+
+      it "updates the schedule on the relevant induction record" do
+        service.call
+        relevant_induction_record = participant_profile.current_induction_record
+
+        expect(relevant_induction_record.schedule).to eq(schedule)
+      end
+
+      context "when profile schedule is not the same as the induction record" do
+        before { participant_profile.update!(schedule:) }
+
+        it "updates the schedule on the relevant induction record" do
+          service.call
+          relevant_induction_record = participant_profile.current_induction_record
+
+          expect(relevant_induction_record.schedule).to eq(schedule)
+        end
+      end
     end
   end
 
@@ -186,6 +235,33 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
 
     describe ".call" do
       it_behaves_like "changing the schedule of a participant"
+
+      it "does not update the npq application cohort" do
+        expect { service.call }.not_to change(participant_profile.npq_application, :cohort)
+      end
+    end
+
+    context "when cohort is changed" do
+      let(:new_cohort) { Cohort.previous }
+      let(:new_schedule) { create(:npq_leadership_schedule, cohort: new_cohort) }
+      let(:params) do
+        {
+          cpd_lead_provider:,
+          participant_id:,
+          course_identifier:,
+          schedule_identifier:,
+          cohort: new_cohort.start_year,
+        }
+      end
+
+      describe ".call" do
+        it_behaves_like "changing the schedule of a participant"
+      end
+
+      it "updates the cohort on the npq application" do
+        service.call
+        expect(participant_profile.npq_application.cohort).to eq(new_cohort)
+      end
     end
   end
 end

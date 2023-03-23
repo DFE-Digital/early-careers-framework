@@ -15,6 +15,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
       operationId :npq_enrolments
       tags "NPQ enrolments"
       security [bearerAuth: []]
+      produces "text/csv"
 
       parameter name: :filter,
                 in: :query,
@@ -28,7 +29,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v2/
                 example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       response "200", "A list of NPQ enrolments" do
-        schema({ "$ref": "#/components/schemas/MultipleNPQEnrolmentsCsvResponse" }, content_type: "text/csv")
+        schema "$ref": "#/components/schemas/MultipleNPQEnrolmentsCsvResponse"
 
         run_test!
       end

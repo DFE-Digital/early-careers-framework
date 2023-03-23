@@ -198,12 +198,12 @@ RSpec.describe InductionRecord, :with_default_schedules, type: :model do
 
     describe "current scopes" do
       let(:induction_programme) { create(:induction_programme, :fip) }
-      let(:charlie_current_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
-      let(:theresa_transfer_in_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.from_now, school_transfer: true) }
-      let(:linda_leaving_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
-      let(:tina_transferred_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
-      let(:wendy_withdrawn_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
-      let(:terry_transferring_out_ir) { Induction::Enrol.call(participant_profile: create(:ecf_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:charlie_current_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:theresa_transfer_in_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.from_now, school_transfer: true) }
+      let(:linda_leaving_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:tina_transferred_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:wendy_withdrawn_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
+      let(:terry_transferring_out_ir) { Induction::Enrol.call(participant_profile: create(:ect_participant_profile), induction_programme:, start_date: 2.months.ago) }
 
       before do
         linda_leaving_ir.leaving!(1.month.from_now)
@@ -373,7 +373,7 @@ RSpec.describe InductionRecord, :with_default_schedules, type: :model do
   describe "callbacks" do
     it "updates analytics when an induction record is created", :with_default_schedules do
       induction_programme = create(:induction_programme)
-      participant_profile = create(:ecf_participant_profile)
+      participant_profile = create(:ect_participant_profile)
 
       expect {
         Induction::Enrol.call(participant_profile:, induction_programme:)

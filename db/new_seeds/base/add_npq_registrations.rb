@@ -3,7 +3,7 @@
 npq_lead_providers = NPQLeadProvider.all
 
 # Create pending NPQ applications
-5.times do
+seed_quantity(:npq_applications_pending).times do
   NewSeeds::Scenarios::NPQ
     .new(lead_provider: npq_lead_providers.sample)
     .build
@@ -11,7 +11,7 @@ end
 
 # Create accepted NPQ applications with participant profiles
 # and a declaration
-10.times do
+seed_quantity(:npq_application_with_declarations).times do
   NewSeeds::Scenarios::NPQ
     .new(lead_provider: npq_lead_providers.sample)
     .build
@@ -20,7 +20,7 @@ end
 end
 
 # Create rejected NPQ applications
-5.times do
+seed_quantity(:npq_applications_rejected).times do
   NewSeeds::Scenarios::NPQ
     .new(lead_provider: npq_lead_providers.sample)
     .build
@@ -28,7 +28,7 @@ end
 end
 
 # Create pending NPQ applications to ASO NPQ course
-3.times do
+seed_quantity(:npq_applications_pending_aso).times do
   NewSeeds::Scenarios::NPQ
     .new(
       lead_provider: npq_lead_providers.sample,
@@ -38,7 +38,7 @@ end
 end
 
 # Create pending NPQ applications to EHCO NPQ course
-3.times do
+seed_quantity(:npq_applications_pending_ehco).times do
   NewSeeds::Scenarios::NPQ
     .new(
       lead_provider: npq_lead_providers.sample,

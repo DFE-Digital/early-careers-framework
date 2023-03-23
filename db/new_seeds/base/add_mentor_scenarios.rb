@@ -2,29 +2,53 @@
 
 # generate some bits of data we'll need below first, roughly sticking to the
 # structure from the legacy seeds but this time spanning two cohorts (2021,
-# 2022) and three lead provoders
-
-school_cohort_one = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2021)
-induction_programme_one = FactoryBot.create(:seed_induction_programme, :cip, school_cohort: school_cohort_one)
-
-school_cohort_two = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2021)
-induction_programme_two = FactoryBot.create(:seed_induction_programme, :fip, school_cohort: school_cohort_two)
-
-school_cohort_three = FactoryBot.create(:seed_school_cohort, :fip, :valid, :starting_in_2021)
-induction_programme_three = FactoryBot.create(:seed_induction_programme, :cip, school_cohort: school_cohort_three)
-
-school_cohort_four = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2022)
-induction_programme_four = FactoryBot.create(:seed_induction_programme, :cip, school_cohort: school_cohort_four)
-
-school_cohort_five = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2022)
-induction_programme_five = FactoryBot.create(:seed_induction_programme, :cip, school_cohort: school_cohort_five)
-
-school_cohort_six = FactoryBot.create(:seed_school_cohort, :fip, :valid, :starting_in_2022)
-induction_programme_six = FactoryBot.create(:seed_induction_programme, :fip, school_cohort: school_cohort_six)
+# 2022) and three lead providers
 
 ambition = CoreInductionProgramme.find_by!(name: "Ambition Institute")
 edt = CoreInductionProgramme.find_by!(name: "Education Development Trust")
 ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
+
+school_cohort_one = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2021)
+induction_programme_one = NewSeeds::Scenarios::InductionProgrammes::Cip
+                            .new(school_cohort: school_cohort_one)
+                            .build
+                            .with_core_induction_programme(core_induction_programme: ambition)
+                            .induction_programme
+
+school_cohort_two = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2021)
+induction_programme_two = NewSeeds::Scenarios::InductionProgrammes::Cip
+                            .new(school_cohort: school_cohort_two)
+                            .build
+                            .with_core_induction_programme(core_induction_programme: edt)
+                            .induction_programme
+
+school_cohort_three = FactoryBot.create(:seed_school_cohort, :fip, :valid, :starting_in_2021)
+induction_programme_three = NewSeeds::Scenarios::InductionProgrammes::Fip
+                              .new(school_cohort: school_cohort_three)
+                              .build
+                              .with_partnership
+                              .induction_programme
+
+school_cohort_four = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2022)
+induction_programme_four = NewSeeds::Scenarios::InductionProgrammes::Cip
+                             .new(school_cohort: school_cohort_four)
+                             .build
+                             .with_core_induction_programme(core_induction_programme: ambition)
+                             .induction_programme
+
+school_cohort_five = FactoryBot.create(:seed_school_cohort, :cip, :valid, :starting_in_2022)
+induction_programme_five = NewSeeds::Scenarios::InductionProgrammes::Cip
+                             .new(school_cohort: school_cohort_five)
+                             .build
+                             .with_core_induction_programme(core_induction_programme: ucl)
+                             .induction_programme
+
+school_cohort_six = FactoryBot.create(:seed_school_cohort, :fip, :valid, :starting_in_2022)
+induction_programme_six = NewSeeds::Scenarios::InductionProgrammes::Fip
+                            .new(school_cohort: school_cohort_six)
+                            .build
+                            .with_partnership
+                            .induction_programme
 
 # first some generic mentors
 
@@ -32,7 +56,6 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   OpenStruct.new(
     full_name: "Sally Mentor",
     email: "rp-mentor.ambition.2021@example.com",
-    core_induction_programme: ambition,
     school_cohort: school_cohort_one,
     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_one.cohort),
     induction_programme: induction_programme_one,
@@ -40,7 +63,6 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   OpenStruct.new(
     full_name: "Bjorn Mentor",
     email: "rp-mentor.edt.2021@example.com",
-    core_induction_programme: edt,
     school_cohort: school_cohort_two,
     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_two.cohort),
     induction_programme: induction_programme_two,
@@ -48,7 +70,6 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   OpenStruct.new(
     full_name: "Abdul Mentor",
     email: "rp-mentor.ucl.2021@example.com",
-    core_induction_programme: ucl,
     school_cohort: school_cohort_three,
     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_three.cohort),
     induction_programme: induction_programme_three,
@@ -57,7 +78,6 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   OpenStruct.new(
     full_name: "Claire Mentor",
     email: "rp-mentor.ambition.2022@example.com",
-    core_induction_programme: ambition,
     school_cohort: school_cohort_four,
     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_four.cohort),
     induction_programme: induction_programme_four,
@@ -65,7 +85,6 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   OpenStruct.new(
     full_name: "Rita Mentor",
     email: "rp-mentor.edt.2022@example.com",
-    core_induction_programme: edt,
     school_cohort: school_cohort_five,
     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_five.cohort),
     induction_programme: induction_programme_five,
@@ -73,18 +92,15 @@ ucl = CoreInductionProgramme.find_by!(name: "UCL Institute of Education")
   OpenStruct.new(
     full_name: "Luigi Mentor",
     email: "rp-mentor.ucl.2022@example.com",
-    core_induction_programme: ucl,
     school_cohort: school_cohort_six,
     schedule: Finance::Schedule::ECF.default_for(cohort: school_cohort_six.cohort),
     induction_programme: induction_programme_six,
   ),
 ].each do |mentor_params|
   NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-    .new(school_cohort: mentor_params.school_cohort, full_name: mentor_params.full_name)
-    .build(
-      schedule: mentor_params.schedule,
-    )
+    .new(school_cohort: mentor_params.school_cohort, full_name: mentor_params.full_name, email: mentor_params.email)
+    .build(schedule: mentor_params.schedule)
     .with_validation_data
     .with_eligibility
-    .add_induction_record(induction_programme: mentor_params.induction_programme)
+    .with_induction_record(induction_programme: mentor_params.induction_programme)
 end

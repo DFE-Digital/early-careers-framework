@@ -2,7 +2,7 @@
 
 require "csv"
 
-class Importers::SeedSchedule
+class Importers::CreateSchedule
   attr_reader :path_to_csv, :klass
 
   def initialize(path_to_csv:, klass:)
@@ -16,11 +16,7 @@ class Importers::SeedSchedule
     rows.each do |row|
       next unless row["schedule-identifier"]
 
-      year = row["schedule-cohort-year"].to_i
-      cohort = Cohort.find_or_create_by!(start_year: year) do |c|
-        c.registration_start_date = Date.new(year, 5, 10)
-        c.academic_year_start_date = Date.new(year, 9, 1)
-      end
+      cohort = Cohort.find_by!(start_year: row["schedule-cohort-year"].to_i)
 
       schedule = klass.find_or_initialize_by(
         schedule_identifier: row["schedule-identifier"],

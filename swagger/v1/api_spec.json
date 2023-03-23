@@ -1723,7 +1723,7 @@
             ]
           },
           "cohort": {
-            "description": "Which cohort this ECF participant is associated with",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           },
@@ -1844,7 +1844,7 @@
             "example": "ecf-induction"
           },
           "cohort": {
-            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "description": "Providers may not change the current value for ECF participants. Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           }
@@ -2244,7 +2244,7 @@
             ]
           },
           "cohort": {
-            "description": "Which cohort this ECF Participant is associated with",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           },
@@ -2413,7 +2413,7 @@
             ]
           },
           "cohort": {
-            "description": "Which cohort this ECF participant is associated with",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           },
@@ -2640,7 +2640,7 @@
             ]
           },
           "cohort": {
-            "description": "Which cohort this ECF participant is associated with",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           },
@@ -3016,7 +3016,7 @@
             ]
           },
           "cohort": {
-            "description": "Which cohort this ECF participant is associated with",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           },
@@ -3606,7 +3606,7 @@
             "example": "2021-05-31T02:21:32.000Z"
           },
           "cohort": {
-            "description": "The start year of the cohort this application belongs to",
+            "description": "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
             "type": "string",
             "example": "2021"
           },
@@ -3805,7 +3805,7 @@
             "example": "2021-05-31T02:22:32.000Z"
           },
           "cohort": {
-            "description": "The start year of the cohort this application belongs to",
+            "description": "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
             "type": "string",
             "example": "2021"
           },
@@ -4166,7 +4166,7 @@
             "example": "npq-executive-leadership"
           },
           "cohort": {
-            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "description": "Providers may change an NPQ participant's cohort up until the point of submitting a started declaration. The value indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "default": "2021",
             "example": "2021"

@@ -1,0 +1,28 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: new_finance_participant_profile_npq_change_lead_provider_path(@participant_profile)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Check your answers before saving this change</h1>
+
+    <div class="govuk-inset-text">
+      <p>
+        <strong>Current lead provider</strong>
+        <br/>
+        <%= @change_lead_provider_form.current_lead_provider.name %>
+      </p>
+      <p>
+        <strong>New lead provider</strong>
+        <br/>
+        <%= @change_lead_provider_form.lead_provider.name %>
+      </p>
+    </div>
+
+    <h2 class="govuk-heading-m">Now save this change</h2>
+    <p class="govuk-body">By submitting this request, you are confirming that this change has been approved by lead providers and DfE contract management.</p>
+
+    <%= form_for @change_lead_provider_form, url: finance_participant_profile_npq_change_lead_provider_path(@participant_profile), method: :put do |f| %>
+      <%= f.hidden_field :lead_provider_id %>
+      <%= f.govuk_submit "Save and continue" %>
+    <% end %>
+  </div>
+</div>

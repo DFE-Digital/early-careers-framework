@@ -15,7 +15,7 @@ private
         sort_sign = attr =~ /\A[+-]/ ? attr.slice!(0) : "+"
 
         if model.attribute_names.include?(attr)
-          sort[attr] = sort_order[sort_sign]
+          sort["#{model.table_name}.#{attr}"] = sort_order[sort_sign]
         end
       end
     end

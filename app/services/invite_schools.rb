@@ -21,7 +21,11 @@ class InviteSchools
         school:,
       )
 
-      send_nomination_email(nomination_email)
+      if school.registered?
+        send_replace_tutor_email(nomination_email)
+      else
+        send_nomination_email(nomination_email)
+      end
     rescue Notifications::Client::RateLimitError
       sleep(1)
       send_nomination_email(nomination_email)
@@ -111,6 +115,15 @@ private
       school: nomination_email.school,
       nomination_url: nomination_email.nomination_url,
       expiry_date: email_expiry_date,
+    ).deliver_now.delivery_method.response.id
+
+    nomination_email.update!(notify_id:)
+  end
+
+  def send_replace_tutor_email(nomination_email)
+    notify_id = SchoolMailer.school_requested_signin_link_from_gias_email(
+      school: nomination_email.school,
+      nomination_link: nomination_email.nomination_url,
     ).deliver_now.delivery_method.response.id
 
     nomination_email.update!(notify_id:)

@@ -4,7 +4,6 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request do
-  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
@@ -17,12 +16,14 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
     before :each do
-      list = []
-      list << create_list(:npq_application, 3, :in_private_childcare_provider, npq_lead_provider:, school_urn: "123456", npq_course:, cohort:)
-      list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:, cohort:)
+      Timecop.freeze(Time.zone.now) do
+        list = []
+        list << create_list(:npq_application, 3, :in_private_childcare_provider, npq_lead_provider:, school_urn: "123456", npq_course:)
+        list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:)
 
-      list.flatten.each do |npq_application|
-        NPQ::Application::Accept.new(npq_application:).call
+        list.flatten.each do |npq_application|
+          NPQ::Application::Accept.new(npq_application:).call
+        end
       end
     end
 
@@ -93,11 +94,16 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
 
           context "with filter[cohort]" do
             let(:next_cohort) { Cohort.next || create(:cohort, :next) }
-            let!(:next_cohort_npq_applications) { create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort }
 
-            it "returns npq applications only for the 2022 cohort" do
+            before do
+              next_cohort.update!(npq_registration_start_date: 20.days.ago)
+              @npq_applications_list = create_list(:npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456", cohort: next_cohort)
+            end
+
+            it "returns npq applications only for the next cohort" do
               get "/api/v1/npq-applications", params: { filter: { cohort: next_cohort.start_year } }
               expect(parsed_response["data"].size).to eq(2)
+              expect(parsed_response["data"].pluck("id")).to match_array(@npq_applications_list.pluck("id"))
             end
           end
         end

@@ -38,7 +38,7 @@ module NewSeeds
           user:,
           participant_identity:,
           npq_application: application,
-
+          npq_course: application.npq_course,
           # it turns out that we don't find the NPQ application via the participant identity but
           # instead by the `has_one` on participant profile. The id of the NPQ application needs
           # to match the corresponding participant profile's id.

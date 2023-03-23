@@ -1,0 +1,44 @@
+# These values can be overridden locally by creating an environment variable
+# with a matching name prefixed by `SEED_`
+#
+# Add the following snippet to your .env file and adjust:
+#
+# SEED_LOCAL_AUTHORITIES=10
+# SEED_NPQ_APPLICATIONS_PENDING=10
+# SEED_NPQ_APPLICATION_WITH_DECLARATIONS=10
+# SEED_NPQ_APPLICATIONS_REJECTED=10
+# SEED_NPQ_APPLICATIONS_PENDING_ASO=10
+# SEED_NPQ_APPLICATIONS_PENDING_ECHO=10
+# SEED_FIP_TO_FIP_TRANSFERS_KEEPING_ORIGINAL_PROVIDER=2
+# SEED_FIP_TO_FIP_TRANSFERS_CHANGING_PROVIDER=2
+# SEED_SCHOOL_INVITATIONS=10
+---
+default: &default
+  local_authorities: 10
+  npq_applications_pending: 10
+  npq_application_with_declarations: 10
+  npq_applications_rejected: 10
+  npq_applications_pending_aso: 10
+  npq_applications_pending_ehco: 10
+  fip_to_fip_transfers_keeping_original_provider: 2
+  fip_to_fip_transfers_changing_provider: 2
+  school_invitations: 10
+
+development:
+  <<: *default
+
+sandbox:
+  <<: *default
+
+test:
+  <<: *default
+  local_authorities: 1
+  npq_applications_pending: 1
+  npq_application_with_declarations: 1
+  npq_applications_rejected: 1
+  npq_applications_pending_aso: 1
+  npq_applications_pending_ehco: 1
+  school_invitations: 1
+
+deployed_development:
+  <<: *default

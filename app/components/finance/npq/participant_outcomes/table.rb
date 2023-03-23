@@ -17,19 +17,15 @@ module Finance
         end
 
         def completion_date(outcome)
-          if outcome.voided?
-            outcome.updated_at.to_s(:govuk)
-          else
-            outcome.completion_date.to_s(:govuk)
-          end
+          outcome.completion_date.to_s(:govuk)
+        end
+
+        def changed_date(outcome)
+          outcome.created_at.to_s(:govuk)
         end
 
         def sent_to_tra(outcome)
-          if outcome.failed?
-            "N/A"
-          else
-            outcome.sent_to_qualified_teachers_api_at&.to_s(:govuk)
-          end
+          outcome.sent_to_qualified_teachers_api_at&.to_s(:govuk)
         end
       end
     end

@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe ParticipantProfile::ECF, type: :model do
-  let(:profile) { create(:ecf_participant_profile) }
+  let(:profile) { create(:ect_participant_profile) }
 
   describe ":current_cohort" do
     let!(:cohort_2020) { Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) }
     let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
-    let!(:participant_2020) { create(:ecf_participant_profile, school_cohort: create(:school_cohort, cohort: cohort_2020)) }
-    let!(:current_participant) { create(:ecf_participant_profile, school_cohort: create(:school_cohort, cohort: current_cohort)) }
+    let!(:participant_2020) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: cohort_2020)) }
+    let!(:current_participant) { create(:ect_participant_profile, school_cohort: create(:school_cohort, cohort: current_cohort)) }
 
     it "does not include 2020 participants" do
       expect(ParticipantProfile::ECF.current_cohort).not_to include(participant_2020)
@@ -236,7 +236,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     let(:partnership) { create(:partnership, lead_provider:, cohort:) }
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:) }
     let(:induction_programme) { create(:induction_programme, school_cohort:, partnership:) }
-    let(:profile) { create(:ecf_participant_profile, school_cohort:) }
+    let(:profile) { create(:ect_participant_profile, school_cohort:) }
     let!(:induction_record_older) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 2.days.ago) }
     let!(:induction_record_latest) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 1.day.ago) }
 
@@ -269,7 +269,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when participant has no induction records" do
-      subject { create(:ecf_participant_profile) }
+      subject { create(:ect_participant_profile) }
 
       it { is_expected.not_to be_withdrawn_for(cpd_lead_provider:) }
     end
@@ -291,7 +291,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when participant has no induction records" do
-      subject { create(:ecf_participant_profile) }
+      subject { create(:ect_participant_profile) }
 
       it { is_expected.not_to be_active_for(cpd_lead_provider:) }
     end
@@ -313,7 +313,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     end
 
     context "when participant has no induction records" do
-      subject { create(:ecf_participant_profile) }
+      subject { create(:ect_participant_profile) }
 
       it { is_expected.not_to be_deferred_for(cpd_lead_provider:) }
     end
@@ -364,7 +364,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     let(:school_cohort) { create(:school_cohort, school: partnership.school, cohort:) }
     let(:induction_programme) { create(:induction_programme, school_cohort:, partnership:) }
     let(:another_induction_programme) { create(:induction_programme, school_cohort:, partnership: another_partnership) }
-    let(:profile) { create(:ecf_participant_profile, school_cohort:) }
+    let(:profile) { create(:ect_participant_profile, school_cohort:) }
     let!(:induction_record_oldest) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 3.days.ago) }
     let!(:induction_record_latest_first_delivery_partner) { create(:induction_record, participant_profile: profile, induction_programme:, start_date: 2.days.ago) }
     let!(:induction_record_latest_second_delivery_partner) { create(:induction_record, participant_profile: profile, induction_programme: another_induction_programme, start_date: 1.day.ago) }

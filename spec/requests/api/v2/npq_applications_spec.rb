@@ -4,7 +4,6 @@ require "rails_helper"
 require "csv"
 
 RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request do
-  let(:cohort) { Cohort.current || create(:cohort, :current) }
   let(:npq_lead_provider) { create(:npq_lead_provider) }
   let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
@@ -17,12 +16,14 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
     let(:other_npq_lead_provider) { create(:npq_lead_provider) }
 
     before :each do
-      list = []
-      list << create_list(:npq_application, 3, npq_lead_provider:, school_urn: "123456", npq_course:, cohort:)
-      list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:, cohort:)
+      Timecop.freeze(Time.zone.now) do
+        list = []
+        list << create_list(:npq_application, 3, npq_lead_provider:, school_urn: "123456", npq_course:)
+        list << create_list(:npq_application, 2, npq_lead_provider: other_npq_lead_provider, school_urn: "123456", npq_course:)
 
-      list.flatten.each do |npq_application|
-        NPQ::Application::Accept.new(npq_application:).call
+        list.flatten.each do |npq_application|
+          NPQ::Application::Accept.new(npq_application:).call
+        end
       end
     end
 

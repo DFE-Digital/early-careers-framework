@@ -1,4 +1,7 @@
 en:
+  time:
+    formats:
+      admin: "%R on %d/%m/%Y"
   currency: "£"
   event_types:
     started: Started
@@ -235,6 +238,7 @@ en:
             new_school_urn:
               blank: "Enter the URN of the school the participant will transfer to"
               invalid: "Cannot find a school with the URN ‘%{urn}’"
+              same_school: "Enter the URN of the school the participant is joining"
             transfer_choice:
               blank: "Select which programme the participant will join"
             start_date:
@@ -382,6 +386,10 @@ en:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
+        finance/npq/change_lead_provider_form:
+          attributes:
+            lead_provider_id:
+              inclusion: Select a valid lead provider
         finance/change_lead_provider_approval_status_form:
           attributes:
             confirmation:
@@ -583,7 +591,14 @@ en:
   admin:
     npq:
       applications:
+        index:
+          title: NPQ Applications
+        show:
+          title: NPQ Application
+          details: Details
+          tabs: Tabs
         layout:
+          applications: Applications
           title: NPQ Applications
           exports: Application Exports
           eligibility_imports: Eligibility Imports

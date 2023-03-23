@@ -175,7 +175,7 @@ RSpec.describe DataStage::ProcessSchoolChanges do
           let!(:staged_successor_school) { create(:staged_school, urn: 10_001, name: "Starship Juniors School", la_code: local_authority.code, administrative_district_code: local_authority_district.code, ukprn: "22334455") }
           let(:school_cohort) { create(:school_cohort, :fip, school: live_school) }
           let!(:induction_tutor) { create(:induction_coordinator_profile, schools: [live_school]) }
-          let!(:participants) { create_list(:ecf_participant_profile, 2, school_cohort:) }
+          let!(:participants) { create_list(:ect_participant_profile, 2, school_cohort:) }
           let!(:partnership) { create(:partnership, school: live_school, cohort: school_cohort.cohort) }
           let!(:school_link) { create(:staged_school_link, :successor, school: staged_school, link_urn: successor_school.urn) }
 

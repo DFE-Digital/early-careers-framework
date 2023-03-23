@@ -7,7 +7,7 @@ RSpec.describe ParticipantIdentity, type: :model do
 
   let(:user) { participant_identity.user }
   let(:additional_identity) { create(:participant_identity, :secondary, user:, email: Faker::Internet.email) }
-  let(:identity_of_duplicate_user) { create(:ecf_participant_profile).participant_identity }
+  let(:identity_of_duplicate_user) { create(:ect_participant_profile).participant_identity }
   let(:transferred_identity) do
     identity_of_duplicate_user.tap { |identity| identity.update!(user:) }
   end

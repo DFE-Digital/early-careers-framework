@@ -13,6 +13,8 @@ class CocSetParticipantCategories < BaseService
     :withdrawn,
   )
 
+  delegate :any?, to: :induction_records
+
   def ect_categories
     @ect_categories ||= categories(ParticipantProfile::ECT.name)
   end

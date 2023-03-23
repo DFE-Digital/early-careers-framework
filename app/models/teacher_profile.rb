@@ -18,6 +18,8 @@ class TeacherProfile < ApplicationRecord
   has_many :npq_profiles, class_name: "ParticipantProfile::NPQ"
   # end: TODO
 
+  self.filter_attributes += [:trn]
+
   def self.trn_matches(search_term)
     return none if search_term.blank?
 

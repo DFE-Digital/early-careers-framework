@@ -171,6 +171,19 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     end
   end
 
+  describe "#sync_uploaded_urns" do
+    it "populates the uploaded_urns field with the CSV contents" do
+      urns = [1, 1, 2, 2, 3, 3]
+      given_the_csv_contains_urns(urns)
+
+      expect(@subject.uploaded_urns).to be_blank
+
+      @subject.sync_uploaded_urns
+
+      expect(@subject.uploaded_urns).to eql(urns.map(&:to_s))
+    end
+  end
+
 private
 
   def given_the_csv_contains_urns(urns, cohort = current_cohort)

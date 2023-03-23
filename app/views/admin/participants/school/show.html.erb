@@ -49,7 +49,7 @@
         row.value do
           ["<ul class='govuk-list govuk-list--bullet'>",
           @latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
-            "<li>#{govuk_link_to(school_mentor.school.name, admin_school_path(school_mentor.school.friendly_id))}</li>"
+            "<li>#{govuk_link_to(school_mentor.school.slug.titleize, admin_school_path(school_mentor.school.friendly_id))}</li>"
           end,
           "</ul>"].flatten.join.html_safe
         end

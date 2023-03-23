@@ -108,6 +108,7 @@ Rails.application.routes.draw do
 
       namespace :npq do
         resources :users, only: %i[show create update]
+        resource :previous_funding, only: [:show]
       end
     end
 
@@ -128,7 +129,7 @@ Rails.application.routes.draw do
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
           get ":participant_id/outcomes", to: "participant_outcomes#index"
-          post ":participant_id/outcomes", to: "participant_outcomes#create"
+          post ":participant_id/outcomes", to: "participant_outcomes#create", as: :create_outcome
         end
       end
       resources :npq_enrolments, only: %i[index], path: "npq-enrolments"
@@ -152,7 +153,7 @@ Rails.application.routes.draw do
     namespace :v3, constraints: ->(_request) { FeatureFlag.active?(:api_v3) } do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
-      resources :partnerships, path: "partnerships/ecf", only: %i[index], controller: "ecf/partnerships"
+      resources :partnerships, path: "partnerships/ecf", only: %i[show index], controller: "ecf/partnerships"
       resources :npq_participants, only: [], path: "participants/npq" do
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
@@ -160,6 +161,7 @@ Rails.application.routes.draw do
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end
+      resources :ecf_schools, path: "schools/ecf", only: %i[index], controller: "ecf/schools"
     end
   end
 
@@ -434,6 +436,7 @@ Rails.application.routes.draw do
         resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
 
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
+        resources :applications, only: %i[index show]
       end
     end
   end
@@ -458,6 +461,7 @@ Rails.application.routes.draw do
       end
       namespace :npq do
         resource :change_training_status, only: %i[new create]
+        resource :change_lead_provider, only: %i[new create update]
       end
     end
     resources :npq_applications, only: [] do

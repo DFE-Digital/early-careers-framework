@@ -225,7 +225,7 @@ module ManageTrainingSteps
 
   def given_a_participant_from_the_same_school_is_already_on_ecf
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user:)
+    teacher_profile = create(:teacher_profile, user:, trn: "1234567")
     @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme)
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))
@@ -237,7 +237,7 @@ module ManageTrainingSteps
     @induction_programme_three = create(:induction_programme, :fip, school_cohort: @school_cohort_three)
 
     user = create(:user, full_name: "Sally Teacher", email: "sally-teacher@example.com")
-    teacher_profile = create(:teacher_profile, user:)
+    teacher_profile = create(:teacher_profile, user:, trn: "1234567")
     @participant_profile_ect = create(:ect_participant_profile, teacher_profile:, school_cohort: @school_cohort_three)
     Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_three)
     create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1234567", date_of_birth: Date.new(1998, 3, 22))

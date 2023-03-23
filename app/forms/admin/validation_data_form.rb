@@ -23,7 +23,7 @@ class Admin::ValidationDataForm
 private
 
   def participant_profile
-    @participant_profile ||= ParticipantProfile::ECF.find(participant_profile_id)
+    @participant_profile ||= ParticipantProfile.ecf.find(participant_profile_id)
   end
 
   def date_of_birth_is_valid

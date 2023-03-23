@@ -1,0 +1,52 @@
+<h2 class="govuk-heading-m">Funding eligibility</h2>
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: 'Funding eligibility')
+      row.value(text: boolean_red_green_tag(application.eligible_for_funding))
+    end
+
+    sl.row do |row|
+      row.key(text: 'Funding eligibility status code')
+      row.value(text: application.funding_eligiblity_status_code || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: "Targeted delivery funding eligibility")
+      row.value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
+    end
+
+    sl.row do |row|
+      row.key(text: 'Funding choice')
+      row.value(text: application.funding_choice || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: "Schedule Cohort")
+      if application.cohort.present?
+        row.value(text: application.cohort.try(:start_year).to_s)
+      else
+        row.value(text: "-" )
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: 'Schedule identifier')
+      if application.profile.present?
+        row.value(text: application.profile.schedule.schedule_identifier)
+      else
+        row.value(text: '-')
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: "Created at")
+      row.value { l application.created_at, format: :admin }
+    end
+
+    sl.row do |row|
+      row.key(text: "Updated at")
+      row.value { l application.created_at, format: :admin }
+    end
+  end
+%>

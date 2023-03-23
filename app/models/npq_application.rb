@@ -5,6 +5,7 @@ class NPQApplication < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
+  has_one :school, class_name: "School", foreign_key: :urn, primary_key: :school_urn
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :participant_identity
   belongs_to :npq_lead_provider
@@ -50,6 +51,8 @@ class NPQApplication < ApplicationRecord
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
 
+  self.filter_attributes += [:teacher_reference_number]
+
   # this builds upon #eligible_for_funding
   # eligible_for_funding is solely based on what NPQ app knows
   # eg school, course etc
@@ -89,7 +92,7 @@ private
   end
 
   def push_enrollment_to_big_query
-    if (saved_changes.keys & %w[id lead_provider_approval_status]).present?
+    if (saved_changes.keys & %w[cohort_id id lead_provider_approval_status]).present?
       NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
     end
   end

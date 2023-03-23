@@ -100,4 +100,21 @@ RSpec.describe Partnership, type: :model do
       partnership:,
     )
   end
+
+  describe "#unchallenge!" do
+    let!(:partnership) { build(:partnership, challenged_at: Time.zone.now, challenge_reason: :mistake) }
+
+    it "clears challenged_at and challenge_reason and sets challenge_deadline" do
+      expect(partnership.challenged?).to be_truthy
+
+      partnership.unchallenge!
+
+      aggregate_failures do
+        expect(partnership.challenged_at).to be_blank
+        expect(partnership.challenge_reason).to be_blank
+        expect(partnership.challenge_deadline).to eq(partnership.cohort.academic_year_start_date + 2.months)
+        expect(partnership.challenged?).to be_falsey
+      end
+    end
+  end
 end

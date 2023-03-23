@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_22_142649) do
+ActiveRecord::Schema.define(version: 2023_03_21_181937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 2023_02_22_142649) do
     t.integer "start_year", limit: 2, null: false
     t.datetime "registration_start_date"
     t.datetime "academic_year_start_date"
+    t.datetime "npq_registration_start_date"
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
@@ -753,6 +754,7 @@ ActiveRecord::Schema.define(version: 2023_02_22_142649) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "delivery_partner_id", null: false
     t.uuid "cohort_id"
+    t.string "uploaded_urns", array: true
     t.index ["cohort_id"], name: "index_partnership_csv_uploads_on_cohort_id"
     t.index ["delivery_partner_id"], name: "index_partnership_csv_uploads_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_partnership_csv_uploads_on_lead_provider_id"
@@ -888,6 +890,7 @@ ActiveRecord::Schema.define(version: 2023_02_22_142649) do
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["default_induction_programme_id"], name: "index_school_cohorts_on_default_induction_programme_id"
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
+    t.index ["updated_at"], name: "index_school_cohorts_on_updated_at"
   end
 
   create_table "school_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

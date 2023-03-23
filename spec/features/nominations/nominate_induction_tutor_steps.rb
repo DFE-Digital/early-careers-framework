@@ -95,6 +95,10 @@ module NominateInductionTutorSteps
     expect(page).to have_text("This person is now our single point of contact for ECF-based training at your school. They'll use our service to:")
   end
 
+  def then_i_should_be_redirected_to_name_different_page
+    expect(page).to have_selector("h1", text: "The name you entered does not match our records")
+  end
+
   def then_i_should_see_the_name_not_match_error
     expect(page).to have_text("The name you entered does not match our records")
   end
@@ -123,6 +127,10 @@ module NominateInductionTutorSteps
   def then_i_should_be_redirected_to_the_induction_tutor_already_nominated_page
     expect(page).to have_selector("h1", text: "An induction tutor has already been nominated")
     expect(page).to have_text("Your school has already nominated an induction tutor to use our service.")
+  end
+
+  def then_i_should_be_redirected_to_the_nominate_induction_tutor_page
+    expect(page).to have_selector("h1", text: "Nominate an induction tutor for your school")
   end
 
   def then_i_should_see_the_email_already_used_error

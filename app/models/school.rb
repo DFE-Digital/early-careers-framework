@@ -8,6 +8,7 @@ class School < ApplicationRecord
 
   belongs_to :network, optional: true
 
+  has_many :npq_applications, foreign_key: "school_urn", class_name: "NPQApplication"
   has_many :school_links, dependent: :destroy
   has_many :successor_links, -> { successor }, class_name: "SchoolLink"
   has_many :predecessor_links, -> { predecessor }, class_name: "SchoolLink"
@@ -91,7 +92,7 @@ class School < ApplicationRecord
   }
 
   def partnered?(cohort)
-    partnerships.unchallenged.where(cohort:).any?
+    partnerships.detect { |partnership| partnership.challenged_at.nil? && partnership.challenge_reason.nil? && partnership.cohort_id == cohort.id }.present?
   end
 
   def lead_provider(year)

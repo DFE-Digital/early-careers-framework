@@ -30,7 +30,7 @@ def add_school_to_local_authority(school:, local_authority:, lead_providers:, co
 end
 
 # create some local authorities
-local_authorities = FactoryBot.create_list(:local_authority, 10)
+local_authorities = FactoryBot.create_list(:local_authority, seed_quantity(:local_authorities))
 
 cohorts = Cohort.where(start_year: [2021, 2022])
 lead_providers = LeadProvider.all

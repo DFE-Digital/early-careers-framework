@@ -2,10 +2,13 @@
 
 module NPQ
   class FundingEligibility
-    attr_reader :trn, :npq_course_identifier
+    attr_reader :npq_course_identifier,
+                :trn,
+                :get_an_identity_id
 
-    def initialize(trn:, npq_course_identifier:)
+    def initialize(npq_course_identifier:, trn: nil, get_an_identity_id: nil)
       @trn = trn
+      @get_an_identity_id = get_an_identity_id
       @npq_course_identifier = npq_course_identifier
     end
 
@@ -27,11 +30,23 @@ module NPQ
     end
 
     def users
-      User.where(teacher_profile: teacher_profiles)
+      get_an_identity_id_users.or(trn_users).distinct
     end
 
-    def teacher_profiles
-      @teacher_profiles ||= TeacherProfile.where(trn:)
+    def get_an_identity_id_users
+      return User.none if get_an_identity_id.blank?
+
+      User.where(get_an_identity_id:)
+    end
+
+    def trn_users
+      return User.none if trn.blank?
+
+      User.where(teacher_profile: teacher_profiles_with_trn)
+    end
+
+    def teacher_profiles_with_trn
+      @teacher_profiles_with_trn ||= TeacherProfile.where(trn:)
     end
 
     def accepted_applications
