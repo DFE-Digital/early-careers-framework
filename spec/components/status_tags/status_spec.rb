@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::Status, type: :component, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe StatusTags::SchoolParticipantStatusTag, type: :component, with_feature_flags: { eligibility_notifications: "active" } do
   let(:component) { described_class.new(participant_profile: profile) }
 
   context "when an email has been sent but the participant has not validated" do

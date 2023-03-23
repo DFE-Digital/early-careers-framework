@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ParticipantStatusTagComponent, type: :component do
+RSpec.describe StatusTags::ParticipantStatusTag, type: :component do
   let!(:participant_profile) { create :ect_participant_profile }
   let(:component) { described_class.new profile: participant_profile }
   subject { page }
