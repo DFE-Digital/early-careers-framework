@@ -82,7 +82,8 @@ RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn parti
 
         travel_to(milestone_started.milestone_date - 2.months) do
           Seeds::CallOffContracts.new.call
-          Importers::CreateStatements.new.call
+          Importers::CreateCohort.new(path_to_csv: Rails.root.join("db/data/cohorts/cohorts.csv")).call
+          Importers::CreateStatement.new(path_to_csv: Rails.root.join("db/data/statements/statements.csv")).call
         end
 
         and_sit_at_pupil_premium_school_reported_programme "Original SIT", "FIP"
