@@ -20,7 +20,7 @@ RSpec.describe Importers::SeedStatements do
       expect {
         subject.call
         subject.call
-      }.to change(Finance::Statement::NPQ, :count).by(72)
+      }.to change(Finance::Statement::NPQ, :count).by(109)
     end
 
     it "populates statements correctly" do
