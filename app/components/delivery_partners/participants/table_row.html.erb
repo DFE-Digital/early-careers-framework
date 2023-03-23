@@ -27,6 +27,6 @@
     <%= training_status %>
   </td>
   <td class="govuk-table__cell">
-    <%= status_tag %>
+    <%= render StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:, induction_record:) %>
   </td>
 </tr>
