@@ -238,6 +238,7 @@ en:
             new_school_urn:
               blank: "Enter the URN of the school the participant will transfer to"
               invalid: "Cannot find a school with the URN ‘%{urn}’"
+              same_school: "Enter the URN of the school the participant is joining"
             transfer_choice:
               blank: "Select which programme the participant will join"
             start_date:

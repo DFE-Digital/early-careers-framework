@@ -12,6 +12,7 @@ class Admin::SchoolTransferForm
   validate :participant_profile_present
   validates :new_school_urn, presence: true, on: :select_school
   validate :new_school_exists, on: :select_school
+  validate :moving_to_new_school, on: :select_school
   validate :start_date_is_valid, on: :start_date
   validates :email, presence: true, notify_email: true, on: :email
   validate :email_is_not_in_use, on: :email
@@ -182,6 +183,10 @@ private
 
   def new_school_exists
     errors.add(:new_school_urn, :invalid, urn: new_school_urn) if new_school.nil?
+  end
+
+  def moving_to_new_school
+    errors.add(:new_school_urn, :same_school, urn: new_school_urn) if participant_profile.school == new_school
   end
 
   def new_school_programmes
