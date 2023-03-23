@@ -9,6 +9,8 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Manage your training</h1>
 
+    <%= govuk_button_link_to "Manage mentors and ECTs", schools_participants_path %>
+
     <h2 class="govuk-heading-m">Participant summary</h2>
     <%= govuk_summary_list do |list| %>
       <% list.row do |row| %>
