@@ -7,6 +7,21 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 24th March 2023
+
+To enable the scenario where a participant needs to be registered as a mentor after having already been trained as an ECT by a given provider, a new `training_record_id` attribute has been added to the [ECF participant schema](/api-reference/reference-v1.html#schema-ecfparticipant).
+
+The `training_record_id` value will be unique to each registration that a participant has for ECF-based training, as either an ECT or mentor.
+
+Induction tutors have not yet been able to register participants as mentors if they were already registered as ECTs. Given the likely scenario that ECTs will go on to become mentors, the `training_record_id` attribute will soon allow the service to recognise and differentiate registrations. Note, DfE does not expect induction tutors to begin registering ECTs as mentors until June. For the moment, we have added examples to provider sandbox environments.
+
+* When using the endpoint GET /api/v1/participants/ecf, providers will receive an API response with all the ECF-based training registrations. Where a given participant is registered as both an ECT and a mentor, they will see multiple responses that each have the same participant_id, but which have unique `training_record_ids` for the mentor and ECT response.
+* When using the endpoint GET /api/v1/participants/ecf/{id}, providers will only receive a single response for a given participant. Where a given participant is registered as both an ECT and a mentor, this will be associated with the participant’s ECT registration, not their mentor registration. Note, when API version 3.0.0 is released and integrated with, providers will receive all registrations for the participant ‘nested’ under the relevant `training_record_id`.
+
+Specifications for the `‘nested’ participant response` can be found in the [draft API version 3.0.0. documentation](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
+
+Note, if the DfE has been in touch regarding consolidating inconsistent participant_ids (see the [release note on 15 March 2023](/api-reference/release-notes.html#15th-march-2023)), the `training_record_id` would not change as it is unique to a registration.
+
 ## 15th March 2023
 
 Providers will see reduced errors and inconsistencies associated with `participant_id` values.
