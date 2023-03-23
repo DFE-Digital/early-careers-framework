@@ -11,6 +11,11 @@ module Admin::Participants
     def show
       @validation_data = @participant_profile.ecf_participant_validation_data || ECFParticipantValidationData.new(participant_profile: @participant_profile)
       @eligibility_data = ::EligibilityPresenter.new(@participant_profile.ecf_participant_eligibility)
+
+      add_breadcrumb(
+        school.name,
+        admin_school_participants_path(school),
+      )
     end
 
     def full_name; end
@@ -27,6 +32,10 @@ module Admin::Participants
     end
 
   private
+
+    def school
+      @school ||= @participant_profile.school
+    end
 
     def validate_participant!
       return unless validation_data.present? && validation_data.can_validate_participant?
