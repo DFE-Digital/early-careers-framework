@@ -12,15 +12,23 @@ module Schools
           ]
         end
 
+        def before_render
+          wizard.appropriate_body_confirmed = false
+        end
+
         def next_step
           :check_answers
         end
 
         def previous_step
-          if wizard.ect_participant? && wizard.mentor_options.any?
-            :choose_mentor
+          if wizard.ect_participant?
+            if wizard.mentor_options.any?
+              :choose_mentor
+            else
+              :start_date
+            end
           else
-            :start_date
+            :email
           end
         end
       end

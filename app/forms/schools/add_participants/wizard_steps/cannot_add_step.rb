@@ -9,7 +9,7 @@ module Schools
         end
 
         def previous_step
-          :none
+          :confirm_transfer
         end
       end
     end

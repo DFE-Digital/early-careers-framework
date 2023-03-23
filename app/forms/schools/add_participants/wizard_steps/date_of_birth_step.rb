@@ -15,12 +15,16 @@ module Schools
         end
 
         def next_step
-          if wizard.sit_mentor?
-            :check_answers
-          elsif wizard.participant_exists?
-            :confirm_transfer
-          elsif wizard.found_participant_in_dqt?
-            :email
+          if wizard.participant_exists?
+            if wizard.ect_participant?
+              :confirm_transfer
+            else
+              :confirm_mentor_transfer
+            end
+          elsif wizard.dqt_record_has_different_name?
+            :known_by_another_name
+          elsif wizard.found_participant_in_dqt? || wizard.sit_mentor?
+            :none
           else
             :cannot_find_their_details
           end
@@ -28,6 +32,10 @@ module Schools
 
         def previous_step
           :trn
+        end
+
+        def journey_complete?
+          next_step == :none
         end
 
       private

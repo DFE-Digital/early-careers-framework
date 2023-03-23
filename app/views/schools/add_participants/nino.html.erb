@@ -9,7 +9,7 @@
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <%= form_with model: @form, url: url_for(action: :update), scope: "add_ect_wizard", method: :put do |f| %>
+    <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :nino,
                              width: "two-thirds",

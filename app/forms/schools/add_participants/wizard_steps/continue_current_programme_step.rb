@@ -16,18 +16,18 @@ module Schools
 
         def next_step
           if continue_current_programme?
-            if wizard.needs_to_confirm_appropriate_body?
-              :confirm_appropriate_body
-            else
-              :check_answers
-            end
+            :check_answers
           else
             :join_school_programme
           end
         end
 
         def previous_step
-          :joining_date
+          if wizard.needs_to_choose_a_mentor?
+            :choose_mentor
+          else
+            :email
+          end
         end
 
         def continue_current_programme?

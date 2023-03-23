@@ -15,10 +15,20 @@ module Schools
         end
 
         def next_step
-          if wizard.transfer?
-            :joining_date
-          else
+          if wizard.email_in_use?
+            :email_already_taken
+          elsif wizard.transfer?
+            if wizard.needs_to_choose_a_mentor?
+              :choose_mentor
+            elsif wizard.needs_to_confirm_programme?
+              :continue_current_programme
+            else
+              :check_answers
+            end
+          elsif wizard.ect_participant?
             :start_date
+          else
+            :check_answers
           end
         end
 

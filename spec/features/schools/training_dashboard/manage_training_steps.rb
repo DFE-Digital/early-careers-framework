@@ -556,8 +556,8 @@ module ManageTrainingSteps
     choose(@participant_profile_mentor.full_name.to_s, allow_label_click: true)
   end
 
-  def when_i_add_ect_or_mentor_name
-    fill_in "What’s this person’s full name?", with: @participant_data[:full_name]
+  def when_i_add_ect_name
+    fill_in "What’s this ECT’s full name?", with: @participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_email
@@ -577,7 +577,7 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_updated_name
-    fill_in "What’s this person’s full name?", with: @updated_participant_data[:full_name]
+    fill_in "What’s this ECT’s full name?", with: @updated_participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_updated_email
@@ -618,8 +618,8 @@ module ManageTrainingSteps
 
     # this method is used in several contexts (start at school, induction
     # start) so checking for the exact text is problematic. Just make sure
-    # it contains 'start'
-    legend = /start/
+    # it contains 'start' (or 'moving' for transfers)
+    legend = /start|moving/
 
     fill_in_date(legend, with: date)
   end
@@ -703,7 +703,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_add_ect_name_page
-    expect(page).to have_selector("h1", text: "What’s this person’s full name?")
+    expect(page).to have_selector("h1", text: "What’s this ECT’s full name?")
   end
 
   def then_i_am_taken_to_add_mentor_name_page
@@ -1035,18 +1035,17 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_are_they_a_transfer_page
-    expect(page).to have_selector("h1", text: "Is #{@participant_profile_ect.full_name} transferring from another school?")
-    expect(page).to have_text("Yes")
-    expect(page).to have_text("No")
+    expect(page).to have_selector("h1", text: "Confirm #{@participant_profile_ect.full_name} is moving from another school")
+    expect(page).to have_link("They’re not moving school")
   end
 
   def then_i_am_taken_to_teacher_start_date_page
-    expect(page).to have_selector("h1", text: "What’s Sally Teacher’s start date at your school?")
+    expect(page).to have_selector("h1", text: "When is Sally Teacher moving to your school?")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_same_school
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
-    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at this school")
+    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_different_school
@@ -1065,7 +1064,7 @@ module ManageTrainingSteps
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We’ll let #{@participant_profile_ect.full_name}")
+    expect(page).to have_text("#{@participant_profile_ect.full_name} has been added")
   end
 
   def then_i_see_the_tab_for_the_cohort(cohort)

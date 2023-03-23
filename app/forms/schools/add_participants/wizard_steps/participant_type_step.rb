@@ -3,7 +3,7 @@
 module Schools
   module AddParticipants
     module WizardSteps
-      class WhoStep < ::WizardStep
+      class ParticipantTypeStep < ::WizardStep
         attr_accessor :participant_type
 
         validates :participant_type, presence: true, inclusion: { in: %w[ect mentor self transfer] }

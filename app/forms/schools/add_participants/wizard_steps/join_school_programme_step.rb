@@ -16,11 +16,7 @@ module Schools
 
         def next_step
           if join_school_programme?
-            if wizard.needs_to_confirm_appropriate_body?
-              :confirm_appropriate_body
-            else
-              :check_answers
-            end
+            :check_answers
           else
             :cannot_add
           end

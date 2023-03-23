@@ -15,17 +15,25 @@ module Schools
         end
 
         def next_step
-          if wizard.needs_to_confirm_appropriate_body?
+          if wizard.transfer?
+            if wizard.needs_to_confirm_programme?
+              :continue_current_programme
+            else
+              :check_answers
+            end
+          elsif wizard.needs_to_confirm_appropriate_body?
             :confirm_appropriate_body
-          elsif wizard.needs_to_confirm_programme?
-            :continue_current_programme
           else
             :check_answers
           end
         end
 
         def previous_step
-          :what_we_need
+          if wizard.transfer?
+            :email
+          else
+            :start_date
+          end
         end
       end
     end

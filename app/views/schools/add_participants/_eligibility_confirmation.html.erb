@@ -1,0 +1,13 @@
+<% if profile.fundable? || ineligible_mentor_at_additional_school?(profile) %>
+  <%= render partial: 'schools/add_participants/add_ect/eligibility_confirmation/eligible', locals: { profile: profile } %>
+<% elsif profile.manual_check_needed? %>
+  <%= render partial: 'schools/add_participants/add_ect/eligibility_confirmation/manual_check_needed', locals: { profile: profile } %>
+<% elsif previous_induction?(profile) %>
+  <%= render partial: 'schools/add_participants/add_ect/eligibility_confirmation/previous_induction', locals: { profile: profile } %>
+<% elsif ineligible_mentor_in_early_rollout?(profile) %>
+  <%= render partial: 'schools/add_participants/add_ect/eligibility_confirmation/eligible_ero', locals: { profile: profile } %>
+<% elsif profile.no_qts? %>
+  <%= render partial: 'schools/add_participants/add_ect/eligibility_confirmation/no_qts_reason', local: { profile: profile } %>
+<% elsif ineligible?(profile)%>
+  <%= render partial: 'schools/add_participants/add_ect/eligibility_confirmation/ineligible', local: { profile: profile } %>
+<% end %>

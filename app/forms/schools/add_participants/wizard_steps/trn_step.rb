@@ -19,7 +19,11 @@ module Schools
         end
 
         def previous_step
-          :name
+          if wizard.sit_mentor?
+            :abort
+          else
+            :name
+          end
         end
       end
     end

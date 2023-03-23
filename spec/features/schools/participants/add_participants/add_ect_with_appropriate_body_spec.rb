@@ -134,13 +134,13 @@ private
       },
     )
 
-    fill_in "schools_add_participant_form[full_name]", with: "George ECT"
+    fill_in "add_participant_wizard[full_name]", with: "George ECT"
     click_on "Continue"
-    fill_in "schools_add_participant_form[trn]", with: "5234457"
+    fill_in "add_participant_wizard[trn]", with: "1234456"
     click_on "Continue"
     fill_in_date("What’s George ECT’s date of birth?", with: "1998-11-22")
     click_on "Continue"
-    fill_in "schools_add_participant_form[email]", with: "ect@email.gov.uk"
+    fill_in "add_participant_wizard[email]", with: "ect@email.gov.uk"
     click_on "Continue"
     fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
     click_on "Continue"
@@ -175,14 +175,15 @@ private
     choose ect_appropriate_body.name
     click_on "Continue"
   end
+  alias_method :and_i_choose_a_different_appropriate_body, :when_i_choose_a_different_appropriate_body
 
-  def and_i_choose_a_different_appropriate_body(ect_appropriate_body)
-    choose "National organisation"
-    click_on "Continue"
+  # def and_i_choose_a_different_appropriate_body(ect_appropriate_body)
+  #   choose "National organisation"
+  #   click_on "Continue"
 
-    choose ect_appropriate_body.name
-    click_on "Continue"
-  end
+  #   choose ect_appropriate_body.name
+  #   click_on "Continue"
+  # end
 
   def and_i_see_the_appropriate_body(ect_appropriate_body)
     expect(page).to have_summary_row("Appropriate body", ect_appropriate_body.name)

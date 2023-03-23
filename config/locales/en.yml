@@ -318,10 +318,30 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
-        schools/who_to_add_form:
+        schools/add_participants/wizard_steps/participant_type_step:
           attributes:
             participant_type:
               inclusion: "Select whether to add an ECT or a Mentor"
+        schools/add_participants/wizard_steps/name_step:
+          attributes:
+            full_name:
+              <<: *full_name_error_messages
+        schools/add_participants/wizard_steps/trn_step:
+          attributes:
+            trn:
+              blank: "Enter the teachers TRN (teacher reference number)"
+              too_short: "Teacher reference number is at least 5 digits long"
+              too_long: "Teacher reference number is at most 7 digits long"
+              invalid: "Teacher reference number must only contain numbers"
+        schools/add_participants/wizard_steps/email_step:
+          attributes:
+            email:
+              <<: *email_error_messages
+        schools/add_participants/wizard_steps/date_of_birth_step:
+          attributes:
+            date_of_birth:
+              blank: "Enter a date of birth"
+              invalid: "Enter a valid date of birth"
         schools/transferring_participant_form:
           attributes:
             full_name:

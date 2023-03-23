@@ -1,4 +1,4 @@
-<% content_for :before_content, govuk_back_link(text: "Back", href: schools_participants_path) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
 
 <% content_for :title, "Who do you want to add?" %>
 
@@ -7,7 +7,7 @@
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
-    <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+    <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_radio_buttons_fieldset :participant_type , legend: { text: "Who do you want to add?", tag: 'h1', size: 'xl' } do %>
         <p class="govuk-body govuk-!-margin-top-4">

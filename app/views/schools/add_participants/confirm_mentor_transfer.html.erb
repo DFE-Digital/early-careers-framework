@@ -1,0 +1,31 @@
+<% title = "Will #{@wizard.full_name} only mentor ECT’s at your school?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_collection_radio_buttons(
+        :transfer_confirmed,
+        simple_yes_no_options,
+        :id, :name,
+        inline: true,
+        caption: { text: @school.name, size: 'xl' },
+        legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+
+        <p class="govuk-body">
+          Our records show this person is already registered as a mentor at a different school.
+        </p>
+
+        <p class="govuk-body">
+          Although a mentor can mentor ECTs at multiple schools, they can only receive mentor training from one school at a time.
+        </p>
+
+      <% end %>
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
+  </div>
+</div>

@@ -6,7 +6,7 @@ module Schools
       class ConfirmTransferStep < ::WizardStep
         attr_accessor :transfer_confirmed
 
-        validates :transfer_confirmed, presence: true
+        validates :transfer_confirmed, inclusion: { in: %w[yes] }
 
         def self.permitted_params
           %i[
@@ -15,18 +15,23 @@ module Schools
         end
 
         def next_step
-          if wizard.need_training_setup?
+          if wizard.already_enrolled_at_school?
+            :already_enrolled_at_school
+          elsif wizard.need_training_setup?
             :need_training_setup
           else
-            :email
+            :none
           end
         end
 
         def previous_step
           :date_of_birth
         end
+
+        def journey_complete?
+          next_step == :none
+        end
       end
     end
   end
 end
-

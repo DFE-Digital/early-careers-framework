@@ -28,6 +28,14 @@ class WizardStep
   end
 
   def before_render; end
+
+  def view_name
+    # remove any module scope and 'Step' suffix from the class name as default view name for the step
+    # e.g. for Module::Group::AmazingThingStep we get "amazing_thing" back
+    # This can be overridden in steps that need to support multiple views.
+    self.class.name.demodulize[...-4].underscore
+  end
+
   def after_render; end
 
   def before_save; end

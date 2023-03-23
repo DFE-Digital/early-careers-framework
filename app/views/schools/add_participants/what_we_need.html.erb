@@ -15,14 +15,21 @@
       <li>email address (personal or school)</li>
       <li><%= @wizard.ect_participant? ? "induction" : "mentoring" %> start date or, if moving from another school, their start date</li>
     </ul>
-    <p class="govuk-body">
-      We use this information to check their details in the Teaching Regulation Agency (TRA) records to make
-      sure they’re eligible for DfE funding. When participants move school, we need to find their record so
-      it can be transferred to your school.
-    </p>
-    <p class="govuk-body">
-      If your school does not have this information, contact the person directly to ask for it.
-    </p>
+    <% if @wizard.ect_participant? %>
+      <p class="govuk-body">
+        We use this information to check their details in the Teaching Regulation Agency (TRA) records to make
+        sure they’re eligible for DfE funding. When participants move school, we need to find their record so
+        it can be transferred to your school.
+      </p>
+      <p class="govuk-body">
+        If your school does not have this information, contact the person directly to ask for it.
+      </p>
+    <% else %>
+      <p class="govuk-body">
+        We use this information to check their details in the Teaching Regulation Agency (TRA) records.
+        This is to make sure they’re eligible for DfE funding.
+      </p>
+    <% end %>
 
     <%= govuk_details(summary_text: "Tell your ECTs and mentors about this use of their data", classes: "govuk-!-margin-top-7 govuk-!-margin-bottom-7") do %>
       <p>You should let them know that we:</p>

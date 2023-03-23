@@ -9,11 +9,7 @@ module Schools
         end
 
         def previous_step
-          :who
-        end
-
-        def before_render
-          wizard.reset_form
+          :participant_type
         end
       end
     end

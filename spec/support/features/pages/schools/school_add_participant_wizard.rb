@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolAddParticipantWizard < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/add/who"
+    set_url "/schools/{slug}/cohorts/{cohort}/participants/who"
     set_primary_heading "Who do you want to add?"
 
     def add_participant(participant_type, full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
@@ -50,7 +50,7 @@ module Pages
     end
 
     def choose_to_add_a_new_ect
-      choose "A new ECT"
+      choose "ECT"
       click_on "Continue"
       click_on "Continue"
 
@@ -58,7 +58,7 @@ module Pages
     end
 
     def choose_to_add_a_new_mentor
-      choose "A new mentor"
+      choose "Mentor"
       click_on "Continue"
       click_on "Continue"
 
@@ -74,14 +74,14 @@ module Pages
 
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
-      fill_in "What’s this person’s full name?", with: participant_name
+      fill_in "What’s this ECT’s full name?", with: participant_name
       click_on "Continue"
 
       self
     end
 
     def add_mentor_full_name(participant_name)
-      fill_in "What’s the full name of this mentor?", with: participant_name
+      fill_in "What’s this mentor’s full name?", with: participant_name
       click_on "Continue"
 
       self

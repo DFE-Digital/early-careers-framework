@@ -15,19 +15,19 @@ module Schools
         end
 
         def next_step
-          if wizard.needs_to_choose_a_mentor?
-            :choose_mentor
-          elsif wizard.needs_to_confirm_programme?
-            :continue_current_programme
-          elsif wizard.needs_to_confirm_appropriate_body?
-            :confirm_appropriate_body
-          else
-            :check_answers
-          end
+          :email
+          # if wizard.needs_to_choose_a_mentor?
+          #   :choose_mentor
+          # elsif wizard.needs_to_confirm_appropriate_body?
+          #   :confirm_appropriate_body
+          # else
+          #   :check_answers
+          # end
         end
 
         def previous_step
-          :email
+          # this is the previous "who-to-add" journey
+          :confirm_transfer
         end
 
       private
