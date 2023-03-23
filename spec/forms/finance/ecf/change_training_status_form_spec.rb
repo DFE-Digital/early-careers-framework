@@ -10,7 +10,8 @@ RSpec.describe Finance::ECF::ChangeTrainingStatusForm, :with_default_schedules, 
 
   describe "EarlyCareerTeacher" do
     let!(:participant_declaration) { create(:ect_participant_declaration, participant_profile:, cpd_lead_provider:) }
-    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:user) { create(:participant_identity, :secondary).user }
+    let(:participant_profile) { create(:ect, user:, lead_provider: cpd_lead_provider.lead_provider) }
 
     it { is_expected.to validate_inclusion_of(:training_status).in_array(ParticipantProfile.training_statuses.values) }
     it { is_expected.to validate_inclusion_of(:reason).in_array(ParticipantProfile::DEFERRAL_REASONS) }
@@ -36,7 +37,8 @@ RSpec.describe Finance::ECF::ChangeTrainingStatusForm, :with_default_schedules, 
 
   describe "Mentor" do
     let!(:participant_declaration) { create(:mentor_participant_declaration, participant_profile:, cpd_lead_provider:) }
-    let(:participant_profile)      { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:user) { create(:participant_identity, :secondary).user }
+    let(:participant_profile) { create(:mentor, user:, lead_provider: cpd_lead_provider.lead_provider) }
 
     it { is_expected.to validate_inclusion_of(:training_status).in_array(ParticipantProfile.training_statuses.values) }
     it { is_expected.to validate_inclusion_of(:reason).in_array(ParticipantProfile::DEFERRAL_REASONS) }
