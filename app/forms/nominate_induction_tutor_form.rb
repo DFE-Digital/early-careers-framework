@@ -42,7 +42,10 @@ class NominateInductionTutorForm
   end
 
   def email_already_taken?
-    Identity.find_user_by(email:).present?
+    user = Identity.find_user_by(email:)
+    return false if user.nil?
+
+    user.early_career_teacher?
   end
 
 private
