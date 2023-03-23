@@ -9,7 +9,7 @@ class ParticipantStatusTagStatus
   def record_state
     return :withdrawn_training if training_status_withdrawn?
     return :registered_for_fip_training if eligible? && participant_profile.single_profile? && on_fip?
-    return :registered_for_cip_training if eligible? && participant_profile.single_profile? && on_cip?
+    return :registered_for_cip_training if eligible? && participant_profile.single_profile? # && on_cip?
     return :registered_for_mentor_training if eligible? && participant_profile.primary_profile?
     return :registered_for_mentor_training_second_school if ineligible? && mentor_with_duplicate_profile?
 
