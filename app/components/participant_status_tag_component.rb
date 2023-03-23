@@ -8,7 +8,7 @@ class ParticipantStatusTagComponent < BaseComponent
 
   def call
     if participant_profile.npq?
-      render Admin::Participants::NPQValidationStatusTag.new(participant_profile:)
+      render Admin::Participants::NPQValidationStatusTag.new(profile: participant_profile)
     else
       govuk_tag(**tag_attributes)
     end
