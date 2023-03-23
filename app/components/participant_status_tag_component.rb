@@ -2,13 +2,13 @@
 
 class ParticipantStatusTagComponent < BaseComponent
   def initialize(profile:, induction_record: nil)
-    @profile = profile
+    @participant_profile = profile
     @induction_record = induction_record
   end
 
   def call
-    if profile.npq?
-      render Admin::Participants::NPQValidationStatusTag.new(profile:)
+    if participant_profile.npq?
+      render Admin::Participants::NPQValidationStatusTag.new(participant_profile:)
     else
       govuk_tag(**tag_attributes)
     end
@@ -16,65 +16,46 @@ class ParticipantStatusTagComponent < BaseComponent
 
 private
 
-  attr_reader :profile, :induction_record
+  attr_reader :participant_profile, :induction_record
 
   def tag_attributes
-    return { text: "Withdrawn by provider", colour: "red" } if training_status_withdrawn?
-    return { text: "Eligible to start", colour: "green" } if eligible? && profile.single_profile?
-    return { text: "Eligible: Mentor at main school", colour: "green" } if eligible? && profile.primary_profile?
-    return { text: "Eligible: Mentor at additional school", colour: "green" } if ineligible? && mentor_with_duplicate_profile?
-
-    return { text: "Not eligible: No QTS", colour: "red" } if participant_has_no_qts?
-    return { text: "DfE checking eligibility", colour: "orange" } if profile.manual_check_needed?
-    return { text: "Not eligible: NQT+1", colour: "red" } if nqt_plus_one? && ineligible?
-    return { text: "Eligible to start: ERO", colour: "green" } if ineligible? && mentor_was_in_early_rollout? && on_fip?
-    return { text: "Eligible to start", colour: "green" } if ineligible? && mentor_was_in_early_rollout?
-    return { text: "Not eligible", colour: "red" } if ineligible?
-    return { text: "Contacted for information", colour: "grey" } if latest_email&.delivered?
-    return { text: "Check email address", colour: "grey" } if latest_email&.failed?
-
-    { text: "Contacting for information", colour: "grey" }
+    case record_state
+    when :withdrawn_training
+      { text: "Withdrawn by provider", colour: "red" }
+    when :registered_for_fip_training || :registered_for_cip_training
+      { text: "Eligible to start", colour: "green" }
+    when :registered_for_mentor_training
+      { text: "Eligible: Mentor at main school", colour: "green" }
+    when :registered_for_mentor_training_second_school
+      { text: "Eligible: Mentor at additional school", colour: "green" }
+    when :not_qualified
+      { text: "Not eligible: No QTS", colour: "red" }
+    # when :active_flags
+    # when :different_trn
+    # when :no_induction_start
+    when :manual_check
+      { text: "DfE checking eligibility", colour: "orange" }
+    when :previous_induction
+      { text: "Not eligible: NQT+1", colour: "red" }
+    when :previous_participation_ero
+      { text: "Eligible to start: ERO", colour: "green" }
+    when :previous_participation
+      { text: "Eligible to start", colour: "green" }
+    when :ineligible
+      { text: "Not eligible", colour: "red" }
+    when :request_for_details_delivered
+      { text: "Contacted for information", colour: "grey" }
+    when :request_for_details_failed
+      { text: "Check email address", colour: "grey" }
+    else
+      { text: "Contacting for information", colour: "grey" }
+    end
   end
 
-  def training_status_withdrawn?
-    (induction_record || profile).training_status_withdrawn?
-  end
-
-  def latest_email
-    return @latest_email if defined?(@latest_email)
-
-    @latest_email = Email.associated_with(profile).tagged_with(:request_for_details).latest
-  end
-
-  def eligible?
-    profile.eligible?
-  end
-
-  def ineligible?
-    profile&.ineligible?
-  end
-
-  def mentor_was_in_early_rollout?
-    return unless profile.mentor?
-
-    profile.previous_participation?
-  end
-
-  def mentor_with_duplicate_profile?
-    return unless profile.mentor?
-
-    profile.duplicate?
-  end
-
-  def on_fip?
-    induction_record&.enrolled_in_fip? || profile&.school_cohort&.full_induction_programme?
-  end
-
-  def nqt_plus_one?
-    profile.previous_induction?
-  end
-
-  def participant_has_no_qts?
-    profile.no_qts?
+  def record_state
+    @record_state ||= ParticipantStatusTagStatus.new(
+      participant_profile:,
+      induction_record:,
+    ).record_state
   end
 end
