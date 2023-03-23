@@ -392,7 +392,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     end
   end
 
-  describe "GET /api/v2/participants/ecf/:id", :with_default_schedules, with_feature_flags: { external_identifier_to_user_id_lookup: "active" } do
+  describe "GET /api/v2/participants/ecf/:id", :with_default_schedules do
     let(:parsed_response) { JSON.parse(response.body) }
 
     before do

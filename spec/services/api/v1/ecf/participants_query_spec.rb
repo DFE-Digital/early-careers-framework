@@ -102,18 +102,6 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
 
   describe "#induction_record" do
     describe "id filter" do
-      context "with correct value" do
-        let(:another_participant_profile) { create(:ect_participant_profile) }
-        let(:another_induction_programme) { create(:induction_programme, :fip, partnership:) }
-        let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
-
-        let(:params) { { id: another_participant_profile.participant_identity.user_id } }
-
-        it "returns the correct induction record" do
-          expect(subject.induction_record).to eql(another_induction_record)
-        end
-      end
-
       context "using user ID" do
         context "with correct value" do
           let(:another_participant_profile) { create(:ect_participant_profile) }
@@ -122,7 +110,7 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
 
           let(:params) { { id: another_participant_profile.participant_identity.external_identifier } }
 
-          it "returns a specific induction record" do
+          it "returns the correct induction record" do
             expect(subject.induction_record).to eql(another_induction_record)
           end
         end
