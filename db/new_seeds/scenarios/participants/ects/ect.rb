@@ -31,6 +31,7 @@ module NewSeeds
 
           def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active", preferred_identity: nil, appropriate_body: nil)
             preferred_identity ||= participant_profile.participant_identity
+            participant_profile.update!(mentor_profile:) if mentor_profile
 
             FactoryBot.create(
               :seed_induction_record,
