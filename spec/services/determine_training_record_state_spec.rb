@@ -479,7 +479,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         context "who is ready for training or is being trained" do
           subject { described_class.call(participant_profile: ect_on_fip).training_state }
-          it { is_expected.to eql :registered_for_fip_training }
+          it { is_expected.to eql :active_fip_training }
         end
       end
 
@@ -511,7 +511,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         context "who is ready for training or is being trained" do
           subject { described_class.call(participant_profile: ect_on_cip).training_state }
-          it { is_expected.to eql :registered_for_cip_training }
+          it { is_expected.to eql :active_cip_training }
         end
       end
 
@@ -557,7 +557,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
       context "for Core Induction Programme ECTs" do
         context "who is currently being trained" do
           subject { described_class.call(participant_profile: ect_on_cip).record_state }
-          it { is_expected.to eql :registered_for_cip_training }
+          it { is_expected.to eql :active_cip_training }
         end
 
         context "who has been withdrawn by their last lead provider" do
@@ -594,12 +594,12 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         context "who was registered at a sparsity uplift school" do
           subject { described_class.call(participant_profile: ect_on_fip_sparsity_uplift).record_state }
-          it { is_expected.to eql :registered_for_fip_training }
+          it { is_expected.to eql :active_fip_training }
         end
 
         context "who was registered at a pupil premium uplift school" do
           subject { described_class.call(participant_profile: ect_on_fip_pupil_premium_uplift).record_state }
-          it { is_expected.to eql :registered_for_fip_training }
+          it { is_expected.to eql :active_fip_training }
         end
 
         context "who needs their active flags checking" do
@@ -649,7 +649,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         context "who is currently being trained" do
           subject { described_class.call(participant_profile: ect_on_fip).record_state }
-          it { is_expected.to eql :registered_for_fip_training }
+          it { is_expected.to eql :active_fip_training }
         end
 
         context "who has been withdrawn by their last lead provider" do
@@ -750,7 +750,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
           it "returns the correct status" do
             response = subject.record_state
-            expect(response).to eq :registered_for_fip_training # "training_or_eligible_for_training"
+            expect(response).to eq :active_fip_training # "training_or_eligible_for_training"
           end
         end
 
@@ -820,7 +820,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
           it "returns the correct status" do
             response = subject.record_state
-            expect(response).to eq :registered_for_fip_training # "training_or_eligible_for_training"
+            expect(response).to eq :active_fip_training # "training_or_eligible_for_training"
           end
 
           context "when induction record does not exist" do
@@ -900,7 +900,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
-        it { is_expected.to eq :registered_for_fip_training } # "Eligible to start"
+        it { is_expected.to eq :active_fip_training } # "Eligible to start"
       end
 
       context "was a participant in early roll out" do
@@ -961,7 +961,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
           subject { described_class.call(participant_profile:, induction_record:).record_state }
 
-          it { is_expected.to eq :registered_for_fip_training } # "Eligible to start" }
+          it { is_expected.to eq :active_fip_training } # "Eligible to start" }
         end
       end
     end
@@ -998,7 +998,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         context "when the participant is eligible" do
           let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
-          it { is_expected.to eq :registered_for_fip_training } #  eligible_fip_no_partner
+          it { is_expected.to eq :active_fip_training } #  eligible_fip_no_partner
 
           context "when the school is in a partnership", skip: "cannot override status in new service" do
             before { allow(component).to receive(:profile_status).and_return(:eligible_fip) }
@@ -1095,7 +1095,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         context "when the participant is eligible" do
           let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
-          it { is_expected.to eq :registered_for_cip_training } #  eligible_cip
+          it { is_expected.to eq :active_cip_training } #  eligible_cip
         end
 
         context "when the participant has no QTS" do
