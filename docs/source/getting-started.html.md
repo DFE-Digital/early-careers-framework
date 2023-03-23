@@ -57,7 +57,7 @@ https://manage-training-for-early-career-teachers.education.gov.uk/api/v3
 
 ### Sandbox environment
 
-The sandbox environment is used by lead providers to: 
+The sandbox environment is used by providers to: 
 
 * test API integrations without affecting real data 
 * become familiar with the service
