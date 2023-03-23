@@ -2,7 +2,7 @@
 
 <% content_for :before_content, govuk_back_link(
   text: "Back",
-  href: schools_participant_path(id: @profile))
+  href: schools_participant_path(id: params[:from_mentor].presence || @profile))
 %>
 
 <div class="govuk-grid-row">
