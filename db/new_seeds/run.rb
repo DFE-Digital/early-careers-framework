@@ -28,6 +28,7 @@ end
   "add_privacy_policy.rb",
   "add_lead_providers_and_cips.rb",
   "add_npq_courses.rb",
+  "add_contracts.rb",
   "add_statements.rb",
   "add_appropriate_bodies.rb",
   "add_schools_and_local_authorities.rb",

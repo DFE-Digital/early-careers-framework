@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Seeds
-  class CallOffContracts
+module Importers
+  class CreateCallOffContracts
     def call
       LeadProvider.all.each do |lp|
-        [cohort_2021, cohort_2022].each do |cohort|
+        [cohort_2021, cohort_2022, cohort_2023].each do |cohort|
           sample_call_off_contract = CallOffContract.find_or_create_by!(
             lead_provider: lp,
             version: example_contract_data[:version] || "0.0.1",
@@ -38,6 +38,10 @@ module Seeds
 
     def cohort_2022
       @cohort_2022 ||= Cohort.find_or_create_by!(start_year: 2022)
+    end
+
+    def cohort_2023
+      @cohort_2023 ||= Cohort.find_or_create_by!(start_year: 2023)
     end
 
     def example_contract_data
