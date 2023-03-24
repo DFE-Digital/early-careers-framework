@@ -56,11 +56,14 @@
       sl.row do |row|
         row.key(text: "Mentoring at")
         row.value do
-          ["<ul class='govuk-list govuk-list--bullet'>",
-          @latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
-            "<li>#{govuk_link_to(school_mentor.school.slug.titleize, admin_school_path(school_mentor.school.friendly_id))}</li>"
-          end,
-          "</ul>"].flatten.join.html_safe
+          html_list(
+            @latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
+              govuk_link_to(school_mentor.school.slug.titleize, admin_school_path(school_mentor.school.friendly_id))
+            end
+          )
+        end
+      end
+
       sl.row do |row|
         row.key(text: "Mentoring")
         row.value do
