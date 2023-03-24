@@ -102,7 +102,8 @@ RSpec.describe Partnership, type: :model do
   end
 
   describe "#unchallenge!" do
-    let!(:partnership) { build(:partnership, challenged_at: Time.zone.now, challenge_reason: :mistake) }
+    let!(:partnership) { create(:partnership, :challenged) }
+    let!(:school_cohort) { create(:school_cohort, school: partnership.school) }
 
     it "clears challenged_at and challenge_reason and sets challenge_deadline" do
       expect(partnership.challenged?).to be_truthy
@@ -115,6 +116,25 @@ RSpec.describe Partnership, type: :model do
         expect(partnership.challenge_deadline).to eq(partnership.cohort.academic_year_start_date + 2.months)
         expect(partnership.challenged?).to be_falsey
       end
+    end
+
+    it "updates the school cohorts" do
+      expect { partnership.unchallenge! }.to change { school_cohort.reload.updated_at }
+    end
+  end
+
+  describe "save callbacks" do
+    let(:lead_provider) { create(:lead_provider) }
+    let(:school_cohort) { create(:school_cohort, lead_provider:) }
+    let(:school) { school_cohort.school }
+    subject(:partnership) { school_cohort.school.partnerships.first }
+
+    it "updates the school updated_at" do
+      expect { partnership.update!(challenged_at: Time.zone.now) }.to change { school.reload.updated_at }
+    end
+
+    it "does not update the school cohorts" do
+      expect { partnership.update!(challenged_at: Time.zone.now) }.not_to change { school_cohort.reload.updated_at }
     end
   end
 end

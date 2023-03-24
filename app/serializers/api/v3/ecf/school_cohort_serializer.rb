@@ -35,9 +35,7 @@ module Api
           school_cohort.school.partnered?(school_cohort.cohort)
         end
 
-        attribute :updated_at do |school_cohort|
-          school_cohort.school.updated_at
-        end
+        attribute :updated_at, &:updated_at
       end
     end
   end

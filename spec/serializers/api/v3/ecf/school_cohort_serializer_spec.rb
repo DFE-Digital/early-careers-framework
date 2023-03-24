@@ -53,7 +53,7 @@ module Api
           end
 
           it "returns the school updated_at" do
-            expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(school.updated_at)
+            expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(school_cohort.updated_at)
           end
         end
       end

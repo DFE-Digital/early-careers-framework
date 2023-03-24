@@ -25,6 +25,11 @@ module Partnerships
       raise ArgumentError if challenge_reason.blank?
 
       partnership.update!(challenge_reason:, challenged_at: Time.zone.now)
+
+      # Ensures the updated_at timestamp exposed by the API
+      # SchoolCohortSerializer is updated when partnership status changes
+      partnership.school_cohorts.touch_all
+
       partnership.event_logs.create!(
         event: :challenged,
         data: {

@@ -4,6 +4,7 @@ class Cohort < ApplicationRecord
   has_many :call_off_contracts
   has_many :npq_contracts
   has_many :partnerships
+  has_many :school_cohorts
   has_many :schedules, class_name: "Finance::Schedule"
   has_many :statements
 

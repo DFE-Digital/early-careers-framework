@@ -17,6 +17,7 @@ class Partnership < ApplicationRecord
   belongs_to :delivery_partner
   has_many :partnership_notification_emails, dependent: :destroy
   has_many :event_logs, as: :owner
+  has_many :school_cohorts, through: :cohort
 
   has_paper_trail
 
@@ -56,6 +57,10 @@ class Partnership < ApplicationRecord
 
   def unchallenge!
     update!(challenged_at: nil, challenge_reason: nil, challenge_deadline: cohort_challenge_deadline)
+
+    # Ensures the updated_at timestamp exposed by the API
+    # SchoolCohortSerializer is updated when partnership status changes
+    school_cohorts.touch_all
   end
 
 private

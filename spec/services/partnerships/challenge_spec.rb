@@ -48,6 +48,10 @@ RSpec.describe Partnerships::Challenge do
       end
     end
 
+    it "updates the school cohorts" do
+      expect { service_call }.to change { school_cohort.reload.updated_at }
+    end
+
     it "sets the event log data" do
       service_call
       created_event = partnership.event_logs.order(created_at: :desc).first
