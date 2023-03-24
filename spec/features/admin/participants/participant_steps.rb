@@ -173,6 +173,12 @@ module ParticipantSteps
     end
   end
 
+  def and_the_mentees_names_should_be_links_to_their_profiles
+    within(page.find("dt", text: /^Mentoring$/).ancestor(".govuk-summary-list__row").find("dd > ul > li")) do
+      expect(page).to have_link(@participant_profile_ect.full_name, href: admin_participant_path(@participant_profile_ect))
+    end
+  end
+
   def and_i_click_on_continue
     click_on("Continue")
   end

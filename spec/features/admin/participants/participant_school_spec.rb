@@ -27,4 +27,14 @@ RSpec.feature "Admin should be able to see the participant's current school", js
       and_the_mentors_name_should_be_a_link_to_their_profile
     end
   end
+
+  context "when the participant is a mentor" do
+    before { given_the_mentor_is_mentoring_the_ect }
+
+    scenario "the mentees' names should be links to their profiles" do
+      when_i_click_on_the_participants_name "Billy Mentor"
+      when_i_click_on_tab("School")
+      and_the_mentees_names_should_be_links_to_their_profiles
+    end
+  end
 end
