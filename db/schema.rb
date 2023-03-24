@@ -890,6 +890,7 @@ ActiveRecord::Schema.define(version: 2023_03_21_181937) do
     t.index ["cohort_id"], name: "index_school_cohorts_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_school_cohorts_on_core_induction_programme_id"
     t.index ["default_induction_programme_id"], name: "index_school_cohorts_on_default_induction_programme_id"
+    t.index ["school_id", "cohort_id"], name: "index_school_cohorts_on_school_id_and_cohort_id", unique: true
     t.index ["school_id"], name: "index_school_cohorts_on_school_id"
     t.index ["updated_at"], name: "index_school_cohorts_on_updated_at"
   end
