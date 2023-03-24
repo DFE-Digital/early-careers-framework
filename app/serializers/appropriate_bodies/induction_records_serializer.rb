@@ -45,11 +45,7 @@ module AppropriateBodies
     attribute :training_status, &:training_status
 
     attribute :status do |induction_record|
-      status_name = ParticipantProfileStatus.new(
-        participant_profile: induction_record.participant_profile,
-        induction_record:,
-      ).status_name
-      I18n.t("participant_profile_status.status.#{status_name}.title") if status_name
+      AppropriateBodyParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record:).label
     end
   end
 end
