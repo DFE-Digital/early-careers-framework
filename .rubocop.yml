@@ -11,6 +11,7 @@ AllCops:
     - 'db/analytics_schema.rb'
     - 'vendor/**/*'
     - 'db/seeds/cip_*.rb'
+    - 'db/data/**/*.csv'
 
 Style/FrozenStringLiteralComment:
   Enabled: true

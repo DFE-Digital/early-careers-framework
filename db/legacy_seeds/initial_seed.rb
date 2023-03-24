@@ -84,5 +84,3 @@ end
 NPQLeadProvider.all.each do |lp|
   lp.update!(cpd_lead_provider: CpdLeadProvider.find_by(name: lp.name))
 end
-
-Importers::SeedStatements.new.call
