@@ -1136,25 +1136,66 @@ module ManageTrainingSteps
   end
 
   def set_dqt_blank_validation_result
-    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(nil)
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        nil,
+        true,
+        true,
+        false,
+        false,
+        2,
+      ),
+    )
   end
 
   def set_dqt_validation_result
-    response = {
-      trn: @participant_data[:trn],
-      full_name: @participant_data[:full_name],
-      nino: nil,
-      dob: @participant_data[:date_of_birth],
-      config: {},
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        valid_dqt_response(@participant_data),
+        true,
+        true,
+        true,
+        false,
+        3,
+      ),
+    )
+  end
+
+  def valid_dqt_response(participant_data)
+    {
+      "name" => participant_data[:full_name],
+      "trn" => participant_data[:trn],
+      "state_name" => "Active",
+      "dob" => participant_data[:date_of_birth],
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "start_date" => 1.month.ago,
+        "status" => "Active",
+      },
     }
-    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
   end
 
   def set_dqt_validation_with_nino
-    response = @participant_data.slice(:full_name, :trn, :date_of_birth, :nino).merge(config: {})
-
-    allow(ParticipantValidationService).to receive(:validate) do |args|
-      response if args[:nino] == @participant_data[:nino]
+    allow(DqtRecordCheck).to receive(:call) do |args|
+      if args[:nino] == @participant_data[:nino]
+        DqtRecordCheck::CheckResult.new(
+          valid_dqt_response(@participant_data),
+          true,
+          true,
+          true,
+          true,
+          4,
+        )
+      else
+        DqtRecordCheck::CheckResult.new(
+          nil,
+          true,
+          true,
+          false,
+          false,
+          2,
+        )
+      end
     end
   end
 end

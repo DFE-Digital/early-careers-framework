@@ -16,9 +16,7 @@ module Schools
 
         def next_step
           if wizard.participant_exists?
-            if wizard.already_enrolled_at_school?
-              :cannot_add_already_enrolled_at_school
-            elsif wizard.ect_participant?
+            if wizard.ect_participant?
               :confirm_transfer
             else
               :confirm_mentor_transfer
@@ -43,15 +41,21 @@ module Schools
       private
 
         def date_of_birth_is_present_and_correct
-          @date_of_birth = ActiveRecord::Type::Date.new.cast(date_of_birth)
           if date_of_birth.blank?
-            errors.add(:date_of_birth, I18n.t("errors.date_of_birth.blank"))
-          elsif date_of_birth > Time.zone.now
-            errors.add(:date_of_birth, I18n.t("errors.date_of_birth.in_future"))
-          elsif !date_of_birth.between?(Date.new(1900, 1, 1), Date.current - 18.years)
-            errors.add(:date_of_birth, I18n.t("errors.date_of_birth.invalid"))
-          elsif date_of_birth.year.digits.length != 4
-            errors.add(:date_of_birth, I18n.t("errors.date_of_birth.invalid"))
+            errors.add(:date_of_birth, :blank)
+          else
+            begin
+              @date_of_birth = Date.parse (1..3).map { |n| date_of_birth[n] }.join("/")
+            rescue Date::Error
+              errors.add(:date_of_birth, :invalid)
+              return
+            end
+
+            if date_of_birth > Time.zone.now
+              errors.add(:date_of_birth, :in_future)
+            elsif !date_of_birth.between?(Date.new(1900, 1, 1), Date.current - 18.years)
+              errors.add(:date_of_birth, :invalid)
+            end
           end
         end
       end

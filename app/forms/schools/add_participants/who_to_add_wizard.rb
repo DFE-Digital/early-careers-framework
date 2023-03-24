@@ -22,7 +22,7 @@ module Schools
           cannot_add
           cannot_add_mismatch
           cannot_add_mentor_at_multiple_schools
-          already_enrolled_at_school
+          cannot_add_already_enrolled_at_school
         ]
       end
 

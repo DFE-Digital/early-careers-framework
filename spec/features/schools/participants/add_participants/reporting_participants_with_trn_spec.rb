@@ -64,14 +64,16 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
   end
 
   before do
-    allow_any_instance_of(ParticipantValidationService).to receive(:validate)
-                                                             .and_return({
-                                                               trn: participant_data[:trn],
-                                                               full_name: participant_data[:full_name],
-                                                               nino: nil,
-                                                               dob: participant_data[:date_of_birth],
-                                                               config: {},
-                                                             })
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        valid_dqt_response(participant_data),
+        true,
+        true,
+        true,
+        false,
+        3,
+      ),
+    )
   end
 
   scenario "Adding an ECT validates input" do
@@ -165,5 +167,19 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
     then_i_am_on_the_school_add_participant_completed_page
     and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]
     and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "Mentor"
+  end
+
+  def valid_dqt_response(participant_data)
+    {
+      "name" => participant_data[:full_name],
+      "trn" => participant_data[:trn],
+      "state_name" => "Active",
+      "dob" => participant_data[:date_of_birth],
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "start_date" => 1.month.ago,
+        "status" => "Active",
+      },
+    }
   end
 end

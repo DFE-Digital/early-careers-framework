@@ -124,14 +124,15 @@ private
   end
 
   def and_i_fill_in_all_info
-    allow(ParticipantValidationService).to receive(:validate).and_return(
-      {
-        trn: "5234457",
-        full_name: "George ECT",
-        nino: nil,
-        dob: Date.new(1998, 11, 22),
-        config: {},
-      },
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        valid_dqt_response,
+        true,
+        true,
+        true,
+        false,
+        3,
+      ),
     )
 
     fill_in "add_participant_wizard[full_name]", with: "George ECT"
@@ -144,6 +145,20 @@ private
     click_on "Continue"
     fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
     click_on "Continue"
+  end
+
+  def valid_dqt_response
+    {
+      "name" => "George ECT",
+      "trn" => "5234457",
+      "state_name" => "Active",
+      "dob" => Date.new(1998, 11, 22),
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "start_date" => 1.month.ago,
+        "status" => "Active",
+      },
+    }
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page

@@ -99,7 +99,7 @@ en:
     cannot_change_from_rejected: Once rejected an application cannot change state
   errors:
     email: &email_error_messages
-      blank: "Enter an email"
+      blank: "Enter an email address"
       taken: "This email address is already in use"
       invalid: "Enter an email address in the correct format, like name@example.com"
     supplier_email:
@@ -110,8 +110,8 @@ en:
     type:
       blank: "Select whether to add or transfer a teacher"
     date_of_birth: &date_of_birth_error_messages
-      blank: "Enter date of birth"
-      invalid: "Invalid date of birth"
+      blank: "Enter a date of birth"
+      invalid: "Enter a valid date of birth"
       in_future: "Date is in the future"
     start_date:
       blank: "Enter start date"
@@ -329,10 +329,7 @@ en:
         schools/add_participants/wizard_steps/trn_step:
           attributes:
             trn:
-              blank: "Enter the teachers TRN (teacher reference number)"
-              too_short: "Teacher reference number is at least 5 digits long"
-              too_long: "Teacher reference number is at most 7 digits long"
-              invalid: "Teacher reference number must only contain numbers"
+              <<: *trn_error_messages
         schools/add_participants/wizard_steps/email_step:
           attributes:
             email:
@@ -340,8 +337,16 @@ en:
         schools/add_participants/wizard_steps/date_of_birth_step:
           attributes:
             date_of_birth:
-              blank: "Enter a date of birth"
-              invalid: "Enter a valid date of birth"
+              <<: *date_of_birth_error_messages
+        schools/add_participants/wizard_steps/start_date_step:
+          attributes:
+            start_date:
+              blank: "Enter the teacher’s induction start date"
+              invalid: "Enter a valid start date"
+        schools/add_participants/wizard_steps/choose_mentor_step:
+          attributes:
+            mentor_id:
+              blank: "Choose a mentor"
         schools/transferring_participant_form:
           attributes:
             full_name:
@@ -349,10 +354,7 @@ en:
             email:
               <<: *email_error_messages
             trn:
-              blank: "Enter the teachers TRN (teacher reference number)"
-              too_short: "Teacher reference number is at least 5 digits long"
-              too_long: "Teacher reference number is at most 7 digits long"
-              invalid: "Teacher reference number must only contain numbers"
+              <<: *trn_error_messages
             dob:
               blank: "Enter date of birth"
               invalid: "Enter valid date of birth"

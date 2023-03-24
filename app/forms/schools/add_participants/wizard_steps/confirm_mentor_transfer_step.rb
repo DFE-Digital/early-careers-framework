@@ -17,7 +17,7 @@ module Schools
         def next_step
           if transfer_confirmed?
             if wizard.already_enrolled_at_school?
-              :already_enrolled_at_school
+              :cannot_add_already_enrolled_at_school
             elsif wizard.need_training_setup?
               :need_training_setup
             else

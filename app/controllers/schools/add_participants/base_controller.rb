@@ -45,7 +45,7 @@ module Schools
       end
 
       def initialize_wizard
-        if request.get?
+        if request.get? || request.head?
           @wizard = wizard_class.new(current_step: step_name,
                                      data_store:,
                                      current_user:,
