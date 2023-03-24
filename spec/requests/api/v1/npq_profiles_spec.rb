@@ -212,6 +212,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             "npq_lead_provider_id" => npq_lead_provider.id,
             "date_of_birth" => "1990-12-13",
             "nino" => "AB123456C",
+            "notes" => nil,
             "teacher_reference_number" => "1234567",
             "teacher_reference_number_verified" => true,
             "active_alert" => true,

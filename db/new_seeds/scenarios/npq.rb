@@ -54,6 +54,31 @@ module NewSeeds
         application.update!(lead_provider_approval_status: "rejected")
       end
 
+      def edge_cases
+        employment_type = %w[hospital_school
+                             other
+                             local_authority_virtual_school
+                             young_offender_institution
+                             local_authority_supply_teacher]
+        employment_role = ["Head of Education",
+                           "Vocational Leader",
+                           "Online Teacher",
+                           "Education manager",
+                           "Tutor of English"]
+        employer_name = ["Learning Partnership West Independent School",
+                         "Salford County Council",
+                         "Havant and South Downs College",
+                         "Independent Special School",
+                         "Feltham Young Offenders Institution"]
+        application.update!(works_in_school: false,
+                            works_in_childcare: false,
+                            employment_type: employment_type.sample,
+                            employment_role: employment_role.sample,
+                            employer_name: employer_name.sample,
+                            eligible_for_funding: false,
+                            funding_eligiblity_status_code: "no_institution")
+      end
+
       def add_declaration
         raise(StandardError, "no participant_profile, call #accept_application first") if participant_profile.blank?
 

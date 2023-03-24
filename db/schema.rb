@@ -563,6 +563,7 @@ ActiveRecord::Schema.define(version: 2023_03_21_181937) do
     t.string "teacher_catchment_iso_country_code", limit: 3
     t.string "itt_provider"
     t.boolean "lead_mentor", default: false
+    t.string "notes"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"

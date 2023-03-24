@@ -46,3 +46,11 @@ seed_quantity(:npq_applications_pending_ehco).times do
     )
     .build
 end
+
+# Create edge case NPQ applications
+25.times do
+  NewSeeds::Scenarios::NPQ
+    .new(lead_provider: npq_lead_providers.sample)
+    .build
+    .edge_cases
+end

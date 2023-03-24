@@ -597,11 +597,21 @@ en:
           title: NPQ Application
           details: Details
           tabs: Tabs
+        eligible_for_funding:
+          edit:
+            true: "Yes"
+            false: "No"
+        eligibility_status:
+          edit:
+            marked_ineligible_by_policy: "Not eligible for funding"
+            awaiting_more_information: "Awaiting more information"
+            re_register: "Needs to re-register"
         layout:
           applications: Applications
           title: NPQ Applications
           exports: Application Exports
           eligibility_imports: Eligibility Imports
+          edge_cases: Edge Cases
         exports:
           new:
             title: New NPQ Applications Export

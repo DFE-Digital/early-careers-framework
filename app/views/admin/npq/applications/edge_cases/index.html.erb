@@ -1,0 +1,33 @@
+<%= render "admin/npq/applications/layout", locals = { page: "applications" } %>
+
+<%=
+  govuk_table do |table|
+    table.head do |head|
+      head.row do |row|
+        row.cell(header: true, text: "Name")
+        row.cell(header: true, text: "Eligible for funding")
+        row.cell(header: true, text: "Funding eligibility status code")
+        row.cell(header: true, text: "Employment type")
+        row.cell(header: true, text: "Employer name")
+        row.cell(header: true, text: "Role")
+        row.cell(header: true, text: "Created at")
+      end
+    end
+
+    table.body do |body|
+      @npq_applications.each do |application|
+        body.row do |row|
+          row.cell(text: govuk_link_to(application.user.full_name, admin_npq_applications_edge_case_path(application)))
+          row.cell(text: boolean_red_green_tag(application.eligible_for_funding))
+          row.cell(text: application.funding_eligiblity_status_code&.humanize&.downcase)
+          row.cell(text: application.employment_type&.humanize || '-')
+          row.cell(text: application.employer_name || '-')
+          row.cell(text: application.employment_role&.humanize&.downcase || '-')
+          row.cell(text: application.created_at.to_s(:govuk_short))
+        end
+      end
+    end
+  end
+%>
+
+<%= govuk_pagination(pagy: @pagy) %>
