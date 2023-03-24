@@ -158,6 +158,21 @@ module ParticipantSteps
     Induction::Enrol.call(participant_profile: @participant_profile_mentor, induction_programme: @induction_programme)
   end
 
+  def and_the_mentor_is_mentoring_the_ect
+    Induction::Enrol.call(
+      participant_profile: @participant_profile_ect,
+      mentor_profile: @participant_profile_mentor,
+      induction_programme: @induction_programme,
+    )
+  end
+  alias_method :given_the_mentor_is_mentoring_the_ect, :and_the_mentor_is_mentoring_the_ect
+
+  def and_the_mentors_name_should_be_a_link_to_their_profile
+    within(page.find("dt", text: /^Mentor$/).ancestor(".govuk-summary-list__row").find("dd")) do
+      expect(page).to have_link(@participant_profile_mentor.full_name, href: admin_participant_path(@participant_profile_mentor))
+    end
+  end
+
   def and_i_click_on_continue
     click_on("Continue")
   end
