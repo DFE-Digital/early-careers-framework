@@ -29,6 +29,7 @@
 
 cohort_2021 = Cohort.find_by(start_year: 2021)
 cohort_2022 = Cohort.find_by(start_year: 2022)
+cohort_2023 = Cohort.find_by(start_year: 2023)
 
 # starting from the outside and work in, create the cpd_lead_providers
 
@@ -59,7 +60,7 @@ ucl_cip = FactoryBot.create(:seed_core_induction_programme, name: ucl_institute_
 }.each do |cip, cpd_lead_providers|
   cpd_lead_providers.each do |cpd_lead_provider|
     FactoryBot.create(:seed_lead_provider, cpd_lead_provider:, name: cpd_lead_provider.name).tap do |lead_provider|
-      lead_provider.update!(cohorts: [cohort_2021, cohort_2022])
+      lead_provider.update!(cohorts: [cohort_2021, cohort_2022, cohort_2023])
 
       # FIXME: what about 2022? omitted in legacy
       FactoryBot.create(:seed_lead_provider_cip, lead_provider:, cohort: cohort_2021, core_induction_programme: cip)
