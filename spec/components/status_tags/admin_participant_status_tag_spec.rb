@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
+RSpec.describe StatusTags::AdminParticipantStatusTag, type: :component do
   let!(:participant_profile) { create :ect_participant_profile }
+  let(:component) { described_class.new participant_profile: }
 
-  subject { described_class.new(participant_profile:).record_state }
+  subject { render_inline(component) }
 
   context "when the request for details has not been sent yet" do
-    it { is_expected.to eq :checks_not_complete } # "Contacting for information"
+    it { is_expected.to have_selector(".govuk-tag.govuk-tag--grey", exact_text: "Contacting for information") }
   end
 
   context "with a request for details email record" do
@@ -15,19 +16,19 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
     context "which has been successfully delivered" do
       let(:email_status) { :delivered }
 
-      it { is_expected.to eq :request_for_details_delivered } # "Contacted for information"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--grey", exact_text: "Contacted for information") }
     end
 
     context "which has failed to be deliver" do
       let(:email_status) { Email::FAILED_STATUSES.sample }
 
-      it { is_expected.to eq :request_for_details_failed } # "Check email address"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--grey", exact_text: "Check email address") }
     end
 
     context "which is still pending" do
       let(:email_status) { :submitted }
 
-      it { is_expected.to eq :checks_not_complete } # "Contacting for information"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--grey", exact_text: "Contacting for information") }
     end
   end
 
@@ -38,22 +39,18 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
       let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
-      before do
-        participant_profile.reload
-      end
+      before { participant_profile.reload }
 
-      it { is_expected.to eq :registered_for_mentor_training } # "Eligible: Mentor at main school" }
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible: Mentor at main school") }
     end
 
     context "when the secondary profile is ineligible because it is a duplicate" do
       let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
 
-      before do
-        participant_profile.reload
-      end
+      before { participant_profile.reload }
 
-      it { is_expected.to eq :registered_for_mentor_training_second_school } # "Eligible: Mentor at additional school"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible: Mentor at additional school") }
     end
   end
 
@@ -63,7 +60,7 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
-      it { is_expected.to eq :registered_for_fip_training } # "Eligible to start"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start") }
     end
 
     context "was a participant in early roll out" do
@@ -71,7 +68,7 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
       let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
 
-      it { is_expected.to eq :previous_participation_ero } # "Eligible to start: ERO"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start: ERO") }
     end
   end
 
@@ -79,9 +76,9 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
     context "has submitted validation data" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile:) }
 
-      it { is_expected.to eq :manual_check } # "DfE checking eligibility"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--orange", exact_text: "DfE checking eligibility") }
     end
 
     context "has a previous induction reason" do
@@ -89,7 +86,7 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
 
-      it { is_expected.to eq :previous_induction } # "Not eligible: NQT+1" - TODO: will this always be NQT+1 ?
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: NQT+1") }
     end
 
     context "has no QTS reason" do
@@ -97,33 +94,30 @@ RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
-      it { is_expected.to eq :not_qualified } # "Not eligible: No QTS"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible: No QTS") }
     end
 
     context "has an ineligible status" do
       let(:school_cohort) { create(:school_cohort, :cip) }
       let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
+      let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
-      it { is_expected.to eq :previous_induction } # "Not eligible"
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Not eligible") }
     end
 
     context "has a withdrawn status" do
       let(:school_cohort) { create(:school_cohort, :fip) }
       let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
+      let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
+      let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
-      context "when there is not induction record to use" do
-        it { is_expected.to eq :withdrawn_training } # "Withdrawn by provider"
-      end
+      it { is_expected.to have_selector(".govuk-tag.govuk-tag--red", exact_text: "Withdrawn by provider") }
 
       context "when an active induction record is available" do
-        let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
-        let(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
+        let(:component) { described_class.new(participant_profile:, induction_record:) }
 
-        subject { described_class.new(participant_profile:, induction_record:).record_state }
-
-        it { is_expected.to eq :registered_for_fip_training } # "Eligible to start" }
+        it { is_expected.to have_selector(".govuk-tag.govuk-tag--green", exact_text: "Eligible to start") }
       end
     end
   end
