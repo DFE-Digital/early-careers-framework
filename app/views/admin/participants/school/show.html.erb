@@ -26,6 +26,16 @@
       row.value(text: @latest_induction_record.school_cohort.school.urn)
     end
 
+    sl.row do |row|
+      row.key(text: "Lead provider")
+      row.value(text: @latest_induction_record.school_cohort.lead_provider&.name)
+    end
+
+    sl.row do |row|
+      row.key(text: "Delivery partner")
+      row.value(text: @latest_induction_record.school_cohort.delivery_partner&.name)
+    end
+
     if @latest_induction_record.participant_profile.ect?
       sl.row do |row|
         row.key(text: "Mentor")
@@ -40,16 +50,6 @@
                 end
         )
       end
-    end
-
-    sl.row do |row|
-      row.key(text: "Lead provider")
-      row.value(text: @latest_induction_record.school_cohort.lead_provider&.name)
-    end
-
-    sl.row do |row|
-      row.key(text: "Delivery partner")
-      row.value(text: @latest_induction_record.school_cohort.delivery_partner&.name)
     end
 
     if @latest_induction_record.participant_profile.mentor?
