@@ -56,7 +56,7 @@
 
   sl.row do |row|
     row.key(text: "Validation status")
-    row.value(text: render(StatusTags::ParticipantStatusTag.new(profile: @participant_profile, induction_record: @relevant_induction_record)))
+    row.value(text: render(StatusTags::ParticipantStatusTag.new(participant_profile: @participant_profile, induction_record: @relevant_induction_record)))
   end
 
   sl.row do |row|

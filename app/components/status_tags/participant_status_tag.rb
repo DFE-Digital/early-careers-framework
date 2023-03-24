@@ -2,55 +2,31 @@
 
 module StatusTags
   class ParticipantStatusTag < BaseComponent
-    def initialize(profile:, induction_record: nil)
-      @participant_profile = profile
+    def initialize(participant_profile:, induction_record: nil)
+      @participant_profile = participant_profile
       @induction_record = induction_record
-    end
-
-    def call
-      if participant_profile.npq?
-        render Admin::Participants::NPQValidationStatusTag.new(profile: participant_profile)
-      else
-        govuk_tag(**tag_attributes)
-      end
     end
 
   private
 
     attr_reader :participant_profile, :induction_record
 
-    def tag_attributes
-      case record_state
-      when :withdrawn_training
-        { text: "Withdrawn by provider", colour: "red" }
-      when :registered_for_fip_training, :registered_for_cip_training
-        { text: "Eligible to start", colour: "green" }
-      when :registered_for_mentor_training
-        { text: "Eligible: Mentor at main school", colour: "green" }
-      when :registered_for_mentor_training_second_school
-        { text: "Eligible: Mentor at additional school", colour: "green" }
-      when :not_qualified
-        { text: "Not eligible: No QTS", colour: "red" }
-      # when :active_flags
-      # when :different_trn
-      # when :no_induction_start
-      when :manual_check
-        { text: "DfE checking eligibility", colour: "orange" }
-      when :previous_induction
-        { text: "Not eligible: NQT+1", colour: "red" }
-      when :previous_participation_ero
-        { text: "Eligible to start: ERO", colour: "green" }
-      when :previous_participation
-        { text: "Eligible to start", colour: "green" }
-      when :ineligible
-        { text: "Not eligible", colour: "red" }
-      when :request_for_details_delivered
-        { text: "Contacted for information", colour: "grey" }
-      when :request_for_details_failed
-        { text: "Check email address", colour: "grey" }
-      else
-        { text: "Contacting for information", colour: "grey" }
-      end
+    def label
+      t :label, scope: translation_scope
+    end
+
+    def description
+      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
+    rescue I18n::MissingTranslationData
+      []
+    end
+
+    def colour
+      t :colour, scope: translation_scope
+    end
+
+    def translation_scope
+      @translation_scope ||= "status_tags.participant_status.#{record_state}"
     end
 
     def record_state

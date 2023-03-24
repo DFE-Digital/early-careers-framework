@@ -6,59 +6,6 @@ en:
         mentor: "Mentor"
         npq: "NPQ"
 
-      status:
-        request_to_be_sent:
-          header: "Contacting for information"
-          content: "We’ll ask this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
-
-        details_required:
-          header: "Contacted for information"
-          content:
-            - "We’ve asked this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
-            - "We suggest you remind them to provide this."
-
-        request_for_details_failed:
-          header: "Check email address"
-          content: "We could not send an email to this address. Please check it’s correct."
-
-        checking_eligibility:
-          header: "DfE checking eligibility"
-          content: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
-
-        ineligible_flag:
-          header: "Not eligible"
-          content: "This person is not eligible for this programme."
-
-        ineligible_generic:
-          header: "Not eligible"
-          content: "This person is not eligible for this programme."
-
-        ineligible_previous_induction:
-          header: "Not eligible: induction already started"
-          content: "This is because they started or completed their statutory induction before 1 September 2021."
-
-        fip_ect_no_qts:
-          header: "Checking qualified teacher status"
-          content:
-            - "Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021."
-            - "If this person has not completed their ITT, %{contact_us}."
-
-        ero_mentor:
-          header: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
-          content: ""
-
-        eligible_cip:
-          header: "Eligible to start"
-          content: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
-
-        eligible_fip_no_partner:
-          header: "Eligible to start"
-          content: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
-
-        eligible_fip:
-          header: "Eligible to start"
-          content: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
-
       validations:
         npq:
           identity:
