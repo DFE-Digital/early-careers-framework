@@ -1,0 +1,70 @@
+en:
+  status_tags:
+    participant_status:
+      withdrawn_training:
+        label: "Withdrawn by provider"
+        colour: "red"
+
+      registered_for_fip_training:
+        label: "Eligible to start"
+        colour: "green"
+
+      registered_for_cip_training:
+        label: "Eligible to start"
+        colour: "green"
+
+      registered_for_mentor_training:
+        label: "Eligible: Mentor at main school"
+        colour: "green"
+
+      registered_for_mentor_training_second_school:
+        label: "Eligible: Mentor at additional school"
+        colour: "green"
+
+      not_qualified:
+        label: "Not eligible: No QTS"
+        colour: "red"
+
+      active_flags:
+        label: "DfE checking eligibility"
+        colour: "orange"
+
+      different_trn:
+        label: "DfE checking eligibility"
+        colour: "orange"
+
+      no_induction_start:
+        label: "DfE checking eligibility"
+        colour: "orange"
+
+      manual_check:
+        label: "DfE checking eligibility"
+        colour: "orange"
+
+      previous_induction:
+        label: "Not eligible: NQT+1"
+        colour: "red"
+
+      previous_participation_ero:
+        label: "Eligible to start: ERO"
+        colour: "green"
+
+      previous_participation:
+        label: "Eligible to start"
+        colour: "green"
+
+      ineligible:
+        label: "Not eligible"
+        colour: "red"
+
+      request_for_details_delivered:
+        label: "Contacted for information"
+        colour: "grey"
+
+      request_for_details_failed:
+        label: "Check email address"
+        colour: "grey"
+
+      checks_not_complete:
+        label: "Contacted for information"
+        colour: "grey"

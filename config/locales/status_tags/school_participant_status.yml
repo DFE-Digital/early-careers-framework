@@ -1,0 +1,55 @@
+en:
+  status_tags:
+    school_participant_status:
+      request_to_be_sent:
+        label: "Contacting for information"
+        description: "We’ll ask this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
+
+      details_required:
+        label: "Contacted for information"
+        description:
+          - "We’ve asked this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency."
+          - "We suggest you remind them to provide this."
+
+      request_for_details_failed:
+        label: "Check email address"
+        description: "We could not send an email to this address. Please check it’s correct."
+
+      checking_eligibility:
+        label: "DfE checking eligibility"
+        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+
+      ineligible_flag:
+        label: "Not eligible"
+        description: "This person is not eligible for this programme."
+
+      ineligible_generic:
+        label: "Not eligible"
+        description: "This person is not eligible for this programme."
+
+      ineligible_previous_induction:
+        label: "Not eligible: induction already started"
+        description: "This is because they started or completed their statutory induction before 1 September 2021."
+
+      fip_ect_no_qts:
+        label: "Checking qualified teacher status"
+        description:
+          - "Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021."
+          - "If this person has not completed their ITT, %{contact_us}."
+
+      ero_mentor:
+        label: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
+        description: ""
+
+      eligible_cip:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
+
+      eligible_fip_no_partner:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+
+      eligible_fip:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
+

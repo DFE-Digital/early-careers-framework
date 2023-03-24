@@ -95,6 +95,10 @@ class ParticipantProfile < ApplicationRecord
       Induction::FindBy.call(participant_profile: self, delivery_partner:, only_active_partnerships: true) unless delivery_partner.nil?
     end
 
+    def relevant_induction_record_for_school(school:)
+      Induction::FindBy.call(participant_profile: self, school:) unless delivery_partner.nil?
+    end
+
     def schedule_for(cpd_lead_provider:)
       relevant_induction_record(lead_provider: cpd_lead_provider&.lead_provider)&.schedule
     end
