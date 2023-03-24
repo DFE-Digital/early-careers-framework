@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ParticipantStatusTagStatus, :with_default_schedules do
+RSpec.describe AdminParticipantStatusTagStatus, :with_default_schedules do
   let!(:participant_profile) { create :ect_participant_profile }
 
   subject { described_class.new(participant_profile:).record_state }

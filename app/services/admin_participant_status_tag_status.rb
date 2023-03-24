@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParticipantStatusTagStatus
+class AdminParticipantStatusTagStatus
   def initialize(participant_profile:, induction_record: nil)
     @participant_profile = participant_profile
     @induction_record = induction_record
