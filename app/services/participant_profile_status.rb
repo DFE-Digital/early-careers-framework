@@ -1,9 +1,24 @@
 # frozen_string_literal: true
 
 class ParticipantProfileStatus
-  def initialize(participant_profile:, induction_record:)
+  def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, school: nil)
+    if school.present? && delivery_partner.present?
+      raise InvalidArgumentError "It is not possible to determine a status for both a school and a delivery partner"
+    end
+
     @participant_profile = participant_profile
-    @induction_record = induction_record
+
+    if delivery_partner.present?
+      @delivery_partner = delivery_partner
+      @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
+
+    elsif school.present?
+      @school = school
+      @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
+
+    else
+      @induction_record = induction_record || participant_profile.induction_records.latest
+    end
   end
 
   def status_name
@@ -69,9 +84,7 @@ class ParticipantProfileStatus
 
 private
 
-  attr_reader :participant_profile, :induction_record
-
-  delegate :school_cohort, to: :participant_profile
+  attr_reader :participant_profile, :induction_record, :delivery_partner, :school
 
   def latest_email
     @latest_email ||= Email.associated_with(participant_profile).tagged_with(:request_for_details).latest
@@ -98,7 +111,7 @@ private
   end
 
   def on_fip?
-    school_cohort&.full_induction_programme?
+    participant_profile.school_cohort&.full_induction_programme?
   end
 
   def nqt_plus_one?
