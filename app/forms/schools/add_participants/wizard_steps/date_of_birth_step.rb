@@ -18,12 +18,10 @@ module Schools
           if wizard.participant_exists?
             if wizard.already_enrolled_at_school?
               :cannot_add_already_enrolled_at_school
+            elsif wizard.ect_participant?
+              :confirm_transfer
             else
-              if wizard.ect_participant?
-                :confirm_transfer
-              else
-                :confirm_mentor_transfer
-              end
+              :confirm_mentor_transfer
             end
           elsif wizard.dqt_record_has_different_name?
             :known_by_another_name
