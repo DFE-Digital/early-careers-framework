@@ -99,9 +99,16 @@ module DeliveryPartners
 
     def status_options
       [OpenStruct.new(id: "", name: "")] +
-        ParticipantProfileStatus.status_options.map do |c|
-          OpenStruct.new(id: c[0], name: c[1])
-        end
+        %w[
+          contacted_for_information
+          dfe_checking_eligibility
+          checking_qts
+          training_or_eligible_for_training
+          no_longer_being_trained
+          not_eligible_for_funded_training
+        ]
+          .index_with { |record_state| I18n.t(:label, scope: "status_tags.appropriate_body_participant_status.#{record_state}") }
+          .map { |c| OpenStruct.new(id: c[0], name: c[1]) }
     end
   end
 end

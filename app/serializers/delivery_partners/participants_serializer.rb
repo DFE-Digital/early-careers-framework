@@ -58,8 +58,11 @@ module DeliveryPartners
       induction_record(participant_profile, params[:delivery_partner])&.training_status
     end
 
-    attribute :status do |_participant_profile, _params|
-      StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile: induction_record.participant_profile, induction_record:).label
+    attribute :status do |participant_profile, params|
+      StatusTags::DeliveryPartnerParticipantStatusTag.new(
+        participant_profile:,
+        induction_record: induction_record(participant_profile, params[:delivery_partner]),
+      ).label
     end
   end
 end
