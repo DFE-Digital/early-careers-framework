@@ -114,6 +114,14 @@ module Schools
       #   full_name.present? && trn.present? && date_of_birth.present?
       # end
 
+      # def check_start_date_is_later_than_induction_start
+      #   start_date = @transferring_participant_form.start_date
+      #   previous_date = existing_induction_record.schedule.milestones.first.start_date
+      #   if start_date < previous_date
+      #     @transferring_participant_form.errors.add(:start_date, I18n.t("errors.start_date.before_schedule_start_date", date: previous_date.to_date.to_s(:govuk)))
+      #   end
+      # end
+
     private
 
       # def dqt_record(force_recheck: false)

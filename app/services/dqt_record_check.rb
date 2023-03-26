@@ -42,6 +42,7 @@ private
 
   def check_record
     return check_failure(:trn_and_nino_blank) if trn.blank? && nino.blank?
+
     @trn = "0000001" if trn.blank?
 
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn

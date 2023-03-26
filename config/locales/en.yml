@@ -343,6 +343,11 @@ en:
             start_date:
               blank: "Enter the teacher’s induction start date"
               invalid: "Enter a valid start date"
+        schools/add_participants/wizard_steps/joining_date_step:
+          attributes:
+            start_date:
+              blank: "Enter the teacher’s joining date"
+              invalid: "Enter a valid joining date"
         schools/add_participants/wizard_steps/choose_mentor_step:
           attributes:
             mentor_id:

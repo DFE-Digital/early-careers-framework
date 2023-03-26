@@ -22,7 +22,8 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
         then_i_should_be_on_the_who_to_add_page
         then_the_page_should_be_accessible
 
-        when_i_select_transfer_teacher_option
+        # when_i_select_transfer_teacher_option
+        when_i_select_the_ect_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
         then_the_page_should_be_accessible
@@ -60,6 +61,10 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
 
         when_i_add_a_valid_date_of_birth
         click_on "Continue"
+
+        then_i_should_be_on_the_confirm_transfer_page
+        then_the_page_should_be_accessible
+        click_on "Confirm"
 
         then_i_should_be_on_the_teacher_start_date_page
         then_the_page_should_be_accessible
@@ -147,12 +152,16 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
         click_on "Add an ECT or mentor"
       end
 
-      def when_i_select_transfer_teacher_option
-        choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
+      def when_i_select_the_ect_option
+        choose("ECT", allow_label_click: true)
       end
 
+      # def when_i_select_transfer_teacher_option
+      #   choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
+      # end
+
       def when_i_update_the_name_with(name)
-        fill_in "What’s this person’s full name?", with: name
+        fill_in "What’s this ECT’s full name?", with: name
       end
 
       def when_i_update_the_email_with(email)
@@ -180,19 +189,19 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
       end
 
       def when_i_add_a_date_prior_to_the_participants_induction_start
-        legend = "#{@participant_data[:full_name]}’s start date"
+        legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
         fill_in_date(legend, with: "1998-10-24")
       end
 
       def when_i_add_an_invalid_start_date
-        legend = "#{@participant_data[:full_name]}’s start date"
+        legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
-        fill_in_date(legend, with: "23-10-24")
+        fill_in_date(legend, with: "25-10-25")
       end
 
       def when_i_add_a_valid_start_date
-        legend = "#{@participant_data[:full_name]}’s start date"
+        legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
         fill_in_date(legend, with: "2023-10-24")
       end
@@ -215,11 +224,10 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
 
       def then_i_should_be_on_what_we_need_page
         expect(page).to have_selector("h1", text: "What we need from you")
-        expect(page).to have_text("To do this, you need to tell us their")
       end
 
       def then_i_should_be_on_full_name_page
-        expect(page).to have_selector("h1", text: "What’s this person’s full name?")
+        expect(page).to have_selector("h1", text: "What’s this ECT’s full name?")
       end
 
       def then_i_should_be_on_trn_page
@@ -230,8 +238,12 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
         expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s date of birth")
       end
 
+      def then_i_should_be_on_the_confirm_transfer_page
+        expect(page).to have_selector("h1", text: "Confirm #{@participant_data[:full_name]} is moving from another school")
+      end
+
       def then_i_should_be_on_the_teacher_start_date_page
-        expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s start date at your school")
+        expect(page).to have_selector("h1", text: "When is #{@participant_data[:full_name]} moving to your school?")
       end
 
       def then_i_should_be_on_the_who_to_add_page
@@ -255,7 +267,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
 
       def then_i_should_be_on_the_complete_page
         expect(page).to have_selector("h2", text: "What happens next")
-        expect(page).to have_text("We’ll let #{@participant_profile_ect.user.full_name}")
+        expect(page).to have_text("We’ll let this person know")
       end
 
       def then_i_receive_a_missing_name_error_message
@@ -271,19 +283,19 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
       end
 
       def then_i_should_see_enter_date_of_birth_error_message
-        expect(page).to have_text("Enter date of birth")
+        expect(page).to have_text("Enter a date of birth")
       end
 
       def then_i_should_see_invalid_date_of_birth_error_message
-        expect(page).to have_text("Invalid date of birth")
+        expect(page).to have_text("Enter a valid date of birth")
       end
 
       def then_i_should_see_enter_start_date_error_message
-        expect(page).to have_text("Enter start date")
+        expect(page).to have_text("Enter the teacher’s joining date")
       end
 
       def then_i_should_see_invalid_start_date_error_message
-        expect(page).to have_text("Invalid start date")
+        expect(page).to have_text("Enter a valid joining date")
       end
 
       def then_i_should_see_start_date_must_be_after_error_message
@@ -299,7 +311,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
       end
 
       def then_i_should_see_select_option_error_message
-        expect(page).to have_text("Select an option")
+        expect(page).to have_text("Choose a mentor")
       end
 
       def then_i_should_see_the_transferring_participant
@@ -323,6 +335,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
       def and_there_is_an_ect_who_will_be_transferring
         @participant_profile_ect = create(:ect_participant_profile, schedule: create(:ecf_schedule, cohort: @cohort), user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
+        @participant_profile_ect.teacher_profile.update!(trn: "1001000")
         Induction::Enrol.call(participant_profile: @participant_profile_ect, start_date: Date.new(2021, 9, 1), induction_programme: @induction_programme_two)
       end
 
@@ -355,15 +368,42 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
         allow(ParticipantTransferMailer).to receive(:provider_existing_school_transfer_notification).and_call_original
       end
 
+      # def set_dqt_validation_result
+      #   response = {
+      #     trn: @participant_data[:trn],
+      #     full_name: @participant_data[:full_name],
+      #     nino: nil,
+      #     dob: @participant_data[:date_of_birth],
+      #     config: {},
+      #   }
+      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
+      # end
+
       def set_dqt_validation_result
-        response = {
-          trn: @participant_data[:trn],
-          full_name: @participant_data[:full_name],
-          nino: nil,
-          dob: @participant_data[:date_of_birth],
-          config: {},
+        allow(DqtRecordCheck).to receive(:call).and_return(
+          DqtRecordCheck::CheckResult.new(
+            valid_dqt_response(@participant_data),
+            true,
+            true,
+            true,
+            false,
+            3,
+          ),
+        )
+      end
+
+      def valid_dqt_response(participant_data)
+        {
+          "name" => participant_data[:full_name],
+          "trn" => participant_data[:trn],
+          "state_name" => "Active",
+          "dob" => participant_data[:date_of_birth],
+          "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+          "induction" => {
+            "start_date" => 1.month.ago,
+            "status" => "Active",
+          },
         }
-        allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
       end
 
       def set_participant_data

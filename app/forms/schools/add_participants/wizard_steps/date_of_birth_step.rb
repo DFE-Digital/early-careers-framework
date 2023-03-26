@@ -16,7 +16,9 @@ module Schools
 
         def next_step
           if wizard.participant_exists?
-            if wizard.ect_participant?
+            if wizard.already_enrolled_at_school?
+              :cannot_add_already_enrolled_at_school
+            elsif wizard.ect_participant?
               :confirm_transfer
             else
               :confirm_mentor_transfer
@@ -46,15 +48,13 @@ module Schools
           else
             begin
               @date_of_birth = Date.parse (1..3).map { |n| date_of_birth[n] }.join("/")
+
+              if date_of_birth > Time.zone.now || !date_of_birth.between?(Date.new(1900, 1, 1), Date.current - 18.years)
+                errors.add(:date_of_birth, :invalid)
+              end
             rescue Date::Error
               errors.add(:date_of_birth, :invalid)
-              return
-            end
-
-            if date_of_birth > Time.zone.now
-              errors.add(:date_of_birth, :in_future)
-            elsif !date_of_birth.between?(Date.new(1900, 1, 1), Date.current - 18.years)
-              errors.add(:date_of_birth, :invalid)
+              nil
             end
           end
         end

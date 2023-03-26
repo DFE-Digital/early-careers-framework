@@ -37,12 +37,12 @@ module Schools
             begin
               @start_date = Date.parse (1..3).map { |n| start_date[n] }.join("/")
 
-              if !start_date.between?(Date.new(2021, 9, 1), Date.current + 1.year)
+              unless start_date.between?(Date.new(2021, 9, 1), Date.current + 1.year)
                 errors.add(:start_date, :invalid)
               end
             rescue Date::Error
               errors.add(:start_date, :invalid)
-              return
+              nil
             end
           end
         end
