@@ -12,7 +12,7 @@ RSpec.describe AppropriateBodies::UpdateUserForm, type: :model do
   subject(:form) { described_class.new(appropriate_body_profile:) }
 
   it { is_expected.to validate_presence_of(:full_name).on(:name).with_message("Enter a full name") }
-  it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email") }
+  it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email address") }
   it { is_expected.to validate_presence_of(:appropriate_body_id).on(:appropriate_body_id).with_message("Choose an appropriate body") }
 
   describe ".update" do

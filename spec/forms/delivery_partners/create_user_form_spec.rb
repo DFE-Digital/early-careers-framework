@@ -7,7 +7,7 @@ RSpec.describe DeliveryPartners::CreateUserForm, type: :model do
   subject(:form) { described_class.new(params) }
 
   it { is_expected.to validate_presence_of(:full_name).on(:name).with_message("Enter a full name") }
-  it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email") }
+  it { is_expected.to validate_presence_of(:email).on(:email).with_message("Enter an email address") }
   it { is_expected.to validate_presence_of(:delivery_partner_id).on(:delivery_partner_id).with_message("Choose a delivery partner") }
 
   describe ".save" do

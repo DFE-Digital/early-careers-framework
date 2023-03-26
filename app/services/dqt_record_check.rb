@@ -42,6 +42,7 @@ private
 
   def check_record
     return check_failure(:trn_and_nino_blank) if trn.blank? && nino.blank?
+    @trn = "0000001" if trn.blank?
 
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn
     dqt_record = dqt_record(padded_trn, nino)
@@ -66,10 +67,11 @@ private
     nino_matches = nino.present? && nino.downcase == dqt_record["ni_number"]&.downcase
     matches += 1 if nino_matches
 
-    if trn_matches && trn != "1"
+    if matches < 3 && (trn_matches && trn != "1")
       # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
       # The API first matches by (mandatory) TRN, then by NINO if it finds no results. This works around that.
-      return check_record(trn: "1", nino:, full_name:, dob:)
+      @trn = "0000001"
+      return check_record
     end
 
     CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
