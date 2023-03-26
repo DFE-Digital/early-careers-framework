@@ -41,7 +41,7 @@ module StatusTags
     end
 
     def translation_scope
-      @translation_scope ||= "status_tags.participant_status.#{record_state}"
+      @translation_scope ||= "status_tags.admin_participant_status.#{record_state}"
     end
 
     def record_state

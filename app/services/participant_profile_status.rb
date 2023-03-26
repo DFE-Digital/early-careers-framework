@@ -69,19 +69,6 @@ class ParticipantProfileStatus
     status == status_name
   end
 
-  def self.status_options
-    %w[
-      contacted_for_information
-      dfe_checking_eligibility
-      checking_qts
-      training_or_eligible_for_training
-      no_longer_being_trained
-      not_eligible_for_funded_training
-    ].index_with do |o|
-      I18n.t("participant_profile_status.status.#{o}.title")
-    end
-  end
-
 private
 
   attr_reader :participant_profile, :induction_record, :delivery_partner, :school

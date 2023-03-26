@@ -22,13 +22,13 @@ module StatusTags
       end
     end
 
-  private
-
-    attr_reader :participant_profile, :induction_record, :delivery_partner
-
     def label
       t :label, scope: translation_scope
     end
+
+  private
+
+    attr_reader :participant_profile, :induction_record, :delivery_partner
 
     def description
       Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)

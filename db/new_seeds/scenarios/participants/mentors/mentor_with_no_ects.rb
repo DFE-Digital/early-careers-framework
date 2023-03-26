@@ -63,6 +63,7 @@ module NewSeeds
                                 trn: args[:trn] || teacher_profile.trn,
                                 date_of_birth: args[:date_of_birth],
                                 nino: args[:nino],
+                                api_failure: args[:api_failure],
                                 participant_profile: }
 
             FactoryBot.create(:seed_ecf_participant_validation_data, **validation_data.compact)
@@ -84,6 +85,25 @@ module NewSeeds
                                  participant_profile: }
 
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
+          end
+
+          def with_request_for_details_email(**args)
+            args[:tags] = [:request_for_details]
+            add_email(**args)
+
+            self
+          end
+
+          def add_email(**args)
+            email_data = {
+              tags: args[:tags],
+              status: args[:status],
+              to: @participant_profile.participant_identity&.email,
+              delivered_to: args[:delivered_to],
+            }
+
+            email = FactoryBot.create(:seed_email, **email_data.compact)
+            email.create_association_with(@participant_profile)
           end
 
         private

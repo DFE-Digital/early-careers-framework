@@ -1,6 +1,6 @@
 en:
   status_tags:
-    participant_status:
+    admin_participant_status:
       withdrawn_training:
         label: "Withdrawn by provider"
         colour: "red"
