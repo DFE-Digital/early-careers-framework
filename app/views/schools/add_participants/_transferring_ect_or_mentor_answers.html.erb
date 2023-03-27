@@ -83,27 +83,29 @@
     <% end %>
   <% end %>
 
-  <% summary_list.row do |row| %>
-    <% row.key { "Training with" } %>
-    <% if form.chose_to_continue_current_programme? %>
-      <% row.value do %>
-        <div><%= form.existing_lead_provider&.name %></div>
-        <div><%= form.existing_delivery_partner&.name %></div>
-      <% end %>
-      <% row.action(text: "Change",
-                    visually_hidden_text: "training programme",
-                    href: form.change_path_for(step: :continue_current_programme)) %>
-    <% else %>
-      <% row.value do %>
-        <div><%= form.lead_provider&.name %></div>
-        <div><%= form.delivery_partner&.name %></div>
-      <% end %>
-      <% if form.switching_programme? %>
+  <% if form.show_training_provider_section? %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Training with" } %>
+      <% if form.chose_to_continue_current_programme? %>
+        <% row.value do %>
+          <div><%= form.existing_lead_provider&.name %></div>
+          <div><%= form.existing_delivery_partner&.name %></div>
+        <% end %>
         <% row.action(text: "Change",
                       visually_hidden_text: "training programme",
                       href: form.change_path_for(step: :continue_current_programme)) %>
       <% else %>
-        <% row.action(text: :none) %>
+        <% row.value do %>
+          <div><%= form.lead_provider&.name %></div>
+          <div><%= form.delivery_partner&.name %></div>
+        <% end %>
+        <% if form.switching_programme? %>
+          <% row.action(text: "Change",
+                        visually_hidden_text: "training programme",
+                        href: form.change_path_for(step: :continue_current_programme)) %>
+        <% else %>
+          <% row.action(text: :none) %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

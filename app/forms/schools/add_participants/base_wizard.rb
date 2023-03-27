@@ -16,7 +16,7 @@ module Schools
       delegate :after_render, to: :form
 
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
-               :start_date, :nino, :ect_participant?, :mentor_id, :join_school_programme?, :continue_current_programme?,
+               :start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?,
                :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
                to: :data_store
 
@@ -86,6 +86,10 @@ module Schools
         end
       end
 
+      def join_school_programme?
+        withdrawn_participant? || data_store.join_school_programme?
+      end
+
       def not_known_by_another_name?
         # only true if responded to question with no
         data_store.get(:known_by_another_name) == "no"
@@ -131,7 +135,7 @@ module Schools
       end
 
       def existing_induction_record
-        @existing_induction_record ||= existing_participant_profile.latest_induction_record
+        @existing_induction_record ||= Induction::FindBy.call(participant_profile: existing_participant_profile)
       end
 
       def existing_participant_profile
@@ -152,6 +156,10 @@ module Schools
 
       def existing_delivery_partner
         @existing_delivery_partner ||= existing_induction_record.delivery_partner
+      end
+
+      def withdrawn_participant?
+        existing_participant_profile.training_status_withdrawn? || existing_induction_record.training_status_withdrawn?
       end
 
       def transfer_has_same_provider_and_different_delivery_partner?

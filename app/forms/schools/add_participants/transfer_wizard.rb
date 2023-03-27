@@ -18,6 +18,8 @@ module Schools
       end
 
       def needs_to_confirm_programme?
+        return false if withdrawn_participant?
+
         lead_provider != existing_lead_provider || delivery_partner != existing_delivery_partner
       end
 
@@ -31,6 +33,10 @@ module Schools
 
       def chose_to_continue_current_programme?
         transfer? && continue_current_programme?
+      end
+
+      def show_training_provider_section?
+        !withdrawn_participant?
       end
 
       def save!
