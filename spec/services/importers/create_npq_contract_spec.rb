@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Importers::NPQContracts do
+RSpec.describe Importers::CreateNPQContract do
   let(:csv) { Tempfile.new("data.csv") }
   let(:path_to_csv) { csv.path }
 
@@ -14,13 +14,6 @@ RSpec.describe Importers::NPQContracts do
   let!(:npq_ehco_course)       { create(:npq_ehco_course, name: "The Early Headship Coaching Offer", identifier: "npq-early-headship-coaching-offer") }
 
   subject { described_class.new(path_to_csv:) }
-
-  before do
-    allow(Finance::Schedule::NPQLeadership).to receive_message_chain(:default_for, :milestones, :count) { 4 }
-    allow(Finance::Schedule::NPQSpecialist).to receive_message_chain(:default_for, :milestones, :count) { 3 }
-    allow(Finance::Schedule::NPQSupport).to receive_message_chain(:default, :milestones, :count) { 4 }
-    allow(Finance::Schedule::NPQEhco).to receive_message_chain(:default_for, :milestones, :count) { 4 }
-  end
 
   describe "#call" do
     context "when headers are incorrect" do
