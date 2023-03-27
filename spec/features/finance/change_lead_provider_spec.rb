@@ -8,6 +8,7 @@ RSpec.feature "Finance users participant change lead provider", :with_default_sc
   describe "NPQ" do
     let(:participant_profile)     { create(:npq_participant_profile, npq_lead_provider: cpd_lead_provider.npq_lead_provider) }
     let(:participant_declaration) { create(:npq_participant_declaration, :submitted, participant_profile:, cpd_lead_provider:) }
+    let(:voided_participant_declaration) { create(:npq_participant_declaration, :voided, participant_profile:, cpd_lead_provider:) }
     let(:npq_lead_provider) { create(:npq_lead_provider) }
 
     scenario "No declarations" do
@@ -33,28 +34,42 @@ RSpec.feature "Finance users participant change lead provider", :with_default_sc
       then_i_should_see_validation_error
     end
 
-    scenario "Change lead provider" do
-      given_i_am_logged_in_as_a_finance_user
-      and_a_declaration_exists
-      and_a_npq_lead_provider_exists
-      when_i_visit_the_finance_participant_drilldown_page
-      then_i_see("ParticipantProfile::NPQ")
+    describe "When only non-voided declarations exist" do
+      scenario "Change lead provider" do
+        given_i_am_logged_in_as_a_finance_user
+        and_a_declaration_exists
+        and_a_npq_lead_provider_exists
+        when_i_visit_the_finance_participant_drilldown_page
+        then_i_see("ParticipantProfile::NPQ")
 
-      then_i_should_see_change_lead_provider_link
-      then_table_value_is(label: "Lead provider", value: participant_profile.npq_application.npq_lead_provider.name)
-      and_i_click_on("Change lead provider")
-      then_i_see("Change lead provider")
-      and_i_select(npq_lead_provider.name, "finance-npq-change-lead-provider-form-lead-provider-id-field")
-      and_i_click_on("Continue")
+        then_i_should_see_change_lead_provider_link
+        then_table_value_is(label: "Lead provider", value: participant_profile.npq_application.npq_lead_provider.name)
+        and_i_click_on("Change lead provider")
+        then_i_see("Change lead provider")
+        and_i_select(npq_lead_provider.name, "finance-npq-change-lead-provider-form-lead-provider-id-field")
+        and_i_click_on("Continue")
 
-      then_i_see("Check your answers before saving this change")
-      and_i_see(participant_profile.npq_application.npq_lead_provider.name)
-      and_i_see(npq_lead_provider.name)
-      and_i_click_on("Save and continue")
+        then_i_see("Check your answers before saving this change")
+        and_i_see(participant_profile.npq_application.npq_lead_provider.name)
+        and_i_see(npq_lead_provider.name)
+        and_i_click_on("Save and continue")
 
-      then_i_see("New lead provider assigned")
-      then_i_see("The new lead provider has been successfully assigned to this participant.")
-      then_table_value_is(label: "Lead provider", value: npq_lead_provider.name)
+        then_i_see("New lead provider assigned")
+        then_i_see("The new lead provider has been successfully assigned to this participant.")
+        then_table_value_is(label: "Lead provider", value: npq_lead_provider.name)
+      end
+    end
+
+    describe "When only voided declarations exist" do
+      scenario "Cannot change lead provider" do
+        given_i_am_logged_in_as_a_finance_user
+        and_a_voided_declaration_exists
+        and_a_npq_lead_provider_exists
+        when_i_visit_the_finance_participant_drilldown_page
+        then_i_see("ParticipantProfile::NPQ")
+
+        then_i_should_not_see_change_lead_provider_link
+      end
     end
   end
 
@@ -100,6 +115,10 @@ RSpec.feature "Finance users participant change lead provider", :with_default_sc
 
   def and_a_declaration_exists
     participant_declaration
+  end
+
+  def and_a_voided_declaration_exists
+    voided_participant_declaration
   end
 
   def and_a_npq_lead_provider_exists

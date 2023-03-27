@@ -34,7 +34,7 @@ module Finance
       end
 
       def change_lead_provider?
-        participant_profile.participant_declarations.where(state: %w[submitted eligible payable paid]).exists?
+        participant_profile.participant_declarations.where(state: %w[submitted eligible payable paid awaiting_clawback clawed_back]).exists?
       end
 
       def lead_provider
