@@ -36,7 +36,7 @@ module Api
         end
 
         attribute :updated_at do |school_cohort|
-          school_cohort.school.updated_at
+          [school_cohort.school.updated_at, school_cohort.updated_at].max.rfc3339
         end
       end
     end
