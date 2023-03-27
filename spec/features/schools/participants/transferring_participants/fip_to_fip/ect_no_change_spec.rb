@@ -156,10 +156,6 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
         choose("ECT", allow_label_click: true)
       end
 
-      # def when_i_select_transfer_teacher_option
-      #   choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
-      # end
-
       def when_i_update_the_name_with(name)
         fill_in "What’s this ECT’s full name?", with: name
       end

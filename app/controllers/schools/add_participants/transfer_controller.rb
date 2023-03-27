@@ -9,7 +9,7 @@ module Schools
     private
 
       def data_check
-        unless @wizard.found_participant_in_dqt? && @wizard.transfer?
+        if has_already_completed? || !who_stage_complete?
           remove_session_data
           redirect_to abort_path
         end
@@ -21,6 +21,14 @@ module Schools
 
       def default_step_name
         "joining-date"
+      end
+
+      def has_already_completed?
+        @wizard.complete? && step_name.to_sym != :complete
+      end
+
+      def who_stage_complete?
+        @wizard.found_participant_in_dqt? && @wizard.transfer?
       end
     end
   end

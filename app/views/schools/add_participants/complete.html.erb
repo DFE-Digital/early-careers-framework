@@ -24,7 +24,7 @@
         <% if @wizard.mentor_participant? %>
           <h3 class="govuk-heading-s">Continuing induction and ECF-based training</h3>
           <p class="govuk-body">Ask <%= @wizard.full_name %> or their previous school to provide records of any assessments and progress reviews completed so far.</p>
-          <% if @transferring_participant_form.switch_to_schools_programme? %>
+          <% if @wizard.join_school_programme? || @wizard.was_withdrawn_participant? %>
             <p class="govuk-body"><%= @wizard.lead_provider&.name %> will advise how <%= @wizard.full_name %> should transfer onto their programme.</p>
           <% end %>
           <p class="govuk-body">Contact us if you need to make any changes: <%= render MailToSupportComponent.new %></p>

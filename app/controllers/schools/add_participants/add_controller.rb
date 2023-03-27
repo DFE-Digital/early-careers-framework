@@ -31,7 +31,7 @@ module Schools
     private
 
       def data_check
-        unless who_stage_complete?
+        if has_already_completed? || !who_stage_complete?
           remove_session_data
           redirect_to abort_path
         end
@@ -43,6 +43,10 @@ module Schools
 
       def default_step_name
         :email
+      end
+
+      def has_already_completed?
+        @wizard.complete? && step_name.to_sym != :complete
       end
 
       def who_stage_complete?

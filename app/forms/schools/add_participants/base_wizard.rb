@@ -18,7 +18,7 @@ module Schools
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
                :start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
-               :same_provider?, :was_withdrawn_participant?,
+               :same_provider?, :was_withdrawn_participant?, :complete?,
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school_cohort:, submitted_params: {})

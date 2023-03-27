@@ -108,5 +108,9 @@ module FormData
     def was_withdrawn_participant?
       get(:was_withdrawn_participant) == true
     end
+
+    def complete?
+      get(:complete) == true
+    end
   end
 end
