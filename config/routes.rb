@@ -308,6 +308,8 @@ Rails.application.routes.draw do
       resource :change_name, only: %i[edit update], controller: "participants/change_name", path: "name"
       resource :change_email, only: %i[edit update], controller: "participants/change_email", path: "email"
 
+      resource :add_to_school_mentor_pool, only: %i[new create], controller: "participants/add_to_school_mentor_pool"
+
       resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
 

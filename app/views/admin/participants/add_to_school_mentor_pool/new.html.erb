@@ -1,0 +1,15 @@
+<% title = "Adding mentor to a school mentor pool" %>
+<% content_for :title, title %>
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_school_path(@participant_profile)) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <span class="govuk-caption-xl">Adding <%=  @participant_profile.user.full_name %> to a school mentor pool</span>
+    <h1 class="govuk-heading-xl">What’s the URN of the school</h1>
+    <%= form_for @add_mentor_to_school, url: admin_participant_add_to_school_mentor_pool_path(@participant_profile), method: :post do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field :school_urn, label: { text: "School URN" }, hint: { text: "Enter the 6-digit URN of the new school, for example 123456" } %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

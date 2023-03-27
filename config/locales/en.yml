@@ -237,6 +237,11 @@ en:
   activemodel:
     errors:
       models:
+        admin/participants/add_mentor_to_school_form:
+          attributes:
+            school_urn:
+              school_missing: "Could not find the school"
+              already_in_mentor_pool: "The mentor is already mentoring in this school"
         admin/school_transfer_form:
           attributes:
             new_school_urn:
