@@ -13,7 +13,7 @@ module Schools
           choose_mentor
           confirm_appropriate_body
           check_answers
-          confirmation
+          complete
         ]
       end
 
@@ -43,7 +43,9 @@ module Schools
         save_progress!
 
         if form.journey_complete?
-          @participant_profile = transfer_participant!
+          # record whether provider changing
+          set_participant_profile(transfer_participant!)
+          complete!
         end
       end
 
@@ -58,10 +60,10 @@ module Schools
           else
             show_path_for(step: "cannot-find-their-details")
           end
-        elsif form.journey_complete?
-          complete_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                      school_id: school_cohort.school.friendly_id,
-                                                      participant_profile_id: participant_profile.id)
+        # elsif form.journey_complete?
+        #   complete_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
+        #                                               school_id: school_cohort.school.friendly_id,
+        #                                               participant_profile_id: participant_profile.id)
         else
           show_path_for(step: form.next_step.to_s.dasherize)
         end
@@ -108,9 +110,10 @@ module Schools
 
       def transfer_participant!
         profile = existing_participant_profile
-        was_withdrawn_participant = withdrawn_participant?
+        data_store.set(:was_withdrawn_participant, withdrawn_participant?)
 
-        new_induction_record = if transfer_has_the_same_provider? || was_withdrawn_participant
+        new_induction_record = if transfer_has_the_same_provider? || was_withdrawn_participant?
+                                 data_store.set_same_provider(true)
                                  transfer_fip_participant_to_schools_programme(profile)
                                elsif chose_to_join_school_programme?
                                  transfer_fip_participant_to_schools_programme(profile)
@@ -118,7 +121,7 @@ module Schools
                                  transfer_fip_participant_and_continue_existing_programme(profile)
                                end
 
-        send_notification_emails!(new_induction_record, was_withdrawn_participant)
+        send_notification_emails!(new_induction_record, was_withdrawn_participant?)
         profile
       end
 

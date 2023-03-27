@@ -16,8 +16,9 @@ module Schools
       delegate :after_render, to: :form
 
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
-               :start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?,
+               :start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
+               :same_provider?, :was_withdrawn_participant?,
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school_cohort:, submitted_params: {})
@@ -162,6 +163,10 @@ module Schools
         existing_participant_profile.training_status_withdrawn? || existing_induction_record.training_status_withdrawn?
       end
 
+      def transfer_has_same_providers?
+        transfer_has_the_same_provider? && transfer_has_the_same_delivery_partner?
+      end
+
       def transfer_has_same_provider_and_different_delivery_partner?
         transfer_has_the_same_provider? && !transfer_has_the_same_delivery_partner?
       end
@@ -172,6 +177,10 @@ module Schools
 
       def transfer_has_the_same_delivery_partner?
         delivery_partner == existing_delivery_partner
+      end
+
+      def set_same_provider(using_same_provider)
+        data_store.set(:same_provider, using_same_provider)
       end
 
       ## appropriate bodies
@@ -193,6 +202,16 @@ module Schools
         elsif appropriate_body_id
           AppropriateBody.find(appropriate_body_id)
         end
+      end
+
+      # for completion
+      def complete!
+        data_store.set(:complete, true)
+      end
+
+      # set after add or transfer completed
+      def set_participant_profile(profile)
+        data_store.set(:participant_profile, profile)
       end
 
       def form_scope
@@ -356,6 +375,9 @@ module Schools
           join_school_programme
           transfer_confirmed
           known_by_another_name
+          participant_profile
+          same_provider
+          complete
         ].each do |key|
           data_store.set(key, nil)
         end

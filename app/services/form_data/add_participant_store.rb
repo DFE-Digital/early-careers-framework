@@ -96,5 +96,17 @@ module FormData
     def known_by_another_name?
       get(:known_by_another_name) == "yes"
     end
+
+    def participant_profile
+      get(:participant_profile)
+    end
+
+    def same_provider?
+      get(:same_provider) == true
+    end
+
+    def was_withdrawn_participant?
+      get(:was_withdrawn_participant) == true
+    end
   end
 end

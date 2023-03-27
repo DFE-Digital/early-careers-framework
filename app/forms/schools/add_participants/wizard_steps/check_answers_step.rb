@@ -9,7 +9,7 @@ module Schools
         end
 
         def next_step
-          :confirmation
+          :complete
         end
 
         def previous_step

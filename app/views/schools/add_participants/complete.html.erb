@@ -2,28 +2,41 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% if @profile.user == current_user %>
+    <% if @wizard.sit_mentor? %>
       <%= govuk_panel title_text: "You’ve been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-7" %>
-    <% elsif exempt_from_induction?(@profile) %>
-      <%= render partial: 'schools/add_participants/eligibility_confirmation/exempt_from_induction', locals: { profile: @profile } %>
+    <% elsif exempt_from_induction?(@wizard.participant_profile) %>
+      <%= render partial: 'schools/add_participants/eligibility_confirmation/exempt_from_induction', locals: { profile: @wizard.participant_profile } %>
     <% else %>
-      <% if @profile.ect? %>
-        <%= govuk_panel title_text: "#{@profile.user.full_name} has been added as an ECT", text: nil, classes: "govuk-!-margin-bottom-7" %>
-      <% else %>
-          <%= govuk_panel title_text: "#{@profile.user.full_name} has been added as a mentor", text: nil, classes: "govuk-!-margin-bottom-7" %>
-      <% end %>
+      <%= govuk_panel title_text: "#{@wizard.full_name} has been added as an #{@wizard.ect_or_mentor_label}", text: nil, classes: "govuk-!-margin-bottom-7" %>
 
-      <% if @profile.ecf_participant_eligibility.present? %>
-        <h2>What happens next</h2>
+      <h2>What happens next</h2>
+      <% if @wizard.transfer? %>
+        <p class="govuk-body">
+          We’ll let this person know you’ve registered them for ECF-based training at your school.
+        </p>
+        <% if @wizard.same_provider? && !@wizard.was_withdrawn_participant? %>
+          <p class="govuk-body">They’re already training with the same provider used by your school. We’ll let your provider know about the transfer.</p>
+        <% elsif @wizard.continue_current_programme? %>
+          <p class="govuk-body">We’ll contact their training lead provider, <%= @wizard.existing_lead_provider&.name %>, to let them know that you’ve reported their transfer too.</p>
+        <% elsif @wizard.join_school_programme? || @wizard.was_withdrawn_participant? %>
+          <p class="govuk-body">We’ll contact your training lead provider, <%= @wizard.lead_provider&.name %>, to let them know that you’ve reported this transfer. We recommend you confirm this with them directly too.</p>
+        <% end %>
+        <% if @wizard.mentor_participant? %>
+          <h3 class="govuk-heading-s">Continuing induction and ECF-based training</h3>
+          <p class="govuk-body">Ask <%= @wizard.full_name %> or their previous school to provide records of any assessments and progress reviews completed so far.</p>
+          <% if @transferring_participant_form.switch_to_schools_programme? %>
+            <p class="govuk-body"><%= @wizard.lead_provider&.name %> will advise how <%= @wizard.full_name %> should transfer onto their programme.</p>
+          <% end %>
+          <p class="govuk-body">Contact us if you need to make any changes: <%= render MailToSupportComponent.new %></p>
+        <% end %>
+      <% else %>
         <p class="govuk-body">
           We’ll let this person know you’ve registered them for ECF-based training at your school.
           They do not need to provide us with any more information.
         </p>
-
+        
         <h2 class="govuk-heading-m">Eligibility for funding</h2>
-        <%= render partial: 'eligibility_confirmation', locals: { profile: @profile } %>
-      <% else %>
-          <%= render partial: 'no_eligibility_record' %>
+        <%= render partial: 'eligibility_confirmation', locals: { profile: @wizard.participant_profile } %>
       <% end %>
     <% end %>
 

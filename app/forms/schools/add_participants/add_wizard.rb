@@ -11,7 +11,7 @@ module Schools
           choose_mentor
           confirm_appropriate_body
           check_answers
-          confirmation
+          complete
         ]
       end
 
@@ -19,7 +19,8 @@ module Schools
         save_progress!
 
         if form.journey_complete?
-          @participant_profile = add_participant!
+          set_participant_profile(add_participant!)
+          complete!
         end
       end
 
@@ -32,10 +33,10 @@ module Schools
           else
             show_path_for(step: :email)
           end
-        elsif form.journey_complete?
-          complete_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                 school_id: school_cohort.school.friendly_id,
-                                                 participant_profile_id: participant_profile.id)
+        # elsif form.journey_complete?
+        #   complete_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
+        #                                          school_id: school_cohort.school.friendly_id,
+        #                                          participant_profile_id: participant_profile.id)
         else
           show_path_for(step: form.next_step)
         end

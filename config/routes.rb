@@ -639,12 +639,10 @@ Rails.application.routes.draw do
                 wizard_scope :transfer do
                   get "/", to: "transfer#show", as: :start, step: "joining-date"
                   get "/", to: "transfer#show", as: :start_same_provider, step: "email"
-                  get "complete/:participant_profile_id", to: "transfer#complete", as: :complete
                 end
 
                 wizard_scope :add do
                   get "/", to: "add#show", as: :start, step: "email"
-                  get "complete/:participant_profile_id", to: "add#complete", as: :complete
                   appropriate_body_selection_routes :add
                   get :change_appropriate_body, path: "change-appropriate-body", controller: :add
                 end

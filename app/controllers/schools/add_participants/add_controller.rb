@@ -5,13 +5,8 @@ module Schools
     class AddController < BaseController
       include AppropriateBodySelection::Controller
 
-      before_action :initialize_wizard, except: :complete
-      before_action :data_check, except: :complete
-
-      def complete
-        @profile = ParticipantProfile.find(params[:participant_profile_id])
-        remove_session_data
-      end
+      before_action :initialize_wizard
+      before_action :data_check
 
       # Appropriate body methods
       def change_appropriate_body
