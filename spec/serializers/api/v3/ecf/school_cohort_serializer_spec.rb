@@ -52,8 +52,26 @@ module Api
             expect(subject.serializable_hash[:data][:attributes][:induction_programme_choice]).to eq(school_cohort.induction_programme_choice)
           end
 
-          it "returns the school updated_at" do
-            expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(school.updated_at)
+          context "when the school is updated last" do
+            before do
+              school_cohort
+              Timecop.travel(1.day.from_now) { school.touch }
+            end
+
+            it "returns the school updated_at" do
+              expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(school.updated_at.rfc3339)
+            end
+          end
+
+          context "when the school cohort is updated last" do
+            before do
+              school_cohort
+              Timecop.travel(1.day.from_now) { school_cohort.touch }
+            end
+
+            it "returns the school cohort updated_at" do
+              expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(school_cohort.updated_at.rfc3339)
+            end
           end
         end
       end
