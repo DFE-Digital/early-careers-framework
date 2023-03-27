@@ -15,13 +15,6 @@ RSpec.describe Importers::NPQContracts do
 
   subject { described_class.new(path_to_csv:) }
 
-  before do
-    allow(Finance::Schedule::NPQLeadership).to receive_message_chain(:default_for, :milestones, :count) { 4 }
-    allow(Finance::Schedule::NPQSpecialist).to receive_message_chain(:default_for, :milestones, :count) { 3 }
-    allow(Finance::Schedule::NPQSupport).to receive_message_chain(:default, :milestones, :count) { 4 }
-    allow(Finance::Schedule::NPQEhco).to receive_message_chain(:default_for, :milestones, :count) { 4 }
-  end
-
   describe "#call" do
     context "when headers are incorrect" do
       before do
