@@ -490,7 +490,7 @@ GEM
     scss_lint-govuk (0.2.0)
       scss_lint
     secure_headers (6.5.0)
-    selenium-webdriver (4.8.1)
+    selenium-webdriver (4.8.3)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
