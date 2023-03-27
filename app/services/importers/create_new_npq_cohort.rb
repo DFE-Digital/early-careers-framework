@@ -19,8 +19,8 @@ module Importers
       logger.info "Running CreateSchedule with: '#{schedule_csv}'"
       CreateSchedule.new(path_to_csv: schedule_csv).call
 
-      logger.info "Running NPQContracts with: '#{contract_csv}'"
-      NPQContracts.new(path_to_csv: contract_csv).call
+      logger.info "Running CreateNPQContract with: '#{contract_csv}'"
+      CreateNPQContract.new(path_to_csv: contract_csv).call
 
       logger.info "Running CreateStatement with: '#{statement_csv}'"
       CreateStatement.new(path_to_csv: statement_csv).call

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Importers::NPQContracts do
+RSpec.describe Importers::CreateNPQContract do
   let(:csv) { Tempfile.new("data.csv") }
   let(:path_to_csv) { csv.path }
 

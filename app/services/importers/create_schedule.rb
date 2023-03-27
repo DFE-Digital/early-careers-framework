@@ -11,32 +11,34 @@ module Importers
     end
 
     def call
-      rows.each do |row|
-        klass = type_to_klass(row["type"])
-        cohort = Cohort.find_by!(start_year: row["schedule-cohort-year"].to_i)
+      ActiveRecord::Base.transaction do
+        rows.each do |row|
+          klass = type_to_klass(row["type"])
+          cohort = Cohort.find_by!(start_year: row["schedule-cohort-year"].to_i)
 
-        schedule = klass.find_or_initialize_by(
-          schedule_identifier: row["schedule-identifier"],
-          cohort:,
-        )
+          schedule = klass.find_or_initialize_by(
+            schedule_identifier: row["schedule-identifier"],
+            cohort:,
+          )
 
-        schedule.update!(
-          name: row["schedule-name"],
-        )
+          schedule.update!(
+            name: row["schedule-name"],
+          )
 
-        milestone = schedule.milestones.find_or_create_by!(
-          name: row["milestone-name"],
-          start_date: row["milestone-start-date"],
-          milestone_date: row["milestone-date"],
-          payment_date: row["milestone-payment-date"],
-          declaration_type: row["milestone-declaration-type"],
-        )
+          milestone = schedule.milestones.find_or_create_by!(
+            name: row["milestone-name"],
+            start_date: row["milestone-start-date"],
+            milestone_date: row["milestone-date"],
+            payment_date: row["milestone-payment-date"],
+            declaration_type: row["milestone-declaration-type"],
+          )
 
-        schedule.schedule_milestones.find_or_create_by!(
-          declaration_type: row["milestone-declaration-type"],
-          name: row["milestone-name"],
-          milestone:,
-        )
+          schedule.schedule_milestones.find_or_create_by!(
+            declaration_type: row["milestone-declaration-type"],
+            name: row["milestone-name"],
+            milestone:,
+          )
+        end
       end
     end
 
