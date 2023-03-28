@@ -9,7 +9,7 @@
     <%= form_for @add_mentor_to_school, url: admin_participant_add_to_school_mentor_pool_path(@participant_profile), method: :post do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :school_urn, label: { text: "School URN" }, hint: { text: "Enter the 6-digit URN of the new school, for example 123456" } %>
-      <%= f.govuk_submit %>
+      <%= f.govuk_submit "Add to school" %>
     <% end %>
   </div>
 </div>
