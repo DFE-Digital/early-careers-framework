@@ -15,7 +15,7 @@ RSpec.describe Finance::NPQ::ChangeLeadProviderForm, :with_default_schedules, ty
 
     describe ".save" do
       context "valid params" do
-        it "should change lead provider" do
+        it "changes lead provider" do
           expect(form.save).to be true
           expect(participant_profile.npq_application.reload.npq_lead_provider).to eql(lead_provider)
         end
@@ -24,7 +24,7 @@ RSpec.describe Finance::NPQ::ChangeLeadProviderForm, :with_default_schedules, ty
       context "invalid params" do
         let(:params) { { participant_profile:, lead_provider_id: nil } }
 
-        it "should not change lead provider" do
+        it "does not change lead provider" do
           old_lead_provider = participant_profile.npq_application.npq_lead_provider
           expect(form.save).to be false
           expect(participant_profile.npq_application.reload.npq_lead_provider).to eql(old_lead_provider)
