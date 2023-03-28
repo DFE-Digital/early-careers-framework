@@ -52,24 +52,18 @@
       end
     end
 
-    if @latest_induction_record.participant_profile.mentor?
-      sl.row do |row|
-        row.key(text: "Mentoring at")
-        row.value do
-          html_list(
-            @latest_induction_record.participant_profile.school_mentors.map do |school_mentor|
-              govuk_link_to(school_mentor.school.slug.titleize, admin_school_path(school_mentor.school.friendly_id))
-            end
-          )
-        end
-      end
-
+    if @latest_induction_record.participant_profile.mentor? && @mentees_by_school.present?
       sl.row do |row|
         row.key(text: "Mentoring")
         row.value do
           html_list(
-            @mentees.map do |mentee_profile|
-              govuk_link_to(mentee_profile.full_name, admin_participant_path(mentee_profile))
+            @mentees_by_school.map do |school, mentees|
+              safe_join([
+                tag.h2(school.name, class: "govuk-heading-s"),
+                html_list(
+                  mentees.map { |m| govuk_link_to(m.full_name, admin_participant_path(m)) }
+                )
+              ])
             end
           )
         end
