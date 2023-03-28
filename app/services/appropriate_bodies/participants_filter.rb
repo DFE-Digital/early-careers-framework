@@ -73,7 +73,7 @@ module AppropriateBodies
         next unless pp
 
         pps = ParticipantProfileStatus.new(participant_profile: pp, induction_record: ir)
-        if pps.is_status?(status)
+        if pps.is_record_state?(status)
           ids << ir.id
         end
       end

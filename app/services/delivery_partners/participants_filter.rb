@@ -74,7 +74,7 @@ module DeliveryPartners
         ir = pp.relevant_induction_record_for(delivery_partner: params[:delivery_partner])
 
         pps = ParticipantProfileStatus.new(participant_profile: pp, induction_record: ir)
-        if pps.is_status?(status)
+        if pps.is_record_state?(status)
           ids << pp.id
         end
       end

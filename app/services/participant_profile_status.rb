@@ -21,7 +21,7 @@ class ParticipantProfileStatus
     end
   end
 
-  def status_name
+  def record_state
     return unless participant_profile
 
     if training_status_withdrawn?
@@ -65,8 +65,8 @@ class ParticipantProfileStatus
     end
   end
 
-  def is_status?(status)
-    status == status_name
+  def is_record_state?(state)
+    state == record_state
   end
 
 private

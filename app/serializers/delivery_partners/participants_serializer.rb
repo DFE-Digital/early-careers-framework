@@ -17,7 +17,7 @@ module DeliveryPartners
         ParticipantProfileStatus.new(
           participant_profile:,
           induction_record: induction_record(participant_profile, delivery_partner),
-        ).status_name
+        ).record_state
       end
     end
 
