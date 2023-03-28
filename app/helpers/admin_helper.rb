@@ -17,10 +17,12 @@ module AdminHelper
     request.path.starts_with?("/admin/npq/applications")
   end
 
-  def html_list(values)
+  def html_list(values, bullets: false)
     return nil if values.empty?
 
-    tag.ul(class: %w[govuk-list]) { safe_join(values.map { |v| tag.li(v) }) }
+    list_classes = class_names("govuk-list", "govuk-list--bullet" => bullets)
+
+    tag.ul(class: list_classes) { safe_join(values.map { |v| tag.li(v) }) }
   end
 
   def induction_programme_friendly_name(name, short: false)
