@@ -19,10 +19,13 @@ class WizardStep
     raise NotImplementedError
   end
 
+  # indicates that the journey is complete and any saving/updating should occur (normally followed by a "complete" page)
   def journey_complete?
     false
   end
 
+  # when changing an answer from a check-answers page, sometimes it is desirable to
+  # revisit the subsequent step and not return immediately on submission
   def revisit_next_step?
     false
   end
@@ -33,7 +36,7 @@ class WizardStep
     # remove any module scope and 'Step' suffix from the class name as default view name for the step
     # e.g. for Module::Group::AmazingThingStep we get "amazing_thing" back
     # This can be overridden in steps that need to support multiple views.
-    self.class.name.demodulize[...-4].underscore
+    self.class.name.demodulize.delete_suffix("Step").underscore
   end
 
   def after_render; end

@@ -8,6 +8,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       before do
         set_participant_data
         set_dqt_validation_result
+        set_nino_validation_result
         given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
         and_there_is_an_ect_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
@@ -20,7 +21,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         when_i_click_to_add_a_new_ect_or_mentor
         then_i_should_be_on_the_who_to_add_page
 
-        when_i_select_transfer_teacher_option
+        when_i_select_the_ect_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
 
@@ -40,9 +41,14 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
         then_i_should_be_taken_to_the_cannot_find_their_details
         then_the_page_should_be_accessible
-        click_on "Confirm and continue"
+        click_on "Continue"
 
-        then_i_should_be_taken_to_the_cannot_add_page
+        then_i_should_be_on_the_nino_page
+        then_the_page_should_be_accessible
+        when_i_enter_a_valid_nino
+        click_on "Continue"
+
+        then_i_should_be_taken_to_the_still_cannot_find_their_details_page
         then_the_page_should_be_accessible
       end
 
@@ -79,12 +85,12 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         click_on "Add an ECT or mentor"
       end
 
-      def when_i_select_transfer_teacher_option
-        choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
+      def when_i_select_the_ect_option
+        choose("ECT", allow_label_click: true)
       end
 
       def when_i_update_the_name_with(name)
-        fill_in "What’s this person’s full name?", with: name
+        fill_in "What’s this ECT’s full name?", with: name
       end
 
       def when_i_update_the_email_with(email)
@@ -99,6 +105,10 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         legend = "What’s #{@participant_data[:full_name]}’s date of birth?"
 
         fill_in_date(legend, with: "1990-10-24")
+      end
+
+      def when_i_enter_a_valid_nino
+        fill_in "What’s #{@participant_data[:full_name]}’s National Insurance number", with: "QQ123456A"
       end
 
       def when_i_assign_a_mentor
@@ -119,11 +129,10 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       def then_i_should_be_on_what_we_need_page
         expect(page).to have_selector("h1", text: "What we need from you")
-        expect(page).to have_text("To do this, you need to tell us their")
       end
 
       def then_i_should_be_on_full_name_page
-        expect(page).to have_selector("h1", text: "What’s this person’s full name?")
+        expect(page).to have_selector("h1", text: "What’s this ECT’s full name?")
       end
 
       def then_i_should_be_on_trn_page
@@ -140,7 +149,16 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       def then_i_should_be_taken_to_the_cannot_find_their_details
         expect(page).to have_selector("h1", text: "We cannot find #{@participant_data[:full_name]}’s record")
-        expect(page).to have_text("Check the information you’ve entered is correct.")
+        expect(page).to have_text("Check the information you entered is correct.")
+      end
+
+      def then_i_should_be_on_the_nino_page
+        expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s National Insurance number?")
+      end
+
+      def then_i_should_be_taken_to_the_still_cannot_find_their_details_page
+        expect(page).to have_selector("h1", text: "We still cannot find #{@participant_data[:full_name]}’s record")
+        expect(page).to have_text("Contact us for help to register this ECT at your school")
       end
 
       def then_i_should_be_taken_to_the_cannot_add_page
@@ -161,6 +179,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         @participant_profile_ect = create(:ect_participant_profile, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
         create(:induction_record, induction_programme: @induction_programme_two, participant_profile: @participant_profile_ect)
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
+        @participant_profile_ect.teacher_profile.update!(trn: "1001000")
       end
 
       def and_it_should_list_the_schools_mentors
@@ -171,15 +190,47 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         click_on @cohort.description
       end
 
+      # def set_dqt_validation_result
+      #   response = {
+      #     trn: @participant_data[:trn],
+      #     full_name: "Sally Teacher",
+      #     nino: nil,
+      #     dob: @participant_data[:date_of_birth],
+      #     config: {},
+      #   }
+      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
+      # end
+
       def set_dqt_validation_result
-        response = {
-          trn: @participant_data[:trn],
-          full_name: "Sally Teacher",
-          nino: nil,
-          dob: @participant_data[:date_of_birth],
-          config: {},
+        allow(DqtRecordCheck).to receive(:call).and_return(
+          DqtRecordCheck::CheckResult.new(
+            nil,
+            false,
+            false,
+            false,
+            false,
+            0,
+            :no_match_found,
+          ),
+        )
+      end
+
+      def set_nino_validation_result
+        allow_any_instance_of(NationalInsuranceNumber).to receive(:valid?).and_return(true)
+      end
+
+      def valid_dqt_response(participant_data)
+        {
+          "name" => participant_data[:full_name],
+          "trn" => participant_data[:trn],
+          "state_name" => "Active",
+          "dob" => participant_data[:date_of_birth],
+          "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+          "induction" => {
+            "start_date" => 1.month.ago,
+            "status" => "Active",
+          },
         }
-        allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
       end
 
       def set_participant_data

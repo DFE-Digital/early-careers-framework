@@ -73,9 +73,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
-
-        # click_on "Moving school"
-        # then_i_should_see_the_transferring_participant
       end
 
       scenario "Induction tutor can transfer an Mentor and they can continue their current programme" do
@@ -126,12 +123,9 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
-
-        # click_on "Moving school"
-        # then_i_should_see_the_transferring_participant_for_an_existing_induction
       end
-      # given
 
+      # given
       def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
         @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
         @school_one = create(:school, name: "Fip School 1")
@@ -340,17 +334,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         allow(ParticipantTransferMailer).to receive(:provider_transfer_in_notification).and_call_original
         allow(ParticipantTransferMailer).to receive(:provider_transfer_out_notification).and_call_original
       end
-
-      # def set_dqt_validation_result
-      #   response = {
-      #     trn: @participant_data[:trn],
-      #     full_name: @participant_data[:full_name],
-      #     nino: nil,
-      #     dob: @participant_data[:date_of_birth],
-      #     config: {},
-      #   }
-      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
-      # end
 
       def set_dqt_validation_result
         allow(DqtRecordCheck).to receive(:call).and_return(

@@ -6,8 +6,6 @@
       <% row.action(text: "Change",
                     visually_hidden_text: "name",
                     href: form.change_path_for(step: :name)) %>
-    <% else %>
-      <% row.action() %>
     <% end %>
   <% end %>
 
@@ -19,8 +17,6 @@
          <% row.action(text: "Change",
                        visually_hidden_text: "TRN",
                        href: form.change_path_for(step: :trn)) %>
-       <% else %>
-         <% row.action() %>
        <% end %>
      <% end %>
    <% end %>
@@ -33,8 +29,6 @@
         <% row.action(text: "Change",
                       visually_hidden_text: "date of birth",
                       href: form.change_path_for(step: :date_of_birth)) %>
-      <% else %>
-        <% row.action() %>
       <% end %>
     <% end %>
   <% end %>
@@ -63,8 +57,6 @@
         <% row.action(text: "Change",
                       visually_hidden_text: "mentor",
                       href: form.change_path_for(step: :choose_mentor)) %>
-      <% else %>
-        <% row.action() %>
       <% end %>
     <% end %>
   <% end %>
@@ -88,7 +80,6 @@
         <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %></p>
         <p class="govuk-body"><%= @school_cohort.default_induction_programme.delivery_partner&.name %></p>
       <% end %>
-     <% row.action() %>
     <% end %>
   <% end %>
 <% end %>
