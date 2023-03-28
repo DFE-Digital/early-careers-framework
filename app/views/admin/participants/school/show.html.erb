@@ -52,7 +52,7 @@
       end
     end
 
-    if @latest_induction_record.participant_profile.mentor? && @mentees_by_school.present?
+    if @latest_induction_record.participant_profile.mentor?
       sl.row do |row|
         row.key(text: "Mentoring")
         row.value do
