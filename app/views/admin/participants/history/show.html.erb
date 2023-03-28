@@ -7,14 +7,14 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<% if @latest_induction_record.present? %>
+<% if @relevant_induction_record.present? %>
   <h2 class="govuk-heading-m">Key events</h2>
 
   <%= govuk_summary_list(
     rows: [
       {
         key: { text: "Added to the service" },
-        value: { text: @latest_induction_record.user.created_at.to_date.to_s(:govuk) }
+        value: { text: @relevant_induction_record.user.created_at.to_date.to_s(:govuk) }
       }
     ]
   ) %>

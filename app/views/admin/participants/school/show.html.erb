@@ -23,27 +23,27 @@
 
     sl.row do |row|
       row.key(text: "School URN")
-      row.value(text: @latest_induction_record.school_cohort.school.urn)
+      row.value(text: @relevant_induction_record.school_cohort.school.urn)
     end
 
     sl.row do |row|
       row.key(text: "Lead provider")
-      row.value(text: @latest_induction_record.school_cohort.lead_provider&.name)
+      row.value(text: @relevant_induction_record.school_cohort.lead_provider&.name)
     end
 
     sl.row do |row|
       row.key(text: "Delivery partner")
-      row.value(text: @latest_induction_record.school_cohort.delivery_partner&.name)
+      row.value(text: @relevant_induction_record.school_cohort.delivery_partner&.name)
     end
 
-    if @latest_induction_record.participant_profile.ect?
+    if @relevant_induction_record.participant_profile.ect?
       sl.row do |row|
         row.key(text: "Mentor")
         row.value(
-          text: if @latest_induction_record.mentor_profile.present?
+          text: if @relevant_induction_record.mentor_profile.present?
                   govuk_link_to(
-                    @latest_induction_record.mentor_full_name,
-                    admin_participant_path(@latest_induction_record.mentor_profile),
+                    @relevant_induction_record.mentor_full_name,
+                    admin_participant_path(@relevant_induction_record.mentor_profile),
                   )
                 else
                   'Not yet assigned'
@@ -52,20 +52,22 @@
       end
     end
 
-    if @latest_induction_record.participant_profile.mentor?
+    if @relevant_induction_record.participant_profile.mentor?
       sl.row do |row|
         row.key(text: "Mentoring")
         row.value do
-          html_list(
-            @mentees_by_school.map do |school, mentees|
-              safe_join([
-                tag.h2(school.name, class: "govuk-heading-s"),
-                html_list(
-                  mentees.map { |m| govuk_link_to(m.full_name, admin_participant_path(m)) }
-                )
-              ])
-            end
-          )
+          if @mentees_by_school.present?
+            html_list(
+              @mentees_by_school.map do |school, mentees|
+                safe_join([
+                  tag.h2(school.name, class: "govuk-heading-s"),
+                  html_list(
+                    mentees.map { |m| govuk_link_to(m.full_name, admin_participant_path(m)) }
+                  )
+                ])
+              end
+            )
+          end
         end
       end
     end
