@@ -14,6 +14,13 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .chosen_fip_and_partnered_in(cohort:)
   end
 
+  let(:fip_school_no_partnership) do
+    NewSeeds::Scenarios::Schools::School
+      .new
+      .build
+      .chosen_fip_but_not_partnered(cohort:)
+  end
+
   let(:cip_school) do
     NewSeeds::Scenarios::Schools::School
       .new
@@ -492,6 +499,26 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .with_validation_data
       .with_eligibility(status: "eligible")
       .with_induction_record(induction_programme: fip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
+  let(:ect_on_fip_no_partnership) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: fip_school_no_partnership.school_cohort)
+      .build(sparsity_uplift: true, pupil_premium_uplift: true)
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: fip_school_no_partnership.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
+  let(:mentor_no_partnership) do
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort: fip_school_no_partnership.school_cohort)
+      .build(sparsity_uplift: true, pupil_premium_uplift: true)
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: fip_school_no_partnership.school_cohort.default_induction_programme)
       .participant_profile
   end
 

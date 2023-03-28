@@ -48,7 +48,7 @@ module StatusTags
       @record_state ||= ParticipantProfileStatus.new(
         participant_profile:,
         induction_record:,
-      ).status_name
+      ).record_state
     end
   end
 end
