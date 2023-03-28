@@ -102,7 +102,7 @@ RSpec.describe PartnershipCsvUpload, type: :model do
         next_cohort = Cohort.next || create(:cohort, :next)
         create(:partnership, school: school_cohort.school)
 
-        given_the_csv_contains_urns([school_cohort.school.urn], next_cohort)
+        given_the_csv_contains_urns([school_cohort.school.urn], cohort: next_cohort)
 
         expect(@subject.invalid_schools.length).to eql 1
         expect(@subject.invalid_schools).to contain_exactly(
@@ -149,8 +149,8 @@ RSpec.describe PartnershipCsvUpload, type: :model do
     end
 
     it "removes BOM from the input" do
-      urns = %W[\xEF\xBB\xBF1 2 3]
-      given_the_csv_contains_urns(urns)
+      urns = %w[1 2 3]
+      given_the_csv_contains_urns(urns, insert_bom: true)
 
       expect(@subject.urns).to eql %w[1 2 3]
     end
@@ -174,7 +174,7 @@ RSpec.describe PartnershipCsvUpload, type: :model do
   describe "#sync_uploaded_urns" do
     it "populates the uploaded_urns field with the CSV contents" do
       urns = [1, 1, 2, 2, 3, 3]
-      given_the_csv_contains_urns(urns)
+      given_the_csv_contains_urns(urns, insert_bom: true)
 
       expect(@subject.uploaded_urns).to be_blank
 
@@ -186,10 +186,18 @@ RSpec.describe PartnershipCsvUpload, type: :model do
 
 private
 
-  def given_the_csv_contains_urns(urns, cohort = current_cohort)
+  def given_the_csv_contains_urns(urns, cohort: current_cohort, insert_bom: false)
+    bom = "\xEF\xBB\xBF"
+
     file = Tempfile.new
+    file.write(bom) if insert_bom
     file.write(urns.join("\n"))
     file.close
+
+    if insert_bom
+      expect(File.read(file).bytes).to start_with(bom.bytes)
+    end
+
     @subject = build(:partnership_csv_upload, cohort:)
     @subject.csv.attach(io: File.open(file), filename: "test.csv", content_type: "text/csv")
     @subject.save!
