@@ -42,7 +42,7 @@
         row.value(
           text: if @latest_induction_record.mentor_profile.present?
                   govuk_link_to(
-                    @latest_induction_record.mentor_profile&.user&.full_name,
+                    @latest_induction_record.mentor_full_name,
                     admin_participant_path(@latest_induction_record.mentor_profile),
                   )
                 else
