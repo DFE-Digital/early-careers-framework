@@ -9,16 +9,29 @@ RSpec.describe Importers::CreateSchedule do
     let(:path_to_csv) { csv.path }
 
     subject do
-      described_class.new(path_to_csv:, klass:)
+      described_class.new(path_to_csv:)
+    end
+
+    context "Invalid type" do
+      before do
+        csv.write "type,schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
+        csv.write "\n"
+        csv.write "invalid,ecf-standard-september,ECF Standard September,2021,Output 1 - Participant Start,started,2021/09/01,2021/11/30,2021/11/30"
+        csv.close
+      end
+
+      it "raises an error" do
+        expect { subject.call }.to raise_error(ArgumentError, "Invalid schedule type")
+      end
     end
 
     context "ECF" do
       let(:klass) { Finance::Schedule::ECF }
 
       before do
-        csv.write "schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
+        csv.write "type,schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
         csv.write "\n"
-        csv.write "ecf-standard-september,ECF Standard September,2021,Output 1 - Participant Start,started,2021/09/01,2021/11/30,2021/11/30"
+        csv.write "ecf_standard,ecf-standard-september,ECF Standard September,2021,Output 1 - Participant Start,started,2021/09/01,2021/11/30,2021/11/30"
         csv.close
       end
 
@@ -61,9 +74,9 @@ RSpec.describe Importers::CreateSchedule do
       let(:klass) { Finance::Schedule::NPQLeadership }
 
       before do
-        csv.write "schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
+        csv.write "type,schedule-identifier,schedule-name,schedule-cohort-year,milestone-name,milestone-declaration-type,milestone-start-date,milestone-date,milestone-payment-date"
         csv.write "\n"
-        csv.write "npq-leadership-autumn,NPQ Leadership Autumn,2021,Output 1 - Participant Start,started,01/11/2021,01/11/2021,01/11/2021"
+        csv.write "npq_leadership,npq-leadership-autumn,NPQ Leadership Autumn,2021,Output 1 - Participant Start,started,01/11/2021,01/11/2021,01/11/2021"
         csv.close
       end
 
@@ -101,6 +114,23 @@ RSpec.describe Importers::CreateSchedule do
           expect(schedule.reload.name).to eql("NPQ Leadership Autumn")
         end
       end
+    end
+  end
+
+  describe "#type_to_klass" do
+    subject do
+      described_class.new(path_to_csv: "test.csv")
+    end
+
+    it "returns correct schedule class for each type" do
+      expect(subject.send(:type_to_klass, "npq_specialist")).to eql(Finance::Schedule::NPQSpecialist)
+      expect(subject.send(:type_to_klass, "npq_leadership")).to eql(Finance::Schedule::NPQLeadership)
+      expect(subject.send(:type_to_klass, "npq_aso")).to eql(Finance::Schedule::NPQSupport)
+      expect(subject.send(:type_to_klass, "npq_ehco")).to eql(Finance::Schedule::NPQEhco)
+      expect(subject.send(:type_to_klass, "ecf_standard")).to eql(Finance::Schedule::ECF)
+      expect(subject.send(:type_to_klass, "ecf_reduced")).to eql(Finance::Schedule::ECF)
+      expect(subject.send(:type_to_klass, "ecf_extended")).to eql(Finance::Schedule::ECF)
+      expect(subject.send(:type_to_klass, "ecf_replacement")).to eql(Finance::Schedule::Mentor)
     end
   end
 end
