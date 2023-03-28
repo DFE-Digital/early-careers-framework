@@ -586,36 +586,6 @@ Rails.application.routes.draw do
             get "complete", to: "setup_school_cohort#complete"
           end
 
-          # resource :transferring_participant, path: "transferring-participant" do
-          #   get "check_transfer", to: "transferring_participants#check_transfer", as: :check_transfer
-          #   put "check_transfer", to: "transferring_participants#check_transfer"
-          #   get "what-we-need", to: "transferring_participants#what_we_need", as: :what_we_need
-          #   get "full-name", to: "transferring_participants#full_name", as: :full_name
-          #   put "full-name", to: "transferring_participants#full_name"
-          #   get "trn", to: "transferring_participants#trn", as: :trn
-          #   put "trn", to: "transferring_participants#trn"
-          #   get "dob", to: "transferring_participants#dob", as: :dob
-          #   put "dob", to: "transferring_participants#dob"
-          #   get "cannot-find-their-details", to: "transferring_participants#cannot_find_their_details", as: :cannot_find_their_details
-          #   get "cannot-add", to: "transferring_participants#cannot_add", as: :cannot_add
-          #   get "need-training-setup", to: "transferring_participants#need_training_setup", as: :need_training_setup
-          #   put "need-training-setup", to: "transferring_participants#need_training_setup"
-          #   get "teacher-start-date", to: "transferring_participants#teacher_start_date", as: :teacher_start_date
-          #   put "teacher-start-date", to: "transferring_participants#teacher_start_date"
-          #   get "email", to: "transferring_participants#email", as: :email
-          #   put "email", to: "transferring_participants#email"
-          #   get "choose-mentor", to: "transferring_participants#choose_mentor", as: :choose_mentor
-          #   put "choose-mentor", to: "transferring_participants#choose_mentor"
-          #   get "teachers-current-programme", to: "transferring_participants#teachers_current_programme", as: :teachers_current_programme
-          #   put "teachers-current-programme", to: "transferring_participants#teachers_current_programme"
-          #   get "schools-current-programme", to: "transferring_participants#schools_current_programme", as: :schools_current_programme
-          #   put "schools-current-programme", to: "transferring_participants#schools_current_programme"
-          #   get "contact-support", to: "transferring_participants#contact_support"
-          #   get "check-answers", to: "transferring_participants#check_answers", as: :check_answers
-          #   put "check-answers", to: "transferring_participants#check_answers"
-          #   get "complete", to: "transferring_participants#complete", as: :complete
-          # end
-
           resources :transfer_out_participant, path: "transfer-out", only: [] do
             get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
             get "teacher-end-date", to: "transfer_out#teacher_end_date", as: :teacher_end_date
@@ -638,29 +608,17 @@ Rails.application.routes.draw do
 
                 wizard_scope :transfer do
                   get "/", to: "transfer#show", as: :start, step: "joining-date"
-                  get "/", to: "transfer#show", as: :start_same_provider, step: "email"
+                  get "/same-provider", to: "transfer#show", as: :start_same_provider, step: "email"
                 end
 
                 wizard_scope :add do
                   get "/", to: "add#show", as: :start, step: "email"
+                  get "/sit-mentor", to: "add#show", as: :sit_start, step: "check-answers"
                   appropriate_body_selection_routes :add
                   get :change_appropriate_body, path: "change-appropriate-body", controller: :add
                 end
               end
             end
-
-            # collection do
-            #   multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
-            #     get :cannot_add_mentor_without_trn
-            #     get :who, path: "who", controller: :add_participants
-            #     put :participant_type, path: "participant-type", controller: :add_participants
-            #     get :what_we_need, path: "what-we-need", controller: :add_participants
-            #     put "transfer", as: nil
-
-            #     appropriate_body_selection_routes :add_participants
-            #     get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
-            #   end
-            # end
 
             get :remove
             get :edit_name, path: "edit-name"

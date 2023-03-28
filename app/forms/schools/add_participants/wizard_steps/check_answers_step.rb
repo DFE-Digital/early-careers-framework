@@ -13,7 +13,11 @@ module Schools
         end
 
         def previous_step
-          :start_date
+          if wizard.sit_mentor?
+            :date_of_birth
+          else
+            :start_date
+          end
         end
 
         def journey_complete?

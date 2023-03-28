@@ -69,6 +69,8 @@ module Schools
 
         if transfer?
           start_schools_transfer_participants_path(**path_opts)
+        elsif sit_mentor?
+          sit_start_schools_add_participants_path(**path_opts)
         else
           start_schools_add_participants_path(**path_opts)
         end
@@ -90,10 +92,6 @@ module Schools
                                                          step:)
       end
 
-      # def found_participant_in_dqt?
-      #   check_for_dqt_record? && dqt_record.present?
-      # end
-
       def reset_known_by_another_name_response
         data_store.set(:known_by_another_name, nil)
       end
@@ -110,41 +108,7 @@ module Schools
         check_for_dqt_record? && dqt_record.present? && existing_participant_profile.present?
       end
 
-      # def check_for_dqt_record?
-      #   full_name.present? && trn.present? && date_of_birth.present?
-      # end
-
-      # def check_start_date_is_later_than_induction_start
-      #   start_date = @transferring_participant_form.start_date
-      #   previous_date = existing_induction_record.schedule.milestones.first.start_date
-      #   if start_date < previous_date
-      #     @transferring_participant_form.errors.add(:start_date, I18n.t("errors.start_date.before_schedule_start_date", date: previous_date.to_date.to_s(:govuk)))
-      #   end
-      # end
-
     private
-
-      # def dqt_record(force_recheck: false)
-      #   @dqt_record = nil if force_recheck
-
-      #   @dqt_record ||= validate_details
-      # end
-
-      # def validate_details
-      #   record = ParticipantValidationService.validate(
-      #     full_name:,
-      #     trn: formatted_trn,
-      #     date_of_birth:,
-      #     nino: formatted_nino,
-      #     config: { check_first_name_only: true },
-      #   )
-      #   set_confirmed_trn(record[:trn]) if record
-      #   record
-      # end
-
-      # def set_confirmed_trn(trn_value)
-      #   data_store.set(:confirmed_trn, TeacherReferenceNumber.new(trn_value).formatted_trn
-      # end
 
       def dqt_record_check(force_recheck: false)
         @dqt_record_check = nil if force_recheck
