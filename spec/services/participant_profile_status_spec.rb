@@ -6,11 +6,9 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
   let(:participant_profile) { create(:ect_participant_profile) }
   let!(:induction_record) { create(:induction_record, participant_profile:) }
 
-  let(:params) { { participant_profile:, induction_record: } }
-
-  subject { described_class.new(**params) }
-
   describe "#initialize" do
+    subject { described_class.new(participant_profile:, induction_record:) }
+
     it "sets it to the injected params if provided" do
       expect(subject.instance_variable_get(:@participant_profile)).to eq(participant_profile)
     end
@@ -20,11 +18,12 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
     end
   end
 
+  subject { described_class.new(participant_profile:, induction_record:).record_state }
+
   describe "#status_name" do
     context "when the request for details has not been sent yet" do
       it "returns the correct status" do
-        response = subject.status_name
-        expect(response).to eq("contacted_for_information")
+        expect(subject).to eq("contacted_for_information")
       end
     end
 
@@ -35,8 +34,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let(:email_status) { :delivered }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("contacted_for_information")
+          expect(subject).to eq("contacted_for_information")
         end
       end
 
@@ -44,8 +42,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let(:email_status) { Email::FAILED_STATUSES.sample }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("contacted_for_information")
+          expect(subject).to eq("contacted_for_information")
         end
       end
 
@@ -53,8 +50,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let(:email_status) { :submitted }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("contacted_for_information")
+          expect(subject).to eq("contacted_for_information")
         end
       end
     end
@@ -67,8 +63,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("training_or_eligible_for_training")
+          expect(subject).to eq("training_or_eligible_for_training")
         end
       end
 
@@ -77,8 +72,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("training_or_eligible_for_training")
+          expect(subject).to eq("training_or_eligible_for_training")
         end
       end
     end
@@ -90,8 +84,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("training_or_eligible_for_training")
+          expect(subject).to eq("training_or_eligible_for_training")
         end
       end
 
@@ -101,8 +94,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("training_or_eligible_for_training")
+          expect(subject).to eq("training_or_eligible_for_training")
         end
       end
     end
@@ -114,8 +106,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("dfe_checking_eligibility")
+          expect(subject).to eq("dfe_checking_eligibility")
         end
       end
 
@@ -125,8 +116,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("not_eligible_for_funded_training")
+          expect(subject).to eq("not_eligible_for_funded_training")
         end
       end
 
@@ -136,8 +126,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("checking_qts")
+          expect(subject).to eq("checking_qts")
         end
       end
 
@@ -147,8 +136,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("not_eligible_for_funded_training")
+          expect(subject).to eq("not_eligible_for_funded_training")
         end
       end
 
@@ -160,8 +148,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
         let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
 
         it "returns the correct status" do
-          response = subject.status_name
-          expect(response).to eq("training_or_eligible_for_training")
+          expect(subject).to eq("training_or_eligible_for_training")
         end
 
         context "when induction record does not exist" do
@@ -169,8 +156,7 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
           let!(:induction_record) { nil }
 
           it "returns the correct status" do
-            response = subject.status_name
-            expect(response).to eq("no_longer_being_trained")
+            expect(subject).to eq("no_longer_being_trained")
           end
         end
       end

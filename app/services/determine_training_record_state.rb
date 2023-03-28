@@ -13,22 +13,47 @@ class DetermineTrainingRecordState < BaseService
     })
   end
 
+  def is_record_state?(state)
+    state == @record_state
+  end
+
 private
 
-  def initialize(participant_profile:, induction_record: nil)
+  def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, school: nil)
     unless participant_profile.is_a? ParticipantProfile
       raise ArgumentError, "Expected a ParticipantProfile, got #{participant_profile.class}"
-    end
-
-    unless induction_record.nil? || induction_record.is_a?(InductionRecord)
-      raise ArgumentError, "Expected a InductionRecord, got #{induction_record.class}"
     end
 
     @participant_profile = participant_profile
 
     if participant_profile.ecf?
-      @induction_record = induction_record || participant_profile.induction_records.latest
-      @current_induction_record = induction_record || participant_profile.induction_records.current
+      unless induction_record.nil? || induction_record.is_a?(InductionRecord)
+        raise ArgumentError, "Expected a InductionRecord, got #{induction_record.class}"
+      end
+
+      unless delivery_partner.nil? || delivery_partner.is_a?(DeliveryPartner)
+        raise ArgumentError, "Expected a InductionRecord, got #{delivery_partner.class}"
+      end
+
+      unless school.nil? || school.is_a?(School)
+        raise ArgumentError, "Expected a InductionRecord, got #{school.class}"
+      end
+
+      if delivery_partner.present? && school.present?
+        raise InvalidArgumentError "It is not possible to determine a status for both a school and a delivery partner"
+      end
+
+      if delivery_partner.present?
+        @delivery_partner = delivery_partner
+        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
+
+      elsif school.present?
+        @school = school
+        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
+
+      else
+        @induction_record = induction_record || participant_profile.induction_records.latest
+      end
 
       @latest_request_for_details = Email.associated_with(participant_profile)
                                          .tagged_with(:request_for_details)
@@ -145,11 +170,11 @@ private
   end
 
   def on_fip?
-    @induction_record&.school_cohort&.full_induction_programme? || @participant_profile.school_cohort&.full_induction_programme?
+    @induction_record&.induction_programme&.full_induction_programme? || @participant_profile.school_cohort&.full_induction_programme?
   end
 
   def on_cip?
-    @induction_record&.school_cohort&.core_induction_programme? || @participant_profile.school_cohort&.core_induction_programme?
+    @induction_record&.induction_programme&.core_induction_programme? || @participant_profile.school_cohort&.core_induction_programme?
   end
 
   def secondary_profile?
