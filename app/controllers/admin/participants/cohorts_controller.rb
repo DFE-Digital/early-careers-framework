@@ -6,7 +6,7 @@ module Admin::Participants
     include FindInductionRecords
 
     def show
-      @latest_induction_record = latest_induction_record
+      @relevant_induction_record = relevant_induction_record
 
       add_breadcrumb(
         school.name,

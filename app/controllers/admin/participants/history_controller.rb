@@ -6,7 +6,7 @@ module Admin::Participants
     include FindInductionRecords
 
     def show
-      @latest_induction_record = latest_induction_record
+      @relevant_induction_record = relevant_induction_record
       @historical_induction_records = historical_induction_records
 
       add_breadcrumb(
