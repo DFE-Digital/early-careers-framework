@@ -49,7 +49,7 @@ RSpec.describe AdminParticipantStatusTagStatus, :with_training_record_state_exam
     end
 
     context "has a withdrawn status" do
-      context "when there is not induction record to use" do
+      context "when there is no induction record to use" do
         let(:participant_profile) { ect_on_fip_withdrawn_no_induction_record }
         it { is_expected.to eq :withdrawn_training } # "Withdrawn by provider"
       end

@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantProfileStatus, :with_default_schedules do
-  let(:participant_profile) { create(:ect_participant_profile) }
-  let!(:induction_record) { create(:induction_record, participant_profile:) }
-
+RSpec.describe ParticipantProfileStatus, :with_training_record_state_examples do
   describe "#initialize" do
+    let(:participant_profile) { create(:ect_participant_profile) }
+    let!(:induction_record) { create(:induction_record, participant_profile:) }
+
     subject { described_class.new(participant_profile:, induction_record:) }
 
     it "sets it to the injected params if provided" do
@@ -18,147 +18,86 @@ RSpec.describe ParticipantProfileStatus, :with_default_schedules do
     end
   end
 
-  subject { described_class.new(participant_profile:, induction_record:).record_state }
+  subject { described_class.new(participant_profile:).record_state }
 
   describe "#status_name" do
     context "when the request for details has not been sent yet" do
-      it "returns the correct status" do
-        expect(subject).to eq("contacted_for_information")
-      end
+      let(:participant_profile) { ect_on_fip_no_validation }
+      it { is_expected.to eq "contacted_for_information" }
     end
 
     context "with a request for details email record" do
-      let!(:email) { create(:email, tags: %i[request_for_details], associated_with: participant_profile, status: email_status) }
-
       context "which has been successfully delivered" do
-        let(:email_status) { :delivered }
-
-        it "returns the correct status" do
-          expect(subject).to eq("contacted_for_information")
-        end
+        let(:participant_profile) { ect_on_fip_details_request_delivered }
+        it { is_expected.to eq "contacted_for_information" }
       end
 
       context "which has failed to be deliver" do
-        let(:email_status) { Email::FAILED_STATUSES.sample }
-
-        it "returns the correct status" do
-          expect(subject).to eq("contacted_for_information")
-        end
+        let(:participant_profile) { ect_on_fip_details_request_failed }
+        it { is_expected.to eq "contacted_for_information" }
       end
 
       context "which is still pending" do
-        let(:email_status) { :submitted }
-
-        it "returns the correct status" do
-          expect(subject).to eq("contacted_for_information")
-        end
+        let(:participant_profile) { ect_on_fip_details_request_submitted }
+        it { is_expected.to eq "contacted_for_information" }
       end
     end
 
     context "mentor with multiple profiles" do
-      let(:school_cohort) { create(:school_cohort) }
-
       context "when the primary profile is eligible" do
-        let(:participant_profile) { create(:mentor_participant_profile, :primary_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("training_or_eligible_for_training")
-        end
+        let(:participant_profile) { mentor_profile_duplicity_primary }
+        it { is_expected.to eq "training_or_eligible_for_training" }
       end
 
       context "when the secondary profile is ineligible because it is a duplicate" do
-        let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("training_or_eligible_for_training")
-        end
+        let(:participant_profile) { mentor_profile_duplicity_secondary }
+        it { is_expected.to eq "training_or_eligible_for_training" }
       end
     end
 
     context "full induction programme participant" do
       context "has submitted validation data" do
-        let(:school_cohort) { create(:school_cohort, :fip) }
-        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("training_or_eligible_for_training")
-        end
+        let(:participant_profile) { ect_on_fip }
+        it { is_expected.to eq "training_or_eligible_for_training" }
       end
 
       context "was a participant in early roll out" do
-        let(:school_cohort) { create(:school_cohort, :fip) }
-        let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
+        let(:participant_profile) { mentor_ineligible_previous_participation }
+        it { is_expected.to eq "training_or_eligible_for_training" }
+      end
 
-        it "returns the correct status" do
-          expect(subject).to eq("training_or_eligible_for_training")
+      context "has a withdrawn status" do
+        context "when there is no induction record to use" do
+          let(:participant_profile) { ect_on_fip_withdrawn_no_induction_record }
+          it { is_expected.to eq "no_longer_being_trained" }
+        end
+
+        context "when an active induction record is available" do
+          let(:participant_profile) { ect_on_fip_enrolled_after_withdraw }
+          it { is_expected.to eq "training_or_eligible_for_training" }
         end
       end
     end
 
     context "core induction programme participant" do
       context "has submitted validation data" do
-        let(:school_cohort) { create(:school_cohort, :cip) }
-        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("dfe_checking_eligibility")
-        end
+        let(:participant_profile) { ect_on_fip_no_tra_record }
+        it { is_expected.to eq "dfe_checking_eligibility" }
       end
 
       context "has a previous induction reason" do
-        let(:school_cohort) { create(:school_cohort, :cip) }
-        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("not_eligible_for_funded_training")
-        end
+        let(:participant_profile) { ect_on_cip_ineligible_previous_induction }
+        it { is_expected.to eq "not_eligible_for_funded_training" }
       end
 
       context "has no QTS reason" do
-        let(:school_cohort) { create(:school_cohort, :cip) }
-        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("checking_qts")
-        end
+        let(:participant_profile) { ect_on_cip_manual_check_no_qts }
+        it { is_expected.to eq "checking_qts" }
       end
 
       context "has an ineligible status" do
-        let(:school_cohort) { create(:school_cohort, :cip) }
-        let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, :ineligible, participant_profile:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("not_eligible_for_funded_training")
-        end
-      end
-
-      context "has a withdrawn status" do
-        let(:school_cohort) { create(:school_cohort, :fip) }
-        let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
-        let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
-        let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
-        let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
-
-        it "returns the correct status" do
-          expect(subject).to eq("training_or_eligible_for_training")
-        end
-
-        context "when induction record does not exist" do
-          let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn") }
-          let!(:induction_record) { nil }
-
-          it "returns the correct status" do
-            expect(subject).to eq("no_longer_being_trained")
-          end
-        end
+        let(:participant_profile) { ect_on_cip_ineligible_previous_participation }
+        it { is_expected.to eq "not_eligible_for_funded_training" }
       end
     end
   end
