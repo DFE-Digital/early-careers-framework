@@ -28,6 +28,30 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .chosen_cip_with_materials_in(cohort:)
   end
 
+  let(:ect_on_fip_no_validation) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: fip_school.school_cohort)
+      .build(teacher_profile_args: { trn: nil })
+      .with_induction_record(induction_programme: fip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
+  let(:ect_on_cip_no_validation) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: cip_school.school_cohort)
+      .build(teacher_profile_args: { trn: nil })
+      .with_induction_record(induction_programme: cip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
+  let(:mentor_no_validation) do
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort: cip_school.school_cohort)
+      .build(teacher_profile_args: { trn: nil })
+      .with_induction_record(induction_programme: cip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
   let(:ect_on_fip_details_request_submitted) do
     NewSeeds::Scenarios::Participants::Ects::Ect
       .new(school_cohort: fip_school.school_cohort)
@@ -502,6 +526,26 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .participant_profile
   end
 
+  let(:mentor_profile_duplicity_primary) do
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort: fip_school.school_cohort)
+      .build(profile_duplicity: :primary)
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: fip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
+  let(:mentor_profile_duplicity_secondary) do
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort: fip_school.school_cohort)
+      .build(profile_duplicity: :secondary)
+      .with_validation_data
+      .with_eligibility(duplicate_profile: true, status: "ineligible", reason: "duplicate_profile")
+      .with_induction_record(induction_programme: fip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
   let(:ect_on_fip_no_partnership) do
     NewSeeds::Scenarios::Participants::Ects::Ect
       .new(school_cohort: fip_school_no_partnership.school_cohort)
@@ -579,6 +623,25 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .with_validation_data
       .with_eligibility
       .with_induction_record(induction_programme: fip_school.school_cohort.default_induction_programme, training_status: "withdrawn")
+      .participant_profile
+  end
+
+  let(:ect_on_fip_enrolled_after_withdraw) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: fip_school.school_cohort)
+      .build(status: "withdrawn")
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: fip_school.school_cohort.default_induction_programme)
+      .participant_profile
+  end
+
+  let(:ect_on_fip_withdrawn_no_induction_record) do
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort: fip_school.school_cohort)
+      .build(training_status: "withdrawn")
+      .with_validation_data
+      .with_eligibility
       .participant_profile
   end
 
