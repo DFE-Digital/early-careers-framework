@@ -166,6 +166,10 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
               teacher_catchment_country: "United Kingdom",
               itt_provider: nil,
               lead_mentor: false,
+              primary_establishment: false,
+              number_of_pupils: 0,
+              tsf_primary_eligibility: false,
+              tsf_primary_plus_eligibility: false,
             },
             relationships: {
               user: {
@@ -193,7 +197,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
 
       let(:json) { json_hash.to_json }
 
-      it "creates the npq validation data" do
+      it "creates the npq validation data", :aggregate_failures do
         Timecop.freeze(Date.new(2023, 3, 20)) do
           expect { post "/api/v1/npq-profiles", params: json }
             .to change(NPQApplication, :count).by(1)
@@ -232,6 +236,10 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
             "works_in_nursery" => false,
             "works_in_childcare" => false,
             "kind_of_nursery" => nil,
+            "number_of_pupils" => 0,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
             "private_childcare_provider_urn" => nil,
             "funding_eligiblity_status_code" => "funded",
             "teacher_catchment" => "other",
@@ -258,7 +266,7 @@ RSpec.describe "NPQ profiles api endpoint", type: :request do
         expect(parsed_response["data"]).to have_type("npq_profiles")
       end
 
-      it "response has correct attributes" do
+      it "response has correct attributes", :aggregate_failures do
         post "/api/v1/npq-profiles", params: json
 
         npq_application = NPQApplication.order(created_at: :desc).first

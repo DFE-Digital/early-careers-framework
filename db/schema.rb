@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_21_181937) do
+ActiveRecord::Schema.define(version: 2023_03_28_155851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -564,6 +564,10 @@ ActiveRecord::Schema.define(version: 2023_03_21_181937) do
     t.string "itt_provider"
     t.boolean "lead_mentor", default: false
     t.string "notes"
+    t.boolean "primary_establishment", default: false
+    t.integer "number_of_pupils", default: 0
+    t.boolean "tsf_primary_eligibility", default: false
+    t.boolean "tsf_primary_plus_eligibility", default: false
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
