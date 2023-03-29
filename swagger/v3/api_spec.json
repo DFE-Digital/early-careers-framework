@@ -413,7 +413,7 @@
             "explode": true,
             "required": true,
             "description": "Refine schools to return.",
-            "example": "filter[cohort]=2021"
+            "example": "filter[cohort]=2021&filter[urn]=106286"
           },
           {
             "name": "sort",
@@ -4024,11 +4024,19 @@
       "ECFSchoolsFilter": {
         "description": "Filter schools to return more specific results",
         "type": "object",
+        "required": [
+          "cohort"
+        ],
         "properties": {
           "cohort": {
-            "description": "Return schools within the specified cohort",
+            "description": "Return schools within the specified cohort.",
             "type": "string",
-            "example": "2021"
+            "example": "2022"
+          },
+          "urn": {
+            "description": "Return a school with the specified Unique Reference Number (URN).",
+            "type": "string",
+            "example": "106286"
           }
         }
       },
