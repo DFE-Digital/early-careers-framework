@@ -66,25 +66,45 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
         end
 
         context "filtering" do
+          before do
+            create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456"
+          end
+
+          context "with invalid filter of a string" do
+            it "returns an error" do
+              get "/api/v1/npq-applications", params: { filter: 2.days.ago.iso8601 }
+              expect(response).to be_bad_request
+              expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+                "errors": [
+                  {
+                    "title": "Bad parameter",
+                    "detail": "Filter must be a hash",
+                  },
+                ],
+              }))
+            end
+          end
+
           context "with filter[updated_at]" do
-            before do
-              create_list :npq_application, 2, npq_lead_provider:, updated_at: 10.days.ago, school_urn: "123456"
+            context "with valid filter[updated_at]" do
+              it "returns content updated after specified timestamp" do
+                get "/api/v1/npq-applications", params: { filter: { updated_since: 2.days.ago.iso8601 } }
+                expect(parsed_response["data"].size).to eql(3)
+              end
             end
 
-            it "returns content updated after specified timestamp" do
-              get "/api/v1/npq-applications", params: { filter: { updated_since: 2.days.ago.iso8601 } }
-              expect(parsed_response["data"].size).to eql(3)
-            end
+            context "with invalid filter[updated_at]" do
+              let(:today) { Date.current.to_s }
 
-            context "with invalid filter of a string" do
-              it "returns an error" do
-                get "/api/v1/npq-applications", params: { filter: 2.days.ago.iso8601 }
+              it "returns a meaningful error message" do
+                get "/api/v1/npq-applications", params: { filter: { updated_since: today } }
+
                 expect(response).to be_bad_request
                 expect(parsed_response).to eql(HashWithIndifferentAccess.new({
                   "errors": [
                     {
-                      "title": "Bad parameter",
-                      "detail": "Filter must be a hash",
+                      "title": "The filter '#/updated_since' must be a valid RCF3339 date",
+                      "detail": today,
                     },
                   ],
                 }))

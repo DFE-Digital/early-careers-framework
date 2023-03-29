@@ -45,6 +45,7 @@ en:
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
   invalid_completion_date: "The property '#/completion_date' must be in the following format: '2021-05-31'"
+  invalid_updated_since_filter: "The filter '#/updated_since' must be a valid RCF3339 date"
   future_date: "The property '#/%{attribute}' can not declare a future date"
   future_date_outcomes: "The attribute '#/%{attribute}' cannot contain a future date. Resubmit the outcome update with a valid date."
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
