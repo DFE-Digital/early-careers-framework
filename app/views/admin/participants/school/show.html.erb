@@ -78,4 +78,12 @@
       secondary: true,
     )
   %>
+
+  <%=
+    govuk_button_link_to(
+      "Add to a school mentor pool",
+      new_admin_participant_add_to_school_mentor_pool_path(@participant_profile),
+      secondary: true,
+    ) if @latest_induction_record.participant_profile.mentor?
+  %>
 <% end %>
