@@ -4,6 +4,11 @@ title: How to guides
 
 # How to guides
 
+The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](LINK NEEDED) is not detailed.
+
+This guidance is API version-generic, and therefore all endpoints include reference to  
+`v{n}`. Providers should amend this according to the API version their systems are integrated with, for example `v2`. 
+
 ## When to use the API throughout a participant’s training
 
 1. For a given cohort, providers will submit confirmations via the API of their partnerships with a school, including confirmation who their delivery partners will be. Note, this only applies to providers integrated with API v3 onwards 
