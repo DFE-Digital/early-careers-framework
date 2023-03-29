@@ -43,10 +43,6 @@ RSpec.describe "Add participants", js: true do
 
       when_i_add_a_date_of_birth
       when_i_click_on_continue
-      then_i_am_taken_to_are_they_a_transfer_page
-
-      # when_i_click_on "They’re not moving school"
-      when_i_click_on_confirm
       then_i_am_taken_to_the_cannot_add_page_same_school
     end
   end

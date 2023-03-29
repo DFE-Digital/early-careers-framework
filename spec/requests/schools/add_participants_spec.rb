@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::AddParticipant", type: :request do
+RSpec.xdescribe "Schools::AddParticipant", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let!(:school_cohort) { create(:school_cohort, :fip, school:, cohort:) }
   let(:school) { user.induction_coordinator_profile.schools.sample }

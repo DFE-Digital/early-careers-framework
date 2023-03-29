@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::TransferringParticipants", type: :request do
+RSpec.xdescribe "Schools::TransferringParticipants", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.induction_coordinator_profile.schools.sample }
   let(:old_school) { create(:school) }

@@ -1,4 +1,5 @@
-<% content_for :title, "Add early career teacher - choose mentor" %>
+<% title = "Who will #{@wizard.possessive_name} mentor be?" %>
+<% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
 
@@ -10,9 +11,7 @@
     <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.hidden_field :mentor_id, value: '' %>
-      <%= f.govuk_radio_buttons_fieldset :mentor_id,
-        legend: { text: "Who will #{@wizard.possessive_name} mentor be?", tag: 'h1', size: 'xl' } do %>
-
+      <%= f.govuk_radio_buttons_fieldset :mentor_id, legend: { text: title, tag: 'h1', size: 'xl' } do %>
         <% @wizard.mentor_options.each_with_index do |mentor, i| %>
           <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
         <% end %>
