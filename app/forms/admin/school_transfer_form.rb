@@ -39,11 +39,11 @@ class Admin::SchoolTransferForm
   end
 
   def current_school
-    @current_school ||= latest_induction_record.school
+    @current_school ||= relevant_induction_record.school
   end
 
   def current_programme
-    @current_programme ||= latest_induction_record.induction_programme
+    @current_programme ||= relevant_induction_record.induction_programme
   end
 
   def current_programme_description
@@ -90,11 +90,11 @@ class Admin::SchoolTransferForm
     # are there any options to select for the transfer
     programme_count = new_school_programmes&.count || 0
 
-    choice = if latest_induction_record.present?
+    choice = if relevant_induction_record.present?
                if programme_count.zero?
                  # no programmes at the new school so we'll treat this as continuing existing programme
                  "continue"
-               elsif programme_count == 1 && latest_induction_record.induction_programme.same_induction_as?(new_school_programme)
+               elsif programme_count == 1 && relevant_induction_record.induction_programme.same_induction_as?(new_school_programme)
                  # the only programme at the school is the same as the current programme so transfer to that one
                  new_school_programme.id
                end
@@ -133,8 +133,8 @@ class Admin::SchoolTransferForm
     participant_profile.user.full_name
   end
 
-  def latest_induction_record
-    @latest_induction_record ||= participant_profile.induction_records.latest
+  def relevant_induction_record
+    @relevant_induction_record ||= Induction::FindBy.call(participant_profile:)
   end
 
   def continue_existing_programme?
@@ -168,7 +168,7 @@ private
   end
 
   def no_programmes_to_transfer_into_or_continue?
-    latest_induction_record.blank? && (new_school_cohort.blank? || new_school_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?)
+    relevant_induction_record.blank? && (new_school_cohort.blank? || new_school_programmes.where(training_programme: %w[core_induction_programme full_induction_programme]).empty?)
   end
 
   def make_programme_description(induction_programme)
@@ -204,8 +204,8 @@ private
     elsif @start_date.year.digits.length != 4
       errors.add(:start_date, :invalid)
     # elsif @start_date < participant_profile.schedule.milestones.first.start_date
-    elsif @start_date < latest_induction_record.start_date
-      errors.add(:start_date, :before_start, date: latest_induction_record.start_date.to_date.to_s(:govuk))
+    elsif @start_date < relevant_induction_record.start_date
+      errors.add(:start_date, :before_start, date: relevant_induction_record.start_date.to_date.to_s(:govuk))
     end
   end
 
