@@ -9,7 +9,7 @@
         :start_year,
         :start_year,
         label: { text: "Change #{@participant_profile.user.full_name}'s cohort", tag: "h1", size: "l" },
-        hint: { text: "Their current cohort is: #{@latest_induction_record.cohort.start_year}" },
+        hint: { text: "Their current cohort is: #{@relevant_induction_record.cohort.start_year}" },
       ) %>
 
       <%= f.govuk_submit %>

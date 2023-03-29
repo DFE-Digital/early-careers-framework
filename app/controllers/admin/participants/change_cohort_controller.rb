@@ -4,14 +4,14 @@ module Admin::Participants
   class ChangeCohortController < Admin::BaseController
     def edit
       @participant_profile = retrieve_participant_profile
-      @latest_induction_record = @participant_profile.latest_induction_record
+      @relevant_induction_record = Induction::FindBy.call(participant_profile: @participant_profile)
 
       @amend_participant_cohort = Induction::AmendParticipantCohort.new
     end
 
     def update
       @participant_profile = retrieve_participant_profile
-      @latest_induction_record = @participant_profile.latest_induction_record
+      @relevant_induction_record = Induction::FindBy.call(participant_profile: @participant_profile)
 
       @amend_participant_cohort = Induction::AmendParticipantCohort.new(
         { **default_amend_participant_cohort_attributes, **amend_participant_cohort_params }.symbolize_keys,
@@ -33,7 +33,7 @@ module Admin::Participants
     def default_amend_participant_cohort_attributes
       {
         participant_profile: @participant_profile,
-        source_cohort_start_year: @latest_induction_record.cohort.start_year,
+        source_cohort_start_year: @relevant_induction_record.cohort.start_year,
       }
     end
 
