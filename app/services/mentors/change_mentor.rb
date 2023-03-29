@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Induction::ChangeMentor < BaseService
+class Mentors::Change < BaseService
   def call
     ActiveRecord::Base.transaction do
       Induction::ChangeInductionRecord.call(induction_record:,

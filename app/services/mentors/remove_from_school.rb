@@ -12,7 +12,7 @@ module Mentors
 
           # remove from mentees at the school
           InductionRecord.for_school(school).ects.current.where(mentor_profile:).each do |induction_record|
-            Induction::ChangeMentor.call(induction_record:)
+            Mentors::Change.call(induction_record:)
           end
         end
       end

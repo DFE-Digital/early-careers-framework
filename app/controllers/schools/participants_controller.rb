@@ -64,7 +64,7 @@ class Schools::ParticipantsController < Schools::BaseController
     @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
 
     if @mentor_form.valid?
-      Induction::ChangeMentor.call(induction_record: @profile.induction_records.for_school(@school).latest,
+      Mentors::Change.call(induction_record: @profile.induction_records.for_school(@school).latest,
                                    mentor_profile: @mentor_form.mentor&.mentor_profile)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }

@@ -42,7 +42,7 @@ private
 
   def remove_mentorship_relations
     mentoring_induction_records.each do |induction_record|
-      Induction::ChangeMentor.call(induction_record:)
+      Mentors::Change.call(induction_record:)
     end
     participant_profile.mentee_profiles.update_all(mentor_profile_id: nil)
   end

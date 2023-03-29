@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Induction::ChangeMentor do
+RSpec.describe Mentors::Change do
   describe "#call" do
     let(:school_cohort) { create :school_cohort }
     let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
