@@ -60,10 +60,6 @@ module Schools
           else
             show_path_for(step: "cannot-find-their-details")
           end
-        # elsif form.journey_complete?
-        #   complete_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
-        #                                               school_id: school_cohort.school.friendly_id,
-        #                                               participant_profile_id: participant_profile.id)
         else
           show_path_for(step: form.next_step.to_s.dasherize)
         end
@@ -150,18 +146,6 @@ module Schools
         )
       end
 
-      # def transfer_has_same_provider_and_different_delivery_partner?
-      #   transfer_has_the_same_provider? && !transfer_has_the_same_delivery_partner?
-      # end
-
-      # def transfer_has_the_same_provider?
-      #   lead_provider == existing_lead_provider
-      # end
-
-      # def transfer_has_the_same_delivery_partner?
-      #   delivery_partner == existing_delivery_partner
-      # end
-
       # This methods assumes that all transfers are requested by the incoming school for now. There
       # are three paths here:
       #
@@ -196,86 +180,6 @@ module Schools
           lead_provider_profiles_out:,
         )
       end
-
-      # def store_validation_result!(profile)
-      #   ::Participants::ParticipantValidationForm.call(
-      #     profile,
-      #     data: {
-      #       trn: formatted_trn,
-      #       nino: formatted_nino,
-      #       date_of_birth:,
-      #       full_name:,
-      #     },
-      #   )
-      # end
-
-      # def send_added_and_validated_email(profile)
-      #   ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
-      # end
-
-      # def participant_create_args
-      #   {
-      #     full_name:,
-      #     email:,
-      #     school_cohort:,
-      #     mentor_profile_id:,
-      #     start_date:,
-      #     sit_validation: true,
-      #     appropriate_body_id:,
-      #   }
-      # end
-
-      # def dqt_record(force_recheck: false)
-      #   @dqt_record = nil if force_recheck
-
-      #   @dqt_record ||= ParticipantValidationService.validate(
-      #     full_name:,
-      #     trn: formatted_trn,
-      #     date_of_birth:,
-      #     nino: formatted_nino,
-      #     config: {
-      #       check_first_name_only: true,
-      #     },
-      #   )
-      # end
-
-      # def load_current_user_into_current_state
-      #   current_state["current_user"] = current_user
-      # end
-
-      # def load_from_current_state
-      #   current_state.slice(*form_class.permitted_params.map(&:to_s))
-      # end
-
-      # def form_class
-      #   @form_class ||= form_class_for(current_step)
-      # end
-
-      # def form_class_for(step)
-      #   "Schools::AddParticipants::WizardSteps::#{step.to_s.camelcase}Step".constantize
-      # end
-
-      # def build_form
-      #   hash = load_from_current_state
-      #   hash.merge!(submitted_params)
-      #   hash.merge!(wizard: self)
-
-      #   form_class.new(hash)
-      # end
-
-      # def set_current_step(step)
-      #   @current_step = steps.find { |s| s == step.to_sym }
-
-      #   raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
-      # end
-
-      # def formatted_nino
-      #   NationalInsuranceNumber.new(nino).formatted_nino
-      # end
-
-      # def formatted_trn
-      #   TeacherReferenceNumber.new(trn).formatted_trn
-      # end
     end
   end
 end

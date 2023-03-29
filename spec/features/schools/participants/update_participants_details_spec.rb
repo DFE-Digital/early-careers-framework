@@ -171,10 +171,10 @@ RSpec.describe "Update participants details", js: true do
     and_i_confirm_the_participant_on_the_edit_school_participant_email_page_with_name "Sally Teacher"
 
     when_i_set_a_blank_email_on_the_edit_school_participant_email_page
-    then_i_see_an_error_message "Enter an email"
+    then_i_see_an_error_message "Enter an email address"
 
     when_i_set_an_invalid_email_on_the_edit_school_participant_email_page
-    then_i_see_an_error_message "Enter an email"
+    then_i_see_an_error_message "Enter an email address"
 
     when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email "jane@school.com"
     then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name "Sally Teacher"
