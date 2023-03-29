@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory(:seed_school_cohort, class: "SchoolCohort") do
-    induction_programme_choice { "full_induction_programme" }
+    induction_programme_choice { SchoolCohort.induction_programme_choices.values.sample }
 
     trait(:with_school) { school { association(:seed_school) } }
     trait(:with_cohort) { cohort { association(:seed_cohort) } }
