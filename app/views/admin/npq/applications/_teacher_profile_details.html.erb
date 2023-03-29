@@ -1,0 +1,9 @@
+<h2 class="govuk-heading-m">Teacher Profile details</h2>
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: 'Teacher profile TRN')
+      row.value(text: teacher_profile&.trn || '-')
+    end
+  end
+%>
