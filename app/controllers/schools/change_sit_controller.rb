@@ -36,7 +36,7 @@ module Schools
     def confirm; end
 
     def save
-      CreateInductionTutor.call(
+      InductionTutors::Create.call(
         school: @induction_tutor_form.school,
         email: @induction_tutor_form.email,
         full_name: @induction_tutor_form.full_name,

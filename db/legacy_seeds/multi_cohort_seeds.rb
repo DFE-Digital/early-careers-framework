@@ -29,7 +29,7 @@ end
 Induction::SetCohortInductionProgramme.call(school_cohort: fip_school_cohort,
                                             programme_choice: "full_induction_programme")
 
-CreateInductionTutor.call(school: fip_school,
+InductionTutors::Create.call(school: fip_school,
                           email: "cpd-test+tutor-91@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090001 FIP")
 
@@ -74,7 +74,7 @@ end
 Induction::SetCohortInductionProgramme.call(school_cohort: fip2_school_cohort,
                                             programme_choice: "full_induction_programme")
 
-CreateInductionTutor.call(school: fip2_school,
+InductionTutors::Create.call(school: fip2_school,
                           email: "cpd-test+tutor-92@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090002 FIP")
 
@@ -113,7 +113,7 @@ end
 Induction::SetCohortInductionProgramme.call(school_cohort: fip3_school_cohort,
                                             programme_choice: "full_induction_programme")
 
-CreateInductionTutor.call(school: fip3_school,
+InductionTutors::Create.call(school: fip3_school,
                           email: "cpd-test+tutor-93@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090003 FIP")
 
@@ -148,7 +148,7 @@ Induction::SetCohortInductionProgramme.call(school_cohort: cip_school_cohort,
                                             programme_choice: "core_induction_programme",
                                             core_induction_programme: cip)
 
-CreateInductionTutor.call(school: cip_school,
+InductionTutors::Create.call(school: cip_school,
                           email: "cpd-test+tutor-910@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090010 CIP")
 
@@ -183,7 +183,7 @@ Induction::SetCohortInductionProgramme.call(school_cohort: cip2_school_cohort,
                                             programme_choice: "core_induction_programme",
                                             core_induction_programme: cip)
 
-CreateInductionTutor.call(school: cip2_school,
+InductionTutors::Create.call(school: cip2_school,
                           email: "cpd-test+tutor-911@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090011 CIP2")
 
@@ -218,7 +218,7 @@ Induction::SetCohortInductionProgramme.call(school_cohort: cip3_school_cohort,
                                             programme_choice: "core_induction_programme",
                                             core_induction_programme: cip)
 
-CreateInductionTutor.call(school: cip3_school,
+InductionTutors::Create.call(school: cip3_school,
                           email: "cpd-test+tutor-912@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090012 CIP3")
 
@@ -250,7 +250,7 @@ diy_school_cohort = SchoolCohort.find_or_initialize_by(school: diy_school,
 Induction::SetCohortInductionProgramme.call(school_cohort: diy_school_cohort,
                                             programme_choice: "design_our_own")
 
-CreateInductionTutor.call(school: diy_school,
+InductionTutors::Create.call(school: diy_school,
                           email: "cpd-test+tutor-920@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090020 DIY")
 
@@ -273,7 +273,7 @@ diy2_school_cohort = SchoolCohort.find_or_initialize_by(school: diy2_school,
 Induction::SetCohortInductionProgramme.call(school_cohort: diy2_school_cohort,
                                             programme_choice: "design_our_own")
 
-CreateInductionTutor.call(school: diy2_school,
+InductionTutors::Create.call(school: diy2_school,
                           email: "cpd-test+tutor-921@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090021 DIY2")
 
@@ -296,7 +296,7 @@ diy3_school_cohort = SchoolCohort.find_or_initialize_by(school: diy3_school,
 Induction::SetCohortInductionProgramme.call(school_cohort: diy3_school_cohort,
                                             programme_choice: "design_our_own")
 
-CreateInductionTutor.call(school: diy3_school,
+InductionTutors::Create.call(school: diy3_school,
                           email: "cpd-test+tutor-922@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090022 DIY3")
 
@@ -320,7 +320,7 @@ Induction::SetCohortInductionProgramme.call(school_cohort: no_ects_school_cohort
                                             programme_choice: "no_early_career_teachers",
                                             opt_out_of_updates: true)
 
-CreateInductionTutor.call(school: no_ects_school,
+InductionTutors::Create.call(school: no_ects_school,
                           email: "cpd-test+tutor-930@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090030 NO ECTs")
 
@@ -344,7 +344,7 @@ Induction::SetCohortInductionProgramme.call(school_cohort: no_ects2_school_cohor
                                             programme_choice: "no_early_career_teachers",
                                             opt_out_of_updates: true)
 
-CreateInductionTutor.call(school: no_ects2_school,
+InductionTutors::Create.call(school: no_ects2_school,
                           email: "cpd-test+tutor-931@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090031 NO ECTs 2")
 
@@ -368,7 +368,7 @@ Induction::SetCohortInductionProgramme.call(school_cohort: no_ects3_school_cohor
                                             programme_choice: "no_early_career_teachers",
                                             opt_out_of_updates: true)
 
-CreateInductionTutor.call(school: no_ects3_school,
+InductionTutors::Create.call(school: no_ects3_school,
                           email: "cpd-test+tutor-932@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090032 NO ECTs 2")
 
@@ -385,7 +385,7 @@ end
 no_choice_school.school_local_authorities.create!(local_authority: LocalAuthority.first,
                                                   start_year: seed_cohort.start_year)
 
-CreateInductionTutor.call(school: no_choice_school,
+InductionTutors::Create.call(school: no_choice_school,
                           email: "cpd-test+tutor-940@digital.education.gov.uk",
                           full_name: "Induction Tutor for 090040 No choice")
 

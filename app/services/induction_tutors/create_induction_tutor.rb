@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateInductionTutor < BaseService
+class InductionTutors::Create < BaseService
   attr_accessor :school, :email, :full_name
 
   def initialize(school:, email:, full_name:)

@@ -13,7 +13,7 @@ module Admin
     def create
       @induction_tutor_form = NominateInductionTutorForm.new(tutor_form_params)
       if @induction_tutor_form.valid?(%i[full_name email])
-        CreateInductionTutor.call(school: @school,
+        InductionTutors::Create.call(school: @school,
                                   email: @induction_tutor_form.email,
                                   full_name: @induction_tutor_form.full_name)
 

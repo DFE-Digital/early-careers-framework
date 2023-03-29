@@ -2,20 +2,20 @@
 
 require "rails_helper"
 
-RSpec.describe CreateInductionTutor do
+RSpec.describe InductionTutors::Create do
   let(:school) { create(:school) }
   let(:name) { Faker::Name.name }
   let(:email) { Faker::Internet.email }
 
   describe ".call" do
     it "creates a user with an induction coordinator profile" do
-      expect { CreateInductionTutor.call(school:, email:, full_name: name) }
+      expect { InductionTutors::Create.call(school:, email:, full_name: name) }
         .to change { InductionCoordinatorProfile.count }.by(1)
         .and change { User.count }.by(1)
     end
 
     it "emails the new induction tutor" do
-      service = CreateInductionTutor.new(school:, email:, full_name: name)
+      service = InductionTutors::Create.new(school:, email:, full_name: name)
 
       expect { service.call }.to have_enqueued_mail(SchoolMailer, :nomination_confirmation_email)
         .with(
@@ -34,7 +34,7 @@ RSpec.describe CreateInductionTutor do
       it "removes the existing induction coordinator" do
         expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-        CreateInductionTutor.call(school:, email:, full_name: name)
+        InductionTutors::Create.call(school:, email:, full_name: name)
 
         user = User.find_by(email:)
         expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -49,7 +49,7 @@ RSpec.describe CreateInductionTutor do
         it "removes the school from the existing induction coordinator" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-          CreateInductionTutor.call(school:, email:, full_name: name)
+          InductionTutors::Create.call(school:, email:, full_name: name)
 
           user = User.find_by(email:)
           expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -65,7 +65,7 @@ RSpec.describe CreateInductionTutor do
           it "removes the school from the existing induction coordinator" do
             expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-            CreateInductionTutor.call(school:, email:, full_name: name)
+            InductionTutors::Create.call(school:, email:, full_name: name)
 
             user = User.find_by(email:)
             expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -84,7 +84,7 @@ RSpec.describe CreateInductionTutor do
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-          CreateInductionTutor.call(school:, email:, full_name: name)
+          InductionTutors::Create.call(school:, email:, full_name: name)
 
           user = User.find_by(email:)
           expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -100,7 +100,7 @@ RSpec.describe CreateInductionTutor do
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-          CreateInductionTutor.call(school:, email:, full_name: name)
+          InductionTutors::Create.call(school:, email:, full_name: name)
 
           user = User.find_by(email:)
           expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -116,7 +116,7 @@ RSpec.describe CreateInductionTutor do
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-          CreateInductionTutor.call(school:, email:, full_name: name)
+          InductionTutors::Create.call(school:, email:, full_name: name)
 
           user = User.find_by(email:)
           expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -133,7 +133,7 @@ RSpec.describe CreateInductionTutor do
         it "retains the user but deletes the induction coordinator profile" do
           expect(school.induction_coordinator_profiles.first).to eq(existing_profile)
 
-          CreateInductionTutor.call(school:, email:, full_name: name)
+          InductionTutors::Create.call(school:, email:, full_name: name)
 
           user = User.find_by(email:)
           expect(school.reload.induction_coordinator_profiles.first).to eq(user.induction_coordinator_profile)
@@ -148,7 +148,7 @@ RSpec.describe CreateInductionTutor do
       let!(:sit_profile) { create :induction_coordinator_profile }
 
       it "adds the school to the existing coordinator" do
-        service = CreateInductionTutor.new(
+        service = InductionTutors::Create.new(
           school:,
           email: sit_profile.user.email,
           full_name: sit_profile.user.full_name,
@@ -168,7 +168,7 @@ RSpec.describe CreateInductionTutor do
       end
 
       it "raises an exception if the name does not match the existing name" do
-        service = CreateInductionTutor.new(
+        service = InductionTutors::Create.new(
           school:,
           email: sit_profile.user.email,
           full_name: "Different Name",

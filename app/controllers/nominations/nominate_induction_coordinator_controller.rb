@@ -46,7 +46,7 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   def check; end
 
   def create
-    CreateInductionTutor.call(school: @nominate_induction_tutor_form.school,
+    InductionTutors::Create.call(school: @nominate_induction_tutor_form.school,
                               email: @nominate_induction_tutor_form.email,
                               full_name: @nominate_induction_tutor_form.full_name)
     session.delete(:nominate_induction_tutor_form)
