@@ -34,6 +34,8 @@ When non-breaking updates (sometimes referred to as backwards compatible updates
 
 Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
 
+All API requests are available in JSON and CSV formats.
+
 ## Who is this guidance for?
 
 This guidance has been created for ECF and NPQ providers who have systems integrated with the API. 
