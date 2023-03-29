@@ -600,10 +600,7 @@ Rails.application.routes.draw do
               scope module: :add_participants do
                 wizard_scope :who_to_add, path: "who" do
                   get "/", to: "who_to_add#show", as: :start, step: "participant-type"
-                end
-
-                wizard_scope :sit_mentor do
-                  get "/", to: "sit_mentor#show", as: :start, step: "yourself"
+                  get "/sit-mentor", to: "who_to_add#show", as: :sit_start, step: "yourself"
                 end
 
                 wizard_scope :transfer do

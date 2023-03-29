@@ -7,7 +7,7 @@
     <% elsif exempt_from_induction?(@wizard.participant_profile) %>
       <%= render partial: 'schools/add_participants/eligibility_confirmation/exempt_from_induction', locals: { profile: @wizard.participant_profile } %>
     <% else %>
-      <%= govuk_panel title_text: "#{@wizard.full_name} has been added as an #{@wizard.ect_or_mentor_label}", text: nil, classes: "govuk-!-margin-bottom-7" %>
+      <%= govuk_panel title_text: "#{@wizard.full_name} has been added as #{@wizard.ect_participant? ? "an ECT" : "a mentor"}", text: nil, classes: "govuk-!-margin-bottom-7" %>
 
       <h2>What happens next</h2>
       <% if @wizard.transfer? %>
