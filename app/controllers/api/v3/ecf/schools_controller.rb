@@ -17,12 +17,24 @@ module Api
           render json: serializer_class.new(paginate(ecf_schools)).serializable_hash.to_json
         end
 
+        # Retrieve a single ECF school scoped to cohort
+        #
+        # GET /api/v3/schools/ecf/:school_id?filter[cohort]=2021
+        #
+        def show
+          render json: serializer_class.new(ecf_school).serializable_hash.to_json
+        end
+
       private
 
         def ecf_schools
           @ecf_schools ||= SchoolCohort.includes(:cohort, school: :partnerships)
                              .where(cohort: { start_year: params[:filter][:cohort] })
                              .order(sort_params(params))
+        end
+
+        def ecf_school
+          ecf_schools.find_by!(school_id: params[:id])
         end
 
         def access_scope

@@ -114,4 +114,78 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
       end
     end
   end
+
+  describe "#show" do
+    let(:school) { school_cohort.school }
+
+    context "when authorized" do
+      before do
+        default_headers[:Authorization] = bearer_token
+      end
+
+      it "returns correct JSON API content type header" do
+        get "/api/v3/schools/ecf/#{school.id}"
+        expect(response.headers["Content-Type"]).to eq("application/vnd.api+json")
+      end
+
+      context "without required cohort filter param" do
+        before { get "/api/v3/schools/ecf/#{school.id}" }
+
+        it "returns a 400 status code" do
+          expect(response.status).to eq(400)
+        end
+
+        it "returns an error message" do
+          expect(parsed_response["errors"][0]["detail"]).to eq("The filter '#/cohort' must be included in your request")
+        end
+      end
+
+      context "with required cohort filter param" do
+        before { get "/api/v3/schools/ecf/#{school.id}", params: { filter: { cohort: cohort.start_year } } }
+
+        context "when there are other schools not in the same cohort" do
+          let!(:another_school_cohort) { create(:school_cohort, cohort: another_cohort) }
+
+          it "returns only those schools in the filtered cohort" do
+            expect(parsed_response["data"]["id"]).to eq(school.id)
+          end
+        end
+
+        it "returns correct type" do
+          expect(parsed_response["data"]).to have_type("school")
+        end
+
+        it "has correct attributes" do
+          expect(parsed_response["data"]).to have_jsonapi_attributes(
+            :name,
+            :urn,
+            :cohort,
+            :in_partnership,
+            :induction_programme_choice,
+            :updated_at,
+          ).exactly
+        end
+      end
+    end
+
+    context "when unauthorized" do
+      it "returns 401 for invalid bearer token" do
+        default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
+        get "/api/v3/schools/ecf/#{school.id}"
+
+        expect(response.status).to eq(401)
+      end
+    end
+
+    context "when using a engage and learn token" do
+      let(:token) { EngageAndLearnApiToken.create_with_random_token! }
+
+      it "returns 403 for invalid bearer token" do
+        default_headers[:Authorization] = bearer_token
+        get "/api/v3/schools/ecf/#{school.id}"
+
+        expect(response.status).to eq(403)
+      end
+    end
+  end
 end
