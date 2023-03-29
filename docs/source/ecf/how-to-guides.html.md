@@ -4,6 +4,25 @@ title: How to guides
 
 # How to guides
 
+## When to use the API throughout a participant’s training
+
+1. For a given cohort, providers will submit confirmations via the API of their partnerships with a school, including confirmation who their delivery partners will be. Note, this only applies to providers integrated with API v3 onwards 
+2. School induction tutors will register participants for ECF-based training via the DfE online service
+3. Providers will view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not been validated by DfE 
+4. Providers will train participants as per details set out in their contract
+5. Providers will submit a `started` declaration via the API to notify DfE that training has begun 
+6. DfE will pay providers output payments for `started` declarations
+7. Providers continue to train participants as per details set out in the contract
+8. Providers will submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
+9. DfE will pay providers output payments for `retained` declarations
+10. Providers complete training participants as per details set out in the contract
+11. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training
+12. DfE will pay providers output payments for `completed` declarations
+
+Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to [update relevant data using the API](LINK NEEDED). 
+
+
+
 The scenarios on this page show example request URLs and payloads clients can use to take actions via this API. The examples are only concerned with business logic and are missing details necessary for real-world usage. For example, authentication is completely left out.
 
 ## Continuing the ECF registration process
