@@ -15,7 +15,7 @@ class ParticipantStatusTagComponent < BaseComponent
     end
   end
 
-  private
+private
 
   attr_reader :profile, :induction_record, :has_mentees
 

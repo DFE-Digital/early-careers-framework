@@ -80,10 +80,10 @@ end
 
   # Extra school for UR purposes.
 ur_school = FactoryBot.create(:seed_school,
-                             :with_induction_coordinator,
-                             urn: 801212,
-                             name: "UR School",
-                             primary_contact_email: "ur_school@digital.education.gov.uk")
+                              :with_induction_coordinator,
+                              urn: "801212",
+                              name: "UR School",
+                              primary_contact_email: "ur_school@digital.education.gov.uk")
 ur_local_authority = local_authorities.sample
 fhtsh_ab = AppropriateBody.find_by(name: "Flying High Teaching School Hub")
 nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
@@ -163,7 +163,7 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
     .with_induction_record(induction_programme: ur_induction_programme_2022, appropriate_body: fhtsh_ab)
     .participant_profile
 
-  mentor_nandita = NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+  NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
     .new(school_cohort: ur_school_cohort_2022, full_name: "Nandita Carla", email: "Nandita.Carla@school.com")
     .build
     .with_validation_data(full_name: "Nandita Carla", trn: "3456789", date_of_birth: Date.new(1995, 2, 1))
@@ -171,12 +171,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
     .with_induction_record(induction_programme: ur_induction_programme_2022, appropriate_body: fhtsh_ab)
     .participant_profile
 
-  ect_susanna = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
-                                                                 full_name: "Susanna Pelo",
-                                                                 email: "Susanna.Pelo@school.com")
-                                                            .build(induction_start_date: Date.new(2022, 9, 5),
-                                                                   mentor_profile: mentor_jan)
-                                                            .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2022, full_name: "Susanna Pelo", email: "Susanna.Pelo@school.com")
+    .build(induction_start_date: Date.new(2022, 9, 5), mentor_profile: mentor_jan)
+    .tap do |ect|
     ect.with_eligibility(qts: false, reason: "no_qts", status: "manual_check")
     ect.with_validation_data(full_name: "Susanna Pelo", trn: "1234567", date_of_birth: Date.new(2000, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2022,
@@ -184,12 +182,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               appropriate_body: fhtsh_ab)
   end
 
-  ect_memet = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
-                                                                 full_name: "Memet Jacob",
-                                                                 email: "Memet.Jacob@school.com")
-                                                            .build(induction_start_date: Date.new(2022, 9, 5),
-                                                                   mentor_profile: mentor_marcy)
-                                                            .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2022, full_name: "Memet Jacob", email: "Memet.Jacob@school.com")
+    .build(induction_start_date: Date.new(2022, 9, 5), mentor_profile: mentor_marcy)
+    .tap do |ect|
     ect.with_eligibility
     ect.with_validation_data(full_name: "Memet Jacob", trn: "8910111", date_of_birth: Date.new(1980, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2022,
@@ -197,12 +193,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               appropriate_body: fhtsh_ab)
   end
 
-  ect_keisha = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2021,
-                                                                 full_name: "Keisha Edwina",
-                                                                 email: "Keisha.Edwina@school.com")
-                                                            .build(induction_start_date: Date.new(2021, 9, 5),
-                                                                   mentor_profile: mentor_hayate)
-                                                            .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2021, full_name: "Keisha Edwina", email: "Keisha.Edwina@school.com")
+    .build(induction_start_date: Date.new(2021, 9, 5), mentor_profile: mentor_hayate)
+    .tap do |ect|
     ect.with_eligibility
     ect.with_validation_data(full_name: "Keisha Edwina", trn: "1617181", date_of_birth: Date.new(1995, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2021,
@@ -210,12 +204,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               appropriate_body: nta_ab)
   end
 
-  ect_laurence = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
-                                                                 full_name: "Laurence Firoozeh",
-                                                                 email: "Laurence.Firoozeh@school.com")
-                                                            .build(induction_start_date: Date.new(2022, 9, 5),
-                                                                   mentor_profile: mentor_jan)
-                                                            .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2022, full_name: "Laurence Firoozeh", email: "Laurence.Firoozeh@school.com")
+    .build(induction_start_date: Date.new(2022, 9, 5), mentor_profile: mentor_jan)
+    .tap do |ect|
     ect.with_eligibility
     ect.with_validation_data(full_name: "Laurence Firoozeh", trn: "9202122", date_of_birth: Date.new(2002, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2021,
@@ -223,12 +215,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               appropriate_body: nta_ab)
   end
 
-  ect_kirsty = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
-                                                                 full_name: "Kirsty Alexandra",
-                                                                 email: "Kirsty.Alexandra@school.com")
-                                                            .build(induction_start_date: Date.new(2022, 4, 5),
-                                                                   mentor_profile: mentor_marcy)
-                                                            .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2022, full_name: "Kirsty Alexandra", email: "Kirsty.Alexandra@school.com")
+    .build(induction_start_date: Date.new(2022, 4, 5), mentor_profile: mentor_marcy)
+    .tap do |ect|
     ect.with_eligibility
     ect.with_validation_data(full_name: "Kirsty Alexandra", trn: "2324252", date_of_birth: Date.new(1985, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2021,
@@ -236,12 +226,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               appropriate_body: nta_ab)
   end
 
-  ect_emmanuel = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
-                                                                   full_name: "Emmanuel Takumi",
-                                                                   email: "Emmanuel.Takumi@school.com")
-                                                              .build(induction_start_date: Date.new(2023, 1, 1),
-                                                                     mentor_profile: mentor_hayate)
-                                                              .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2022, full_name: "Emmanuel Takumi", email: "Emmanuel.Takumi@school.com")
+    .build(induction_start_date: Date.new(2023, 1, 1), mentor_profile: mentor_hayate)
+    .tap do |ect|
     ect.with_eligibility
     ect.with_validation_data(full_name: "Emmanuel Takumi", trn: "3031323", date_of_birth: Date.new(1998, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2022,
@@ -250,11 +238,10 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               appropriate_body: fhtsh_ab)
   end
 
-  ect_emmanuel = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
-                                                                   full_name: "Mel Jackson",
-                                                                   email: "Mel.Jackson@school.com")
-                                                              .build(induction_start_date: Date.new(2023, 1, 1))
-                                                              .tap do |ect|
+  NewSeeds::Scenarios::Participants::Ects::Ect
+    .new(school_cohort: ur_school_cohort_2022, full_name: "Mel Jackson", email: "Mel.Jackson@school.com")
+    .build(induction_start_date: Date.new(2023, 1, 1))
+    .tap do |ect|
     ect.with_eligibility
     ect.with_validation_data(full_name: "Mel Jackson", trn: "5031020", date_of_birth: Date.new(1998, 2, 1))
     ect.with_induction_record(induction_programme: ur_induction_programme_2022,

@@ -13,6 +13,7 @@ module Admin
       stop_impersonating_user
       redirect_to after_sign_in_path_for(current_user)
     end
+
     def create
       impersonate_user(@user)
       session[:impersonation_start_path] = request.referer

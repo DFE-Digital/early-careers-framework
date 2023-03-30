@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dashboard
   class Participants
     attr_reader :mentors, :orphan_ects, :school, :user
@@ -6,15 +8,11 @@ module Dashboard
       @orphan_ects = []
       @school = school
       @user = user
-      process_participants
+      @mentors = process_participants
     end
 
     def ects
       @ects ||= mentors.values.flatten.compact + orphan_ects
-    end
-
-    def no_induction_start_date
-      @no_induction_start_date ||= induction_records.select { |induction_record| no_induction_start_date?(induction_record) }
     end
 
     def no_qts
@@ -25,7 +23,7 @@ module Dashboard
       @orphan_mentors ||= induction_records.select(&:mentor?) - mentors.keys
     end
 
-    private
+  private
 
     def dashboard_school_cohorts
       school.school_cohorts.dashboard_cohorts
@@ -53,10 +51,6 @@ module Dashboard
       end
     end
 
-    def no_induction_start_date?(induction_record)
-
-    end
-
     def no_qts?(induction_record)
       !induction_record.training_status_withdrawn? &&
         (induction_record.active? || induction_record.claimed_by_another_school?) &&
@@ -66,10 +60,10 @@ module Dashboard
     end
 
     def process_participants
-      @mentors ||= induction_records
-                     .select(&:ect?)
-                     .group_by(&:mentor_profile_id)
-                     .each_with_object({}) do |(mentor_profile_id, ects), hash|
+      induction_records
+        .select(&:ect?)
+        .group_by(&:mentor_profile_id)
+        .each_with_object({}) do |(mentor_profile_id, ects), hash|
         if mentor_profile_id
           hash[induction_record_of_profile(mentor_profile_id)] = ects
         else

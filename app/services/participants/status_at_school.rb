@@ -20,13 +20,11 @@ class Participants::StatusAtSchool < BaseService
     @profile = profile || induction_record&.participant_profile
   end
 
-  def call
-    @status ||= compute_status
-  end
+  alias_method :call, :status
 
 private
 
-  attr_reader :has_mentees, :induction_record, :profile, :status
+  attr_reader :has_mentees, :induction_record, :profile
 
   delegate :ecf_participant_eligibility,
            :ecf_participant_validation_data,
@@ -70,6 +68,10 @@ private
     :training
   end
 
+  def status
+    @status ||= compute_status
+  end
+
   # Status predicates
   def active_flags_need_checking?
     manual_check_status? && active_flags_reason?
@@ -87,16 +89,16 @@ private
     induction_record&.completed_induction_status?
   end
 
+  def deferred?
+    (induction_record || profile)&.training_status_deferred?
+  end
+
   def different_trn?
     manual_check_status? && different_trn_reason?
   end
 
   def duplicate?
     profile&.duplicate?
-  end
-
-  def not_qualified?
-    profile&.ect? && ineligible_status? && no_qts_reason?
   end
 
   def email_address_not_deliverable?
@@ -109,7 +111,7 @@ private
 
   def joining?
     induction_record&.active_induction_status? &&
-      induction_record&.start_date.future? &&
+      induction_record&.start_date&.future? &&
       induction_record&.school_transfer?
   end
 
@@ -133,18 +135,18 @@ private
     profile&.mentor? && !has_mentees
   end
 
+  def not_qualified?
+    profile&.ect? && ineligible_status? && no_qts_reason?
+  end
+
   def previous_induction_or_participation?
     ineligible_status? && (previous_induction_reason? || previous_participation_reason?)
   end
 
   def request_for_details_email
-    return @latest_email if defined?(@latest_email)
+    return @request_for_details_email if defined?(@request_for_details_email)
 
-    @latest_email = Email.associated_with(profile).tagged_with(:request_for_details).latest
-  end
-
-  def deferred?
-    (induction_record || profile)&.training_status_deferred?
+    @request_for_details_email = Email.associated_with(profile).tagged_with(:request_for_details).latest
   end
 
   def waiting_for_qts?

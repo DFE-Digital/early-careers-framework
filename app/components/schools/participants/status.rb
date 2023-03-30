@@ -8,7 +8,7 @@ module Schools
         @has_mentees = has_mentees
       end
 
-      private
+    private
 
       attr_reader :induction_record, :has_mentees
 
