@@ -7,80 +7,93 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Manage mentors and ECTs</h1>
 
-    <%= govuk_button_link_to(
-          "Add ECT or mentor",
-          start_schools_who_to_add_participants_path(cohort_id: @school.school_cohorts.dashboard_cohorts.first.start_year),
-          class: "govuk-link--no-visited-state",
-        ) %>
+    <div class="wrapper-dashboard-v2 manage-mentors-ects">
+      <%= govuk_button_link_to(
+            "Add ECT or mentor",
+            start_schools_who_to_add_participants_path(cohort_id: @school.school_cohorts.dashboard_cohorts.first.start_year),
+            class: "govuk-link--no-visited-state",
+          ) %>
 
-    <% if actions?(@participants) %>
-      <hr>
-      <% if @participants.orphan_ects.any? %>
-        <%= govuk_warning_text(text: "You need to assign a mentor to these ECTs.") %>
-        <ul class="govuk-list">
-          <% @participants.orphan_ects.each do |ect| %>
-            <li>
-              <%= govuk_link_to(ect.participant_full_name, schools_participant_path(id: ect.participant_profile_id,
-                                                                                    school_id: @school,
-                                                                                    cohort_id: ect.cohort_start_year),
-                                no_visited_state: true,
-                                classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
-            </li>
+      <% if actions?(@participants) %>
+        <% if @participants.orphan_ects.any? %>
+          <%= govuk_warning_text(text: "You need to assign a mentor to these ECTs.") %>
+          <ul class="govuk-list">
+            <% @participants.orphan_ects.sort_by(&:participant_full_name).each do |ect| %>
+              <li>
+                <%= govuk_link_to(ect.participant_full_name, schools_participant_path(id: ect.participant_profile_id,
+                                                                                      school_id: @school,
+                                                                                      cohort_id: ect.cohort_start_year),
+                                  no_visited_state: true,
+                                  classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
+              </li>
+            <% end %>
+          </ul>
+          <br>
+        <% end %>
+      <% end %>
+
+      <% @participants.mentors.keys.sort_by(&:participant_full_name).each do |mentor| %>
+        <div class="group-card">
+          <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
+            <% list.row do |row| %>
+              <% row.key(text: "Mentor") %>
+            <% end %>
+
+            <% list.row do |row| %>
+              <% row.key(text: govuk_link_to(mentor.participant_full_name,
+                                             schools_participant_path(id: mentor.participant_profile_id,
+                                                                      school_id: @school,
+                                                                      cohort_id: mentor.cohort_start_year),
+                                             no_visited_state: true),
+                         classes: ["govuk-!-font-weight-regular"]) %>
+              <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
+                                                                          induction_record: mentor,
+                                                                          has_mentees: true))) %>
+            <% end %>
+
+            <% list.row do |row| %>
+              <% row.key(text: "ECTs") %>
+            <% end %>
+
+            <% @participants.mentors[mentor].sort_by(&:participant_full_name).each do |ect| %>
+              <% list.row do |row| %>
+                <% row.key(text: govuk_link_to("#{ect.participant_full_name}",
+                                               schools_participant_path(id: ect.participant_profile_id,
+                                                                        school_id: @school,
+                                                                        cohort_id: ect.cohort_start_year),
+                                               no_visited_state: true),
+                           classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
+                <% row.value(text: render(ParticipantStatusTagComponent.new(profile: ect.participant_profile,
+                                                                            induction_record: ect)),
+                             classes: ["govuk-\!-padding-bottom-static-0"]) %>
+              <% end %>
+            <% end %>
           <% end %>
-        </ul>
+        </div>
         <br>
       <% end %>
-    <% end %>
 
-    <% @participants.mentors.each do |mentor, ects| %>
-      <hr>
-      <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-        <% list.row do |row| %>
-          <% row.key(text: govuk_link_to("Mentor - #{mentor.participant_full_name}",
-                                         schools_participant_path(id: mentor.participant_profile_id,
-                                                                  school_id: @school,
-                                                                  cohort_id: mentor.cohort_start_year),
-                                         no_visited_state: true),
-                     classes: ["govuk-\!-width-one-half"]) %>
-          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
-                                                                      induction_record: mentor,
-                                                                      has_mentees: true))) %>
-        <% end %>
-
-        <% list.row do |row| %>
-          <% row.key(text: "ECTs") %>
-        <% end %>
-
-        <% ects.each do |ect| %>
+      <% if @participants.orphan_mentors.any? %>
+        <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
           <% list.row do |row| %>
-            <% row.key(text: govuk_link_to("#{ect.participant_full_name}",
-                                           schools_participant_path(id: ect.participant_profile_id,
-                                                                    school_id: @school,
-                                                                    cohort_id: ect.cohort_start_year),
-                                           no_visited_state: true),
-                       classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
-            <% row.value(text: render(ParticipantStatusTagComponent.new(profile: ect.participant_profile,
-                                                                        induction_record: ect)),
-                         classes: ["govuk-\!-padding-bottom-static-0"]) %>
+            <% row.key(text: @participants.orphan_mentors.many? ? "Mentors" : "Mentor") %>
+          <% end %>
+
+          <% @participants.orphan_mentors.sort_by(&:participant_full_name).each do |mentor| %>
+            <% list.row do |row| %>
+              <% row.key(text: govuk_link_to(mentor.participant_full_name,
+                                             schools_participant_path(id: mentor.participant_profile_id,
+                                                                      school_id: @school,
+                                                                      cohort_id: mentor.cohort_start_year),
+                                             no_visited_state: true),
+                         classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
+              <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
+                                                                          induction_record: mentor)),
+                           classes: ["govuk-\!-padding-bottom-static-0"]) %>
+            <% end %>
           <% end %>
         <% end %>
-      <% end %>
     <% end %>
-
-    <% @participants.orphan_mentors.each do |mentor| %>
-      <hr>
-      <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-        <% list.row do |row| %>
-          <% row.key(text: govuk_link_to("Mentor - #{mentor.participant_full_name}",
-                                         schools_participant_path(id: mentor.participant_profile_id,
-                                                                  school_id: @school,
-                                                                  cohort_id: mentor.cohort_start_year),
-                                         no_visited_state: true),
-                     classes: ["govuk-\!-width-one-half"]) %>
-          <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
-                                                                      induction_record: mentor))) %>
-        <% end %>
-      <% end %>
-    <% end %>
+    </div>
   </div>
 </div>
