@@ -26,46 +26,126 @@ This guidance is API version-generic, and therefore all endpoints include refere
 
 Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to [update relevant data using the API](LINK NEEDED). 
 
+## How to view and update participant data
 
+Providers can view data to find out whether participants:
 
-The scenarios on this page show example request URLs and payloads clients can use to take actions via this API. The examples are only concerned with business logic and are missing details necessary for real-world usage. For example, authentication is completely left out.
+* have valid email addresses
+* have valid teacher reference numbers (TRN) 
+* have achieved qualified teacher status (QTS)
+* are eligible for funding
+* have transferred to or from a school you are partnered with 
 
-## Continuing the ECF registration process
-This scenario begins when an ECF participant has been added to the service by a school induction tutor via the manage training for early career teachers service.
+Providers can then update data to confirm participants have: 
 
-### Provider retrieves ECF participant records
+* deferred training 
+* resumed training 
+* withdrawn from training 
+* changed their training schedule
 
-Get the ECF participant records.
+### View all participant records
 
-```
-GET /api/v1/participants/ecf
-```
-
-This will return [multiple ECF participant records](/api-reference/reference-v1#schema-multipleecfparticipantsresponse).
-
-See [retrieve multiple ECF participants](/api-reference/reference-v1#api-v1-participants-ecf-get) endpoint.
-
-### ECF Participant enters registration details on register for early career framework service
-
-A participant is invited to continue their registration by validating their TRN and contact details.
-
-When the participant has completed this step the ECF participant record will show:
-* whether the email address has been validated
-* whether the TRN is valid
-* whether the participant has achieved QTS status
-* whether the participant is eligible for funding
-
-### Provider refreshes ECF participant records
-
-Get updated ECF participant records.
+To view all ECF participant records, use the endpoint: 
 
 ```
-GET /api/v1/participants/ecf?filter[updated_since]=2021-05-13T11:21:55Z
+GET /api/v{n}/participants/ecf
 ```
 
-This will return [multiple ECF participant records](/api-reference/reference-v1#schema-multipleecfparticipantsresponse) with the updates to the record included.
+Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
-See [retrieve multiple participants](/api-reference/reference-v1#api-v1-participants-ecf-get) endpoint.
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view multiple ECF participants endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "participant",
+      "attributes": {
+        "full_name": "Jane Smith",
+        "teacher_reference_number": "1234567",
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "ecf_enrolments": [
+          {
+            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+            "email": "jane.smith@some-school.example.com",
+            "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+            "school_urn": "106286",
+            "participant_type": "ect",
+            "cohort": "2021",
+            "training_status": "active",
+            "participant_status": "active",
+            "teacher_reference_number_validated": true,
+            "eligible_for_funding": true,
+            "pupil_premium_uplift": true,
+            "sparsity_uplift": true,
+            "schedule_identifier": "ecf-standard-january",
+            "validation_status": "eligible_to_start",
+            "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+            "withdrawal": null,
+            "deferral": null,
+            "created_at": "2021-05-31T02:22:32.000Z"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+### View a single participant records
+
+To view a participant’s record, use the endpoint:
+
+```
+GET /api/v{n}/participants/ecf/{id}
+```
+
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view a single ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant",
+    "attributes": {
+      "full_name": "Jane Smith",
+      "teacher_reference_number": "1234567",
+      "updated_at": "2021-05-31T02:22:32.000Z",
+      "ecf_enrolments": [
+        {
+          "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+          "email": "jane.smith@some-school.example.com",
+          "mentor_id": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+          "school_urn": "106286",
+          "participant_type": "ect",
+          "cohort": "2021",
+          "training_status": "active",
+          "participant_status": "active",
+          "teacher_reference_number_validated": true,
+          "eligible_for_funding": true,
+          "pupil_premium_uplift": true,
+          "sparsity_uplift": true,
+          "schedule_identifier": "ecf-standard-january",
+          "validation_status": "eligible_to_start",
+          "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+          "withdrawal": null,
+          "deferral": null,
+          "created_at": "2021-05-31T02:22:32.000Z"
+        }
+      ]
+    }
+  }
+}
+```
+
+
 
 ## Notifying that an ECF participant is taking a break from their course
 
@@ -123,98 +203,6 @@ Where milestone validation applies, the API will reject a declaration if it is n
 
 Providers will still be expected to evidence any declarations and why a participant is following a non-standard induction.
 
-### Standard induction
-
-A usual 2 year induction covers 6 terms (3 in each academic year). The payment model for those following a standard induction is therefore equal to 1 milestone payment for each of the 6 terms you are supporting a participant. We are allowing functionality for providers to switch participants onto the following standard schedules:
-
-* `ecf-standard-september`
-* `ecf-standard-january`
-* `ecf-standard-april`
-
-Standard schedules will be subject to milestone validation as outlined in the tables below.
-
-### Standard induction starting in September
-Participants should be tagged as `ecf-standard-september` if they are starting their course before the **30 November 2021** and are expected to complete their training over two academic years.
-
-| Retention Point                         | Milestone Date      | Payment Made       |
-| --------------------------------------- | ------------------- | ------------------ |
-| Output 1 - Participant Start (20%)      | 30th November 2021  | 30th November 2021 |
-| Output 2 – Retention Point 1 (15%)      | 31st January 2022   | 28th February 2022 |
-| Output 3 – Retention Point 2 (15%)      | 30th April 2022     | 31st May 2022      |
-| Output 4 – Retention Point 3 (15%)      | 30th September 2022 | 31st October 2022  |
-| Output 5 – Retention Point 4 (15%)      | 31st January 2023   | 28th February 2023 |
-| Output 6 – Participant Completion (20%) | 30th April 2023     | 31st May 2023      |
-
-### Standard induction starting in January
-Participants should be tagged as `ecf-standard-january` if they are starting their course on or after **1 December** and are expected to complete their training over 2 years.
-
-| Retention Point                         | Milestone Date      | Payment Made       |
-| --------------------------------------- | ------------------- | ------------------ |
-| Output 1 - Participant Start (20%)      | 31st January 2022   | 28th February 2022 |
-| Output 2 – Retention Point 1 (15%)      | 30th April 2022     | 31st May 2022      |
-| Output 3 – Retention Point 2 (15%)      | 30th September 2022 | 31st October 2022  |
-| Output 4 – Retention Point 3 (15%)      | 31st January 2023   | 28th February 2023 |
-| Output 5 – Retention Point 4 (15%)      | 30th April 2023     | 31st May 2023      |
-| Output 6 – Participant Completion (20%) | 31st October 2023   | 30th November 2023 |
-
-### Standard induction starting in April
-
-Participants should be tagged as `ecf-standard-april` if they are starting their course on or after **1 February** and are expected to complete their training over 2 years.
-
-| Retention Point                         | Milestone Date      | Payment Made       |
-| --------------------------------------- | ------------------- | ------------------ |
-| Output 1 - Participant Start (20%)      | 30th April 2022     | 31st May 2022      |
-| Output 2 – Retention Point 1 (15%)      | 30th September 2022 | 31st October 2022  |
-| Output 3 – Retention Point 2 (15%)      | 31st January 2023   | 28th February 2023 |
-| Output 4 – Retention Point 3 (15%)      | 30th April 2023     | 31st May 2023      |
-| Output 5 – Retention Point 4 (15%)      | 31st October 2023   | 30th November 2023 |
-| Output 6 – Participant Completion (20%) | 31st January 2024   | 28th February 2024 |
-
-
-### Non-standard induction
-Following the same principles of those on a standard induction, providers will be paid the equivalent of one milestone payment for each of the terms they are supporting a participant. Non-standard schedules will not be subject to milestone validation.
-
-Under a non-standard schedule, the API will accept any declarations once the first milestone period for the schedule has started. For example, if a participant is on an ecf-extended-september schedule, the API will accept any type of declaration, such as a start, retention-1 or completion, from 1 September 2021. Providers will still be expected to evidence any declarations and why a participant is following a non-standard induction.
-
-We are allowing functionality for providers to switch participants onto the following non-standard schedules:
-
-* `ecf-extended-september`
-* `ecf-extended-january`
-* `ecf-extended-april`
-* `ecf-reduced-september`
-* `ecf-reduced-january`
-* `ecf-reduced-april`
-* `ecf-replacement-september`
-* `cf-replacement-january`
-* `ecf-replacement-april`
-
-The non-standard induction schedules are detailed below.
-
-### Extended schedule
-For participants that expect to complete their induction over a period greater than two years, with the schedule reflecting the month when the participant starts. For example, part time ECTs:
-
-* `ecf-extended-september`
-* `ecf-extended-january`
-* `ecf-extended-april`
-
-### Reduced schedule
-For participants that expect to complete their induction over a period less than 2 years, with the schedule reflecting the month when the participant starts:
-
-* `ecf-reduced-september`
-* `ecf-reduced-january`
-* `ecf-reduced-april`
-
-### Replacement mentors
-For mentors that are replacing a mentor for an ECT that is part way through their training with the schedule reflecting the month when the replacement starts:
-
-* `ecf-replacement-september`
-* `ecf-replacement-january`
-* `ecf-replacement-april`
-
-Where a mentor is already mentoring an ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
-
-The DfE expects that a replacement mentor's training, and therefore any declarations a provider submits for them, will align with the ECT they are mentoring. Say a replacement mentor begins mentoring an ECT part way through the ECT’s induction. The provider has already submitted a start declaration for the previous mentor. Now, the provider makes a retention-1 declaration for the ECT. The department would expect that any declaration made for the replacement mentor in the same milestone period as that made for the ECT would also be a retention-1 declaration.
-
 ## Notifying that an ECF participant has withdrawn from their course
 
 This operation allows the provider to tell the DfE that a participant has withdrawn from their ECF course.
@@ -234,6 +222,11 @@ PUT /api/v1/participants/ecf/{id}/withdraw
 This will return an [ECF participant record](/api-reference/reference-v1#schema-ecfparticipantresponse) with the updates to the record included.
 
 See [withdraw ECF participant](/api-reference/reference-v1#api-v1-participants-ecf-id-withdraw-put) endpoint.
+
+
+
+
+
 
 ## Declaring that an ECF participant has started their course
 This scenario begins after it has been confirmed that an ECF participant is ready to begin their induction training.</p>
