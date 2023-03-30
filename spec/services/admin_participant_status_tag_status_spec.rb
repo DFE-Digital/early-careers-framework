@@ -27,12 +27,12 @@ RSpec.describe AdminParticipantStatusTagStatus, :with_training_record_state_exam
 
   context "mentor with multiple profiles" do
     context "when the primary profile is eligible" do
-      let(:participant_profile) { mentor_profile_duplicity_primary }
+      let(:participant_profile) { mentor_on_fip_profile_duplicity_primary }
       it { is_expected.to eq :registered_for_mentor_training } # "Eligible: Mentor at main school" }
     end
 
     context "when the secondary profile is ineligible because it is a duplicate" do
-      let(:participant_profile) { mentor_profile_duplicity_secondary }
+      let(:participant_profile) { mentor_on_fip_profile_duplicity_secondary }
       it { is_expected.to eq :registered_for_mentor_training_second_school } # "Eligible: Mentor at additional school"
     end
   end
@@ -44,8 +44,8 @@ RSpec.describe AdminParticipantStatusTagStatus, :with_training_record_state_exam
     end
 
     context "was a participant in early roll out" do
-      let(:participant_profile) { mentor_ineligible_previous_participation }
-      it { is_expected.to eq :previous_participation_ero } # "Eligible to start: ERO" - TODO: we won't just find ERO anymore ?
+      let(:participant_profile) { mentor_ero_on_fip }
+      it { is_expected.to eq :previous_participation_ero } # "Eligible to start: ERO"
     end
 
     context "has a withdrawn status" do
@@ -68,8 +68,9 @@ RSpec.describe AdminParticipantStatusTagStatus, :with_training_record_state_exam
     end
 
     context "has a previous induction reason" do
+      # TODO: this will not always be NQT+1
       let(:participant_profile) { ect_on_cip_ineligible_previous_induction }
-      it { is_expected.to eq :previous_induction } # "Not eligible: NQT+1" - TODO: will this always be NQT+1 ?
+      it { is_expected.to eq :previous_induction } # "Not eligible: NQT+1"
     end
 
     context "has no QTS reason" do

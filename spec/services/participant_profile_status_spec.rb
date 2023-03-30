@@ -45,12 +45,12 @@ RSpec.describe ParticipantProfileStatus, :with_training_record_state_examples do
 
     context "mentor with multiple profiles" do
       context "when the primary profile is eligible" do
-        let(:participant_profile) { mentor_profile_duplicity_primary }
+        let(:participant_profile) { mentor_on_fip_profile_duplicity_primary }
         it { is_expected.to eq "training_or_eligible_for_training" }
       end
 
       context "when the secondary profile is ineligible because it is a duplicate" do
-        let(:participant_profile) { mentor_profile_duplicity_secondary }
+        let(:participant_profile) { mentor_on_fip_profile_duplicity_secondary }
         it { is_expected.to eq "training_or_eligible_for_training" }
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe ParticipantProfileStatus, :with_training_record_state_examples do
       end
 
       context "was a participant in early roll out" do
-        let(:participant_profile) { mentor_ineligible_previous_participation }
+        let(:participant_profile) { mentor_ero_on_fip }
         it { is_expected.to eq "training_or_eligible_for_training" }
       end
 
