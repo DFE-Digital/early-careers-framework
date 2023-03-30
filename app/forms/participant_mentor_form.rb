@@ -9,7 +9,7 @@ class ParticipantMentorForm
   validate :mentor_exists
 
   def mentor
-    @mentor ||= User.find(mentor_id) if mentor_id && mentor_id != "later"
+    @mentor ||= User.find(mentor_id) if mentor_id
   end
 
   def available_mentors

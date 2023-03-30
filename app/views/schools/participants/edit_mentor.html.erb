@@ -21,11 +21,6 @@
                 <% @mentor_form.available_mentors.each_with_index do |mentor, i| %>
                     <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
                 <% end %>
-
-                <% unless @mentor_form.mentor %>
-                  <%= f.govuk_radio_divider %>
-                  <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
-                <% end %>
             <% end %>
 
             <%= f.govuk_submit %>

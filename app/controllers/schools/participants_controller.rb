@@ -67,11 +67,9 @@ class Schools::ParticipantsController < Schools::BaseController
 
     if @mentor_form.valid?
       induction_record = @profile.induction_records.for_school(@school).latest
-      old_mentor_profile = induction_record.mentor_profile
       new_mentor_profile = @mentor_form.mentor&.mentor_profile
       Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
-      @message = "#{@profile.full_name} does not have a mentor" if new_mentor_profile.blank?
-      @message ||= "#{@profile.full_name} has been assigned to #{new_mentor_profile.full_name}"
+      @message = "#{@profile.full_name} has been assigned to #{new_mentor_profile.full_name}"
       render :mentor_change_confirmation
     else
       render :edit_mentor
