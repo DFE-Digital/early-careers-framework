@@ -22,10 +22,6 @@ module StatusTags
       end
     end
 
-  private
-
-    attr_reader :participant_profile, :induction_record
-
     def label
       t :label, scope: translation_scope
     end
@@ -39,6 +35,10 @@ module StatusTags
     def colour
       t :colour, scope: translation_scope
     end
+
+  private
+
+    attr_reader :participant_profile, :induction_record
 
     def translation_scope
       @translation_scope ||= "status_tags.admin_participant_status.#{record_state}"

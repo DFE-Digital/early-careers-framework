@@ -26,10 +26,6 @@ module StatusTags
       t :label, scope: translation_scope
     end
 
-  private
-
-    attr_reader :participant_profile, :induction_record, :delivery_partner
-
     def description
       Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
     rescue I18n::MissingTranslationData
@@ -39,6 +35,10 @@ module StatusTags
     def colour
       t :colour, scope: translation_scope
     end
+
+  private
+
+    attr_reader :participant_profile, :induction_record, :delivery_partner
 
     def translation_scope
       @translation_scope ||= "status_tags.delivery_partner_participant_status.#{record_state}"
