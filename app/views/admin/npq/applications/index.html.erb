@@ -7,7 +7,8 @@
     <%= f.govuk_text_field(
         :query,
         value: params[:query],
-        label: { text: "Search records", size: "s" },
+        label: { text: "Search applications", size: "m" },
+        hint: { text: "Enter the applicant’s ID, Name, School, Email, School/Oftsed URN or TRN", size: "s" },
       )
     %>
 
@@ -25,7 +26,7 @@
       row.with_cell(text: 'Lead provider')
       row.with_cell(text: 'School')
       row.with_cell(text: 'Funding')
-
+      row.with_cell(text: 'Link')
     end
   end
 
