@@ -249,4 +249,15 @@ FactoryBot.create(:seed_induction_coordinator_profile, :with_user).tap do |induc
                               mentor_profile: mentor_hayate,
                               appropriate_body: fhtsh_ab)
   end
+
+  ect_emmanuel = NewSeeds::Scenarios::Participants::Ects::Ect.new(school_cohort: ur_school_cohort_2022,
+                                                                   full_name: "Mel Jackson",
+                                                                   email: "Mel.Jackson@school.com")
+                                                              .build(induction_start_date: Date.new(2023, 1, 1))
+                                                              .tap do |ect|
+    ect.with_eligibility
+    ect.with_validation_data(full_name: "Mel Jackson", trn: "5031020", date_of_birth: Date.new(1998, 2, 1))
+    ect.with_induction_record(induction_programme: ur_induction_programme_2022,
+                              appropriate_body: fhtsh_ab)
+  end
 end
