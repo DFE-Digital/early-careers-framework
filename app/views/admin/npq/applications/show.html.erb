@@ -14,6 +14,7 @@
         <%= render "application_details", application: @application %>
         <%= render "employment_details", application: @application %>
         <%= render "funding_eligibility", application: @application %>
+        <%= render "teacher_profile_details", teacher_profile: @application.profile.try(:teacher_profile) %>
       </div>
     </div>
   <% end %>
