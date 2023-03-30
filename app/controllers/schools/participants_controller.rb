@@ -95,7 +95,7 @@ class Schools::ParticipantsController < Schools::BaseController
     render :removed
   end
 
-  private
+private
 
   def set_school
     @school ||= policy_scope(School).friendly.find(params[:school_id]) if params[:school_id].present?
