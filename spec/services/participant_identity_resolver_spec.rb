@@ -94,5 +94,17 @@ RSpec.describe ParticipantIdentityResolver, :with_default_schedules, :with_suppo
         expect(result).to eql(participant_identity)
       end
     end
+
+    context "when participant external identifier does not equal user id" do
+      let(:ect_profile) { create(:ect, lead_provider:, user:) }
+      let!(:participant_identity) { create(:participant_identity, :secondary, user:) }
+      let(:participant_id) { participant_identity.external_identifier }
+
+      it "correctly selects ect participant identity" do
+        result = subject.call
+
+        expect(result).to eql(participant_identity)
+      end
+    end
   end
 end

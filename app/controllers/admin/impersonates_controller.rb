@@ -11,13 +11,13 @@ module Admin
 
     def create
       impersonate_user(@user)
-
+      store_location_for(:impersonation_start, request.referer)
       redirect_to after_sign_in_path_for(@user)
     end
 
     def destroy
       stop_impersonating_user
-      redirect_to after_sign_in_path_for(current_user)
+      redirect_to stored_location_for(:impersonation_start)
     end
 
   private
@@ -29,14 +29,14 @@ module Admin
     def check_self_impersonation
       if params[:impersonated_user_id] == current_user.id.to_s
         flash[:warning] = "You cannot impersonate yourself"
-        redirect_to(after_sign_in_path_for(current_user))
+        redirect_to URI(request.referer).path
       end
     end
 
     def check_admin_user_impersonation
       if @user.admin?
         flash[:warning] = "You cannot impersonate another admin user"
-        redirect_to(after_sign_in_path_for(current_user))
+        redirect_to URI(request.referer).path
       end
     end
 

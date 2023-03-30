@@ -15,6 +15,8 @@ module Admin::Participants
         .joins(:induction_records)
         .where(induction_records: { mentor_profile_id: @participant_profile.id })
         .group_by(&:school)
+
+      add_breadcrumb(@school.name, admin_school_participants_path(@school)) if @school.present?
     end
   end
 end

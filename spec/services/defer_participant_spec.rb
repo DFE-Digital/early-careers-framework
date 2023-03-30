@@ -72,18 +72,6 @@ RSpec.shared_examples "validating deferring a participant attributes" do
       expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
     end
   end
-
-  context "when the participant has a different user ID to external ID" do
-    let(:participant_identity) { create(:participant_identity, :secondary) }
-
-    before { participant_profile.update!(participant_identity:) }
-
-    it "is invalid and returns an error message" do
-      is_expected.to be_invalid
-
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
-    end
-  end
 end
 
 RSpec.shared_examples "validating a participant is not already deferred" do
@@ -119,6 +107,16 @@ RSpec.shared_examples "deferring a participant" do
 
   it "marks the participant profiles as deferred" do
     expect { service.call }.to change { participant_profile.reload.training_status }.from("active").to("deferred")
+  end
+
+  context "when the participant has a different user ID to external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+
+    before { participant_profile.update!(participant_identity:) }
+
+    it "marks the participant profiles as deferred" do
+      expect { service.call }.to change { participant_profile.reload.training_status }.from("active").to("deferred")
+    end
   end
 end
 
