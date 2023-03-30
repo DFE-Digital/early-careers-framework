@@ -51,7 +51,7 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
       it "returns NPQ Specialist Autumn schedule" do
         expected_schedule = described_class.find_by(cohort:, schedule_identifier: "npq-specialist-autumn")
 
-        travel_to Date.new(cohort_start_year + 1, 4, 16) do
+        travel_to Date.new(cohort_start_year + 1, 4, 3) do
           expect(described_class.schedule_for(cohort:)).to eq(expected_schedule)
         end
       end
@@ -77,17 +77,17 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   end
 
   describe ".spring_schedule?" do
-    it "returns true when date between Dec 26 to Apr 15" do
+    it "returns true when date between Dec 26 to Apr 2" do
       (2.years.ago.year..Date.current.year).each do |year|
-        (("#{year}-12-26".to_date)..("#{year + 1}-04-15".to_date)).each do |date|
+        (("#{year}-12-26".to_date)..("#{year + 1}-04-2".to_date)).each do |date|
           expect(described_class.spring_schedule?(date)).to be(true)
         end
       end
     end
 
-    it "returns false when date between Apr 16 to Dec 25" do
+    it "returns false when date between Apr 3 to Dec 25" do
       (2.years.ago.year..Date.current.year).each do |year|
-        (("#{year}-04-16".to_date)..("#{year}-12-25".to_date)).each do |date|
+        (("#{year}-04-3".to_date)..("#{year}-12-25".to_date)).each do |date|
           expect(described_class.spring_schedule?(date)).to be(false)
         end
       end
@@ -95,17 +95,17 @@ RSpec.describe Finance::Schedule::NPQSpecialist, type: :model do
   end
 
   describe ".autumn_schedule?" do
-    it "returns true when date between Apr 16 to Dec 25" do
+    it "returns true when date between Apr 3 to Dec 25" do
       (2.years.ago.year..Date.current.year).each do |year|
-        (("#{year}-04-16".to_date)..("#{year}-12-25".to_date)).each do |date|
+        (("#{year}-04-3".to_date)..("#{year}-12-25".to_date)).each do |date|
           expect(described_class.autumn_schedule?(date)).to be(true)
         end
       end
     end
 
-    it "returns false when date between Dec 26 to Apr 15" do
+    it "returns false when date between Dec 26 to Apr 2" do
       (2.years.ago.year..Date.current.year).each do |year|
-        (("#{year}-12-26".to_date)..("#{year + 1}-04-15".to_date)).each do |date|
+        (("#{year}-12-26".to_date)..("#{year + 1}-04-2".to_date)).each do |date|
           expect(described_class.autumn_schedule?(date)).to be(false)
         end
       end
