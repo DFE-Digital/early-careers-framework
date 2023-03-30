@@ -6,6 +6,17 @@ module Admin::Participants
 
     def show
       @participant_identities = @participant_profile.user.participant_identities
+
+      add_breadcrumb(
+        school.name,
+        admin_school_participants_path(school),
+      )
+    end
+
+  private
+
+    def school
+      @school ||= @participant_profile.school
     end
   end
 end
