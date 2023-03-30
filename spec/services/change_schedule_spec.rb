@@ -74,18 +74,6 @@ RSpec.shared_examples "validating a participant for a change schedule" do
       expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is already on the profile")
     end
   end
-
-  context "when the participant has a different user ID to external ID" do
-    let(:participant_identity) { create(:participant_identity, :secondary) }
-
-    before { participant_profile.update!(participant_identity:) }
-
-    it "is invalid and returns an error message" do
-      is_expected.to be_invalid
-
-      expect(service.errors.messages_for(:participant_id)).to include("The property '#/participant_id' must be a valid Participant ID")
-    end
-  end
 end
 
 RSpec.shared_examples "validating a participant is not already withdrawn for a change schedule" do
@@ -121,6 +109,14 @@ RSpec.shared_examples "changing the schedule of a participant" do
       schedule_id: Finance::Schedule.where(schedule_identifier:, cohort: new_cohort).first.id,
     )
   end
+
+  context "when the participant has a different user ID to external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+
+    it "creates a participant profile schedule" do
+      expect { service.call }.to change { ParticipantProfileSchedule.count }
+    end
+  end
 end
 
 RSpec.describe ChangeSchedule, :with_default_schedules do
@@ -134,6 +130,8 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
     }
   end
   let(:new_cohort) { Cohort.current }
+  let(:participant_identity) { create(:participant_identity) }
+  let(:user) { participant_identity.user }
 
   subject(:service) do
     described_class.new(params)
@@ -141,7 +139,7 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
 
   context "ECT participant profile" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:participant_profile) { create(:ect, lead_provider: cpd_lead_provider.lead_provider, user:) }
     let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-induction" }
     let!(:schedule) { create(:ecf_schedule, schedule_identifier: "ecf-extended-april", name: "ECF Standard") }
@@ -179,7 +177,7 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
 
   context "Mentor participant profile" do
     let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
-    let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+    let(:participant_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider, user:) }
     let(:schedule_identifier) { "ecf-extended-april" }
     let(:course_identifier) { "ecf-mentor" }
     let!(:schedule) { create(:ecf_mentor_schedule, schedule_identifier: "ecf-extended-april", name: "Mentor Standard") }
@@ -220,7 +218,7 @@ RSpec.describe ChangeSchedule, :with_default_schedules do
     let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
     let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
     let(:schedule) { create(:npq_specialist_schedule) }
-    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:) }
+    let(:participant_profile) { create(:npq_participant_profile, npq_lead_provider:, npq_course:, schedule:, user:) }
     let(:course_identifier) { npq_course.identifier }
     let(:schedule_identifier) { new_schedule.schedule_identifier }
     let(:new_schedule) { create(:npq_leadership_schedule) }
