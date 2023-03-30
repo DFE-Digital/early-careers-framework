@@ -22,9 +22,10 @@
                     <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
                 <% end %>
 
-            <%= f.govuk_radio_divider %>
-
-            <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
+                <% unless @mentor_form.mentor %>
+                  <%= f.govuk_radio_divider %>
+                  <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
+                <% end %>
             <% end %>
 
             <%= f.govuk_submit %>
