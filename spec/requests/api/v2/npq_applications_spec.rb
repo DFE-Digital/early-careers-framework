@@ -94,17 +94,15 @@ RSpec.describe "NPQ Applications API", :with_default_schedules, type: :request d
             end
 
             context "with invalid filter[updated_at]" do
-              let(:today) { Date.current.to_s }
-
               it "returns a meaningful error message" do
-                get "/api/v1/npq-applications", params: { filter: { updated_since: today } }
+                get "/api/v1/npq-applications", params: { filter: { updated_since: Date.current.to_s } }
 
                 expect(response).to be_bad_request
                 expect(parsed_response).to eql(HashWithIndifferentAccess.new({
                   "errors": [
                     {
-                      "title": "The filter '#/updated_since' must be a valid RCF3339 date",
-                      "detail": today,
+                      "title": "Bad request",
+                      "detail": "The filter '#/updated_since' must be a valid RCF3339 date",
                     },
                   ],
                 }))

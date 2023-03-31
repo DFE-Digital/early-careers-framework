@@ -38,7 +38,7 @@ private
     begin
       Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
     rescue ArgumentError
-      raise Api::Errors::InvalidDatetimeError, filter[:updated_since]
+      raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
     end
   end
 

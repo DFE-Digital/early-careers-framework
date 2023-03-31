@@ -52,7 +52,7 @@ module Api
     end
 
     def invalid_updated_since_response(exception)
-      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:invalid_updated_since_filter), params: exception).call }, status: :bad_request
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: exception.message).call }, status: :bad_request
     end
   end
 end
