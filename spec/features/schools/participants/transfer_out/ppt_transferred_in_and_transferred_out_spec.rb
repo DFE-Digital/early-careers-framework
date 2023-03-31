@@ -15,7 +15,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
     scenario "Induction tutor only sees the transfer once they’ve done it themselves" do
       when_i_click_to_view_ects_and_mentors
-      then_i_am_taken_to_your_ect_and_mentors_page
+      then_i_am_taken_to_manage_mentors_and_ects_page
       then_i_should_still_see_the_participant_in_my_active_participants
       and_i_should_not_see_any_transferring_participants
 
@@ -38,7 +38,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       and_the_participant_should_be_notified_that_theyre_transferred_out
 
       click_on "View your ECTs and mentors"
-      then_i_am_taken_to_your_ect_and_mentors_page
+      then_i_am_taken_to_manage_mentors_and_ects_page
       then_i_should_see_the_transfer_out_participant
       and_they_should_not_be_under_their_previous_heading
 
@@ -99,10 +99,9 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
     # then
 
-    def then_i_am_taken_to_your_ect_and_mentors_page
-      expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-      expect(page).to have_text("Add an ECT or mentor")
-      expect(page).to have_text("Add yourself as a mentor")
+    def then_i_am_taken_to_manage_mentors_and_ects_page
+      expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+      expect(page).to have_text("Add ECT or mentor")
     end
 
     def then_i_should_still_see_the_participant_in_my_active_participants

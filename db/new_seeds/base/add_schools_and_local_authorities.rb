@@ -78,7 +78,7 @@ Random.rand(1..4).times.map do
   )
 end
 
-  # Extra school for UR purposes.
+# Extra school with participants for UR purposes.
 ur_school = FactoryBot.create(:seed_school,
                               :with_induction_coordinator,
                               urn: "801212",

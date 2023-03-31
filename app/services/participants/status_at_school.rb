@@ -51,7 +51,7 @@ private
     return :no_longer_being_trained_sit if withdrawn_from_induction?
     return :no_longer_being_trained_provider if withdrawn_from_training?
     return :check_email_address if email_address_not_deliverable?
-    return :contacted_for_information if awaiting_contact_from_participant?
+    return :contacted_for_info if awaiting_contact_from_participant?
     return :no_trn_provided if no_trn?
     return :pending if active_flags_need_checking?
     return :pending if different_trn?
@@ -60,7 +60,7 @@ private
     return :statutory_induction_completed if previous_induction_or_participation?
     return :exempt if exempt?
     return :duplicate_profile if duplicate?
-    return :no_longer_being_trained_provider if active_flags_verified?
+    return :failed_induction if active_flags_verified?
     return :not_qualified if not_qualified?
     return :training_deferred if deferred?
     return :training_completed if completed?

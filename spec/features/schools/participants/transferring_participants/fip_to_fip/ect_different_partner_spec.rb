@@ -14,7 +14,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         and_i_am_signed_in_as_an_induction_coordinator
         and_i_have_selected_my_cohort_tab
         when_i_click_to_view_ects_and_mentors
-        then_i_am_taken_to_your_ect_and_mentors_page
+        then_i_am_taken_to_manage_mentors_and_ects_page
       end
 
       scenario "Induction tutor can transfer an ECT to their schools programme" do
@@ -78,7 +78,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         and_the_participants_current_provider_is_notified_with(:provider_transfer_out_notification)
 
         click_on "View your ECTs and mentors"
-        then_i_am_taken_to_your_ect_and_mentors_page
+        then_i_am_taken_to_manage_mentors_and_ects_page
       end
 
       scenario "Induction tutor can transfer an ECT and they can continue their current programme" do
@@ -133,7 +133,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         and_the_participants_current_provider_is_notified_with(:provider_new_school_transfer_notification)
 
         click_on "View your ECTs and mentors"
-        then_i_am_taken_to_your_ect_and_mentors_page
+        then_i_am_taken_to_manage_mentors_and_ects_page
       end
 
       # given
@@ -210,10 +210,9 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       # then
 
-      def then_i_am_taken_to_your_ect_and_mentors_page
-        expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-        expect(page).to have_text("Add an ECT or mentor")
-        expect(page).to have_text("Add yourself as a mentor")
+      def then_i_am_taken_to_manage_mentors_and_ects_page
+        expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+        expect(page).to have_text("Add ECT or mentor")
       end
 
       def then_i_should_be_on_what_we_need_page
