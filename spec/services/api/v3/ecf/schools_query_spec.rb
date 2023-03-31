@@ -16,11 +16,21 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
     let!(:another_school_cohort) { create(:school_cohort, cohort: another_cohort) }
     let!(:another_school) { another_school_cohort.school }
 
-    it "returns all schools" do
-      expect(subject.schools).to match_array([school_cohort, another_school_cohort])
+    context "with no cohort filter" do
+      it "returns no schools" do
+        expect(subject.schools).to match_array([])
+      end
+
+      context "with any other filter" do
+        let(:params) { { filter: { urn: school.urn } } }
+
+        it "returns no schools" do
+          expect(subject.schools).to match_array([])
+        end
+      end
     end
 
-    describe "cohort filter" do
+    context "with cohort filter" do
       context "with correct value" do
         let(:params) { { filter: { cohort: cohort.display_name } } }
 
@@ -36,22 +46,22 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
           expect(subject.schools).to be_empty
         end
       end
-    end
 
-    describe "school urn filter" do
-      context "with correct value" do
-        let(:params) { { filter: { urn: another_school.urn } } }
+      context "with school urn filter" do
+        context "with correct value" do
+          let(:params) { { filter: { cohort: another_cohort.display_name, urn: another_school.urn } } }
 
-        it "returns all schools for the specific urn" do
-          expect(subject.schools).to match_array([another_school_cohort])
+          it "returns all schools for the specific urn" do
+            expect(subject.schools).to match_array([another_school_cohort])
+          end
         end
-      end
 
-      context "with incorrect value" do
-        let(:params) { { filter: { urn: "abc" } } }
+        context "with incorrect value" do
+          let(:params) { { filter: { cohort: another_cohort.display_name, urn: "abc" } } }
 
-        it "returns no schools" do
-          expect(subject.schools).to be_empty
+          it "returns no schools" do
+            expect(subject.schools).to be_empty
+          end
         end
       end
     end
