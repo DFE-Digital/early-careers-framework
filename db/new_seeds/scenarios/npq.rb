@@ -3,28 +3,30 @@
 module NewSeeds
   module Scenarios
     class NPQ
-      attr_reader :user, :application, :participant_identity, :participant_profile, :npq_lead_provider, :npq_course
+      attr_reader :user, :application, :participant_identity, :npq_lead_provider, :npq_course, :cohort, :declaration
 
-      def initialize(user: nil, lead_provider: nil, npq_course: nil)
+      def initialize(user: nil, lead_provider: nil, npq_course: nil, cohort: nil)
         @supplied_user = user
         @supplied_lead_provider = lead_provider
         @supplied_npq_course = npq_course
+        @supplied_cohort = cohort
       end
 
       def build
         @user = @supplied_user || FactoryBot.create(:seed_user, :valid)
         @npq_lead_provider = @supplied_lead_provider || FactoryBot.create(:seed_npq_lead_provider, :valid)
         @npq_course = @supplied_npq_course || FactoryBot.create(:seed_npq_course, :valid)
+        @cohort = @supplied_cohort || Cohort.current || FactoryBot.create(:seed_cohort, :valid)
 
         @participant_identity = user&.participant_identities&.sample ||
           FactoryBot.create(:seed_participant_identity, user:)
 
         @application = FactoryBot.create(
-          :seed_npq_application,
-          :valid,
+          :npq_application,
           participant_identity:,
           npq_lead_provider:,
           npq_course:,
+          cohort:,
         )
 
         self
@@ -33,25 +35,26 @@ module NewSeeds
       def accept_application
         raise(StandardError, "no npq application, call #build first") if application.blank?
 
-        @participant_profile = FactoryBot.create(
-          :seed_npq_participant_profile,
-          user:,
-          participant_identity:,
-          npq_application: application,
-          npq_course: application.npq_course,
-          # it turns out that we don't find the NPQ application via the participant identity but
-          # instead by the `has_one` on participant profile. The id of the NPQ application needs
-          # to match the corresponding participant profile's id.
-          id: application.id,
-        )
-
-        application.update!(lead_provider_approval_status: "accepted")
+        ::NPQ::Application::Accept.new(npq_application: application).call
 
         self
       end
 
+      def participant_profile
+        @participant_profile ||=
+          ParticipantProfileResolver.call(
+            participant_identity:,
+            course_identifier: application.npq_course.identifier,
+            cpd_lead_provider: application.npq_lead_provider.cpd_lead_provider,
+          )
+      end
+
       def reject_application
-        application.update!(lead_provider_approval_status: "rejected")
+        raise(StandardError, "no npq application, call #build first") if application.blank?
+
+        ::NPQ::Application::Reject.new(npq_application: application)
+
+        self
       end
 
       def edge_cases
@@ -82,7 +85,7 @@ module NewSeeds
       def add_declaration
         raise(StandardError, "no participant_profile, call #accept_application first") if participant_profile.blank?
 
-        FactoryBot.create(
+        @declaration = FactoryBot.create(
           :seed_npq_participant_declaration,
           user:,
           participant_profile:,
@@ -90,7 +93,30 @@ module NewSeeds
           cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
         )
 
+        return self if [true, false].sample
+
+        declaration.make_eligible!
+        return self if [true, false].sample
+
+        declaration.make_payable!
+        return self if [true, false].sample
+
+        declaration.make_paid!
+
         self
+      end
+
+      def add_statement_line_items
+        return self if declaration.submitted?
+
+        line_item = Finance::StatementLineItem.find_or_initialize_by(
+          participant_declaration: declaration,
+          statement: npq_lead_provider.statements.upto_current.where(cohort:).sample,
+        )
+
+        line_item.update!(
+          state: declaration.state,
+        )
       end
     end
   end
