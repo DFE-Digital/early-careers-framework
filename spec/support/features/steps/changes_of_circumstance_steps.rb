@@ -71,16 +71,27 @@ module Steps
                                            .add_participant_details
                                            .choose_to_add_an_ect_or_mentor
         participant_start_date = Date.new(2021, 9, 1)
-        response = {
-          trn: participant_trn,
-          qts: true,
-          active_alert: false,
-          previous_participation: false,
-          previous_induction: false,
-          no_induction: false,
-          exempt_from_induction: false,
-        }
-        allow(ParticipantValidationService).to receive(:validate).and_return(response)
+
+        allow(DqtRecordCheck).to receive(:call).and_return(
+          DqtRecordCheck::CheckResult.new(
+            {
+              "name" => participant_name,
+              "trn" => participant_trn,
+              "state_name" => "Active",
+              "dob" => participant_dob,
+              "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+              "induction" => {
+                "start_date" => 1.month.ago,
+                "status" => "Active",
+              },
+            },
+            true,
+            true,
+            true,
+            false,
+            3,
+          ),
+        )
 
         if participant_type == "ECT"
           wizard.add_ect participant_name, participant_trn, participant_dob, participant_email, participant_start_date
@@ -177,7 +188,7 @@ module Steps
 
         page_object = Pages::SchoolDashboardPage.loaded
                                                 .add_participant_details
-                                                .choose_to_transfer_an_ect_or_mentor
+                                                .choose_to_add_an_ect_or_mentor
 
         if participant_profile.ect?
           page_object.transfer_ect participant_name, participant_email, 1.day.from_now, same_provider, participant_trn, participant_dob

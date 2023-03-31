@@ -63,7 +63,7 @@ RSpec.configure do |config|
   # aliases for `it`, `describe`, and `context` that include `:focus`
   # metadata: `fit`, `fdescribe` and `fcontext`, respectively.
   config.filter_run_when_matching :focus
-  config.filter_run_excluding end_to_end_scenario: true
+  # config.filter_run_excluding end_to_end_scenario: true
 
   #
   #   # Allows RSpec to persist some state between runs in order to support
