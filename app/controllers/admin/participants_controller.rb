@@ -6,14 +6,6 @@ module Admin
     skip_after_action :verify_authorized, only: :index
 
     before_action :load_participant, except: :index
-    before_action :historical_induction_records, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :latest_induction_record, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :participant_declarations, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :validation_data, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :eligibility_data, only: :show, unless: -> { @participant_profile.npq? }
-    before_action :participant_identities, only: :show
-
-    def show; end
 
     def index
       search_term = params[:query]

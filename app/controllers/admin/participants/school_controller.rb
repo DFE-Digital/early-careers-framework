@@ -3,20 +3,20 @@
 module Admin::Participants
   class SchoolController < Admin::BaseController
     include RetrieveProfile
-    include FindInductionRecords
 
     def show
-      @relevant_induction_record = relevant_induction_record
-      @school_cohort = @relevant_induction_record&.school_cohort
-      @lead_provider = @school_cohort&.lead_provider
-      @school = @school_cohort&.school
-      @mentees_by_school = ParticipantProfile::ECT
-        .merge(InductionRecord.current)
-        .joins(:induction_records)
-        .where(induction_records: { mentor_profile_id: @participant_profile.id })
-        .group_by(&:school)
+      @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
-      add_breadcrumb(@school.name, admin_school_participants_path(@school)) if @school.present?
+      add_breadcrumb(
+        school.name,
+        admin_school_participants_path(school),
+      )
+    end
+
+  private
+
+    def school
+      @school ||= @participant_profile.school
     end
   end
 end

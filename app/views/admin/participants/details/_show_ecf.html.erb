@@ -1,7 +1,7 @@
 <%= govuk_summary_list do |sl|
   sl.row do |row|
     row.key(text: "Full name")
-    row.value(text: @user.full_name)
+    row.value(text: @participant_presenter.full_name)
     row.action(
       href: edit_admin_participant_change_name_path(@participant_profile),
       visually_hidden_text: "name"
@@ -10,7 +10,7 @@
 
   sl.row do |row|
     row.key(text: "Email address")
-    row.value(text: @user.email)
+    row.value(text: @participant_presenter.email)
     row.action(
       href: edit_admin_participant_change_email_path(@participant_profile),
       visually_hidden_text: "email"
@@ -19,43 +19,34 @@
 
   sl.row do |row|
     row.key(text: "Date of birth")
-    row.value(text: @participant_profile&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
-  end
-
-  sl.row do |row|
-    row.key(text: "Induction start date")
-    row.value(text: @participant_profile&.induction_start_date&.to_s(:govuk))
-    # row.action(
-    #   href: edit_admin_participant_change_induction_start_date_path(participant_profile),
-    #   visually_hidden_text: "induction start date"
-    # )
+    row.value(text: @participant_presenter&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
   end
 
   sl.row do |row|
     row.key(text: "Training status")
-    row.value(text: @participant_profile.training_status)
+    row.value(text: @participant_presenter.training_status)
   end
 
-  if @participant_profile.teacher_profile
+  if @participant_presenter.teacher_profile
     sl.row do |row|
       row.key(text: "TRN")
-      row.value(text: @participant_profile.teacher_profile.trn)
+      row.value(text: @participant_presenter.teacher_profile.trn)
     end
   end
 
   sl.row do |row|
     row.key(text: "Profile ID")
-    row.value(text: tag.code(@participant_profile.id))
+    row.value(text: tag.code(@participant_presenter.id))
   end
 
   sl.row do |row|
     row.key(text: "User ID")
-    row.value(text: tag.code(@user.id))
+    row.value(text: tag.code(@participant_presenter.id))
   end
 
   sl.row do |row|
     row.key(text: "External ID")
-    row.value(text: tag.code(@participant_profile.participant_identity.external_identifier))
+    row.value(text: tag.code(@participant_presenter.participant_identity.external_identifier))
   end
 
   sl.row do |row|
@@ -72,19 +63,19 @@
     row.key(text: "Notes")
 
     row.value do
-      if @participant_profile.notes?
-        simple_format(@participant_profile.notes, class: "govuk-body")
+      if @participant_presenter.notes?
+        simple_format(@participant_presenter.notes, class: "govuk-body")
       else
         "No notes"
       end
     end
 
-    notes_present = @participant_profile.notes.present?
+    notes_present = @participant_presenter.notes.present?
 
     row.action(
       text: notes_present ? "Change notes" : "Add notes",
       href: edit_admin_note_path(@participant_profile),
-      visually_hidden_text: notes_present ? "on #{@user.full_name}'s profile" : "to #{@user.full_name}'s profile",
+      visually_hidden_text: notes_present ? "on #{@participant_presenter.full_name}'s profile" : "to #{@participant_presenter.full_name}'s profile",
     )
   end
 end %>
