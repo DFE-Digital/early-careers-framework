@@ -189,8 +189,8 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
               expect(parsed_response).to eql(HashWithIndifferentAccess.new({
                 "errors": [
                   {
-                    "title": "The filter '#/updated_since' must be a valid RCF3339 date",
-                    "detail": "23rm21",
+                    "title": "Bad request",
+                    "detail": "The filter '#/updated_since' must be a valid RCF3339 date",
                   },
                 ],
               }))
