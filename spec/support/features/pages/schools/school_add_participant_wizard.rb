@@ -66,7 +66,7 @@ module Pages
       confirm_and_add
     end
 
-    def transfer_ect(full_name, trn, date_of_birth, email_address, start_date, mentor_full_name = nil)
+    def transfer_ect(full_name, email_address, start_date, same_provider, trn, date_of_birth)
       choose_to_add_a_new_ect
 
       add_full_name full_name
@@ -77,7 +77,7 @@ module Pages
 
       add_start_date start_date
       add_email_address full_name, email_address
-      choose_a_mentor mentor_full_name if mentor_full_name.present?
+      # choose_a_mentor mentor_full_name if mentor_full_name.present?
 
       choose_schools_current_training_provider unless same_provider
       confirm_and_transfer

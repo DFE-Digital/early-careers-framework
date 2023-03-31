@@ -93,6 +93,17 @@ module Steps
           ),
         )
 
+        response = {
+          trn: participant_trn,
+          qts: true,
+          active_alert: false,
+          previous_participation: false,
+          previous_induction: false,
+          no_induction: false,
+          exempt_from_induction: false,
+        }
+        allow(ParticipantValidationService).to receive(:validate).and_return(response)
+
         if participant_type == "ECT"
           wizard.add_ect participant_name, participant_trn, participant_dob, participant_email, participant_start_date
         else
