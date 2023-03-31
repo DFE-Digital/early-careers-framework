@@ -151,7 +151,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :tra_record_not_found,
                          :active_fip_training,
                          :tra_record_not_found,
-                         admin_status_label: "DfE checking eligibility", # TODO: conflict with ect_on_fip_no_validation !!
+                         admin_status_label: "DfE checking eligibility",
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          school_status_label: "DfE checking eligibility"
@@ -1043,8 +1043,8 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
                          admin_status_label: "Eligible to start",
-                         ab_status_label: "Checking QTS",
-                         dp_status_label: "Checking QTS",
+                         ab_status_label: "Training or eligible for training",
+                         dp_status_label: "Training or eligible for training",
                          school_status_label: "DfE checking eligibility"
       end
 
@@ -1466,8 +1466,8 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
                          admin_status_label: "Eligible to start",
-                         ab_status_label: "Checking QTS",
-                         dp_status_label: "Checking QTS",
+                         ab_status_label: "Training or eligible for training",
+                         dp_status_label: "Training or eligible for training",
                          school_status_label: "Eligible to start"
       end
 
