@@ -541,7 +541,30 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
-      resources :participants, only: %i[index]
+      resources :participants, only: %i[index show destroy] do
+        get :remove
+        get :edit_name, path: "edit-name"
+        put :update_name, path: "update-name"
+        get :edit_email, path: "edit-email"
+        put :update_email, path: "update-email"
+        get :email_used, path: "email-used"
+        get :edit_mentor, path: "edit-mentor"
+        put :update_mentor, path: "update-mentor"
+        get :add_appropriate_body, path: "add-appropriate-body"
+        get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
+        appropriate_body_selection_routes :participants
+
+        resource :transfer_out, path: "transfer-out", only: [] do
+          collection do
+            get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
+            get "teacher-end-date", to: "transfer_out#teacher_end_date"
+            put "teacher-end-date", to: "transfer_out#teacher_end_date"
+            get "check-answers", to: "transfer_out#check_answers"
+            put "check-answers", to: "transfer_out#check_answers"
+            get "complete", to: "transfer_out#complete"
+          end
+        end
+      end
 
       resources :cohorts, only: :show, param: :cohort_id do
         member do
@@ -594,15 +617,6 @@ Rails.application.routes.draw do
             get "complete", to: "setup_school_cohort#complete"
           end
 
-          resources :transfer_out_participant, path: "transfer-out", only: [] do
-            get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
-            get "teacher-end-date", to: "transfer_out#teacher_end_date", as: :teacher_end_date
-            put "teacher-end-date", to: "transfer_out#teacher_end_date"
-            get "check-answers", to: "transfer_out#check_answers", as: :check_answers
-            put "check-answers", to: "transfer_out#check_answers"
-            get "complete", to: "transfer_out#complete", as: :complete
-          end
-
           resources :participants, only: %i[index show destroy] do
             collection do
               scope module: :add_participants do
@@ -624,18 +638,6 @@ Rails.application.routes.draw do
                 end
               end
             end
-
-            get :remove
-            get :edit_name, path: "edit-name"
-            put :update_name, path: "update-name"
-            get :edit_email, path: "edit-email"
-            put :update_email, path: "update-email"
-            get :email_used, path: "email-used"
-            get :edit_mentor, path: "edit-mentor"
-            put :update_mentor, path: "update-mentor"
-            get :add_appropriate_body, path: "add-appropriate-body"
-            get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
-            appropriate_body_selection_routes :participants
           end
 
           namespace :core_programme, path: "core-programme" do

@@ -138,8 +138,9 @@
             <%= @induction_record.appropriate_body_name %>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <% if @profile.policy_class.new(current_user, @profile).add_appropriate_body? && can_appropriate_body_be_changed? %>
-              <%= govuk_link_to (participant_has_appropriate_body? ? "Change" : "Add"), { action: :add_appropriate_body, participant_id: @profile } %>
+            <% if @profile.ect? && @profile.policy_class.new(current_user, @profile).add_appropriate_body? %>
+              <%= govuk_link_to(participant_has_appropriate_body? ? "Change" : "Add",
+                                { action: :add_appropriate_body, participant_id: @profile }) %>
             <% end %>
           </dd>
         </div>
@@ -169,10 +170,9 @@
 
     <% unless @induction_record.leaving_induction_status? && @induction_record.school_transfer %>
       <h3 class="govuk-heading-m">No longer training?</h3>
-      <p class="govuk-body">Tell
-        us if <%= govuk_link_to "#{@profile.user.full_name} is transferring to another school",
-                                schools_transfer_out_participant_check_transfer_path(
-                                  transfer_out_participant_id: @profile.id) %>
+      <p class="govuk-body">
+        Tell us if <%= govuk_link_to "#{@profile.user.full_name} is transferring to another school",
+                                     check_transfer_schools_participant_transfer_out_path(participant_id: @profile.id) %>
       </p>
     <% end %>
 
