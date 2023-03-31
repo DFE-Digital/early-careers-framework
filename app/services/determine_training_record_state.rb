@@ -71,7 +71,7 @@ private
     return @training_state if %i[withdrawn_programme withdrawn_training deferred_training completed_training].include?(@training_state)
 
     return @validation_state unless @validation_state == :valid
-    return @training_eligibility_state unless %i[mentor_training_available induction_training_required].include?(@training_eligibility_state)
+    return @training_eligibility_state unless %i[eligible_for_mentor_training eligible_for_mentor_training_ero eligible_for_induction_training].include?(@training_eligibility_state)
 
     return @fip_funding_eligibility_state unless on_cip? || %i[eligible_for_mentor_funding eligible_for_fip_funding].include?(@fip_funding_eligibility_state)
 
@@ -82,9 +82,11 @@ private
     return :different_trn if manual_check_different_trn?
 
     # details have been requested from participant
-    return :request_for_details_submitted if request_for_details_submitted?
-    return :request_for_details_failed if request_for_details_failed?
     return :request_for_details_delivered if request_for_details_delivered?
+    return :request_for_details_failed if request_for_details_failed?
+    return :request_for_details_submitted if request_for_details_submitted?
+
+    return :validation_not_started if awaiting_validation_data?
 
     return :internal_error if validation_api_failed?
     return :tra_record_not_found unless tra_record_found?
@@ -93,13 +95,20 @@ private
   end
 
   def training_eligibility_state
-    return :duplicate_profile if ineligible_duplicate_profile?
+    return :checks_not_complete if eligibility_not_checked?
+
     return :active_flags if manual_check_active_flags?
     return :not_allowed if ineligible_active_flags?
 
-    return :mentor_training_available if @participant_profile.mentor?
+    if @participant_profile.mentor?
+      return :eligible_for_mentor_training_ero if ineligible_previous_participation?
+
+      return :eligible_for_mentor_training
+    end
 
     # ECTs only
+    return :duplicate_profile if ineligible_duplicate_profile?
+    return :secondary_profile if secondary_profile?
     return :not_qualified if manual_check_no_qts?
 
     return :exempt_from_induction if ineligible_exempt_from_induction?
@@ -107,19 +116,18 @@ private
     return :previous_participation if ineligible_previous_participation?
 
     return :tra_record_not_found unless tra_record_found?
-    return :checks_not_complete if eligibility_not_checked?
 
-    :induction_training_required
+    :eligible_for_induction_training
   end
 
   def fip_funding_eligibility_state
+    return :checks_not_complete if eligibility_not_checked?
+
     # DfE can override everything
     return :eligible_for_mentor_funding if eligible? && @participant_profile.mentor?
-    return :eligible_for_fip_funding if eligible? # && uplift? - TODO: does uplift affect eligibility ?
+    return :eligible_for_fip_funding if eligible?
 
     # ECTs and Mentors
-    return :duplicate_profile if ineligible_duplicate_profile?
-    return :secondary_profile if secondary_profile?
     return :active_flags if manual_check_active_flags?
     return :not_allowed if ineligible_active_flags?
 
@@ -127,6 +135,8 @@ private
     return :eligible_for_mentor_funding if @participant_profile.mentor?
 
     # ECTs only
+    return :duplicate_profile if ineligible_duplicate_profile?
+    return :secondary_profile if secondary_profile?
     return :no_induction_start if manual_check_no_induction?
     return :not_qualified if manual_check_no_qts?
 
@@ -135,9 +145,6 @@ private
     return :previous_participation if ineligible_previous_participation?
 
     return :tra_record_not_found unless tra_record_found?
-    return :checks_not_complete if eligibility_not_checked?
-
-    # return :no_uplift unless uplift? - TODO: does uplift affect eligibility ?
 
     :eligible_for_fip_funding
   end
@@ -156,11 +163,27 @@ private
     # TODO: if IR is in leaving state we need to figure out which state the leave / join is in
     return :leaving if leaving_training?
 
-    return :registered_for_mentor_training if @participant_profile.mentor?
+    if @participant_profile.mentor?
+      if ineligible_previous_participation?
+        return :registered_for_mentor_training_ero_primary if primary_profile?
+        return :registered_for_mentor_training_ero_secondary if secondary_profile?
+        return :registered_for_mentor_training_ero_duplicate if ineligible_duplicate_profile?
+
+        return :registered_for_mentor_training_ero
+      end
+
+      return :registered_for_mentor_training_primary if primary_profile?
+      return :registered_for_mentor_training_secondary if secondary_profile?
+      return :registered_for_mentor_training_duplicate if ineligible_duplicate_profile?
+
+      return :registered_for_mentor_training
+    end
 
     return :no_induction_start if manual_check_no_induction?
     return :active_fip_training if on_fip?
     return :active_cip_training if on_cip?
+
+    :active_diy_training
   end
 
   def on_fip?
@@ -169,6 +192,10 @@ private
 
   def on_cip?
     @induction_record&.induction_programme&.core_induction_programme? || @participant_profile.school_cohort&.core_induction_programme?
+  end
+
+  def primary_profile?
+    @participant_profile.primary_profile?
   end
 
   def secondary_profile?

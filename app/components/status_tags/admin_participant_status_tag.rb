@@ -45,7 +45,7 @@ module StatusTags
     end
 
     def record_state
-      @record_state ||= AdminParticipantStatusTagStatus.new(
+      @record_state ||= DetermineTrainingRecordState.call(
         participant_profile:,
         induction_record:,
       ).record_state

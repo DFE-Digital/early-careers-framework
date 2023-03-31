@@ -3,10 +3,15 @@
 require "rails_helper"
 
 RSpec.describe DetermineTrainingRecordState, :with_training_record_state_examples do
+  subject(:determined_state) { described_class.call(participant_profile:) }
+
+  let(:admin_status) { StatusTags::AdminParticipantStatusTag.new(participant_profile:).label }
+  let(:ab_status) { StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:).label }
+  let(:dp_status) { StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:).label }
+  let(:school_status) { StatusTags::SchoolParticipantStatusTag.new(participant_profile:).label }
+
   shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, training_state, record_state,
       admin_status_label:, ab_status_label: nil, dp_status_label: nil, school_status_label: nil|
-    subject(:determined_state) { described_class.call(participant_profile:) }
-
     it "#validation_state is set to \":#{validation_state}\"" do
       expect(determined_state.validation_state).to eq validation_state
     end
@@ -27,22 +32,18 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
       expect(determined_state.record_state).to eq record_state
     end
 
-    let(:admin_status) { StatusTags::AdminParticipantStatusTag.new(participant_profile:).label }
     it "StatusTags::AdminParticipantStatusTag has the label \"#{admin_status_label}\"" do
       expect(admin_status).to eq admin_status_label
     end
 
-    let(:ab_status) { StatusTags::AppropriateBodyParticipantStatusTag.new(participant_profile:).label }
     it "StatusTags::AppropriateBodyParticipantStatusTag has the label \"#{ab_status_label}\"" do
       expect(ab_status).to eq ab_status_label
     end
 
-    let(:dp_status) { StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:).label }
     it "StatusTags::DeliveryPartnerParticipantStatusTag has the label \"#{dp_status_label}\"" do
       expect(dp_status).to eq dp_status_label
     end
 
-    let(:school_status) { StatusTags::SchoolParticipantStatusTag.new(participant_profile:).label }
     it "StatusTags::SchoolParticipantStatusTag has the label \"#{school_status_label}\"" do
       expect(school_status).to eq school_status_label
     end
@@ -70,11 +71,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         let(:participant_profile) { ect_on_fip_no_validation }
 
         include_examples "determines states as",
-                         :tra_record_not_found,
+                         :validation_not_started,
                          :tra_record_not_found,
                          :tra_record_not_found,
                          :active_fip_training,
-                         :tra_record_not_found,
+                         :validation_not_started,
                          admin_status_label: "Contacted for information",
                          ab_status_label: "Contacted for information",
                          dp_status_label: "Contacted for information",
@@ -150,7 +151,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :tra_record_not_found,
                          :active_fip_training,
                          :tra_record_not_found,
-                         admin_status_label: "DfE checking eligibility",
+                         admin_status_label: "DfE checking eligibility", # TODO: conflict with ect_on_fip_no_validation !!
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          school_status_label: "DfE checking eligibility"
@@ -161,7 +162,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -176,7 +177,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -191,7 +192,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -221,7 +222,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :different_trn,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :different_trn,
@@ -236,7 +237,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :no_induction_start,
                          :no_induction_start,
                          :no_induction_start,
@@ -281,7 +282,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -371,7 +372,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -386,7 +387,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -401,7 +402,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -416,7 +417,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -431,7 +432,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_fip_training,
                          :active_fip_training,
@@ -446,7 +447,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -461,7 +462,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :deferred_training,
                          :deferred_training,
@@ -476,7 +477,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
@@ -492,7 +493,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :leaving,
                          :leaving,
@@ -507,7 +508,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :completed_training,
                          :completed_training,
@@ -523,11 +524,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         let(:participant_profile) { ect_on_cip_no_validation }
 
         include_examples "determines states as",
-                         :tra_record_not_found,
+                         :validation_not_started,
                          :tra_record_not_found,
                          :tra_record_not_found,
                          :active_cip_training,
-                         :tra_record_not_found,
+                         :validation_not_started,
                          admin_status_label: "Contacted for information",
                          ab_status_label: "Contacted for information",
                          dp_status_label: "Contacted for information",
@@ -629,7 +630,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :different_trn,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_cip_training,
                          :different_trn,
@@ -644,7 +645,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :no_induction_start,
                          :no_induction_start,
                          :no_induction_start,
@@ -689,7 +690,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_cip_training,
                          :active_cip_training,
@@ -779,7 +780,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_cip_training,
                          :active_cip_training,
@@ -794,7 +795,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_cip_training,
                          :active_cip_training,
@@ -809,7 +810,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -824,7 +825,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :active_cip_training,
                          :active_cip_training,
@@ -839,7 +840,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -854,7 +855,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :deferred_training,
                          :deferred_training,
@@ -869,7 +870,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
@@ -885,7 +886,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :leaving,
                          :leaving,
@@ -900,7 +901,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :induction_training_required,
+                         :eligible_for_induction_training,
                          :eligible_for_fip_funding,
                          :completed_training,
                          :completed_training,
@@ -916,11 +917,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         let(:participant_profile) { mentor_on_fip_no_validation }
 
         include_examples "determines states as",
-                         :tra_record_not_found,
-                         :mentor_training_available,
+                         :validation_not_started,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
-                         :tra_record_not_found,
+                         :validation_not_started,
                          admin_status_label: "Contacted for information",
                          ab_status_label: "Contacted for information",
                          dp_status_label: "Contacted for information",
@@ -932,7 +933,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :request_for_details_submitted,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :request_for_details_submitted,
@@ -947,7 +948,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :request_for_details_failed,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :request_for_details_failed,
@@ -962,7 +963,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :request_for_details_delivered,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :request_for_details_delivered,
@@ -977,7 +978,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :internal_error,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :internal_error,
@@ -992,7 +993,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :tra_record_not_found,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :tra_record_not_found,
@@ -1022,7 +1023,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :different_trn,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :different_trn,
@@ -1037,11 +1038,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
-                         admin_status_label: "Not eligible: No QTS",
+                         admin_status_label: "Eligible to start",
                          ab_status_label: "Checking QTS",
                          dp_status_label: "Checking QTS",
                          school_status_label: "DfE checking eligibility"
@@ -1052,7 +1053,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1082,7 +1083,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1097,10 +1098,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :duplicate_profile,
-                         :duplicate_profile,
-                         :registered_for_mentor_training,
-                         :duplicate_profile,
+                         :eligible_for_mentor_training,
+                         :eligible_for_mentor_funding,
+                         :registered_for_mentor_training_duplicate,
+                         :registered_for_mentor_training_duplicate,
                          admin_status_label: "Eligible: Mentor at additional school",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1112,10 +1113,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training_ero,
                          :eligible_for_mentor_funding,
-                         :registered_for_mentor_training,
-                         :registered_for_mentor_training,
+                         :registered_for_mentor_training_ero,
+                         :registered_for_mentor_training_ero,
                          admin_status_label: "Eligible to start: ERO",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1127,7 +1128,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1142,10 +1143,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
-                         :eligible_for_mentor_funding,
+                         :checks_not_complete,
+                         :checks_not_complete,
                          :registered_for_mentor_training,
-                         :registered_for_mentor_training,
+                         :checks_not_complete,
                          admin_status_label: "DfE checking eligibility",
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
@@ -1157,7 +1158,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1172,10 +1173,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
-                         :registered_for_mentor_training,
-                         :registered_for_mentor_training,
+                         :registered_for_mentor_training_primary,
+                         :registered_for_mentor_training_primary, # TODO: primary_mentor_profile
                          admin_status_label: "Eligible: Mentor at main school",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1187,10 +1188,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :duplicate_profile,
-                         :duplicate_profile,
-                         :registered_for_mentor_training,
-                         :duplicate_profile,
+                         :eligible_for_mentor_training,
+                         :eligible_for_mentor_funding,
+                         :registered_for_mentor_training_secondary,
+                         :registered_for_mentor_training_secondary,
                          admin_status_label: "Eligible: Mentor at additional school",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1202,7 +1203,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1217,7 +1218,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1232,7 +1233,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -1247,7 +1248,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1262,7 +1263,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -1277,7 +1278,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :deferred_training,
                          :deferred_training,
@@ -1292,7 +1293,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
@@ -1308,7 +1309,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :leaving,
                          :leaving,
@@ -1323,7 +1324,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :completed_training,
                          :completed_training,
@@ -1339,11 +1340,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         let(:participant_profile) { mentor_on_cip_no_validation }
 
         include_examples "determines states as",
-                         :tra_record_not_found,
-                         :mentor_training_available,
+                         :validation_not_started,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
-                         :tra_record_not_found,
+                         :validation_not_started,
                          admin_status_label: "Contacted for information",
                          ab_status_label: "Contacted for information",
                          dp_status_label: "Contacted for information",
@@ -1355,7 +1356,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :request_for_details_submitted,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :request_for_details_submitted,
@@ -1370,7 +1371,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :request_for_details_failed,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :request_for_details_failed,
@@ -1385,7 +1386,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :request_for_details_delivered,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :request_for_details_delivered,
@@ -1400,7 +1401,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :internal_error,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :internal_error,
@@ -1415,7 +1416,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :tra_record_not_found,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :tra_record_not_found,
@@ -1445,7 +1446,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :different_trn,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :different_trn,
@@ -1460,11 +1461,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
-                         admin_status_label: "Not eligible: No QTS",
+                         admin_status_label: "Eligible to start",
                          ab_status_label: "Checking QTS",
                          dp_status_label: "Checking QTS",
                          school_status_label: "Eligible to start"
@@ -1475,7 +1476,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1505,7 +1506,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1520,10 +1521,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :duplicate_profile,
-                         :duplicate_profile,
-                         :registered_for_mentor_training,
-                         :duplicate_profile,
+                         :eligible_for_mentor_training,
+                         :eligible_for_mentor_funding,
+                         :registered_for_mentor_training_duplicate,
+                         :registered_for_mentor_training_duplicate,
                          admin_status_label: "Eligible: Mentor at additional school",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1535,11 +1536,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training_ero,
                          :eligible_for_mentor_funding,
-                         :registered_for_mentor_training,
-                         :registered_for_mentor_training,
-                         admin_status_label: "Eligible to start",
+                         :registered_for_mentor_training_ero,
+                         :registered_for_mentor_training_ero,
+                         admin_status_label: "Eligible to start: ERO",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          school_status_label: "Eligible to start"
@@ -1550,7 +1551,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1565,10 +1566,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
-                         :eligible_for_mentor_funding,
+                         :checks_not_complete,
+                         :checks_not_complete,
                          :registered_for_mentor_training,
-                         :registered_for_mentor_training,
+                         :checks_not_complete,
                          admin_status_label: "DfE checking eligibility",
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
@@ -1580,7 +1581,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1595,10 +1596,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
-                         :registered_for_mentor_training,
-                         :registered_for_mentor_training,
+                         :registered_for_mentor_training_primary,
+                         :registered_for_mentor_training_primary,
                          admin_status_label: "Eligible: Mentor at main school",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1610,10 +1611,10 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :duplicate_profile,
-                         :duplicate_profile,
-                         :registered_for_mentor_training,
-                         :duplicate_profile,
+                         :eligible_for_mentor_training,
+                         :eligible_for_mentor_funding,
+                         :registered_for_mentor_training_secondary,
+                         :registered_for_mentor_training_secondary,
                          admin_status_label: "Eligible: Mentor at additional school",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
@@ -1625,7 +1626,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1640,7 +1641,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -1655,7 +1656,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :registered_for_mentor_training,
                          :registered_for_mentor_training,
@@ -1670,7 +1671,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :withdrawn_training,
                          :withdrawn_training,
@@ -1685,7 +1686,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :deferred_training,
                          :deferred_training,
@@ -1700,7 +1701,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
@@ -1716,7 +1717,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :leaving,
                          :leaving,
@@ -1731,7 +1732,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
 
         include_examples "determines states as",
                          :valid,
-                         :mentor_training_available,
+                         :eligible_for_mentor_training,
                          :eligible_for_mentor_funding,
                          :completed_training,
                          :completed_training,
