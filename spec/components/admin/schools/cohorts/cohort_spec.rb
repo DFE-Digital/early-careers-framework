@@ -45,7 +45,7 @@ RSpec.describe Admin::Schools::Cohorts::Cohort, type: :component do
   end
 
   context "with school cohort that is neither CIP nor FIP" do
-    let(:school_cohort) { instance_double(SchoolCohort, induction_programme_choice: Faker::Lorem.words.join("_")) }
+    let(:school_cohort) { instance_double(SchoolCohort, induction_programme_choice: Faker::Lorem.words.join("_"), appropriate_body: build(:seed_appropriate_body)) }
 
     before { render_inline(component) }
 
