@@ -130,7 +130,7 @@ RSpec.describe Participants::HistoryBuilder, :with_support_for_ect_examples do
       end
 
       Mentors::Change.call induction_record: fip_ect_only.induction_records.latest,
-                                   mentor_profile: fip_mentor_only
+                           mentor_profile: fip_mentor_only
 
       event_list = described_class.from_participant_profile(fip_ect_only).events
 

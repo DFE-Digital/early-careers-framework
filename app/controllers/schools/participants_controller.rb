@@ -65,7 +65,7 @@ class Schools::ParticipantsController < Schools::BaseController
 
     if @mentor_form.valid?
       Mentors::Change.call(induction_record: @profile.induction_records.for_school(@school).latest,
-                                   mentor_profile: @mentor_form.mentor&.mentor_profile)
+                           mentor_profile: @mentor_form.mentor&.mentor_profile)
 
       flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
       redirect_to schools_participant_path(id: @profile)
