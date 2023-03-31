@@ -9,12 +9,12 @@ en:
         label: "Contacted for information"
         colour: "grey"
 
-      request_for_details_failed:
-        label: "Check email address"
-        colour: "grey"
-
       request_for_details_delivered:
         label: "Contacted for information"
+        colour: "grey"
+
+      request_for_details_failed:
+        label: "Check email address"
         colour: "grey"
 
       internal_error:
@@ -29,16 +29,20 @@ en:
         label: "DfE checking eligibility"
         colour: "orange"
 
-      not_allowed:
-        label: "Not eligible"
-        colour: "red"
-
       different_trn:
         label: "DfE checking eligibility"
         colour: "orange"
 
-      not_qualified:
-        label: "Not eligible: No QTS"
+      checks_not_complete:
+        label: "DfE checking eligibility"
+        colour: "orange"
+
+      no_induction_start:
+        label: "DfE checking eligibility"
+        colour: "orange"
+
+      not_allowed:
+        label: "Not eligible"
         colour: "red"
 
       duplicate_profile:
@@ -49,25 +53,9 @@ en:
         label: "Not eligible"
         colour: "red"
 
-      previous_induction:
-        label: "Not eligible: NQT+1"
-        colour: "red"
-
       previous_participation:
         label: "Not eligible"
         colour: "red"
-
-      previous_participation_ero:
-        label: "Eligible to start: ERO"
-        colour: "green"
-
-      checks_not_complete:
-        label: "DfE checking eligibility"
-        colour: "orange"
-
-      no_induction_start:
-        label: "DfE checking eligibility"
-        colour: "orange"
 
       registered_for_fip_training:
         label: "Eligible to start"
@@ -79,6 +67,18 @@ en:
 
       registered_for_mentor_training:
         label: "Eligible to start"
+        colour: "green"
+
+      not_qualified:
+        label: "Not eligible: No QTS"
+        colour: "red"
+
+      previous_induction:
+        label: "Not eligible: NQT+1"
+        colour: "red"
+
+      previous_participation_ero:
+        label: "Eligible to start: ERO"
         colour: "green"
 
       registered_for_mentor_training_ero:
@@ -117,11 +117,15 @@ en:
         label: "Eligible to start"
         colour: "green"
 
-      withdrawn_training:
-        label: "Withdrawn by provider"
-        colour: "red"
+      leaving:
+        label: "Eligible to start"
+        colour: "green"
 
       deferred_training:
+        label: "Eligible to start"
+        colour: "green"
+
+      completed_training:
         label: "Eligible to start"
         colour: "green"
 
@@ -129,10 +133,6 @@ en:
         label: "Eligible to start"
         colour: "green"
 
-      leaving:
-        label: "Eligible to start"
-        colour: "green"
-
-      completed_training:
-        label: "Eligible to start"
-        colour: "green"
+      withdrawn_training:
+        label: "Withdrawn by provider"
+        colour: "red"
