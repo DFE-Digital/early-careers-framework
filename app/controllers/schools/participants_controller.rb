@@ -3,13 +3,12 @@
 class Schools::ParticipantsController < Schools::BaseController
   include AppropriateBodySelection::Controller
 
-  before_action :set_school, only: %i[index]
-  before_action :set_school_cohort, except: %i[index]
+  before_action :set_school
   before_action :set_participant, except: %i[index email_used]
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
 
-  helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
+  helper_method :participant_has_appropriate_body?
 
   def index
     @participants = Dashboard::Participants.new(school: @school, user: current_user)
@@ -63,7 +62,7 @@ class Schools::ParticipantsController < Schools::BaseController
       render :edit_mentor and return
     end
 
-    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
+    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
 
     if @mentor_form.valid?
       induction_record = @profile.induction_records.for_school(@school).latest
@@ -77,7 +76,7 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def add_appropriate_body
-    if can_appropriate_body_be_changed?
+    if @profile.ect?
       start_appropriate_body_selection
     else
       redirect_to schools_participant_path(id: @profile.id)
@@ -97,10 +96,6 @@ class Schools::ParticipantsController < Schools::BaseController
 
 private
 
-  def set_school
-    @school ||= policy_scope(School).friendly.find(params[:school_id]) if params[:school_id].present?
-  end
-
   def set_mentors_added
     @mentors_added = @school.school_mentors.any?
   end
@@ -109,7 +104,6 @@ private
     @mentor_form = ParticipantMentorForm.new(
       mentor_id: @profile.mentor&.id,
       school_id: @school.id,
-      cohort_id: @cohort.id,
     )
   end
 
@@ -143,9 +137,5 @@ private
 
   def participant_has_appropriate_body?
     @induction_record.appropriate_body.present?
-  end
-
-  def can_appropriate_body_be_changed?
-    @school_cohort.appropriate_body.present? && @profile.ect?
   end
 end

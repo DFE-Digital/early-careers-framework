@@ -23,7 +23,7 @@
       <% end %>
     <% end %>
 
-    <%= form_for @transfer_out_form, url: { action: :check_answers }, method: :put do |f| %>
+    <%= form_for @transfer_out_form, url: url_for(action: :check_answers), method: :put do |f| %>
       <%= f.govuk_submit "Confirm and continue" %>
     <% end %>
   </div>

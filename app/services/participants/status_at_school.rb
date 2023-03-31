@@ -20,6 +20,10 @@ class Participants::StatusAtSchool < BaseService
     @profile = profile || induction_record&.participant_profile
   end
 
+  def status
+    @status ||= compute_status
+  end
+
   alias_method :call, :status
 
 private
@@ -66,10 +70,6 @@ private
     return :mentoring if mentoring?
 
     :training
-  end
-
-  def status
-    @status ||= compute_status
   end
 
   # Status predicates
