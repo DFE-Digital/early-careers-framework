@@ -12,6 +12,7 @@ module Api
     rescue_from ActiveRecord::RecordNotUnique, with: :bad_request_response
     rescue_from ActiveRecord::RecordInvalid, with: :invalid_transition
     rescue_from Api::Errors::InvalidTransitionError, with: :invalid_transition
+    rescue_from Api::Errors::InvalidDatetimeError, with: :invalid_updated_since_response
 
     def append_info_to_payload(payload)
       super
@@ -48,6 +49,10 @@ module Api
 
     def invalid_transition(exception)
       render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:invalid_transition), params: exception).call }, status: :unprocessable_entity
+    end
+
+    def invalid_updated_since_response(exception)
+      render json: { errors: Api::ParamErrorFactory.new(error: I18n.t(:bad_request), params: exception.message).call }, status: :bad_request
     end
   end
 end

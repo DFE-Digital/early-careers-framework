@@ -35,7 +35,11 @@ private
 
     Time.iso8601(filter[:updated_since])
   rescue ArgumentError
-    Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+    begin
+      Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+    rescue ArgumentError
+      raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
+    end
   end
 
   def with_cohorts
