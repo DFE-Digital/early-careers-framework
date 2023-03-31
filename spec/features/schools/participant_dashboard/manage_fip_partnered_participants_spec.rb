@@ -63,7 +63,7 @@ RSpec.describe "Manage FIP partnered participants with change of circumstances",
 
     scenario "Induction coordinator can view participants that have completed their transfer out" do
       given_i_am_taken_to_fip_induction_dashboard
-      when_i_navigate_to_participants_dashboard(action: "Add")
+      when_i_navigate_to_participants_dashboard
       click_on "Not training"
       then_i_can_view_transferred_from_your_school_participants
 

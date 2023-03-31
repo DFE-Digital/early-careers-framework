@@ -249,7 +249,7 @@ RSpec.shared_examples "manage fip participants example", js: true do
 
       when_i_click_on_the_participants_name "DBC Mentor"
       then_i_am_taken_to_view_details_page
-      then_i_can_view_details_being_checked_mentor_status
+      then_i_can_view_details_being_checked_status
     end
   end
 end

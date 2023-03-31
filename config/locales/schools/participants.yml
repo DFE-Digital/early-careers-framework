@@ -29,6 +29,11 @@ en:
           content: "The participant does not need to complete statutory induction."
           colour: "grey"
 
+        failed_induction:
+          header: "Failed induction"
+          content: "The participant has failed statutory induction and is not eligible for training."
+          colour: "blue"
+
         joining_your_school:
           header: "Joining your school"
           content: "The participant is joining your school on %{start_date}. If this is wrong, contact the relevant provider."
@@ -56,7 +61,7 @@ en:
 
         no_induction_start_date:
           header: "No induction start date"
-          content: "We're waiting for the school's appropriate body to record the start date. Contact your appropriate body to remind them to record the participant's start date."
+          content: "We’re waiting for the school's appropriate body to record the start date. Contact your appropriate body to remind them to record the participant's start date."
           colour: "blue"
 
         no_longer_being_trained_sit:
@@ -81,7 +86,7 @@ en:
 
         training:
           header: "Training"
-          content: "We've confirmed the participant is eligible for this programme. Your training provider will contact them directly to facilitate their training."
+          content: "We’ve confirmed the participant is eligible for this programme. Your training provider will contact them directly to facilitate their training."
           colour: "green"
 
         training_completed:

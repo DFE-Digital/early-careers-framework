@@ -178,7 +178,7 @@ module ManageTrainingSteps
   def and_i_have_added_an_ineligible_ect_with_mentor
     @ineligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, user: create(:user, full_name: "Ineligible With-mentor"), mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
     @ineligible_ect_with_mentor.ecf_participant_eligibility.update!(status: "ineligible", reason: "active_flags")
-    Induction::Enrol.call(participant_profile: @ineligible_ect_with_mentor, induction_programme: @induction_programme)
+    Induction::Enrol.call(participant_profile: @ineligible_ect_with_mentor, induction_programme: @induction_programme, mentor_profile: @contacted_for_info_mentor)
   end
 
   def and_i_have_added_an_ineligible_mentor
@@ -642,13 +642,9 @@ module ManageTrainingSteps
     click_on "Manage #{name}"
   end
 
-  def when_i_click_change_induction_start_date
-    click_on "Change induction start date"
-  end
-
-  def when_i_navigate_to_participants_dashboard(action: "Manage")
-    when_i_click_on_summary_row_action("ECTs and mentors", action)
-    then_i_am_taken_to_your_ect_and_mentors_page
+  def when_i_navigate_to_participants_dashboard
+    click_on("Manage mentors and ECTs")
+    then_i_am_taken_to_manage_mentors_and_ects_page
   end
 
   def when_i_change_ect_email
@@ -679,10 +675,9 @@ module ManageTrainingSteps
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
   end
 
-  def then_i_am_taken_to_your_ect_and_mentors_page
-    expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-    expect(page).to have_link("Add an ECT or mentor")
-    expect(page).to have_link("Add yourself as a mentor")
+  def then_i_am_taken_to_manage_mentors_and_ects_page
+    expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+    expect(page).to have_text("Add ECT or mentor")
   end
 
   def then_i_am_taken_to_are_you_sure_page
@@ -890,39 +885,40 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_view_details_page
-    expect(page).to have_text("Name")
+    expect(page).to have_title("ECT or mentor details - Manage training for early career teachers")
   end
 
-  def then_i_can_view_ineligible_participant_status
-    expect(page).to have_text("This person is not eligible for this programme.")
+  def then_i_can_view_ineligible_participant_status(status = "FAILED INDUCTION")
+    expect(page).to have_text(status)
   end
 
   def then_i_can_view_eligible_fip_partnered_ect_status
     expect(page).to have_text("We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly.")
   end
 
-  def then_i_can_view_eligible_fip_unpartnered_status
-    expect(page).to have_text("We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly.")
+  def then_i_can_view_eligible_fip_unpartnered_status(status = "TRAINING")
+    expect(page).to have_text(status)
+    expect(page).to have_summary_row("Lead provider", "")
   end
 
   def then_i_can_view_contacted_for_info_status
+    expect(page).to have_text("CONTACTED FOR INFORMATION")
     expect(page).to have_text("We’ve asked this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency.")
   end
 
   def then_i_can_view_contacted_for_info_bounced_email_status
+    expect(page).to have_text("CHECK EMAIL ADDRESS")
     expect(page).to have_text("We could not send an email to this address. Please check it’s correct.")
   end
 
   def then_i_can_view_details_being_checked_status
-    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
+    expect(page).to have_text("PENDING")
+    expect(page).to have_text("We are doing some manual checks and will contact you for more information.")
   end
 
   def then_i_can_view_no_qts_status
-    expect(page).to have_text("Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021.")
-  end
-
-  def then_i_can_view_details_being_checked_mentor_status
-    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
+    expect(page).to have_text("WAITING FOR QTS")
+    expect(page).to have_text("We do not yet have qualified teacher status for the participant. Your school might want to chase this with their appropriate body.")
   end
 
   def then_i_can_view_eligible_cip_status
