@@ -36,6 +36,11 @@
       row.value(text: @relevant_induction_record.school_cohort.delivery_partner&.name)
     end
 
+    sl.row do |row|
+      row.key(text: "Appropriate body")
+      row.value(text: @relevant_induction_record.school_cohort.appropriate_body&.name)
+    end
+
     if @relevant_induction_record.participant_profile.ect?
       sl.row do |row|
         row.key(text: "Mentor")
