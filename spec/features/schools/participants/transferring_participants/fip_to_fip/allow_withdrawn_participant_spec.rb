@@ -270,7 +270,7 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       end
 
       def valid_dqt_response(participant_data)
-        {
+        DqtRecordPresenter.new({
           "name" => participant_data[:full_name],
           "trn" => participant_data[:trn],
           "state_name" => "Active",
@@ -280,7 +280,7 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
             "start_date" => 1.month.ago,
             "status" => "Active",
           },
-        }
+        })
       end
 
       def set_participant_data

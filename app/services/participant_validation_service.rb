@@ -21,29 +21,28 @@ class ParticipantValidationService
     return if validated_record.nil?
 
     {
-      trn: validated_record["trn"],
-      qts: validated_record.dig("qualified_teacher_status", "qts_date").present?,
-      active_alert: validated_record["active_alert"],
+      trn: validated_record.trn,
+      qts: validated_record.qts_date.present?,
+      active_alert: validated_record.active_alert?,
       previous_participation: previous_participation?(validated_record),
       previous_induction: previous_induction?(validated_record),
-      no_induction: validated_record.dig("induction", "start_date").nil?,
-      exempt_from_induction: validated_record.dig("induction", "status") == "Exempt",
+      no_induction: validated_record.induction_start_date.nil?,
+      exempt_from_induction: validated_record.exempt?,
     }
   end
 
 private
 
   def previous_participation?(validation_data)
-    CheckParticipantPreviousParticipation.call(trn: validation_data["trn"])
+    CheckParticipantPreviousParticipation.call(trn: validation_data.trn)
   end
 
   def previous_induction?(validation_data)
-    return false if validation_data["induction"].nil?
-    return true if validation_data["induction"]["completion_date"].present?
-    return false if validation_data["induction"]["start_date"].nil?
+    return true if validation_data.induction_completion_date.present?
+    return false if validation_data.induction_start_date.nil?
 
     # this should always be a check against 2021 not Cohort.current.start_year
-    validation_data["induction"]["start_date"] < ActiveSupport::TimeZone["London"].local(2021, 9, 1)
+    validation_data.induction_start_date < ActiveSupport::TimeZone["London"].local(2021, 9, 1)
   end
 
   def check_first_name_only?

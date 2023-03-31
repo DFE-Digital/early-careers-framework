@@ -148,7 +148,7 @@ private
   end
 
   def valid_dqt_response
-    {
+    DqtRecordPresenter.new({
       "name" => "George ECT",
       "trn" => "5234457",
       "state_name" => "Active",
@@ -158,7 +158,7 @@ private
         "start_date" => 1.month.ago,
         "status" => "Active",
       },
-    }
+    })
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page

@@ -1135,7 +1135,7 @@ module ManageTrainingSteps
   end
 
   def valid_dqt_response(participant_data)
-    {
+    DqtRecordPresenter.new({
       "name" => participant_data[:full_name],
       "trn" => participant_data[:trn],
       "state_name" => "Active",
@@ -1145,7 +1145,7 @@ module ManageTrainingSteps
         "start_date" => 1.month.ago,
         "status" => "Active",
       },
-    }
+    })
   end
 
   def set_updated_participant_data

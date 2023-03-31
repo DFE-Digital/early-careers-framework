@@ -378,7 +378,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
       end
 
       def valid_dqt_response(participant_data)
-        {
+        DqtRecordPresenter.new({
           "name" => participant_data[:full_name],
           "trn" => participant_data[:trn],
           "state_name" => "Active",
@@ -388,7 +388,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
             "start_date" => 1.month.ago,
             "status" => "Active",
           },
-        }
+        })
       end
 
       def set_participant_data

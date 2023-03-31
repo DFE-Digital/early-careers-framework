@@ -170,7 +170,7 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
   end
 
   def valid_dqt_response(participant_data)
-    {
+    DqtRecordPresenter.new({
       "name" => participant_data[:full_name],
       "trn" => participant_data[:trn],
       "state_name" => "Active",
@@ -180,6 +180,6 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
         "start_date" => 1.month.ago,
         "status" => "Active",
       },
-    }
+    })
   end
 end

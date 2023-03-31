@@ -46,27 +46,17 @@ private
     @trn = "0000001" if trn.blank?
 
     padded_trn = TeacherReferenceNumber.new(trn).formatted_trn
-    dqt_record = dqt_record(padded_trn, nino)
+    dqt_record = DqtRecordPresenter.new(dqt_record(padded_trn, nino))
 
-    return check_failure(:no_match_found) if dqt_record.nil?
-    return check_failure(:found_but_not_active) if dqt_record["state_name"] != "Active"
+    return check_failure(:no_match_found) if dqt_record.blank?
+    return check_failure(:found_but_not_active) unless dqt_record.active?
 
-    matches = 0
-    trn_matches = padded_trn == dqt_record["trn"]
-    matches += 1 if trn_matches
+    trn_matches = dqt_record.trn == padded_trn
+    name_matches = name_matches?(name: dqt_record.name)
+    dob_matches = dqt_record.dob == date_of_birth
+    nino_matches = nino.present? && nino.downcase == dqt_record.ni_number&.downcase
 
-    name_matches = if check_first_name_only?
-                     full_name.split(" ").first.downcase == dqt_record["name"].split(" ").first.downcase
-                   else
-                     full_name.downcase == dqt_record["name"].downcase
-                   end
-
-    matches += 1 if name_matches
-
-    dob_matches = date_of_birth == dqt_record["dob"]
-    matches += 1 if dob_matches
-    nino_matches = nino.present? && nino.downcase == dqt_record["ni_number"]&.downcase
-    matches += 1 if nino_matches
+    matches = [trn_matches, name_matches, dob_matches, nino_matches].count(true)
 
     if matches < 3 && (trn_matches && trn != "1")
       # If a participant mistypes their TRN and enters someone else's, we should search by NINO instead
@@ -76,6 +66,27 @@ private
     end
 
     CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
+  end
+
+  def name_matches?(name:)
+    if check_first_name_only?
+      extract_first_name(full_name).downcase == extract_first_name(name).downcase
+    else
+      strip_title_prefix(full_name).downcase == strip_title_prefix(name).downcase
+    end
+  end
+
+  def strip_title_prefix(str)
+    parts = str.split(" ")
+    if parts.first.downcase =~ /^(mr|mrs|miss|ms|dr|prof|rev)/
+      parts.shift.join(" ")
+    else
+      str
+    end
+  end
+
+  def extract_first_name(name)
+    strip_title_prefix(name).split(" ").first
   end
 
   def check_failure(reason)
@@ -107,7 +118,7 @@ private
   end
 
   def magic_dqt_record
-    {
+    DqtRecordPresenter.new({
       "trn" => trn,
       "name" => full_name,
       "dob" => date_of_birth,
@@ -121,6 +132,6 @@ private
         "start_date" => 1.month.ago,
         "status" => "In Progress",
       },
-    }
+    })
   end
 end
