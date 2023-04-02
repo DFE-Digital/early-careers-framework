@@ -37,6 +37,7 @@ class ParticipantProfile < ApplicationRecord
   has_many :current_induction_records, -> { current }, class_name: "InductionRecord"
   has_many :deleted_duplicates, class_name: "Finance::ECF::DeletedDuplicate", foreign_key: :primary_participant_profile_id
   has_many :induction_records
+  has_many :school_records
   has_many :participant_declarations
   has_many :participant_profile_schedules
   has_many :participant_profile_states

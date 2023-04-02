@@ -47,6 +47,7 @@ class School < ApplicationRecord
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :additional_school_emails
+  has_many :school_records
 
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])
