@@ -8,6 +8,7 @@ module Schools
           email
           email_already_taken
           start_date
+          cannot_add_registration_not_yet_open
           choose_mentor
           confirm_appropriate_body
           check_answers

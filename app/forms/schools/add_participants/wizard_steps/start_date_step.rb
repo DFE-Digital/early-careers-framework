@@ -15,7 +15,9 @@ module Schools
         end
 
         def next_step
-          if wizard.needs_to_choose_a_mentor?
+          if start_date_is_out_of_registration_scope?
+            :cannot_add_registration_not_yet_open
+          elsif wizard.needs_to_choose_a_mentor?
             :choose_mentor
           elsif wizard.needs_to_confirm_appropriate_body?
             :confirm_appropriate_body
@@ -29,6 +31,12 @@ module Schools
         end
 
       private
+
+        def start_date_is_out_of_registration_scope?
+          # This could be dynamic based on Cohort.registration_start_date but the ask on the ticket is for
+          # a temporary stop to prevent registrations
+          wizard.ect_participant? && start_date >= Date.new(2023, 9, 1)
+        end
 
         def start_date_is_present_and_correct
           if start_date.blank?
