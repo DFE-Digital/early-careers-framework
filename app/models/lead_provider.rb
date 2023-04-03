@@ -27,6 +27,8 @@ class LeadProvider < ApplicationRecord
   has_one :call_off_contract
 
   has_many :statements, through: :cpd_lead_provider, class_name: "Finance::Statement::ECF", source: :ecf_statements
+  has_many :leaving_school_transfers, foreign_key: "leaving_provider_id", class_name: "SchoolTransfer"
+  has_many :joining_school_transfers, foreign_key: "joining_provider_id", class_name: "SchoolTransfer"
   validates :name, presence: { message: "Enter a name" }
 
   def next_output_fee_statement(cohort)

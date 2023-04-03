@@ -47,6 +47,8 @@ class School < ApplicationRecord
   has_many :active_ecf_participants, through: :active_ecf_participant_profiles, source: :user
 
   has_many :additional_school_emails
+  has_many :leaving_school_transfers, foreign_key: "leaving_school_id", class_name: "SchoolTransfer"
+  has_many :joining_school_transfers, foreign_key: "joining_school_id", class_name: "SchoolTransfer"
 
   scope :with_local_authority, lambda { |local_authority|
     joins(%i[school_local_authorities local_authorities])

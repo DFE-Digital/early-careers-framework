@@ -48,6 +48,7 @@ class ParticipantProfile < ApplicationRecord
     merge(ParticipantProfileState.most_recent)
   }, class_name: "ParticipantProfileState"
   has_one :user, through: :teacher_profile
+  has_many :school_transfers
 
   # Scopes
   scope :ecf, -> { where(type: [ECT.name, Mentor.name]) }
