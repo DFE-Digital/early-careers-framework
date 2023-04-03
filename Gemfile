@@ -165,7 +165,7 @@ end
 
 group :test do
   gem "axe-core-rspec"
-  gem "capybara", "~> 3.38"
+  gem "capybara", "~> 3.39"
   gem "jsonapi-rspec"
   gem "launchy"
   gem "pundit-matchers", "~> 1.8.4"
