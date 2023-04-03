@@ -3,11 +3,7 @@
 module Schools
   module AddParticipants
     module WizardSteps
-      class CannotAddRegistrationNotYetOpenStep < ::WizardStep
-        def next_step
-          :none
-        end
-
+      class CannotAddRegistrationNotYetOpenStep < CannotAddStep
         def previous_step
           :start_date
         end

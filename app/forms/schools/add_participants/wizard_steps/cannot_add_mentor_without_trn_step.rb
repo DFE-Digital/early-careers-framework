@@ -3,11 +3,7 @@
 module Schools
   module AddParticipants
     module WizardSteps
-      class CannotAddMentorWithoutTrnStep < ::WizardStep
-        def next_step
-          # cannot proceed from here
-        end
-
+      class CannotAddMentorWithoutTrnStep < CannotAddStep
         def previous_step
           :trn
         end

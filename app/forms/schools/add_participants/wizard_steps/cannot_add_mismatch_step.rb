@@ -3,11 +3,7 @@
 module Schools
   module AddParticipants
     module WizardSteps
-      class CannotAddMismatchStep < ::WizardStep
-        def next_step
-          :none
-        end
-
+      class CannotAddMismatchStep < CannotAddStep
         def previous_step
           :known_by_another_name
         end
