@@ -153,7 +153,20 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           context "when updated_since in an invalid format" do
             it "returns a 400 status" do
               get "/api/v1/participants", params: { filter: { updated_since: "23rm21" } }
-              expect(response.status).to eq 400
+              expect(response).to be_bad_request
+            end
+
+            it "returns a meaningful error message" do
+              get "/api/v1/participants", params: { filter: { updated_since: "23rm21" } }
+
+              expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+                "errors": [
+                  {
+                    "title": "Bad request",
+                    "detail": "The filter '#/updated_since' must be a valid RCF3339 date",
+                  },
+                ],
+              }))
             end
           end
         end

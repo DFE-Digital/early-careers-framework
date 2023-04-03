@@ -11,6 +11,17 @@ class Admin::BaseController < ApplicationController
 
   layout "admin"
 
+  helper_method :breadcrumbs
+
+  def breadcrumbs
+    @breadcrumbs ||= []
+  end
+
+  def add_breadcrumb(name, path = nil)
+    breadcrumbs << helpers.govuk_breadcrumb_link_to("Schools", admin_schools_path)
+    breadcrumbs << helpers.govuk_breadcrumb_link_to(name, path)
+  end
+
 private
 
   def ensure_admin
