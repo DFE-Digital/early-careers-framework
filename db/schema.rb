@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_28_155851) do
+ActiveRecord::Schema.define(version: 2023_04_03_113148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -944,6 +944,38 @@ ActiveRecord::Schema.define(version: 2023_03_28_155851) do
     t.index ["school_id"], name: "index_school_mentors_on_school_id"
   end
 
+  create_table "school_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "joining_date", null: false
+    t.datetime "leaving_date"
+    t.uuid "school_id", null: false
+    t.uuid "participant_profile_id", null: false
+    t.uuid "joining_induction_record_id", null: false
+    t.uuid "leaving_induction_record_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["joining_induction_record_id"], name: "index_school_records_on_joining_induction_record_id"
+    t.index ["leaving_induction_record_id"], name: "index_school_records_on_leaving_induction_record_id"
+    t.index ["participant_profile_id"], name: "index_school_records_on_participant_profile_id"
+    t.index ["school_id"], name: "index_school_records_on_school_id"
+  end
+
+  create_table "school_transfers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "joining_date"
+    t.datetime "leaving_date", null: false
+    t.uuid "participant_profile_id", null: false
+    t.uuid "leaving_school_id", null: false
+    t.uuid "joining_school_id"
+    t.uuid "leaving_provider_id", null: false
+    t.uuid "joining_provider_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["joining_provider_id"], name: "index_school_transfers_on_joining_provider_id"
+    t.index ["joining_school_id"], name: "index_school_transfers_on_joining_school_id"
+    t.index ["leaving_provider_id"], name: "index_school_transfers_on_leaving_provider_id"
+    t.index ["leaving_school_id"], name: "index_school_transfers_on_leaving_school_id"
+    t.index ["participant_profile_id"], name: "index_school_transfers_on_participant_profile_id"
+  end
+
   create_table "schools", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -1144,6 +1176,15 @@ ActiveRecord::Schema.define(version: 2023_03_28_155851) do
   add_foreign_key "school_mentors", "participant_identities", column: "preferred_identity_id"
   add_foreign_key "school_mentors", "participant_profiles"
   add_foreign_key "school_mentors", "schools"
+  add_foreign_key "school_records", "induction_records", column: "joining_induction_record_id"
+  add_foreign_key "school_records", "induction_records", column: "leaving_induction_record_id"
+  add_foreign_key "school_records", "participant_profiles"
+  add_foreign_key "school_records", "schools"
+  add_foreign_key "school_transfers", "lead_providers", column: "joining_provider_id"
+  add_foreign_key "school_transfers", "lead_providers", column: "leaving_provider_id"
+  add_foreign_key "school_transfers", "participant_profiles"
+  add_foreign_key "school_transfers", "schools", column: "joining_school_id"
+  add_foreign_key "school_transfers", "schools", column: "leaving_school_id"
   add_foreign_key "schools", "networks"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"
