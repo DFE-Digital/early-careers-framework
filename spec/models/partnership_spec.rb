@@ -48,16 +48,38 @@ RSpec.describe Partnership, type: :model do
     end
   end
 
-  describe "scope :unchallenged" do
-    let!(:challenged_partnership) { create(:partnership, challenged_at: Time.zone.now, challenge_reason: "mistake") }
-    before { partnership.save! }
+  describe "scopes" do
+    let(:unchallenged_condition) { %("partnerships"."challenged_at" IS NULL AND "partnerships"."challenge_reason" IS NULL) }
 
-    it "includes unchallenged partnerships" do
-      expect(Partnership.unchallenged).to include(partnership)
+    describe ".unchallenged" do
+      it "includes partnerships where challenged_at and challenge_reason are both null" do
+        expect(Partnership.unchallenged.to_sql).to end_with(unchallenged_condition)
+      end
     end
 
-    it "does not include challenged partnerships" do
-      expect(Partnership.unchallenged).not_to include(challenged_partnership)
+    describe ".active" do
+      it "includes unchallenged partnerships where pending is false" do
+        pending_condition = %("partnerships"."pending" = FALSE)
+
+        expect(Partnership.active.to_sql).to include(%(#{unchallenged_condition} AND #{pending_condition}))
+      end
+    end
+
+    describe ".relationships" do
+      it "includes unchallenged partnerships where pending is false" do
+        relationship_condition = %("partnerships"."relationship" = TRUE)
+
+        expect(Partnership.relationships.to_sql).to include(relationship_condition)
+      end
+    end
+
+    describe ".in_year" do
+      it "joins cohorts and filters on the supplied start_year" do
+        year = 2003
+        start_year_condition = %("cohort"."start_year" = #{year})
+
+        expect(Partnership.in_year(year).to_sql).to include(start_year_condition)
+      end
     end
   end
 
@@ -78,16 +100,6 @@ RSpec.describe Partnership, type: :model do
       partnership = create(:partnership, challenge_deadline: nil)
 
       expect(partnership).not_to be_in_challenge_window
-    end
-  end
-
-  describe "scope :active" do
-    let!(:pending_partnership) { create(:partnership, :pending) }
-    let!(:partnership) { create(:partnership) }
-    let!(:challenged_partnership) { create(:partnership, :challenged, :pending) }
-
-    it "returns only unchallenged, not pending partnerships" do
-      expect(Partnership.active).to contain_exactly(partnership)
     end
   end
 
