@@ -6,12 +6,10 @@
     <dd class="govuk-summary-list__value">
       <%= message %>
     </dd>
-    <% if cohort.start_year != 2023 %>
-      <dd class="govuk-summary-list__actions">
-        <%= govuk_link_to "Change", admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug) %>
-        <span class="govuk-visually-hidden"> induction programme</span>
-      </dd>
-    <% end %>
+    <dd class="govuk-summary-list__actions">
+      <%= govuk_link_to "Change", admin_school_change_programme_path(id: cohort.start_year, school_id: school.slug) %>
+      <span class="govuk-visually-hidden"> induction programme</span>
+    </dd>
   </div>
 
   <%= content %>
