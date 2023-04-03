@@ -8,29 +8,26 @@ RSpec.describe NPQCourse do
 
     context "when a course is one of NPQCourse::LEADERSHIP_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQLeadership::IDENTIFIERS.sample }
-      let!(:cohort_schedule) { create(:npq_leadership_schedule, cohort:) }
 
       it "returns the default NPQ leadership schedule" do
         expect(described_class.schedule_for(npq_course:, cohort:))
-          .to eq(Finance::Schedule::NPQLeadership.default_for(cohort:))
+          .to eq(Finance::Schedule::NPQLeadership.schedule_for(cohort:))
       end
 
       context "when requesting for next cohort" do
         let(:next_cohort) { Cohort.next || create(:cohort, :next) }
-        let!(:next_cohort_schedule) { create(:npq_leadership_schedule, cohort: next_cohort) }
 
         it "uses next cohort schedule" do
-          expect(described_class.schedule_for(npq_course:, cohort: next_cohort)).to eql(next_cohort_schedule)
+          expect(described_class.schedule_for(npq_course:, cohort: next_cohort)).to eql(Finance::Schedule::NPQLeadership.schedule_for(cohort: next_cohort))
         end
       end
     end
 
     context "when a course is one of NPQCourse::SPECIALIST_IDENTIFIER" do
       let(:identifier) { Finance::Schedule::NPQSpecialist::IDENTIFIERS.sample }
-      let!(:cohort_schedule) { create(:npq_specialist_schedule, cohort:) }
 
       it "returns the default NPQ specialist schedule" do
-        expect(described_class.schedule_for(npq_course:, cohort:)).to eq(Finance::Schedule::NPQSpecialist.default_for(cohort:))
+        expect(described_class.schedule_for(npq_course:, cohort:)).to eq(Finance::Schedule::NPQSpecialist.schedule_for(cohort:))
       end
     end
 
@@ -46,11 +43,9 @@ RSpec.describe NPQCourse do
       let(:identifier) { "npq-early-headship-coaching-offer" }
 
       it "returns the default NPQ EHCO schedule" do
-        expected_schedule = Finance::Schedule::NPQEhco.find_by(schedule_identifier: "npq-ehco-december")
+        expected_schedule = Finance::Schedule::NPQEhco.schedule_for(cohort:)
 
-        travel_to Date.new(Cohort.current.start_year, 12, 1) do
-          expect(described_class.schedule_for(npq_course:)).to eq(expected_schedule)
-        end
+        expect(described_class.schedule_for(npq_course:)).to eq(expected_schedule)
       end
     end
 
