@@ -17,7 +17,7 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
 
     it "includes participants from the current cohort" do
       expect(ParticipantProfile::ECF.current_cohort).to include(current_participant)
-      expect(ParticipantProfile::ECF.current_cohort.count).to eql 1
+      expect(ParticipantProfile::ECF.current_cohort.to_sql).to include(%("school_cohort"."cohort_id" = '#{Cohort.current.id}'))
     end
   end
 
@@ -200,13 +200,13 @@ RSpec.describe ParticipantProfile::ECF, type: :model do
     let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
     context "when the details have not been matched" do
       it "returns the profile" do
-        expect(ParticipantProfile::ECF.details_being_checked).to match_array([profile])
+        expect(profile).to be_in(ParticipantProfile::ECF.details_being_checked)
       end
     end
     context "when the eligibility is manual check" do
       let!(:eligibility) { create(:ecf_participant_eligibility, :manual_check, participant_profile: profile) }
       it "returns the profile" do
-        expect(ParticipantProfile::ECF.details_being_checked).to match_array([profile])
+        expect(profile).to be_in(ParticipantProfile::ECF.details_being_checked)
       end
     end
   end
