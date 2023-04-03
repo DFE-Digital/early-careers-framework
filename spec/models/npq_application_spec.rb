@@ -215,12 +215,12 @@ RSpec.describe NPQApplication, :with_default_schedules, type: :model do
     end
 
     context "when there is a previously accepted ASO and applying for EHC0" do
-      let(:npq_aso_course) { create(:npq_aso_course) }
-      let(:npq_ehco_course) { create(:npq_ehco_course) }
-
       subject { create(:npq_application, eligible_for_funding: true, npq_course: npq_ehco_course) }
 
       before do
+      npq_aso_course = create(:npq_aso_course)
+      npq_ehco_course = create(:npq_ehco_course)
+
         create(:npq_aso_schedule)
         create(:npq_ehco_schedule)
 
