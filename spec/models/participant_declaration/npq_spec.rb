@@ -4,10 +4,6 @@ require "rails_helper"
 
 RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :model do
   context "when declarations for a particular course are made" do
-    before do
-      create_list(:npq_participant_declaration, 20)
-    end
-
     describe "associations" do
       subject(:declaration) { create(:npq_participant_declaration) }
 
@@ -19,14 +15,6 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
         }
       end
     end
-
-    it "returns all records when not scoped" do
-      expect(described_class.all.count).to eq(20)
-    end
-
-    it "can retrieve by npq courses attached" do
-      expect(NPQCourse.identifiers.uniq.map { |course_identifier| described_class.for_course(course_identifier).count }.inject(:+)).to eq(20)
-    end
   end
 
   describe "scopes" do
@@ -37,6 +25,14 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
 
       it "returns only valid declarations" do
         expect(described_class.valid_to_have_outcome_for_lead_provider_and_course(participant_declaration.cpd_lead_provider, participant_declaration.course_identifier)).to match([participant_declaration])
+      end
+    end
+
+    describe "#for_course" do
+      it "retrieves NPQ participant declarations by their course identifier" do
+        identifier = "xyz"
+
+        expect(described_class.for_course(identifier).to_sql).to include(%("participant_declarations"."course_identifier" = '#{identifier}'))
       end
     end
   end
