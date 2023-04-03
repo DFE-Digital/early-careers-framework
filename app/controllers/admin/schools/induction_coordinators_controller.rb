@@ -14,8 +14,8 @@ module Admin
       @induction_tutor_form = NominateInductionTutorForm.new(tutor_form_params)
       if @induction_tutor_form.valid?(%i[full_name email])
         InductionTutors::Create.call(school: @school,
-                                  email: @induction_tutor_form.email,
-                                  full_name: @induction_tutor_form.full_name)
+                                     email: @induction_tutor_form.email,
+                                     full_name: @induction_tutor_form.full_name)
 
         set_success_message(content: "New induction tutor added. They will get an email with next steps.", title: "Success")
         redirect_to admin_school_path(@school)

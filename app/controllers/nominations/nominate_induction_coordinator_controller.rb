@@ -47,8 +47,8 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
 
   def create
     InductionTutors::Create.call(school: @nominate_induction_tutor_form.school,
-                              email: @nominate_induction_tutor_form.email,
-                              full_name: @nominate_induction_tutor_form.full_name)
+                                 email: @nominate_induction_tutor_form.email,
+                                 full_name: @nominate_induction_tutor_form.full_name)
     session.delete(:nominate_induction_tutor_form)
 
     redirect_to nominate_school_lead_success_nominate_induction_coordinator_path
