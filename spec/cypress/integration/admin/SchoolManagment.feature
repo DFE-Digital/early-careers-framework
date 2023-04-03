@@ -51,4 +51,4 @@ Feature: Admin user managing schools
     Then "notification banner" should contain "You are impersonating Sarah Smith"
     And "notification banner" should contain "Stop impersonating"
     When I click on "stop impersonating button"
-    Then I should be on "admin schools" page
+    Then I should be on "admin school overview" page
