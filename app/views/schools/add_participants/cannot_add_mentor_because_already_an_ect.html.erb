@@ -1,0 +1,17 @@
+<% title = "You cannot add #{@wizard.full_name}" %>
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link( text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
+
+    <p class="govuk-body">Our records show <%= @wizard.full_name %> is currently registered as an ECT.</p>
+    <p class="govuk-body">Our service currently does not allow you to change an ECT into a mentor.</p>
+    <p class="govuk-body">You should contact <%= @wizard.lead_provider&.name || "your training provider" %> to provide access to their mentor training.</p>
+
+    <%= govuk_link_to "Return to your ECTs and mentors", schools_participants_path, class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
+</div>

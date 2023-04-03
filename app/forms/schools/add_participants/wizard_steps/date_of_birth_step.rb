@@ -16,7 +16,15 @@ module Schools
 
         def next_step
           if wizard.participant_exists?
-            if wizard.already_enrolled_at_school?
+            if wizard.existing_participant_is_a_different_type?
+              if wizard.ect_participant?
+                # trying to add an ECT who is already a mentor
+                :cannot_add_ect_because_already_a_mentor
+              else
+                # trying to add a mentor who is already an ECT
+                :cannot_add_mentor_because_already_an_ect
+              end
+            elsif wizard.already_enrolled_at_school?
               :cannot_add_already_enrolled_at_school
             elsif wizard.ect_participant?
               :confirm_transfer

@@ -11,6 +11,8 @@ module Schools
           name
           trn
           cannot_add_mentor_without_trn
+          cannot_add_ect_because_already_a_mentor
+          cannot_add_mentor_because_already_an_ect
           date_of_birth
           known_by_another_name
           different_name
@@ -106,6 +108,10 @@ module Schools
       def participant_exists?
         # NOTE: this doesn't differentiate being at this school from being at another school
         check_for_dqt_record? && dqt_record.present? && existing_participant_profile.present?
+      end
+
+      def existing_participant_is_a_different_type?
+        participant_exists? && existing_participant_profile.participant_type != participant_type.to_sym
       end
 
     private
