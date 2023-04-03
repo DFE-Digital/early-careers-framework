@@ -22,7 +22,8 @@ module NewSeeds
           FactoryBot.create(:seed_participant_identity, user:)
 
         @application = FactoryBot.create(
-          :npq_application,
+          :seed_npq_application,
+          :valid,
           participant_identity:,
           npq_lead_provider:,
           npq_course:,
@@ -35,24 +36,36 @@ module NewSeeds
       def accept_application
         raise(StandardError, "no npq application, call #build first") if application.blank?
 
-        ::NPQ::Application::Accept.new(npq_application: application).call
+        FactoryBot.create(:seed_npq_participant_profile_state, :valid, participant_profile:)
+
+        participant_profile.teacher_profile.update!(trn: application.teacher_reference_number)
+        application.update!(lead_provider_approval_status: "accepted")
 
         self
       end
 
       def participant_profile
         @participant_profile ||=
-          ParticipantProfileResolver.call(
+          FactoryBot.create(
+            :seed_npq_participant_profile,
+            user:,
             participant_identity:,
-            course_identifier: application.npq_course.identifier,
-            cpd_lead_provider: application.npq_lead_provider.cpd_lead_provider,
+            npq_application: application,
+            npq_course:,
+            school_urn: application.school_urn,
+            school_ukprn: application.school_ukprn,
+            schedule: NPQCourse.schedule_for(npq_course:, cohort:),
+            # it turns out that we don't find the NPQ application via the participant identity but
+            # instead by the `has_one` on participant profile. The id of the NPQ application needs
+            # to match the corresponding participant profile's id.
+            id: application.id,
           )
       end
 
       def reject_application
         raise(StandardError, "no npq application, call #build first") if application.blank?
 
-        ::NPQ::Application::Reject.new(npq_application: application)
+        application.update!(lead_provider_approval_status: "rejected")
 
         self
       end
@@ -93,30 +106,7 @@ module NewSeeds
           cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
         )
 
-        return self if [true, false].sample
-
-        declaration.make_eligible!
-        return self if [true, false].sample
-
-        declaration.make_payable!
-        return self if [true, false].sample
-
-        declaration.make_paid!
-
         self
-      end
-
-      def add_statement_line_items
-        return self if declaration.submitted?
-
-        line_item = Finance::StatementLineItem.find_or_initialize_by(
-          participant_declaration: declaration,
-          statement: npq_lead_provider.statements.upto_current.where(cohort:).sample,
-        )
-
-        line_item.update!(
-          state: declaration.state,
-        )
       end
     end
   end
