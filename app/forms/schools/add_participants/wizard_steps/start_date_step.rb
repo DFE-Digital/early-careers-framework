@@ -35,7 +35,11 @@ module Schools
         def start_date_is_out_of_registration_scope?
           # This could be dynamic based on Cohort.registration_start_date but the ask on the ticket is for
           # a temporary stop to prevent registrations
-          wizard.ect_participant? && start_date >= Date.new(2023, 9, 1)
+          if FeatureFlag.active? :prevent_2023_ect_registrations
+            wizard.ect_participant? && start_date >= Date.new(2023, 9, 1)
+          else
+            false
+          end
         end
 
         def start_date_is_present_and_correct
