@@ -25,6 +25,13 @@ class Induction::TransferAndContinueExistingFip < BaseService
                                                preferred_email: email,
                                                mentor_profile:,
                                                school_transfer: true)
+      ## Update old School record and create new one for new school:
+      ## SchoolRecord::Enrol.new(
+      ##  school: school_cohort.school,
+      ##  participant_profile:,
+      ##  joining_date: start_date,
+      ##  leaving_date: end_date,
+      # #).call
 
       if participant_profile.mentor?
         Mentors::ChangeSchool.call(mentor_profile: participant_profile,

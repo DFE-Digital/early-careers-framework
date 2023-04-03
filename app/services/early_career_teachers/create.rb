@@ -29,6 +29,12 @@ module EarlyCareerTeachers
                                 mentor_profile:,
                                 start_date:,
                                 appropriate_body_id:)
+          ## Create School record:
+          ## SchoolRecord::Enrol.new(
+          ##  school: school_cohort.school,
+          ##  participant_profile: profile,
+          ##  joining_date: start_date
+          # #).call
         end
       end
 
