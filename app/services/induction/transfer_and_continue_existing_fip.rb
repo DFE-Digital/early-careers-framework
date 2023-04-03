@@ -26,6 +26,29 @@ class Induction::TransferAndContinueExistingFip < BaseService
                                                mentor_profile:,
                                                school_transfer: true)
 
+      ## Create new school transfer, this data depends who triggers the transfer:
+      ## participant_profile.school_transfer.create!(
+      ##  leaving_school:,
+      ##  joining_school:,
+      ##  leaving_provider:,
+      ##  joining_provider:,
+      ##  leaving_date: end_date,
+      ##  joining_date: start_date,
+      # #)
+      ##
+      ## or
+      ##
+      ## update school transfer, this data depends who triggers the transfer:
+      ## participant_profile.school_transfer.where(
+      ##  leaving_school:,
+      ##  leaving_provider:,
+      ##  joining_date: nil,
+      ## ).update(
+      ##   joining_date: start_date,
+      ##   joining_school:,
+      ##   joining_provider:,
+      ## )
+
       if participant_profile.mentor?
         Mentors::ChangeSchool.call(mentor_profile: participant_profile,
                                    from_school: old_school,
