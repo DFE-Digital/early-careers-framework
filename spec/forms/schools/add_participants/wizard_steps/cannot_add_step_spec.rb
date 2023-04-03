@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::AddParticipants::WizardSteps::CannotAddMentorBecauseAlreadyAnECTStep, type: :model do
+RSpec.describe Schools::AddParticipants::WizardSteps::CannotAddStep, type: :model do
   subject(:step) { described_class.new }
 
   describe "#next_step" do
