@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "NPQ view contract" do
+RSpec.feature "NPQ view contract", :with_default_schedules do
   include FinanceHelper
 
   scenario "see the contract information for all courses of an NPQ lead provider" do
