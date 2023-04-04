@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe Importers::NPQManualValidation, :with_default_schedules do
-  let(:npq_course)      { create(:npq_course, identifier: "npq-senior-leadership") }
-  let(:npq_application) { create(:npq_application, :accepted, npq_course:, teacher_reference_number_verified: false) }
-  let(:file)            { Tempfile.new("test.csv") }
+  let(:npq_course)       { create(:npq_course, identifier: "npq-senior-leadership") }
+  let(:npq_application)  { create(:npq_application, :accepted, npq_course:, teacher_reference_number_verified: false) }
+  let(:file)             { Tempfile.new("test.csv") }
+  let!(:teacher_profile) { npq_application.profile.teacher_profile }
 
   around do |example|
     original_stdout = $stdout
@@ -35,6 +36,12 @@ RSpec.describe Importers::NPQManualValidation, :with_default_schedules do
         expect {
           subject.call
         }.to change { npq_application.reload.teacher_reference_number }.to("7654321")
+      end
+
+      it "updates the teacher profile trn" do
+        expect {
+          subject.call
+        }.to change { teacher_profile.reload.trn }.to("7654321")
       end
 
       it "updates teacher_reference_number_verified to true" do
