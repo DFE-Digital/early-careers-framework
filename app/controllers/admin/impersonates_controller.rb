@@ -11,6 +11,16 @@ module Admin
 
     def create
       impersonate_user(@user)
+
+      Sentry.with_scope do |scope|
+        scope.set_tags(
+          request_dot_referer: request.referer,
+          request_headers_http_referer: request.headers["HTTP_REFERER"],
+          request_headers_referer: request.headers["Referer"],
+        )
+        Sentry.capture_message("User was impersonated")
+      end
+
       session[:impersonation_start_path] = referer
       redirect_to after_sign_in_path_for(@user)
     end
