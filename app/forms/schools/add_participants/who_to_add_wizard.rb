@@ -21,6 +21,7 @@ module Schools
           still_cannot_find_their_details
           confirm_transfer
           confirm_mentor_transfer
+          need_training_setup
           cannot_add
           cannot_add_mismatch
           cannot_add_mentor_at_multiple_schools
@@ -41,9 +42,9 @@ module Schools
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
         if existing_participant_cohort == Cohort.active_registration_cohort
-          expect_any_ects_schools_setup_school_cohort_path(cohort_id: existing_participant_cohort)
+          expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: existing_participant_cohort)
         else
-          schools_choose_programme_path(cohort_id: participant_cohort)
+          schools_choose_programme_path(school_id: school.slug, cohort_id: existing_participant_cohort)
         end
       end
 

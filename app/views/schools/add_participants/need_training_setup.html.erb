@@ -16,6 +16,6 @@
     <%= render GovukComponent::InsetTextComponent.new(text: "The name, TRN and date of birth you have entered will not be saved.
           You will need to enter this information again once you have set up the training.") %>
   
-    <%= govuk_link_to_button "Continue to set up training", @wizard.need_training_path %>
+    <%= govuk_button_link_to "Continue to set up training", @wizard.need_training_path %>
   </div>
 </div>

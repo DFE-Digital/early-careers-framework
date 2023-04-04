@@ -9,7 +9,11 @@ module Schools
         end
 
         def previous_step
-          :email
+          if wizard.ect_participant?
+            :confirm_transfer
+          else
+            :confirm_mentor_transfer
+          end
         end
       end
     end
