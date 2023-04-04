@@ -155,7 +155,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       end
 
       def then_i_should_be_on_the_only_mentor_at_your_school_page
-        expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} only mentor ECT’s at your school?")
+        expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} only mentor ECTs at your school?")
       end
 
       def then_i_should_be_on_the_teacher_start_date_page
