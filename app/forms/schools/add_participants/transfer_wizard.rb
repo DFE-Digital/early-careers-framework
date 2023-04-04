@@ -7,6 +7,7 @@ module Schools
         %i[
           continue_current_programme
           join_school_programme
+          cannot_add_manual_transfer
           email
           email_already_taken
           joining_date

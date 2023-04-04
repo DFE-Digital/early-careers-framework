@@ -18,7 +18,7 @@ module Schools
           if join_school_programme?
             :check_answers
           else
-            :cannot_add
+            :cannot_add_manual_transfer
           end
         end
 
