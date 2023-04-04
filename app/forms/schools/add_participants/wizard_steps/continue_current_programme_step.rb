@@ -23,7 +23,7 @@ module Schools
         end
 
         def previous_step
-          if wizard.needs_to_choose_a_mentor?
+          if wizard.ect_participant? && wizard.mentor_options.any?
             :choose_mentor
           else
             :email
