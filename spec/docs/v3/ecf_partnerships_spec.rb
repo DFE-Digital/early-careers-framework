@@ -8,10 +8,10 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
   let(:delivery_partner) { create(:delivery_partner, name: "First Delivery Partner") }
   let(:school) { create(:school, urn: "123456", name: "My first High School") }
   let(:cohort) { create(:cohort, :current) }
-  let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
+  let!(:provider_relationship) { create(:provider_relationship, lead_provider:, delivery_partner:, cohort:) }
 
   context "with API V3 feature flag enabled", with_feature_flags: { api_v3: "active" } do
     path "/api/v3/partnerships/ecf" do
@@ -19,6 +19,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         operationId :partnerships_ecf_get
         tags "ECF partnerships"
         security [bearerAuth: []]
+
+        let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
 
         parameter name: :filter,
                   schema: {
@@ -64,6 +66,8 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         tags "ECF partnerships"
         security [bearerAuth: []]
 
+        let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
+
         parameter name: :id,
                   in: :path,
                   required: true,
@@ -99,15 +103,26 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         end
       end
     end
-  end
 
-  context "with API V3 feature flag disabled", api_v3: true do
     path "/api/v3/partnerships/ecf" do
       post "<b>Note, this endpoint is new.</b><br/>Create an ECF partnership with a school and delivery partner" do
         operationId :partnerships_ecf_post
         tags "ECF partnerships"
         security [bearerAuth: []]
         consumes "application/json"
+
+        let(:params) do
+          {
+            "data": {
+              "type": "ecf-partnership",
+              "attributes": {
+                "cohort": cohort.start_year,
+                "school_id": school.id,
+                "delivery_partner_id": delivery_partner.id,
+              },
+            },
+          }
+        end
 
         parameter name: :params,
                   in: :body,
@@ -119,40 +134,6 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
 
         response "200", "Create an ECF partnership" do
           schema({ "$ref": "#/components/schemas/ECFPartnershipResponse" })
-
-          # TODO: replace with actual implementation once implemented
-          after do |example|
-            content = example.metadata[:response][:content] || {}
-            example_spec = {
-              "application/json" => {
-                examples: {
-                  create_partnership: {
-                    value: {
-                      data: {
-                        id: "cd3a12347-7308-4879-942a-c4a70ced400a",
-                        type: "partnership",
-                        attributes: {
-                          cohort: 2021,
-                          urn: "123456",
-                          delivery_partner_name: "Delivery partner name",
-                          delivery_partner_id: "cd3a12347-7308-4879-942a-c4a70ced400a",
-                          school_id: "dd3a12347-7308-4879-942a-c4a70ced400a",
-                          status: "active",
-                          challenged_reason: nil,
-                          challenged_at: "2021-05-31T02:22:32.000Z",
-                          induction_tutor_name: "John Doe",
-                          induction_tutor_email: "john.doe@example.com",
-                          updated_at: "2021-05-31T02:22:32.000Z",
-                          created_at: "2021-05-31T02:22:32.000Z",
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            }
-            example.metadata[:response][:content] = content.deep_merge(example_spec)
-          end
 
           run_test!
         end
@@ -166,13 +147,27 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         end
 
         response "422", "Unprocessable entity" do
+          let(:params) do
+            {
+              "data": {
+                "type": "ecf-partnership",
+                "attributes": {
+                  "cohort": nil,
+                  "school_id": nil,
+                  "delivery_partner_id": nil,
+                },
+              },
+            }
+          end
           schema({ "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse" })
 
           run_test!
         end
       end
     end
+  end
 
+  context "with API V3 feature flag disabled", api_v3: true do
     path "/api/v3/partnerships/ecf/{id}" do
       put "<b>Note, this endpoint is new.</b><br/>Update a partnership’s delivery partner in an existing partnership in a cohort" do
         operationId :partnerships_ecf_put
