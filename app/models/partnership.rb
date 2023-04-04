@@ -19,6 +19,7 @@ class Partnership < ApplicationRecord
   belongs_to :delivery_partner
   has_many :partnership_notification_emails, dependent: :destroy
   has_many :event_logs, as: :owner
+  has_many :induction_programmes
 
   after_save do |partnership|
     unless partnership.saved_changes.empty?
