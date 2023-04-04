@@ -5,7 +5,7 @@
 
       <%= f.govuk_collection_select(
         :target_cohort_start_year,
-        Cohort.where(start_year: 2021..),
+        Cohort.where(start_year: 2021..Cohort.active_registration_cohort.start_year),
         :start_year,
         :start_year,
         label: { text: "Change #{@participant_profile.user.full_name}'s cohort", tag: "h1", size: "l" },
