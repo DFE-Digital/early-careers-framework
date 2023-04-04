@@ -161,7 +161,7 @@ Rails.application.routes.draw do
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end
-      resources :ecf_schools, path: "schools/ecf", only: %i[index], controller: "ecf/schools"
+      resources :ecf_schools, path: "schools/ecf", only: %i[index show], controller: "ecf/schools"
     end
   end
 
