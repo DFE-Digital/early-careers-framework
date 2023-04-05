@@ -66,4 +66,38 @@ RSpec.describe Api::V3::ECF::SchoolsQuery do
       end
     end
   end
+
+  describe "#school" do
+    context "with no cohort filter" do
+      it "raises an exception" do
+        expect { subject.school }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      context "with any other filter" do
+        let(:params) { { id: school.id } }
+
+        it "raises an exception" do
+          expect { subject.school }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+
+    context "with cohort filter" do
+      context "with correct value" do
+        let(:params) { { id: school.id, filter: { cohort: cohort.display_name } } }
+
+        it "returns the correct school for the specific cohort" do
+          expect(subject.school).to eq(school_cohort)
+        end
+      end
+
+      context "with incorrect value" do
+        let(:params) { { id: school.id, filter: { cohort: "2017" } } }
+
+        it "raises an exception" do
+          expect { subject.school }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+  end
 end

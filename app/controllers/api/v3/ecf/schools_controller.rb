@@ -31,14 +31,14 @@ module Api
           @ecf_schools ||= ecf_schools_query.schools.order(sort_params(params))
         end
 
+        def ecf_school
+          @ecf_school ||= ecf_schools_query.school
+        end
+
         def ecf_schools_query
           Api::V3::ECF::SchoolsQuery.new(
             params: school_params,
           )
-        end
-
-        def ecf_school
-          ecf_schools.find_by!(school_id: params[:id])
         end
 
         def access_scope
@@ -56,7 +56,7 @@ module Api
         def school_params
           params
             .with_defaults({ filter: { cohort: "", urn: "" } })
-            .permit(:sort, filter: %i[cohort urn])
+            .permit(:id, :sort, filter: %i[cohort urn])
         end
       end
     end

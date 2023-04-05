@@ -158,8 +158,6 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
   end
 
   describe "#show" do
-    let(:school) { school_cohort.school }
-
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token

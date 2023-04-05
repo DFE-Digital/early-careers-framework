@@ -22,7 +22,7 @@ module Api
       end
 
       def finance_statement
-        finance_statements_query.statement
+        @finance_statement ||= finance_statements_query.statement
       end
 
       def finance_statements_query

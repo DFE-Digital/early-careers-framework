@@ -16,6 +16,10 @@ module Api
           scope
         end
 
+        def school
+          schools.find_by!(school_id: params[:id])
+        end
+
       private
 
         attr_reader :params
