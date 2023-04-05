@@ -10,8 +10,7 @@
     <div class="wrapper-dashboard-v2 manage-mentors-ects">
       <%= govuk_button_link_to(
             "Add ECT or mentor",
-            start_schools_who_to_add_participants_path(cohort_id: @school.school_cohorts.dashboard_cohorts.first.start_year),
-            class: "govuk-link--no-visited-state",
+            who_schools_add_participants_path(cohort_id: @school.school_cohorts.dashboard_cohorts.first.start_year),
           ) %>
 
       <% if actions?(@participants) %>
@@ -32,12 +31,13 @@
       <% end %>
 
       <% @participants.mentors.keys.sort_by(&:participant_full_name).each do |mentor| %>
-        <div class="group-card">
-          <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-            <% list.row do |row| %>
-              <% row.key(text: "Mentor") %>
-            <% end %>
+        <div class="group-card" aria-label="Mentor group">
+          <h2 class="govuk-visually-hidden">Mentor group</h2>
 
+          <h3 class="govuk-heading-s">
+            Mentor <span class="govuk-visually-hidden">- <%= mentor.participant_full_name %></span>
+          </h3>
+          <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
             <% list.row do |row| %>
               <% row.key(text: govuk_link_to(mentor.participant_full_name,
                                              schools_participant_path(id: mentor.participant_profile_id,
@@ -48,11 +48,13 @@
                                                                           induction_record: mentor,
                                                                           has_mentees: true))) %>
             <% end %>
+          <% end %>
 
-            <% list.row do |row| %>
-              <% row.key(text: "ECTs") %>
-            <% end %>
+          <h3 class="govuk-heading-s">
+            ECTs <span class="govuk-visually-hidden">mentored by <%= mentor.participant_full_name %></span>
+          </h3>
 
+          <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
             <% @participants.mentors[mentor].sort_by(&:participant_full_name).each do |ect| %>
               <% list.row do |row| %>
                 <% row.key(text: govuk_link_to("#{ect.participant_full_name}",
@@ -71,11 +73,11 @@
       <% end %>
 
       <% if @participants.orphan_mentors.any? %>
-        <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
-          <% list.row do |row| %>
-            <% row.key(text: @participants.orphan_mentors.many? ? "Mentors" : "Mentor") %>
-          <% end %>
+        <h3 class="govuk-heading-s">
+          <%= @participants.orphan_mentors.many? ? "Mentors" : "Mentor" %><span class="govuk-visually-hidden"> not assigned to any ECT</span>
+        </h3>
 
+        <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
           <% @participants.orphan_mentors.sort_by(&:participant_full_name).each do |mentor| %>
             <% list.row do |row| %>
               <% row.key(text: govuk_link_to(mentor.participant_full_name,
