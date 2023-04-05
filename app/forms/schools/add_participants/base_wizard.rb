@@ -35,7 +35,7 @@ module Schools
         @school_cohort = school_cohort
         @submitted_params = submitted_params
         @participant_profile = nil
-
+        @email_owner = nil
         @return_point = nil
 
         load_current_user_and_cohort_into_data_store
@@ -109,17 +109,16 @@ module Schools
       end
 
       def email_in_use?
-        u = Identity.find_user_by(email: data_store.email)
-        return false if u.nil?
+        @email_owner ||= Identity.find_user_by(email: data_store.email)
+        return false if @email_owner.nil?
         return true unless transfer?
 
-        u != existing_user
+        @email_owner != existing_user
       end
 
       def email_used_in_the_same_school?
         if email_in_use?
-          u = Identity.find_user_by(email: data_store.email)
-          participant_profile = u.teacher_profile&.ecf_profiles&.first
+          participant_profile = @email_owner.teacher_profile&.ecf_profiles&.first
           if participant_profile
             Induction::FindBy.call(participant_profile:)&.school == school
           else

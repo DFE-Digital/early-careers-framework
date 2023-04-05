@@ -16,19 +16,19 @@
         <%= govuk_link_to "find a lost TRN service (opens in new tab)",
                           "https://find-a-lost-trn.education.gov.uk/start",
                           target: :_blank,
-                          class: "govuk-link govuk-link--no-visited-state" %>
+                          no_visited_state: true %>
       </li>
       <li>have never had one, <%= @wizard.sit_mentor? ? "you" : "they" %>’ll need to
         <%= govuk_link_to "get a TRN (opens in new tab)",
                           get_a_trn_participants_start_registrations_path,
                           target: :_blank,
-                          class: "govuk-link govuk-link--no-visited-state" %>
+                          no_visited_state: true %>
       </li>
     </ul>
 
     <%= govuk_link_to "Return to your ECTs and mentors",
                       schools_participants_path,
-                      class: "govuk-link govuk-link--no-visited-state" %>
+                      no_visited_state: true %>
 
   </div>
 </div>
