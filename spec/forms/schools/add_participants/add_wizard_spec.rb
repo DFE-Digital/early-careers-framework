@@ -282,4 +282,3 @@ RSpec.xdescribe Schools::AddParticipants::AddWizard, type: :model do
     end
   end
 end
-
