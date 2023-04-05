@@ -28,13 +28,17 @@ module Api
       private
 
         def ecf_schools
-          @ecf_schools ||= SchoolCohort.includes(:cohort, school: :partnerships)
-                             .where(cohort: { start_year: params[:filter][:cohort] })
-                             .order(sort_params(params))
+          @ecf_schools ||= ecf_schools_query.schools.order(sort_params(params))
         end
 
         def ecf_school
-          ecf_schools.find_by!(school_id: params[:id])
+          @ecf_school ||= ecf_schools_query.school
+        end
+
+        def ecf_schools_query
+          Api::V3::ECF::SchoolsQuery.new(
+            params: school_params,
+          )
         end
 
         def access_scope
@@ -46,7 +50,13 @@ module Api
         end
 
         def required_filter_params
-          [:cohort]
+          %i[cohort]
+        end
+
+        def school_params
+          params
+            .with_defaults({ filter: { cohort: "", urn: "" } })
+            .permit(:id, :sort, filter: %i[cohort urn])
         end
       end
     end

@@ -28,6 +28,17 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json", with_feat
                 description: "Refine schools to return.",
                 example: "filter[cohort]=2021"
 
+      parameter name: "filter[urn]",
+                schema: {
+                  "$ref": "#/components/schemas/ECFSchoolsFilter",
+                },
+                in: :query,
+                style: :deepObject,
+                explode: true,
+                required: false,
+                description: "Refine schools to return.",
+                example: "filter[urn]=106286"
+
       parameter name: :sort,
                 in: :query,
                 schema: {

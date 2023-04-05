@@ -11,7 +11,10 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
   let(:cohort) { create(:cohort, start_year: 2022) }
   let(:another_cohort) { create(:cohort, start_year: 2021) }
 
-  let!(:school_cohort) { create(:school_cohort, cohort:) }
+  let(:school) { create(:school, updated_at: Time.zone.now) }
+  let(:another_school) { create(:school, updated_at: Time.zone.now - 2.days) }
+  let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
+  let!(:another_school_cohort) { create(:school_cohort, school: another_school, cohort: another_cohort) }
 
   describe "#index" do
     context "when authorized" do
@@ -40,8 +43,6 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
         before { get "/api/v3/schools/ecf", params: { filter: { cohort: cohort.start_year } } }
 
         context "when there are other schools not in the same cohort" do
-          let!(:another_school_cohort) { create(:school_cohort, cohort: another_cohort) }
-
           it "returns only those schools in the filtered cohort" do
             expect(parsed_response["data"].size).to eql(1)
             expect(parsed_response["data"][0]["id"]).to eq(school_cohort.school.id)
@@ -65,12 +66,9 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
       end
 
       describe "ordering" do
-        let(:school) { create(:school, updated_at: Time.zone.now) }
-        let(:another_school) { create(:school, updated_at: Time.zone.now - 2.days) }
-        let!(:school_cohort) { create(:school_cohort, school:, cohort:) }
         let!(:another_school_cohort) { create(:school_cohort, school: another_school, cohort:) }
 
-        before { get "/api/v3/schools/ecf", params: { sort: sort_param, filter: { cohort: cohort.start_year } } }
+        before { get "/api/v3/schools/ecf", params: { sort: sort_param, filter: { cohort: cohort.display_name } } }
 
         context "when ordering by updated_at ascending" do
           let(:sort_param) { "updated_at" }
@@ -90,6 +88,50 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
             expect(parsed_response.dig("data", 0, "attributes", "name")).to eql(school.name)
             expect(parsed_response.dig("data", 1, "attributes", "name")).to eql(another_school.name)
           end
+        end
+      end
+
+      context "when filtering by cohort" do
+        it "returns all schools that match" do
+          get "/api/v3/schools/ecf", params: { filter: { cohort: cohort.display_name } }
+
+          expect(parsed_response["data"].size).to eql(1)
+          expect(parsed_response.dig("data", 0, "attributes", "urn")).to eql(school.urn)
+        end
+
+        it "returns all schools that match" do
+          get "/api/v3/schools/ecf", params: { filter: { cohort: another_cohort.display_name } }
+
+          expect(parsed_response["data"].size).to eql(1)
+          expect(parsed_response.dig("data", 0, "attributes", "urn")).to eql(another_school.urn)
+        end
+
+        it "returns no schools if no matches" do
+          get "/api/v3/schools/ecf", params: { filter: { cohort: "3100" } }
+
+          expect(parsed_response["data"].size).to eql(0)
+        end
+      end
+
+      context "when filtering by school urn" do
+        it "returns all schools that match" do
+          get "/api/v3/schools/ecf", params: { filter: { urn: school.urn, cohort: cohort.display_name } }
+
+          expect(parsed_response["data"].size).to eql(1)
+          expect(parsed_response.dig("data", 0, "attributes", "urn")).to eql(school.urn)
+        end
+
+        it "returns all schools that match" do
+          get "/api/v3/schools/ecf", params: { filter: { urn: another_school.urn, cohort: another_cohort.display_name } }
+
+          expect(parsed_response["data"].size).to eql(1)
+          expect(parsed_response.dig("data", 0, "attributes", "urn")).to eql(another_school.urn)
+        end
+
+        it "returns no schools if no matches" do
+          get "/api/v3/schools/ecf", params: { filter: { urn: "ABC", cohort: cohort.display_name } }
+
+          expect(parsed_response["data"].size).to eql(0)
         end
       end
     end
@@ -116,8 +158,6 @@ RSpec.describe "API ECF schools", :with_default_schedules, type: :request, with_
   end
 
   describe "#show" do
-    let(:school) { school_cohort.school }
-
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token

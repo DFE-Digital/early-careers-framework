@@ -38,7 +38,7 @@ module Api
         end
 
         def ecf_partnership
-          ecf_partnerships_query.partnership
+          @ecf_partnership ||= ecf_partnerships_query.partnership
         end
 
         def ecf_partnerships_query
