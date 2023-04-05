@@ -11,7 +11,7 @@ RSpec.describe NominateInductionTutorForm, type: :model do
 
   describe "validations", :with_default_schedules do
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name").on(%i[full_name check_name]) }
-    it { is_expected.to validate_presence_of(:email).with_message("Enter an email").on(%i[email create]) }
+    it { is_expected.to validate_presence_of(:email).with_message("Enter an email address").on(%i[email create]) }
 
     it "validates that the email address is not in use by an ECT" do
       create(:ect, user: create(:user, email:))

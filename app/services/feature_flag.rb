@@ -19,6 +19,7 @@ class FeatureFlag
     eligibility_notifications
     api_v3
     appropriate_bodies
+    prevent_2023_ect_registrations
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

@@ -21,7 +21,7 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         when_i_click_to_add_a_new_ect_or_mentor
         then_i_should_be_on_the_who_to_add_page
 
-        when_i_select_transfer_teacher_option
+        when_i_select_the_ect_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
 
@@ -38,6 +38,9 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
 
         when_i_add_a_valid_date_of_birth
         click_on "Continue"
+
+        then_i_should_be_on_the_confirm_transfer_page
+        click_on "Confirm"
 
         then_i_should_be_on_the_teacher_start_date_page
         when_i_add_a_valid_start_date
@@ -95,12 +98,12 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         click_on "Add an ECT or mentor"
       end
 
-      def when_i_select_transfer_teacher_option
-        choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
+      def when_i_select_the_ect_option
+        choose("ECT", allow_label_click: true)
       end
 
       def when_i_update_the_name_with(name)
-        fill_in "What’s this person’s full name?", with: name
+        fill_in "What’s this ECT’s full name?", with: name
       end
 
       def when_i_update_the_email_with(email)
@@ -108,7 +111,7 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       end
 
       def when_i_add_a_valid_trn
-        fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)", with: "1001000"
+        fill_in "What’s #{@participant_data[:full_name]}’s teacher reference number (TRN)", with: @participant_data[:trn]
       end
 
       def when_i_add_a_valid_date_of_birth
@@ -118,7 +121,7 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       end
 
       def when_i_add_a_valid_start_date
-        legend = "#{@participant_data[:full_name]}’s start date"
+        legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
         fill_in_date(legend, with: "2023-10-24")
       end
@@ -141,11 +144,10 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
 
       def then_i_should_be_on_what_we_need_page
         expect(page).to have_selector("h1", text: "What we need from you")
-        expect(page).to have_text("To do this, you need to tell us their")
       end
 
       def then_i_should_be_on_full_name_page
-        expect(page).to have_selector("h1", text: "What’s this person’s full name?")
+        expect(page).to have_selector("h1", text: "What’s this ECT’s full name?")
       end
 
       def then_i_should_be_on_trn_page
@@ -156,12 +158,16 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s date of birth?")
       end
 
+      def then_i_should_be_on_the_confirm_transfer_page
+        expect(page).to have_selector("h1", text: "Confirm #{@participant_data[:full_name]} is moving from another school")
+      end
+
       def then_i_should_be_on_the_who_to_add_page
         expect(page).to have_selector("h1", text: "Who do you want to add?")
       end
 
       def then_i_should_be_on_the_teacher_start_date_page
-        expect(page).to have_selector("h1", text: "What’s #{@participant_data[:full_name]}’s start date at your school")
+        expect(page).to have_selector("h1", text: "When is #{@participant_data[:full_name]} moving to your school?")
       end
 
       def then_i_should_be_on_the_add_email_page
@@ -175,13 +181,11 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       def then_i_should_be_taken_to_the_check_your_answers_page
         expect(page).to have_selector("h1", text: "Check your answers")
         expect(page).to have_selector("dd", text: @mentor.user.full_name)
-        expect(page).to have_selector("dd", text: @lead_provider_two.name)
-        expect(page).to have_selector("dd", text: @other_delivery_partner.name)
       end
 
       def then_i_should_be_on_the_complete_page
         expect(page).to have_selector("h2", text: "What happens next")
-        expect(page).to have_text("We’ll let #{@participant_profile_ect.user.full_name}")
+        expect(page).to have_text("We’ll let this person know")
       end
 
       # and
@@ -197,6 +201,8 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         @participant_profile_ect = create(:ect, user: create(:user, full_name: "Sally Teacher"), school_cohort: @school_cohort_two)
         induction_record = Induction::Enrol.call(participant_profile: @participant_profile_ect, induction_programme: @induction_programme_two, start_date: 3.months.ago)
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_ect, full_name: "Sally Teacher", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
+        @participant_profile_ect.teacher_profile.update!(trn: "1001000")
+
         ParticipantProfileState.create!(participant_profile: @participant_profile_ect, state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: @induction_programme_two.lead_provider&.cpd_lead_provider)
         @participant_profile_ect.training_status_withdrawn!
         induction_record.training_status_withdrawn!
@@ -232,14 +238,30 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       end
 
       def set_dqt_validation_result
-        response = {
-          trn: @participant_data[:trn],
-          full_name: @participant_data[:full_name],
-          nino: nil,
-          dob: @participant_data[:date_of_birth],
-          config: {},
-        }
-        allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
+        allow(DqtRecordCheck).to receive(:call).and_return(
+          DqtRecordCheck::CheckResult.new(
+            valid_dqt_response(@participant_data),
+            true,
+            true,
+            true,
+            false,
+            3,
+          ),
+        )
+      end
+
+      def valid_dqt_response(participant_data)
+        DqtRecordPresenter.new({
+          "name" => participant_data[:full_name],
+          "trn" => participant_data[:trn],
+          "state_name" => "Active",
+          "dob" => participant_data[:date_of_birth],
+          "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+          "induction" => {
+            "start_date" => 1.month.ago,
+            "status" => "Active",
+          },
+        })
       end
 
       def set_participant_data

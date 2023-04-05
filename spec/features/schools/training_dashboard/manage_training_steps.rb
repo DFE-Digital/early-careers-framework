@@ -556,8 +556,8 @@ module ManageTrainingSteps
     choose(@participant_profile_mentor.full_name.to_s, allow_label_click: true)
   end
 
-  def when_i_add_ect_or_mentor_name
-    fill_in "What’s this person’s full name?", with: @participant_data[:full_name]
+  def when_i_add_ect_name
+    fill_in "What’s this ECT’s full name?", with: @participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_email
@@ -577,7 +577,7 @@ module ManageTrainingSteps
   end
 
   def when_i_add_ect_or_mentor_updated_name
-    fill_in "What’s this person’s full name?", with: @updated_participant_data[:full_name]
+    fill_in "What’s this ECT’s full name?", with: @updated_participant_data[:full_name]
   end
 
   def when_i_add_ect_or_mentor_updated_email
@@ -618,8 +618,8 @@ module ManageTrainingSteps
 
     # this method is used in several contexts (start at school, induction
     # start) so checking for the exact text is problematic. Just make sure
-    # it contains 'start'
-    legend = /start/
+    # it contains 'start' (or 'moving' for transfers)
+    legend = /start|moving/
 
     fill_in_date(legend, with: date)
   end
@@ -640,6 +640,10 @@ module ManageTrainingSteps
 
   def when_i_go_to_manage_the_participant_named(name)
     click_on "Manage #{name}"
+  end
+
+  def when_i_click_change_induction_start_date
+    click_on "Change induction start date"
   end
 
   def when_i_navigate_to_participants_dashboard(action: "Manage")
@@ -703,7 +707,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_add_ect_name_page
-    expect(page).to have_selector("h1", text: "What’s this person’s full name?")
+    expect(page).to have_selector("h1", text: "What’s this ECT’s full name?")
   end
 
   def then_i_am_taken_to_add_mentor_name_page
@@ -834,7 +838,7 @@ module ManageTrainingSteps
 
   def then_i_am_taken_to_the_cannot_find_their_details
     expect(page).to have_selector("h1", text: "We cannot find #{@participant_data[:full_name]}’s record")
-    expect(page).to have_text("Check the information you’ve entered is correct.")
+    expect(page).to have_text("Check the information you entered is correct.")
   end
 
   def then_i_can_view_the_design_our_own_induction_dashboard
@@ -1035,18 +1039,17 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_are_they_a_transfer_page
-    expect(page).to have_selector("h1", text: "Is #{@participant_profile_ect.full_name} transferring from another school?")
-    expect(page).to have_text("Yes")
-    expect(page).to have_text("No")
+    expect(page).to have_selector("h1", text: "Confirm #{@participant_profile_ect.full_name} is moving from another school")
+    expect(page).to have_link("They’re not moving school")
   end
 
   def then_i_am_taken_to_teacher_start_date_page
-    expect(page).to have_selector("h1", text: "What’s Sally Teacher’s start date at your school?")
+    expect(page).to have_selector("h1", text: "When is Sally Teacher moving to your school?")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_same_school
     expect(page).to have_selector("h1", text: "You cannot add Sally Teacher")
-    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at this school")
+    expect(page).to have_text("Our records show this person is already registered on an ECF-based training programme at your school")
   end
 
   def then_i_am_taken_to_the_cannot_add_page_different_school
@@ -1065,7 +1068,7 @@ module ManageTrainingSteps
 
   def then_i_should_be_on_the_complete_page
     expect(page).to have_selector("h2", text: "What happens next")
-    expect(page).to have_text("We’ll let #{@participant_profile_ect.full_name}")
+    expect(page).to have_text("#{@participant_profile_ect.full_name} has been added")
   end
 
   def then_i_see_the_tab_for_the_cohort(cohort)
@@ -1119,14 +1122,30 @@ module ManageTrainingSteps
   end
 
   def set_sit_dqt_validation_result
-    response = {
-      trn: @sit_data[:trn],
-      full_name: @sit_data[:full_name],
-      nino: nil,
-      dob: @sit_data[:date_of_birth],
-      config: {},
-    }
-    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        valid_dqt_response(@sit_data),
+        true,
+        true,
+        true,
+        false,
+        3,
+      ),
+    )
+  end
+
+  def valid_dqt_response(participant_data)
+    DqtRecordPresenter.new({
+      "name" => participant_data[:full_name],
+      "trn" => participant_data[:trn],
+      "state_name" => "Active",
+      "dob" => participant_data[:date_of_birth],
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "start_date" => 1.month.ago,
+        "status" => "Active",
+      },
+    })
   end
 
   def set_updated_participant_data
@@ -1137,25 +1156,52 @@ module ManageTrainingSteps
   end
 
   def set_dqt_blank_validation_result
-    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(nil)
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        nil,
+        true,
+        true,
+        false,
+        false,
+        2,
+      ),
+    )
   end
 
   def set_dqt_validation_result
-    response = {
-      trn: @participant_data[:trn],
-      full_name: @participant_data[:full_name],
-      nino: nil,
-      dob: @participant_data[:date_of_birth],
-      config: {},
-    }
-    allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        valid_dqt_response(@participant_data),
+        true,
+        true,
+        true,
+        false,
+        3,
+      ),
+    )
   end
 
   def set_dqt_validation_with_nino
-    response = @participant_data.slice(:full_name, :trn, :date_of_birth, :nino).merge(config: {})
-
-    allow(ParticipantValidationService).to receive(:validate) do |args|
-      response if args[:nino] == @participant_data[:nino]
+    allow(DqtRecordCheck).to receive(:call) do |args|
+      if args[:nino] == @participant_data[:nino]
+        DqtRecordCheck::CheckResult.new(
+          valid_dqt_response(@participant_data),
+          true,
+          true,
+          true,
+          true,
+          4,
+        )
+      else
+        DqtRecordCheck::CheckResult.new(
+          nil,
+          true,
+          true,
+          false,
+          false,
+          2,
+        )
+      end
     end
   end
 end

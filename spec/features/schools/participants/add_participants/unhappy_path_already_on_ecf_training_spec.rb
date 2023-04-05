@@ -26,14 +26,14 @@ RSpec.describe "Add participants", js: true do
       when_i_click_to_add_a_new_ect_or_mentor
       then_i_should_be_on_the_who_to_add_page
 
-      when_i_select_to_add_a "A new ECT"
+      when_i_select_to_add_a "ECT"
       when_i_click_on_continue
       then_i_am_taken_to_the_what_we_need_from_you_page
 
       when_i_click_on_continue
       then_i_am_taken_to_add_ect_name_page
 
-      when_i_add_ect_or_mentor_name
+      when_i_add_ect_name
       when_i_click_on_continue
       then_i_am_taken_to_add_teachers_trn_page
 
@@ -42,10 +42,6 @@ RSpec.describe "Add participants", js: true do
       then_i_am_taken_to_add_date_of_birth_page
 
       when_i_add_a_date_of_birth
-      when_i_click_on_continue
-      then_i_am_taken_to_are_they_a_transfer_page
-
-      when_i_select "No"
       when_i_click_on_continue
       then_i_am_taken_to_the_cannot_add_page_same_school
     end
@@ -61,14 +57,14 @@ RSpec.describe "Add participants", js: true do
       when_i_click_to_add_a_new_ect_or_mentor
       then_i_should_be_on_the_who_to_add_page
 
-      when_i_select_to_add_a "A new ECT"
+      when_i_select_to_add_a "ECT"
       when_i_click_on_continue
       then_i_am_taken_to_the_what_we_need_from_you_page
 
       when_i_click_on_continue
       then_i_am_taken_to_add_ect_name_page
 
-      when_i_add_ect_or_mentor_name
+      when_i_add_ect_name
       when_i_click_on_continue
       then_i_am_taken_to_add_teachers_trn_page
 
@@ -80,8 +76,7 @@ RSpec.describe "Add participants", js: true do
       when_i_click_on_continue
       then_i_am_taken_to_are_they_a_transfer_page
 
-      when_i_select "Yes"
-      when_i_click_on_continue
+      when_i_click_on_confirm
       then_i_am_taken_to_teacher_start_date_page
 
       when_i_add_a_start_date
@@ -110,14 +105,14 @@ RSpec.describe "Add participants", js: true do
       when_i_click_to_add_a_new_ect_or_mentor
       then_i_should_be_on_the_who_to_add_page
 
-      when_i_select_to_add_a "A new ECT"
+      when_i_select_to_add_a "ECT"
       when_i_click_on_continue
       then_i_am_taken_to_the_what_we_need_from_you_page
 
       when_i_click_on_continue
       then_i_am_taken_to_add_ect_name_page
 
-      when_i_add_ect_or_mentor_name
+      when_i_add_ect_name
       when_i_click_on_continue
       then_i_am_taken_to_add_teachers_trn_page
 
@@ -129,8 +124,7 @@ RSpec.describe "Add participants", js: true do
       when_i_click_on_continue
       then_i_am_taken_to_are_they_a_transfer_page
 
-      when_i_select "No"
-      when_i_click_on_continue
+      when_i_click_on "They’re not moving school"
       then_i_am_taken_to_the_cannot_add_page_different_school
     end
   end
