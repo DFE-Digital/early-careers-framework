@@ -57,3 +57,23 @@ end
     nomination_email: i == 3,
   )
 end
+
+# added some edge cases
+Random.rand(1..4).times.map do
+  add_school_to_local_authority(
+    school: FactoryBot.create(
+      :seed_school,
+      :with_induction_coordinator,
+      :cip_only,
+    ),
+    local_authority: local_authorities.sample,
+  )
+  add_school_to_local_authority(
+    school: FactoryBot.create(
+      :seed_school,
+      :with_induction_coordinator,
+      :ineligible,
+    ),
+    local_authority: local_authorities.sample,
+  )
+end
