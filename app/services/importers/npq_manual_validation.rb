@@ -11,14 +11,22 @@ class Importers::NPQManualValidation
     check_headers
 
     rows.each do |row|
-      data = NPQApplication.find_by(id: row["application_ecf_id"])
+      npq_application_id = row["application_ecf_id"]
+      trn = row["validated_trn"]
 
-      puts "no NPQApplication found for #{row['application_ecf_id']}" if data.nil?
-      next if data.nil?
+      npq_application = NPQApplication.find_by(id: npq_application_id)
 
-      puts "updating trn for NPQApplication: #{row['application_ecf_id']} with trn: #{row['validated_trn']}"
+      puts "No NPQApplication found for #{npq_application_id}" if npq_application.nil?
+      next if npq_application.nil?
 
-      data.update!(teacher_reference_number: row["validated_trn"], teacher_reference_number_verified: true)
+      puts "Updating TRN for NPQApplication: #{npq_application_id} with TRN: #{trn}"
+      npq_application.update!(teacher_reference_number: row["validated_trn"], teacher_reference_number_verified: true)
+
+      teacher_profile = npq_application.profile.try(:teacher_profile)
+      next if teacher_profile.nil?
+
+      puts "Updating TeacherProfile for NPQApplication: #{npq_application_id} with TRN: #{trn}"
+      teacher_profile.update!(trn:)
     end
   end
 
