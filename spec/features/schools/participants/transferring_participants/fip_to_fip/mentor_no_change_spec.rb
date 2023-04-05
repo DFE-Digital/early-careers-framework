@@ -59,9 +59,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
-
-        # click_on "Moving school"
-        # then_i_should_see_the_transferring_participant
       end
 
       # given
@@ -231,17 +228,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_call_original
         allow(ParticipantTransferMailer).to receive(:provider_existing_school_transfer_notification).and_call_original
       end
-
-      # def set_dqt_validation_result
-      #   response = {
-      #     trn: @participant_data[:trn],
-      #     full_name: @participant_data[:full_name],
-      #     nino: nil,
-      #     dob: @participant_data[:date_of_birth],
-      #     config: {},
-      #   }
-      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
-      # end
 
       def set_dqt_validation_result
         allow(DqtRecordCheck).to receive(:call).and_return(

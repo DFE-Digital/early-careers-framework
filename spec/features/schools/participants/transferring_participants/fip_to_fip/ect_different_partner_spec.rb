@@ -21,7 +21,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         when_i_click_to_add_a_new_ect_or_mentor
         then_i_should_be_on_the_who_to_add_page
 
-        # when_i_select_transfer_teacher_option
         when_i_select_the_ect_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
@@ -80,9 +79,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
-
-        # click_on "Moving school"
-        # then_i_should_see_the_transferring_participant
       end
 
       scenario "Induction tutor can transfer an ECT and they can continue their current programme" do
@@ -90,7 +86,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         then_i_should_be_on_the_who_to_add_page
 
         when_i_select_the_ect_option
-        # when_i_select_transfer_teacher_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
 
@@ -139,9 +134,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
         click_on "View your ECTs and mentors"
         then_i_am_taken_to_your_ect_and_mentors_page
-
-        # click_on "Moving school"
-        # then_i_should_see_the_transferring_participant_for_an_existing_induction
       end
 
       # given
@@ -183,10 +175,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       def when_i_select_the_ect_option
         choose("ECT", allow_label_click: true)
       end
-
-      # def when_i_select_transfer_teacher_option
-      #   choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
-      # end
 
       def when_i_update_the_name_with(name)
         fill_in "What’s this ECT’s full name?", with: name
@@ -368,17 +356,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         allow(ParticipantTransferMailer).to receive(:provider_transfer_in_notification).and_call_original
         allow(ParticipantTransferMailer).to receive(:provider_transfer_out_notification).and_call_original
       end
-
-      # def set_dqt_validation_result
-      #   response = {
-      #     trn: @participant_data[:trn],
-      #     full_name: @participant_data[:full_name],
-      #     nino: nil,
-      #     dob: @participant_data[:date_of_birth],
-      #     config: {},
-      #   }
-      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
-      # end
 
       def set_dqt_validation_result
         allow(DqtRecordCheck).to receive(:call).and_return(

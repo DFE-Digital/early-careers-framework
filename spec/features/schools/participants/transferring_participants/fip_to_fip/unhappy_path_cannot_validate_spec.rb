@@ -190,17 +190,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         click_on @cohort.description
       end
 
-      # def set_dqt_validation_result
-      #   response = {
-      #     trn: @participant_data[:trn],
-      #     full_name: "Sally Teacher",
-      #     nino: nil,
-      #     dob: @participant_data[:date_of_birth],
-      #     config: {},
-      #   }
-      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
-      # end
-
       def set_dqt_validation_result
         allow(DqtRecordCheck).to receive(:call).and_return(
           DqtRecordCheck::CheckResult.new(

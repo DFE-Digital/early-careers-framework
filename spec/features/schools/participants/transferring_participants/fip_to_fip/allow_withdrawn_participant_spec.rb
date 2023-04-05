@@ -22,7 +22,6 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         then_i_should_be_on_the_who_to_add_page
 
         when_i_select_the_ect_option
-        # when_i_select_transfer_teacher_option
         click_on "Continue"
         then_i_should_be_on_what_we_need_page
 
@@ -98,10 +97,6 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       def when_i_click_to_add_a_new_ect_or_mentor
         click_on "Add an ECT or mentor"
       end
-
-      # def when_i_select_transfer_teacher_option
-      #   choose("A teacher transferring from another school where they’ve started ECF-based training or mentoring", allow_label_click: true)
-      # end
 
       def when_i_select_the_ect_option
         choose("ECT", allow_label_click: true)
@@ -186,9 +181,6 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       def then_i_should_be_taken_to_the_check_your_answers_page
         expect(page).to have_selector("h1", text: "Check your answers")
         expect(page).to have_selector("dd", text: @mentor.user.full_name)
-        # FIXME: This doesn't look right as these are the old providers - also does it make sense to show them if you can't change?
-        # expect(page).to have_selector("dd", text: @lead_provider_two.name)
-        # expect(page).to have_selector("dd", text: @other_delivery_partner.name)
       end
 
       def then_i_should_be_on_the_complete_page
@@ -244,17 +236,6 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_call_original
         allow(ParticipantTransferMailer).to receive(:provider_transfer_in_notification).and_call_original
       end
-
-      # def set_dqt_validation_result
-      #   response = {
-      #     trn: @participant_data[:trn],
-      #     full_name: @participant_data[:full_name],
-      #     nino: nil,
-      #     dob: @participant_data[:date_of_birth],
-      #     config: {},
-      #   }
-      #   allow_any_instance_of(ParticipantValidationService).to receive(:validate).and_return(response)
-      # end
 
       def set_dqt_validation_result
         allow(DqtRecordCheck).to receive(:call).and_return(

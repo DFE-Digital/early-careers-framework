@@ -16,13 +16,6 @@ module Schools
 
         def next_step
           :email
-          # if wizard.needs_to_choose_a_mentor?
-          #   :choose_mentor
-          # elsif wizard.needs_to_confirm_appropriate_body?
-          #   :confirm_appropriate_body
-          # else
-          #   :check_answers
-          # end
         end
 
         def previous_step
