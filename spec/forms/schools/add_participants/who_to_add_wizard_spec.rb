@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: needs refactoring for new wizard form
 RSpec.xdescribe Schools::AddParticipants::WhoToAddWizard, type: :model do
   let(:school_cohort) { create(:school_cohort) }
   let(:school) { school_cohort.school }

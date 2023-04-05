@@ -2,6 +2,7 @@
 
 require "rails_helper"
 
+# TODO: needs refactoring for new wizard form
 RSpec.xdescribe Schools::AddParticipants::TransferWizard, type: :model do
   let(:school_cohort) { create(:school_cohort) }
   let(:user) { create(:user) }
