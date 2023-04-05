@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory(:seed_school_local_authority, class: "SchoolLocalAuthority") do
-    start_year { [2019, 2020, 2021, 2022].sample }
+    start_year { [2019, 2020, 2021, 2022, 2023].sample }
 
     trait(:with_local_authority) { association(:local_authority, factory: :seed_local_authority) }
     trait(:with_school) { association(:school, factory: :seed_school) }
