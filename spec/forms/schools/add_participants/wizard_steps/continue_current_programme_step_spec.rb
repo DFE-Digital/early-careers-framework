@@ -9,7 +9,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ContinueCurrentProgrammeSt
   end
 
   describe ".permitted_params" do
-    it "returns continue_current_programme" do
+    it "returns the permitted params for the step" do
       expect(described_class.permitted_params).to eql %i[continue_current_programme]
     end
   end

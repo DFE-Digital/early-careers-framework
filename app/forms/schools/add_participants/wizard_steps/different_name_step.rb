@@ -16,7 +16,11 @@ module Schools
 
         def next_step
           if wizard.participant_exists?
-            :confirm_transfer
+            if wizard.ect_participant?
+              :confirm_transfer
+            else
+              :confirm_mentor_transfer
+            end
           elsif wizard.dqt_record_has_different_name?
             :known_by_another_name
           elsif wizard.found_participant_in_dqt? || wizard.sit_mentor?
