@@ -111,6 +111,7 @@ module ManageTrainingSteps
   def and_i_can_manage_ects_and_mentors(action: "Manage participants")
     expect(page).to have_summary_row_action("ECTs and mentors", action)
   end
+
   alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
 
   def and_i_am_signed_in_as_an_induction_coordinator
@@ -141,7 +142,7 @@ module ManageTrainingSteps
     user = create(:user, full_name: "Eligible With-mentor")
     teacher_profile = create(:teacher_profile, user:)
     @eligible_ect_with_mentor = create(:ect_participant_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, teacher_profile:, mentor_profile_id: @contacted_for_info_mentor.id, school_cohort: @school_cohort)
-    Induction::Enrol.call(participant_profile: @eligible_ect_with_mentor, induction_programme: @induction_programme)
+    Induction::Enrol.call(participant_profile: @eligible_ect_with_mentor, induction_programme: @induction_programme, mentor_profile: @contacted_for_info_mentor)
   end
 
   def and_i_have_added_an_eligible_ect_without_mentor
@@ -251,6 +252,14 @@ module ManageTrainingSteps
     @induction_record.leaving!(1.day.ago)
   end
 
+  def and_the_participant_is_displayed_unpartnered
+    expect(page).to have_summary_row("Lead provider", "")
+  end
+
+  def and_the_participant_is_displayed_mentored_by(name)
+    expect(page).to have_summary_row("Mentor", name)
+  end
+
   def then_i_am_taken_to_add_mentor_page
     expect(page).to have_selector("h1", text: "Who will")
   end
@@ -298,6 +307,7 @@ module ManageTrainingSteps
   def and_i_click_on(string)
     page.click_on(string)
   end
+
   alias_method :when_i_click_on, :and_i_click_on
 
   def and_i_should_see_multiple_schools
@@ -421,6 +431,7 @@ module ManageTrainingSteps
   def and_it_should_not_allow_a_sit_to_edit_the_participant_details
     expect(page).not_to have_link("//a[text()='Change']")
   end
+
   alias_method :then_it_should_not_allow_a_sit_to_edit_the_participant_details, :and_it_should_not_allow_a_sit_to_edit_the_participant_details
 
   def and_i_click_on_view_your_early_career_teacher_and_mentor_details
@@ -460,6 +471,7 @@ module ManageTrainingSteps
   def when_i_click_on_continue
     click_on("Continue")
   end
+
   alias_method :and_i_click_on_continue, :when_i_click_on_continue
 
   def when_i_click_on_change
@@ -886,49 +898,10 @@ module ManageTrainingSteps
     expect(page).to have_title("ECT or mentor details - Manage training for early career teachers")
   end
 
-  def then_i_can_view_ineligible_participant_status(status = "FAILED INDUCTION")
-    expect(page).to have_text(status)
-  end
-
-  def then_i_can_view_eligible_fip_partnered_ect_status
-    expect(page).to have_text("We’ve confirmed the participant is eligible for this programme. Your training provider will contact them directly to facilitate their training.")
-  end
-
-  def then_i_can_view_eligible_fip_unpartnered_status(status = "TRAINING")
-    expect(page).to have_text(status)
-    expect(page).to have_summary_row("Lead provider", "")
-  end
-
-  def then_i_can_view_eligible_fip_partnered_mentor_status(status = "MENTORING")
-    expect(page).to have_text(status)
-  end
-
-  def then_i_can_view_contacted_for_info_status
-    expect(page).to have_text("CONTACTED FOR INFORMATION")
-    expect(page).to have_text("We’ve asked this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency.")
-  end
-
-  def then_i_can_view_contacted_for_info_bounced_email_status
-    expect(page).to have_text("CHECK EMAIL ADDRESS")
-    expect(page).to have_text("We could not send an email to this address. Please check it’s correct.")
-  end
-
-  def then_i_can_view_details_being_checked_status
-    expect(page).to have_text("PENDING")
-    expect(page).to have_text("We are doing some manual checks and will contact you for more information.")
-  end
-
-  def then_i_can_view_no_qts_status
-    expect(page).to have_text("WAITING FOR QTS")
-    expect(page).to have_text("We do not yet have qualified teacher status for the participant. Your school might want to chase this with their appropriate body.")
-  end
-
-  def then_i_can_view_eligible_cip_status
-    expect(page).to have_text("We’ve confirmed this person is eligible for this programme. They have access to their materials.")
-  end
-
-  def then_i_can_see_ero_status
-    expect(page).to have_text("The participant has completed statutory induction.")
+  def then_i_can_view_participant_with_status(status_key)
+    status = I18n.t("schools.participants.status.#{status_key}")
+    expect(page).to have_text(status[:header].upcase)
+    expect(page).to have_text(Array.wrap(status[:content]).first)
   end
 
   def then_i_am_taken_to_cip_induction_dashboard
@@ -936,66 +909,15 @@ module ManageTrainingSteps
     expect(page).not_to have_text("Programme materials")
   end
 
-  def then_i_can_view_ineligible_participants
-    expect(page).to have_text("Not eligible for funded training")
-    expect(page).to have_text("We’ve checked these people’s details and found they’re not eligible for this programme.")
-  end
-
-  def then_the_action_required_is_none
-    expect(page).to have_text("None")
-  end
-
   def then_the_action_required_is_assign_mentor
     expect(page).to have_text("Assign mentor")
-  end
-
-  def then_the_action_required_is_check_email_address
-    expect(page).to have_text("Check email address")
-  end
-
-  def then_the_action_required_is_remind_them
-    expect(page).to have_text("Remind them")
-  end
-
-  def then_i_can_view_fip_unpartnered_eligible_participants
-    expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.")
-  end
-
-  def then_i_can_view_details_being_checked_participants
-    expect(page).to have_text("DfE checking eligibility")
-    expect(page).to have_text("We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
-  end
-
-  def then_i_can_view_no_qts_ects
-    expect(page).to have_text("Checking QTS")
-    expect(page).to have_text("These ECTs do not have qualified teacher status (QTS) yet.")
-  end
-
-  def then_i_can_view_no_qts_mentors
-    expect(page).to have_text("Checking QTS")
-    expect(page).to have_text("These mentors do not have qualified teacher status (QTS) yet.")
-  end
-
-  def then_i_can_view_eligible_participants
-    expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.")
-  end
-
-  def then_i_can_view_cip_eligible_participants
-    expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. They have access to their materials.")
-  end
-
-  def then_i_can_view_contacted_for_info_participants
-    expect(page).to have_text("Contacted for information")
-    expect(page).to have_text("We need this to check their eligibility with the Teaching Regulation Agency.")
   end
 
   def then_i_can_view_the_fip_induction_dashboard_without_partnership_details(displayed_value: "To be confirmed")
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Delivery partner", displayed_value)
   end
+
   alias_method :given_i_can_view_the_fip_induction_dashboard_without_partnership_details,
                :then_i_can_view_the_fip_induction_dashboard_without_partnership_details
 
@@ -1009,11 +931,6 @@ module ManageTrainingSteps
     expect(page).to have_text("You’ve told us these people are moving to a new school.")
   end
 
-  def then_i_can_view_transferred_from_your_school_participants
-    expect(page).to have_text("Transferred from your school")
-    expect(page).to have_text("You told us these people moved to a new school.")
-  end
-
   def then_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Programme", "Use a training provider funded by the DfE")
@@ -1022,11 +939,6 @@ module ManageTrainingSteps
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
     expect(page).to have_text(@school_cohort.delivery_partner.name)
-  end
-
-  def then_i_am_taken_to_fip_induction_dashboard_without_provider
-    expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_text("Training provider")
   end
 
   def then_it_should_show_the_withdrawn_participant
@@ -1062,6 +974,7 @@ module ManageTrainingSteps
   def then_i_should_be_taken_to_the_teachers_current_programme_page
     expect(page).to have_selector("h1", text: "Will #{@participant_data[:full_name]} continue with their current training programme?")
   end
+
   alias_method :then_i_am_taken_to_the_teachers_current_programme_page, :then_i_should_be_taken_to_the_teachers_current_programme_page
 
   def then_i_should_be_on_the_complete_page
