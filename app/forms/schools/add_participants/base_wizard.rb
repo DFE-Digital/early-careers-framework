@@ -9,7 +9,7 @@ module Schools
       class AlreadyInitialised < StandardError; end
       class InvalidStep < StandardError; end
 
-      attr_reader :current_step, :submitted_params, :data_store, :current_user, :school_cohort, :participant_profile
+      attr_reader :current_step, :submitted_params, :data_store, :current_user, :school, :participant_profile
 
       delegate :before_render, to: :form
       delegate :view_name, to: :form
@@ -21,7 +21,7 @@ module Schools
                :same_provider?, :was_withdrawn_participant?, :complete?,
                to: :data_store
 
-      def initialize(current_step:, data_store:, current_user:, school_cohort:, submitted_params: {})
+      def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
         if data_store.store.empty? && !(current_step.to_sym.in? %i[participant_type yourself])
           raise InvalidStep, "store empty (#{data_store.store.empty?} - current_step: #{current_step})"
         elsif !data_store.current_user.nil? && data_store.current_user != current_user ||
@@ -32,7 +32,7 @@ module Schools
         set_current_step(current_step)
         @current_user = current_user
         @data_store = data_store
-        @school_cohort = school_cohort
+        @school = school
         @submitted_params = submitted_params
         @participant_profile = nil
         @email_owner = nil
@@ -96,9 +96,9 @@ module Schools
         data_store.get(:known_by_another_name) == "no"
       end
 
-      def school
-        @school ||= school_cohort.school
-      end
+      # def school
+      #   @school ||= school_cohort.school
+      # end
 
       def lead_provider
         @lead_provider ||= @school_cohort.default_induction_programme&.lead_provider
@@ -333,9 +333,9 @@ module Schools
         form_class.new(hash)
       end
 
-      def load_current_user_and_cohort_into_data_store
+      def load_current_user_and_school_into_data_store
         data_store.set(:current_user, current_user)
-        data_store.set(:school_cohort_id, school_cohort.id)
+        data_store.set(:school_id, school.slug)
       end
 
       def load_from_data_store
