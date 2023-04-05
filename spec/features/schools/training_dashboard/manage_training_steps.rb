@@ -79,10 +79,8 @@ module ManageTrainingSteps
 
   def given_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_text("Training provider")
-    expect(page).to have_text(@school_cohort.lead_provider.name)
-    expect(page).to have_text("Delivery partner")
-    expect(page).to have_text(@school_cohort.delivery_partner.name)
+    expect(page).to have_summary_row("Lead provider", @school_cohort.lead_provider.name)
+    expect(page).to have_summary_row("Delivery partner", @school_cohort.delivery_partner.name)
   end
 
   def given_the_ect_has_been_validated
@@ -893,12 +891,16 @@ module ManageTrainingSteps
   end
 
   def then_i_can_view_eligible_fip_partnered_ect_status
-    expect(page).to have_text("We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly.")
+    expect(page).to have_text("We’ve confirmed the participant is eligible for this programme. Your training provider will contact them directly to facilitate their training.")
   end
 
   def then_i_can_view_eligible_fip_unpartnered_status(status = "TRAINING")
     expect(page).to have_text(status)
     expect(page).to have_summary_row("Lead provider", "")
+  end
+
+  def then_i_can_view_eligible_fip_partnered_mentor_status(status = "MENTORING")
+    expect(page).to have_text(status)
   end
 
   def then_i_can_view_contacted_for_info_status
@@ -926,7 +928,7 @@ module ManageTrainingSteps
   end
 
   def then_i_can_see_ero_status
-    expect(page).to have_text("This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms.")
+    expect(page).to have_text("The participant has completed statutory induction.")
   end
 
   def then_i_am_taken_to_cip_induction_dashboard
