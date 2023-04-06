@@ -51,21 +51,13 @@ module Pages
     end
 
     def view_participant_details
-      if has_link?("Manage participants")
-        click_on("Manage participants")
-      else
-        click_on("Add participants")
-      end
+      click_on("Manage mentors and ECTs")
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
 
     def add_participant_details
-      if has_content?("ECTs and mentors0")
-        click_on("Add participants")
-      else
-        click_on("Manage participants")
-      end
+      click_on("Manage mentors and ECTs")
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
