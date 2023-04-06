@@ -1633,9 +1633,8 @@
             ]
           },
           "training_record_id": {
-            "description": "The unique identifier of the ECF participant profile",
+            "description": "The unique identifier of the participant training record",
             "type": "string",
-            "nullable": true,
             "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
             "format": "uuid"
           },
@@ -2058,6 +2057,7 @@
           "cohort",
           "status",
           "training_status",
+          "training_record_id",
           "schedule_identifier",
           "updated_at"
         ],
@@ -2154,6 +2154,12 @@
               "deferred",
               "withdrawn"
             ]
+          },
+          "training_record_id": {
+            "description": "The unique identifier of the participant training record",
+            "type": "string",
+            "example": "bb36d74a-68a7-47b6-86b6-1fd0d141c590",
+            "format": "uuid"
           },
           "schedule_identifier": {
             "description": "The schedule of the ECF participant",
@@ -3077,7 +3083,7 @@
             }
           }
         },
-        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active,2021-05-31T02:22:32.000Z\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred,2021-05-31T02:22:32.000Z\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn\n"
+        "example": "id,type,email,full_name,mentor_id,school_urn,participant_type,cohort,status,teacher_reference_number,teacher_reference_number_validated,eligible_for_funding,pupil_premium_uplift,sparsity_uplift,training_status,training_record_id,schedule_identifier,updated_at\ndb3a7848-7308-4879-942a-c4a70ced400a,participant,jane.smith@some-school.example.com,Jane Smith,bb36d74a-68a7-47b6-86b6-1fd0d141c590,106286,ect,2021,active,0012345,true,true,true,true,active,b339d7a3-97a4-49c2-9ba2-8e0514276f5b,ecf-standard-september,2021-05-31T02:22:32.000Z\nbb36d74a-68a7-47b6-86b6-1fd0d141c590,participant,martin.jones@some-school.example.com,Martin Jones,,106286,mentor,2021,active,\"\",false,false,false,false,deferred,c449d7a3-97a4-49c2-9ba2-8e0514276f5b,ecf-standard-september,2021-05-31T02:22:32.000Z\neb475531-bf08-48ae-b0ef-c2ff5e5bdef0,participant,\"\",\"\",\"\",\"\",ect,\"\",withdrawn,\"\",\"\",\"\",\"\",\"\",withdrawn,a239d7a3-97a4-49c2-9ba2-8e0514276f5b,ecf-standard-september,2022-06-31T02:22:32.000Z\n"
       },
       "MultipleECFParticipantsResponse": {
         "description": "A list of ECF participants",

@@ -82,9 +82,8 @@ properties:
       - deferred
       - withdrawn
   training_record_id:
-    description: "The unique identifier of the ECF participant profile"
+    description: "The unique identifier of the participant training record"
     type: string
-    nullable: true
     example: bb36d74a-68a7-47b6-86b6-1fd0d141c590
     format: uuid
   schedule_identifier:
