@@ -35,7 +35,7 @@ module Schools
       end
 
       def path_ids
-        { school_id: induction_record.school, cohort_id: induction_record.cohort_start_year }
+        { school_id: induction_record.school }
       end
 
     private

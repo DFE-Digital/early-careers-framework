@@ -20,12 +20,8 @@ module Pages
       element_has_content? self, "Induction tutor #{full_name}"
     end
 
-    def confirm_has_participants
-      element_has_content? self, "View your early career teacher and mentor details"
-    end
-
     def confirm_has_no_participants
-      element_has_content?(self, "ECTs and mentors0")
+      element_has_content?(self, "ECTs and mentors")
     end
 
     def confirm_will_use_dfe_funded_training_provider
