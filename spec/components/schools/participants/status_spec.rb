@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Schools::Participants::Status, type: :component, with_feature_flags: { eligibility_notifications: "active" } do
-  let(:component) { described_class.new(participant_profile: profile) }
+  let(:induction_record) { create(:induction_record, participant_profile:) }
+  let(:component) { described_class.new(induction_record:) }
 
   context "when an email has been sent but the participant has not validated" do
-    let(:profile) { create(:ect_participant_profile, :email_sent) }
+    let(:participant_profile) { create(:ect_participant_profile, :email_sent) }
 
     subject! { render_inline(component) }
 
@@ -17,7 +18,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
   end
 
   context "when an email bounced" do
-    let(:profile) { create(:ect_participant_profile, :email_bounced) }
+    let(:participant_profile) { create(:ect_participant_profile, :email_bounced) }
 
     subject! { render_inline(component) }
 
@@ -28,7 +29,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
   end
 
   context "when no email has been sent" do
-    let(:profile) { create(:ect_participant_profile) }
+    let(:participant_profile) { create(:ect_participant_profile) }
 
     subject! { render_inline(component) }
 
@@ -42,11 +43,11 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
     let(:school_cohort) { create(:school_cohort, :fip) }
 
     context "when the participant is an ECT" do
-      let(:profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
         it "displays the eligible fip no partner content" do
           render_inline(component)
@@ -67,7 +68,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -78,7 +79,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous induction" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -89,7 +90,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -100,7 +101,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -112,11 +113,11 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
     end
 
     context "when the participant is a mentor" do
-      let(:profile) { create(:mentor_participant_profile, school_cohort:) }
-      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
+      let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
         it "displays the eligible fip no partner content" do
           render_inline(component)
@@ -138,7 +139,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous participation (ERO)" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -149,7 +150,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -160,11 +161,11 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant is a duplicate profile" do
-        let(:profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
-        let!(:eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile: profile) }
+        let(:participant_profile) { create(:mentor_participant_profile, :secondary_profile, school_cohort:) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :secondary_profile_state, participant_profile:) }
 
         before do
-          profile.reload
+          participant_profile.reload
         end
 
         it "displays the eligible fip no partner content" do
@@ -187,7 +188,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -202,11 +203,11 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
   context "when the participant is doing CIP" do
     let(:school_cohort) { create(:school_cohort, :cip) }
     context "when the participant is an ECT" do
-      let(:profile) { create(:ect_participant_profile, school_cohort:) }
-      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
+      let(:participant_profile) { create(:ect_participant_profile, school_cohort:) }
+      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -217,7 +218,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -228,7 +229,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous induction" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_induction_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -239,7 +240,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -250,7 +251,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -262,13 +263,13 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
     end
 
     context "when the participant is a mentor" do
-      let(:profile) { create(:mentor_participant_profile, school_cohort:) }
-      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile: profile) }
+      let(:participant_profile) { create(:mentor_participant_profile, school_cohort:) }
+      let!(:validation_data) { create(:ecf_participant_validation_data, participant_profile:) }
 
       subject! { render_inline(component) }
 
       context "when the participant is eligible" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
 
         it "displays the eligible cip content" do
           expect(rendered_content).to have_content I18n.t "schools.participants.status.eligible_cip.header"
@@ -277,7 +278,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has no QTS" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :no_qts_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -288,7 +289,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a previous participation (ERO)" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :previous_participation_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -299,7 +300,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has a TRN mismatch" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :different_trn_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
@@ -310,7 +311,7 @@ RSpec.describe Schools::Participants::Status, type: :component, with_feature_fla
       end
 
       context "when the participant has active flags and manual check status" do
-        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile: profile) }
+        let!(:eligibility) { create(:ecf_participant_eligibility, :active_flags_state, participant_profile:) }
 
         subject! { render_inline(component) }
 
