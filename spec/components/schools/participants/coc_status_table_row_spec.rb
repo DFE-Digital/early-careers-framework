@@ -16,7 +16,7 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :component do
       it "renders the row" do
         render_inline(component)
 
-        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/cohorts/#{induction_record.cohort.start_year}/participants/#{participant_profile.id}"
+        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/participants/#{participant_profile.id}"
         expect(rendered_content).to have_content induction_record.induction_programme.lead_provider.name
         expect(rendered_content).to have_content induction_record.induction_programme.delivery_partner.name
       end
@@ -28,7 +28,7 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :component do
 
         render_inline(component)
 
-        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/cohorts/#{induction_record.cohort.start_year}/participants/#{participant_profile.id}"
+        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/participants/#{participant_profile.id}"
         expect(rendered_content).not_to have_content induction_record.induction_programme.lead_provider.name
         expect(rendered_content).not_to have_content induction_record.induction_programme.delivery_partner.name
         expect(rendered_content).to have_text "Remove"
@@ -48,7 +48,7 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :component do
       it "renders the row" do
         render_inline(component)
 
-        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/cohorts/#{induction_record.cohort.start_year}/participants/#{participant_profile.id}"
+        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/participants/#{participant_profile.id}"
         expect(rendered_content).to have_content induction_record.induction_programme.core_induction_programme.name
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe Schools::Participants::CocStatusTableRow, type: :component do
 
         render_inline(component)
 
-        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/cohorts/#{induction_record.cohort.start_year}/participants/#{participant_profile.id}"
+        expect(rendered_content).to have_link induction_record.user.full_name, href: "/schools/#{induction_record.school.slug}/participants/#{participant_profile.id}"
         expect(rendered_content).not_to have_content induction_record.induction_programme.core_induction_programme.name
         expect(rendered_content).to have_text "Remove"
       end
