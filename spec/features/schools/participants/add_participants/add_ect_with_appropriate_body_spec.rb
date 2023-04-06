@@ -109,7 +109,7 @@ private
 
   def when_i_go_to_add_new_ect_page
     when_i_click_on_summary_row_action("ECTs and mentors", "Add")
-    click_on "Add an ECT or mentor"
+    click_on "Add ECT or mentor"
   end
 
   def and_i_go_through_the_who_do_you_want_to_add_page

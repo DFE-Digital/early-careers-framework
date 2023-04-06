@@ -43,7 +43,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     # when
 
     def when_i_click_to_view_ects_and_mentors
-      click_on "Manage"
+      click_on("Manage mentors and ECTs")
     end
 
     def when_i_select(option)

@@ -91,11 +91,11 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
       # when
 
       def when_i_click_to_view_ects_and_mentors
-        click_on("Manage participants")
+        click_on("Manage mentors and ECTs")
       end
 
       def when_i_click_to_add_a_new_ect_or_mentor
-        click_on "Add an ECT or mentor"
+        click_on "Add ECT or mentor"
       end
 
       def when_i_select_the_ect_option
