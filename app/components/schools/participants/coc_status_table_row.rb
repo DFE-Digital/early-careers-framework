@@ -16,7 +16,7 @@ module Schools
       end
 
       def mentor_in_early_rollout?
-        induction_record.mentor_training? && induction_record.participant_previous_participation?
+        induction_record.mentor? && induction_record.participant_previous_participation?
       end
 
       def participant_is_on_a_cip?

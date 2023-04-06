@@ -108,8 +108,8 @@ module ManageTrainingSteps
     expect(page).to have_summary_row_action("Appropriate body", "Change")
   end
 
-  def and_i_can_manage_ects_and_mentors(action: "Manage participants")
-    expect(page).to have_summary_row_action("ECTs and mentors", action)
+  def and_i_can_manage_ects_and_mentors
+    expect(page).to have_link("Manage mentors and ECTs")
   end
 
   alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
