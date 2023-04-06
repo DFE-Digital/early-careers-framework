@@ -19,7 +19,7 @@
 2. Run `yarn` to install node dependencies
 3. Create `.env` file - copy `.env.template`. Set your database password and user in the `.env` file
 4. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
-6. Run `./bin/dev` to launch the app on http://localhost:3000, sidekiq and auto-compile assets
+6. Run `./bin/dev` to launch the app on http://localhost:3000, sidekiq and auto-compile assets. To run with a Sidekiq worker enabled run `./bin/dev -j`
 7. For most work, you will need to seed the database with `rails db:seed`. For school data, see [Importing School data](#importing-school-data)
 
 ### With docker
