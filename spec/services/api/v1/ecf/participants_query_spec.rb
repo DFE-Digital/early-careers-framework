@@ -102,65 +102,101 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
 
   describe "#induction_record" do
     describe "id filter" do
-      context "using user ID" do
-        context "with correct value" do
-          let(:another_participant_profile) { create(:ect_participant_profile) }
-          let(:another_induction_programme) { create(:induction_programme, :fip, partnership:) }
-          let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
+      context "with correct value" do
+        let(:another_participant_profile) { create(:ect_participant_profile) }
+        let(:another_induction_programme) { create(:induction_programme, :fip, partnership:) }
+        let!(:another_induction_record) { create(:induction_record, induction_programme: another_induction_programme, participant_profile: another_participant_profile) }
 
-          let(:params) { { id: another_participant_profile.participant_identity.external_identifier } }
+        let(:params) { { id: another_participant_profile.participant_identity.user_id } }
 
-          it "returns the correct induction record" do
-            expect(subject.induction_record).to eql(another_induction_record)
+        it "returns a specific induction record" do
+          expect(subject.induction_record).to eql(another_induction_record)
+        end
+      end
+
+      context "with multiple induction records with no end date" do
+        let!(:latest_induction_record) do
+          travel_to(1.day.ago) do
+            create(:induction_record, induction_programme:, participant_profile:, end_date: nil)
           end
         end
 
-        context "with multiple induction records with no end date" do
-          let!(:latest_induction_record) do
-            travel_to(1.day.ago) do
-              create(:induction_record, induction_programme:, participant_profile:, end_date: nil)
-            end
-          end
+        let!(:induction_record) { create(:induction_record, :with_end_date, induction_programme:, participant_profile:) }
 
-          let!(:induction_record) { create(:induction_record, :with_end_date, induction_programme:, participant_profile:) }
+        let(:params) { { id: participant_profile.participant_identity.user_id } }
 
-          let(:params) { { id: participant_profile.participant_identity.user_id } }
+        it "returns the induction record with no end date" do
+          expect(subject.induction_record).to eql(latest_induction_record)
+        end
+      end
 
-          it "returns the induction record with no end date" do
-            expect(subject.induction_record).to eql(latest_induction_record)
+      context "with multiple induction records starting at different times" do
+        let!(:induction_record) do
+          create(:induction_record, induction_programme:, participant_profile:, start_date: Time.zone.now)
+        end
+
+        let!(:latest_induction_record) do
+          create(:induction_record, :future_start_date, induction_programme:, participant_profile:)
+        end
+
+        let(:params) { { id: participant_profile.participant_identity.user_id } }
+
+        it "returns the induction record with the latest start date" do
+          expect(subject.induction_record).to eql(latest_induction_record)
+        end
+      end
+
+      context "with multiple induction records created at different times" do
+        let!(:induction_record) do
+          travel_to(1.day.ago) do
+            create(:induction_record, induction_programme:, participant_profile:)
           end
         end
 
-        context "with multiple induction records starting at different times" do
-          let!(:induction_record) do
-            create(:induction_record, induction_programme:, participant_profile:, start_date: Time.zone.now)
-          end
+        let!(:latest_induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
 
-          let!(:latest_induction_record) do
-            create(:induction_record, :future_start_date, induction_programme:, participant_profile:)
-          end
+        let(:params) { { id: participant_profile.participant_identity.user_id } }
 
-          let(:params) { { id: participant_profile.participant_identity.user_id } }
+        it "returns the induction record with the latest timestamp" do
+          expect(subject.induction_record).to eql(latest_induction_record)
+        end
+      end
 
-          it "returns the induction record with the latest start date" do
-            expect(subject.induction_record).to eql(latest_induction_record)
-          end
+      context "with incorrect value" do
+        let(:params) { { id: SecureRandom.uuid } }
+
+        it "raises an error" do
+          expect {
+            subject.induction_record
+          }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+
+      context "when participant is a mentor" do
+        let(:participant_profile) { create(:mentor_participant_profile) }
+        let(:params) { { id: participant_profile.participant_identity.user_id } }
+
+        it "returns the Mentor induction record only" do
+          expect(subject.induction_record).to eql(induction_record)
+        end
+      end
+
+      context "when ECT is also a mentor" do
+        let(:user) { participant_profile.participant_identity.user }
+        let(:mentor_participant_profile) { create(:mentor_participant_profile, user:, teacher_profile: participant_profile.teacher_profile) }
+
+        # set ID on induction records to ensure test fails consistently, as they are chosen by asc order
+        let!(:ect_induction_record) do
+          create(:induction_record, induction_programme:, participant_profile:, id: "bb9fd4c7-bdce-4338-a42d-723876f514bc")
+        end
+        let!(:mentor_induction_record) do
+          create(:induction_record, induction_programme:, participant_profile: mentor_participant_profile, id: "aa1fd4c7-bdce-4338-a42d-723876f514bc")
         end
 
-        context "with multiple induction records created at different times" do
-          let!(:induction_record) do
-            travel_to(1.day.ago) do
-              create(:induction_record, induction_programme:, participant_profile:)
-            end
-          end
+        let(:params) { { id: user.id } }
 
-          let!(:latest_induction_record) { create(:induction_record, induction_programme:, participant_profile:) }
-
-          let(:params) { { id: participant_profile.participant_identity.user_id } }
-
-          it "returns the induction record with the latest timestamp" do
-            expect(subject.induction_record).to eql(latest_induction_record)
-          end
+        it "returns the ECT induction record only" do
+          expect(subject.induction_record).to eql(ect_induction_record)
         end
       end
     end

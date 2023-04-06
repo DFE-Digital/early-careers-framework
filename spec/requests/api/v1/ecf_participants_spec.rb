@@ -429,7 +429,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
     before do
       default_headers[:Authorization] = bearer_token
       travel_to Time.zone.local(2022, 7, 22, 11, 30, 0) do
-        get "/api/v1/participants/ecf/#{early_career_teacher_profile.id}"
+        get "/api/v1/participants/ecf/#{early_career_teacher_profile.user.id}"
       end
     end
 

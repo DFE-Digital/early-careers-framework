@@ -46,13 +46,11 @@ module Api
         end
 
         def induction_record
-          induction_records
-            .where(participant_profile: { id: params[:id], type: ParticipantProfile::ECT.name })
-            .or(
-              induction_records
-                .where(participant_profile: { participant_identities: { user_id: params[:id] } }),
-            )
-            .first
+          scope = induction_records
+            .where(participant_profile: { participant_identities: { user_id: params[:id] } })
+          scope = scope.where(participant_profile: { type: "ParticipantProfile::ECT" }) if scope.size > 1
+
+          scope.first.presence || raise(ActiveRecord::RecordNotFound)
         end
 
       private
