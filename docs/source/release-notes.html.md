@@ -7,7 +7,7 @@ weight: 8
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## 24th March 2023
+## 13th April 2023
 
 To enable the scenario where a participant needs to be registered as a mentor after having already been trained as an ECT by a given provider, a new `training_record_id` attribute has been added to the [ECF participant schema](/api-reference/reference-v1.html#schema-ecfparticipant).
 
