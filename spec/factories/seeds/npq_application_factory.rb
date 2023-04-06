@@ -44,6 +44,7 @@ FactoryBot.define do
 
     trait(:starting_in_2021) { cohort { create(:cohort, start_year: 2021) } }
     trait(:starting_in_2022) { cohort { create(:cohort, start_year: 2022) } }
+    trait(:starting_in_2023) { cohort { create(:cohort, start_year: 2023) } }
 
     trait(:valid) do
       with_participant_identity
