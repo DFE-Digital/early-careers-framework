@@ -307,4 +307,118 @@ RSpec.describe "API ECF Partnerships", :with_default_schedules, type: :request d
       end
     end
   end
+
+  describe "PUT /api/v3/partnerships/ecf/:id" do
+    let(:delivery_partner2) { create(:delivery_partner, name: "Second Delivery Partner") }
+    let!(:provider_relationship2) { create(:provider_relationship, lead_provider:, delivery_partner: delivery_partner2, cohort:) }
+    let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
+    let(:partnership_id) { partnership.id }
+
+    let(:params_hash) do
+      {
+        delivery_partner_id: delivery_partner2.id,
+      }
+    end
+
+    let(:params_json) do
+      {
+        data: {
+          type: "ecf-partnership-update",
+          attributes: params_hash,
+        },
+      }.to_json
+    end
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      default_headers[:CONTENT_TYPE] = "application/json"
+    end
+
+    context "with API V3 flag disabled" do
+      it "returns a 404" do
+        expect { put("/api/v3/partnerships/ecf/#{partnership_id}") }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context "with API V3 flag active", with_feature_flags: { api_v3: "active" } do
+      context "when unauthorized" do
+        let(:token) { "incorrect-token" }
+
+        it "returns 401" do
+          put("/api/v3/partnerships/ecf/#{partnership_id}", params: params_json)
+
+          expect(response.status).to eq 401
+        end
+      end
+
+      context "when partnership id is incorrect", exceptions_app: true do
+        let(:partnership_id) { "incorrect-id" }
+
+        it "returns 404" do
+          put("/api/v3/partnerships/ecf/#{partnership_id}", params: params_json)
+
+          expect(response.status).to eq 404
+        end
+      end
+
+      context "missing params" do
+        let(:params_hash) do
+          {
+            delivery_partner_id: nil,
+          }
+        end
+
+        it "returns errors" do
+          expect(Partnership.count).to eql(1)
+          put("/api/v3/partnerships/ecf/#{partnership_id}", params: params_json)
+
+          expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+          expect(response.status).to eq 422
+
+          errors = parsed_response["errors"].each_with_object({}) do |er, sum|
+            sum[er["title"]] = er["detail"]
+          end
+          expect(errors["delivery_partner_id"]).to include("The attribute '#/delivery_partner_id' must be included as part of partnership confirmations.")
+          expect(Partnership.count).to eql(1)
+        end
+      end
+
+      context "valid params" do
+        it "updates a partnership" do
+          expect(Partnership.count).to eql(1)
+          put("/api/v3/partnerships/ecf/#{partnership_id}", params: params_json)
+
+          expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+          expect(response.status).to eq 200
+
+          expect(parsed_response["data"]).to have_type("partnership")
+          expect(parsed_response["data"]).to have_jsonapi_attributes(
+            :cohort,
+            :urn,
+            :delivery_partner_id,
+            :delivery_partner_name,
+            :school_id,
+            :status,
+            :challenged_at,
+            :challenged_reason,
+            :induction_tutor_name,
+            :induction_tutor_email,
+            :updated_at,
+            :created_at,
+          ).exactly
+
+          expect(parsed_response["data"]["attributes"]["cohort"]).to eq(cohort.start_year.to_s)
+          expect(parsed_response["data"]["attributes"]["school_id"]).to eq(school.id)
+          expect(parsed_response["data"]["attributes"]["delivery_partner_id"]).to eq(delivery_partner2.id)
+
+          expect(Partnership.count).to eql(1)
+          part = Partnership.first
+          expect(part.id).to eq(partnership_id)
+          expect(part.cohort_id).to eq(cohort.id)
+          expect(part.school_id).to eq(school.id)
+          expect(part.delivery_partner_id).to eq(delivery_partner2.id)
+        end
+      end
+    end
+  end
 end
