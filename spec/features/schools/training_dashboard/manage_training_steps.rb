@@ -511,7 +511,7 @@ module ManageTrainingSteps
   end
 
   def when_i_click_to_add_a_new_ect_or_mentor
-    click_on "Add an ECT or mentor"
+    click_on "Add ECT or mentor"
   end
 
   def when_i_click_on_add_myself_as_mentor
@@ -935,7 +935,7 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Programme", "Use a training provider funded by the DfE")
     expect(page).to have_summary_row_action("Programme", "Change induction programme choice")
-    expect(page).to have_text("Training provider")
+    expect(page).to have_text("Lead provider")
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
     expect(page).to have_text(@school_cohort.delivery_partner.name)

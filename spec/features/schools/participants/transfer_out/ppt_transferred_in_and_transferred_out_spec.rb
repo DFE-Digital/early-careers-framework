@@ -16,8 +16,6 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     scenario "Induction tutor only sees the transfer once they’ve done it themselves" do
       when_i_click_to_view_ects_and_mentors
       then_i_am_taken_to_manage_mentors_and_ects_page
-      then_i_should_still_see_the_participant_in_my_active_participants
-      and_i_should_not_see_any_transferring_participants
 
       when_i_click_on_an_ect
       then_i_should_be_on_the_ect_details_page
@@ -39,14 +37,9 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
       click_on "View your ECTs and mentors"
       then_i_am_taken_to_manage_mentors_and_ects_page
+
+      when_i_click_on_an_ect
       then_i_should_see_the_transfer_out_participant
-      and_they_should_not_be_under_their_previous_heading
-
-      travel_to(@participant_data[:end_date] + 1.day)
-
-      visit current_path
-
-      then_i_should_see_the_participants_as_having_transferred
     end
 
     # given
@@ -76,7 +69,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     # when
 
     def when_i_click_to_view_ects_and_mentors
-      click_on "Manage participants"
+      click_on("Manage mentors and ECTs")
     end
 
     def when_i_click_on_an_ect
@@ -105,6 +98,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     end
 
     def then_i_should_still_see_the_participant_in_my_active_participants
+      expect(page).to have_summary_row(@ect.full_name, "LEAVING YOUR SCHOOL")
       expect(page).to have_selector("h2", text: "Contacted for information")
       within(:xpath, "//table[@data-test='checked_ects']/tbody/tr[1]") do
         expect(page).to have_xpath(".//td[1]", text: @ect.user.full_name)
@@ -113,7 +107,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
 
     def then_i_should_be_on_the_ect_details_page
       expect(page).to have_text(@participant_data[:full_name])
-      expect(page).to have_text("Tell us #{@participant_data[:full_name]} is transferring to another school")
+      expect(page).to have_text("Tell us if #{@participant_data[:full_name]} is transferring to another school")
     end
 
     def then_i_should_be_on_the_check_transfer_page
@@ -137,12 +131,9 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     end
 
     def then_i_should_see_the_transfer_out_participant
-      date = @participant_data[:end_date]
-      expect(page).to have_selector("h2", text: "Transferring from your school")
-      within(:xpath, "//table[@data-test='transferring_out']/tbody/tr[1]") do
-        expect(page).to have_xpath(".//td[1]", text: @participant_data[:full_name])
-        expect(page).to have_xpath(".//td[4]", text: date.to_date.to_s(:govuk))
-      end
+      expect(page).to have_text(@participant_data[:full_name])
+      expect(page).to have_text("LEAVING YOUR SCHOOL")
+      expect(page).to have_link("Remove #{@participant_data[:full_name]}")
     end
 
     def then_i_should_see_the_participants_as_having_transferred

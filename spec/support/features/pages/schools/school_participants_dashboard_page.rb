@@ -4,11 +4,11 @@ require_relative "../base_page"
 
 module Pages
   class SchoolParticipantsDashboardPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants"
+    set_url "/schools/{slug}/participants"
     set_primary_heading "Your ECTs and mentors"
 
     def choose_to_add_an_ect_or_mentor
-      click_on "Add an ECT or mentor"
+      click_on "Add ECT or mentor"
 
       Pages::SchoolAddParticipantWizard.loaded
     end
