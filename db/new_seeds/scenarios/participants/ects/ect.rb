@@ -15,8 +15,9 @@ module NewSeeds
           def build(**_profile_args)
             @user = FactoryBot.create(:seed_user, **new_user_attributes)
             @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school)
+            @participant_identity = FactoryBot.create(:seed_participant_identity, user:)
             @participant_profile = FactoryBot.create(:seed_ect_participant_profile,
-                                                     participant_identity: FactoryBot.create(:seed_participant_identity, user:),
+                                                     participant_identity:,
                                                      teacher_profile:,
                                                      school_cohort:)
 
@@ -80,11 +81,25 @@ module NewSeeds
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
           end
 
+          def with_becoming_a_mentor(mentor_school_cohort:, mentor_induction_programme:)
+            Mentors::MentorWithNoEcts
+              .new(
+                school_cohort: mentor_school_cohort,
+                participant_identity:,
+                teacher_profile:,
+              )
+              .build(schedule: Finance::Schedule::ECF.default_for(cohort: mentor_school_cohort.cohort))
+              .with_validation_data
+              .with_eligibility
+              .with_induction_record(induction_programme: mentor_induction_programme)
+          end
+
         private
 
           attr_reader :new_user_attributes,
                       :school_cohort,
                       :teacher_profile,
+                      :participant_identity,
                       :user
         end
       end

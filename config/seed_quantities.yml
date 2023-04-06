@@ -11,9 +11,12 @@
 # SEED_NPQ_APPLICATIONS_EHCO=10
 # SEED_NPQ_APPLICATIONS_SPECIALIST=10
 # SEED_NPQ_APPLICATIONS_LEADERSHIP=10
+# SEED_NPQ_APPLICATIONS_EDGE_CASES=10
 # SEED_FIP_TO_FIP_TRANSFERS_KEEPING_ORIGINAL_PROVIDER=2
 # SEED_FIP_TO_FIP_TRANSFERS_CHANGING_PROVIDER=2
 # SEED_SCHOOL_INVITATIONS=10
+# SEED_NPQ_APPLICATIONS_ELIGIBLE_FOR_TRANSFER=10
+# SEED_ECTS_BECOMING_MENTORS=10
 ---
 default: &default
   local_authorities: 10
@@ -29,6 +32,7 @@ default: &default
   school_invitations: 10
   npq_applications_eligible_for_transfer: 10
   npq_applications_edge_cases: 25
+  ects_becoming_mentors: 10
 
 development:
   <<: *default

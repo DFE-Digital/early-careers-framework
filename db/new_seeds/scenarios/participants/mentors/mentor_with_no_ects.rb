@@ -7,18 +7,21 @@ module NewSeeds
         class MentorWithNoEcts
           attr_reader :participant_profile
 
-          def initialize(school_cohort: nil, full_name: nil, email: nil)
+          def initialize(school_cohort: nil, full_name: nil, email: nil, teacher_profile: nil, participant_identity: nil)
             @school_cohort = school_cohort
             @new_user_attributes = { full_name:, email: }.compact
+            @supplied_teacher_profile = teacher_profile
+            @supplied_participant_identity = participant_identity
           end
 
           def build(**profile_args)
             school = school_cohort.school
+            @user = @supplied_participant_identity&.user || FactoryBot.create(:seed_user, **new_user_attributes)
+            @participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:)
 
-            @user = FactoryBot.create(:seed_user, **new_user_attributes)
-            @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school:)
+            @teacher_profile = @supplied_teacher_profile || FactoryBot.create(:seed_teacher_profile, user:, school:)
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
-                                                     participant_identity: FactoryBot.create(:seed_participant_identity, user:),
+                                                     participant_identity:,
                                                      school_cohort:,
                                                      teacher_profile:,
                                                      **profile_args)
@@ -89,6 +92,7 @@ module NewSeeds
           attr_reader :new_user_attributes,
                       :school_cohort,
                       :teacher_profile,
+                      :participant_identity,
                       :user
         end
       end
