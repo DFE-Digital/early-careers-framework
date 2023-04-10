@@ -16,7 +16,11 @@
         <% end %>
 
         <%= f.govuk_radio_divider %>
-        <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
+        <% if FeatureFlag.active? :cohortless_dashboard %>
+          <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
+        <% else %>
+          <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
+        <% end %>
       <% end %>
 
       <%= f.govuk_submit "Continue" %>

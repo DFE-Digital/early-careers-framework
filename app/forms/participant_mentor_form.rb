@@ -3,13 +3,17 @@
 class ParticipantMentorForm
   include ActiveModel::Model
 
-  attr_accessor :mentor_id, :school_id, :user_id
+  attr_accessor :mentor_id, :school_id, :user_id, :cohort_id
 
   validates :mentor_id, presence: { message: I18n.t("errors.mentor.blank") }
   validate :mentor_exists
 
   def mentor
-    @mentor ||= User.find(mentor_id) if mentor_id
+    @mentor ||= if FeatureFlag.active? :cohortless_dashboard
+                  User.find(mentor_id) if mentor_id
+                else
+                  mentor_id == "later" ? nil : User.find(mentor_id)
+                end
   end
 
   def available_mentors

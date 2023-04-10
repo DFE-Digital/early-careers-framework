@@ -2,6 +2,10 @@
 
 module Schools
   module DashboardHelper
+    def manage_single_cohort_ects_and_mentors?(school_cohort)
+      school_cohort.full_induction_programme? || school_cohort.core_induction_programme?
+    end
+
     def actions?(participants)
       participants.orphan_ects.any?
     end

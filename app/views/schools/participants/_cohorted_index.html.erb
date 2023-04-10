@@ -1,0 +1,50 @@
+<% content_for :title, "Early career teachers and mentors" %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: schools_dashboard_path) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl">Your ECTs and mentors</h1>
+
+    <p class="govuk-body">We’ll check your early career teacher (ECTs) and mentors details with the Teaching Regulation Agency to make sure they’re eligible for funding for the programme.</p>
+    <p class="govuk-body">In the meantime ECTs can begin training with their training provider.</p>
+    <div class="govuk-inset-text">
+      <ul class="govuk-list">
+        <li><%= govuk_link_to "Add an ECT or mentor", start_schools_who_to_add_participants_path(cohort_id: @school_cohort.cohort.start_year), class: "govuk-link--no-visited-state" %></li>
+        <% unless current_user.mentor? %>
+          <li><%= govuk_link_to "Add yourself as a mentor", sit_start_schools_who_to_add_participants_path, class: "govuk-link--no-visited-state" %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="govuk-grid-column-full">
+    <% if @categories.any? %>
+      <%= govuk_tabs(title: 'Contents') do |component| %>
+        <% if participants_active?(@categories.ect_categories) %>
+          <% component.tab(label: 'ECTs') do %>
+            <%= render partial: 'ects', locals: { ect_profiles: @categories.ect_categories } %>
+          <% end %>
+        <% end %>
+
+        <% if participants_active?(@categories.mentor_categories) %>
+          <% component.tab(label: 'Mentors') do %>
+            <%= render partial: 'mentors', locals: { mentor_profiles: @categories.mentor_categories } %>
+          <% end %>
+        <% end %>
+
+        <% if @categories.transferring_in.any? || @categories.transferring_out.any? %>
+          <% component.tab(label: 'Moving school') do %>
+            <%= render partial: 'moving_school', locals: { transferring_in: @categories.transferring_in,
+                                                            transferring_out: @categories.transferring_out } %>
+          <% end %>
+        <% end %>
+        <% if @categories.withdrawn.any? || @categories.ineligible.any? || @categories.transferred.any? %>
+          <% component.tab(label: 'Not training') do %>
+            <%= render partial: 'not_training', locals: { withdrawn: @categories.withdrawn,
+                                                          ineligible: @categories.ineligible,
+                                                          transferred: @categories.transferred } %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

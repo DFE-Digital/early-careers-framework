@@ -35,7 +35,11 @@ module Schools
       end
 
       def path_ids
-        { school_id: induction_record.school }
+        if FeatureFlag.active? :cohortless_dashboard
+          { school_id: induction_record.school }
+        else
+          { school_id: induction_record.school, cohort_id: induction_record.cohort_start_year }
+        end
       end
 
     private
