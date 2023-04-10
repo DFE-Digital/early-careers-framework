@@ -19,7 +19,7 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            render json: serializer_class.new(paginate(induction_records)).serializable_hash.to_json
+            render json: serializer_class.new(induction_records).serializable_hash.to_json
           end
 
           format.csv do

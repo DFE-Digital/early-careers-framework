@@ -184,6 +184,8 @@ module Api
             schedule_id
             training_status
             updated_at
+            start_date
+            end_date
           ]
         end
       end

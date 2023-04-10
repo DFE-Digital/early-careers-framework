@@ -30,6 +30,21 @@ module Api
 
       set_id :id, &:user_id
 
+      attribute :participant_status do |induction_record|
+        if induction_record.end_date.present?
+          induction_record.end_date > Time.zone.now ? "leaving" : "left"
+        elsif induction_record.start_date > Time.zone.now
+          "joining"
+        else
+          case induction_record.induction_status
+          when "active", "completed"
+            "active"
+          when "withdrawn", "changed"
+            "withdrawn"
+          end
+        end
+      end
+
       attribute :email do |induction_record|
         induction_record.preferred_identity_email ||
           induction_record.user_email
