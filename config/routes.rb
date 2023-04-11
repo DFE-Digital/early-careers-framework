@@ -563,6 +563,8 @@ Rails.application.routes.draw do
           appropriate_body_selection_routes :add
           get :change_appropriate_body, path: "change-appropriate-body", controller: :add
         end
+
+        get "roles", to: "roles#show", as: :participant_roles
       end
 
       resources :cohorts, only: :show, param: :cohort_id do

@@ -12,9 +12,21 @@
 
     <div class="govuk-inset-text">
       <ul class="govuk-list">
-          <li><%= govuk_link_to "Add an ECT or mentor", start_schools_who_to_add_participants_path(school_id: @school.slug), no_visited_state: true%></li>
+        <li>
+        <% if FeatureFlag.active? :cohortless_dashboard %>
+          <%= govuk_link_to "Add an ECT or mentor", schools_who_to_add_start_path(school_id: @school.slug), no_visited_state: true %>
+        <% else %>
+          <%= govuk_link_to "Add an ECT or mentor", start_schools_who_to_add_participants_path(school_id: @school.slug), no_visited_state: true%>
+        <% end %>
+        </li>
         <% unless current_user.mentor? %>
-          <li><%= govuk_link_to "Add yourself as a mentor", sit_start_schools_who_to_add_participants_path, no_visited_state: true%></li>
+          <li>
+          <% if FeatureFlag.active? :cohortless_dashboard %>
+            <%= govuk_link_to "Add yourself as a mentor", schools_who_to_add_sit_start_path, no_visited_state: true %>
+          <% else %>
+            <%= govuk_link_to "Add yourself as a mentor", sit_start_schools_who_to_add_participants_path, no_visited_state: true %>
+          <% end %>
+          </li>
         <% end %>
       </ul>
     </div>
