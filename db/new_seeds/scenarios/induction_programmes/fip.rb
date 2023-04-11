@@ -22,6 +22,7 @@ module NewSeeds
         end
 
         def with_partnership(partnership: nil)
+          create_provider_relationship
           relationship = Partnership.exists?(school:, cohort:)
           partnership ||= FactoryBot.create(:seed_partnership, cohort:, school:, delivery_partner:, lead_provider:, relationship:)
           induction_programme.update!(partnership:)
@@ -30,6 +31,7 @@ module NewSeeds
         end
 
         def with_relationship(lead_provider:, delivery_partner:)
+          create_provider_relationship
           induction_programme.update!(partnership: FactoryBot.create(:seed_partnership,
                                                                      :relationship,
                                                                      cohort:,
@@ -55,6 +57,15 @@ module NewSeeds
 
         def set_default_induction_programme!
           school_cohort.update!(default_induction_programme: induction_programme)
+        end
+
+        def create_provider_relationship
+          FactoryBot.create(
+            :seed_provider_relationship,
+            lead_provider:,
+            delivery_partner:,
+            cohort:,
+          )
         end
       end
     end

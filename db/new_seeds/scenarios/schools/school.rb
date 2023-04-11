@@ -85,6 +85,13 @@ module NewSeeds
 
           partnerships[cohort.start_year] = FactoryBot.create(:seed_partnership, *traits, **options)
 
+          FactoryBot.create(
+            :seed_provider_relationship,
+            cohort:,
+            lead_provider: partnerships[cohort.start_year].lead_provider,
+            delivery_partner: partnerships[cohort.start_year].delivery_partner,
+          )
+
           self
         end
 
