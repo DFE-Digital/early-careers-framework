@@ -594,7 +594,7 @@ Providers can void specific declarations which have been submitted in error.
 
 Once voided, the [declaration `state`](LINK NEEDED) value will become: 
 * `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
-* `awaiting_clawback` if if it had been  `payable`
+* `awaiting_clawback` if it had been  `payable`
 
 Void a previously submitted declaration by using the endpoint:
 
