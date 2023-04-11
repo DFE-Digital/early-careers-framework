@@ -159,7 +159,7 @@ Confirm a participant has deferred training by using the endpoint:
 
 An example request body is listed below. 
 
-For more detailed information see the specifications for this [notify that an ECF participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-defer-put).
+For more detailed information see the specifications for this [notify DfE that an ECF participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-defer-put).
 
 #### Example request body:
 
@@ -187,7 +187,7 @@ Notify DfE a participant has resumed training by using the endpoint:
 
 An example request body is listed below. Successful requests will return a response body including updates.
 
-For more detailed information see the specifications for this [notify that an ECF participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put).
+For more detailed information see the specifications for this [notify DfE that an ECF participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put).
 
 #### Example request body:
 
@@ -203,6 +203,7 @@ For more detailed information see the specifications for this [notify that an EC
 ```
 
 ###  Notify DfE a participant has withdrawn from training
+
 A participant can choose to withdraw from ECF-based training at any time.
 
 Notify DfE a participant has withdrawn from training by using the endpoint: 
@@ -213,7 +214,7 @@ Notify DfE a participant has withdrawn from training by using the endpoint:
 
 An example request body is listed below. Successful requests will return a response body including updates to the `training_status` attribute.
 
-For more detailed information see the specifications for this [notify that an ECF participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
+For more detailed information see the specifications for this [notify DfE that an ECF participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
 
 #### Example request body:
 
@@ -236,56 +237,129 @@ For more detailed information see the specifications for this [notify that an EC
 * If a participant is withdrawn later in their training, DfE will pay providers for any declarations submitted where the declaration_date is before the date of the withdrawal
 * The amount DfE will pay depends on which milestones have been reached and declarations submitted before the participant withdraws. [View ECF schedules and milestone dates](LINK NEEDED) 
 
+### Notify DfE a participant has changed their training schedule
 
+Participants can choose to follow [standard or non-standard training schedules](LINK NEEDED). Providers must notify the DfE of any schedule change.
 
-
-## Notifying that an ECF participant is changing training schedule
-
-This operation allows the provider to tell the DfE that a participant has changed training schedules on their ECF course.
-
-### Provider changes a participant's schedule
-
-Submit the change of schedule notification to the following endpoint.
+Notify DfE a participant has changed their training schedule by using the endpoint:
 
 ```
-PUT /api/v1/participants/ecf/{id}/change-schedule
+ PUT /api/v3/participants/ecf/{id}/change-schedule
 ```
 
-This will return an [ECF participant record](/api-reference/reference-v1#schema-ecfparticipantresponse) with the updates to the record included.
+An example request body is listed below. Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
-See [change schedule of ECF participant](/api-reference/reference-v1#api-v1-participants-ecf-id-change-schedule-put) endpoint.
+For more detailed information see the specifications for this [notify that an ECF participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
-Where a schedule’s name does not include ‘standard’, we will not apply ‘milestone validation’ to any declarations.
-
-Where milestone validation applies, the API will reject a declaration if it is not submitted during the correct milestone period. It will also reject declarations submitted after the milestone period and the declaration_date set in the milestone period. For example, if a participant is on the ecf-standard-september [schedule](#notifying-of-schedule-change-standard-induction-september), the API would reject a start declaration unless it is submitted during the period 19 November 2021 to 30 November 2021, or submitted afterwards and backdated accordingly.
-
-Providers will still be expected to evidence any declarations and why a participant is following a non-standard induction.
-
-
-
-
-
-
-## Declaring that an ECF participant has started their course
-This scenario begins after it has been confirmed that an ECF participant is ready to begin their induction training.</p>
-
-### Provider confirms an ECF participant has started
-Confirm an ECF participant has started their induction training before Milestone 1.
+#### Example request body:
 
 ```
-POST /api/v1/participant-declarations
+{
+  "data": {
+    "type": "participant-change-schedule",
+    "attributes": {
+      "schedule_identifier": "ecf-standard-january",
+      "course_identifier": "ecf-mentor",
+      "cohort": "2021"
+    }
+  }
+}
 ```
 
-With a [request body containing an ECF participant declaration](/api-reference/reference-v1#schema-ecfparticipantstarteddeclaration).
+#### Providers should note: 
 
-This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+Milestone validation applies. The API will reject a schedule change request if any previously submitted declarations (`eligible`, `payable` or `paid`) have a `declaration_date` which does not align with the new schedule’s milestone dates. 
 
-This endpoint is idempotent - submitting exact copy of a request will return the same response body as submitting it the first time.
+Where this occurs, providers should:
 
-See [confirm ECF participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
+1. void the existing declarations (where declaration_date does not align with the new schedule)
+2. change the participant’s training schedule 
+3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
 
-### Provider records the ECF participant declaration ID
-Store the returned ECF participant declaration ID for future management tasks.
+
+## How to submit, view and void declarations
+
+Providers must submit declarations in line with ECF contractual [schedules and milestone dates](LINK NEEDED). These declarations will trigger payment from DfE to providers. 
+
+Providers must submit declarations in line with ECF contractual [schedules and milestone dates](LINK NEEDED). These declarations will trigger payment from DfE to providers. 
+### Test the ability to submit declarations in sandbox ahead of time 
+
+`X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
+
+The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
+
+It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.
+
+To test declaration submission functionality, include: 
+
+* the header `X-With-Server-Date` as part of declaration submission request
+* the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example: 
+
+```
+X-With-Server-Date: 2022-01-10T10:42:00Z
+```
+
+### Notify DfE a participant has started training
+
+To notify DfE that a participant has started ECF-based training, providers must submit a `started` declaration in line with [milestone 1 dates](LINK NEEDED).
+
+Confirm a participant has started training by using the endpoint: 
+
+```
+ POST /api/v3/participant-declarations
+```
+
+Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. An example request body is listed below.
+
+Successful requests will return a response body with declaration data. An example response body is listed below. Any attempts to submit duplicate declarations will return an error message.
+
+For more detailed information see the specifications for this [notify DfE that an ECF participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "declaration_type": "started",
+      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "course_identifier": "ecf-induction"
+    }
+  }
+}
+```
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+      "declaration_type": "started",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "ecf-induction",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+      "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+      "uplift_paid": true,
+      "evidence_held": "other"
+    }
+  }
+}
+```
+
+Note, providers should store the returned ECF participant declaration ID for management tasks.
+
 
 ## Declaring that an ECF participant has reached a retained milestone
 This scenario begins after it has been confirmed that an ECF participant has completed enough of their course to meet a milestone.
