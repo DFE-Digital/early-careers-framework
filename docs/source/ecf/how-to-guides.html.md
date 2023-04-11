@@ -185,7 +185,9 @@ Notify DfE a participant has resumed training by using the endpoint:
  /api/v{n}/participants/ecf/{id}/resume
 ```
 
-An example request body is listed below. Successful requests will return a response body including updates. 
+An example request body is listed below. Successful requests will return a response body including updates.
+
+For more detailed information see the specifications for this [notify that an ECF participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put).
 
 #### Example request body:
 
@@ -199,6 +201,42 @@ An example request body is listed below. Successful requests will return a respo
   }
 }
 ```
+
+###  Notify DfE a participant has withdrawn from training
+A participant can choose to withdraw from ECF-based training at any time.
+
+Notify DfE a participant has withdrawn from training by using the endpoint: 
+
+```
+ PUT /api/v{n}/participants/ecf/{id}/withdraw
+```
+
+An example request body is listed below. Successful requests will return a response body including updates to the `training_status` attribute.
+
+For more detailed information see the specifications for this [notify that an ECF participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-withdraw",
+    "attributes": {
+      "reason": "left-teaching-profession",
+      "course_identifier": "ecf-mentor"
+    }
+  }
+}
+```
+
+#### Providers should note: 
+
+* The API will not allow withdrawals for participants who have not had a started declaration submitted against them. If a participant withdraws before a started declaration has been submitted, providers should inform their contract manager who can advise
+* DfE will only pay for participants who have had, at a minimum, a started declaration submitted against them
+* If a participant is withdrawn later in their training, DfE will pay providers for any declarations submitted where the declaration_date is before the date of the withdrawal
+* The amount DfE will pay depends on which milestones have been reached and declarations submitted before the participant withdraws. [View ECF schedules and milestone dates](LINK NEEDED) 
+
+
 
 
 ## Notifying that an ECF participant is changing training schedule
@@ -222,26 +260,6 @@ Where a schedule’s name does not include ‘standard’, we will not apply ‘
 Where milestone validation applies, the API will reject a declaration if it is not submitted during the correct milestone period. It will also reject declarations submitted after the milestone period and the declaration_date set in the milestone period. For example, if a participant is on the ecf-standard-september [schedule](#notifying-of-schedule-change-standard-induction-september), the API would reject a start declaration unless it is submitted during the period 19 November 2021 to 30 November 2021, or submitted afterwards and backdated accordingly.
 
 Providers will still be expected to evidence any declarations and why a participant is following a non-standard induction.
-
-## Notifying that an ECF participant has withdrawn from their course
-
-This operation allows the provider to tell the DfE that a participant has withdrawn from their ECF course.
-
-A participant that withdraws in a given milestone period after the submission of a retained event for the same period, will be paid for that period.
-
-A participant that withdraws before the started milestone cut-off date will not be paid for by the department.
-
-### Provider withdraws a participant
-
-Submit the withdrawal notification to the following endpoint
-
-```
-PUT /api/v1/participants/ecf/{id}/withdraw
-```
-
-This will return an [ECF participant record](/api-reference/reference-v1#schema-ecfparticipantresponse) with the updates to the record included.
-
-See [withdraw ECF participant](/api-reference/reference-v1#api-v1-participants-ecf-id-withdraw-put) endpoint.
 
 
 
