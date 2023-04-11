@@ -46,37 +46,16 @@ module Schools
           super
         else
           # return to previous wizard
-          if FeatureFlag.active? :cohortless_dashboard
-            show_schools_who_to_add_participants_path(school_id: school.slug,
-                                                      step: back_step.to_s.dasherize)
-          else
-            show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                      school_id: school.slug,
-                                                      step: back_step.to_s.dasherize)
-          end
+          show_schools_who_to_add_participants_path(**path_options(step: back_step))
         end
       end
 
       def show_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          show_schools_add_participants_path(school_id: school.slug,
-                                             step: step.to_s.dasherize)
-        else
-          show_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                             school_id: school.slug,
-                                             step: step.to_s.dasherize)
-        end
+        show_schools_add_participants_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          show_change_schools_add_participants_path(school_id: school.slug,
-                                                    step: step.to_s.dasherize)
-        else
-          show_change_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                    school_id: school.slug,
-                                                    step: step.to_s.dasherize)
-        end
+        show_change_schools_add_participants_path(**path_options(step:))
       end
 
       def found_participant_in_dqt?

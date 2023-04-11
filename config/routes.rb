@@ -626,7 +626,6 @@ Rails.application.routes.draw do
           end
 
           resources :participants, only: %i[index show destroy] do
-
             constraints ->(_request) { !FeatureFlag.active?(:cohortless_dashboard) } do
               collection do
                 scope module: :add_participants do

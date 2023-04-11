@@ -22,36 +22,29 @@ module Schools
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school_cohort: nil, school: nil, submitted_params: {})
-        if FeatureFlag.active? :cohortless_dashboard
-          if data_store.store.empty? && !(current_step.to_sym.in? %i[participant_type yourself])
-            raise InvalidStep, "store empty (#{data_store.store.empty?} - current_step: #{current_step})"
-          elsif !data_store.current_user.nil? && data_store.current_user != current_user ||
-            !data_store.school_id.nil? && data_store.school_id != school.slug
-            raise AlreadyInitialised, "current_user or school different"
-          end
-        else
-          if data_store.store.empty? && !(current_step.to_sym.in? %i[participant_type yourself])
-            raise InvalidStep, "store empty (#{data_store.store.empty?} - current_step: #{current_step})"
-          elsif !data_store.current_user.nil? && data_store.current_user != current_user ||
-            !data_store.school_cohort_id.nil? && data_store.school_cohort_id != school_cohort.id
-            raise AlreadyInitialised, "current_user or school_cohort different"
-          end
-        end
-        set_current_step(current_step)
         @current_user = current_user
         @data_store = data_store
+
+        data_store_should_not_be_empty_for_step!(step: current_step)
+        data_store_should_not_have_a_different_user!
+
+        @school = school
+        @school_cohort = school_cohort
+
+        if FeatureFlag.active? :cohortless_dashboard
+          data_store_should_not_have_a_different_school!
+        else
+          data_store_should_not_have_a_different_school_cohort!
+        end
+
+        set_current_step(current_step)
 
         @submitted_params = submitted_params
         @participant_profile = nil
         @email_owner = nil
         @return_point = nil
 
-        if FeatureFlag.active? :cohortless_dashboard
-          @school = school
-        else
-          @school_cohort = school_cohort
-        end
-        load_current_user_and_school_info_into_data_store
+        load_current_user_and_school_into_data_store
       end
 
       def self.permitted_params_for(step)
@@ -388,6 +381,16 @@ module Schools
         "Schools::AddParticipants::WizardSteps::#{step.to_s.camelcase}Step".constantize
       end
 
+      def path_options(step: nil)
+        path_opts = {
+          school_id: school.slug,
+        }
+
+        path_opts[:cohort_id] = school_cohort.cohort.start_year unless FeatureFlag.active?(:cohortless_dashboard)
+        path_opts[:step] = step.to_s.dasherize if step.present?
+        path_opts
+      end
+
       def reset_form
         %i[
           participant_type
@@ -413,6 +416,23 @@ module Schools
         end
 
         load_current_user_and_school_into_data_store
+      end
+
+      # sanity checks
+      def data_store_should_not_be_empty_for_step!(step:)
+        raise InvalidStep, "Datastore is empty at [#{step}]" if data_store.store.empty? && !(step.to_sym.in? %i[participant_type yourself])
+      end
+
+      def data_store_should_not_have_a_different_user!
+        raise AlreadyInitialised, "current_user different" if data_store.current_user.present? && data_store.current_user != current_user
+      end
+
+      def data_store_should_not_have_a_different_school!
+        raise AlreadyInitialised, "school different" if data_store.school_id.present? && data_store.school_id != school.slug
+      end
+
+      def data_store_should_not_have_a_different_school_cohort!
+        raise AlreadyInitialised, "school_cohort different" if data_store.school_cohort_id.present? && data_store.school_cohort_id != school_cohort.id
       end
     end
   end

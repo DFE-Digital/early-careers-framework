@@ -67,9 +67,7 @@ module Schools
       end
 
       def show_path_for(step:)
-        show_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                school_id: school_cohort.school.friendly_id,
-                                                step:)
+        show_schools_transfer_participants_path(**path_options(step:))
       end
 
       def previous_step_path
@@ -79,9 +77,7 @@ module Schools
           super
         else
           # return to previous wizard
-          show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                    school_id: school.friendly_id,
-                                                    step: back_step.to_s.dasherize)
+          show_schools_who_to_add_participants_path(**path_options(step: back_step))
         end
       end
 
@@ -90,9 +86,7 @@ module Schools
       end
 
       def change_path_for(step:)
-        show_change_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                       school_id: school_cohort.school.friendly_id,
-                                                       step:)
+        show_change_schools_transfer_participants_path(**path_options(step:))
       end
 
       def needs_to_choose_a_mentor?

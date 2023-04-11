@@ -66,11 +66,11 @@ module Schools
 
       def next_journey_path
         if transfer?
-          start_schools_transfer_participants_path(school_id: school.slug)
+          start_schools_transfer_participants_path(**path_options)
         elsif sit_mentor?
-          sit_start_schools_add_participants_path(school_id: school.slug)
+          sit_start_schools_add_participants_path(**path_options)
         else
-          start_schools_add_participants_path(school_id: school.slug)
+          start_schools_add_participants_path(**path_options)
         end
       end
 
@@ -79,13 +79,11 @@ module Schools
       end
 
       def show_path_for(step:)
-        show_schools_who_to_add_participants_path(school_id: school.slug,
-                                                  step: step.to_s.dasherize)
+        show_schools_who_to_add_participants_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        show_change_schools_who_to_add_participants_path(school_id: school.slug,
-                                                         step:)
+        show_change_schools_who_to_add_participants_path(**path_options(step:))
       end
 
       def reset_known_by_another_name_response
