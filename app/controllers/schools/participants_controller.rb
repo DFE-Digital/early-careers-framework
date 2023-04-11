@@ -8,7 +8,7 @@ class Schools::ParticipantsController < Schools::BaseController
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
 
-  helper_method :participant_has_appropriate_body?
+  helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
   def index
     @participants = Dashboard::Participants.new(school: @school, user: current_user)
@@ -76,7 +76,7 @@ class Schools::ParticipantsController < Schools::BaseController
   end
 
   def add_appropriate_body
-    if @profile.ect?
+    if can_appropriate_body_be_changed?
       start_appropriate_body_selection
     else
       redirect_to schools_participant_path(id: @profile.id)
@@ -137,5 +137,9 @@ private
 
   def participant_has_appropriate_body?
     @induction_record.appropriate_body.present?
+  end
+
+  def can_appropriate_body_be_changed?
+    @induction_record.school_cohort.appropriate_body.present? && @profile.ect? && !@induction_record.training_status_withdrawn?
   end
 end

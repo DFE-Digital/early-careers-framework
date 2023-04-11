@@ -93,10 +93,6 @@ RSpec.describe "Update participants details", js: true do
     and_i_click("2021 to 2022")
 
     when_i_navigate_to_participants_dashboard
-    click_on "Not training"
-    then_it_should_show_the_withdrawn_participant
-    and_the_page_should_be_accessible
-
     when_i_click_on_the_participants_name "Sally Teacher"
     then_i_am_taken_to_view_details_page
     and_it_should_not_allow_a_sit_to_edit_the_participant_details

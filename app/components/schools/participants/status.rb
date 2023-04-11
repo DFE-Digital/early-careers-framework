@@ -15,8 +15,8 @@ module Schools
       def content
         Array.wrap(t(:content, scope: translation_scope,
                      contact_us: render(MailToSupportComponent.new("contact us")),
-                     start_date: induction_record.start_date,
-                     end_date: induction_record.end_date))
+                     start_date: induction_record.start_date.to_date.to_s(:govuk),
+                     end_date: induction_record.end_date&.to_date&.to_s(:govuk)))
              .map(&:html_safe)
       end
 

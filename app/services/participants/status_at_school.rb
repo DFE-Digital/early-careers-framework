@@ -90,7 +90,7 @@ private
   end
 
   def deferred?
-    (induction_record || profile)&.training_status_deferred?
+    induction_record&.training_status_deferred? || profile&.training_status_deferred?
   end
 
   def different_trn?
@@ -128,7 +128,7 @@ private
   end
 
   def no_trn?
-    (induction_record || profile)&.trn.blank?
+    (induction_record || profile).trn.blank?
   end
 
   def not_mentoring?
@@ -158,6 +158,6 @@ private
   end
 
   def withdrawn_from_training?
-    (induction_record || profile)&.training_status_withdrawn?
+    induction_record&.training_status_withdrawn? || profile&.training_status_withdrawn?
   end
 end
