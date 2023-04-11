@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipantProfileState < ApplicationRecord
-  belongs_to :participant_profile
+  belongs_to :participant_profile, touch: true
   belongs_to :cpd_lead_provider, optional: true
 
   enum state: {
