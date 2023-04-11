@@ -21,10 +21,21 @@ module Api
         # Returns a specific ECF partnership given its ID
         # Providers can see a specific ECF partnership and which cohorts it applies to via this endpoint
         #
-        # GET /api/v1/partnerships/ecf/:id
+        # GET /api/v3/partnerships/ecf/:id
         #
         def show
           render json: serializer_class.new(ecf_partnership).serializable_hash.to_json
+        end
+
+        # Creates a new ECF partnership
+        # Providers can see create a new partnership via this endpoint
+        #
+        # POST /api/v3/partnerships/ecf
+        #
+        def create
+          service = ::Partnerships::Create.new(partnership_params)
+
+          render_from_service(service, serializer_class)
         end
 
       private
@@ -60,6 +71,22 @@ module Api
 
         def serializer_class
           Api::V3::ECF::PartnershipSerializer
+        end
+
+        def permitted_params
+          params.require(:data).permit(:type, attributes: %i[cohort school_id delivery_partner_id])
+        rescue ActionController::ParameterMissing => e
+          if e.param == :data
+            raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+          else
+            raise
+          end
+        end
+
+        def partnership_params
+          HashWithIndifferentAccess.new(
+            lead_provider_id: lead_provider.id,
+          ).merge(permitted_params["attributes"] || {})
         end
       end
     end

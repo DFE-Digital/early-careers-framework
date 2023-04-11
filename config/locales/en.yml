@@ -451,6 +451,25 @@ en:
           attributes:
             induction_start_date:
               blank: Enter an induction start date
+        partnerships/create:
+          attributes:
+            cohort:
+              blank: "The attribute '#/cohort' must be included as part of partnership confirmations."
+              invalid: "The '#/cohort' you have entered is invalid. Enter a valid '#/cohort' attribute in the request body for partnership confirmations."
+            school_id:
+              blank: "The attribute '#/school_id' must be included as part of partnership confirmations."
+              invalid: "The '#/school_id' you have entered is invalid. Enter a valid '#/school_id' value in the request body for partnership confirmations. Contact the DfE for support if you are unable to find the '#/school_id'."
+              funding_error: "The school you have entered has not registered to deliver training using a DfE-funded training provider."
+              ineligible_error: "The school you have entered is currently ineligible for DfE funding."
+              already_confirmed: "You are already confirmed to be in partnership with the school for the entered cohort."
+              recruited_by_other_provider: "Another provider is already confirmed to be in partnership with the school for the entered cohort. Contact the school for more information."
+            lead_provider_id:
+              blank: "The attribute '#/lead_provider_id' must be included as part of partnership confirmations."
+              invalid: "The '#/lead_provider_id' you have entered is invalid. Enter a valid '#/lead_provider_id' attribute in the request body for partnership confirmations."
+            delivery_partner_id:
+              blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
+              invalid: "The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations."
+              no_relationship: "The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
 
   page_titles:
     lead_providers:
