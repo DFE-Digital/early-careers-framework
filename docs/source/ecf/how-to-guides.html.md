@@ -422,28 +422,67 @@ For more detailed information see the specifications for this [notify DfE that a
 
 Note, providers should store the returned ECF participant declaration ID for management tasks.
 
+### Notify DfE a participant has completed training
 
+To notify DfE that a participant has completed their training, providers must submit a `completed` declaration in line with [milestone dates](LINK NEEDED).
 
-## Declaring that an ECF participant has completed their course
-This scenario begins after it has been confirmed that an ECF participant has completed their course.
-
-### Provider confirms an ECF participant has completed their course
-Confirm an ECF participant has completed their ECF course.
-
-An explicit `completed` declaration is required to trigger output payments. You should declare this when a participant has reached their final milestone and completed their ECF course.
+Confirm a participant has completed training by using the endpoint:
 
 ```
-POST /api/v1/participant-declarations
+POST /api/v{n}/participant-declarations
 ```
 
-With a [request body containing an ECF participant completed declaration](/api-reference/reference-v1#schema-ecfparticipantstarteddeclaration).
+Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value. An example request body is listed below.
 
-This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+Successful requests will return a response body with declaration data. An example response body is listed below. Any attempts to submit duplicate declarations will return an error message.
 
-See [confirm ECF participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
+For more detailed information see the specifications for this [notify DfE that an ECF participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
-### Provider records the ECF participant declaration ID
-Store the returned ECF participant declaration ID for future management tasks.
+#### Example request body:
+
+```
+{
+  “data”: {
+    “type”: “participant-declaration”,
+    “attributes”: {
+      “participant_id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
+      “declaration_type”: “completed”,
+      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “course_identifier”: “ecf-induction”
+      “evidence_held”: “self-study-material-completed”
+    }
+  }
+}
+```
+#### Example response body:
+
+```
+{
+  “data”: {
+    “id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
+    “type”: “participant-declaration”,
+    “attributes”: {
+      “participant_id”: “08d78829-f864-417f-8a30-cb7655714e28",
+      “declaration_type”: “completed",
+      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “course_identifier”: “ecf-induction”,
+      “state”: “eligible”,
+      “updated_at”: “2020-11-13T11:21:55Z”,
+      “created_at”: “2020-11-13T11:21:55Z”,
+      “delivery_partner_id”: “99ca2223-8c1f-4ac8-985d-a0672e97694e”,
+      “statement_id”: “99ca2223-8c1f-4ac8-985d-a0672e97694e”,
+      “clawback_statement_id”: null,
+      “ineligible_for_funding_reason”: null,
+      “mentor_id”: “907f61ed-5770-4d38-b22c-1a4265939378",
+      “uplift_paid”: true,
+      “evidence_held”: “self-study-material-completed”
+    }
+  }
+}
+```
+
+Note, providers should store the returned ECF participant declaration ID for future management tasks.
+
 
 ## Removing a declaration submitted in error
 This operation allows the provider to void a participant declaration that has been previously submitted.
