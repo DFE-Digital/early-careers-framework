@@ -331,7 +331,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-#### Example request body:
+#### Example response body:
 
 ```
 {
@@ -360,27 +360,69 @@ For more detailed information see the specifications for this [notify DfE that a
 
 Note, providers should store the returned ECF participant declaration ID for management tasks.
 
+### Notify DfE a participant has been retained in training
 
-## Declaring that an ECF participant has reached a retained milestone
-This scenario begins after it has been confirmed that an ECF participant has completed enough of their course to meet a milestone.
+To notify DfE that a participant has reached a given retention point in their training, providers must submit a `retained` declaration in line with [milestone dates](LINK NEEDED).
 
-### Provider confirms an ECF participant has been retained
-Confirm an ECF participant has been retained by the appropriate number of months for this retained event on their ECF course.
-
-An explicit `retained-x` declaration is required to trigger output payments. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.
+Confirm a participant has been retained in training by using the endpoint:
 
 ```
-POST /api/v1/participant-declarations
+POST /api/v{n}/participant-declarations
 ```
 
-With a [request body containing an ECF participant retained declaration](/api-reference/reference-v1#schema-ecfparticipantretaineddeclaration).
+Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`. An example request body is listed below.
 
-This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+Successful requests will return a response body with declaration data. An example response body is listed below. Any attempts to submit duplicate declarations will return an error message.
 
-See [confirm ECF participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
+For more detailed information see the specifications for this [notify DfE that an ECF participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
-### Provider records the ECF participant declaration ID
-Store the returned ECF participant declaration ID for future management tasks.
+#### Example request body:
+
+```
+{
+  “data”: {
+    “type”: “participant-declaration”,
+    “attributes”: {
+      “participant_id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
+      “declaration_type”: “retained-1",
+      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “course_identifier”: “ecf-induction”
+      “evidence_held”: “training-event-attended”
+    }
+  }
+}
+```
+
+#### Example response body:
+
+```
+{
+  “data”: {
+    “id”: “db3a7848-7308-4879-942a-c4a70ced400a”,
+    “type”: “participant-declaration”,
+    “attributes”: {
+      “participant_id”: “08d78829-f864-417f-8a30-cb7655714e28",
+      “declaration_type”: “retained-1",
+      “declaration_date”: “2021-05-31T02:21:32.000Z”,
+      “course_identifier”: “ecf-induction”,
+      “state”: “eligible”,
+      “updated_at”: “2020-11-13T11:21:55Z”,
+      “created_at”: “2020-11-13T11:21:55Z”,
+      “delivery_partner_id”: “99ca2223-8c1f-4ac8-985d-a0672e97694e”,
+      “statement_id”: “99ca2223-8c1f-4ac8-985d-a0672e97694e”,
+      “clawback_statement_id”: null,
+      “ineligible_for_funding_reason”: null,
+      “mentor_id”: “907f61ed-5770-4d38-b22c-1a4265939378",
+      “uplift_paid”: true,
+      “evidence_held”: “training-event-attended”
+    }
+  }
+}
+```
+
+Note, providers should store the returned ECF participant declaration ID for management tasks.
+
+
 
 ## Declaring that an ECF participant has completed their course
 This scenario begins after it has been confirmed that an ECF participant has completed their course.
