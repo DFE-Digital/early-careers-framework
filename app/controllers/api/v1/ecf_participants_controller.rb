@@ -19,7 +19,7 @@ module Api
       def index
         respond_to do |format|
           format.json do
-            render json: serializer_class.new(induction_records).serializable_hash.to_json
+            render json: serializer_class.new(paginate(induction_records)).serializable_hash.to_json
           end
 
           format.csv do
@@ -34,13 +34,13 @@ module Api
       # GET /api/v1/participants/ecf/:id
       #
       def show
-        render json: serializer_class.new(induction_record).serializable_hash.to_json
+        render json: serializer_class.new(paginate(induction_record)).serializable_hash.to_json
       end
 
     private
 
       def serializer_class
-        ParticipantFromQuerySerializer
+        TransferSerializer
       end
 
       def induction_records
@@ -65,7 +65,7 @@ module Api
       end
 
       def ecf_participant_query
-        Api::V1::ECF::ParticipantsQuery.new(
+        Api::V1::ECF::TransfersQuery.new(
           lead_provider:,
           params: ecf_participant_params,
         )
