@@ -79,7 +79,7 @@ private
   def strip_title_prefix(str)
     parts = str.split(" ")
     if parts.first.downcase =~ /^(mr|mrs|miss|ms|dr|prof|rev)/
-      parts.shift.join(" ")
+      parts.drop(1).join(" ")
     else
       str
     end
