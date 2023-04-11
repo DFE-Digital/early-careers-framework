@@ -483,45 +483,153 @@ For more detailed information see the specifications for this [notify DfE that a
 
 Note, providers should store the returned ECF participant declaration ID for future management tasks.
 
+### View all previously submitted declarations 
 
-## Removing a declaration submitted in error
-This operation allows the provider to void a participant declaration that has been previously submitted.
+Providers can view all declarations which they have submitted to date. They can check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
-This allows the provider to rectify incorrectly/inaccurately reported participant data that may have been submitted in error.
-
-### Provider voids a declaration
-Submit the void to the following endpoint
+View all previously submitted declarations by using the endpoint:
 
 ```
-PUT /api/v1/participant-declarations/{id}/void
+GET /api/v3/participant-declarations
 ```
 
-This will return a [participant declaration record](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse) with the updates to the record included.
+Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
-See [void participant declaration](/api-reference/reference-v1#api-v1-participant-declarations-id-void-put) endpoint.
+An example response body is listed below. 
 
-## Listing participant declaration submissions 
-This is how you see all the declarations you have made. This functionality allows the provider to check declaration submissions and identify any that are missing.
+For more detailed information see the specifications for this [view all declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-get)
 
-If declarations are missing, following other guidance by going to [Declaring that an ECF participant started their course](#declaring-that-an-ecf-participant-has-started-their-course).
+#### Example response body:
+```
+{
+  "data": [
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "participant-declaration",
+      "attributes": {
+        "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+        "declaration_type": "started",
+        "declaration_date": "2020-11-13T11:21:55Z",
+        "course_identifier": "ecf-induction",
+        "state": "eligible",
+        "updated_at": "2020-11-13T11:21:55Z",
+        "created_at": "2020-11-13T11:21:55Z",
+        "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+        "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+        "clawback_statement_id": null,
+        "ineligible_for_funding_reason": null,
+        "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+        "uplift_paid": true,
+        "evidence_held": "other"
+      }
+    },
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "participant-declaration",
+      "attributes": {
+        "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+        "declaration_type": "retained-1",
+        "declaration_date": "2020-11-13T11:21:55Z",
+        "course_identifier": "ecf-induction",
+        "state": "eligible",
+        "updated_at": "2020-11-13T11:21:55Z",
+        "created_at": "2020-11-13T11:21:55Z",
+        "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+        "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+        "clawback_statement_id": null,
+        "ineligible_for_funding_reason": null,
+        "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+        "uplift_paid": true,
+        "evidence_held": "training-event-attended"
+      }
+    }
+  ]
+}
+```
 
-### Checking all previously submitted declarations
-This section lets you review all of the declarations you have made.
+### View a specific previously submitted declaration
 
-All of your submitted declarations are listed.
+Providers can view specific declarations which have previously been submitted. They can check declaration details and void or clawback those which have been submitted in error.
+
+View all specific declaration by using the endpoint:
 
 ```
-GET /api/v1/participant-declarations
+GET /api/v3/participant-declarations/{id}
 ```
 
-This returns [participant declarations](/api-reference/reference-v1#schema-participantdeclarationresponse).
+An example response body is listed below. 
 
-### Checking a single previously submitted declaration 
+For more detailed information see the specifications for this [view specific declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-get)
 
-This section lets you review a single declaration you have made.
+#### Example response body:
 
 ```
-GET /api/v1/participant-declarations/{id}
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+      "declaration_type": "started",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "ecf-induction",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+      "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+      "uplift_paid": true,
+      "evidence_held": "other"
+    }
+  }
+}
 ```
 
-This returns a [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+### Void or clawback a declaration
+
+Providers can void specific declarations which have been submitted in error.
+
+Once voided, the [declaration `state`](LINK NEEDED) value will become: 
+* `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
+* `awaiting_clawback` if if it had been  `payable`
+
+Void a previously submitted declaration by using the endpoint:
+
+```
+PUT /api/v3/participant-declarations/{id}/void
+```
+
+Successful requests will return a response body including updates. An example response body is listed below. 
+
+For more detailed information see the specifications for this [void declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-void-put)
+
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "08d78829-f864-417f-8a30-cb7655714e28",
+      "declaration_type": "started",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "ecf-induction",
+      "state": "voided",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+      "statement_id": "99ca2223-8c1f-4ac8-985d-a0672e97694e",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
+      "uplift_paid": true,
+      "evidence_held": "other"
+    }
+  }
+}
+```
