@@ -181,7 +181,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and the school is eligible for pupil premium uplift" do
@@ -197,7 +197,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and the school has no eligible uplifts" do
@@ -213,7 +213,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and active flags have been found on the TRA record" do
@@ -277,7 +277,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Checking QTS",
                          dp_status_label: "Checking QTS",
                          pp_status_label: "checking_qts",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Checking qualified teacher status"
       end
 
       context "and the active flags have been investigated and found to be relevant" do
@@ -293,7 +293,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Not eligible"
       end
 
       context "and the active flags have been investigated and found to be irrelevant" do
@@ -309,7 +309,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and a duplicate profile has been found but no duplicity is recorded" do
@@ -325,7 +325,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Not eligible"
       end
 
       context "and they are exempt from induction" do
@@ -341,7 +341,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Not eligible"
       end
 
       context "and they have a previous induction recorded" do
@@ -357,7 +357,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Not eligible: induction already started"
       end
 
       context "and they have a previous participation recorded" do
@@ -373,7 +373,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Not eligible"
       end
 
       context "and they have had no eligibility checks performed yet" do
@@ -405,7 +405,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and the school has not yet reported the training providers" do
@@ -421,7 +421,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they are active" do
@@ -437,7 +437,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have been withdrawn by a training provider through the API" do
@@ -469,7 +469,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they were withdrawn before an induction record was created for them" do
@@ -550,7 +550,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
     end
 
@@ -632,7 +632,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and no TRA record could be found" do
@@ -648,7 +648,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and active flags have been found on the TRA record" do
@@ -664,7 +664,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and a different TRN was identified with the details provided" do
@@ -680,7 +680,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and no induction start date has been recorded by the AB yet" do
@@ -696,7 +696,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they do not have QTS on record" do
@@ -712,7 +712,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Checking QTS",
                          dp_status_label: "Checking QTS",
                          pp_status_label: "checking_qts",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Checking qualified teacher status"
       end
 
       context "and the active flags have been investigated and found to be relevant" do
@@ -728,7 +728,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Not eligible"
       end
 
       context "and the active flags have been investigated and found to be irrelevant" do
@@ -760,7 +760,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Not eligible"
       end
 
       context "and they are exempt from induction" do
@@ -776,7 +776,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Not eligible"
       end
 
       context "and they have a previous induction recorded" do
@@ -792,7 +792,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Not eligible: induction already started"
       end
 
       context "and they have a previous participation recorded" do
@@ -808,7 +808,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Not eligible"
       end
 
       context "and they have had no eligibility checks performed yet" do
@@ -824,7 +824,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have been made eligible by DfE" do
@@ -872,7 +872,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "No longer being trained",
                          dp_status_label: "No longer being trained",
                          pp_status_label: "no_longer_being_trained",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have been re-enrolled after being withdrawn by a training provider through the API" do
@@ -920,7 +920,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have been withdrawn from the programme" do
@@ -936,7 +936,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       # TODO: need to include all four transfer scenarios
@@ -953,7 +953,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have completed their induction training" do
@@ -1115,7 +1115,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they do not have QTS on record but had been made eligible by DfE" do
@@ -1131,7 +1131,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and the active flags have been investigated and found to be relevant" do
@@ -1147,7 +1147,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Not eligible"
       end
 
       context "and the active flags have been investigated and found to be irrelevant" do
@@ -1163,7 +1163,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and a duplicate profile has been found but no duplicity is recorded" do
@@ -1179,7 +1179,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have a previous participation recorded" do
@@ -1195,7 +1195,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have a previous participation recorded and have been made eligible by DfE" do
@@ -1211,7 +1211,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have had no eligibility checks performed yet" do
@@ -1243,7 +1243,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have a duplicate profile but this is the primary one" do
@@ -1259,7 +1259,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have a duplicate profile and this is the secondary one" do
@@ -1275,7 +1275,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and the school has not yet reported the training providers" do
@@ -1291,7 +1291,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they are active" do
@@ -1307,7 +1307,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have been withdrawn by a training provider through the API" do
@@ -1339,7 +1339,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they were withdrawn before an induction record was created for them" do
@@ -1420,7 +1420,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
     end
 
@@ -1502,7 +1502,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and no TRA record could be found" do
@@ -1518,7 +1518,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and active flags have been found on the TRA record" do
@@ -1534,7 +1534,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and a different TRN was identified with the details provided" do
@@ -1550,7 +1550,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they do not have QTS on record" do
@@ -1598,7 +1598,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Not eligible for funded training",
                          dp_status_label: "Not eligible for funded training",
                          pp_status_label: "not_eligible_for_funded_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "Not eligible"
       end
 
       context "and the active flags have been investigated and found to be irrelevant" do
@@ -1678,7 +1678,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "DfE checking eligibility",
                          dp_status_label: "DfE checking eligibility",
                          pp_status_label: "dfe_checking_eligibility",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have been made eligible by DfE" do
@@ -1758,7 +1758,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "No longer being trained",
                          dp_status_label: "No longer being trained",
                          pp_status_label: "no_longer_being_trained",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have been re-enrolled after being withdrawn by a training provider through the API" do
@@ -1790,7 +1790,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "No longer being trained",
                          dp_status_label: "No longer being trained",
                          pp_status_label: "no_longer_being_trained",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and their training has been deferred" do
@@ -1822,7 +1822,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       # TODO: need to include all four transfer scenarios
@@ -1839,7 +1839,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
+                         school_status_label: "DfE checking eligibility"
       end
 
       context "and they have completed their induction training" do
