@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe StatusTags::AdminParticipantStatusTag, :with_training_record_state_examples, type: :component do
-  let(:participant_profile) { create :seed_ect_participant_profile }
+  let(:participant_profile) { ect_on_fip }
 
   let(:component) { described_class.new participant_profile: }
 

@@ -14,10 +14,10 @@ module DeliveryPartners
       end
 
       def status_name(participant_profile, delivery_partner)
-        ParticipantProfileStatus.new(
+        StatusTags::DeliveryPartnerParticipantStatusTag.new(
           participant_profile:,
           induction_record: induction_record(participant_profile, delivery_partner),
-        ).record_state
+        ).id
       end
     end
 
