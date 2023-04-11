@@ -44,18 +44,28 @@ module Schools
 
         if changing_answer? || back_step != :date_of_birth
           super
-        else
+        elsif FeatureFlag.active? :cohortless_dashboard
           # return to previous wizard
+          schools_who_to_add_show_path(**path_options(step: back_step))
+        else
           show_schools_who_to_add_participants_path(**path_options(step: back_step))
         end
       end
 
       def show_path_for(step:)
-        show_schools_add_participants_path(**path_options(step:))
+        if FeatureFlag.active? :cohortless_dashboard
+          schools_add_show_path(**path_options(step:))
+        else
+          show_schools_add_participants_path(**path_options(step:))
+        end
       end
 
       def change_path_for(step:)
-        show_change_schools_add_participants_path(**path_options(step:))
+        if FeatureFlag.active? :cohortless_dashboard
+          schools_add_show_change_path(**path_options(step:))
+        else
+          show_change_schools_add_participants_path(**path_options(step:))
+        end
       end
 
       def found_participant_in_dqt?

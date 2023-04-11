@@ -65,7 +65,15 @@ module Schools
       end
 
       def next_journey_path
-        if transfer?
+        if FeatureFlag.active? :cohortless_dashboard
+          if transfer?
+            schools_transfer_start_path(**path_options)
+          elsif sit_mentor?
+            schools_add_sit_start_path(**path_options)
+          else
+            schools_add_start_path(**path_options)
+          end
+        elsif transfer?
           start_schools_transfer_participants_path(**path_options)
         elsif sit_mentor?
           sit_start_schools_add_participants_path(**path_options)
@@ -79,11 +87,19 @@ module Schools
       end
 
       def show_path_for(step:)
-        show_schools_who_to_add_participants_path(**path_options(step:))
+        if FeatureFlag.active? :cohortless_dashboard
+          schools_who_to_add_show_path(**path_options(step:))
+        else
+          show_schools_who_to_add_participants_path(**path_options(step:))
+        end
       end
 
       def change_path_for(step:)
-        show_change_schools_who_to_add_participants_path(**path_options(step:))
+        if FeatureFlag.active? :cohortless_dashboard
+          schools_who_to_add_show_change_path(**path_options(step:))
+        else
+          show_change_schools_who_to_add_participants_path(**path_options(step:))
+        end
       end
 
       def reset_known_by_another_name_response
