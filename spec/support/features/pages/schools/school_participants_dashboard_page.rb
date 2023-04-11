@@ -13,19 +13,13 @@ module Pages
       Pages::SchoolAddParticipantWizard.loaded
     end
 
-    def view_ects(participant_name)
-      click_on participant_name
+    def choose_to_transfer_an_ect_or_mentor
+      click_on "Add ECT or mentor"
 
-      Pages::SchoolParticipantDetailsPage.loaded
+      Pages::SchoolTransferParticipantWizard.loaded
     end
 
-    def view_mentors(participant_name)
-      click_on participant_name
-
-      Pages::SchoolParticipantDetailsPage.loaded
-    end
-
-    def view_not_training(participant_name)
+    def visit_participant(participant_name)
       click_on participant_name
 
       Pages::SchoolParticipantDetailsPage.loaded

@@ -648,6 +648,10 @@ module ManageTrainingSteps
     click_on name
   end
 
+  def when_i_click_change_induction_start_date
+    click_on "Change induction start date"
+  end
+
   def when_i_go_to_manage_the_participant_named(name)
     click_on "Manage #{name}"
   end
