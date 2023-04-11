@@ -82,17 +82,17 @@
 
     <% if current_user != true_user %>
       <div class="govuk-width-container">
-        <br>
-        <p class="govuk-body">
-          You are impersonating <%= govuk_link_to current_user.full_name %> (<%= current_user.email %>)
+        <%= render GovukComponent::NotificationBannerComponent.new(title_text: 'Important', classes: 'govuk-!-margin-top-0 govuk-!-margin-bottom-5', html_attributes: { data: { test: "notification-banner"} }) do |banner| %>
+          <p class="govuk-notification-banner__heading">
+            You are impersonating <%= govuk_link_to current_user.full_name %> (<%= current_user.email %>)
+          </p>
 
-          <%= govuk_link_to('Stop impersonating',
+          <%= govuk_button_to('Stop impersonating',
               admin_impersonate_path,
               method: :delete,
               class: 'govuk-!-margin-bottom-1',
               "data-test": "stop-impersonating-button") %>
-        </p>
-
+        <% end %>
       </div>
     <% end %>
 
