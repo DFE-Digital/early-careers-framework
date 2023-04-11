@@ -43,12 +43,12 @@ Providers can then update data to confirm participants have:
 * withdrawn from training 
 * changed their training schedule
 
-### View all participant records
+### View all participant data
 
-To view all ECF participant records, use the endpoint: 
+View all ECF participant records by using the endpoint: 
 
 ```
-GET /api/v{n}/participants/ecf
+ GET /api/v{n}/participants/ecf
 ```
 
 Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
@@ -97,17 +97,19 @@ For more detailed information see the specifications for this [view multiple ECF
 }
 ```
 
-### View a single participant records
+### View a single participant's data
 
-To view a participant’s record, use the endpoint:
+View a participant’s data by using the endpoint:
 
 ```
-GET /api/v{n}/participants/ecf/{id}
+ GET /api/v{n}/participants/ecf/{id}
 ```
 
 An example response body is listed below. 
 
 For more detailed information see the specifications for this [view a single ECF participant endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-get).
+
+#### Example response body:
 
 ```
 {
@@ -145,41 +147,59 @@ For more detailed information see the specifications for this [view a single ECF
 }
 ```
 
+### Notify DfE a participant has taken a break (deferred) from training
 
+A participant can choose to take a break from ECF-based training at any time if they plan to resume training at a later date. 
 
-## Notifying that an ECF participant is taking a break from their course
-
-This operation allows the provider to tell the DfE that a participant has deferred from their ECF course.
-
-A participant is deemed to have deferred from an ECF course if he or she will be resuming it at a later date.
-
-### Provider defers a participant
-
-Submit the deferral notification to the following endpoint
+Confirm a participant has deferred training by using the endpoint: 
 
 ```
-PUT /api/v1/participants/{id}/defer
+ PUT /api/v{n}/participants/ecf/{id}/defer
 ```
 
-This will return an [ECF participant response](/api-reference/reference-v1#schema-ecfparticipantresponse) with the updates to the record included.
+An example request body is listed below. 
 
-See [defer ECF participant](/api-reference/reference-v1#api-v1-participants-ecf-id-defer-put) endpoint.
+For more detailed information see the specifications for this [notify that an ECF participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-defer-put).
 
-## Notifying that an ECF participant is resuming their course
-
-This functionality allows the provider to inform the DfE that a participant has resumed an ECF course.
-
-### Provider resumes a participant
-
-Submit the resumed notification to the following endpoint
+#### Example request body:
 
 ```
-PUT /api/v1/participants/{id}/resume
+{
+  "data": {
+    "type": "participant-defer",
+    "attributes": {
+      "reason": "career-break",
+      "course_identifier": "ecf-mentor"
+    }
+  }
+}
 ```
 
-This will return an [ECF participant record](/api-reference/reference-v1#schema-ecfparticipantresponse) with the updates to the record included.
+### Notify DfE a participant has resumed training
 
-See [resume ECF participant](/api-reference/reference-v1#api-v1-participants-ecf-id-resume-put) endpoint.
+A participant can choose to resume their ECF-based training at any time if they had previously deferred. 
+
+Notify DfE a participant has resumed training by using the endpoint:
+
+```
+ /api/v{n}/participants/ecf/{id}/resume
+```
+
+An example request body is listed below. Successful requests will return a response body including updates. 
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-resume",
+    "attributes": {
+      "course_identifier": "ecf-mentor"
+    }
+  }
+}
+```
+
 
 ## Notifying that an ECF participant is changing training schedule
 
