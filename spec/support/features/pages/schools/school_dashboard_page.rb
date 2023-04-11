@@ -21,7 +21,7 @@ module Pages
     end
 
     def confirm_has_no_participants
-      element_has_content?(self, "ECTs and mentors")
+      element_has_content? self, "ECTs0"
     end
 
     def confirm_will_use_dfe_funded_training_provider
