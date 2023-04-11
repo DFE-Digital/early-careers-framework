@@ -15,7 +15,7 @@ module StatusTags
 
       elsif school.present?
         @school = school
-        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
+        @induction_record = Induction::FindBy.call(participant_profile:, school:)
 
       else
         @induction_record = induction_record || participant_profile.induction_records.latest
