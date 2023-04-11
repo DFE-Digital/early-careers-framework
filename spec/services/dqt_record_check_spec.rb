@@ -20,7 +20,7 @@ RSpec.describe DqtRecordCheck do
       "trn" => trn,
       "name" => full_name,
       "ni_number" => nino,
-      "dob" => 25.years.ago.to_date.iso8601,
+      "dob" => 25.years.ago.to_date,
     }
   end
   let(:fake_api_response) { nil }
@@ -120,7 +120,7 @@ RSpec.describe DqtRecordCheck do
 
       context "when different" do
         include_context "build fake DQT response" do
-          let(:fake_api_response) { default_api_response.merge("dob" => 27.years.ago.to_date.iso8601) }
+          let(:fake_api_response) { default_api_response.merge("dob" => 27.years.ago.to_date) }
         end
 
         it("#dob_matches is false") { expect(subject.call.dob_matches).to be(false) }

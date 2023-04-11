@@ -14,9 +14,7 @@ class DqtRecordPresenter < SimpleDelegator
   end
 
   def dob
-    return unless dqt_record.key?("dob")
-
-    Date.parse(dqt_record["dob"])
+    dqt_record["dob"]
   end
 
   def ni_number
