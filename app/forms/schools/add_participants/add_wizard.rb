@@ -46,22 +46,37 @@ module Schools
           super
         else
           # return to previous wizard
-          show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                    school_id: school.friendly_id,
-                                                    step: back_step.to_s.dasherize)
+          if FeatureFlag.active? :cohortless_dashboard
+            show_schools_who_to_add_participants_path(school_id: school.slug,
+                                                      step: back_step.to_s.dasherize)
+          else
+            show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
+                                                      school_id: school.slug,
+                                                      step: back_step.to_s.dasherize)
+          end
         end
       end
 
       def show_path_for(step:)
-        show_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                           school_id: school.friendly_id,
-                                           step: step.to_s.dasherize)
+        if FeatureFlag.active? :cohortless_dashboard
+          show_schools_add_participants_path(school_id: school.slug,
+                                             step: step.to_s.dasherize)
+        else
+          show_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
+                                             school_id: school.slug,
+                                             step: step.to_s.dasherize)
+        end
       end
 
       def change_path_for(step:)
-        show_change_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                  school_id: school_cohort.school.friendly_id,
-                                                  step:)
+        if FeatureFlag.active? :cohortless_dashboard
+          show_change_schools_add_participants_path(school_id: school.slug,
+                                                    step: step.to_s.dasherize)
+        else
+          show_change_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
+                                                    school_id: school.slug,
+                                                    step: step.to_s.dasherize)
+        end
       end
 
       def found_participant_in_dqt?
@@ -115,7 +130,7 @@ module Schools
       end
 
       def send_added_and_validated_email(profile)
-        ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
+        ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school.name).deliver_later
       end
 
       def participant_create_args
