@@ -11,10 +11,14 @@ module Api
       end
 
       def participants
-        scope = npq_lead_provider.npq_participants
+        scope = npq_lead_provider.npq_participants.includes(:teacher_profile)
         scope = scope.where("users.updated_at > ?", updated_since) if updated_since.present?
         scope = scope.order("users.updated_at DESC") if params[:sort].blank?
         scope
+      end
+
+      def participant
+        npq_lead_provider.npq_participants.find(params[:id])
       end
 
     private

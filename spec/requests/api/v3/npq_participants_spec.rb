@@ -38,16 +38,14 @@ RSpec.describe "NPQ Participants API", :with_default_schedules, type: :request, 
           expect(parsed_response["data"][0]).to have_type("npq-participant")
         end
 
-        it "returns IDs" do
+        it "returns correct data" do
           get "/api/v3/participants/npq"
 
           user = User.find(parsed_response["data"][0]["id"])
           expect(parsed_response["data"][0]["id"]).to be_in(ParticipantIdentity.joins(:npq_applications).pluck(:user_id))
-          teacher_profile = user.teacher_profile
-
-          expect(parsed_response["data"][0]["attributes"]["email"]).to eql(user.email)
           expect(parsed_response["data"][0]["attributes"]["full_name"]).to eql(user.full_name)
-          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(teacher_profile.trn)
+          expect(parsed_response["data"][0]["attributes"]["teacher_reference_number"]).to eql(user.teacher_profile.trn)
+          expect(parsed_response["data"][0]["attributes"]["updated_at"]).to eql(user.updated_at.rfc3339)
         end
 
         it "has correct attributes" do
@@ -55,7 +53,6 @@ RSpec.describe "NPQ Participants API", :with_default_schedules, type: :request, 
 
           expect(parsed_response["data"][0])
             .to(have_jsonapi_attributes(
-              :email,
               :full_name,
               :teacher_reference_number,
               :updated_at,
@@ -96,6 +93,34 @@ RSpec.describe "NPQ Participants API", :with_default_schedules, type: :request, 
                   },
                 ],
               }))
+            end
+          end
+        end
+
+        describe "ordering" do
+          let!(:another_npq_application) { create(:npq_application, :accepted, npq_lead_provider:, school_urn: "123456", npq_course:) }
+
+          before do
+            another_npq_application.user.update!(updated_at: 5.days.ago)
+
+            get "/api/v3/participants/npq", params: { sort: sort_param }
+          end
+
+          context "when ordering by updated_at ascending" do
+            let(:sort_param) { "updated_at" }
+
+            it "returns an ordered list of npq participants" do
+              expect(parsed_response["data"].size).to eql(4)
+              expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
+            end
+          end
+
+          context "when ordering by updated_at descending" do
+            let(:sort_param) { "-updated_at" }
+
+            it "returns an ordered list of npq participants" do
+              expect(parsed_response["data"].size).to eql(4)
+              expect(parsed_response.dig("data", 3, "attributes", "full_name")).to eql(another_npq_application.user.full_name)
             end
           end
         end

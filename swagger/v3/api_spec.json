@@ -959,6 +959,18 @@
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ participants."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/NPQParticipantsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort NPQ participants being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -1157,7 +1169,6 @@
                               "training_status": "deferred",
                               "school_urn": "123456",
                               "targeted_delivery_funding_eligibility": true,
-                              "withdrawal": null,
                               "deferral": {
                                 "reason": "other",
                                 "date": "2022-12-09T16:07:38Z"
@@ -1293,7 +1304,6 @@
                                 "reason": "insufficient-capacity",
                                 "date": "2022-12-09T16:07:38Z"
                               },
-                              "deferral": null,
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
                           ],
@@ -4752,12 +4762,14 @@
           },
           "withdrawal": {
             "nullable": true,
+            "type": "object",
             "anyOf": [
               { "$ref": "#/components/schemas/NPQWithdrawal" }
             ]
           },
           "deferral": {
             "nullable": true,
+            "type": "object",
             "anyOf": [
               { "$ref": "#/components/schemas/NPQDeferral" }
             ]
@@ -5035,18 +5047,18 @@
             "example": "1234567",
             "nullable": true
           },
+          "updated_at": {
+            "description": "The date the NPQ participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
           "npq_enrolments": {
             "description": "Information about the course(s) the participant is enroled in",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NPQEnrolment"
             }
-          },
-          "updated_at": {
-            "description": "The date the NPQ participant was last updated",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -5923,6 +5935,19 @@
             ],
             "example": "unknown"
           }
+        }
+      },
+      "NPQParticipantsSort": {
+        "description": "Sort NPQ participants being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "-created_at",
+            "updated_at",
+            "-updated_at"
+          ]
         }
       },
       "NPQParticipantWithdraw": {

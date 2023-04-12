@@ -8,6 +8,34 @@ module Api
       include JSONAPI::Serializer
       include JSONAPI::Serializer::Instrumentation
 
+      class << self
+        def withdrawal(hash:, profile:, cpd_lead_provider:)
+          if profile.withdrawn_for?(cpd_lead_provider:)
+            latest_participant_profile_state = profile.participant_profile_states.where(state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider:).order(created_at: :desc).first
+            if latest_participant_profile_state.present?
+              hash[:withdrawal] = {
+                reason: latest_participant_profile_state.reason,
+                date: latest_participant_profile_state.created_at.rfc3339,
+              }
+            end
+          end
+          hash
+        end
+
+        def deferral(hash:, profile:, cpd_lead_provider:)
+          if profile.deferred_for?(cpd_lead_provider:)
+            latest_participant_profile_state = profile.participant_profile_states.where(state: ParticipantProfileState.states[:deferred], cpd_lead_provider:).order(created_at: :desc).first
+            if latest_participant_profile_state.present?
+              hash[:deferral] = {
+                reason: latest_participant_profile_state.reason,
+                date: latest_participant_profile_state.created_at.rfc3339,
+              }
+            end
+          end
+          hash
+        end
+      end
+
       set_id :id
       set_type :'npq-participant'
 
@@ -23,7 +51,7 @@ module Api
 
       attribute(:npq_enrolments) do |object, params|
         scope = object.npq_profiles
-        scope = scope.includes(:npq_course, :npq_application, :participant_identity, :participant_profile_states, schedule: [:cohort])
+        scope = scope.includes(:npq_course, :npq_application, :participant_identity, schedule: [:cohort])
 
         if params[:cpd_lead_provider]
           scope = scope.joins(npq_application: { npq_lead_provider: [:cpd_lead_provider] })
@@ -42,24 +70,8 @@ module Api
             school_urn: profile.school_urn,
             targeted_delivery_funding_eligibility: profile.npq_application.targeted_delivery_funding_eligibility,
           }
-          if profile.withdrawn_for?(cpd_lead_provider: params[:cpd_lead_provider])
-            latest_participant_profile_state = profile.participant_profile_states.where(state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider: params[:cpd_lead_provider]).order(created_at: :desc).first
-            if latest_participant_profile_state.present?
-              hash[:withdrawal] = {
-                reason: latest_participant_profile_state.reason,
-                date: latest_participant_profile_state.created_at.rfc3339,
-              }
-            end
-          end
-          if profile.deferred_for?(cpd_lead_provider: params[:cpd_lead_provider])
-            latest_participant_profile_state = profile.participant_profile_states.where(state: ParticipantProfileState.states[:deferred], cpd_lead_provider: params[:cpd_lead_provider]).order(created_at: :desc).first
-            if latest_participant_profile_state.present?
-              hash[:deferral] = {
-                reason: latest_participant_profile_state.reason,
-                date: latest_participant_profile_state.created_at.rfc3339,
-              }
-            end
-          end
+          hash = withdrawal(hash:, profile:, cpd_lead_provider: params[:cpd_lead_provider])
+          hash = deferral(hash:, profile:, cpd_lead_provider: params[:cpd_lead_provider])
           hash[:created_at] = profile.created_at.rfc3339
           hash
         end

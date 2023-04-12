@@ -37,6 +37,17 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of NPQ participants."
 
+      parameter name: :sort,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/NPQParticipantsSort",
+                },
+                style: :form,
+                explode: false,
+                required: false,
+                description: "Sort NPQ participants being returned.",
+                example: "sort=-updated_at"
+
       response "200", "A list of NPQ participants" do
         schema({ "$ref": "#/components/schemas/MultipleNPQParticipantsResponse" })
 
@@ -232,7 +243,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                               reason: "insufficient-capacity",
                               date: "2022-12-09T16:07:38Z",
                             },
-                            "deferral": null,
                             "created_at": "2021-05-31T02:22:32.000Z",
                           },
                         ],
@@ -353,7 +363,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                             "training_status": "deferred",
                             "school_urn": "123456",
                             "targeted_delivery_funding_eligibility": true,
-                            "withdrawal": nil,
                             "deferral": {
                               reason: "other",
                               date: "2022-12-09T16:07:38Z",
