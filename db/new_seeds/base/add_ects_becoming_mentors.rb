@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-@cohorts = [Cohort.previous, Cohort.current]
 # select providers with API tokens for API testing
 @lead_providers = LeadProvider.where(name: ["Ambition Institute", "Best Practice Network", "Capita", "Education Development Trust"])
 
 seed_quantity(:ects_becoming_mentors).times do
   lead_provider = @lead_providers.sample
-  cohort = @cohorts.sample
+  cohort_ect = Cohort.previous
+  cohort_mentor = Cohort.current
   school = NewSeeds::Scenarios::Schools::School
     .new
     .build
-    .with_partnership_in(cohort:, lead_provider:)
-    .chosen_fip_and_partnered_in(cohort:)
+    .with_partnership_in(cohort: cohort_ect, lead_provider:)
+    .chosen_fip_and_partnered_in(cohort: cohort_ect)
 
   mentor_school = NewSeeds::Scenarios::Schools::School
     .new
     .build
-    .with_partnership_in(cohort:, lead_provider:)
-    .chosen_fip_and_partnered_in(cohort:)
+    .with_partnership_in(cohort: cohort_mentor, lead_provider:)
+    .chosen_fip_and_partnered_in(cohort: cohort_mentor)
 
   NewSeeds::Scenarios::Participants::Ects::Ect
     .new(school_cohort: school.school_cohort)
