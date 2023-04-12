@@ -2,14 +2,14 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", type: :feature, js: true do
+RSpec.describe "transferring participants", :with_default_schedules, type: :feature, js: true do
   context "Transferring a Mentor to a school" do
     context "Mentor is with different lead provider" do
       before do
         allow_participant_transfer_mailers
         set_participant_data
         set_dqt_validation_result
-        given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
+        given_there_are_two_schools_that_have_chosen_fip_for_the_current_cohort_and_partnered
         and_there_is_a_mentor_who_will_be_transferring
         and_i_am_signed_in_as_an_induction_coordinator
         and_i_have_selected_my_cohort_tab
@@ -126,11 +126,10 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       end
 
       # given
-      def given_there_are_two_schools_that_have_chosen_fip_for_2021_and_partnered
-        @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+      def given_there_are_two_schools_that_have_chosen_fip_for_the_current_cohort_and_partnered
+        @cohort = Cohort.current
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
-        create(:school_cohort, school: @school_one, cohort: Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022), induction_programme_choice: "full_induction_programme")
         @school_cohort_one = create(:school_cohort, school: @school_one, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @school_cohort_two = create(:school_cohort, school: @school_two, cohort: @cohort, induction_programme_choice: "full_induction_programme")
         @lead_provider = create(:lead_provider, name: "Lead Provider One Ltd")
@@ -146,7 +145,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
         @induction_programme_two = create(:induction_programme, :fip, school_cohort: @school_cohort_two, partnership: @partnership_two)
         @school_cohort_one.update!(default_induction_programme: @induction_programme_one)
         @school_cohort_two.update!(default_induction_programme: @induction_programme_two)
-        Induction::Enrol.call(participant_profile: @mentor, start_date: Date.new(2021, 9, 1), induction_programme: @induction_programme_one)
+        Induction::Enrol.call(participant_profile: @mentor, start_date: Date.new(Cohort.current.start_year, 9, 1), induction_programme: @induction_programme_one)
         Mentors::AddToSchool.call(school: @school_one, mentor_profile: @mentor)
       end
 
@@ -185,7 +184,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       def when_i_add_a_valid_start_date
         legend = "When is #{@participant_data[:full_name]} moving to your school?"
 
-        fill_in_date(legend, with: "2023-10-24")
+        fill_in_date(legend, with: "#{Cohort.current.start_year + 1}-10-24")
       end
 
       def when_i_select(option)
@@ -295,7 +294,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       def and_there_is_a_mentor_who_will_be_transferring
         @participant_profile_mentor = create(:mentor_participant_profile, schedule: create(:ecf_schedule, cohort: @cohort), user: create(:user, full_name: "Sally Mentor"), school_cohort: @school_cohort_two)
-        Induction::Enrol.call(participant_profile: @participant_profile_mentor, start_date: Date.new(2021, 9, 1), induction_programme: @induction_programme_two)
+        Induction::Enrol.call(participant_profile: @participant_profile_mentor, start_date: Date.new(Cohort.current.start_year, 9, 1), induction_programme: @induction_programme_two)
 
         create(:ecf_participant_validation_data, participant_profile: @participant_profile_mentor, full_name: "Sally Mentor", trn: "1001000", date_of_birth: Date.new(1990, 10, 24))
         @participant_profile_mentor.teacher_profile.update!(trn: "1001000")
