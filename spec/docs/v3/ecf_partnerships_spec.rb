@@ -135,6 +135,41 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         response "200", "Create an ECF partnership" do
           schema({ "$ref": "#/components/schemas/ECFPartnershipResponse" })
 
+          after do |example|
+            content = example.metadata[:response][:content] || {}
+
+            example_spec = {
+              "application/json" => {
+                examples: {
+                  success: {
+                    value: JSON.parse({
+                      data: {
+                        id: "cd3a12347-7308-4879-942a-c4a70ced400a",
+                        type: "partnership",
+                        attributes: {
+                          cohort: 2021,
+                          urn: "123456",
+                          school_id: "dd4a11347-7308-4879-942a-c4a70ced400v",
+                          delivery_partner_id: "db2fbf67-b7b7-454f-a1b7-0020411e2314",
+                          delivery_partner_name: "Delivery Partner Example",
+                          status: "active",
+                          challenged_reason: nil,
+                          challenged_at: nil,
+                          induction_tutor_name: "John Doe",
+                          induction_tutor_email: "john.doe@example.com",
+                          updated_at: "2021-05-31T02:22:32.000Z",
+                          created_at: "2021-05-31T02:22:32.000Z",
+                        },
+                      },
+                    }.to_json, symbolize_names: true),
+                  },
+                },
+              },
+            }
+
+            example.metadata[:response][:content] = content.deep_merge(example_spec)
+          end
+
           run_test!
         end
 
@@ -198,34 +233,36 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
           # TODO: replace with actual implementation once implemented
           after do |example|
             content = example.metadata[:response][:content] || {}
+
             example_spec = {
               "application/json" => {
                 examples: {
-                  update_partnership: {
-                    value: {
+                  success: {
+                    value: JSON.parse({
                       data: {
                         id: "cd3a12347-7308-4879-942a-c4a70ced400a",
                         type: "partnership",
                         attributes: {
                           cohort: 2021,
                           urn: "123456",
-                          delivery_partner_name: "Delivery partner name",
-                          delivery_partner_id: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                          school_id: "dd3a12347-7308-4879-942a-c4a70ced400a",
+                          school_id: "dd4a11347-7308-4879-942a-c4a70ced400v",
+                          delivery_partner_id: "db2fbf67-b7b7-454f-a1b7-0020411e2314",
+                          delivery_partner_name: "Delivery Partner Example",
                           status: "active",
                           challenged_reason: nil,
-                          challenged_at: "2021-05-31T02:22:32.000Z",
+                          challenged_at: nil,
                           induction_tutor_name: "John Doe",
                           induction_tutor_email: "john.doe@example.com",
                           updated_at: "2021-05-31T02:22:32.000Z",
                           created_at: "2021-05-31T02:22:32.000Z",
                         },
                       },
-                    },
+                    }.to_json, symbolize_names: true),
                   },
                 },
               },
             }
+
             example.metadata[:response][:content] = content.deep_merge(example_spec)
           end
 
