@@ -299,7 +299,7 @@ To test declaration submission functionality, include:
 X-With-Server-Date: 2022-01-10T10:42:00Z
 ```
 
-### Notify DfE a participant has started training
+### Submit a declaration to notify DfE a participant has started training
 
 To notify DfE that a participant has started ECF-based training, providers must submit a `started` declaration in line with [milestone 1 dates](LINK NEEDED).
 
@@ -360,7 +360,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 Note, providers should store the returned ECF participant declaration ID for management tasks.
 
-### Notify DfE a participant has been retained in training
+### Submit a declation to notify DfE a participant has been retained in training
 
 To notify DfE that a participant has reached a given retention point in their training, providers must submit a `retained` declaration in line with [milestone dates](LINK NEEDED).
 
@@ -422,7 +422,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 Note, providers should store the returned ECF participant declaration ID for management tasks.
 
-### Notify DfE a participant has completed training
+### Submit a declaration to notify DfE a participant has completed training
 
 To notify DfE that a participant has completed their training, providers must submit a `completed` declaration in line with [milestone dates](LINK NEEDED).
 
@@ -594,9 +594,9 @@ Providers can void specific declarations which have been submitted in error.
 
 Once voided, the [declaration `state`](LINK NEEDED) value will become: 
 * `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
-* `awaiting_clawback` if it had been  `payable`
+* `awaiting_clawback` if it had been  `paid` 
 
-Void a previously submitted declaration by using the endpoint:
+Void a declaration by using the endpoint:
 
 ```
 PUT /api/v3/participant-declarations/{id}/void
@@ -629,6 +629,63 @@ For more detailed information see the specifications for this [void declarations
       "mentor_id": "907f61ed-5770-4d38-b22c-1a4265939378",
       "uplift_paid": true,
       "evidence_held": "other"
+    }
+  }
+}
+```
+
+## How to view and submit partnerships with schools and delivery partners
+
+Providers must notify DfE to confirm they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
+
+Note, the following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
+### Notify DfE of partnerships with schools and delivery partners
+Confirm a partnership with a school and delivery partner by using the endpoint:
+
+```
+ POST /api/v3/partnerships/ecf
+```
+
+Request bodies must include all necessary data attributes. An example request body is listed below.
+
+Successful requests will return a response body with updates included. An example response body is listed below.
+
+For more detailed information see the specifications for this [confirm an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "ecf-partnership",
+    "attributes": {
+      "cohort": "2021",
+      "school_id": "24b61d1c-ad95-4000-aee0-afbdd542294a",
+      "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
+    }
+  }
+}
+```
+
+#### Example response body:
+```
+{
+  "data": {
+    "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+    "type": "partnership",
+    "attributes": {
+      "cohort": 2021,
+      "urn": "123456",
+      "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+      "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "delivery_partner_name": "Delivery Partner Example",
+      "status": "challenged",
+      "challenged_reason": "mistake",
+      "challenged_at": "2021-05-31T02:22:32.000Z",
+      "induction_tutor_name": "John Doe",
+      "induction_tutor_email": "john.doe@example.com",
+      "updated_at": "2021-05-31T02:22:32.000Z",
+      "created_at": "2021-05-31T02:22:32.000Z"
     }
   }
 }
