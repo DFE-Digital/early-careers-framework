@@ -88,7 +88,7 @@ ur_local_authority = local_authorities.sample
 fhtsh_ab = AppropriateBody.find_by(name: "Flying High Teaching School Hub")
 nta_ab = AppropriateBody.find_by(name: "National Teacher Accreditation (NTA)")
 
-ur_cohorts = cohorts
+ur_cohorts = @cohorts
 ur_cohort_2021 = ur_cohorts.detect { |cohort| cohort.start_year == 2021 }
 ur_cohort_2022 = ur_cohorts.detect { |cohort| cohort.start_year == 2022 }
 

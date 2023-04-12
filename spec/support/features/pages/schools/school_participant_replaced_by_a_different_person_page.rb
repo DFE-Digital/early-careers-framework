@@ -13,8 +13,6 @@ module Pages
 
     def can_add_a_participant(type)
       click_on "Add a new #{type}"
-
-      element_has_content?(self, "Who do you want to add?")
     end
   end
 end

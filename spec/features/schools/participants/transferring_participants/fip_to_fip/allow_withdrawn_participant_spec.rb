@@ -72,7 +72,6 @@ RSpec.describe "transferring participants", :with_default_schedules, type: :feat
         @cohort = Cohort.current
         @school_one = create(:school, name: "Fip School 1")
         @school_two = create(:school, name: "Fip School 2")
-        create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: Cohort.next || create(:cohort, :next))
         @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
         @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
         @school_cohort_one = create(:school_cohort, :fip, :with_induction_programme, school: @school_one, cohort: @cohort, lead_provider: @lead_provider, delivery_partner: @delivery_partner)
