@@ -21,11 +21,12 @@ Feature: Admin user creating induction tutor
     When I type "John Smith" into "name input"
     And I type "existing_induction_coordinator@example.com" into "email input"
     And I click the submit button
-    Then "page body" should contain "The name you entered does not match our records"
+    Then "page body" should contain "An induction tutor has already been nominated using this email address"
     And the page should be accessible
 
-    When I click on "link" containing "Change name"
+    When I clear "name input"
     And I type "John Smith" into "name input"
+    And I clear "email input"
     And I type "j.smith@example.com" into "email input"
     And I click the submit button
     Then I should be on "admin school overview" page

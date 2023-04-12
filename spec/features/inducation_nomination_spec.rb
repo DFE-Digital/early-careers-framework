@@ -31,41 +31,32 @@ RSpec.feature "Nominating tutors", :with_default_schedules, :js do
       fill_in "nominate_induction_tutor_form[email]", with: "john-smith@example.com"
       click_on "Continue"
 
-      expect(page).to have_css("h1", text: "The name you entered does not match our records")
+      expect(page).to have_text("The name you entered does not match our records")
 
       and_the_page_should_be_accessible
 
-      click_on "Change the name"
+      visit start_nominate_induction_coordinator_path(token: nomination_email.token)
 
-      fill_in "What’s the full name of your induction tutor?", with: "John Wick"
+      choose "Yes"
+      click_on "Continue"
+
+      click_on "Continue"
+
+      fill_in "What’s the full name of your induction tutor?", with: "John Smith"
       click_on "Continue"
 
       fill_in "nominate_induction_tutor_form[email]", with: different_user.email
       click_on "Continue"
 
-      expect(page).to have_css("h1", text: "The email address is being used by another school")
+      expect(page).to have_text("The email address #{different_user.email} is already in use")
 
       and_the_page_should_be_accessible
-
-      click_on "Change email address"
-
-      fill_in "What’s the full name of your induction tutor?", with: "John Smith"
-      click_on "Continue"
 
       fill_in "nominate_induction_tutor_form[email]", with: "john-smith@example.com"
       click_on "Continue"
 
-      expect(
-        page
-          .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Name")
-          .sibling("dd.govuk-summary-list__value"),
-      ).to have_text("John Smith")
-
-      expect(
-        page
-          .find(".govuk-summary-list dt.govuk-summary-list__key", text: "Email")
-          .sibling("dd.govuk-summary-list__value"),
-      ).to have_text("john-smith@example.com")
+      expect(page).to have_summary_row("Name", "John Smith")
+      expect(page).to have_summary_row("Email", "john-smith@example.com")
 
       click_on "Confirm and nominate"
 
