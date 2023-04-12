@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./choose_programme_steps"
 
-RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do
+RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0), with_feature_flags: { cohortless_dashboard: "active" } do
   include ChooseProgrammeSteps
 
   scenario "A school chooses no ECTs expected in next academic year" do
@@ -25,6 +25,7 @@ RSpec.feature "Schools should be able to choose their programme", type: :feature
   end
 
   scenario "A school chooses ECTs expected in next academic year and training DfE funded" do
+    given_feature_flag_is_active "cohortless_dashboard"
     given_a_school_with_no_chosen_programme_for_next_academic_year
     and_i_am_signed_in_as_an_induction_coordinator
 
