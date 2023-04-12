@@ -42,7 +42,7 @@ RSpec.describe "API ECF Partnerships", :with_default_schedules, type: :request d
       it "returns correct type" do
         get "/api/v3/partnerships/ecf"
 
-        expect(parsed_response["data"][0]).to have_type("partnership-confirmation")
+        expect(parsed_response["data"][0]).to have_type("partnership")
       end
 
       it "returns IDs" do
@@ -164,7 +164,7 @@ RSpec.describe "API ECF Partnerships", :with_default_schedules, type: :request d
       end
 
       it "returns correct type" do
-        expect(parsed_response["data"]).to have_type("partnership-confirmation")
+        expect(parsed_response["data"]).to have_type("partnership")
       end
 
       it "has correct attributes" do
@@ -252,7 +252,7 @@ RSpec.describe "API ECF Partnerships", :with_default_schedules, type: :request d
           expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
           expect(response.status).to eq 200
 
-          expect(parsed_response["data"]).to have_type("partnership-confirmation")
+          expect(parsed_response["data"]).to have_type("partnership")
           expect(parsed_response["data"]).to have_jsonapi_attributes(
             :cohort,
             :urn,

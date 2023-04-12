@@ -10,7 +10,7 @@ module Api
         include JSONAPI::Serializer::Instrumentation
 
         set_id :id
-        set_type :'partnership-confirmation'
+        set_type :partnership
 
         attribute :cohort do |partnership|
           partnership.cohort.display_name
