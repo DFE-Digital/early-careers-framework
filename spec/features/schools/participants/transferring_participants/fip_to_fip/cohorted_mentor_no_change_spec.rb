@@ -221,7 +221,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
                                                .with(hash_including(
                                                        induction_record: @participant_profile_mentor.induction_records.latest,
                                                        lead_provider_profile: @lead_provider_profile,
-                                                       ))
+                                                     ))
       end
 
       def allow_participant_transfer_mailers
@@ -238,13 +238,13 @@ RSpec.describe "transferring participants", type: :feature, js: true do
             true,
             false,
             3,
-            ),
-          )
+          ),
+        )
       end
 
       def valid_dqt_response(participant_data)
         DqtRecordPresenter.new({
-                                 "name" => participant_data[:full_name],
+          "name" => participant_data[:full_name],
                                  "trn" => participant_data[:trn],
                                  "state_name" => "Active",
                                  "dob" => participant_data[:date_of_birth],
@@ -253,7 +253,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
                                    "start_date" => 1.month.ago,
                                    "status" => "Active",
                                  },
-                               })
+        })
       end
 
       def set_participant_data

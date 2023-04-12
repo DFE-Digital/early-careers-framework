@@ -70,7 +70,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
         participant_profile: @ect,
         email: @ect.user.email,
         end_date: Time.zone.now.next_month,
-        )
+      )
     end
 
     # when

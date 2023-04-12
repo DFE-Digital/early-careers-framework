@@ -128,6 +128,7 @@ private
                    else
                      ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id, cohort_id: @cohort.id)
                    end
+  end
 
   def set_participant
     @profile = ParticipantProfile.find(params[:participant_id] || params[:id])

@@ -44,7 +44,7 @@ RSpec.describe "Add a school cohort appropriate body", type: :feature, js: true 
     end
   end
 
-  private
+private
 
   def given_there_is_a_school_and_an_induction_coordinator
     @cohort = Cohort.current || create(:cohort, :current)

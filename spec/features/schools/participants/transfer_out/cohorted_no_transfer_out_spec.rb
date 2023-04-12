@@ -98,7 +98,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
         participant_profile: @ect,
         email: @ect.user.email,
         end_date: @participant_data[:end_date],
-        )
+      )
     end
 
     def and_select_the_most_recent_cohort

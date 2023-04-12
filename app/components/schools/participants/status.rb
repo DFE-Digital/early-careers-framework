@@ -8,7 +8,7 @@ module Schools
         @has_mentees = has_mentees
       end
 
-      private
+    private
 
       # Remove this code when FeatureFlag.active?(:cohortless_dashboard) is removed - start
       attr_reader :participant_profile
@@ -58,7 +58,7 @@ module Schools
       end
 
       # Remove this code when FeatureFlag.active?(:cohortless_dashboard) is removed - start
-      def profile_statusº
+      def profile_status
         return awaiting_validation_status if participant_profile.ecf_participant_validation_data.blank?
         return :eligible_cip if core_induction_programme?
 

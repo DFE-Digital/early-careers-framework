@@ -10,9 +10,9 @@ module Pages
     # Replace this line with
     #   set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/edit-email"
     # if FeatureFlag.active?(:cohortless_dashboard) gets removed and its code removed (i.e. no cohortless in the service)
-    set_url_matcher /schools\/([^\/]+)(\/cohorts\/([^\/]+))?\/participants\/([^\/]+)\/edit-email/
+    set_url_matcher(/schools\/([^\/]+)(\/cohorts\/([^\/]+))?\/participants\/([^\/]+)\/edit-email/)
 
-    set_primary_heading(/\AWhat’s (.*)’s correct email address\?\z/)s
+    set_primary_heading(/\AWhat’s (.*)’s correct email address\?\z/)
 
     def confirm_the_participant(name:)
       element_has_content?(header, "What’s #{name}’s correct email address?")

@@ -55,12 +55,10 @@ module Pages
     def view_participant_details
       if FeatureFlag.active?(:cohortless_dashboard)
         click_on("Manage mentors and ECTs")
+      elsif has_link?("Manage participants")
+        click_on("Manage participants")
       else
-        if has_link?("Manage participants")
-          click_on("Manage participants")
-        else
-          click_on("Add participants")
-        end
+        click_on("Add participants")
       end
 
       Pages::SchoolParticipantsDashboardPage.loaded
@@ -69,12 +67,10 @@ module Pages
     def add_participant_details
       if FeatureFlag.active?(:cohortless_dashboard)
         click_on("Manage mentors and ECTs")
+      elsif has_content?("ECTs and mentors0")
+        click_on("Add participants")
       else
-        if has_content?("ECTs and mentors0")
-          click_on("Add participants")
-        else
-          click_on("Manage participants")
-        end
+        click_on("Manage participants")
       end
 
       Pages::SchoolParticipantsDashboardPage.loaded

@@ -200,8 +200,8 @@ RSpec.describe "transferring participants", type: :feature, js: true do
             false,
             0,
             :no_match_found,
-            ),
-          )
+          ),
+        )
       end
 
       def set_nino_validation_result
@@ -210,7 +210,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
 
       def valid_dqt_response(participant_data)
         DqtRecordPresenter.new({
-                                 "name" => participant_data[:full_name],
+          "name" => participant_data[:full_name],
                                  "trn" => participant_data[:trn],
                                  "state_name" => "Active",
                                  "dob" => participant_data[:date_of_birth],
@@ -219,7 +219,7 @@ RSpec.describe "transferring participants", type: :feature, js: true do
                                    "start_date" => 1.month.ago,
                                    "status" => "Active",
                                  },
-                               })
+        })
       end
 
       def set_participant_data

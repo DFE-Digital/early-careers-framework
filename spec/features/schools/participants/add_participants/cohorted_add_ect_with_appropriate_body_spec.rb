@@ -101,7 +101,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
     then_i_see_the_appropriate_body(ect_appropriate_body)
   end
 
-  private
+private
 
   def sign_in
     sign_in_as user
@@ -132,8 +132,8 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
         true,
         false,
         3,
-        ),
-      )
+      ),
+    )
 
     fill_in "add_participant_wizard[full_name]", with: "George ECT"
     click_on "Continue"
@@ -149,7 +149,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
 
   def valid_dqt_response
     DqtRecordPresenter.new({
-                             "name" => "George ECT",
+      "name" => "George ECT",
                              "trn" => "5234457",
                              "state_name" => "Active",
                              "dob" => Date.new(1998, 11, 22),
@@ -158,7 +158,7 @@ RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
                                "start_date" => 1.month.ago,
                                "status" => "Active",
                              },
-                           })
+    })
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page

@@ -1,6 +1,6 @@
 <% content_for :title, "Change mentor" %>
 
-<% if FeatureFlag.active?(:cohorless_dashboard) %>
+<% if FeatureFlag.active?(:cohortless_dashboard) %>
   <% content_for :before_content,
                  govuk_back_link(text: "Back",
                                  href: schools_participant_path(id: params[:from_mentor].presence || @profile)) %>
@@ -27,7 +27,7 @@
           <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
         <% end %>
 
-        <% if FeatureFlag.active?(:cohorless_dashboard) %>
+        <% if FeatureFlag.active?(:cohortless_dashboard) %>
           <%= f.govuk_radio_divider %>
           <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Assign mentor later' } %>
         <% end %>

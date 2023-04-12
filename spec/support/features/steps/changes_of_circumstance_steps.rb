@@ -526,8 +526,7 @@ module Steps
                                                                  "New SIT",
                                                                  scenario.new_lead_provider_name,
                                                                  FeatureFlag.active?(:cohortless_dashboard) ? "Training" : "Eligible to start",
-
-      sign_out
+                                                                 sign_out
     end
 
     def then_the_admin_portal_shows_the_current_participant_record(participant_name, sit_name, lead_provider_name, validation_status)

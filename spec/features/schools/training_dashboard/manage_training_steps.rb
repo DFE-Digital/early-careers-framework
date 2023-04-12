@@ -931,7 +931,6 @@ module ManageTrainingSteps
     end
   end
 
-
   # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - start
   def then_i_can_view_ineligible_participant_status
     expect(page).to have_text("This person is not eligible for this programme.")

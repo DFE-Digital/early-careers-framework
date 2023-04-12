@@ -343,7 +343,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
         expect(ParticipantTransferMailer).to have_received(notification_method)
                                                .with(hash_including(
                                                        induction_record: @participant_profile_ect.induction_records.latest,
-                                                       ))
+                                                     ))
       end
 
       def and_the_schools_current_provider_is_notified_with(notification_method)
@@ -352,7 +352,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
                                                .with(hash_including(
                                                        induction_record:,
                                                        lead_provider_profile: @lead_provider_profile,
-                                                       ))
+                                                     ))
       end
 
       def and_i_have_selected_my_cohort_tab
@@ -373,13 +373,13 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
             true,
             false,
             3,
-            ),
-          )
+          ),
+        )
       end
 
       def valid_dqt_response(participant_data)
         DqtRecordPresenter.new({
-                                 "name" => participant_data[:full_name],
+          "name" => participant_data[:full_name],
                                  "trn" => participant_data[:trn],
                                  "state_name" => "Active",
                                  "dob" => participant_data[:date_of_birth],
@@ -388,7 +388,7 @@ RSpec.describe "transferring participants", type: :feature, js: true, rutabaga: 
                                    "start_date" => 1.month.ago,
                                    "status" => "Active",
                                  },
-                               })
+        })
       end
 
       def set_participant_data

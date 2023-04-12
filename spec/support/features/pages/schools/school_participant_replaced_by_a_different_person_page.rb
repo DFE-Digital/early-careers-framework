@@ -10,7 +10,7 @@ module Pages
     # Replace this line with
     #   set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/edit-name"
     # if FeatureFlag.active?(:cohortless_dashboard) gets removed and its code removed (i.e. no cohortless in the service)
-    set_url_matcher /schools\/([^\/]+)(\/cohorts\/([^\/]+))?\/participants\/([^\/]+)\/edit-name/
+    set_url_matcher(/schools\/([^\/]+)(\/cohorts\/([^\/]+))?\/participants\/([^\/]+)\/edit-name/)
 
     set_primary_heading(/\AYou cannot make that change by editing (.*)’s name\z/)
 
