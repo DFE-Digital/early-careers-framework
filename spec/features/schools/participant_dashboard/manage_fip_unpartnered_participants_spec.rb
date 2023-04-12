@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe "Manage FIP unpartnered participants", js: true, with_feature_flags: { eligibility_notifications: "active", cohortless_dashboard: "active" } do
   include ManageTrainingSteps
 
   before do

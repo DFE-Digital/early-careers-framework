@@ -2,6 +2,9 @@
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
 
+<% unless FeatureFlag.active?(:cohortless_dashboard) %>
+  <span class="govuk-caption-xl"><%= @cohort.display_name %></span>
+<% end %>
 <h1 class="govuk-heading-xl">Confirm you want to remove <%= @profile.user.full_name %></h1>
 
 <div class="govuk-grid-row">

@@ -3,7 +3,8 @@
 class Schools::ParticipantsController < Schools::BaseController
   include AppropriateBodySelection::Controller
 
-  before_action :set_school
+  before_action :set_school, if: -> { FeatureFlag.active? :cohortless_dashboard }
+  before_action :set_school_cohort, if: -> { !FeatureFlag.active? :cohortless_dashboard }
   before_action :set_participant, except: %i[index email_used]
   before_action :build_mentor_form, only: :edit_mentor
   before_action :set_mentors_added, only: %i[index show]
@@ -11,14 +12,23 @@ class Schools::ParticipantsController < Schools::BaseController
   helper_method :can_appropriate_body_be_changed?, :participant_has_appropriate_body?
 
   def index
-    @participants = Dashboard::Participants.new(school: @school, user: current_user)
+    if FeatureFlag.active?(:cohortless_dashboard)
+      @participants = Dashboard::Participants.new(school: @school, user: current_user)
+    else
+      @categories = CocSetParticipantCategories.new(@school_cohort, current_user)
+    end
+    render :cohorted_index unless FeatureFlag.active?(:cohortless_dashboard)
   end
 
   def show
     @induction_record = @profile.induction_records.for_school(@school).latest
     @first_induction_record = @profile.induction_records.oldest
     @mentor_profile = @induction_record.mentor_profile
-    @ects = Dashboard::Participants.new(school: @school, user: current_user).mentors[@induction_record]
+    if FeatureFlag.active?(:cohortless_dashboard)
+      @ects = Dashboard::Participants.new(school: @school, user: current_user).mentors[@induction_record]
+    else
+      render :cohorted_show
+    end
   end
 
   def edit_name
@@ -62,14 +72,26 @@ class Schools::ParticipantsController < Schools::BaseController
       render :edit_mentor and return
     end
 
-    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
+    @mentor_form = if FeatureFlag.active?(:cohortless_dashboard)
+                     ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
+                   else
+                     ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
+                   end
 
     if @mentor_form.valid?
-      induction_record = @profile.induction_records.for_school(@school).latest
-      new_mentor_profile = @mentor_form.mentor&.mentor_profile
-      Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
-      @message = "#{@profile.full_name} has been assigned to #{new_mentor_profile.full_name}"
-      render :mentor_change_confirmation
+      if FeatureFlag.active?(:cohortless_dashboard)
+        induction_record = @profile.induction_records.for_school(@school).latest
+        new_mentor_profile = @mentor_form.mentor&.mentor_profile
+        Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
+        @message = "#{@profile.full_name} has been assigned to #{new_mentor_profile.full_name}"
+        render :mentor_change_confirmation
+      else
+        Induction::ChangeMentor.call(induction_record: @profile.induction_records.for_school(@school).latest,
+                                     mentor_profile: @mentor_form.mentor&.mentor_profile)
+
+        flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
+        redirect_to schools_participant_path(id: @profile)
+      end
     else
       render :edit_mentor
     end
@@ -101,11 +123,11 @@ private
   end
 
   def build_mentor_form
-    @mentor_form = ParticipantMentorForm.new(
-      mentor_id: @profile.mentor&.id,
-      school_id: @school.id,
-    )
-  end
+    @mentor_form = if FeatureFlag.active?(:cohortless_dashboard)
+                     ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id)
+                   else
+                     ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id, cohort_id: @cohort.id)
+                   end
 
   def set_participant
     @profile = ParticipantProfile.find(params[:participant_id] || params[:id])
@@ -140,6 +162,10 @@ private
   end
 
   def can_appropriate_body_be_changed?
-    @induction_record.school_cohort.appropriate_body.present? && @profile.ect? && !@induction_record.training_status_withdrawn?
+    if FeatureFlag.active?(:cohortless_dashboard)
+      @induction_record.school_cohort.appropriate_body.present? && @profile.ect? && !@induction_record.training_status_withdrawn?
+    else
+      @school_cohort.appropriate_body.present? && @profile.ect?
+    end
   end
 end

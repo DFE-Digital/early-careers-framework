@@ -2,21 +2,27 @@
 
 <% content_for :title, title %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile.id)) %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: schools_participant_path(id: @profile.id)) %>
 <div class="govuk-grid-row">
-	<div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds">
 
-  		<span class="govuk-caption-xl"><%= @school.name %></span>
-		<h1 class="govuk-heading-xl"><%= title %></h1>
+    <span class="govuk-caption-xl"><%= @school.name %></span>
+    <h1 class="govuk-heading-xl"><%= title %></h1>
 
-    	<p class="govuk-body">If they’re leaving your school for a different reason, you must contact your training provider to remove them instead. Reasons may include:</p>
-    	<ul class="govuk-list govuk-list--bullet">
-			  <li>leaving teaching</li>
-			  <li>taking a break from teaching</li>
-			  <li>taking a teaching job outside of England</li>
-    	</ul>
-    	<p class="govuk-body govuk-!-margin-bottom-7">If this person is moving to work at a new school where they’ll continue their induction, confirm below.</p>
-    	<%= govuk_button_link_to "Continue",  teacher_end_date_schools_participant_transfer_out_path %>
+    <p class="govuk-body">If they’re leaving your school for a different reason, you must contact your training provider
+      to remove them instead. Reasons may include:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>leaving teaching</li>
+      <li>taking a break from teaching</li>
+      <li>taking a teaching job outside of England</li>
+    </ul>
+    <p class="govuk-body govuk-!-margin-bottom-7">If this person is moving to work at a new school where they’ll
+      continue their induction, confirm below.</p>
 
-  	</div>
+    <% if FeatureFlag.active? :cohortless_dashboard %>
+      <%= govuk_button_link_to "Continue",  teacher_end_date_schools_participant_transfer_out_path %>
+    <% else %>
+      <%= govuk_button_link_to "Continue", schools_transfer_out_participant_teacher_end_date_path %>
+    <% end %>
+  </div>
 </div>

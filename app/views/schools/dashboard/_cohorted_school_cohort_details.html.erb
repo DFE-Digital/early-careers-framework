@@ -1,0 +1,104 @@
+<% lead_provider = school_cohort_lead_provider_name(school_cohort) %>
+<% delivery_partner = school_cohort_delivery_partner_name(school_cohort) %>
+<% ects_count = school_cohort.current_induction_records.count %>
+<% latest_partnership = school_cohort.school.partnerships.where(cohort: school_cohort.cohort, relationship: false).order(created_at: :desc).limit(1).first %>
+
+<% if school_cohort.school_chose_cip? && school_cohort.default_induction_programme&.core_induction_programme.blank? %>
+
+  <h2 class="govuk-heading-m">Choose your training materials</h2>
+  <p class="govuk-body"><%= govuk_link_to "Tell us which materials you’ll use", info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year) %></p>
+  <p class="govuk-body">Read our guidance to <%= govuk_link_to 'compare materials (opens in new tab)', page_path(page: "core-materials-info"), target: "_blank" %>.</p>
+
+<% end %>
+
+<%= govuk_summary_list do |list| %>
+  <% list.row do |row| %>
+    <% row.key(text: "Length of induction") %>
+    <% row.value(text: "2 years")  %>
+    <% row.action(text: :none) %>
+  <% end %>
+
+  <% if manage_ects_and_mentors?(school_cohort) %>
+    <% list.row do |row| %>
+      <% row.key(text: "ECTs and mentors") %>
+      <% row.value(text: ects_count) %>
+      <% row.action(text: ects_count.zero? ? "Add" : "Manage", href: schools_participants_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "participants") %>
+    <% end %>
+  <% end %>
+
+  <% list.row do |row| %>
+    <% row.key(text: "Induction tutor") %>
+    <% row.value(text: school_cohort.school.induction_coordinators.first.full_name) %>
+    <% row.action(text: "Change", href: name_schools_change_sit_path, visually_hidden_text: "induction tutor") %>
+  <% end %>
+
+  <% list.row do |row| %>
+    <% row.key(text: "Programme") %>
+    <% row.value(text: t(school_cohort.induction_programme_choice, scope: %i[manage_your_training induction_programmes])) %>
+    <% row.action(text: "Change", href: change_programme_schools_cohort_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "induction programme choice") %>
+  <% end %>
+
+  <% if school_cohort.full_induction_programme? %>
+    <% list.row do |row| %>
+      <% row.key(text: "Training provider") %>
+      <% if latest_partnership&.challenged? == true %>
+        <% row.value(text: nil) %>
+      <% else %>
+        <% row.value(text: lead_provider) %>
+      <% end %>
+      <% row.action(text: :none) %>
+    <% end %>
+
+    <% list.row do |row| %>
+      <% row.key(text: "Delivery partner") %>
+      <% if latest_partnership&.challenged? == true %>
+        <% row.value(text: nil) %>
+      <% else %>
+        <% row.value(text: delivery_partner) %>
+      <% end %>
+      <% row.action(text: :none) %>
+    <% end %>
+  <% elsif school_cohort.core_induction_programme? %>
+    <% list.row do |row| %>
+      <% row.key(text: "Materials supplier") %>
+      <% row.value(text: school_cohort.default_induction_programme&.core_induction_programme&.name) %>
+      <% if school_cohort.default_induction_programme&.core_induction_programme.blank? %>
+        <% row.action(text: "Choose", href: info_schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+      <% else %>
+        <% row.action(text: "Change", href: schools_core_programme_materials_path(cohort_id: school_cohort.cohort.start_year), visually_hidden_text: "materials") %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if school_cohort.appropriate_body.present? %>
+    <% list.row do |row| %>
+      <% row.key(text: "Appropriate body") %>
+      <% row.value(text: school_cohort.appropriate_body.name) %>
+      <% row.action(text: "Change", href: change_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% end %>
+  <% else %>
+    <% list.row do |row| %>
+      <% row.key(text: "Appropriate body") %>
+      <% row.value(text: "") %>
+      <% row.action(text: "Add", href: add_appropriate_body_schools_cohort_path(cohort_id: school_cohort.cohort.start_year)) %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if latest_partnership&.challenged? == false %>
+  <% if latest_partnership&.in_challenge_window? %>
+    <p class="govuk-body">
+      If this does not look right, <%= govuk_link_to "report that your school has been confirmed incorrectly", challenge_partnership_path(partnership: latest_partnership) %>. This link will expire on <%= latest_partnership.challenge_deadline&.to_date&.to_s(:govuk) %>.
+    </p>
+  <% else %>
+    <p class="govuk-body">
+      If this does not look right, contact: <%= render MailToSupportComponent.new %>
+    </p>
+  <% end %>
+<% end %>
+
+<% if school_cohort.school.cip_only? %>
+  <p class="govuk-body">
+    You do not need to add information about your ECTs and mentors to this service.
+  </p>
+<% end %>

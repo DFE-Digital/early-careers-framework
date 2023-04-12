@@ -316,6 +316,7 @@ module Steps
     def self.then_sit_can_see_context(scenario, is_training: true)
       str = "can see \"The Participant\" as a \"#{scenario.participant_type}\"\n"
       str += "          with the Email address of \"#{scenario.participant_email}\"\n"
+      str += "          and with the Training status of \"Eligible to start\"\n" unless FeatureFlag.active?(:cohortless_dashboard)
       str += "          and that they are#{is_training ? '' : ' not'} being trained\n"
       str
     end
@@ -324,11 +325,24 @@ module Steps
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
       when_i_view_participant_details_from_the_school_dashboard_page
+      unless FeatureFlag.active?(:cohortless_dashboard)
+        case scenario.participant_type
+        when "ECT"
+          and_i_view_ects_from_the_school_participants_dashboard_page "The Participant"
+        when "Mentor"
+          and_i_view_mentors_from_the_school_participants_dashboard_page "The Participant"
+        else
+          raise "Participant Type \"#{scenario.participant_type}\" not recognised"
+        end
+      end
       and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
 
       and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "The Participant"
       and_i_confirm_full_name_on_the_school_participant_details_page "The Participant"
       and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      unless FeatureFlag.active?(:cohortless_dashboard)
+        and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
+      end
 
       sign_out
     end
@@ -337,11 +351,18 @@ module Steps
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
       when_i_view_participant_details_from_the_school_dashboard_page
-      and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
+      if FeatureFlag.active?(:cohortless_dashboard)
+        and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
+      else
+        and_i_view_not_training_on_the_school_participants_dashboard_page "The Participant"
+      end
 
       and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "The Participant"
       and_i_confirm_full_name_on_the_school_participant_details_page "The Participant"
       and_i_confirm_email_address_on_the_school_participant_details_page scenario.participant_email
+      unless FeatureFlag.active?(:cohortless_dashboard)
+        and_i_confirm_status_on_the_school_participant_details_page "Eligible to start"
+      end
 
       sign_out
     end
@@ -489,6 +510,7 @@ module Steps
     def self.then_admin_user_context(scenario)
       str = "can see \"The Participant\" as a \"#{scenario.participant_type}\"\n"
       str += "          with the school as \"New SIT's school\"\n"
+      str += "          and with the validation status as \"Eligible to start\"\n" unless FeatureFlag.active?(:cohortless_dashboard)
       str += "          and with the lead provider as \"#{scenario.new_lead_provider_name}\""
       str
     end
@@ -503,7 +525,7 @@ module Steps
       then_the_admin_portal_shows_the_current_participant_record "The Participant",
                                                                  "New SIT",
                                                                  scenario.new_lead_provider_name,
-                                                                 "Training"
+                                                                 FeatureFlag.active?(:cohortless_dashboard) ? "Training" : "Eligible to start",
 
       sign_out
     end

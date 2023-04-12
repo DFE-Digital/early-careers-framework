@@ -24,9 +24,16 @@
     <% if participant_not_started_validation?(@profile, @induction_record) %>
       <p class="govuk-body">
         If <%= @profile.full_name %> should not have been registered, you need to
-        <%= govuk_link_to "remove all their information from this service.",
-                          schools_participant_remove_path(school_id: @induction_record.school,
-                                                          participant_id: @profile) %>
+        <% if FeatureFlag.active?(:cohortless_dashboard) %>
+          <%= govuk_link_to "remove all their information from this service.",
+                            schools_participant_remove_path(school_id: @induction_record.school,
+                                                            participant_id: @profile) %>
+        <% else %>
+          <%= govuk_link_to "remove all their information from this service.",
+                            schools_participant_remove_path(school_id: @induction_record.school,
+                                                            cohort_id: @induction_record.cohort,
+                                                            participant_id: @profile) %>
+        <% end %>
       </p>
     <% end %>
   </div>

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::RemoveFromCohortComponent, :with_default_schedules, type: :component do
+RSpec.describe Schools::Participants::RemoveFromCohortComponent, :with_default_schedules, type: :component, with_feature_flags: { cohortless_dashboard: "active" } do
   let(:lead_provider) { create(:cpd_lead_provider, :with_lead_provider).lead_provider }
   let(:delivery_partner) { create :delivery_partner }
   let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, lead_provider:, delivery_partner:) }
