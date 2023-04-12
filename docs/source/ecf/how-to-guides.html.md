@@ -634,19 +634,20 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## How to view and submit partnerships with schools and delivery partners
+## How to view, submit and update partnerships with schools and delivery partners
 
 Providers must notify DfE to confirm they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
 
 Note, the following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
-### Notify DfE of partnerships with schools and delivery partners
+### Confirm a partnership with a school and delivery partner
+
 Confirm a partnership with a school and delivery partner by using the endpoint:
 
 ```
  POST /api/v3/partnerships/ecf
 ```
 
-Request bodies must include all necessary data attributes. An example request body is listed below.
+Request bodies must include all necessary data attributes, namely `cohort`, `school_id` and `delivery_partner_id`. An example request body is listed below.
 
 Successful requests will return a response body with updates included. An example response body is listed below.
 
@@ -679,14 +680,195 @@ For more detailed information see the specifications for this [confirm an ECF pa
       "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
       "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
       "delivery_partner_name": "Delivery Partner Example",
-      "status": "challenged",
-      "challenged_reason": "mistake",
-      "challenged_at": "2021-05-31T02:22:32.000Z",
+      "status": "active",
+      "challenged_reason": "null",
+      "challenged_at": "null",
       "induction_tutor_name": "John Doe",
       "induction_tutor_email": "john.doe@example.com",
       "updated_at": "2021-05-31T02:22:32.000Z",
       "created_at": "2021-05-31T02:22:32.000Z"
     }
   }
+}
+```
+
+### View all details for all existing partnership
+
+Providers can view details for all existing partnerships to check  information is correct and whether any have had their status challenged by schools. [Find out more about partnership statuses.](LINK NEEDED). 
+
+View existing partnership details by using the endpoint: 
+
+```
+GET /api/v3/partnerships/ecf
+```
+
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2022`
+
+An example response body is listed below. 
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "partnership",
+      "attributes": {
+        "cohort": 2021,
+        "urn": "123456",
+        "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+        "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+        "delivery_partner_name": "Delivery Partner Example",
+        "status": "challenged",
+        "challenged_reason": "mistake",
+        "challenged_at": "2021-05-31T02:22:32.000Z",
+        "induction_tutor_name": "John Doe",
+        "induction_tutor_email": "john.doe@example.com",
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "created_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+### View details for a specific existing partnership
+
+Providers can view details for a specific existing partnership to check information is correct and whether the status has been challenged by the school. [Find out more about partnership statuses.](LINK NEEDED). 
+
+View existing partnership details by using the endpoint: 
+
+```
+GET /api/v3/partnerships/ecf/{id}
+```
+
+An example response body is listed below. 
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "partnership",
+      "attributes": {
+        "cohort": 2021,
+        "urn": "123456",
+        "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+        "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+        "delivery_partner_name": "Delivery Partner Example",
+        "status": "challenged",
+        "challenged_reason": "mistake",
+        "challenged_at": "2021-05-31T02:22:32.000Z",
+        "induction_tutor_name": "John Doe",
+        "induction_tutor_email": "john.doe@example.com",
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "created_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+### Update a partnership with a new delivery partner
+
+Providers can update a partnership with new delivery partner details for a given cohort. 
+
+Update existing partnership details by using the endpoint: 
+
+```
+ PUT /api/v3/partnerships/ecf/{id}
+```
+
+Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](LINK NEEDED). 
+
+An example request body is listed below.
+
+Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](LINK NEEDED). 
+
+Successful requests will return a response body with updates included. 
+
+For more detailed information see the specifications for this [confirm an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "ecf-partnership-update",
+    "attributes": {
+      "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314"
+    }
+  }
+}
+```
+
+### Find delivery partner IDs 
+
+Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required by providers when [confirming partnerships with a school and delivery partner](LINK NEEDED).
+
+Find delivery partner IDs by using the endpoint:
+
+```
+GET /api/v3/delivery-partners
+```
+
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
+
+Successful requests will return a response body including delivery partner details. An example response body is listed below. 
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "delivery-partner",
+      "attributes": {
+        "name": "Awesome Delivery Partner Ltd",
+        "cohort": [
+          "2021",
+          "2022"
+        ],
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+### View details for a specific delivery partner
+
+Providers can view details for specific delivery partners to check whether they have been registered to deliver training for a given cohort. 
+
+View details for a specific delivery partner by using the endpoint: 
+
+```
+GET //api/v3/delivery-partners/{id}
+```
+
+Successful requests will return a response body with the delivery partner details. An example response body is listed below. 
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "delivery-partner",
+      "attributes": {
+        "name": "Awesome Delivery Partner Ltd",
+        "cohort": [
+          "2021",
+          "2022"
+        ],
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
 }
 ```
