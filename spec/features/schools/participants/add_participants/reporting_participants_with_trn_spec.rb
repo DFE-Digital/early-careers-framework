@@ -12,7 +12,7 @@ end
 
 require "rails_helper"
 
-RSpec.describe "Reporting participants with a known TRN", type: :feature, js: true do
+RSpec.describe "Reporting participants with a known TRN", type: :feature, js: true, with_feature_flags: { cohortless_dashboard: "active" } do
   let!(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:next_cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
   let!(:privacy_policy) do

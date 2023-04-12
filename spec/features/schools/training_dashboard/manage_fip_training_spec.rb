@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021, 9, 17, 16, 15, 0) do
+RSpec.describe "Manage FIP training", js: true, travel_to: Time.zone.local(2021, 9, 17, 16, 15, 0), with_feature_flags: { cohortless_dashboard: "active" } do
   include ManageTrainingSteps
 
   scenario "FIP Induction Coordinator with training provider" do

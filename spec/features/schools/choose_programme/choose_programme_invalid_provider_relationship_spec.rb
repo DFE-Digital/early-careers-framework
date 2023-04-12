@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./choose_programme_steps"
 
-RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0) do
+RSpec.feature "Schools should be able to choose their programme", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 5, 10, 16, 15, 0), with_feature_flags: { cohortless_dashboard: "active" } do
   include ChooseProgrammeSteps
 
   before do
