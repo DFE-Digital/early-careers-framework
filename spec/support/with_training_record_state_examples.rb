@@ -357,18 +357,6 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .participant_profile
   end
 
-  let(:ect_on_fip_leaving) do
-    school_cohort = fip_school.school_cohort
-
-    NewSeeds::Scenarios::Participants::Ects::Ect
-      .new(school_cohort:)
-      .build
-      .with_validation_data
-      .with_eligibility
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving")
-      .participant_profile
-  end
-
   let(:ect_on_fip_completed) do
     school_cohort = fip_school.school_cohort
 
@@ -379,6 +367,106 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .with_eligibility
       .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
       .participant_profile
+  end
+
+  # FIP transfer scenarios
+
+  let(:ect_on_fip_leaving) do
+    school_cohort = fip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+      .participant_profile
+  end
+
+  let(:ect_on_fip_left) do
+    school_cohort = fip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Ects::Ect
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+        .participant_profile
+    end
+  end
+
+  let(:ect_on_fip_transferring) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:ect_on_fip_transferred) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Ects::Ect
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
+  end
+
+  let(:ect_on_fip_joining) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:ect_on_fip_joined) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Ects::Ect
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
   end
 
   # CIP ECTs
@@ -674,18 +762,6 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .participant_profile
   end
 
-  let(:ect_on_cip_leaving) do
-    school_cohort = cip_school.school_cohort
-
-    NewSeeds::Scenarios::Participants::Ects::Ect
-      .new(school_cohort:)
-      .build
-      .with_validation_data
-      .with_eligibility
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving")
-      .participant_profile
-  end
-
   let(:ect_on_cip_completed) do
     school_cohort = cip_school.school_cohort
 
@@ -696,6 +772,106 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .with_eligibility
       .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
       .participant_profile
+  end
+
+  # CIP transfer scenarios
+
+  let(:ect_on_cip_leaving) do
+    school_cohort = cip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+      .participant_profile
+  end
+
+  let(:ect_on_cip_left) do
+    school_cohort = cip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Ects::Ect
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+        .participant_profile
+    end
+  end
+
+  let(:ect_on_cip_transferring) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:ect_on_cip_transferred) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Ects::Ect
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
+  end
+
+  let(:ect_on_cip_joining) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Ects::Ect
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:ect_on_cip_joined) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Ects::Ect
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
   end
 
   # mentor of FIP
@@ -1003,18 +1179,6 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .participant_profile
   end
 
-  let(:mentor_on_fip_leaving) do
-    school_cohort = fip_school.school_cohort
-
-    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-      .new(school_cohort:)
-      .build
-      .with_validation_data
-      .with_eligibility
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving")
-      .participant_profile
-  end
-
   let(:mentor_on_fip_completed) do
     school_cohort = fip_school.school_cohort
 
@@ -1025,6 +1189,106 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .with_eligibility
       .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
       .participant_profile
+  end
+
+  # FIP transfer scenarios
+
+  let(:mentor_on_fip_leaving) do
+    school_cohort = fip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+      .participant_profile
+  end
+
+  let(:mentor_on_fip_left) do
+    school_cohort = fip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+        .participant_profile
+    end
+  end
+
+  let(:mentor_on_fip_transferring) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:mentor_on_fip_transferred) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
+  end
+
+  let(:mentor_on_fip_joining) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:mentor_on_fip_joined) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
   end
 
   # mentor on CIP
@@ -1320,18 +1584,6 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .participant_profile
   end
 
-  let(:mentor_on_cip_leaving) do
-    school_cohort = cip_school.school_cohort
-
-    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
-      .new(school_cohort:)
-      .build
-      .with_validation_data
-      .with_eligibility
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving")
-      .participant_profile
-  end
-
   let(:mentor_on_cip_completed) do
     school_cohort = cip_school.school_cohort
 
@@ -1342,6 +1594,106 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .with_eligibility
       .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "completed")
       .participant_profile
+  end
+
+  # CIP transfer scenarios
+
+  let(:mentor_on_cip_leaving) do
+    school_cohort = cip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+      .participant_profile
+  end
+
+  let(:mentor_on_cip_left) do
+    school_cohort = cip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date)
+        .participant_profile
+    end
+  end
+
+  let(:mentor_on_cip_transferring) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:mentor_on_cip_transferred) do
+    school_cohort = cip_school.school_cohort
+    school_cohort_2 = fip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
+  end
+
+  let(:mentor_on_cip_joining) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.from_now
+
+    NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+      .new(school_cohort:)
+      .build
+      .with_validation_data
+      .with_eligibility
+      .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+      .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+      .participant_profile
+  end
+
+  let(:mentor_on_cip_joined) do
+    school_cohort = fip_school.school_cohort
+    school_cohort_2 = cip_school.school_cohort
+
+    transfer_date = 1.month.ago
+
+    travel_to(2.months.ago) do
+      NewSeeds::Scenarios::Participants::Mentors::MentorWithNoEcts
+        .new(school_cohort:)
+        .build
+        .with_validation_data
+        .with_eligibility
+        .with_induction_record(induction_programme: school_cohort.default_induction_programme, induction_status: "leaving", end_date: transfer_date, school_transfer: true)
+        .with_induction_record(induction_programme: school_cohort_2.default_induction_programme, start_date: transfer_date, school_transfer: true)
+        .participant_profile
+    end
   end
 end
 

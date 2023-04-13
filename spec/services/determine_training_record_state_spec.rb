@@ -3,7 +3,9 @@
 require "rails_helper"
 
 RSpec.describe DetermineTrainingRecordState, :with_training_record_state_examples do
-  subject(:determined_state) { described_class.call(participant_profile:) }
+  let(:current_school) { nil }
+
+  subject(:determined_state) { described_class.call(participant_profile:, school: current_school) }
 
   let(:admin_status) { StatusTags::AdminParticipantStatusTag.new(participant_profile:).label }
 
@@ -13,7 +15,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
   let(:dp_status) { StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:).label }
 
   let(:pp_status) { StatusTags::DeliveryPartnerParticipantStatusTag.new(participant_profile:).id }
-  let(:school_status) { StatusTags::SchoolParticipantStatusTag.new(participant_profile:).label }
+  let(:school_status) { StatusTags::SchoolParticipantStatusTag.new(participant_profile:, school: current_school).label }
 
   shared_examples "determines states as" do |validation_state, training_eligibility_state, fip_funding_eligibility_state, training_state, record_state,
       admin_status_label:, ab_status_label: nil, dp_status_label: nil, pp_status_label: nil, school_status_label: nil|
@@ -517,28 +519,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_fip_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "DfE checking eligibility"
-      end
-
-      # TODO: need to include all four transfer scenarios
-      context "and they are leaving their current school" do
-        let(:participant_profile) { ect_on_fip_leaving }
-
-        include_examples "determines states as",
-                         :valid,
-                         :eligible_for_induction_training,
-                         :eligible_for_fip_funding,
-                         :leaving,
-                         :leaving,
-                         admin_status_label: "Eligible to start",
-                         ab_status_label: "Training or eligible for training",
-                         dp_status_label: "Training or eligible for training",
-                         pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -550,11 +535,111 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_fip_funding,
                          :completed_training,
                          :completed_training,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "Eligible to start"
+      end
+
+      context "in transfer scenario" do
+        let(:current_school) { fip_school.school }
+
+        context "and they are leaving their current school" do
+          let(:participant_profile) { ect_on_fip_leaving }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have left their current school" do
+          let(:participant_profile) { ect_on_fip_left }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "No longer being trained",
+                           ab_status_label: "No longer being trained",
+                           dp_status_label: "No longer being trained",
+                           pp_status_label: "no_longer_being_trained",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are transferring from their current school" do
+          let(:participant_profile) { ect_on_fip_transferring }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have transferred from their current school" do
+          let(:participant_profile) { ect_on_fip_transferred }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are joining their current school" do
+          let(:participant_profile) { ect_on_fip_joining }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :joining,
+                           :joining,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have joined their current school" do
+          let(:participant_profile) { ect_on_fip_joined }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :active_fip_training,
+                           :active_fip_training,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
       end
     end
 
@@ -936,28 +1021,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_fip_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "DfE checking eligibility"
-      end
-
-      # TODO: need to include all four transfer scenarios
-      context "and they are leaving their current school" do
-        let(:participant_profile) { ect_on_cip_leaving }
-
-        include_examples "determines states as",
-                         :valid,
-                         :eligible_for_induction_training,
-                         :eligible_for_fip_funding,
-                         :leaving,
-                         :leaving,
-                         admin_status_label: "Eligible to start",
-                         ab_status_label: "Training or eligible for training",
-                         dp_status_label: "Training or eligible for training",
-                         pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -969,11 +1037,111 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_fip_funding,
                          :completed_training,
                          :completed_training,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "Eligible to start"
+      end
+
+      context "in transfer scenario" do
+        let(:current_school) { cip_school.school }
+
+        context "and they are leaving their current school" do
+          let(:participant_profile) { ect_on_cip_leaving }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have left their current school" do
+          let(:participant_profile) { ect_on_cip_left }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "No longer being trained",
+                           ab_status_label: "No longer being trained",
+                           dp_status_label: "No longer being trained",
+                           pp_status_label: "no_longer_being_trained",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are transferring from their current school" do
+          let(:participant_profile) { ect_on_cip_transferring }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have transferred from their current school" do
+          let(:participant_profile) { ect_on_cip_transferred }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are joining their current school" do
+          let(:participant_profile) { ect_on_cip_joining }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :joining,
+                           :joining,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have joined their current school" do
+          let(:participant_profile) { ect_on_cip_joined }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_induction_training,
+                           :eligible_for_fip_funding,
+                           :active_cip_training,
+                           :active_cip_training,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
       end
     end
 
@@ -1387,28 +1555,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_mentor_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "DfE checking eligibility"
-      end
-
-      # TODO: need to include all four transfer scenarios
-      context "and they are leaving their current school" do
-        let(:participant_profile) { mentor_on_fip_leaving }
-
-        include_examples "determines states as",
-                         :valid,
-                         :eligible_for_mentor_training,
-                         :eligible_for_mentor_funding,
-                         :leaving,
-                         :leaving,
-                         admin_status_label: "Eligible to start",
-                         ab_status_label: "Training or eligible for training",
-                         dp_status_label: "Training or eligible for training",
-                         pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -1420,11 +1571,111 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_mentor_funding,
                          :completed_training,
                          :completed_training,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "Eligible to start"
+      end
+
+      context "in transfer scenario" do
+        let(:current_school) { fip_school.school }
+
+        context "and they are leaving their current school" do
+          let(:participant_profile) { mentor_on_fip_leaving }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have left their current school" do
+          let(:participant_profile) { mentor_on_fip_left }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "No longer being trained",
+                           ab_status_label: "No longer being trained",
+                           dp_status_label: "No longer being trained",
+                           pp_status_label: "no_longer_being_trained",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are transferring from their current school" do
+          let(:participant_profile) { mentor_on_fip_transferring }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have transferred from their current school" do
+          let(:participant_profile) { mentor_on_fip_transferred }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are joining their current school" do
+          let(:participant_profile) { mentor_on_fip_joining }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :joining,
+                           :joining,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have joined their current school" do
+          let(:participant_profile) { mentor_on_fip_joined }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :registered_for_mentor_training,
+                           :registered_for_mentor_training,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
       end
     end
 
@@ -1822,28 +2073,11 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_mentor_funding,
                          :withdrawn_programme,
                          :withdrawn_programme,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "DfE checking eligibility"
-      end
-
-      # TODO: need to include all four transfer scenarios
-      context "and they are leaving their current school" do
-        let(:participant_profile) { mentor_on_cip_leaving }
-
-        include_examples "determines states as",
-                         :valid,
-                         :eligible_for_mentor_training,
-                         :eligible_for_mentor_funding,
-                         :leaving,
-                         :leaving,
-                         admin_status_label: "Eligible to start",
-                         ab_status_label: "Training or eligible for training",
-                         dp_status_label: "Training or eligible for training",
-                         pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -1855,11 +2089,111 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          :eligible_for_mentor_funding,
                          :completed_training,
                          :completed_training,
-                         admin_status_label: "Eligible to start",
+                         admin_status_label: "No longer being trained",
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
                          school_status_label: "Eligible to start"
+      end
+
+      context "in transfer scenario" do
+        let(:current_school) { cip_school.school }
+
+        context "and they are leaving their current school" do
+          let(:participant_profile) { mentor_on_cip_leaving }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have left their current school" do
+          let(:participant_profile) { mentor_on_cip_left }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "No longer being trained",
+                           ab_status_label: "No longer being trained",
+                           dp_status_label: "No longer being trained",
+                           pp_status_label: "no_longer_being_trained",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are transferring from their current school" do
+          let(:participant_profile) { mentor_on_cip_transferring }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :leaving,
+                           :leaving,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have transferred from their current school" do
+          let(:participant_profile) { mentor_on_cip_transferred }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :left,
+                           :left,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "DfE checking eligibility"
+        end
+
+        context "and they are joining their current school" do
+          let(:participant_profile) { mentor_on_cip_joining }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :joining,
+                           :joining,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
+
+        context "and they have joined their current school" do
+          let(:participant_profile) { mentor_on_cip_joined }
+
+          include_examples "determines states as",
+                           :valid,
+                           :eligible_for_mentor_training,
+                           :eligible_for_mentor_funding,
+                           :registered_for_mentor_training,
+                           :registered_for_mentor_training,
+                           admin_status_label: "Eligible to start",
+                           ab_status_label: "Training or eligible for training",
+                           dp_status_label: "Training or eligible for training",
+                           pp_status_label: "training_or_eligible_for_training",
+                           school_status_label: "Eligible to start"
+        end
       end
     end
   end

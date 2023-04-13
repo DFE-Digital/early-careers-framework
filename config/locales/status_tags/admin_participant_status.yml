@@ -129,18 +129,26 @@ en:
         label: "Eligible to start"
         colour: "green"
 
+      joining:
+        label: "Eligible to start"
+        colour: "green"
+
       deferred_training:
         label: "Eligible to start"
         colour: "green"
 
       completed_training:
-        label: "Eligible to start"
-        colour: "green"
+        label: "No longer being trained"
+        colour: "red"
 
       withdrawn_programme:
-        label: "Eligible to start"
-        colour: "green"
+        label: "No longer being trained"
+        colour: "red"
 
       withdrawn_training:
         label: "Withdrawn by provider"
+        colour: "red"
+
+      left:
+        label: "No longer being trained"
         colour: "red"
