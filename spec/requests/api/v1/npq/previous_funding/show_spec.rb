@@ -22,11 +22,7 @@ RSpec.describe "NPQ Funding API", type: :request do
     stubbed_checker = double(:npq_funding_eligibility)
     allow(stubbed_checker).to receive(:call).and_return(stubbed_response)
     expect(NPQ::FundingEligibility).to receive(:new)
-                                         .with(
-                                           get_an_identity_id:,
-                                           trn:,
-                                           npq_course_identifier:,
-                                         )
+                                         .with({ get_an_identity_id:, trn:, npq_course_identifier: })
                                          .and_return(stubbed_checker)
 
     stubbed_response
