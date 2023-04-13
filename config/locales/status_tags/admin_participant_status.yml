@@ -61,12 +61,20 @@ en:
         label: "Eligible to start"
         colour: "green"
 
+      registered_for_fip_no_partner:
+        label: "Eligible to start: No partnership"
+        colour: "green"
+
       registered_for_cip_training:
         label: "Eligible to start"
         colour: "green"
 
       registered_for_mentor_training:
         label: "Eligible to start"
+        colour: "green"
+
+      registered_for_mentor_no_partner:
+        label: "Eligible to start: No partnership"
         colour: "green"
 
       not_qualified:
