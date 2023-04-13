@@ -197,7 +197,7 @@
               <% row.cell(text: "Uplift clawbacks") %>
               <% row.cell(text: @calculator.uplift_deductions_count) %>
               <% row.cell(text: number_to_pounds(-@calculator.uplift_fee_per_declaration), numeric: true) %>
-              <% row.cell(text: number_to_pounds(@calculator.uplift_deductions_count * -@calculator.uplift_fee_per_declaration), numeric: true) %>
+              <% row.cell(text: number_to_pounds(@calculator.uplift_clawback_deductions), numeric: true) %>
             <% end %>
 
             <% @calculator.send(:output_calculator).banding_breakdown.each do |hash| %>

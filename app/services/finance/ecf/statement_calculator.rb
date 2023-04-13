@@ -131,8 +131,12 @@ module Finance
         [available, delta_uplift_amount].min
       end
 
+      def uplift_clawback_deductions
+        uplift_deductions_count * -uplift_fee_per_declaration
+      end
+
       def adjustments_total
-        -clawback_deductions
+        -clawback_deductions + uplift_clawback_deductions
       end
 
       def clawback_deductions
