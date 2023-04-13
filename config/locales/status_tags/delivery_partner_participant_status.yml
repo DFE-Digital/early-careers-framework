@@ -86,12 +86,22 @@ en:
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
+      registered_for_fip_no_partner:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
       registered_for_cip_training:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
       registered_for_mentor_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_no_partner:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
