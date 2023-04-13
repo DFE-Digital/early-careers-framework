@@ -6,12 +6,25 @@ module Admin
       skip_after_action :verify_authorized, only: :index
 
       def index
-        lead_providers = policy_scope(LeadProvider).sort_by(&:name)
-        delivery_partners = policy_scope(DeliveryPartner).sort_by(&:name)
-        sorted_suppliers = (lead_providers + delivery_partners)
-        @pagy, @suppliers = pagy_array(sorted_suppliers, page: params[:page], items: 20)
+        suppliers_search = delivery_partners_search + lead_providers_search
+        @query = params[:query]
+        @pagy, @suppliers = pagy_array(suppliers_search, page: params[:page], items: 20)
         @page = @pagy.page
         @total_pages = @pagy.pages
+      end
+
+    private
+
+      def delivery_partners_search
+        ::DeliveryPartners::SearchQuery
+          .new(query: params[:query], scope: policy_scope(DeliveryPartner))
+          .call
+      end
+
+      def lead_providers_search
+        ::LeadProviders::SearchQuery
+          .new(query: params[:query], scope: policy_scope(LeadProvider))
+          .call
       end
     end
   end

@@ -1,7 +1,10 @@
 <% content_for :title, "Suppliers" %>
-<%= render "layout", locals = { page: "suppliers" } %>
 
+<%= render "layout", locals = { page: "suppliers" } %>
 <p class="govuk-body-l">Manage your lead providers and delivery partners supplying training.</p>
+
+<%= render SearchBox.new(query: @query, title: "Search suppliers", hint: "Enter the supplier's name") %>
+
 
 <%= govuk_button_link_to "Add a new delivery partner", choose_name_admin_delivery_partners_path %>
 
