@@ -538,7 +538,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -957,7 +957,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -1408,7 +1408,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
@@ -1843,7 +1843,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                          ab_status_label: "Training or eligible for training",
                          dp_status_label: "Training or eligible for training",
                          pp_status_label: "training_or_eligible_for_training",
-                         school_status_label: "DfE checking eligibility"
+                         school_status_label: "Eligible to start"
       end
 
       context "and they have completed their induction training" do
