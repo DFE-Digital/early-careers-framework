@@ -4,7 +4,7 @@
 # the following line to use "http://"
 source "https://rubygems.org"
 
-ruby "3.2.1"
+ruby "3.2.2"
 
 # Include the tech docs gem
 gem "govuk_tech_docs"
