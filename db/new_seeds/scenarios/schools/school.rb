@@ -48,7 +48,11 @@ module NewSeeds
         # will also add a partnership to that cohort and induction programme
         ###
         def chosen_fip_and_partnered_in(cohort:, partnership: nil)
-          fip = NewSeeds::Scenarios::SchoolCohorts::Fip.new(cohort:, school:).build.with_programme(partnership:)
+          supplied_partnership = partnership
+          fip = NewSeeds::Scenarios::SchoolCohorts::Fip
+            .new(cohort:, school:)
+            .build
+            .with_programme(partnership: supplied_partnership || partnerships[cohort.start_year])
           partnerships[cohort.start_year] = fip.school_cohort.default_induction_programme.partnership
           school_cohorts[cohort.start_year] = fip.school_cohort
 

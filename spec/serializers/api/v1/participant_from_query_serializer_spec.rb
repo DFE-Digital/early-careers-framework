@@ -336,6 +336,15 @@ module Api
         end
       end
 
+      describe "#training_record_id" do
+        let(:participant_profile_id) { Faker::Internet.uuid }
+        let(:fields) { { participant_profile_id: } }
+
+        it "returns the training_status" do
+          expect(subject.serializable_hash[:data][:attributes][:training_record_id]).to eql(participant_profile_id)
+        end
+      end
+
       describe "#schedule_identifier" do
         let(:fields) { { schedule_identifier: "ecf-standard-september" } }
 

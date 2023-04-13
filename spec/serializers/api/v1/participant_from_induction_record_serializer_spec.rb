@@ -64,6 +64,14 @@ module Api
         end
       end
 
+      describe "#training_record_id" do
+        subject { described_class.new(ect.reload.current_induction_record) }
+
+        it "returns the training_status" do
+          expect(subject.serializable_hash[:data][:attributes][:training_record_id]).to eql(ect.id)
+        end
+      end
+
       describe "#updated_at" do
         let(:user) { induction_record.participant_profile.user }
         let(:profile) { induction_record.participant_profile }

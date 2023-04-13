@@ -2,10 +2,6 @@ session_trim:
   cron: "0 1 * * *"
   class: "SessionTrimJob"
   queue: default
-create_new_fake_sandbox_data:
-  cron: "0 2 * * *"
-  class: "CreateNewFakeSandboxDataJob"
-  queue: default
 stream_big_query_participant_declarations:
   cron: "0 * * * *"
   class: "StreamBigQueryParticipantDeclarationsJob"

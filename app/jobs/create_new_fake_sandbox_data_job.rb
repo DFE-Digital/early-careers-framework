@@ -10,9 +10,9 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
 
     @provider_name = provider_name
 
-    if ecf_lead_provider.present?
+    if ecf_lead_provider.present? && random_school_cohort.present?
       10.times do
-        name = Faker::Name.name
+        name = ::Faker::Name.name
         EarlyCareerTeachers::Create.call(
           full_name: name,
           email: Faker::Internet.email(name:),
@@ -22,7 +22,7 @@ class CreateNewFakeSandboxDataJob < ApplicationJob
       end
     end
 
-    if npq_lead_provider.present?
+    if npq_lead_provider.present? && random_school.present?
       10.times do
         name = Faker::Name.name
         user = User.create!(full_name: name, email: Faker::Internet.email(name:))

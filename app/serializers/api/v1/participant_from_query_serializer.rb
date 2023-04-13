@@ -88,6 +88,8 @@ module Api
 
       attribute :training_status, &:training_status
 
+      attribute :training_record_id, &:participant_profile_id
+
       attribute :schedule_identifier, &:schedule_identifier
 
       attribute :updated_at do |induction_record|

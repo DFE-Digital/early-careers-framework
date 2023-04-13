@@ -10,6 +10,7 @@ required:
   - cohort
   - status
   - training_status
+  - training_record_id
   - schedule_identifier
   - updated_at
 properties:
@@ -87,6 +88,11 @@ properties:
       - active
       - deferred
       - withdrawn
+  training_record_id:
+    description: "The unique identifier of the participant training record"
+    type: string
+    example: bb36d74a-68a7-47b6-86b6-1fd0d141c590
+    format: uuid
   schedule_identifier:
     description: "The schedule of the ECF participant"
     type: string

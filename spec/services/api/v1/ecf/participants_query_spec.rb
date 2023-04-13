@@ -171,6 +171,34 @@ RSpec.describe Api::V1::ECF::ParticipantsQuery do
           }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
+
+      context "when participant is a mentor" do
+        let(:participant_profile) { create(:mentor_participant_profile) }
+        let(:params) { { id: participant_profile.participant_identity.user_id } }
+
+        it "returns the Mentor induction record only" do
+          expect(subject.induction_record).to eql(induction_record)
+        end
+      end
+
+      context "when ECT is also a mentor" do
+        let(:user) { participant_profile.participant_identity.user }
+        let(:mentor_participant_profile) { create(:mentor_participant_profile, user:, teacher_profile: participant_profile.teacher_profile) }
+
+        # set ID on induction records to ensure test fails consistently, as they are chosen by asc order
+        let!(:ect_induction_record) do
+          create(:induction_record, induction_programme:, participant_profile:, id: "bb9fd4c7-bdce-4338-a42d-723876f514bc")
+        end
+        let!(:mentor_induction_record) do
+          create(:induction_record, induction_programme:, participant_profile: mentor_participant_profile, id: "aa1fd4c7-bdce-4338-a42d-723876f514bc")
+        end
+
+        let(:params) { { id: user.id } }
+
+        it "returns the ECT induction record only" do
+          expect(subject.induction_record).to eql(ect_induction_record)
+        end
+      end
     end
   end
 end
