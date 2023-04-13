@@ -1,4 +1,7 @@
 en:
+  time:
+    formats:
+      admin: "%R on %d/%m/%Y"
   currency: "£"
   event_types:
     started: Started
@@ -42,6 +45,7 @@ en:
   invalid_declaration_type: "The property '#/declaration_type' must be available for '#/course_identifier'"
   invalid_declaration_date: "The property '#/declaration_date' must be a valid RCF3339 date"
   invalid_completion_date: "The property '#/completion_date' must be in the following format: '2021-05-31'"
+  invalid_updated_since_filter: "The filter '#/updated_since' must be a valid RCF3339 date"
   future_date: "The property '#/%{attribute}' can not declare a future date"
   future_date_outcomes: "The attribute '#/%{attribute}' cannot contain a future date. Resubmit the outcome update with a valid date."
   mismatch_declaration_type_for_schedule: "The property '#/declaration_type does not exist for this schedule"
@@ -96,7 +100,7 @@ en:
     cannot_change_from_rejected: Once rejected an application cannot change state
   errors:
     email: &email_error_messages
-      blank: "Enter an email"
+      blank: "Enter an email address"
       taken: "This email address is already in use"
       invalid: "Enter an email address in the correct format, like name@example.com"
     supplier_email:
@@ -107,8 +111,8 @@ en:
     type:
       blank: "Select whether to add or transfer a teacher"
     date_of_birth: &date_of_birth_error_messages
-      blank: "Enter date of birth"
-      invalid: "Invalid date of birth"
+      blank: "Enter a date of birth"
+      invalid: "Enter a valid date of birth"
       in_future: "Date is in the future"
     start_date:
       blank: "Enter start date"
@@ -226,15 +230,25 @@ en:
               cannot_change_from_accepted: Once accepted an application cannot change state
               cannot_change_from_rejected: Once rejected an application cannot change state
               declarations_exist: There are already declarations for this participant on this course, please ask provider to void and/or clawback any declarations they have made before attempting to reset the application.
+        school_cohort:
+          attributes:
+            school_id:
+              taken: The school is already linked to this cohort
 
   activemodel:
     errors:
       models:
+        admin/participants/add_mentor_to_school_form:
+          attributes:
+            school_urn:
+              school_missing: "Could not find the school"
+              already_in_mentor_pool: "The mentor is already mentoring in this school"
         admin/school_transfer_form:
           attributes:
             new_school_urn:
               blank: "Enter the URN of the school the participant will transfer to"
               invalid: "Cannot find a school with the URN ‘%{urn}’"
+              same_school: "Enter the URN of the school the participant is joining"
             transfer_choice:
               blank: "Select which programme the participant will join"
             start_date:
@@ -314,6 +328,40 @@ en:
               blank: "Enter an email address for your teacher"
             core_induction_programme_id:
               blank: "Select the materials you want to use"
+        schools/add_participants/wizard_steps/participant_type_step:
+          attributes:
+            participant_type:
+              inclusion: "Select whether to add an ECT or a Mentor"
+        schools/add_participants/wizard_steps/name_step:
+          attributes:
+            full_name:
+              <<: *full_name_error_messages
+        schools/add_participants/wizard_steps/trn_step:
+          attributes:
+            trn:
+              <<: *trn_error_messages
+        schools/add_participants/wizard_steps/email_step:
+          attributes:
+            email:
+              <<: *email_error_messages
+        schools/add_participants/wizard_steps/date_of_birth_step:
+          attributes:
+            date_of_birth:
+              <<: *date_of_birth_error_messages
+        schools/add_participants/wizard_steps/start_date_step:
+          attributes:
+            start_date:
+              blank: "Enter the teacher’s induction start date"
+              invalid: "Enter a valid start date"
+        schools/add_participants/wizard_steps/joining_date_step:
+          attributes:
+            start_date:
+              blank: "Enter the teacher’s joining date"
+              invalid: "Enter a valid joining date"
+        schools/add_participants/wizard_steps/choose_mentor_step:
+          attributes:
+            mentor_id:
+              blank: "Choose a mentor"
         schools/transferring_participant_form:
           attributes:
             full_name:
@@ -321,10 +369,7 @@ en:
             email:
               <<: *email_error_messages
             trn:
-              blank: "Enter the teachers TRN (teacher reference number)"
-              too_short: "Teacher reference number is at least 5 digits long"
-              too_long: "Teacher reference number is at most 7 digits long"
-              invalid: "Teacher reference number must only contain numbers"
+              <<: *trn_error_messages
             dob:
               blank: "Enter date of birth"
               invalid: "Enter valid date of birth"
@@ -382,6 +427,10 @@ en:
               inclusion: Choose a valid training status
             reason:
               inclusion: Choose a valid reason for training status
+        finance/npq/change_lead_provider_form:
+          attributes:
+            lead_provider_id:
+              inclusion: Select a valid lead provider
         finance/change_lead_provider_approval_status_form:
           attributes:
             confirmation:
@@ -402,6 +451,25 @@ en:
           attributes:
             induction_start_date:
               blank: Enter an induction start date
+        partnerships/create:
+          attributes:
+            cohort:
+              blank: "The attribute '#/cohort' must be included as part of partnership confirmations."
+              invalid: "The '#/cohort' you have entered is invalid. Enter a valid '#/cohort' attribute in the request body for partnership confirmations."
+            school_id:
+              blank: "The attribute '#/school_id' must be included as part of partnership confirmations."
+              invalid: "The '#/school_id' you have entered is invalid. Enter a valid '#/school_id' value in the request body for partnership confirmations. Contact the DfE for support if you are unable to find the '#/school_id'."
+              funding_error: "The school you have entered has not registered to deliver training using a DfE-funded training provider."
+              ineligible_error: "The school you have entered is currently ineligible for DfE funding."
+              already_confirmed: "You are already confirmed to be in partnership with the school for the entered cohort."
+              recruited_by_other_provider: "Another provider is already confirmed to be in partnership with the school for the entered cohort. Contact the school for more information."
+            lead_provider_id:
+              blank: "The attribute '#/lead_provider_id' must be included as part of partnership confirmations."
+              invalid: "The '#/lead_provider_id' you have entered is invalid. Enter a valid '#/lead_provider_id' attribute in the request body for partnership confirmations."
+            delivery_partner_id:
+              blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
+              invalid: "The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations."
+              no_relationship: "The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
 
   page_titles:
     lead_providers:
@@ -583,10 +651,27 @@ en:
   admin:
     npq:
       applications:
+        index:
+          title: NPQ Applications
+        show:
+          title: NPQ Application
+          details: Details
+          tabs: Tabs
+        eligible_for_funding:
+          edit:
+            true: "Yes"
+            false: "No"
+        eligibility_status:
+          edit:
+            marked_ineligible_by_policy: "Not eligible for funding"
+            awaiting_more_information: "Awaiting more information"
+            re_register: "Needs to re-register"
         layout:
+          applications: Applications
           title: NPQ Applications
           exports: Application Exports
           eligibility_imports: Eligibility Imports
+          edge_cases: Edge Cases
         exports:
           new:
             title: New NPQ Applications Export

@@ -1,0 +1,54 @@
+<h2 class="govuk-heading-m">Employment details</h2>
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: 'School URN')
+      row.value(text: application.school_urn || '-')
+      if application.school.present?
+        row.action(text: "View School", href: admin_school_path(application.school))
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: 'School UKPRN')
+      row.value(text: application.school_ukprn || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'Private Childcare Provider URN')
+      row.value(text: application.private_childcare_provider_urn || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'Headteacher status')
+      row.value(text: application.headteacher_status || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'Employer name')
+      row.value(text: application.employer_name || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'Employment role')
+      row.value(text: application.employment_role || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'ITT Lead mentor')
+      row.value { boolean_red_green_tag(application.lead_mentor?) }
+    end
+
+    sl.row do |row|
+      row.key(text: 'ITT provider')
+      row.value(text: application.itt_provider || "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'Country')
+      row.value(text: application.teacher_catchment_country || "-")
+    end
+
+
+  end
+%>

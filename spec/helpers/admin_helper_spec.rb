@@ -58,6 +58,14 @@ RSpec.describe AdminHelper, type: :helper do
 
       it("renders nothing") { is_expected.to be_nil }
     end
+
+    context "when bullets: true" do
+      subject { html_list(values, bullets: true) }
+
+      it "it adds the govuk-list--bullet class to the list" do
+        expect(subject).to have_css("ul.govuk-list.govuk-list--bullet > li", count: values.size)
+      end
+    end
   end
 
   describe "#induction_programme_friendly_name" do

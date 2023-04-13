@@ -29,7 +29,7 @@ describe "ApiOrderable", type: :controller do
       get("index", params:)
       get_response = JSON.parse(response.body)
 
-      expect(get_response["ordering_params"]).to eq({ "full_name" => "asc" })
+      expect(get_response["ordering_params"]).to eq("tests.full_name ASC")
     end
 
     it "returns formatted sort params" do
@@ -37,7 +37,7 @@ describe "ApiOrderable", type: :controller do
       get("index", params:)
       get_response = JSON.parse(response.body)
 
-      expect(get_response["ordering_params"]).to eq({ "full_name" => "desc", "id" => "asc" })
+      expect(get_response["ordering_params"]).to eq("tests.full_name DESC, tests.id ASC")
     end
 
     it "returns formatted sort params" do
@@ -45,7 +45,7 @@ describe "ApiOrderable", type: :controller do
       get("index", params:)
       get_response = JSON.parse(response.body)
 
-      expect(get_response["ordering_params"]).to eq({ "full_name" => "asc", "id" => "desc" })
+      expect(get_response["ordering_params"]).to eq("tests.id DESC, tests.full_name ASC")
     end
   end
 end

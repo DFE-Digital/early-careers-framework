@@ -1,0 +1,47 @@
+<% content_for :title, t(".title") %>
+
+<%= render "admin/npq/applications/layout", locals = { page: "applications" } %>
+
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :query,
+        value: params[:query],
+        label: { text: "Search applications", size: "m" },
+        hint: { text: "Enter the applicant’s ID, Name, School, Email, School/Oftsed URN or TRN", size: "s" },
+      )
+    %>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
+<%= govuk_table do |table|
+  table.with_caption(size: 'm', text: 'NPQ Application data')
+
+  table.with_head do |head|
+    head.with_row do |row|
+      row.with_cell(text: 'Email')
+      row.with_cell(text: 'Course')
+      row.with_cell(text: 'Lead provider')
+      row.with_cell(text: 'School')
+      row.with_cell(text: 'Funding')
+      row.with_cell(text: 'Link')
+    end
+  end
+
+  table.with_body do |body|
+    @applications.each do |application|
+      body.with_row do |row|
+        row.with_cell(text: application.user.email)
+        row.with_cell(text: application.npq_course.name)
+        row.with_cell(text: application.npq_lead_provider.name)
+        row.with_cell(text: application.school_urn, numeric: true)
+        row.with_cell(text: boolean_red_green_tag(application.eligible_for_funding))
+        row.with_cell(text: govuk_link_to("View", admin_npq_applications_application_path(application)))
+      end
+    end
+  end
+end %>
+
+<%= govuk_pagination(pagy: @pagy) %>

@@ -222,7 +222,8 @@ RSpec.shared_examples "creates participant declaration attempt" do
 
   context "when user has different ID to participant external ID" do
     let(:participant_identity) { create(:participant_identity, :secondary) }
-    let(:opts) { { participant_identity: } }
+
+    before { participant_profile.update!(participant_identity:) }
 
     it "creates the relevant participant declaration" do
       expect { subject.call }.to change(ParticipantDeclarationAttempt, :count).by(1)

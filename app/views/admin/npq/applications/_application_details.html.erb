@@ -1,0 +1,69 @@
+<h2 class="govuk-heading-m">Application details</h2>
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: 'Application ID')
+      row.value(text: application.id || govuk_tag(text: "Missing", colour: "red"))
+    end
+
+    sl.row do |row|
+      row.key(text: 'User ID')
+      row.value(text: application.user.id || govuk_tag(text: "Missing", colour: "red"))
+    end
+
+    sl.row do |row|
+      row.key(text: 'GAI ID')
+      row.value(text: application.user.get_an_identity_id || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'External ID')
+      row.value(text: application.participant_identity.external_identifier || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'Proflie ID')
+      if application.profile.present?
+        row.value(text: application.profile_id)
+      else
+        row.value(text: '-')
+      end
+    end
+
+    sl.row do |row|
+      row.key(text: 'Email')
+      row.value(text: application.user.email)
+    end
+
+    sl.row do |row|
+      row.key(text: 'Preferred name')
+      row.value(text: application.user.full_name)
+    end
+
+    sl.row do |row|
+      row.key(text: 'TRN')
+      row.value(text: application.teacher_reference_number || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'TRN validated')
+      row.value(text: application.teacher_reference_number_verified.to_s)
+    end
+
+    sl.row do |row|
+      row.key(text: 'Course')
+      row.value(text: application.npq_course.name)
+    end
+
+    sl.row do |row|
+      row.key(text: 'Lead provider')
+      row.value(text: application.npq_lead_provider.name)
+    end
+
+    sl.row do |row|
+      row.key(text: 'Lead provider approval status')
+      row.value(text: application.lead_provider_approval_status)
+    end
+
+  end
+%>

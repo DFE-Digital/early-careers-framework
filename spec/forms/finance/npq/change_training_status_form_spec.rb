@@ -4,7 +4,8 @@ RSpec.describe Finance::NPQ::ChangeTrainingStatusForm, :with_default_schedules, 
   subject(:form) { described_class.new(params) }
 
   describe "NPQ" do
-    let(:participant_profile) { create(:npq_participant_profile, training_status: "active") }
+    let(:user) { create(:participant_identity, :secondary).user }
+    let(:participant_profile) { create(:npq_participant_profile, user:, training_status: "active") }
     let(:params) { { participant_profile:, training_status: "deferred", reason: "bereavement" } }
 
     it { is_expected.to validate_inclusion_of(:training_status).in_array(ParticipantProfile.training_statuses.values) }

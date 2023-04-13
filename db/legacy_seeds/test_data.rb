@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require "tasks/valid_test_data_generator"
-require_relative "call_off_contracts"
 require "active_support/testing/time_helpers"
 
 include ActiveSupport::Testing::TimeHelpers
 
 DOMAIN = "@digital.education.gov.uk" # Prevent low effort email scraping
-Cohort.find_or_create_by!(start_year: 2021)
-cohort_2023 = Cohort.find_or_create_by!(start_year: 2023)
+cohort_2023 = Cohort.find_by!(start_year: 2023)
 
 local_authority = LocalAuthority.find_or_create_by!(name: "ZZ Test Local Authority", code: "ZZTEST")
 
@@ -216,8 +214,6 @@ ProviderRelationship.find_or_create_by!(
   delivery_partner:,
   cohort: Cohort.current,
 )
-
-Seeds::CallOffContracts.new.call
 
 # FIP ECT
 user = User.find_or_create_by!(email: "fip-ect@example.com") do |u|
@@ -764,12 +760,8 @@ create_npq_declarations = lambda {
   ]
 end
 
-service = Importers::NPQContracts.new(
-  path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2021.csv"),
-)
-service.call
-
-service = Importers::NPQContracts.new(
-  path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2022.csv"),
-)
-service.call
+Importers::CreateNPQContract.new(path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2021.csv")).call
+Importers::CreateNPQContract.new(path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2022.csv")).call
+Importers::CreateNPQContract.new(path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2023.csv")).call
+Importers::CreateCallOffContracts.new.call
+Importers::CreateStatement.new(path_to_csv: Rails.root.join("db/data/statements/statements.csv")).call

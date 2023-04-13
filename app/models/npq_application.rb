@@ -5,6 +5,7 @@ class NPQApplication < ApplicationRecord
 
   self.ignored_columns = %w[user_id]
 
+  has_one :school, class_name: "School", foreign_key: :urn, primary_key: :school_urn
   has_one :profile, class_name: "ParticipantProfile::NPQ", foreign_key: :id, touch: true
   belongs_to :participant_identity
   belongs_to :npq_lead_provider
@@ -39,6 +40,16 @@ class NPQApplication < ApplicationRecord
   }
 
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
+  scope :does_not_work_in_school, -> { where(works_in_school: false) }
+  scope :does_not_work_in_childcare, -> { where(works_in_childcare: false) }
+  scope :not_eligible_for_funding, -> { where(eligible_for_funding: false) }
+  scope :edge_case_statuses, lambda {
+                               where(funding_eligiblity_status_code: %w[re_register
+                                                                        no_institution
+                                                                        awaiting_more_information
+                                                                        marked_ineligible_by_policy
+                                                                        marked_funded_by_policy])
+                             }
 
   validates :eligible_for_funding_before_type_cast, inclusion: { in: [true, false, "true", "false"] }
 
@@ -49,6 +60,8 @@ class NPQApplication < ApplicationRecord
 
   delegate :id, :name, to: :npq_course, prefix: true
   delegate :id, :name, to: :npq_lead_provider, prefix: true
+
+  self.filter_attributes += [:teacher_reference_number]
 
   # this builds upon #eligible_for_funding
   # eligible_for_funding is solely based on what NPQ app knows
@@ -89,7 +102,7 @@ private
   end
 
   def push_enrollment_to_big_query
-    if (saved_changes.keys & %w[id lead_provider_approval_status]).present?
+    if (saved_changes.keys & %w[cohort_id id lead_provider_approval_status]).present?
       NPQ::StreamBigQueryEnrollmentJob.perform_later(npq_application_id: id)
     end
   end

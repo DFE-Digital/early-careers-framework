@@ -33,14 +33,14 @@ module Finance
       end
 
       def self.spring_schedule?(date)
-        # Between: Dec 26 to Apr 15
-        (Date.new(date.year, 1, 1)..Date.new(date.year, 4, 15)).include?(date) ||
+        # Between: Dec 26 to Apr 2
+        (Date.new(date.year, 1, 1)..Date.new(date.year, 4, 2)).include?(date) ||
           (Date.new(date.year, 12, 26)..Date.new(date.year, 12, 31)).include?(date)
       end
 
       def self.autumn_schedule?(date)
-        # Between: Apr 16 to Dec 25
-        (Date.new(date.year, 4, 16)..Date.new(date.year, 12, 25)).include?(date)
+        # Between: Apr 3 to Dec 25
+        (Date.new(date.year, 4, 3)..Date.new(date.year, 12, 25)).include?(date)
       end
     end
   end

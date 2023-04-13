@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory(:seed_partnership, class: "Partnership") do
+    challenge_deadline { cohort.academic_year_start_date + 2.months if cohort }
+
     trait(:with_cohort) { association(:cohort, factory: :seed_cohort) }
     trait(:with_school) { association(:school, factory: :seed_school) }
     trait(:with_lead_provider) { association(:lead_provider, factory: :seed_lead_provider) }

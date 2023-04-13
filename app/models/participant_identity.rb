@@ -18,6 +18,8 @@ class ParticipantIdentity < ApplicationRecord
   scope :original, -> { where("participant_identities.external_identifier = participant_identities.user_id") }
   scope :secondary, -> { where("participant_identities.external_identifier != participant_identities.user_id") }
 
+  self.filter_attributes += [:email]
+
   def self.email_matches(search_term)
     return none if search_term.blank?
 

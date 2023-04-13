@@ -48,17 +48,13 @@ module NewSeeds
         # will also add a partnership to that cohort and induction programme
         ###
         def chosen_fip_and_partnered_in(cohort:, partnership: nil)
-          with_school_cohort_and_programme(cohort:, programme_type: :fip)
-          relevant_school_cohort = school_cohorts[cohort.start_year]
-
-          if partnership.present?
-            partnerships[cohort.start_year] = partnership
-          else
-            with_partnership_in(cohort:)
-          end
-
-          partnership = partnerships[cohort.start_year]
-          relevant_school_cohort.default_induction_programme.update!(partnership:)
+          supplied_partnership = partnership
+          fip = NewSeeds::Scenarios::SchoolCohorts::Fip
+            .new(cohort:, school:)
+            .build
+            .with_programme(partnership: supplied_partnership || partnerships[cohort.start_year])
+          partnerships[cohort.start_year] = fip.school_cohort.default_induction_programme.partnership
+          school_cohorts[cohort.start_year] = fip.school_cohort
 
           self
         end
@@ -68,14 +64,11 @@ module NewSeeds
         # will also add CIP materials to that school_cohort and induction programme
         ###
         def chosen_cip_with_materials_in(cohort:, materials: nil)
-          with_school_cohort_and_programme(cohort:, programme_type: :cip)
-          relevant_school_cohort = school_cohorts[cohort.start_year]
-
-          materials = FactoryBot.create(:seed_core_induction_programme) if materials.nil?
-
-          relevant_school_cohort.default_induction_programme.update!(core_induction_programme: materials)
-          relevant_school_cohort.update!(core_induction_programme: materials)
-
+          school_cohorts[cohort.start_year] = NewSeeds::Scenarios::SchoolCohorts::Cip
+                                                .new(cohort:, school:)
+                                                .build
+                                                .with_programme(core_induction_programme: materials)
+                                                .school_cohort
           self
         end
 
@@ -96,6 +89,13 @@ module NewSeeds
 
           partnerships[cohort.start_year] = FactoryBot.create(:seed_partnership, *traits, **options)
 
+          FactoryBot.create(
+            :seed_provider_relationship,
+            cohort:,
+            lead_provider: partnerships[cohort.start_year].lead_provider,
+            delivery_partner: partnerships[cohort.start_year].delivery_partner,
+          )
+
           self
         end
 
@@ -110,6 +110,12 @@ module NewSeeds
 
         def partnership
           partnerships.values.first
+        end
+
+      private
+
+        def add_school_cohort(cohort:, programme_type:)
+          school_cohorts[cohort.start_year] = FactoryBot.create(:seed_school_cohort, programme_type, school:, cohort:)
         end
       end
     end

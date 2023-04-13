@@ -115,15 +115,7 @@ RSpec.feature "NPQ Course payment breakdown", :with_default_schedules, type: :fe
 
   def create_accepted_application(user, npq_course, npq_lead_provider)
     Identity::Create.call(user:, origin: :npq)
-    npq_application = NPQ::BuildApplication.call(
-      npq_application_params: attributes_for(:npq_application, cohort: cohort.start_year),
-      npq_course_id: npq_course.id,
-      npq_lead_provider_id: npq_lead_provider.id,
-      user_id: user.id,
-    )
-    npq_application.save!
-    NPQ::Application::Accept.new(npq_application:).call
-    npq_application
+    create(:npq_application, :accepted, cohort:, npq_course:, npq_lead_provider:, user:)
   end
 
   def create_started_declarations(npq_application)

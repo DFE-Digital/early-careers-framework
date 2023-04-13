@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Partnership < ApplicationRecord
+  CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START = 2.months
+
   enum challenge_reason: {
     another_provider: "another_provider",
     not_confirmed: "not_confirmed",
@@ -52,7 +54,15 @@ class Partnership < ApplicationRecord
     challenged_at.nil? && challenge_reason.nil? && pending == false
   end
 
+  def unchallenge!
+    update!(challenged_at: nil, challenge_reason: nil, challenge_deadline: cohort_challenge_deadline)
+  end
+
 private
+
+  def cohort_challenge_deadline
+    cohort.academic_year_start_date + CHALLENGE_PERIOD_SINCE_ACADEMIC_YEAR_START
+  end
 
   def update_analytics
     Analytics::UpsertECFPartnershipJob.perform_later(partnership: self) if saved_changes?

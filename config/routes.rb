@@ -153,7 +153,7 @@ Rails.application.routes.draw do
     namespace :v3, constraints: ->(_request) { FeatureFlag.active?(:api_v3) } do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
-      resources :partnerships, path: "partnerships/ecf", only: %i[index], controller: "ecf/partnerships"
+      resources :partnerships, path: "partnerships/ecf", only: %i[show index create], controller: "ecf/partnerships"
       resources :npq_participants, only: [], path: "participants/npq" do
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
@@ -161,6 +161,7 @@ Rails.application.routes.draw do
           post ":participant_id/outcomes", to: "participant_outcomes#create"
         end
       end
+      resources :ecf_schools, path: "schools/ecf", only: %i[index show], controller: "ecf/schools"
     end
   end
 
@@ -307,6 +308,8 @@ Rails.application.routes.draw do
       resource :change_name, only: %i[edit update], controller: "participants/change_name", path: "name"
       resource :change_email, only: %i[edit update], controller: "participants/change_email", path: "email"
 
+      resource :add_to_school_mentor_pool, only: %i[new create], controller: "participants/add_to_school_mentor_pool"
+
       resource :npq_change_full_name, only: %i[edit update], controller: "participants/npq/change_full_name"
       resource :npq_change_email, only: %i[edit update], controller: "participants/npq/change_email"
 
@@ -435,6 +438,11 @@ Rails.application.routes.draw do
         resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
 
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
+        resources :applications, only: %i[index show]
+        resources :edge_cases, controller: "applications/edge_cases", only: %i[index show]
+        resources :eligible_for_funding, controller: "applications/eligible_for_funding", only: %i[edit update]
+        resources :eligibility_status, controller: "applications/eligibility_status", only: %i[edit update]
+        resources :notes, controller: "applications/notes", only: %i[edit update]
       end
     end
   end
@@ -459,6 +467,7 @@ Rails.application.routes.draw do
       end
       namespace :npq do
         resource :change_training_status, only: %i[new create]
+        resource :change_lead_provider, only: %i[new create update]
       end
     end
     resources :npq_applications, only: [] do
@@ -583,36 +592,6 @@ Rails.application.routes.draw do
             get "complete", to: "setup_school_cohort#complete"
           end
 
-          resource :transferring_participant, path: "transferring-participant" do
-            get "check_transfer", to: "transferring_participants#check_transfer", as: :check_transfer
-            put "check_transfer", to: "transferring_participants#check_transfer"
-            get "what-we-need", to: "transferring_participants#what_we_need", as: :what_we_need
-            get "full-name", to: "transferring_participants#full_name", as: :full_name
-            put "full-name", to: "transferring_participants#full_name"
-            get "trn", to: "transferring_participants#trn", as: :trn
-            put "trn", to: "transferring_participants#trn"
-            get "dob", to: "transferring_participants#dob", as: :dob
-            put "dob", to: "transferring_participants#dob"
-            get "cannot-find-their-details", to: "transferring_participants#cannot_find_their_details", as: :cannot_find_their_details
-            get "cannot-add", to: "transferring_participants#cannot_add", as: :cannot_add
-            get "need-training-setup", to: "transferring_participants#need_training_setup", as: :need_training_setup
-            put "need-training-setup", to: "transferring_participants#need_training_setup"
-            get "teacher-start-date", to: "transferring_participants#teacher_start_date", as: :teacher_start_date
-            put "teacher-start-date", to: "transferring_participants#teacher_start_date"
-            get "email", to: "transferring_participants#email", as: :email
-            put "email", to: "transferring_participants#email"
-            get "choose-mentor", to: "transferring_participants#choose_mentor", as: :choose_mentor
-            put "choose-mentor", to: "transferring_participants#choose_mentor"
-            get "teachers-current-programme", to: "transferring_participants#teachers_current_programme", as: :teachers_current_programme
-            put "teachers-current-programme", to: "transferring_participants#teachers_current_programme"
-            get "schools-current-programme", to: "transferring_participants#schools_current_programme", as: :schools_current_programme
-            put "schools-current-programme", to: "transferring_participants#schools_current_programme"
-            get "contact-support", to: "transferring_participants#contact_support"
-            get "check-answers", to: "transferring_participants#check_answers", as: :check_answers
-            put "check-answers", to: "transferring_participants#check_answers"
-            get "complete", to: "transferring_participants#complete", as: :complete
-          end
-
           resources :transfer_out_participant, path: "transfer-out", only: [] do
             get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
             get "teacher-end-date", to: "transfer_out#teacher_end_date", as: :teacher_end_date
@@ -624,15 +603,23 @@ Rails.application.routes.draw do
 
           resources :participants, only: %i[index show destroy] do
             collection do
-              multistep_form :add, Schools::AddParticipantForm, controller: :add_participants do
-                get :cannot_add_mentor_without_trn
-                get :who, path: "who", controller: :add_participants
-                put :participant_type, path: "participant-type", controller: :add_participants
-                get :what_we_need, path: "what-we-need", controller: :add_participants
-                put "transfer", as: nil
+              scope module: :add_participants do
+                wizard_scope :who_to_add, path: "who" do
+                  get "/", to: "who_to_add#show", as: :start, step: "participant-type"
+                  get "/sit-mentor", to: "who_to_add#show", as: :sit_start, step: "yourself"
+                end
 
-                appropriate_body_selection_routes :add_participants
-                get :change_appropriate_body, path: "change-appropriate-body", controller: :add_participants
+                wizard_scope :transfer do
+                  get "/", to: "transfer#show", as: :start, step: "joining-date"
+                  get "/same-provider", to: "transfer#show", as: :start_same_provider, step: "email"
+                end
+
+                wizard_scope :add do
+                  get "/", to: "add#show", as: :start, step: "email"
+                  get "/sit-mentor", to: "add#show", as: :sit_start, step: "check-answers"
+                  appropriate_body_selection_routes :add
+                  get :change_appropriate_body, path: "change-appropriate-body", controller: :add
+                end
               end
             end
 

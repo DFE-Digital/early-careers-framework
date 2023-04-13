@@ -2,6 +2,10 @@ description: "Filter schools to return more specific results"
 type: object
 properties:
   cohort:
-    description: "Return schools within the specified cohort"
+    description: "Return schools within the specified cohort."
     type: string
     example: "2021"
+  urn:
+    description: "Return a school with the specified Unique Reference Number (URN)."
+    type: string
+    example: "106286"

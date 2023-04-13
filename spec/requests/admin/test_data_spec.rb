@@ -7,16 +7,16 @@ RSpec.describe "Admin::TestData", :with_default_schedules, type: :request do
 
   let(:cohort) { Cohort.current }
 
-  let(:fip_cohort) { create(:seed_school_cohort, :with_school, :fip, cohort:) }
-  let(:cip_cohort) { create(:seed_school_cohort, :with_school, :cip, cohort:) }
+  let!(:fip_cohort) { create(:seed_school_cohort, :fip, school: fip_school, cohort:) }
+  let!(:cip_cohort) { create(:seed_school_cohort, :cip, school: cip_school, cohort:) }
 
   let(:fip_programme) { create(:seed_induction_programme, :valid, school_cohort: fip_cohort) }
   let(:cip_programme) { create(:seed_induction_programme, :cip, :valid, school_cohort: cip_cohort) }
 
-  let!(:fip_school) { fip_cohort.school }
-  let!(:cip_school) { cip_cohort.school }
-  let!(:ytc_school) { create(:seed_school, :valid) }
-  let!(:unclaimed_school) { create(:seed_school, :valid) }
+  let(:fip_school) { create(:seed_school, :valid, name: "Highgate School") }
+  let(:cip_school) { create(:seed_school, :valid, name: "Keefeport Infant School") }
+  let!(:ytc_school) { create(:seed_school, :valid, name: "View School") }
+  let!(:unclaimed_school) { create(:seed_school, :valid, name: "Southern School") }
 
   let!(:fip_sit) { create(:seed_induction_coordinator_profiles_school, :with_induction_coordinator_profile, school: fip_school) }
   let!(:cip_sit) { create(:seed_induction_coordinator_profiles_school, :with_induction_coordinator_profile, school: cip_school) }

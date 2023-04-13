@@ -7,7 +7,7 @@ FactoryBot.define do
     end
 
     trait(:with_cohort_2022) do
-      cohort { Cohort.find_or_create_by!(start_year: 2022) }
+      cohort { create(:cohort, start_year: 2022) }
     end
 
     trait(:with_lead_provider) do

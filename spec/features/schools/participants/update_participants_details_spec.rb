@@ -39,8 +39,14 @@ RSpec.describe "Update participants details", js: true do
 
     when_i_add_ect_or_mentor_updated_email
     when_i_click_on_continue
+    then_i_am_taken_to_check_details_page
+
+    when_i_click_change_induction_start_date
     when_i_add_a_start_date
     when_i_click_on_continue
+    then_i_am_taken_to_check_details_page
+
+    when_i_click_on_change_mentor
     when_i_choose_assign_mentor_later
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
@@ -171,10 +177,10 @@ RSpec.describe "Update participants details", js: true do
     and_i_confirm_the_participant_on_the_edit_school_participant_email_page_with_name "Sally Teacher"
 
     when_i_set_a_blank_email_on_the_edit_school_participant_email_page
-    then_i_see_an_error_message "Enter an email"
+    then_i_see_an_error_message "Enter an email address"
 
     when_i_set_an_invalid_email_on_the_edit_school_participant_email_page
-    then_i_see_an_error_message "Enter an email"
+    then_i_see_an_error_message "Enter an email address"
 
     when_i_set_the_email_on_the_edit_school_participant_email_page_with_new_email "jane@school.com"
     then_i_see_a_confirmation_message_on_the_school_participant_email_updated_page_with_name "Sally Teacher"

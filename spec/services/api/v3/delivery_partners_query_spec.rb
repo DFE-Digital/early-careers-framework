@@ -45,6 +45,17 @@ RSpec.describe Api::V3::DeliveryPartnersQuery do
         expect(subject.delivery_partners).to be_empty
       end
     end
+
+    context "when delivery_partners belongs in multiple cohorts" do
+      before do
+        create(:provider_relationship, cohort: another_cohort, delivery_partner:, lead_provider:)
+        create(:provider_relationship, cohort:, delivery_partner: another_delivery_partner, lead_provider:)
+      end
+
+      it "returns each delivery partner only once" do
+        expect(subject.delivery_partners).to match_array([delivery_partner, another_delivery_partner])
+      end
+    end
   end
 
   describe "#delivery_partner" do

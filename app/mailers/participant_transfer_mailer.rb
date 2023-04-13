@@ -97,7 +97,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_date.to_s(:govuk),
-        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.user_id,
       },
     ).tag(:provider_transfer_out_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -116,7 +116,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_date.to_s(:govuk),
-        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.user_id,
       },
     ).tag(:provider_transfer_in_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -136,7 +136,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_date.to_s(:govuk),
-        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.user_id,
       },
     ).tag(:provider_new_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end
@@ -155,7 +155,7 @@ class ParticipantTransferMailer < ApplicationMailer
       rails_mail_template: action_name,
       personalisation: {
         joining_date: induction_record.start_date.to_s(:govuk),
-        external_participant_id: induction_record.participant_profile.participant_identity.external_identifier,
+        external_participant_id: induction_record.participant_profile.participant_identity.user_id,
       },
     ).tag(:provider_existing_school_transfer_notification).associate_with(lead_provider_profile, as: :lead_provider_profile)
   end

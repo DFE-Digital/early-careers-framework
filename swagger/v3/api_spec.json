@@ -235,6 +235,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ECFPartnershipResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                        "type": "partnership",
+                        "attributes": {
+                          "cohort": 2021,
+                          "urn": "123456",
+                          "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+                          "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
+                          "delivery_partner_name": "Delivery Partner Example",
+                          "status": "active",
+                          "challenged_reason": null,
+                          "challenged_at": null,
+                          "induction_tutor_name": "John Doe",
+                          "induction_tutor_email": "john.doe@example.com",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "created_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -351,6 +375,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ECFPartnershipResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+                        "type": "partnership",
+                        "attributes": {
+                          "cohort": 2021,
+                          "urn": "123456",
+                          "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
+                          "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
+                          "delivery_partner_name": "Delivery Partner Example",
+                          "status": "active",
+                          "challenged_reason": null,
+                          "challenged_at": null,
+                          "induction_tutor_name": "John Doe",
+                          "induction_tutor_email": "john.doe@example.com",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
+                          "created_at": "2021-05-31T02:22:32.000Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -413,7 +461,7 @@
             "explode": true,
             "required": true,
             "description": "Refine schools to return.",
-            "example": "filter[cohort]=2021"
+            "example": "filter[cohort]=2021&filter[urn]=106286"
           },
           {
             "name": "sort",
@@ -2723,7 +2771,7 @@
             ]
           },
           "cohort": {
-            "description": "Which cohort this ECF participant is associated with",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           },
@@ -2923,7 +2971,7 @@
             "example": "ecf-induction"
           },
           "cohort": {
-            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "description": "Providers may not change the current value for ECF participants. Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": "2021"
           }
@@ -3776,12 +3824,14 @@
           "challenged_at": {
             "description": "The date the partnership has been challenged",
             "type": "string",
+            "nullable": true,
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           },
           "induction_tutor_name": {
             "description": "The name of the induction tutor at the school you are in partnership with",
             "type": "string",
+            "nullable": true,
             "example": "John Doe"
           },
           "induction_tutor_email": {
@@ -3790,13 +3840,13 @@
             "example": "john.doe@example.com"
           },
           "updated_at": {
-            "description": "The date the partnership was reported by you",
+            "description": "The date the partnership was last updated",
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
           },
           "created_at": {
-            "description": "The date the partnership was last updated",
+            "description": "The date the partnership was reported by you",
             "type": "string",
             "format": "date-time",
             "example": "2021-05-31T02:22:32.000Z"
@@ -3977,7 +4027,7 @@
             "example": "123456"
           },
           "cohort": {
-            "description": "The cohort the school is in",
+            "description": "Indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "example": 2021
           },
@@ -3992,7 +4042,7 @@
             "example": "not_yet_known",
             "enum": [
               "core_induction_programme",
-              "funded_induction_programme",
+              "full_induction_programme",
               "design_our_own",
               "school_funded_fip",
               "no_early_career_teachers",
@@ -4022,11 +4072,19 @@
       "ECFSchoolsFilter": {
         "description": "Filter schools to return more specific results",
         "type": "object",
+        "required": [
+          "cohort"
+        ],
         "properties": {
           "cohort": {
-            "description": "Return schools within the specified cohort",
+            "description": "Return schools within the specified cohort.",
             "type": "string",
-            "example": "2021"
+            "example": "2022"
+          },
+          "urn": {
+            "description": "Return a school with the specified Unique Reference Number (URN).",
+            "type": "string",
+            "example": "106286"
           }
         }
       },
@@ -4511,7 +4569,7 @@
             ]
           },
           "cohort": {
-            "description": "The start year of the cohort this application belongs to",
+            "description": "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
             "type": "string",
             "nullable": false,
             "example": "2022"
@@ -4655,7 +4713,7 @@
             ]
           },
           "cohort": {
-            "description": "The start year of the cohort the participant is enrolled in",
+            "description": "The value indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Providers may change an NPQ participant's cohort up until the point of submitting a started declaration.",
             "type": "string",
             "example": "2021"
           },
@@ -5057,7 +5115,7 @@
             "example": "npq-executive-leadership"
           },
           "cohort": {
-            "description": "The start year of the cohort the the participant is enrolled in. Defaults to 2021 if not specified",
+            "description": "Providers may change an NPQ participant's cohort up until the point of submitting a started declaration. The value indicates which call-off contract funds this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year.",
             "type": "string",
             "default": "2021",
             "example": "2021"

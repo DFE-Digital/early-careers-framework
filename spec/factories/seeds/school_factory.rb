@@ -24,6 +24,9 @@ FactoryBot.define do
       induction_coordinator_profiles { FactoryBot.build_list(:seed_induction_coordinator_profile, 2, :with_user) }
     end
 
+    trait(:cip_only) { school_type_code { GiasTypes::CIP_ONLY_TYPE_CODES.sample } }
+    trait(:ineligible) { school_type_code { 10 } }
+
     trait(:valid) {}
 
     after(:build) { |s| Rails.logger.debug("seeded school #{s.name}") }

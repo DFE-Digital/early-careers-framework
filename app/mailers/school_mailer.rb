@@ -3,6 +3,7 @@
 class SchoolMailer < ApplicationMailer
   NOMINATION_EMAIL_TEMPLATE = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   NOMINATION_CONFIRMATION_EMAIL_TEMPLATE = "2c740b37-bc4e-47eb-8657-1742b9b8eda7"
+  SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS = "f2764570-ca3c-4e3b-97c3-251a853c9dde"
   SCHOOL_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   COORDINATOR_PARTNERSHIP_NOTIFICATION_EMAIL_TEMPLATE = "076e8486-cbcc-44ee-8a6e-d2a721ee1460"
   MINISTERIAL_LETTER_EMAIL_TEMPLATE = "f1310917-aa50-4789-b8c2-8cc5e9b91485"
@@ -111,6 +112,20 @@ class SchoolMailer < ApplicationMailer
         step_by_step: step_by_step_url,
       },
     ).tag(:sit_nominated).associate_with(school, sit_profile)
+  end
+
+  # This email is sent when induction tutor to be changed
+  def school_requested_signin_link_from_gias_email(school:, nomination_link:)
+    template_mail(
+      SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS,
+      to: school.primary_contact_email,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: {
+        school_name: school.name,
+        nomination_link:,
+      },
+    ).tag(:school_signin_link).associate_with(school)
   end
 
   # This email is sent to the school which has been reported by the lead provider and which hasn't yet nominated SIT

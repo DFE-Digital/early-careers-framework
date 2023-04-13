@@ -31,6 +31,11 @@
     # )
   end
 
+  sl.row do |row|
+    row.key(text: "Training status")
+    row.value(text: @participant_profile.training_status)
+  end
+
   if @participant_profile.teacher_profile
     sl.row do |row|
       row.key(text: "TRN")
@@ -39,7 +44,12 @@
   end
 
   sl.row do |row|
-    row.key(text: "ID")
+    row.key(text: "Profile ID")
+    row.value(text: tag.code(@participant_profile.id))
+  end
+
+  sl.row do |row|
+    row.key(text: "User ID")
     row.value(text: tag.code(@user.id))
   end
 

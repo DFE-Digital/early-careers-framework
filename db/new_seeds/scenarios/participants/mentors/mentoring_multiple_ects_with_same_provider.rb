@@ -36,12 +36,14 @@ module NewSeeds
                                              cohort:,
                                              school:,
                                              delivery_partner:,
-                                             lead_provider:)
+                                             lead_provider:,
+                                             relationship: Partnership.exists?(cohort:, school:))
 
-            @induction_programme = FactoryBot.create(:seed_induction_programme,
-                                                     :fip,
-                                                     school_cohort:,
-                                                     partnership:)
+            @induction_programme = NewSeeds::Scenarios::InductionProgrammes::Fip
+                                     .new(school_cohort:)
+                                     .build
+                                     .with_partnership(partnership:)
+                                     .induction_programme
 
             @mentor ||= build_mentor
 

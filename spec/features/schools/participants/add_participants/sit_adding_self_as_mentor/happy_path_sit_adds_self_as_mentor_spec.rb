@@ -14,7 +14,7 @@ RSpec.describe "Add participants", js: true do
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_click_on("2021 to 2022")
     then_i_am_taken_to_fip_induction_dashboard
-    set_dqt_validation_result
+    set_sit_dqt_validation_result
   end
 
   scenario "Induction tutor can add themselves as a mentor and validates" do
@@ -36,6 +36,7 @@ RSpec.describe "Add participants", js: true do
     then_i_am_taken_to_add_your_dob_page
     when_i_add_my_date_of_birth
     click_on "Continue"
+
     then_i_am_taken_to_check_details_page
     when_i_click_confirm_and_add
     then_i_am_taken_to_yourself_as_mentor_confirmation_page
@@ -43,6 +44,7 @@ RSpec.describe "Add participants", js: true do
     sign_out
     when_i_sign_back_in
     and_i_choose_induction_coordinator_and_mentor_role
+
     and_i_click_on("2021 to 2022")
     then_i_am_taken_to_fip_induction_dashboard
     then_the_page_should_be_accessible

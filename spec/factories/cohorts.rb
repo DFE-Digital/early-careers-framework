@@ -10,6 +10,10 @@ FactoryBot.define do
     registration_start_date { Date.new(start_year.to_i, 5, 10) }
     academic_year_start_date { Date.new(start_year.to_i, 9, 1) }
 
+    initialize_with do
+      Cohort.find_by(start_year:) || new(**attributes)
+    end
+
     trait :previous do
       start_year { Date.current.year - (Date.current.month < 9 ? 2 : 1) }
     end
@@ -24,6 +28,10 @@ FactoryBot.define do
 
     trait :consecutive_years do
       start_year { generate(:base_year) }
+    end
+
+    initialize_with do
+      Cohort.find_by(start_year:) || new(**attributes)
     end
   end
 end

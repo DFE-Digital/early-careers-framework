@@ -3,7 +3,7 @@
 RSpec.describe Admin::Schools::Cohorts::OtherInfo, type: :component do
   let(:cohort) { instance_double Cohort, start_year: rand(2020..2030) }
   let(:school) { instance_double School, slug: "xyz" }
-  let(:school_cohort) { instance_double(SchoolCohort, induction_programme_choice: Faker::Lorem.words.join("_")) if rand < 0.5 }
+  let(:school_cohort) { FactoryBot.build(:seed_school_cohort) }
 
   before { render_inline(described_class.new(cohort:, school_cohort:, school:)) }
 
@@ -36,7 +36,7 @@ RSpec.describe Admin::Schools::Cohorts::OtherInfo, type: :component do
   end
 
   context "with school cohort of unknown type" do
-    let(:school_cohort) { instance_double SchoolCohort, induction_programme_choice: Faker::Lorem.words.join("_") }
+    let(:school_cohort) { instance_double SchoolCohort, induction_programme_choice: Faker::Lorem.words.join("_"), appropriate_body: FactoryBot.build(:seed_appropriate_body) }
 
     it { is_expected.to have_content "Not using service" }
   end

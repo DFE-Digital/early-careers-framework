@@ -37,12 +37,10 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
           create(:user, :induction_coordinator, schools: [school])
         end
 
-        it "redirects to already-nominated" do
+        it "it shows the choose new induction tutor page" do
           get "/nominations/start-nomination?token=#{token}"
 
-          expect(response).to redirect_to("/nominations/already-nominated")
-          follow_redirect!
-          expect(response).to render_template("nominations/request_nomination_invite/already_nominated")
+          expect(response).to render_template("nominations/nominate_induction_coordinator/start_nomination")
         end
       end
     end
@@ -171,7 +169,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
 
           expect(existing_induction_coordinator.schools.count).to eql 1
           expect(existing_induction_coordinator.schools).not_to include nomination_email.school
-          expect(response).to redirect_to("/nominations/name-different")
         end
       end
 
@@ -186,8 +183,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
               token:,
             } }
           }.not_to(change { User.count })
-
-          expect(response).to redirect_to("/nominations/email-used")
         end
       end
     end
@@ -270,13 +265,6 @@ RSpec.describe "Nominating an induction coordinator", type: :request do
         school_id: school.id,
       } }
       expect(response).to redirect_to(limit_reached_request_nomination_invite_path)
-    end
-  end
-
-  describe "GET /nominations/email-used" do
-    it "renders the email used template" do
-      get "/nominations/email-used"
-      expect(response).to render_template("nominations/nominate_induction_coordinator/email_used")
     end
   end
 

@@ -29,10 +29,7 @@ module Api
       set_type :participant
 
       set_id :id do |induction_record|
-        # NOTE: using this will retain the original ID exposed to provider
-        induction_record.participant_profile.participant_identity.external_identifier
-        # NOTE: use this instead to use new (de-duped) ID
-        # induction_record.participant_profile.user.id
+        induction_record.participant_profile.participant_identity.user_id
       end
 
       attribute :email do |induction_record|
@@ -46,7 +43,7 @@ module Api
 
       attribute :mentor_id do |induction_record|
         if induction_record.participant_profile.ect?
-          induction_record.mentor_profile&.participant_identity&.external_identifier
+          induction_record.mentor_profile&.participant_identity&.user_id
         end
       end
 
@@ -96,6 +93,8 @@ module Api
       end
 
       attribute :training_status, &:training_status
+
+      attribute :training_record_id, &:participant_profile_id
 
       attribute :schedule_identifier do |induction_record|
         induction_record.schedule&.schedule_identifier

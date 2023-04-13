@@ -8,6 +8,17 @@ module Admin::Participants
     def show
       @latest_induction_record = latest_induction_record
       @historical_induction_records = historical_induction_records
+
+      add_breadcrumb(
+        school.name,
+        admin_school_participants_path(school),
+      )
+    end
+
+  private
+
+    def school
+      @school ||= @participant_profile.school
     end
   end
 end

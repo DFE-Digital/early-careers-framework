@@ -16,18 +16,9 @@ module NewSeeds
         # - the user/participant identity/participant profile
         # - the delivery partners/lead providers/induction programmes
         class FipToFip
-          attr_reader :school_from,
-                      :school_to,
-                      :school_cohort_from,
-                      :school_cohort_to,
-                      :participant_profile,
-                      :lead_provider_from,
-                      :lead_provider_to,
-                      :partnership_from,
-                      :partnership_to,
-                      :delivery_partner_from,
-                      :delivery_partner_to,
-                      :induction_programme_from,
+          COHORT_START_YEAR = 2022
+
+          attr_reader :participant_profile,
                       :induction_programme_to
 
           def initialize(from_school: nil, to_school: nil)
@@ -35,59 +26,78 @@ module NewSeeds
             @school_to = to_school
           end
 
+          def induction_programme_from
+            @induction_programme_from ||= NewSeeds::Scenarios::SchoolCohorts::Fip
+                                            .new(cohort:, school: school_from)
+                                            .build
+                                            .with_programme
+                                            .school_cohort
+                                            .default_induction_programme
+          end
+
         private
 
-          def setup
-            # schools with cohorts
+          def cohort
+            @cohort ||= Cohort.find_by!(start_year: COHORT_START_YEAR)
+          end
+
+          def create_induction_record_to
+            FactoryBot.create(:seed_induction_record,
+                              induction_programme: induction_programme_to,
+                              participant_profile:,
+                              preferred_identity: FactoryBot.create(:seed_participant_identity, user: participant_profile.user),
+                              schedule: Finance::Schedule::ECF.default_for(cohort: induction_programme_to.cohort),
+                              start_date: 6.months.ago + 10.days,
+                              school_transfer: true,
+                              induction_status: :active,
+                              training_status: :active)
+          end
+
+          def email
+            @email ||= "participant-identity-#{SecureRandom.hex(4)}@example.com"
+          end
+
+          def mentor_profile
+            participant_profile.latest_induction_record.mentor_profile
+          end
+
+          def school_cohort_from
+            induction_programme_from.school_cohort
+          end
+
+          def school_cohort_to
+            induction_programme_to.school_cohort
+          end
+
+          def school_from
             @school_from ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
+          end
+
+          def school_to
             @school_to ||= FactoryBot.create(:seed_school, :with_induction_coordinator)
-            @school_cohort_from = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school: school_from)
-            @school_cohort_to = FactoryBot.create(:seed_school_cohort, cohort: cohort(2022), school: school_to)
+          end
 
-            # create two lead providers
-            @lead_provider_from = FactoryBot.create(:seed_lead_provider)
-            @lead_provider_to = FactoryBot.create(:seed_lead_provider)
-
-            # create two delivery_partners
-            @delivery_partner_from = FactoryBot.create(:seed_delivery_partner)
-            @delivery_partner_to = FactoryBot.create(:seed_delivery_partner)
-
-            # create partnerships between lead providers, delivery partners, cohorts and schools
-            @partnership_from = FactoryBot.create(:seed_partnership,
-                                                  cohort: cohort(2022),
-                                                  school: school_from,
-                                                  delivery_partner: delivery_partner_from,
-                                                  lead_provider: lead_provider_from)
-
-            @partnership_to = FactoryBot.create(:seed_partnership,
-                                                cohort: cohort(2022),
-                                                school: school_to,
-                                                delivery_partner: delivery_partner_to,
-                                                lead_provider: lead_provider_to)
-
-            # partnership induction programmes
-            @induction_programme_from = FactoryBot.create(:seed_induction_programme,
-                                                          :fip,
-                                                          school_cohort: school_cohort_from,
-                                                          partnership: partnership_to)
-
-            @induction_programme_to = FactoryBot.create(:seed_induction_programme,
-                                                        :fip,
-                                                        school_cohort: school_cohort_to,
-                                                        partnership: partnership_to)
-
+          def setup
+            @induction_programme_to ||= NewSeeds::Scenarios::SchoolCohorts::Fip
+                                          .new(cohort:, school: school_to)
+                                          .build
+                                          .with_programme
+                                          .school_cohort
+                                          .default_induction_programme
             # a teacher to transfer
             @participant_profile = NewSeeds::Scenarios::Participants::Ects::Ect
                                      .new(school_cohort: school_cohort_from)
                                      .build
                                      .with_validation_data
                                      .with_eligibility
-                                     .with_induction_record(induction_programme: induction_programme_from)
+                                     .with_induction_record(induction_programme: induction_programme_from,
+                                                            induction_status: :leaving,
+                                                            end_date: 6.months.ago + 10.days)
                                      .participant_profile
           end
 
-          def cohort(year)
-            Cohort.find_by!(start_year: year)
+          def start_date
+            participant_profile.latest_induction_record.start_date + 10.days
           end
         end
       end

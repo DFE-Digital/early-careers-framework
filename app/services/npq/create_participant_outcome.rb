@@ -37,7 +37,12 @@ module NPQ
     end
 
     def participant_identity
-      @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_external_id)
+      @participant_identity ||= ParticipantIdentityResolver
+                                  .call(
+                                    participant_id: participant_external_id,
+                                    course_identifier:,
+                                    cpd_lead_provider:,
+                                  )
     end
 
   private

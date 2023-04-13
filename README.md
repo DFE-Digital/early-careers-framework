@@ -19,7 +19,7 @@
 2. Run `yarn` to install node dependencies
 3. Create `.env` file - copy `.env.template`. Set your database password and user in the `.env` file
 4. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
-6. Run `./bin/dev` to launch the app on http://localhost:3000, sidekiq and auto-compile assets
+6. Run `./bin/dev` to launch the app on http://localhost:3000, sidekiq and auto-compile assets. To run with a Sidekiq worker enabled run `./bin/dev -j`
 7. For most work, you will need to seed the database with `rails db:seed`. For school data, see [Importing School data](#importing-school-data)
 
 ### With docker
@@ -39,20 +39,34 @@ Check docker-compose file for username and password to put in your `.env` file.
 If you want to seed the database you can either run `db:drop` and `db:setup` tasks with your preferred method,
 or `db:seed`.
 
+### Building the documentation
+
+The API documenation is a [Middleman](https://middlemanapp.com/) app contained in the `docs` directory. In production it's
+built at deploy time and available at [/api-reference](https://manage-training-for-early-career-teachers.education.gov.uk/api-reference). We can't use `middleman serve` because
+the Middleman application assumes it's embedded and references the Rails application's assets, so instead we need to
+build it using the following steps:
+
+1. install [entr](https://github.com/eradman/entr) using your package manager of choice (eg. `brew install entr`)
+2. use the Makefile to keep building the documentation whenever a file is changed `make -C docs` or `cd docs && make watch`
+
 ### Govuk Notify
+
 Register on [GOV.UK Notify](https://www.notifications.service.gov.uk).
 Ask someone from the team to add you to our service.
 Generate a limited api key for yourself and set it in your `.env` file.
 
 ### Set up git hooks
+
 Run `git config core.hooksPath .githooks` to use the included git hooks.
 
 ## Running specs, linter(without auto correct) and annotate models and serializers
+
 ```
 bundle exec rake
 ```
 
 ## Running specs
+
 ```
 bundle exec rspec
 ```

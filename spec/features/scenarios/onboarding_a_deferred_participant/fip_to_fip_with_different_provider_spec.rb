@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "./db/legacy_seeds/call_off_contracts"
 require "./spec/features/scenarios/changes_of_circumstance_scenario"
 
 def given_context(scenario)
@@ -81,8 +80,9 @@ RSpec.feature "FIP to FIP with different provider - Onboard a deferred participa
         given_lead_providers_contracted_to_deliver_ecf "Another Lead Provider"
 
         travel_to(milestone_started.milestone_date - 2.months) do
-          Seeds::CallOffContracts.new.call
-          Importers::SeedStatements.new.call
+          Importers::CreateCohort.new(path_to_csv: Rails.root.join("db/data/cohorts/cohorts.csv")).call
+          Importers::CreateCallOffContracts.new.call
+          Importers::CreateStatement.new(path_to_csv: Rails.root.join("db/data/statements/statements.csv")).call
         end
 
         and_sit_at_pupil_premium_school_reported_programme "Original SIT", "FIP"

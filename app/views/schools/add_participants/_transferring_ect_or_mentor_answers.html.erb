@@ -1,0 +1,112 @@
+<%= govuk_summary_list do |summary_list| %>
+  <% summary_list.row do |row| %>
+    <% row.key { "Name" } %>
+    <% row.value { form.full_name } %>
+    <% unless form.found_participant_in_dqt? %>
+      <% row.action(text: "Change",
+                    visually_hidden_text: "name",
+                    href: form.change_path_for(step: :name)) %>
+    <% else %>
+      <% row.action() %>
+    <% end %>
+  <% end %>
+
+  <% if form.trn %>
+   <% summary_list.row do |row| %>
+       <% row.key { "TRN" } %>
+       <% row.value { form.trn } %>
+       <% unless form.found_participant_in_dqt? %>
+         <% row.action(text: "Change",
+                       visually_hidden_text: "TRN",
+                       href: form.change_path_for(step: :trn)) %>
+       <% else %>
+         <% row.action() %>
+       <% end %>
+     <% end %>
+   <% end %>
+
+  <% if form.date_of_birth %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Date of birth" } %>
+      <% row.value { form.date_of_birth.to_date.to_s(:govuk) } %>
+      <% unless form.found_participant_in_dqt? %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "date of birth",
+                      href: form.change_path_for(step: :date_of_birth)) %>
+      <% else %>
+        <% row.action() %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% summary_list.row do |row| %>
+    <% row.key { "Email address" } %>
+    <% row.value { form.email } %>
+    <% row.action(text: "Change",
+                 visually_hidden_text: "email address",
+                 href: form.change_path_for(step: :email)) %>
+  <% end %>
+
+  <% if form.start_date %>
+    <% summary_list.row do |row| %>
+        <% row.key { "Joining date" } %>
+        <% row.value { form.start_date.to_date.to_s(:govuk) } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "joining date",
+                      href: form.change_path_for(step: :joining_date)) %>
+    <% end %>
+  <% end %>
+
+  <% if form.ect_participant? %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Mentor" } %>
+      <% row.value { form.mentor.present? ? form.mentor.full_name : "Add later" } %>
+      <% if !form.sit_mentor? && form.mentor_options.any? %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "mentor",
+                      href: form.change_path_for(step: :"choose-mentor")) %>
+      <% else %>
+        <% row.action() %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if form.appropriate_body_selected.present? %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Appropriate body" } %>
+      <% row.value do %>
+        <p class="govuk-body"><%= form.appropriate_body_selected.name %></p>
+      <% end %>
+      <% row.action(text: "Change",
+                    visually_hidden_text: "mentor",
+                    href: form.change_path_for(step: :"appropriate-body")) %>
+    <% end %>
+  <% end %>
+
+  <% if form.show_training_provider_section? %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Training with" } %>
+      <% if form.chose_to_continue_current_programme? %>
+        <% row.value do %>
+          <div><%= form.existing_lead_provider&.name %></div>
+          <div><%= form.existing_delivery_partner&.name %></div>
+        <% end %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "training programme",
+                      href: form.change_path_for(step: :continue_current_programme)) %>
+      <% else %>
+        <% row.value do %>
+          <div><%= form.lead_provider&.name %></div>
+          <div><%= form.delivery_partner&.name %></div>
+        <% end %>
+        <% if form.switching_programme? %>
+          <% row.action(text: "Change",
+                        visually_hidden_text: "training programme",
+                        href: form.change_path_for(step: :continue_current_programme)) %>
+        <% else %>
+          <% row.action(text: :none) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

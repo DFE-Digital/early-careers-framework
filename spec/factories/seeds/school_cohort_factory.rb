@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory(:seed_school_cohort, class: "SchoolCohort") do
-    induction_programme_choice { "full_induction_programme" }
+    induction_programme_choice { SchoolCohort.induction_programme_choices.values.sample }
 
     trait(:with_school) { school { association(:seed_school) } }
     trait(:with_cohort) { cohort { association(:seed_cohort) } }
@@ -10,8 +10,8 @@ FactoryBot.define do
     trait(:fip) { induction_programme_choice { "full_induction_programme" } }
     trait(:cip) { induction_programme_choice { "core_induction_programme" } }
 
-    trait(:starting_in_2021) { cohort { Cohort.find_or_create_by!(start_year: 2021) } }
-    trait(:starting_in_2022) { cohort { Cohort.find_or_create_by!(start_year: 2022) } }
+    trait(:starting_in_2021) { cohort { create(:cohort, start_year: 2021) } }
+    trait(:starting_in_2022) { cohort { create(:cohort, start_year: 2022) } }
 
     trait(:valid) do
       with_school

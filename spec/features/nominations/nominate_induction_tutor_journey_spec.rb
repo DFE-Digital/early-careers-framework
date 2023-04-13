@@ -56,7 +56,7 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
   scenario "Nomination Link was sent for which Induction Tutor was already nominated for the same school" do
     given_an_induction_tutor_has_already_been_nominated
     when_i_click_the_link_to_nominate_a_sit
-    then_i_should_be_redirected_to_the_induction_tutor_already_nominated_page
+    then_i_should_be_redirected_to_the_nominate_induction_tutor_page
     and_the_page_should_be_accessible
   end
 
@@ -81,10 +81,10 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
 
     when_i_fill_in_using_an_email_that_is_already_being_used
     click_on "Continue"
-    then_i_should_be_redirected_to_name_different_page
+    then_i_should_see_the_name_not_match_error
     and_the_page_should_be_accessible
 
-    click_on "Change the name"
+    click_on "Back"
     then_i_should_be_on_the_nominations_full_name_page
 
     when_i_fill_in_the_sits_name
@@ -118,15 +118,8 @@ RSpec.feature "ECT nominate SIT journey", type: :feature, js: true do
 
     when_i_fill_in_using_an_ects_email
     click_on "Continue"
-    then_i_should_be_on_the_email_already_used_page
+    then_i_should_see_the_email_already_used_error
     and_the_page_should_be_accessible
-
-    when_i_click "Change email address"
-    then_i_should_be_on_the_nominations_full_name_page
-
-    when_i_fill_in_the_sits_name
-    click_on "Continue"
-    then_i_should_be_on_the_nominations_email_page
 
     when_i_fill_in_the_sits_email
     click_on "Continue"

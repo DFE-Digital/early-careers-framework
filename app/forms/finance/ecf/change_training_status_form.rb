@@ -38,7 +38,7 @@ module Finance
         params = {
           cpd_lead_provider:,
           course_identifier:,
-          participant_id: participant_profile.participant_identity.external_identifier,
+          participant_id: participant_profile.participant_identity.user_id,
         }
 
         case training_status

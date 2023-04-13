@@ -23,6 +23,16 @@ if ENV.key?("VCAP_SERVICES")
   end
 end
 
+if ENV.key?("REDIS_URI")
+  Sidekiq.configure_server do |config|
+    config.redis = { url: ENV.fetch("REDIS_URI") }
+  end
+
+  Sidekiq.configure_client do |config|
+    config.redis = { url: ENV.fetch("REDIS_URI") }
+  end
+end
+
 # Sidekiq Cron
 if Sidekiq.server?
   Rails.application.config.after_initialize do

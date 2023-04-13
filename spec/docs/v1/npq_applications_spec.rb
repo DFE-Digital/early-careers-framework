@@ -59,6 +59,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
       operationId :npq_applications_csv
       tags "NPQ applications"
       security [bearerAuth: []]
+      produces "text/csv"
 
       parameter name: :filter,
                 in: :query,
@@ -72,7 +73,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v1/api_sp
                 example: CGI.unescape({ updated_since: "2020-11-13T11:21:55Z" }.to_param)
 
       response "200", "A CSV file of NPQ application" do
-        schema({ "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse" }, content_type: "text/csv")
+        schema "$ref": "#/components/schemas/MultipleNPQApplicationsCsvResponse"
 
         run_test!
       end

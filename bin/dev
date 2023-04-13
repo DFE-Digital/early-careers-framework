@@ -1,8 +1,21 @@
 #!/usr/bin/env sh
 
+run_jobs=false
+
+while getopts ":j" opt; do
+  case $opt in
+    j) run_jobs=true
+    ;;
+  esac
+done
+
 if ! gem list foreman -i --silent; then
   echo "Installing foreman..."
   gem install foreman
 fi
 
-exec foreman start -f Procfile.dev "$@"
+if $run_jobs; then
+  exec foreman start -m "web=1,js=1,css=1,jobs=1" -f Procfile.dev
+else
+  exec foreman start -m "web=1,js=1,css=1,jobs=0" -f Procfile.dev
+fi

@@ -124,26 +124,41 @@ private
   end
 
   def and_i_fill_in_all_info
-    allow(ParticipantValidationService).to receive(:validate).and_return(
-      {
-        trn: "AB123445A",
-        full_name: "George ECT",
-        nino: nil,
-        dob: Date.new(1998, 11, 22),
-        config: {},
-      },
+    allow(DqtRecordCheck).to receive(:call).and_return(
+      DqtRecordCheck::CheckResult.new(
+        valid_dqt_response,
+        true,
+        true,
+        true,
+        false,
+        3,
+      ),
     )
 
-    fill_in "schools_add_participant_form[full_name]", with: "George ECT"
+    fill_in "add_participant_wizard[full_name]", with: "George ECT"
     click_on "Continue"
-    fill_in "schools_add_participant_form[trn]", with: "AB123445A"
+    fill_in "add_participant_wizard[trn]", with: "1234456"
     click_on "Continue"
     fill_in_date("What’s George ECT’s date of birth?", with: "1998-11-22")
     click_on "Continue"
-    fill_in "schools_add_participant_form[email]", with: "ect@email.gov.uk"
+    fill_in "add_participant_wizard[email]", with: "ect@email.gov.uk"
     click_on "Continue"
     fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
     click_on "Continue"
+  end
+
+  def valid_dqt_response
+    DqtRecordPresenter.new({
+      "name" => "George ECT",
+      "trn" => "5234457",
+      "state_name" => "Active",
+      "dob" => Date.new(1998, 11, 22),
+      "qualified_teacher_status" => { "qts_date" => 1.year.ago },
+      "induction" => {
+        "start_date" => 1.month.ago,
+        "status" => "Active",
+      },
+    })
   end
 
   def then_i_am_taken_to_the_confirm_appropriate_body_page
@@ -175,14 +190,15 @@ private
     choose ect_appropriate_body.name
     click_on "Continue"
   end
+  alias_method :and_i_choose_a_different_appropriate_body, :when_i_choose_a_different_appropriate_body
 
-  def and_i_choose_a_different_appropriate_body(ect_appropriate_body)
-    choose "National organisation"
-    click_on "Continue"
+  # def and_i_choose_a_different_appropriate_body(ect_appropriate_body)
+  #   choose "National organisation"
+  #   click_on "Continue"
 
-    choose ect_appropriate_body.name
-    click_on "Continue"
-  end
+  #   choose ect_appropriate_body.name
+  #   click_on "Continue"
+  # end
 
   def and_i_see_the_appropriate_body(ect_appropriate_body)
     expect(page).to have_summary_row("Appropriate body", ect_appropriate_body.name)

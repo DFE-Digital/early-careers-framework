@@ -24,7 +24,7 @@ FactoryBot.define do
       end_date { 2.months.ago }
     end
 
-    trait(:ecf) { participant_profile { create(:ecf_participant_profile) } }
+    trait(:ecf) { participant_profile { create(:ect_participant_profile) } } # FIXME: remove
     trait(:ect) { participant_profile { create(:ect_participant_profile) } }
     trait(:mentor) { participant_profile { create(:mentor_participant_profile) } }
 

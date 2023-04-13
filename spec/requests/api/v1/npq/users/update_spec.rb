@@ -71,7 +71,7 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
               {
                 "errors" => [
                   {
-                    "detail"=>"Enter an email",
+                    "detail"=>"Enter an email address",
                     "title"=>"email",
                   },
                   {

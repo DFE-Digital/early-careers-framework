@@ -13,6 +13,16 @@ RSpec.describe SchoolCohort, type: :model do
     it { is_expected.to have_many(:transferring_out_induction_records).through(:induction_programmes) }
   end
 
+  describe "validation" do
+    it "validates the uniqueness of school_id and cohort_id in combination" do
+      school_cohort_1 = create(:school_cohort)
+      school_cohort_2 = school_cohort_1.dup
+
+      expect(school_cohort_2).to be_invalid
+      expect(school_cohort_2.errors.messages[:school_id]).to include("The school is already linked to this cohort")
+    end
+  end
+
   it "updates the updated_at on participant profiles and users when meaningfully updated" do
     freeze_time
     school_cohort = create(:school_cohort)

@@ -87,6 +87,16 @@ RSpec.shared_examples "resuming a participant" do
   it "marks the participant profiles as active" do
     expect { service.call }.to change { participant_profile.reload.training_status }.from("deferred").to("active")
   end
+
+  context "when the participant has a different user ID to external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+
+    before { participant_profile.update!(participant_identity:) }
+
+    it "marks the participant profiles as active" do
+      expect { service.call }.to change { participant_profile.reload.training_status }.from("deferred").to("active")
+    end
+  end
 end
 
 RSpec.shared_examples "resuming an ECF participant" do

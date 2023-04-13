@@ -34,10 +34,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
     if @nominate_induction_tutor_form.valid? :email
       store_nominate_induction_tutor_form
       redirect_to action: :check
-    elsif @nominate_induction_tutor_form.name_different?
-      redirect_to action: :name_different
-    elsif @nominate_induction_tutor_form.email_already_taken?
-      redirect_to action: :email_used
     else
       render :email
     end
@@ -66,10 +62,6 @@ class Nominations::NominateInductionCoordinatorController < ApplicationControlle
   rescue TooManyEmailsError
     redirect_to limit_reached_request_nomination_invite_path
   end
-
-  def email_used; end
-
-  def name_different; end
 
   def nominate_school_lead_success; end
 

@@ -29,21 +29,19 @@ class ChangeSchedule
       ParticipantProfileSchedule.create!(participant_profile:, schedule: new_schedule)
       participant_profile.update_schedule!(new_schedule)
 
-      if relevant_induction_record
-        Induction::ChangeInductionRecord.call(
-          induction_record: relevant_induction_record,
-          changes: {
-            schedule: new_schedule,
-          },
-        )
-      end
+      update_participant_profile_schedule_references
     end
 
     participant_profile.record_to_serialize_for(lead_provider: cpd_lead_provider.lead_provider)
   end
 
   def participant_identity
-    @participant_identity ||= ParticipantIdentity.find_by(external_identifier: participant_id)
+    @participant_identity ||= ParticipantIdentityResolver
+                                .call(
+                                  participant_id:,
+                                  course_identifier:,
+                                  cpd_lead_provider:,
+                                )
   end
 
   def participant_profile
@@ -80,6 +78,28 @@ private
 
   def cohort
     @cohort ||= super ? Cohort.find_by(start_year: super) : Cohort.current
+  end
+
+  def update_participant_profile_schedule_references
+    update_induction_records
+    update_npq_application_cohort
+  end
+
+  def update_induction_records
+    return unless relevant_induction_record
+
+    Induction::ChangeInductionRecord.call(
+      induction_record: relevant_induction_record,
+      changes: {
+        schedule: new_schedule,
+      },
+    )
+  end
+
+  def update_npq_application_cohort
+    return unless participant_profile.npq? && participant_profile.npq_application.cohort != new_schedule.cohort
+
+    participant_profile.npq_application.update!(cohort: new_schedule.cohort)
   end
 
   def relevant_induction_record
@@ -131,6 +151,14 @@ private
   def change_with_a_different_schedule
     return unless new_schedule && participant_profile && new_schedule == participant_profile.schedule
 
+    return if relevant_induction_record_has_different_schedule
+
     errors.add(:schedule_identifier, I18n.t(:schedule_already_on_the_profile))
+  end
+
+  def relevant_induction_record_has_different_schedule
+    return unless relevant_induction_record
+
+    new_schedule != relevant_induction_record.schedule
   end
 end

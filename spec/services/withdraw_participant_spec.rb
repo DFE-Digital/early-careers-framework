@@ -100,6 +100,16 @@ RSpec.shared_examples "withdrawing a participant" do
   it "marks the participant profile as withdrawn" do
     expect { service.call }.to change { participant_profile.reload.training_status }.from("active").to("withdrawn")
   end
+
+  context "when the participant has a different user ID to external ID" do
+    let(:participant_identity) { create(:participant_identity, :secondary) }
+
+    before { participant_profile.update!(participant_identity:) }
+
+    it "marks the participant profile as withdrawn" do
+      expect { service.call }.to change { participant_profile.reload.training_status }.from("active").to("withdrawn")
+    end
+  end
 end
 
 RSpec.shared_examples "withdrawing an ECF participant" do

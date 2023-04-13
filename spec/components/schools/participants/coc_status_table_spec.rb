@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Schools::Participants::CocStatusTable, type: :component do
-  let(:participant_profile) { create(:ecf_participant_profile, :ecf_participant_eligibility, school_cohort:) }
+  let(:participant_profile) { create(:ect_participant_profile, :ecf_participant_eligibility, school_cohort:) }
   let(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme: programme) }
 
   let(:component) { described_class.new induction_records: [induction_record] }

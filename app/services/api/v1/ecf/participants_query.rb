@@ -46,8 +46,11 @@ module Api
         end
 
         def induction_record
-          induction_records
-            .find_by!(participant_profile: { participant_identities: { external_identifier: params[:id] } })
+          scope = induction_records
+            .where(participant_profile: { participant_identities: { user_id: params[:id] } })
+          scope = scope.where(participant_profile: { type: "ParticipantProfile::ECT" }) if scope.size > 1
+
+          scope.first.presence || raise(ActiveRecord::RecordNotFound)
         end
 
       private
@@ -69,7 +72,11 @@ module Api
 
           Time.iso8601(filter[:updated_since])
         rescue ArgumentError
-          Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+          begin
+            Time.iso8601(URI.decode_www_form_component(filter[:updated_since]))
+          rescue ArgumentError
+            raise Api::Errors::InvalidDatetimeError, I18n.t(:invalid_updated_since_filter)
+          end
         end
 
         def latest_induction_record_order
@@ -150,10 +157,10 @@ module Api
 
         def participant_identity_fields
           [
-            "participant_identities.external_identifier as external_identifier",
+            "participant_identities.user_id as user_id",
             "participant_identities.updated_at AS participant_identity_updated_at",
             "preferred_identities.email AS preferred_identity_email",
-            "participant_identities_mentor_profiles.external_identifier AS mentor_external_identifier",
+            "participant_identities_mentor_profiles.user_id AS mentor_user_id",
           ]
         end
 

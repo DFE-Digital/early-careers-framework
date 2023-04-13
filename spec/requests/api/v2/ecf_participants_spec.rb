@@ -108,6 +108,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
               :pupil_premium_uplift,
               :sparsity_uplift,
               :training_status,
+              :training_record_id,
               :schedule_identifier,
               :updated_at,
             ).exactly)
@@ -174,7 +175,20 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           context "when updated_since in an invalid format" do
             it "returns a 400 status" do
               get "/api/v2/participants/ecf", params: { filter: { updated_since: "23rm21" } }
-              expect(response.status).to eq 400
+              expect(response).to be_bad_request
+            end
+
+            it "returns a meaningful error message" do
+              get "/api/v2/participants/ecf", params: { filter: { updated_since: "23rm21" } }
+
+              expect(parsed_response).to eql(HashWithIndifferentAccess.new({
+                "errors": [
+                  {
+                    "title": "Bad request",
+                    "detail": "The filter '#/updated_since' must be a valid RCF3339 date",
+                  },
+                ],
+              }))
             end
           end
         end
@@ -246,19 +260,20 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
                pupil_premium_uplift
                sparsity_uplift
                training_status
+               training_record_id
                schedule_identifier
                updated_at],
           )
         end
 
         it "returns the correct values" do
-          mentor = ParticipantProfile::Mentor.first.user
-          mentor_row = parsed_response.find { |row| row["id"] == mentor.id && row["participant_type"] == "mentor" }
+          mentor = ParticipantProfile::Mentor.first
+          mentor_row = parsed_response.find { |row| row["id"] == mentor.user_id && row["participant_type"] == "mentor" }
           expect(mentor_row).not_to be_nil
-          expect(mentor_row["email"]).to eql mentor.email
-          expect(mentor_row["full_name"]).to eql mentor.full_name
+          expect(mentor_row["email"]).to eql mentor.user.email
+          expect(mentor_row["full_name"]).to eql mentor.user.full_name
           expect(mentor_row["mentor_id"]).to eql ""
-          expect(mentor_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
+          expect(mentor_row["school_urn"]).to eql mentor.induction_records[0].school_cohort.school.urn
           expect(mentor_row["participant_type"]).to eql "mentor"
           expect(mentor_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(mentor_row["teacher_reference_number"]).to be_empty
@@ -267,22 +282,24 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(mentor_row["pupil_premium_uplift"]).to eql "false"
           expect(mentor_row["sparsity_uplift"]).to eql "false"
           expect(mentor_row["training_status"]).to eql "active"
+          expect(mentor_row["training_record_id"]).to eql mentor.id
 
-          ect = ect_profile.user
-          ect_row = parsed_response.find { |row| row["id"] == ect.id }
+          ect = ect_profile
+          ect_row = parsed_response.find { |row| row["id"] == ect.user_id }
           expect(ect_row).not_to be_nil
-          expect(ect_row["email"]).to eql ect.email
-          expect(ect_row["full_name"]).to eql ect.full_name
-          expect(ect_row["mentor_id"]).to eql mentor.id
-          expect(ect_row["school_urn"]).to eql mentor.participant_profiles[0].induction_records[0].school_cohort.school.urn
+          expect(ect_row["email"]).to eql ect.user.email
+          expect(ect_row["full_name"]).to eql ect.user.full_name
+          expect(ect_row["mentor_id"]).to eql mentor.user_id
+          expect(ect_row["school_urn"]).to eql mentor.induction_records[0].school_cohort.school.urn
           expect(ect_row["participant_type"]).to eql "ect"
           expect(ect_row["cohort"]).to eql partnership.cohort.start_year.to_s
           expect(ect_row["teacher_reference_number"]).to be_empty
           expect(ect_row["teacher_reference_number_validated"]).to be_empty
-          expect(mentor_row["eligible_for_funding"]).to be_empty
-          expect(mentor_row["pupil_premium_uplift"]).to eql "false"
-          expect(mentor_row["sparsity_uplift"]).to eql "false"
-          expect(mentor_row["training_status"]).to eql "active"
+          expect(ect_row["eligible_for_funding"]).to be_empty
+          expect(ect_row["pupil_premium_uplift"]).to eql "false"
+          expect(ect_row["sparsity_uplift"]).to eql "false"
+          expect(ect_row["training_status"]).to eql "active"
+          expect(ect_row["training_record_id"]).to eql ect.id
 
           withdrawn_record_row = parsed_response.find { |row| row["id"] == withdrawn_ect_profile_record.user.id }
           expect(withdrawn_record_row).not_to be_nil
@@ -298,6 +315,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
           expect(withdrawn_record_row["pupil_premium_uplift"]).to eql(withdrawn_ect_profile_record.pupil_premium_uplift.to_s)
           expect(withdrawn_record_row["sparsity_uplift"]).to eql(withdrawn_ect_profile_record.sparsity_uplift.to_s)
           expect(withdrawn_record_row["training_status"]).to eql(withdrawn_ect_profile_record.induction_records.first.training_status)
+          expect(withdrawn_record_row["training_record_id"]).to eql(withdrawn_ect_profile_record.id)
         end
 
         it "ignores pagination parameters" do
@@ -404,6 +422,7 @@ RSpec.describe "Participants API", :with_default_schedules, type: :request do
               "pupil_premium_uplift" => early_career_teacher_profile.pupil_premium_uplift,
               "sparsity_uplift" => early_career_teacher_profile.sparsity_uplift,
               "training_status" => early_career_teacher_profile.training_status,
+              "training_record_id" => early_career_teacher_profile.id,
               "schedule_identifier" => early_career_teacher_profile.induction_records[0].schedule&.schedule_identifier,
               "updated_at" => Time.zone.local(2022, 7, 22, 11, 30, 0).rfc3339,
             },
