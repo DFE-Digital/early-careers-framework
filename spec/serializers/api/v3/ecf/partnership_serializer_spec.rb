@@ -23,7 +23,7 @@ module Api
           end
 
           it "sets the type" do
-            expect(subject.serializable_hash[:data][:type]).to eq(:"partnership-confirmation")
+            expect(subject.serializable_hash[:data][:type]).to eq(:partnership)
           end
 
           it "returns the cohort start year" do
