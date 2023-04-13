@@ -1158,6 +1158,7 @@
                         "attributes": {
                           "full_name": "Isabelle MacDonald",
                           "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
                           "npq_enrolments": [
                             {
                               "email": "isabelle.macdonald2@some-school.example.com",
@@ -1175,8 +1176,7 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
-                          ],
-                          "updated_at": "2021-05-31T02:22:32.000Z"
+                          ]
                         }
                       }
                     }
@@ -1289,6 +1289,7 @@
                         "attributes": {
                           "full_name": "Isabelle MacDonald",
                           "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
                           "npq_enrolments": [
                             {
                               "email": "isabelle.macdonald2@some-school.example.com",
@@ -1306,8 +1307,7 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
-                          ],
-                          "updated_at": "2021-05-31T02:22:32.000Z"
+                          ]
                         }
                       }
                     }
