@@ -4,19 +4,29 @@ title: Schedules and milestone dates
 
 # Schedules and milestone dates
 
-Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
-labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi
-anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est
-aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud
-officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat
-reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia
-voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt
-duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt
-velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est
-culpa et culpa duis.
+The DfE makes payment to providers in line with agreed contractual schedules and training criteria. 
+
+Providers are paid a proportionate sum of money relative to the amount of time they support their participants.
+
+Providers must [submit declarations](LINK NEEDED) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
+
+## Key definitions
+
+| Concept      | Definition| 
+| -------- | --------  |
+| Schedule    | The expected timeframe in which a participant will complete their ECF-based training, which determine the defined milestone dates      |
+| Standard schedule  | For participants completing the standard 2 year induction, starting in September, January or April  |
+| Extended schedule   | A non-standard schedule for participants who expect to complete the induction over a period greater than 2 years. Examples include part-time ECTs, or ECTs whose induction period is extended by their appropriate body  |
+| Reduced schedule   | A non-standard schedule for participants who expect to complete the induction over a period less than 2 years, e.g. those with previous experience  |
+| Replacement schedule  | A non-standard schedule for mentors that are replacing a previous mentor for an ECT that is part way through their training  |
+| Milestone   | Contractual periods of ECF-based training delivery during which providers must submit relevant declarations evidencing participant retention      |
+| Milestone dates    | The deadline date a valid declaration can be made for a given milestone in order for the DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule       |
+| Milestone period    | The period of time between the milestone start date and deadline date       |
+| Payment date    | The date the DfE will make payment for valid declarations submitted by providers for a given milestone     |
 
 
-### Standard induction
+
+## Standard induction
 
 A usual 2 year induction covers 6 terms (3 in each academic year). The payment model for those following a standard induction is therefore equal to 1 milestone payment for each of the 6 terms you are supporting a participant. We are allowing functionality for providers to switch participants onto the following standard schedules:
 

@@ -72,11 +72,13 @@ Find more detailed specifications in the [declaration schema](/api-reference/ref
 
 Partnership states are defined by the `status` attribute. 
 
-Providers must confirm partnerships with schools for each cohort via the API. Once a partnership has been established the `status` value will reflect this and providers will have access to participant information via the API.
+Providers must confirm partnerships with schools for each cohort via the API. Once a partnership has been established the `status` value will reflect this (`active`) and providers will have access to participant information via the API.
+
+Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details. 
 
 | `status` | Definition | Action |
 | -------- | -------- | -------- |
-| `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can [view and confirm partnerships](LINK NEEDED)     |
-| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can [view and confirm partnerships](LINK NEEDED)    |
+| `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can [view, confirm and update active partnerships](LINK NEEDED)     |
+| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can [view challenged partnerships](LINK NEEDED)    |
 
 Find more detailed specifications in the [partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
