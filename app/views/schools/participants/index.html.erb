@@ -20,7 +20,7 @@
             <% @participants.orphan_ects.sort_by(&:participant_full_name).each do |ect| %>
               <li>
                 <%= govuk_link_to(ect.participant_full_name,
-                                  schools_participant_path(id: ect.participant_profile_id, school_id: @school),
+                                  school_participant_path(id: ect.participant_profile_id, school_id: @school),
                                   no_visited_state: true,
                                   classes: ["govuk-\!-padding-bottom-static-1 govuk-\!-margin-bottom-static-0"]) %>
               </li>
@@ -40,7 +40,7 @@
           <%= govuk_summary_list(actions: false, borders: nil) do |list| %>
             <% list.row do |row| %>
               <% row.key(text: govuk_link_to(mentor.participant_full_name,
-                                             schools_participant_path(id: mentor.participant_profile_id,
+                                             school_participant_path(id: mentor.participant_profile_id,
                                                                       school_id: @school),
                                              no_visited_state: true),
                          classes: ["govuk-!-font-weight-regular"]) %>
@@ -58,7 +58,7 @@
             <% @participants.mentors[mentor].sort_by(&:participant_full_name).each do |ect| %>
               <% list.row do |row| %>
                 <% row.key(text: govuk_link_to("#{ect.participant_full_name}",
-                                               schools_participant_path(id: ect.participant_profile_id,
+                                               school_participant_path(id: ect.participant_profile_id,
                                                                         school_id: @school),
                                                no_visited_state: true),
                            classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
@@ -81,7 +81,7 @@
           <% @participants.orphan_mentors.sort_by(&:participant_full_name).each do |mentor| %>
             <% list.row do |row| %>
               <% row.key(text: govuk_link_to(mentor.participant_full_name,
-                                             schools_participant_path(id: mentor.participant_profile_id,
+                                             school_participant_path(id: mentor.participant_profile_id,
                                                                       school_id: @school),
                                              no_visited_state: true),
                          classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>

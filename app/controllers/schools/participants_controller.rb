@@ -72,11 +72,7 @@ class Schools::ParticipantsController < Schools::BaseController
       render :edit_mentor and return
     end
 
-    @mentor_form = if FeatureFlag.active?(:cohortless_dashboard)
-                     ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
-                   else
-                     ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id, cohort_id: @cohort.id))
-                   end
+    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
 
     if @mentor_form.valid?
       if FeatureFlag.active?(:cohortless_dashboard)
@@ -91,9 +87,9 @@ class Schools::ParticipantsController < Schools::BaseController
 
         flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
         if FeatureFlag.active?(:cohortless_dashboard)
-          redirect_to schools_participant_path(id: @profile)
+          redirect_to school_participant_path(id: @profile)
         else
-          redirect_to schools_cohort_participant_path(id: @profile)
+          redirect_to schools_participant_path(id: @profile)
         end
       end
     else
@@ -105,9 +101,9 @@ class Schools::ParticipantsController < Schools::BaseController
     if can_appropriate_body_be_changed?
       start_appropriate_body_selection
     elsif FeatureFlag.active?(:cohortless_dashboard)
-      redirect_to schools_participant_path(id: @profile.id)
+      redirect_to school_participant_path(id: @profile.id)
     else
-      redirect_to schools_cohort_participant_path(id: @profile.id)
+      redirect_to schools_participant_path(id: @profile.id)
     end
   end
 
@@ -129,11 +125,7 @@ private
   end
 
   def build_mentor_form
-    @mentor_form = if FeatureFlag.active?(:cohortless_dashboard)
-                     ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id)
-                   else
-                     ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id, cohort_id: @cohort.id)
-                   end
+    @mentor_form = ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id)
   end
 
   def set_participant
@@ -152,7 +144,7 @@ private
 
   def start_appropriate_body_selection
     super action_name: @induction_record.appropriate_body_id.present? ? :change : :add,
-          from_path: FeatureFlag.active?(:cohortless_dashboard) ? schools_participant_path(id: @profile.id) : schools_cohort_participant_path(id: @profile.id),
+          from_path: FeatureFlag.active?(:cohortless_dashboard) ? school_participant_path(id: @profile.id) : schools_participant_path(id: @profile.id),
           submit_action: :save_appropriate_body,
           school_name: @profile.user.full_name,
           ask_appointed: false

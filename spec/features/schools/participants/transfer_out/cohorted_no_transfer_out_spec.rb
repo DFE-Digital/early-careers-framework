@@ -43,7 +43,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     # when
 
     def when_i_click_to_view_ects_and_mentors
-      click_on "Manage"
+      click_on "Manage participants"
     end
 
     def when_i_select(option)
@@ -110,7 +110,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
         trn: "1001000",
         full_name: "Sally Teacher",
         start_date: Time.zone.today.prev_month,
-        end_date: Date.new(2022, 10, 24),
+        end_date: Date.new(2024, 10, 24),
         email: "sally-teacher@example.com",
       }
     end

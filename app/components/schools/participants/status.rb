@@ -3,9 +3,13 @@
 module Schools
   module Participants
     class Status < BaseComponent
-      def initialize(induction_record:, has_mentees: false)
-        @induction_record = induction_record
-        @has_mentees = has_mentees
+      def initialize(participant_profile: nil, induction_record: nil, has_mentees: false)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          @induction_record = induction_record
+          @has_mentees = has_mentees
+        else
+          @participant_profile = participant_profile
+        end
       end
 
     private

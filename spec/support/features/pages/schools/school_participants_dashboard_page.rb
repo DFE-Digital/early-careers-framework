@@ -12,7 +12,14 @@ module Pages
     # if FeatureFlag.active?(:cohortless_dashboard) gets removed and its code removed (i.e. no cohortless in the service)
     set_url_matcher(/schools\/([^\/]+)(\/cohorts\/([^\/]+))?\/participants/)
 
-    set_primary_heading "Manage mentors and ECTs"
+    def initialize
+      if FeatureFlag.active?(:cohortless_dashboard)
+        self.class.set_primary_heading "Manage mentors and ECTs"
+      else
+        self.class.set_primary_heading "Your ECTs and mentors"
+      end
+      super
+    end
 
     def choose_to_add_an_ect_or_mentor
       click_on FeatureFlag.active?(:cohortless_dashboard) ? "Add ECT or mentor" : "Add an ECT or mentor"

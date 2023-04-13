@@ -15,11 +15,10 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     scenario "Old induction tutor only sees the transfer once the end date has passed" do
       when_i_click_to_view_ects_and_mentors
       then_i_am_taken_to_manage_mentors_and_ects_page
-      then_i_should_still_see_the_participant_in_my_ects
-      and_i_should_not_see_any_transferring_participants
+      when_i_visit_the_participant_page
+      then_i_should_still_see_the_participant_is_leaving_my_school
 
       travel_to(@participant_data[:end_date] + 1.day)
-
       visit current_path
 
       then_i_should_see_the_participants_as_having_transferred
@@ -46,6 +45,10 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
       click_on("Manage mentors and ECTs")
     end
 
+    def when_i_visit_the_participant_page
+      click_on(@ect.full_name)
+    end
+
     def when_i_select(option)
       choose(option)
     end
@@ -57,29 +60,14 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
       expect(page).to have_text("Add ECT or mentor")
     end
 
-    def and_i_should_not_see_any_transferring_participants
-      expect(page).not_to have_selector("h2", text: "Transferring from your school")
-    end
-
-    def then_i_should_still_see_the_participant_in_my_ects
-      expect(page).to have_selector("h2", text: "Contacted for information")
-      within(:xpath, "//table[@data-test='checked_ects']/tbody/tr[1]") do
-        expect(page).to have_xpath(".//td[1]", text: @ect.user.full_name)
-      end
+    def then_i_should_still_see_the_participant_is_leaving_my_school
+      expect(page).to have_summary_row("Name", @ect.user.full_name)
+      expect(page).to have_text("LEAVING YOUR SCHOOL")
     end
 
     def then_i_should_see_the_participants_as_having_transferred
-      date = @participant_data[:end_date]
-      expect(page).to have_selector("h2", text: "Transferred from your school")
-      within(:xpath, "//table[@data-test='transferred']/tbody/tr[1]") do
-        expect(page).to have_xpath(".//td[1]", text: @participant_data[:full_name])
-        expect(page).to have_xpath(".//td[2]", text: date.to_date.to_s(:govuk))
-      end
-    end
-
-    def and_they_wont_be_listed_as_a_transfer_out
-      expect(page).not_to have_selector("h2", text: "Transferring from your school")
-      within(:xpath, "//table[@data-test='transferring_out']/tbody/tr[1]")
+      expect(page).to have_summary_row("Name", @ect.user.full_name)
+      expect(page).to have_text("LEAVING YOUR SCHOOL")
     end
 
     # and

@@ -2,7 +2,7 @@
 
 <% content_for :before_content,
                govuk_back_link(text: "Back",
-                               href: schools_participant_edit_mentor_path(participant_id: @profile.id,
+                               href: school_participant_edit_mentor_path(participant_id: @profile.id,
                                                                           from_mentor: params[:from_mentor])) %>
 
 <div class="govuk-grid-row">
@@ -12,8 +12,8 @@
     <br>
     <%= govuk_button_link_to("Back to manage mentors and ECTs",
                              FeatureFlag.active?(:cohortless_dashboard) ?
-                               schools_participants_path(id: @school) :
-                               schools_cohort_participants_path(id: @school),
+                               school_participants_path(id: @school) :
+                               schools_participants_path(id: @school),
                              class: "govuk-link--no-visited-state") %>
   </div>
 </div>

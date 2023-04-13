@@ -2,8 +2,8 @@
 
 <% content_for :before_content, govuk_back_link( text: "Back",
                                                  href: FeatureFlag.active?(:cohortless_dashboard) ?
-                                                         schools_participant_path(id: @profile) :
-                                                         schools_cohort_participant_path(id: @profile)) %>
+                                                         school_participant_path(id: @profile) :
+                                                         schools_participant_path(id: @profile)) %>
 
 <% unless FeatureFlag.active?(:cohortless_dashboard) %>
   <span class="govuk-caption-xl"><%= @cohort.display_name %></span>
@@ -19,8 +19,8 @@
     </ul>
     <%= govuk_button_to "Confirm and remove",
                         FeatureFlag.active?(:cohortless_dashboard) ?
-                          schools_participant_path(id: @profile) :
-                          schools_cohort_participant_path(id: @profile),
+                          school_participant_path(id: @profile) :
+                          schools_participant_path(id: @profile),
                         method: :delete %>
   </div>
 </div>

@@ -8,7 +8,7 @@ RSpec.describe ParticipantMentorForm, :with_default_schedules, type: :model do
     let(:cohort_2022) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
     let(:school_cohort_2) { create(:school_cohort, school:, cohort: cohort_2022) }
 
-    subject { described_class.new(school_id: school.id, cohort_id: school_cohort.cohort_id) }
+    subject { described_class.new(school_id: school.id) }
 
     before do
       create(:ecf_schedule, cohort: cohort_2022)

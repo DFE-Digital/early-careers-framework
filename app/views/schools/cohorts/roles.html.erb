@@ -5,8 +5,8 @@
     <% unless @hide_button %>
       <%= govuk_button_link_to "Continue",
                                FeatureFlag.active?(:cohortless_dashboard) ?
-                                 schools_participants_path :
-                                 schools_cohort_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
+                                 school_participants_path :
+                                 schools_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
     <% end %>
   </div>
 </div>

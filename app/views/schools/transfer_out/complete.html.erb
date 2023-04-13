@@ -27,7 +27,7 @@
           <p class="govuk-body">You need to assign a new mentor for any ECTs they’ve been working with.</p>
         <% end %>
         <%= govuk_link_to "View your ECTs and mentors",
-                          FeatureFlag.active?(:cohortless_dashboard) ? schools_participants_path : schools_cohort_participants_path,
+                          FeatureFlag.active?(:cohortless_dashboard) ? school_participants_path : schools_participants_path,
                           class: "govuk-link govuk-link--no-visited-state" %>
 
     </div>

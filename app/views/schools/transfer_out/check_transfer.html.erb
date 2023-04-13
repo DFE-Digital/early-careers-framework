@@ -4,8 +4,8 @@
 
 <% content_for :before_content, govuk_back_link(text: "Back",
                                                 href: FeatureFlag.active?(:cohortless_dashboard) ?
-                                                        schools_participant_path(id: @profile) :
-                                                        schools_cohort_participant_path(id: @profile)) %>
+                                                        school_participant_path(id: @profile) :
+                                                        schools_participant_path(id: @profile)) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
@@ -23,7 +23,7 @@
       continue their induction, confirm below.</p>
 
     <% if FeatureFlag.active? :cohortless_dashboard %>
-      <%= govuk_button_link_to "Continue",  teacher_end_date_schools_participant_transfer_out_path %>
+      <%= govuk_button_link_to "Continue",  teacher_end_date_school_participant_transfer_out_path %>
     <% else %>
       <%= govuk_button_link_to "Continue", schools_transfer_out_participant_teacher_end_date_path %>
     <% end %>

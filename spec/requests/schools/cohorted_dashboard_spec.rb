@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::Dashboard", type: :request, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "Schools::Dashboard", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.schools.first }
 
@@ -48,7 +48,7 @@ RSpec.describe "Schools::Dashboard", type: :request, with_feature_flags: { cohor
       it "should render the dashboard" do
         get "/schools/#{school.slug}"
 
-        expect(response).to render_template("schools/dashboard/show")
+        expect(response).to render_template("schools/dashboard/cohorted_show")
       end
     end
   end

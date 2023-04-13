@@ -43,7 +43,7 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
     it "renders participants template" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
-      expect(response).to render_template("schools/participants/index")
+      expect(response).to render_template("schools/participants/cohorted_index")
     end
 
     it "renders participant details" do
@@ -59,7 +59,7 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
       ect_profile.training_status_withdrawn!
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants"
 
-      expect(response).to render_template("schools/participants/index")
+      expect(response).to render_template("schools/participants/cohorted_index")
       expect(response.body).to include(CGI.escapeHTML(ect_user.full_name))
       expect(response.body).to include(CGI.escapeHTML(delivery_partner.name))
       expect(response.body).to include(CGI.escapeHTML(lead_provider.name))
@@ -76,7 +76,7 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
     it "renders participant template" do
       get "/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}"
 
-      expect(response).to render_template("schools/participants/show")
+      expect(response).to render_template("schools/participants/cohorted_show")
     end
 
     it "renders participant details" do
@@ -142,9 +142,9 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
       put("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params:)
 
       if FeatureFlag.active?(:cohortless_dashboard)
-        expect(response).to redirect_to(schools_participant_path(id: ect_profile))
+        expect(response).to redirect_to(school_participant_path(id: ect_profile))
       else
-        expect(response).to redirect_to(schools_cohort_participant_path(id: ect_profile))
+        expect(response).to redirect_to(schools_participant_path(id: ect_profile))
       end
 
       expect(flash[:success][:title]).to eq("Success")

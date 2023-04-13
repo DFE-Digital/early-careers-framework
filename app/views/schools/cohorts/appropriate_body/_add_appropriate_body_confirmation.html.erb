@@ -19,8 +19,8 @@
       If you’ve already added the ECT to this service, select their name on the
       <%= govuk_link_to "ECTs and mentors",
                         FeatureFlag.active?(:cohortless_dashboard) ?
-                          schools_participants_path :
-                          schools_cohort_participants_path,
+                          school_participants_path :
+                          schools_participants_path,
                         no_visited_state: true %>
       page to see their details and change their appropriate body.
     </p>

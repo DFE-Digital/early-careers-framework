@@ -23,7 +23,7 @@
       <% row.key(text: "ECTs and mentors") %>
       <% row.value(text: ects_count) %>
       <% row.action(text: ects_count.zero? ? "Add" : "Manage",
-                    href: schools_cohort_participants_path(cohort_id: school_cohort.cohort.start_year),
+                    href: schools_participants_path(cohort_id: school_cohort.cohort.start_year),
                     visually_hidden_text: "participants") %>
     <% end %>
   <% end %>

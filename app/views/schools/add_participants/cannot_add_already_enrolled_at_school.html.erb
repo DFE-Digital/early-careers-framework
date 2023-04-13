@@ -13,8 +13,8 @@
   <% end %>
     <%= govuk_link_to "View your ECTs and mentors",
                       FeatureFlag.active?(:cohortless_dashboard) ?
-                        schools_participants_path :
-                        schools_cohort_participants_path,
+                        school_participants_path :
+                        schools_participants_path,
                       no_visited_state: true %>
   </div>
 </div>
