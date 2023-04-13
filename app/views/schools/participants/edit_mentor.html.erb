@@ -3,9 +3,14 @@
 <% if FeatureFlag.active?(:cohortless_dashboard) %>
   <% content_for :before_content,
                  govuk_back_link(text: "Back",
-                                 href: schools_participant_path(id: params[:from_mentor].presence || @profile)) %>
+                                 href: FeatureFlag.active?(:cohortless_dashboard) ?
+                                         schools_participant_path(id: params[:from_mentor].presence || @profile) :
+                                         schools_cohort_participant_path(id: params[:from_mentor].presence || @profile)) %>
 <% else %>
-  <% content_for :before_content, govuk_back_link(text: "Back", href: schools_participant_path(id: @profile)) %>
+  <% content_for :before_content, govuk_back_link(text: "Back",
+                                                  href: FeatureFlag.active?(:cohortless_dashboard) ?
+                                                          schools_participant_path(id: @profile) :
+                                                          schools_cohort_participant_path(id: @profile)) %>
 <% end %>
 
 <div class="govuk-grid-row">
@@ -15,8 +20,8 @@
 
     <%= form_with model: @mentor_form,
                   url: (FeatureFlag.active?(:cohortless_dashboard) ?
-                         schools_participant_update_mentor_path(participant_id: @profile, from_mentor: params[:from_mentor]) :
-                         schools_participant_update_mentor_path(participant_id: @profile)),
+                          schools_participant_update_mentor_path(participant_id: @profile, from_mentor: params[:from_mentor]) :
+                          schools_cohort_participant_update_mentor_path(participant_id: @profile)),
                   method: :put,
                   id: "school-cohort-participant-update-mentor" do |f| %>
       <%= f.govuk_error_summary %>

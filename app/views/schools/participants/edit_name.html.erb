@@ -1,13 +1,19 @@
 <% content_for :before_content,
                govuk_back_link(text: "Back",
-                               href: schools_participant_edit_name_path(participant_id: @profile,
-                                                                        selected_reason: @reason)) %>
+                               href: FeatureFlag.active?(:cohortless_dashboard) ?
+                                       schools_participant_edit_name_path(participant_id: @profile, selected_reason: @reason) :
+                                       schools_cohort_participant_edit_name_path(participant_id: @profile, selected_reason: @reason),
+               ) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
     <span class="govuk-caption-xl"><%= @school.name %></span>
-    <%= form_with model: @profile.user, scope: '', url: schools_participant_update_name_path, method: :put do |f| %>
+    <%= form_with model: @profile.user, scope: '',
+                  url: FeatureFlag.active?(:cohortless_dashboard) ?
+                         schools_participant_update_name_path :
+                         schools_cohort_participant_update_name_path,
+                  method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :full_name,
                              value: nil,
@@ -19,5 +25,5 @@
       <%= f.govuk_submit %>
     <% end %>
 
-    </div>
+  </div>
 </div>

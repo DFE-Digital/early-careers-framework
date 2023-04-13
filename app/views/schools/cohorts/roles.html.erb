@@ -3,7 +3,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <% unless @hide_button %>
-      <%= govuk_button_link_to "Continue", schools_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
+      <%= govuk_button_link_to "Continue",
+                               FeatureFlag.active?(:cohortless_dashboard) ?
+                                 schools_participants_path :
+                                 schools_cohort_participants_path(cohort_id: @school_cohort.cohort.start_year) %>
     <% end %>
   </div>
 </div>

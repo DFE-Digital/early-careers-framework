@@ -141,7 +141,12 @@ RSpec.describe "Schools::Participants", :with_default_schedules, type: :request,
       params = { participant_mentor_form: { mentor_id: mentor_user_2.id } }
       put("/schools/#{school.slug}/cohorts/#{cohort.start_year}/participants/#{ect_profile.id}/update-mentor", params:)
 
-      expect(response).to redirect_to(schools_participant_path(id: ect_profile))
+      if FeatureFlag.active?(:cohortless_dashboard)
+        expect(response).to redirect_to(schools_participant_path(id: ect_profile))
+      else
+        expect(response).to redirect_to(schools_cohort_participant_path(id: ect_profile))
+      end
+
       expect(flash[:success][:title]).to eq("Success")
       expect(ect_user.reload.early_career_teacher_profile.mentor).to eq(mentor_user_2)
     end

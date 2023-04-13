@@ -11,7 +11,9 @@
 
     <br>
     <%= govuk_button_link_to("Back to manage mentors and ECTs",
-                             schools_participants_path(id: @school),
+                             FeatureFlag.active?(:cohortless_dashboard) ?
+                               schools_participants_path(id: @school) :
+                               schools_cohort_participants_path(id: @school),
                              class: "govuk-link--no-visited-state") %>
   </div>
 </div>

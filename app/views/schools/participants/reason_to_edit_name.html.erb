@@ -1,6 +1,9 @@
 <% content_for :title, t('page_titles.schools.participants.reason_to_edit_name', name: @profile.full_name) %>
 
-<% content_for :before_content, govuk_back_link(text: "Back", href: schools_participant_path(id: @profile)) %>
+<% content_for :before_content, govuk_back_link(text: "Back",
+                                                href: FeatureFlag.active?(:cohortless_dashboard) ?
+                                                        schools_participant_path(id: @profile) :
+                                                        schools_cohort_participant_path(id: @profile)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -8,7 +11,10 @@
 
     <%= form_with model: edit_name_reason(@selected_reason),
                   scope: '',
-                  url: schools_participant_edit_name_path(participant_id: @profile), method: :get do |f| %>
+                  url: FeatureFlag.active?(:cohortless_dashboard) ?
+                         schools_participant_edit_name_path(participant_id: @profile) :
+                         schools_cohort_participant_edit_name_path(participant_id: @profile),
+                  method: :get do |f| %>s
       <%= f.govuk_collection_radio_buttons(
             :reason,
             edit_name_reasons,

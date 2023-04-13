@@ -46,8 +46,11 @@ module Schools
       end
 
       def abort_path
-        schools_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                  school_id: school.slug)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          schools_participants_path(school_id: school.slug)
+        else
+          schools_cohort_participants_path(cohort_id: school_cohort.cohort.start_year, school_id: school.slug)
+        end
       end
 
       def previous_step_path

@@ -34,13 +34,17 @@
           We’ll let this person know you’ve registered them for ECF-based training at your school.
           They do not need to provide us with any more information.
         </p>
-        
+
         <h2 class="govuk-heading-m">Eligibility for funding</h2>
         <%= render partial: eligibility_confirmation_view_for(@wizard.participant_profile), locals: { profile: @wizard.participant_profile } %>
       <% end %>
     <% end %>
 
-    <%= govuk_link_to "View your ECTs and mentors", schools_participants_path, no_visited_state: true %>
+    <%= govuk_link_to "View your ECTs and mentors",
+                      FeatureFlag.active?(:cohortless_dashboard) ?
+                        schools_participants_path :
+                        schools_cohort_participants_path,
+                      no_visited_state: true %>
 
   </div>
 </div>

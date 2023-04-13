@@ -5,9 +5,9 @@
                                                       participant_id: induction_record.participant_profile) %>
   <% else %>
     <%= govuk_link_to "Remove #{name} from this cohort",
-                      schools_participant_remove_path(school_id: induction_record.school,
-                                                      cohort_id: induction_record.school_cohort.cohort,
-                                                      participant_id: induction_record.participant_profile) %>
+                      schools_cohort_participant_remove_path(school_id: induction_record.school,
+                                                             cohort_id: induction_record.school_cohort.cohort,
+                                                             participant_id: induction_record.participant_profile) %>
   <% end %>
 <% elsif fip? %>
   <% if lead_provider %>

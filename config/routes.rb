@@ -630,7 +630,7 @@ Rails.application.routes.draw do
             end
           end
 
-          resources :participants, only: %i[index show destroy] do
+          resources :participants, only: [] do
             collection do
               scope module: :add_participants do
                 wizard_scope :who_to_add, path: "who" do
@@ -651,20 +651,6 @@ Rails.application.routes.draw do
                 end
               end
             end
-
-            constraints(->(_request) { !FeatureFlag.active?(:cohortless_dashboard) }) do
-              get :remove
-              get :edit_name, path: "edit-name"
-              put :update_name, path: "update-name"
-              get :edit_email, path: "edit-email"
-              put :update_email, path: "update-email"
-              get :email_used, path: "email-used"
-              get :edit_mentor, path: "edit-mentor"
-              put :update_mentor, path: "update-mentor"
-              get :add_appropriate_body, path: "add-appropriate-body"
-              get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
-              appropriate_body_selection_routes :participants
-            end
           end
 
           namespace :core_programme, path: "core-programme" do
@@ -680,6 +666,22 @@ Rails.application.routes.draw do
             get :success
 
             appropriate_body_selection_routes :choose_programme
+          end
+        end
+
+        constraints(->(_request) { !FeatureFlag.active?(:cohortless_dashboard) }) do
+          resources :participants, only: %i[index show destroy] do
+            get :remove
+            get :edit_name, path: "edit-name"
+            put :update_name, path: "update-name"
+            get :edit_email, path: "edit-email"
+            put :update_email, path: "update-email"
+            get :email_used, path: "email-used"
+            get :edit_mentor, path: "edit-mentor"
+            put :update_mentor, path: "update-mentor"
+            get :add_appropriate_body, path: "add-appropriate-body"
+            get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
+            appropriate_body_selection_routes :participants
           end
         end
       end

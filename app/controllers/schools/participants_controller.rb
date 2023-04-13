@@ -90,7 +90,11 @@ class Schools::ParticipantsController < Schools::BaseController
                                      mentor_profile: @mentor_form.mentor&.mentor_profile)
 
         flash[:success] = { title: "Success", heading: "The mentor for this participant has been updated" }
-        redirect_to schools_participant_path(id: @profile)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          redirect_to schools_participant_path(id: @profile)
+        else
+          redirect_to schools_cohort_participant_path(id: @profile)
+        end
       end
     else
       render :edit_mentor
@@ -100,8 +104,10 @@ class Schools::ParticipantsController < Schools::BaseController
   def add_appropriate_body
     if can_appropriate_body_be_changed?
       start_appropriate_body_selection
-    else
+    elsif FeatureFlag.active?(:cohortless_dashboard)
       redirect_to schools_participant_path(id: @profile.id)
+    else
+      redirect_to schools_cohort_participant_path(id: @profile.id)
     end
   end
 
@@ -146,7 +152,7 @@ private
 
   def start_appropriate_body_selection
     super action_name: @induction_record.appropriate_body_id.present? ? :change : :add,
-          from_path: schools_participant_path(id: @profile.id),
+          from_path: FeatureFlag.active?(:cohortless_dashboard) ? schools_participant_path(id: @profile.id) : schools_cohort_participant_path(id: @profile.id),
           submit_action: :save_appropriate_body,
           school_name: @profile.user.full_name,
           ask_appointed: false

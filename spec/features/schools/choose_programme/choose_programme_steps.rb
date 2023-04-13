@@ -197,7 +197,12 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_add_ects_link
-    expect(page).to have_link("Add", href: schools_participants_path(cohort_id: @cohort.start_year, school_id: @school))
+    expect(page).to have_link("Add",
+                              href: if FeatureFlag.active?(:cohortless_dashboard)
+                                      schools_participants_path(school_id: @school)
+                                    else
+                                      schools_cohort_participants_path(cohort_id: @cohort.start_year, school_id: @school)
+                                    end)
   end
 
   def and_i_see_training_provider_to_be_confirmed
