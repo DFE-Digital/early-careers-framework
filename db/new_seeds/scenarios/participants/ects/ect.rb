@@ -34,7 +34,7 @@ module NewSeeds
             self
           end
 
-          def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active", preferred_identity: nil)
+          def add_induction_record(induction_programme:, mentor_profile: nil, start_date: 6.months.ago, end_date: nil, induction_status: "active", training_status: "active", preferred_identity: nil, school_transfer: false)
             preferred_identity ||= FactoryBot.create(:seed_participant_identity, user: participant_profile.user)
 
             FactoryBot.create(
@@ -48,6 +48,7 @@ module NewSeeds
               end_date:,
               induction_status:,
               training_status:,
+              school_transfer:,
             )
           end
 
