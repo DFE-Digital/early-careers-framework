@@ -2,9 +2,10 @@
 
 module StatusTags
   class AdminParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil)
+    def initialize(participant_profile:, induction_record: nil, school: nil)
       @participant_profile = participant_profile
       @induction_record = induction_record
+      @school = school
     end
 
     def label
@@ -23,7 +24,7 @@ module StatusTags
 
   private
 
-    attr_reader :participant_profile, :induction_record
+    attr_reader :participant_profile, :induction_record, :school
 
     def translation_scope
       @translation_scope ||= "status_tags.admin_participant_status.#{record_state}"
@@ -33,6 +34,7 @@ module StatusTags
       @record_state ||= DetermineTrainingRecordState.call(
         participant_profile:,
         induction_record:,
+        school:,
       ).record_state
     end
   end
