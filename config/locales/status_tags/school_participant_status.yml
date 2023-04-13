@@ -130,12 +130,12 @@ en:
         description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       leaving:
-        label: "DfE checking eligibility"
-        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       joining:
-        label: "DfE checking eligibility"
-        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       deferred_training:
         label: "DfE checking eligibility"
