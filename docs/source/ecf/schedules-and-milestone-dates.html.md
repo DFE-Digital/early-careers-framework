@@ -39,14 +39,31 @@ Providers should note:
 * Providers must [notify DfE a participant has changed their training schedule] if this is inaccurate for the given participant
 
 
-### Standard schedule dates starting in September
+### Dates for standard schedule starting in September
+
+#### Cohort 2023
+For participants starting their course on or before 31 December 2023, and  who are expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+
+```
+ "schedule_identifier": "ecf-standard-september"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jun 2023     | 31 Dec 2023     | `started`    | 30 Nov 2023      | 
+| Retention Point 1      | 1 Jan 2024     | 31 Mar 2024      | `retained-1`    | 30 Apr 2024     | 
+| Retention Point 2      | 1 Apr 2024     | 31 Jul 2024      | `retained-2`    | 31 Aug 2024     | 
+| Retention Point 3      | 1 Aug 2024     | 31 Dec 2024      | `retained-3`    | 31 Jan 2025      | 
+| Retention Point 4      | 1 Jan 2025     | 31 Mar 2025      | `retained-4`    | 30 Apr 2025     | 
+| Participant Completion      | 1 Apr 2025     | 31 Jul 2025      | `completed`    | 31 Aug 2025      | 
+
 
 #### Cohort 2022
 
-For participants starting their course on or before 30 November 2022, and expected to complete their training over 2 academic years, providers [notify DfE of the schedule](LINK NEEDED): 
+For participants starting their course on or before 30 November 2022, and  who are expected to complete their training over 2 academic years, providers [notify DfE of the schedule](LINK NEEDED): 
 
 ```
- "schedule_identifier": "ecf-standard-january"
+ "schedule_identifier": "ecf-standard-september"
 ```
 
 | Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
@@ -60,32 +77,81 @@ For participants starting their course on or before 30 November 2022, and expect
 
 #### Cohort 2021
 
+For participants starting their course on or before 30 November 2021, and  who are expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+
+```
+ "schedule_identifier": "ecf-standard-september"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Sep 2021    | 30 Nov 2021     | `started`    | 30 Nov 2021      | 
+| Retention Point 1      | 1 Sep 2021     | 31 Jan 2022      | `retained-1`    | 28 Feb 2022      | 
+| Retention Point 2      | 1 Feb 2022     | 30 Apr 2022      | `retained-2`    | 31 May 2022      | 
+| Retention Point 3      | 1 May 2022     | 30 Sep 2022      | `retained-3`    | 31 Oct 2022      | 
+| Retention Point 4      | 1 Oct 2022     | 31 Jan 2023      | `retained-4`    | 28 Feb 2023      | 
+| Participant Completion      | 1 Feb 2023     | 30 Apr 2023      | `completed`    | 31 May 2023      | 
+
+
+### Dates for standard schedule starting in January
+
+#### Cohort 2023
+For participants starting their course on or after [CONFIRM DATE], and  who are expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+
+```
+ "schedule_identifier": "ecf-standard-january"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2024     | 31 Mar 2024      | `started`    | 30 Apr 2024      | 
+| Retention Point 1      | 1 Apr 2024    | 31 Jul 2024      | `retained-1`    | 31 Aug 2024      | 
+| Retention Point 2      | 1 Aug 2024     | 31 Dec 2024      | `retained-2`    | 31 Jan 2025      | 
+| Retention Point 3      | 1 Jan 2025     | 31 Mar 2025      | `retained-3`    | 30 Apr 2025      | 
+| Retention Point 4      | 1 Apr 2025     | 31 Jul 2025      | `retained-4`    | 31 Aug 2025      | 
+| Participant Completion      | 1 Aug 2025     | 31 Dec 2025      | `completed`    | 31 Jan 2026      | 
+
+#### Cohort 2022
+
+For participants starting their course on or before [CONFIRM DATE], and who are expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+
+```
+ "schedule_identifier": "ecf-standard-january"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2023     | 31 Mar 2023      | `started`    | 30 Apr 2023      | 
+| Retention Point 1      | 1 Apr 2023    | 31 Jul 2023      | `retained-1`    | 31 Aug 2023      | 
+| Retention Point 2      | 1 Aug 2023     | 31 Dec 2023      | `retained-2`    | 31 Jan 2024      | 
+| Retention Point 3      | 1 Jan 2024     | 31 Mar 2024      | `retained-3`    | 30 Apr 2024      | 
+| Retention Point 4      | 1 Apr 2024     | 31 Jul 2024      | `retained-4`    | 31 Aug 2024      | 
+| Participant Completion      | 1 Aug 2024     | 31 Dec 2024      | `completed`    | 31 Jan 2025      | 
+
+#### Cohort 2021
+
+For participants starting their course on or before 1 December 2021, and expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+
+```
+ "schedule_identifier": "ecf-standard-january"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Dec 2021     | 31 Jan 2022      | `started`    | 28 Feb 2022      | 
+| Retention Point 1      | 1 Feb 2022     | 30 Apr 2022      | `retained-1`    | 31 May 2022      | 
+| Retention Point 2      | 1 May 2022     | 30 Sep 2022      | `retained-2`    | 31 Oct 2022      | 
+| Retention Point 3      | 1 Oct 2022     | 31 Jan 2023      | `retained-3`    | 28 Feb 2023      | 
+| Retention Point 4      | 1 Feb 2023     | 30 Apr 2023      | `retained-4`    | 31 May 2023      | 
+| Participant Completion      | 1 May 2023     | 31 Oct 2023      | `completed`    | 30 Nov 2023      | 
 
 
 
 
-Participants should be tagged as `ecf-standard-september` if they are starting their course before the **30 November 2021** and are expected to complete their training over two academic years.
 
-| Retention Point                         | Milestone Date      | Payment Made       |
-| --------------------------------------- | ------------------- | ------------------ |
-| Output 1 - Participant Start (20%)      | 30th November 2021  | 30th November 2021 |
-| Output 2 – Retention Point 1 (15%)      | 31st January 2022   | 28th February 2022 |
-| Output 3 – Retention Point 2 (15%)      | 30th April 2022     | 31st May 2022      |
-| Output 4 – Retention Point 3 (15%)      | 30th September 2022 | 31st October 2022  |
-| Output 5 – Retention Point 4 (15%)      | 31st January 2023   | 28th February 2023 |
-| Output 6 – Participant Completion (20%) | 30th April 2023     | 31st May 2023      |
 
-### Standard induction starting in January
-Participants should be tagged as `ecf-standard-january` if they are starting their course on or after **1 December** and are expected to complete their training over 2 years.
 
-| Retention Point                         | Milestone Date      | Payment Made       |
-| --------------------------------------- | ------------------- | ------------------ |
-| Output 1 - Participant Start (20%)      | 31st January 2022   | 28th February 2022 |
-| Output 2 – Retention Point 1 (15%)      | 30th April 2022     | 31st May 2022      |
-| Output 3 – Retention Point 2 (15%)      | 30th September 2022 | 31st October 2022  |
-| Output 4 – Retention Point 3 (15%)      | 31st January 2023   | 28th February 2023 |
-| Output 5 – Retention Point 4 (15%)      | 30th April 2023     | 31st May 2023      |
-| Output 6 – Participant Completion (20%) | 31st October 2023   | 30th November 2023 |
+
 
 ### Standard induction starting in April
 
@@ -99,6 +165,9 @@ Participants should be tagged as `ecf-standard-april` if they are starting their
 | Output 4 – Retention Point 3 (15%)      | 30th April 2023     | 31st May 2023      |
 | Output 5 – Retention Point 4 (15%)      | 31st October 2023   | 30th November 2023 |
 | Output 6 – Participant Completion (20%) | 31st January 2024   | 28th February 2024 |
+
+
+
 
 
 ### Non-standard induction
