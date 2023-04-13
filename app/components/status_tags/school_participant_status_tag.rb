@@ -2,24 +2,10 @@
 
 module StatusTags
   class SchoolParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, school: nil)
-      if school.present? && delivery_partner.present?
-        raise InvalidArgumentError "It is not possible to determine a status for both a school and a delivery partner"
-      end
-
+    def initialize(participant_profile:, induction_record: nil, school: nil)
       @participant_profile = participant_profile
-
-      if delivery_partner.present?
-        @delivery_partner = delivery_partner
-        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
-
-      elsif school.present?
-        @school = school
-        @induction_record = Induction::FindBy.call(participant_profile:, school:)
-
-      else
-        @induction_record = induction_record || participant_profile.induction_records.latest
-      end
+      @school = school
+      @induction_record = induction_record
     end
 
     def label
@@ -38,7 +24,7 @@ module StatusTags
 
   private
 
-    attr_reader :participant_profile, :induction_record
+    attr_reader :participant_profile, :induction_record, :school
 
     def translation_scope
       @translation_scope ||= "status_tags.school_participant_status.#{record_state}"
@@ -52,6 +38,7 @@ module StatusTags
       record_state = DetermineTrainingRecordState.call(
         participant_profile:,
         induction_record:,
+        school:,
       ).record_state
 
       # Schools logic states that we show eligible for CIP participants whether that is correct or not

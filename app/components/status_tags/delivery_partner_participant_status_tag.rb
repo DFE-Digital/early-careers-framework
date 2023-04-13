@@ -2,24 +2,10 @@
 
 module StatusTags
   class DeliveryPartnerParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, delivery_partner: nil, school: nil)
-      if school.present? && delivery_partner.present?
-        raise InvalidArgumentError "It is not possible to determine a status for both a school and a delivery partner"
-      end
-
+    def initialize(participant_profile:, induction_record: nil, delivery_partner: nil)
       @participant_profile = participant_profile
-
-      if delivery_partner.present?
-        @delivery_partner = delivery_partner
-        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
-
-      elsif school.present?
-        @school = school
-        @induction_record = Induction::FindBy.call(participant_profile:, school:)
-
-      else
-        @induction_record = induction_record || participant_profile.induction_records.latest
-      end
+      @delivery_partner = delivery_partner
+      @induction_record = induction_record
     end
 
     def label
@@ -52,6 +38,7 @@ module StatusTags
       @record_state ||= DetermineTrainingRecordState.call(
         participant_profile:,
         induction_record:,
+        delivery_partner:,
       ).record_state
     end
   end

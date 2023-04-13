@@ -27,32 +27,28 @@ private
 
     if participant_profile.ecf?
       unless induction_record.nil? || induction_record.is_a?(InductionRecord)
-        raise ArgumentError, "Expected a InductionRecord, got #{induction_record.class}"
+        raise ArgumentError, "Expected an InductionRecord, got #{induction_record.class}"
       end
 
       unless delivery_partner.nil? || delivery_partner.is_a?(DeliveryPartner)
-        raise ArgumentError, "Expected a InductionRecord, got #{delivery_partner.class}"
+        raise ArgumentError, "Expected a DeliveryPartner, got #{delivery_partner.class}"
       end
 
       unless school.nil? || school.is_a?(School)
-        raise ArgumentError, "Expected a InductionRecord, got #{school.class}"
+        raise ArgumentError, "Expected a School, got #{school.class}"
       end
 
       if delivery_partner.present? && school.present?
         raise InvalidArgumentError "It is not possible to determine a status for both a school and a delivery partner"
       end
 
-      if delivery_partner.present?
-        @delivery_partner = delivery_partner
-        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
-
-      elsif school.present?
-        @school = school
-        @induction_record = Induction::FindBy.call(participant_profile:, delivery_partner:)
-
-      else
-        @induction_record = induction_record || participant_profile.induction_records.latest
-      end
+      @induction_record = if delivery_partner.present?
+                            Induction::FindBy.call(participant_profile:, delivery_partner:)
+                          elsif school.present?
+                            Induction::FindBy.call(participant_profile:, school:)
+                          else
+                            induction_record || participant_profile.induction_records.latest
+                          end
 
       @latest_request_for_details = Email.associated_with(participant_profile)
                                          .tagged_with(:request_for_details)
@@ -156,11 +152,12 @@ private
 
     return :completed_training if completed_training?
 
-    # TODO: if IR is in changed state we need to go get the actual current IR to see who can see what
+    # TODO: This may be incorrect if it is a historical IR
     return :no_longer_involved if changed_training?
 
-    # TODO: if IR is in leaving state we need to figure out which state the leave / join is in
-    return :leaving if leaving_training?
+    return :leaving if is_leaving_school?
+    return :left if has_left_school?
+    return :joining if is_joining_school?
 
     if @participant_profile.mentor?
       if ineligible_previous_participation?
@@ -317,12 +314,12 @@ private
   end
 
   def withdrawn_training?
-    @induction_record.present? ? @induction_record&.training_status_withdrawn? : @participant_profile.training_status_withdrawn?
+    @induction_record.present? ? @induction_record.training_status_withdrawn? : @participant_profile.training_status_withdrawn?
   end
 
   def deferred_training?
     # only use `participant_profile.training_status` if no `induction_record` is present
-    @induction_record.present? ? @induction_record&.training_status_deferred? : @participant_profile.training_status_deferred?
+    @induction_record.present? ? @induction_record.training_status_deferred? : @participant_profile.training_status_deferred?
   end
 
   def withdrawn_participant?
@@ -338,7 +335,15 @@ private
     @induction_record&.changed_induction_status?
   end
 
-  def leaving_training?
-    @induction_record&.leaving_induction_status?
+  def is_leaving_school?
+    @induction_record&.leaving_induction_status? && @induction_record&.end_date.present? && @induction_record&.end_date&.future?
+  end
+
+  def has_left_school?
+    @induction_record&.leaving_induction_status? && @induction_record&.end_date.present? && @induction_record&.end_date&.past?
+  end
+
+  def is_joining_school?
+    @induction_record&.active_induction_status? && @induction_record&.start_date&.future?
   end
 end
