@@ -40,8 +40,8 @@ en:
         description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       no_induction_start:
-        label: "DfE checking eligibility"
-        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
 
       not_allowed:
         label: "Not eligible"
@@ -83,7 +83,11 @@ en:
 
       registered_for_mentor_training:
         label: "Eligible to start"
-        description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
+
+      registered_for_mentor_no_partner:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
 
       previous_participation_ero:
         label: "Eligible to start"

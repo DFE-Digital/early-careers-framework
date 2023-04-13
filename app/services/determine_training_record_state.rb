@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# noinspection RubyTooManyMethodsInspection
-# noinspection RubyInstanceMethodNamingConvention
+# noinspection RubyTooManyMethodsInspection, RubyTooManyInstanceVariablesInspection, RubyInstanceMethodNamingConvention
 class DetermineTrainingRecordState < BaseService
   def call
     OpenStruct.new({
@@ -165,33 +164,48 @@ private
 
     if @participant_profile.mentor?
       if ineligible_previous_participation?
-        return :registered_for_mentor_training_ero_primary if primary_profile?
         return :registered_for_mentor_training_ero_secondary if secondary_profile?
         return :registered_for_mentor_training_ero_duplicate if ineligible_duplicate_profile?
+
+        return :registered_for_mentor_no_partner if on_fip? && no_partnership?
+
+        return :registered_for_mentor_training_ero_primary if primary_profile?
 
         return :registered_for_mentor_training_ero
       end
 
-      return :registered_for_mentor_training_primary if primary_profile?
       return :registered_for_mentor_training_secondary if secondary_profile?
       return :registered_for_mentor_training_duplicate if ineligible_duplicate_profile?
+
+      return :registered_for_mentor_no_partner if on_fip? && no_partnership?
+
+      return :registered_for_mentor_training_primary if primary_profile?
 
       return :registered_for_mentor_training
     end
 
-    return :no_induction_start if manual_check_no_induction?
-    return :active_fip_training if on_fip?
-    return :active_cip_training if on_cip?
+    if on_fip?
+      return :registered_for_fip_no_partner if no_partnership?
+      return :registered_for_fip_training if manual_check_no_induction?
+
+      return :active_fip_training
+    end
+
+    if on_cip?
+      return :registered_for_cip_training if manual_check_no_induction?
+
+      return :active_cip_training
+    end
 
     :active_diy_training
   end
 
   def on_fip?
-    @induction_record&.induction_programme&.full_induction_programme? || @participant_profile.school_cohort&.full_induction_programme?
+    relevant_induction_programme&.full_induction_programme?
   end
 
   def on_cip?
-    @induction_record&.induction_programme&.core_induction_programme? || @participant_profile.school_cohort&.core_induction_programme?
+    relevant_induction_programme&.core_induction_programme?
   end
 
   def primary_profile?
@@ -292,6 +306,14 @@ private
 
   def tra_record_found?
     @participant_profile.teacher_profile&.trn.present?
+  end
+
+  def no_partnership?
+    relevant_induction_programme&.partnership&.lead_provider.nil?
+  end
+
+  def relevant_induction_programme
+    @relevant_induction_programme ||= @induction_record&.induction_programme || @participant_profile.school_cohort&.default_induction_programme
   end
 
   def withdrawn_training?
