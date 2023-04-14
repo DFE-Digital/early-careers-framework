@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::CocStatusTableRow, type: :component do
+RSpec.describe Schools::Participants::CocStatusTableRow, type: :component, with_feature_flags: { cohortless_dashboard: "active" } do
   let!(:school_cohort) { create :school_cohort, :fip }
   let!(:partnership) { create :partnership, school: school_cohort.school, cohort: school_cohort.cohort }
   let(:participant_profile) { create :ect_participant_profile, school_cohort: }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ParticipantStatusTagComponent, type: :component do
+RSpec.describe ParticipantStatusTagComponent, type: :component, with_feature_flags: { cohortless_dashboard: "active" } do
   let!(:participant_profile) { create :ect_participant_profile }
   let(:component) { described_class.new profile: participant_profile }
   subject { page }
