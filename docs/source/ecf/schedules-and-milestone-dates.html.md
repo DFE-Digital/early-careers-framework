@@ -201,6 +201,17 @@ For participants starting their course on or before 1 February 2022, and who are
 | Participant Completion      | 1 Nov 2023     | 31 Jan 2024      | `completed`    | 28 Feb 2024      | 
 
 
+### Validating declarations against milestones
+
+Declarations submitted for participants on standard schedules are subject to milestone validation. 
+
+{inset-text}Note, milestone validation does not apply to any non-standard schedules.{/inset-text}
+
+The API will perform milestone validation to reject a declaration if:
+
+* it is not submitted for the correct milestone. For example, the API will reject a `retained-1` declaration if it is submitted during the `started` milestone period
+* it is submitted before or after the milestone date. For example, an `ecf-standard-september` schedule allows `started` declarations between 19 November to 30 November. A declaration submitted outside of these dates will be rejected, unless its `declaration_date` is backdated accordingly.
+* it corresponds to a participant's [updated schedule](LINK NEEDED), but the participant has previously submitted declarations corresponding to the former schedule (which have not yet been voided).
 
 
 
