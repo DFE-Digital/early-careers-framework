@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Manage FIP partnered participants with no change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe "Manage FIP partnered participants with no change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active", cohortless_dashboard: "active" } do
   include ManageTrainingSteps
 
   context "inactive change of circumstances flag" do
@@ -11,7 +11,7 @@ RSpec.describe "Manage FIP partnered participants with no change of circumstance
   end
 end
 
-RSpec.describe "Manage FIP partnered participants with change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe "Manage FIP partnered participants with change of circumstances", js: true, with_feature_flags: { eligibility_notifications: "active", cohortless_dashboard: "active" } do
   include ManageTrainingSteps
 
   context "active change of circumstances flag" do
