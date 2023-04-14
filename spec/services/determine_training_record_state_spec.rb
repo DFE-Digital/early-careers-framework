@@ -574,7 +574,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "No longer being trained",
                            dp_status_label: "No longer being trained",
                            pp_status_label: "no_longer_being_trained",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are transferring from their current school" do
@@ -606,7 +606,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "Training or eligible for training",
                            dp_status_label: "Training or eligible for training",
                            pp_status_label: "training_or_eligible_for_training",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are joining their current school" do
@@ -1076,7 +1076,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "No longer being trained",
                            dp_status_label: "No longer being trained",
                            pp_status_label: "no_longer_being_trained",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are transferring from their current school" do
@@ -1108,7 +1108,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "Training or eligible for training",
                            dp_status_label: "Training or eligible for training",
                            pp_status_label: "training_or_eligible_for_training",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are joining their current school" do
@@ -1610,7 +1610,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "No longer being trained",
                            dp_status_label: "No longer being trained",
                            pp_status_label: "no_longer_being_trained",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are transferring from their current school" do
@@ -1642,7 +1642,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "Training or eligible for training",
                            dp_status_label: "Training or eligible for training",
                            pp_status_label: "training_or_eligible_for_training",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are joining their current school" do
@@ -2128,7 +2128,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "No longer being trained",
                            dp_status_label: "No longer being trained",
                            pp_status_label: "no_longer_being_trained",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are transferring from their current school" do
@@ -2160,7 +2160,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
                            ab_status_label: "Training or eligible for training",
                            dp_status_label: "Training or eligible for training",
                            pp_status_label: "training_or_eligible_for_training",
-                           school_status_label: "DfE checking eligibility"
+                           school_status_label: "Eligible to start"
         end
 
         context "and they are joining their current school" do
