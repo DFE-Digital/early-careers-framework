@@ -66,7 +66,7 @@ module Schools
       end
 
       def abort_path
-        schools_participants_path
+        FeatureFlag.active?(:cohortless_dashboard) ? school_participants_path : schools_participants_path
       end
 
       def wizard_back_link_path
