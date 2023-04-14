@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 
-RSpec.describe "Add participants", js: true do
+RSpec.describe "Add participants", js: true, with_feature_flags: { cohortless_dashboard: "active" } do
   include ManageTrainingSteps
 
   before do
