@@ -154,5 +154,6 @@ en:
         description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       left:
-        label: "DfE checking eligibility"
-        description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+        
