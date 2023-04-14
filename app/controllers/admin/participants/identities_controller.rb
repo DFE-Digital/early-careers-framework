@@ -5,7 +5,7 @@ module Admin::Participants
     include RetrieveProfile
 
     def show
-      @participant_identities = @participant_profile.user.participant_identities
+      @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
       add_breadcrumb(
         school.name,

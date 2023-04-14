@@ -9,8 +9,7 @@ module Admin::Participants
     before_action :save_and_redirect, except: :validate_details
 
     def show
-      @validation_data = @participant_profile.ecf_participant_validation_data || ECFParticipantValidationData.new(participant_profile: @participant_profile)
-      @eligibility_data = ::EligibilityPresenter.new(@participant_profile.ecf_participant_eligibility)
+      @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
       add_breadcrumb(
         school.name,

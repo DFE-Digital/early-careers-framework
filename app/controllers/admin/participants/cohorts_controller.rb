@@ -3,10 +3,9 @@
 module Admin::Participants
   class CohortsController < Admin::BaseController
     include RetrieveProfile
-    include FindInductionRecords
 
     def show
-      @latest_induction_record = latest_induction_record
+      @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
       add_breadcrumb(
         school.name,
