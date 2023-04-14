@@ -11,4 +11,7 @@ class ParticipantProfileState < ApplicationRecord
   }
 
   scope :most_recent, -> { order("created_at desc").limit(1) }
+  scope :withdrawn, -> { where(state: states[:withdrawn]) }
+  scope :deferred, -> { where(state: states[:deferred]) }
+  scope :for_lead_provider, ->(cpd_lead_provider) { where(cpd_lead_provider:) }
 end

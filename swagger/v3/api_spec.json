@@ -1170,6 +1170,7 @@
                               "training_status": "deferred",
                               "school_urn": "123456",
                               "targeted_delivery_funding_eligibility": true,
+                              "withdrawal": null,
                               "deferral": {
                                 "reason": "other",
                                 "date": "2022-12-09T16:07:38Z"
@@ -1305,6 +1306,7 @@
                                 "reason": "insufficient-capacity",
                                 "date": "2022-12-09T16:07:38Z"
                               },
+                              "deferral": null,
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
                           ]

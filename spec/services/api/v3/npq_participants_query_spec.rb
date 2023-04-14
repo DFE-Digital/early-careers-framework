@@ -42,4 +42,28 @@ RSpec.describe Api::V3::NPQParticipantsQuery, :with_default_schedules do
       end
     end
   end
+
+  describe "#participant" do
+    context "with correct params" do
+      let(:params) { { id: participant_profile.user_id } }
+
+      it "returns a specific participant" do
+        expect(subject.participant).to eq(user)
+      end
+    end
+
+    context "with incorrect params" do
+      let(:params) { { id: SecureRandom.uuid } }
+
+      it "returns no participant" do
+        expect { subject.participant }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "with no params" do
+      it "returns no participant" do
+        expect { subject.participant }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 end

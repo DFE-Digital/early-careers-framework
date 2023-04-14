@@ -34,6 +34,8 @@ module Api
                 training_status: profile.training_status,
                 school_urn: profile.school_urn,
                 targeted_delivery_funding_eligibility: profile.npq_application.targeted_delivery_funding_eligibility,
+                withdrawal: nil,
+                deferral: nil,
                 created_at: profile.created_at.rfc3339,
               }],
             },
@@ -64,12 +66,6 @@ module Api
                 date: profile.participant_profile_state.created_at.rfc3339,
               })
             end
-
-            it "does not include a deferral object" do
-              result = subject.serializable_hash
-
-              expect(result[:data][0][:attributes][:npq_enrolments][0][:deferral]).to be_nil
-            end
           end
 
           context "when the profile is deferred" do
@@ -83,24 +79,6 @@ module Api
                 date: profile.participant_profile_state.created_at.rfc3339,
               })
             end
-
-            it "does not include a withdrawal object" do
-              result = subject.serializable_hash
-
-              expect(result[:data][0][:attributes][:npq_enrolments][0][:withdrawal]).to be_nil
-            end
-          end
-
-          it "does not include a withdrawal object" do
-            result = subject.serializable_hash
-
-            expect(result[:data][0][:attributes][:npq_enrolments][0][:withdrawal]).to be_nil
-          end
-
-          it "does not include a deferral object" do
-            result = subject.serializable_hash
-
-            expect(result[:data][0][:attributes][:npq_enrolments][0][:deferral]).to be_nil
           end
         end
       end

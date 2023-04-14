@@ -9,30 +9,28 @@ module Api
       include JSONAPI::Serializer::Instrumentation
 
       class << self
-        def withdrawal(hash:, profile:, cpd_lead_provider:)
+        def withdrawal(profile:, cpd_lead_provider:)
           if profile.withdrawn_for?(cpd_lead_provider:)
-            latest_participant_profile_state = profile.participant_profile_states.where(state: ParticipantProfileState.states[:withdrawn], cpd_lead_provider:).order(created_at: :desc).first
+            latest_participant_profile_state = profile.participant_profile_states.withdrawn.for_lead_provider(cpd_lead_provider).most_recent.first
             if latest_participant_profile_state.present?
-              hash[:withdrawal] = {
+              {
                 reason: latest_participant_profile_state.reason,
                 date: latest_participant_profile_state.created_at.rfc3339,
               }
             end
           end
-          hash
         end
 
-        def deferral(hash:, profile:, cpd_lead_provider:)
+        def deferral(profile:, cpd_lead_provider:)
           if profile.deferred_for?(cpd_lead_provider:)
-            latest_participant_profile_state = profile.participant_profile_states.where(state: ParticipantProfileState.states[:deferred], cpd_lead_provider:).order(created_at: :desc).first
+            latest_participant_profile_state = profile.participant_profile_states.deferred.for_lead_provider(cpd_lead_provider).most_recent.first
             if latest_participant_profile_state.present?
-              hash[:deferral] = {
+              {
                 reason: latest_participant_profile_state.reason,
                 date: latest_participant_profile_state.created_at.rfc3339,
               }
             end
           end
-          hash
         end
       end
 
@@ -50,16 +48,10 @@ module Api
       end
 
       attribute(:npq_enrolments) do |object, params|
-        scope = object.npq_profiles
-        scope = scope.includes(:npq_course, :npq_application, :participant_identity, schedule: [:cohort])
+        object.npq_profiles.map { |profile|
+          next unless params[:cpd_lead_provider] && profile.npq_application&.npq_lead_provider&.cpd_lead_provider == params[:cpd_lead_provider]
 
-        if params[:cpd_lead_provider]
-          scope = scope.joins(npq_application: { npq_lead_provider: [:cpd_lead_provider] })
-          scope = scope.where(npq_applications: { npq_lead_providers: { cpd_lead_provider: params[:cpd_lead_provider] } })
-        end
-
-        scope.map do |profile|
-          hash = {
+          {
             email: profile.participant_identity&.email.presence || object.email,
             course_identifier: profile.npq_course.identifier,
             schedule_identifier: profile.schedule.schedule_identifier,
@@ -69,12 +61,11 @@ module Api
             training_status: profile.training_status,
             school_urn: profile.school_urn,
             targeted_delivery_funding_eligibility: profile.npq_application.targeted_delivery_funding_eligibility,
+            withdrawal: withdrawal(profile:, cpd_lead_provider: params[:cpd_lead_provider]),
+            deferral: deferral(profile:, cpd_lead_provider: params[:cpd_lead_provider]),
+            created_at: profile.created_at.rfc3339,
           }
-          hash = withdrawal(hash:, profile:, cpd_lead_provider: params[:cpd_lead_provider])
-          hash = deferral(hash:, profile:, cpd_lead_provider: params[:cpd_lead_provider])
-          hash[:created_at] = profile.created_at.rfc3339
-          hash
-        end
+        }.compact
       end
     end
   end

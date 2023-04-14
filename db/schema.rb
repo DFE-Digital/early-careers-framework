@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_28_155851) do
+ActiveRecord::Schema.define(version: 2023_04_14_123726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -716,6 +716,8 @@ ActiveRecord::Schema.define(version: 2023_03_28_155851) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cpd_lead_provider_id"
     t.index ["cpd_lead_provider_id"], name: "index_participant_profile_states_on_cpd_lead_provider_id"
+    t.index ["participant_profile_id", "cpd_lead_provider_id"], name: "index_on_profile_and_lead_provider"
+    t.index ["participant_profile_id", "state", "cpd_lead_provider_id"], name: "index_on_profile_and_state_and_lead_provider"
     t.index ["participant_profile_id"], name: "index_participant_profile_states_on_participant_profile_id"
   end
 
