@@ -1,7 +1,13 @@
 <% content_for :title, "Confirm you want to remove #{@profile.user.full_name}" %>
 
-<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
+<% content_for :before_content, govuk_back_link( text: "Back",
+                                                 href: FeatureFlag.active?(:cohortless_dashboard) ?
+                                                         school_participant_path(id: @profile) :
+                                                         schools_participant_path(id: @profile)) %>
 
+<% unless FeatureFlag.active?(:cohortless_dashboard) %>
+  <span class="govuk-caption-xl"><%= @cohort.display_name %></span>
+<% end %>
 <h1 class="govuk-heading-xl">Confirm you want to remove <%= @profile.user.full_name %></h1>
 
 <div class="govuk-grid-row">
@@ -11,6 +17,10 @@
       <li>their information will be removed from this service</li>
       <li>they will not be able to access the training programme</li>
     </ul>
-    <%= govuk_button_to "Confirm and remove", schools_participant_path(id: @profile), method: :delete %>
+    <%= govuk_button_to "Confirm and remove",
+                        FeatureFlag.active?(:cohortless_dashboard) ?
+                          school_participant_path(id: @profile) :
+                          schools_participant_path(id: @profile),
+                        method: :delete %>
   </div>
 </div>
