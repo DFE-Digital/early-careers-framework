@@ -422,7 +422,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-Note, providers should store the returned ECF participant declaration ID for management tasks.
+{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
 
 ### Submit a declaration to notify DfE a participant has completed training
 
@@ -483,7 +483,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-Note, providers should store the returned ECF participant declaration ID for future management tasks.
+{inset-text}Note, providers should store the returned ECF participant declaration ID for future management tasks.{/inset-text}
 
 ### View all previously submitted declarations 
 
@@ -608,7 +608,6 @@ Successful requests will return a response body including updates. An example re
 
 For more detailed information see the specifications for this [void declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-void-put)
 
-
 #### Example response body:
 
 ```
@@ -638,15 +637,18 @@ For more detailed information see the specifications for this [void declarations
 
 ## How to view, submit and update partnerships with schools and delivery partners
 
+The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
+
 Providers must notify DfE to confirm they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
 
+{inset-text}
 Providers should note: 
 
-* Once a partnership for a given cohort is confirmed, it will enable default training provision to participants who are registered for training at that school. For example, a given participant registered in the 2022 cohort to X school, to receive training from Y provider with support from Z delivery partner. 
+* Once a partnership for a given cohort is confirmed, it will enable default training provided to participants who are registered for training at that school. For example, a provider confirms partnership for the 2022 cohort with school and delivery partner. Any participants that are registered (by the induction tutor) will default to training with the provider.
 * Not all participants at a given school need to be registered to the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. For example, if a participant who has begun training with A provider and B delivery partner transfers to a new school which is partnered with Y provider and Z delivery partner, the participant can choose to remain with their existing training providers (A and B). In this case, Y provider will not receive data for this participant. 
 * Providers may receive data for participants at schools where they do not have a confirmed partnership. For example, a X participant begins training at school 1 which is partnered with Y provider and Z delivery partner, and then transfers to school 2. They choose to remain with their existing training providers (Y and Z). Therefore Y provider will continue to receive data for X participant, despite not being partnered with school 2. 
+{/inset-text}
 
-The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
 
 ### Confirm a partnership with a school and delivery partner
 
@@ -795,7 +797,7 @@ Request bodies must include a new value for the `delivery_partner_id` attribute.
 
 An example request body is listed below.
 
-Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](LINK NEEDED). 
+{inset-text}Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](LINK NEEDED).{/inset-text}
 
 Successful requests will return a response body with updates included. 
 
