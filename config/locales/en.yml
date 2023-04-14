@@ -470,6 +470,17 @@ en:
               blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
               invalid: "The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations."
               no_relationship: "The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
+              duplicate_delivery_partner: "We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
+        partnerships/update:
+          attributes:
+            partnership:
+              blank: "The attribute '#/partnership' must be included as part of partnership confirmations."
+            delivery_partner_id:
+              blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
+              invalid: "The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations."
+              no_relationship: "The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
+              partnership_challenged: "Your update cannot be made as this partnership has been challenged by the school. If this partnership has been challenged in error, you can submit a new confirmation of partnership using the endpoint POST /api/v3/partnerships/ecf."
+              duplicate_delivery_partner: "We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
 
   page_titles:
     lead_providers:

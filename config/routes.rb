@@ -153,7 +153,7 @@ Rails.application.routes.draw do
     namespace :v3, constraints: ->(_request) { FeatureFlag.active?(:api_v3) } do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
-      resources :partnerships, path: "partnerships/ecf", only: %i[show index create], controller: "ecf/partnerships"
+      resources :partnerships, path: "partnerships/ecf", only: %i[show index create update], controller: "ecf/partnerships"
       resources :npq_participants, only: [], path: "participants/npq" do
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
