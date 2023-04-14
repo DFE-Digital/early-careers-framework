@@ -606,7 +606,13 @@ Rails.application.routes.draw do
           get "/", to: "setup#show", as: :start, step: :what_we_need
         end
       end
+    end
+  end
 
+  namespace :schools do
+    resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
+
+    scope "/:school_id" do
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice

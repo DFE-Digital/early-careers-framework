@@ -11,6 +11,8 @@
     <% if @profile.mentor? %>
       <p>Remember to assign this person’s ECT(s) to another mentor.</p>
     <% end %>
-    <%= govuk_link_to "Return to manage mentors and ECTs", { action: :index }, class: "govuk-link--no-visited-state" %>
+    <%= govuk_link_to FeatureFlag.active?(:cohortless_dashboard) ? "Return to manage mentors and ECTs" : "Return to your ECTs and mentors",
+                      { action: :index },
+                      class: "govuk-link--no-visited-state" %>
   </div>
 </div>
