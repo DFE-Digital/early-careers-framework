@@ -8,9 +8,9 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
-    <p class="govuk-body"><%= @wizard.possessive_name %> induction will not start until the 2023 academic year.</p>
+    <p class="govuk-body"><%= @wizard.possessive_name %> induction will not start until the <%= Cohort.next.start_year %> academic year.</p>
     <p class="govuk-body">Our service is not yet open for registrations.</p>
 
-    <%= govuk_link_to "Return to your ECTs and mentors", schools_participants_path, no_visited_state: true %>
+    <%= govuk_link_to "Return to your ECTs and mentors", schools_dashboard_path, no_visited_state: true %>
   </div>
 </div>

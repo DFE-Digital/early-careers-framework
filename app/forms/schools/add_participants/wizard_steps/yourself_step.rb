@@ -20,9 +20,9 @@ module Schools
           :abort
         end
 
-        def before_render
-          wizard.reset_form
-        end
+        # def before_render
+        #   wizard.reset_form
+        # end
 
         def before_save
           @participant_type = "self"

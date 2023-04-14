@@ -5,7 +5,7 @@ module Schools
     module WizardSteps
       class CannotAddRegistrationNotYetOpenStep < CannotAddStep
         def previous_step
-          :start_date
+          :start_term
         end
       end
     end

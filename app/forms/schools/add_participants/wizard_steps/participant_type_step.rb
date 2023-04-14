@@ -22,9 +22,9 @@ module Schools
           :abort
         end
 
-        def before_render
-          wizard.reset_form
-        end
+        # def before_render
+        #   wizard.reset_form
+        # end
       end
     end
   end

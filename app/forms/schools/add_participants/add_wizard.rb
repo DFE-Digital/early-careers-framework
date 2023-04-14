@@ -8,6 +8,7 @@ module Schools
           email
           email_already_taken
           start_date
+          start_term
           cannot_add_registration_not_yet_open
           choose_mentor
           confirm_appropriate_body
@@ -40,13 +41,16 @@ module Schools
       end
 
       def previous_step_path
-        back_step = form.previous_step
+        # back_step = form.previous_step
+        back_step = last_visited_step
+        return abort_path if back_step.nil?
 
         if changing_answer? || back_step != :date_of_birth
           super
         elsif FeatureFlag.active? :cohortless_dashboard
-          # return to previous wizard
+          # raise "back step mismatch" if last_visited_step.present? && last_visited_step != back_step
           schools_who_to_add_show_path(**path_options(step: back_step))
+        # return to previous wizard
         else
           show_schools_who_to_add_participants_path(**path_options(step: back_step))
         end
@@ -84,6 +88,11 @@ module Schools
       ## ECT journey
       def needs_to_choose_a_mentor?
         ect_participant? && mentor_id.blank? && mentor_options.any?
+      end
+
+      def needs_to_confirm_start_term?
+        # FIXME: just testing
+        true
       end
 
     private

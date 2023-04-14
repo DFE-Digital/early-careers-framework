@@ -24,8 +24,10 @@ module Schools
           if wizard.ect_participant?
             if wizard.mentor_options.any?
               :choose_mentor
+            elsif wizard.needs_to_confirm_start_term?
+              :start_term
             else
-              :start_date
+              :email
             end
           else
             :email

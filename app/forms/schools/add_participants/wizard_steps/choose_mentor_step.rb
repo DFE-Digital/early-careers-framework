@@ -29,10 +29,10 @@ module Schools
         end
 
         def previous_step
-          if wizard.transfer?
-            :email
+          if !wizard.transfer? && wizard.needs_to_confirm_start_term?
+            :start_term
           else
-            :start_date
+            :email
           end
         end
       end

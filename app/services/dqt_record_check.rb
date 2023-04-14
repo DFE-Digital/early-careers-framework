@@ -117,8 +117,8 @@ private
     ]
   end
 
-  def magic_dqt_record
-    DqtRecordPresenter.new({
+  def magic_dqt_record(with_induction: true)
+    record = {
       "trn" => trn,
       "name" => full_name,
       "dob" => date_of_birth,
@@ -128,10 +128,14 @@ private
       "qualified_teacher_status" => {
         "qts_date" => 2.years.ago,
       },
-      "induction" => {
+    }
+
+    if with_induction
+      record.merge!("induction" => {
         "start_date" => 1.month.ago,
         "status" => "In Progress",
-      },
-    })
+      })
+    end
+    DqtRecordPresenter.new(record)
   end
 end

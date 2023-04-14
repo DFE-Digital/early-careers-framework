@@ -68,6 +68,7 @@ module Schools
                                      school_cohort: @school_cohort)
 
           @wizard.changing_answer(params["changing_answer"] == "1")
+          @wizard.update_history
         else
           @wizard = wizard_class.new(current_step: step_name,
                                      data_store:,
@@ -89,6 +90,7 @@ module Schools
                                      school: @school)
 
           @wizard.changing_answer(params["changing_answer"] == "1")
+          @wizard.update_history
         else
           @wizard = wizard_class.new(current_step: step_name,
                                      data_store:,
@@ -103,7 +105,7 @@ module Schools
       end
 
       def abort_path
-        schools_participants_path
+        schools_dashboard_path(school_id: @school.slug)
       end
 
       def wizard_back_link_path
