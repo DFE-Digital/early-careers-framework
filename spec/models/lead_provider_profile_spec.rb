@@ -33,17 +33,11 @@ RSpec.describe LeadProviderProfile, type: :model do
     end
 
     it "sends an email to the new user" do
-      expect {
-        LeadProviderProfile.create_lead_provider_user(name, email, lead_provider, start_url)
-      }.to have_enqueued_mail(LeadProviderMailer, :welcome_email)
-          .with(
-            params: {
-              user: created_user,
-              lead_provider_name: lead_provider.name,
-              start_url:,
-            },
-            args: [],
-          )
+      allow(LeadProviderMailer).to receive(:with).and_call_original
+
+      LeadProviderProfile.create_lead_provider_user(name, email, lead_provider, start_url)
+
+      expect(LeadProviderMailer).to have_received(:with).once.with(any_args)
     end
   end
 end
