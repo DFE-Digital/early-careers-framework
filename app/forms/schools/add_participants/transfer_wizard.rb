@@ -82,7 +82,11 @@ module Schools
       end
 
       def abandon_path
-        schools_participants_path
+        if FeatureFlag.active?(:cohortless_dashboard)
+          school_participants_path
+        else
+          schools_participants_path
+        end
       end
 
       def change_path_for(step:)

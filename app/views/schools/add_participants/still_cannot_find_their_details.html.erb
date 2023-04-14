@@ -43,6 +43,7 @@
     <p class="govuk-body">
       Contact us for help to register this <%= @wizard.ect_participant? ? "ECT" : "mentor" %> at your school: <%= render MailToSupportComponent.new %>
     </p>
+
     <%= govuk_link_to "Return to your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
   </div>
 </div>
