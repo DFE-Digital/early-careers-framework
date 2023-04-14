@@ -540,11 +540,9 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :schools do
-    resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
-
-    scope "/:school_id" do
-      resources :participants, only: %i[index show destroy] do
+  resources :schools, only: [] do
+    constraints(->(_request) { FeatureFlag.active?(:cohortless_dashboard) }) do
+      resources :participants, only: %i[index show destroy], module: :schools do
         get :remove
         get :edit_name, path: "edit-name"
         put :update_name, path: "update-name"
@@ -568,7 +566,13 @@ Rails.application.routes.draw do
           end
         end
       end
+    end
+  end
 
+  namespace :schools do
+    resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
+
+    scope "/:school_id" do
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice
@@ -620,7 +624,18 @@ Rails.application.routes.draw do
             get "complete", to: "setup_school_cohort#complete"
           end
 
-          resources :participants, only: %i[index show destroy] do
+          constraints(->(_request) { !FeatureFlag.active?(:cohortless_dashboard) }) do
+            resources :transfer_out_participant, path: "transfer-out", only: [] do
+              get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
+              get "teacher-end-date", to: "transfer_out#teacher_end_date", as: :teacher_end_date
+              put "teacher-end-date", to: "transfer_out#teacher_end_date"
+              get "check-answers", to: "transfer_out#check_answers", as: :check_answers
+              put "check-answers", to: "transfer_out#check_answers"
+              get "complete", to: "transfer_out#complete", as: :complete
+            end
+          end
+
+          resources :participants, only: [] do
             collection do
               scope module: :add_participants do
                 wizard_scope :who_to_add, path: "who" do
@@ -640,6 +655,22 @@ Rails.application.routes.draw do
                   get :change_appropriate_body, path: "change-appropriate-body", controller: :add
                 end
               end
+            end
+          end
+
+          constraints(->(_request) { !FeatureFlag.active?(:cohortless_dashboard) }) do
+            resources :participants, only: %i[index show destroy] do
+              get :remove
+              get :edit_name, path: "edit-name"
+              put :update_name, path: "update-name"
+              get :edit_email, path: "edit-email"
+              put :update_email, path: "update-email"
+              get :email_used, path: "email-used"
+              get :edit_mentor, path: "edit-mentor"
+              put :update_mentor, path: "update-mentor"
+              get :add_appropriate_body, path: "add-appropriate-body"
+              get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
+              appropriate_body_selection_routes :participants
             end
           end
 

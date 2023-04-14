@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Schools::Participants::Status, type: :component, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe Schools::Participants::Status, type: :component, with_feature_flags: { eligibility_notifications: "active", cohortless_dashboard: "active" } do
   let(:induction_record) { create(:induction_record, participant_profile:) }
   let(:component) { described_class.new(induction_record:) }
 

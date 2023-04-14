@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", :with_default_schedules, type: :feature, js: true, rutabaga: false do
+RSpec.describe "transferring participants", :with_default_schedules, type: :feature, js: true, rutabaga: false, with_feature_flags: { cohortless_dashboard: "active" } do
   context "Transferring an ECT to a school" do
     context "ECT has matching lead provider and delivery partner" do
       before do

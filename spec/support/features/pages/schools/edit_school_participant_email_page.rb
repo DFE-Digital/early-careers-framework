@@ -4,7 +4,14 @@ require_relative "../base_page"
 
 module Pages
   class EditSchoolParticipantEmailPage < ::Pages::BasePage
-    set_url "/schools/{slug}/participants/{participant_id}/edit-email"
+    # Uncomment this line when FeatureFlag.active?(:cohortless_dashboard) gets removed and its code merged
+    #   set_url "/schools/{slug}/participants/{participant_id}/edit-email"
+
+    # Replace this line with
+    #   set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/edit-email"
+    # if FeatureFlag.active?(:cohortless_dashboard) gets removed and its code removed (i.e. no cohortless in the service)
+    set_url_matcher(/schools\/([^\/]+)(\/cohorts\/([^\/]+))?\/participants\/([^\/]+)\/edit-email/)
+
     set_primary_heading(/\AWhat’s (.*)’s correct email address\?\z/)
 
     def confirm_the_participant(name:)
