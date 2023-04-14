@@ -169,6 +169,18 @@ module Participants
       )
     end
 
+    def update_induction_start_date()
+      return if dqt_response.nil?
+
+      # validation_data = participant_profile.ecf_participant_validation_data
+      # return if validation_data.nil?
+
+      induction_start_date = dqt_response&.dqt_record&.induction_start_date
+      return if induction_start_date.nil?
+
+      participant_profile.update!(induction_start_date:)
+    end
+
     def store_analytics!
       Analytics::RecordValidationJob.perform_later(
         participant_profile:,
@@ -195,6 +207,7 @@ module Participants
     def call(save_validation_data_without_match: true)
       check_eligibility!
       store_validation_result!(save_validation_data_without_match:)
+      update_induction_start_date
     end
   end
 end
