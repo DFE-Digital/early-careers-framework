@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "SIT removing participants from the cohort", js: true, with_feature_flags: { eligibility_notifications: "active" } do
+RSpec.describe "SIT removing participants from the cohort", js: true, with_feature_flags: { eligibility_notifications: "active", cohortless_dashboard: "active" } do
   let(:sit_profile) { create(:induction_coordinator_profile, schools: [school_cohort.school]) }
   let(:school_cohort) { create(:school_cohort, induction_programme_choice: "full_induction_programme") }
   let(:mentor_user) { create :user, :teacher, full_name: "John Doe", email: "john-doe@example.com" }
@@ -28,7 +28,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
     click_on "Sign out"
 
     sign_in_as sit_profile.user
-    visit schools_participants_path(school_cohort.school)
+    visit school_participants_path(school_cohort.school)
     click_on mentor_profile.user.full_name
     click_on "Remove #{mentor_profile.user.full_name}"
 
@@ -52,7 +52,7 @@ RSpec.describe "SIT removing participants from the cohort", js: true, with_featu
 
   scenario "removing ineligible participant" do
     sign_in_as sit_profile.user
-    visit schools_participants_path(school_cohort.school)
+    visit school_participants_path(school_cohort.school)
 
     click_on ineligible_user.full_name
     click_on "Remove #{ineligible_user.full_name}"

@@ -6,7 +6,7 @@ Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
   require scenario
 end
 
-RSpec.describe "transfer out participants", :with_default_schedules, type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
+RSpec.describe "transfer out participants", :with_default_schedules, type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21), with_feature_flags: { cohortless_dashboard: "active" } do
   context "Transfer out an ECT" do
     before do
       allow_participant_transfer_mailers
