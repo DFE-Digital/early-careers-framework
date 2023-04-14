@@ -1,4 +1,7 @@
-<% content_for :before_content, govuk_back_link( text: "Back", href: schools_participant_path(id: @profile)) %>
+<% content_for :before_content, govuk_back_link(text: "Back",
+                                                href: FeatureFlag.active?(:cohortless_dashboard) ?
+                                                        school_participant_path(id: @profile) :
+                                                        schools_participant_path(id: @profile)) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
@@ -6,7 +9,9 @@
 
     <%= form_with model: @induction_record.preferred_identity,
                   scope: '',
-                  url: schools_participant_update_email_path,
+                  url: FeatureFlag.active?(:cohortless_dashboard) ?
+                         school_participant_update_email_path :
+                         schools_participant_update_email_path,
                   method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :email,
