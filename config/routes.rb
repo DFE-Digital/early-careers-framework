@@ -341,7 +341,7 @@ Rails.application.routes.draw do
     end
 
     resources :notes, only: %i[edit update]
-    resource :impersonate, only: %i[show create destroy]
+    resource :impersonate, only: %i[create destroy]
 
     namespace :gias do
       resources :home, only: :index, path: "/"
