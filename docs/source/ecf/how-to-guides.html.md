@@ -6,8 +6,7 @@ title: How to guides
 
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](LINK NEEDED) is not detailed.
 
-This guidance is API version-generic, and therefore all endpoints include reference to  
-`v{n}`. Providers should amend this according to the API version their systems are integrated with, for example `v2`. 
+{inset-text}This guidance is writen for API v3, and therefore all endpoints reference `v3`. Providers should amend this according to the API version their systems are integrated with where appropriate. For example `v2`.{/inset-text}
 
 ## When to use the API throughout a participant’s training
 
@@ -230,12 +229,14 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
+{inset-text}
 #### Providers should note: 
 
 * The API will not allow withdrawals for participants who have not had a started declaration submitted against them. If a participant withdraws before a started declaration has been submitted, providers should inform their contract manager who can advise
 * DfE will only pay for participants who have had, at a minimum, a started declaration submitted against them
 * If a participant is withdrawn later in their training, DfE will pay providers for any declarations submitted where the declaration_date is before the date of the withdrawal
-* The amount DfE will pay depends on which milestones have been reached and declarations submitted before the participant withdraws. [View ECF schedules and milestone dates](LINK NEEDED) 
+* The amount DfE will pay depends on which milestones have been reached and declarations submitted before the participant withdraws. [View ECF schedules and milestone dates](LINK NEEDED)
+{/inset-text}
 
 ### Notify DfE a participant has changed their training schedule
 
@@ -266,6 +267,8 @@ For more detailed information see the specifications for this [notify that an EC
 }
 ```
 
+
+{inset-text}
 #### Providers should note: 
 
 Milestone validation applies. The API will reject a schedule change request if any previously submitted declarations (`eligible`, `payable` or `paid`) have a `declaration_date` which does not align with the new schedule’s milestone dates. 
@@ -275,13 +278,12 @@ Where this occurs, providers should:
 1. void the existing declarations (where declaration_date does not align with the new schedule)
 2. change the participant’s training schedule 
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
-
+{/inset-text}
 
 ## How to submit, view and void declarations
 
 Providers must submit declarations in line with ECF contractual [schedules and milestone dates](LINK NEEDED). These declarations will trigger payment from DfE to providers. 
 
-Providers must submit declarations in line with ECF contractual [schedules and milestone dates](LINK NEEDED). These declarations will trigger payment from DfE to providers. 
 ### Test the ability to submit declarations in sandbox ahead of time 
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
@@ -358,7 +360,7 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-Note, providers should store the returned ECF participant declaration ID for management tasks.
+{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
 
 ### Submit a declation to notify DfE a participant has been retained in training
 

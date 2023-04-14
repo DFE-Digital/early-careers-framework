@@ -28,7 +28,7 @@ If the API changes in a way that is backwards-incompatible, a new version of the
 
 When the DfE publishes a new API version, only one previous version will remain supported. For example, when a `v4` is released then `v2` will be discontinued.
 
-Note, there will be an exception to this rule for API `v3`. DfE will support `v1` for an extended period whilst working with providers on transition plans.
+{inset-text}Note, there will be an exception to this rule for API `v3`. DfE will support `v1` for an extended period whilst working with providers on transition plans.{/inset-text}
 
 When non-breaking updates (sometimes referred to as backwards compatible updates) are made to the API, it will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
 

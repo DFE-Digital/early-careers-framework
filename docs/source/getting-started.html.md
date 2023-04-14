@@ -44,14 +44,17 @@ The production environment is the live environment which processes real data.
 Do not perform testing in the production environment as real participant and payment data may be affected.
 
 ```
+API v1: 
 https://manage-training-for-early-career-teachers.education.gov.uk/api/v1
 ```
 
 ```
+API v2:
 https://manage-training-for-early-career-teachers.education.gov.uk/api/v2
 ```
 
 ```
+API v3: 
 https://manage-training-for-early-career-teachers.education.gov.uk/api/v3
 ```
 
@@ -77,7 +80,7 @@ API v3:
 https://ecf-sandbox.london.cloudapps.digital/api/v3
 ```
 
-Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf) and [NPQ](/api-reference/npq). 
+{inset-text}Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf) and [NPQ](/api-reference/npq).{/inset-text}
 
 ## Rate limits
 

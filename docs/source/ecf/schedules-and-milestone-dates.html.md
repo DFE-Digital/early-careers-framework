@@ -24,6 +24,8 @@ Providers must [submit declarations](LINK NEEDED) ahead of milestone dates (dead
 | Milestone period    | The period of time between the milestone start date and deadline date       |
 | Output payment    | The sum of money paid by DfE to providers per valid declaration     |
 | Payment date    | The date the DfE will make payment for valid declarations submitted by providers for a given milestone     |
+| Milestone validation    | The API's process to validate declarations submitted by providers for participants in standard training schedules        |
+
 
 ## Standard training schedules and dates
 
@@ -245,3 +247,6 @@ For mentors that are replacing a mentor for an ECT that is part way through thei
 Where a mentor is already mentoring an ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
 
 The DfE expects that a replacement mentor's training, and therefore any declarations a provider submits for them, will align with the ECT they are mentoring. Say a replacement mentor begins mentoring an ECT part way through the ECT’s induction. The provider has already submitted a start declaration for the previous mentor. Now, the provider makes a retention-1 declaration for the ECT. The department would expect that any declaration made for the replacement mentor in the same milestone period as that made for the ECT would also be a retention-1 declaration.
+
+
+
