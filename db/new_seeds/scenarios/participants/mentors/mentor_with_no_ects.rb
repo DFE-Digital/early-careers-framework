@@ -17,12 +17,13 @@ module NewSeeds
           def build(teacher_profile_args: {}, **profile_args)
             school = school_cohort.school
             @user = @supplied_participant_identity&.user || FactoryBot.create(:seed_user, **new_user_attributes)
+            @teacher_profile = FactoryBot.create(:seed_teacher_profile, user:, school: school_cohort.school, **teacher_profile_args)
             @participant_identity = @supplied_participant_identity || FactoryBot.create(:seed_participant_identity, user:)
 
             @participant_profile = FactoryBot.create(:seed_mentor_participant_profile,
                                                      participant_identity:,
-                                                     school_cohort:,
                                                      teacher_profile:,
+                                                     school_cohort:,
                                                      **profile_args)
 
             preferred_identity = participant_profile.participant_identity
