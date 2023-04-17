@@ -1,5 +1,6 @@
 ---
 title: Definitions and states
+weight: 1
 ---
 
 # Definitions and states
