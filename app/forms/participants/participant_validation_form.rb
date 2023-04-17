@@ -170,7 +170,7 @@ module Participants
     end
 
     def change_participant_cohort_and_induction_start_date!
-      dqt_induction_start_date = dqt_response&.induction_start_date
+      dqt_induction_start_date = dqt_response[:induction_start_date]
       return false if dqt_induction_start_date.nil?
 
       return false if participant_profile.induction_start_date.present?
