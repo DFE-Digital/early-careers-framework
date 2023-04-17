@@ -168,7 +168,7 @@ group :test do
   gem "capybara", "~> 3.39"
   gem "jsonapi-rspec"
   gem "launchy"
-  gem "pundit-matchers", "~> 1.8.4"
+  gem "pundit-matchers", "~> 1.9.0"
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"
   gem "selenium-webdriver"
