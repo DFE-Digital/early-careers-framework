@@ -247,7 +247,7 @@ Providers should note:
 
 ### Extended schedules
 
-While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF call-off contracts. 
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance. 
 
 Contact ECF contract managers via email for more information on exact dates.
 
@@ -267,7 +267,7 @@ For participants who expect to complete their ECF-based training in more than 2 
 
 ### Reduced schedules
 
-While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF call-off contracts. 
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance. 
 
 Contact ECF contract managers via email for more information on exact dates.
 
@@ -287,11 +287,11 @@ For participants who expect to complete their ECF-based training in less than 2 
 
 ### Replacement schedules 
 
-While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF call-off contracts. 
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF contract payment guidance. 
 
 Contact ECF contract managers via email for more information on exact dates.
 
-Mentors that are not already training ECTs and are replacing a mentor must be [confirmed by providers onto one of the following replacement schedules](LINK NEEDED). 
+Mentors that are not already training ECTs and are replacing a mentor must be [confirmed by providers onto one of the following replacement schedules.](/api-reference/ecf/how-to-guides/#notify-dfe-a-participant-has-changed-their-training-schedule) 
 
 ```
  "schedule_identifier": "ecf-replacement-september"
