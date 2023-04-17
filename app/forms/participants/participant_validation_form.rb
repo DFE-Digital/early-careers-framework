@@ -192,14 +192,13 @@ module Participants
           if amend_cohort.save
             # update participant profile induction start date
             participant_profile.update!(induction_start_date: dqt_induction_start_date)
+            # update participant profile flag
             return true
-          else
+          # else
             # flag participant (and save error message amend_cohort.errors?)
           end
         end
       end
-
-      participant_profile.update!(dqt_induction_start_date:)
     end
 
     def store_analytics!
