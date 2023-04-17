@@ -8,8 +8,8 @@ module Admin
       before_action :set_delivery_partner_profile_and_authorize, only: %i[edit update delete destroy]
 
       def index
+        @query = params[:query]
         authorize DeliveryPartnerProfile
-        scoped = policy_scope(DeliveryPartnerProfile).includes(:user).order("users.full_name asc")
         @pagy, @delivery_partner_profiles = pagy(scoped, page: params[:page], items: 20)
       end
 
@@ -66,6 +66,14 @@ module Admin
       def set_delivery_partner_profile_and_authorize
         @delivery_partner_profile = DeliveryPartnerProfile.find(params[:id])
         authorize @delivery_partner_profile.user
+      end
+
+      def scoped
+        return policy_scope(DeliveryPartnerProfile).includes(:user).order("users.full_name asc") if params[:query].blank?
+
+        ::DeliveryPartnerProfiles::SearchQuery
+          .new(query: params[:query], scope: policy_scope(DeliveryPartnerProfile))
+          .call
       end
     end
   end
