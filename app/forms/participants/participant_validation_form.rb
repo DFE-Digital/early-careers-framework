@@ -169,16 +169,37 @@ module Participants
       )
     end
 
-    def update_induction_start_date()
-      return if dqt_response.nil?
+    def change_participant_cohort()
+      dqt_induction_start_date = dqt_response&.dqt_record&.induction_start_date
+      return false if dqt_induction_start_date.nil?
 
-      # validation_data = participant_profile.ecf_participant_validation_data
-      # return if validation_data.nil?
+      return false if participant_profile.induction_start_date.present?
 
-      induction_start_date = dqt_response&.dqt_record&.induction_start_date
-      return if induction_start_date.nil?
+      # Get participant profile cohort and DQT cohort
+      current_induction_record = participant_profile.current_induction_record
+      participant_cohort = current_induction_record.cohort
+      dqt_cohort = Cohort.containing_date(dqt_induction_start_date)
+      # check cohort against DQT induction start date
+      if dqt_cohort == participant_cohort
+        participant_profile.update!(induction_start_date: dqt_induction_start_date)
+        return true
+      else
+        ActiveRecord::Base.transaction do
+          # change participant cohort
+          source_cohort_start_year = participant_cohort.start_year
+          target_cohort_start_year = dqt_cohort.start_year
+          amend_cohort = Induction::AmendParticipantCohort.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
+          if amend_cohort.save
+            # update participant profile induction start date
+            participant_profile.update!(induction_start_date: dqt_induction_start_date)
+            return true
+          else
+            # flag participant (and save error message amend_cohort.errors?)
+          end
+        end
+      end
 
-      participant_profile.update!(induction_start_date:)
+      participant_profile.update!(dqt_induction_start_date:)
     end
 
     def store_analytics!
@@ -207,7 +228,7 @@ module Participants
     def call(save_validation_data_without_match: true)
       check_eligibility!
       store_validation_result!(save_validation_data_without_match:)
-      update_induction_start_date
+      change_participant_cohort
     end
   end
 end
