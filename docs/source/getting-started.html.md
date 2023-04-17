@@ -1,17 +1,17 @@
 ---
-title: Getting started
+title: Get started
 weight: 2
 ---
 
-# Getting started
+# Get started
 
-Providers can connect to the API by integrating their local systems with it. 
+Connect to the API by integrating local provider CRM systems with it.
 
 Provider development teams can access the OpenAPI spec [in YAML format](/lead-providers/api-docs/v1/api_spec.yml).
 
-## Connecting to the API
+## Connect to the API
 
-To connect to the API providers will need a unique authentication token.
+Providers will need a unique authentication token to connect to the API. 
 
 Each token is associated with a single provider. The authentication token will grant providers access to CPD participant data. 
 
@@ -19,13 +19,13 @@ Each token is associated with a single provider. The authentication token will g
 
 Providers should [contact us](/api-reference/help) to request a token for production and sandbox environments.
 
-DfE will send each provider a unique authentication token via secure email. 
+DfE will send a unique authentication token via secure email.
 
 ### How to use an authentication token
 
 An authentication token must be included in all requests to the API. 
 
-Providers should accompany all requests with an `Authorization` request header (not as part of the URL) in the following format: 
+All requests must contain an `Authorization` request header (not as part of the URL) in the following format:  
 
 ```
 Authorization: Bearer {token}
@@ -39,9 +39,9 @@ The API is available via production (live) and sandbox (testing) environments.
 
 ### Production environment
 
-The production environment is the live environment which processes real data. 
+The production environment is the live environment which processes real data.  
 
-Do not perform testing in the production environment as real participant and payment data may be affected.
+{inset-text} Do not perform testing in the production environment as real participant and payment data may be affected.{/inset-text}
 
 ```
 API v1: 
@@ -60,10 +60,7 @@ https://manage-training-for-early-career-teachers.education.gov.uk/api/v3
 
 ### Sandbox environment
 
-The sandbox environment is used by providers to: 
-
-* test API integrations without affecting real data 
-* become familiar with the service
+The sandbox environment is used to test API integrations without affecting real data. 
 
 ```
 API v1: 
@@ -80,7 +77,7 @@ API v3:
 https://ecf-sandbox.london.cloudapps.digital/api/v3
 ```
 
-{inset-text}Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf) and [NPQ](/api-reference/npq).{/inset-text}
+{inset-text}Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/how-to-guides/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq).{/inset-text}
 
 ## Rate limits
 
