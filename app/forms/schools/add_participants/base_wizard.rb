@@ -18,7 +18,7 @@ module Schools
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
                :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
-               :same_provider?, :was_withdrawn_participant?, :complete?, :start_term, :last_visited_step,
+               :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                to: :data_store
 
       def initialize(current_step:, data_store:, current_user:, school_cohort: nil, school: nil, submitted_params: {})
@@ -115,9 +115,8 @@ module Schools
 
       def school_cohort
         if FeatureFlag.active? :cohortless_dashboard
-          # FIXME: dummy value while we build this thing
-          # need to determine this based on which cohort to place the participant in
-          @school_cohort ||= school.school_cohorts.first
+          # determine this based on which cohort to place the participant in
+          @school_cohort ||= school.school_cohorts.find_by(cohort: participant_cohort)
         else
           @school_cohort
         end
@@ -162,7 +161,11 @@ module Schools
       end
 
       def existing_participant_profile
-        @existing_participant_profile ||= TeacherProfile.joins(:ecf_profiles).where(trn: formatted_confirmed_trn).first&.ecf_profiles&.first
+        @existing_participant_profile ||=
+          ParticipantProfile::ECF
+          .joins(:teacher_profile)
+          .where(teacher_profile: { trn: formatted_confirmed_trn })
+          .first
       end
 
       def existing_user
@@ -252,7 +255,6 @@ module Schools
 
       def set_current_step(step)
         @current_step = self.class.steps.find { |s| s == step.to_sym }
-
         raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
       end
 
@@ -260,6 +262,9 @@ module Schools
         previous = history_stack.last
 
         if changing_answer?
+          # if changing the answer corrects the problem we will move straight on
+          # to the next step so we do not want to keep the return point in the stack
+          history_stack.pop if previous == return_point
           Rails.logger.debug("***********[ changing answer - history_stack: #{history_stack.inspect} ]***************")
           Rails.logger.debug("***********[ changing answer - previous: #{previous} ]***************")
         else
@@ -329,6 +334,10 @@ module Schools
           date_of_birth:,
           nino: formatted_nino,
         )
+      end
+
+      def participant_cohort
+        @participant_cohort ||= cohort_to_place_participant
       end
 
       # NOTE: not preventing registration here just determining where to put the participant

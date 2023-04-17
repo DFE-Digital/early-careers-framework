@@ -70,7 +70,7 @@ module FormData
     end
 
     def return_point
-      (get(:return_point) || "").to_s.dasherize
+      get(:return_point) || ""
     end
 
     def changing_answer?

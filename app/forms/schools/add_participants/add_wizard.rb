@@ -95,6 +95,21 @@ module Schools
         true
       end
 
+      # check answers helpers
+      def show_default_induction_programme_details?
+        !!(school_cohort&.default_induction_programme && school_cohort.default_induction_programme&.partnership&.active?)
+      end
+
+      # only relevant when we are in the registration period before the next cohort starts
+      # and the participant doesn't have an induction start date registered with DQT
+      def show_start_term?
+        induction_start_date.blank? && start_term.present?
+      end
+
+      def start_term_description
+        "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
+      end
+
     private
 
       def add_participant!
@@ -104,7 +119,7 @@ module Schools
           profile = if ect_participant?
                       EarlyCareerTeachers::Create.call(**participant_create_args)
                     else
-                      Mentors::Create.call(**participant_create_args)
+                      Mentors::Create.call(**participant_create_args.except(:induction_start_date))
                     end
 
           store_validation_result!(profile)
@@ -137,9 +152,9 @@ module Schools
           email:,
           school_cohort:,
           mentor_profile_id: mentor_profile&.id,
-          start_date:,
           sit_validation: true,
           appropriate_body_id:,
+          induction_start_date:,
         }
       end
     end

@@ -119,7 +119,7 @@ private
 
   def magic_dqt_record(with_induction: true)
     record = {
-      "trn" => trn,
+      "trn" => TeacherReferenceNumber.new(trn).formatted_trn,
       "name" => full_name,
       "dob" => date_of_birth,
       "ni_number" => nino,

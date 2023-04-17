@@ -21,7 +21,6 @@ module Schools
       def update
         if @form.valid?
           @wizard.save!
-
           redirect_to @wizard.next_step_path
         else
           render @wizard.current_step

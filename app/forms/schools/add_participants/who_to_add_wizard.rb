@@ -53,7 +53,7 @@ module Schools
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
           elsif dqt_record(force_recheck: true).present?
-            next_journey_path
+            show_path_for(step: form.next_step)
           else
             show_path_for(step: :cannot_find_their_details)
           end
@@ -115,7 +115,7 @@ module Schools
 
       def participant_exists?
         # NOTE: this doesn't differentiate being at this school from being at another school
-        check_for_dqt_record? && dqt_record.present? && existing_participant_profile.present?
+        check_for_dqt_record? && dqt_record(force_recheck: true).present? && existing_participant_profile.present?
       end
 
       def existing_participant_is_a_different_type?

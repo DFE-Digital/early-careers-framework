@@ -9,9 +9,8 @@
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
     <p class="govuk-body">Before you can register <%= @wizard.full_name %> for ECF-based training at your school,
-        you need to set up training for the <%= @wizard.existing_participant_cohort.description %> year.  This is because
-        <%= @wizard.full_name %> has already started training at a previous school so cannot be added to the 
-        <%= @cohort.description %> year.</p>
+      you’ll need to set up training for the <%= @wizard.existing_participant_cohort.description %> academic year.
+      This is because they started training in that year at a previous school.</p>
 
     <%= render GovukComponent::InsetTextComponent.new(text: "The name, TRN and date of birth you have entered will not be saved.
           You will need to enter this information again once you have set up the training.") %>
