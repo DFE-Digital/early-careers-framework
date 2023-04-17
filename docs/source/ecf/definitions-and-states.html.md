@@ -30,7 +30,7 @@ A participant’s `training_status` value will determine whether a provider can:
 * submit a declaration. For example, notifying DfE that a participant has completed their training
 
 
-| `training_status` | Definition | Action |
+| training_status | Definition | Action |
 | -------- | -------- | -------- |
 | `active`     | Participants currently in training     | Providers can 1. [update participant data](LINK NEEDED). For example, notifying DfE they have withdrawn 2. [submit declarations](LINK NEEDED). For example, notifying DfE they have completed training     |
 | `deferred`     | Participants who have deferred training     | Providers cannot submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](LINK NEEDED)     |
@@ -45,7 +45,7 @@ Declaration states are defined by the `state` attribute.
 
 Providers must submit declarations via the API to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered to this participant.
 
-| `state` | Definition | Action |
+| state | Definition | Action |
 | -------- | -------- | -------- |
 | `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can [submit, view and void declarations](LINK NEEDED)     |
 | `eligible`     | A declaration associated with a participant who has been confirmed to be eligible for funding     | Providers can [view and void declarations](LINK NEEDED)    |
@@ -68,7 +68,7 @@ Providers must confirm partnerships with schools for each cohort via the API. On
 
 Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details. 
 
-| `status` | Definition | Action |
+| status | Definition | Action |
 | -------- | -------- | -------- |
 | `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can [view, confirm and update active partnerships](LINK NEEDED)     |
 | `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can [view challenged partnerships](LINK NEEDED)    |
