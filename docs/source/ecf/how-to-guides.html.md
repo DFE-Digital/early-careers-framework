@@ -24,7 +24,7 @@ The focus of the following guidance is on business logic only. Critical details 
 11. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training
 12. DfE will pay providers output payments for `completed` declarations
 
-Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to [update relevant data using the API](LINK NEEDED). 
+Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to update relevant data using the API. 
 
 ## How to view and update participant data
 
