@@ -4,16 +4,7 @@ title: Definitions and states
 
 # Definitions and states
 
-## Key definitions
-
-The API sends and receives data from: 
-
-* lead providers
-* delivery partners
-* schools
-* participants
-* DfE
-
+## Key concepts
 
 | Concept      | Definition| Action |
 | -------- | --------  | -------- |

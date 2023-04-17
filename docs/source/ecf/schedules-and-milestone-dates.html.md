@@ -10,7 +10,7 @@ Providers are paid a proportionate sum of money relative to the amount of time t
 
 Providers must [submit declarations](LINK NEEDED) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
 
-## Key definitions
+## Key concepts
 
 | Concept      | Definition| 
 | -------- | --------  |
