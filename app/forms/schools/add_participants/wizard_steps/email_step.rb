@@ -39,10 +39,6 @@ module Schools
             :check_answers
           end
         end
-
-        def previous_step
-          :date_of_birth
-        end
       end
     end
   end

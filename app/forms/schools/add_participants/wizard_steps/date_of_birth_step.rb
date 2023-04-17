@@ -40,10 +40,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :trn
-        end
-
         def journey_complete?
           next_step == :none
         end

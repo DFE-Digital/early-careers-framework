@@ -17,14 +17,6 @@ module Schools
         def next_step
           :what_we_need
         end
-
-        def previous_step
-          :abort
-        end
-
-        # def before_render
-        #   wizard.reset_form
-        # end
       end
     end
   end

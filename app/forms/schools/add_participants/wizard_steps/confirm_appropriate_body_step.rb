@@ -19,20 +19,6 @@ module Schools
         def next_step
           :check_answers
         end
-
-        def previous_step
-          if wizard.ect_participant?
-            if wizard.mentor_options.any?
-              :choose_mentor
-            elsif wizard.needs_to_confirm_start_term?
-              :start_term
-            else
-              :email
-            end
-          else
-            :email
-          end
-        end
       end
     end
   end

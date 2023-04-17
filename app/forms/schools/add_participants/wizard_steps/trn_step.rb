@@ -17,14 +17,6 @@ module Schools
         def next_step
           :date_of_birth
         end
-
-        def previous_step
-          if wizard.sit_mentor?
-            :abort
-          else
-            :name
-          end
-        end
       end
     end
   end

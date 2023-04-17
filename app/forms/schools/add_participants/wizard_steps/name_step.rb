@@ -17,10 +17,6 @@ module Schools
         def next_step
           :trn
         end
-
-        def previous_step
-          :what_we_need
-        end
       end
     end
   end

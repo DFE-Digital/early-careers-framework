@@ -7,10 +7,6 @@ module Schools
         def next_step
           :name
         end
-
-        def previous_step
-          :participant_type
-        end
       end
     end
   end

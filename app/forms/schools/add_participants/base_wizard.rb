@@ -265,8 +265,6 @@ module Schools
           # if changing the answer corrects the problem we will move straight on
           # to the next step so we do not want to keep the return point in the stack
           history_stack.pop if previous == return_point
-          Rails.logger.debug("***********[ changing answer - history_stack: #{history_stack.inspect} ]***************")
-          Rails.logger.debug("***********[ changing answer - previous: #{previous} ]***************")
         else
           if previous != current_step
             # on a new step
@@ -283,8 +281,6 @@ module Schools
           end
           data_store.set(:last_visited_step, previous)
           data_store.set(:history_stack, history_stack)
-          Rails.logger.debug("***********[ history_stack: #{history_stack.inspect} ]***************")
-          Rails.logger.debug("***********[ previous: #{previous} ]***************")
         end
       end
 

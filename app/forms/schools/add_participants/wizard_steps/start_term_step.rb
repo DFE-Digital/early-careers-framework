@@ -26,10 +26,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :email
-        end
-
         # only visible during or just prior to the registration start for the next cohort
         def start_term_options
           year = Time.zone.today.year

@@ -16,14 +16,6 @@ module Schools
           :trn
         end
 
-        def previous_step
-          :abort
-        end
-
-        # def before_render
-        #   wizard.reset_form
-        # end
-
         def before_save
           @participant_type = "self"
         end

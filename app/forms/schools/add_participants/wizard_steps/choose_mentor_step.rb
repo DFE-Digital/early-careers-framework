@@ -27,14 +27,6 @@ module Schools
             :check_answers
           end
         end
-
-        def previous_step
-          if !wizard.transfer? && wizard.needs_to_confirm_start_term?
-            :start_term
-          else
-            :email
-          end
-        end
       end
     end
   end

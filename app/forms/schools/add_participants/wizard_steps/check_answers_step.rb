@@ -12,20 +12,6 @@ module Schools
           :complete
         end
 
-        def previous_step
-          if wizard.sit_mentor?
-            :date_of_birth
-          elsif wizard.needs_to_confirm_appropriate_body?
-            :confirm_appropriate_body?
-          elsif wizard.mentor_options.any?
-            :choose_mentor
-          elsif wizard.needs_to_confirm_start_term?
-            :start_term
-          else
-            :email
-          end
-        end
-
         def journey_complete?
           true
         end

@@ -28,10 +28,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :cannot_find_their_details
-        end
-
         def journey_complete?
           next_step == :none
         end
