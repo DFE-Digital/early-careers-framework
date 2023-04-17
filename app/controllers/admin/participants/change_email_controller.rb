@@ -3,6 +3,8 @@
 module Admin::Participants
   class ChangeEmailController < Admin::BaseController
     before_action :load_participant
+    before_action :check_gai_status
+
     skip_after_action :verify_policy_scoped
 
     def edit; end
@@ -24,6 +26,10 @@ module Admin::Participants
     end
 
   private
+
+    def check_gai_status
+      redirect_to admin_participants_path if @participant_profile.user.get_an_identity_id.present?
+    end
 
     def load_participant
       @participant_profile = ParticipantProfile
