@@ -62,6 +62,10 @@ class Cohort < ApplicationRecord
     self.class.find_by(start_year: start_year - 1)
   end
 
+  def self.containing_date(date)
+    starting_within(date - 1.year + 1.day, date)
+  end
+
   # e.g. "2022"
   def to_param
     start_year.to_s
