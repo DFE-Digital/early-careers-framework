@@ -8,10 +8,20 @@ module Api
       include ApiFilter
       include ParticipantActions
 
+      # Returns a list of NPQ participants
+      # Providers can see their NPQ participants and their NPQ enrolments via this endpoint
+      #
+      # GET /api/v1/participants/npq?filter[updated_since]=2022-11-13T11:21:55Z&sort=-updated_at,full_name
+      #
       def index
         render json: serializer_class.new(paginate(npq_participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end
 
+      # Returns a single of NPQ participant
+      # Providers can see a specific NPQ participant and its NPQ enrolments via this endpoint
+      #
+      # GET /api/v1/participants/npq/:id
+      #
       def show
         render json: serializer_class.new(npq_participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
       end

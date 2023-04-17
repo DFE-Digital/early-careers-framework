@@ -2,12 +2,17 @@
 
 require "swagger_helper"
 
-describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
-  let(:cpd_lead_provider) { create(:cpd_lead_provider, npq_lead_provider:) }
-  let(:npq_lead_provider) { create(:npq_lead_provider) }
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_npq_lead_provider) }
+  let(:npq_lead_provider) { cpd_lead_provider.npq_lead_provider }
+  let(:npq_course) { create(:npq_course, identifier: "npq-senior-leadership") }
+  let(:participant_identity) { create(:participant_identity) }
+  let(:user) { participant_identity.user }
+  let(:npq_application) { create(:npq_application, :accepted, :with_started_declaration, npq_lead_provider:, npq_course:, participant_identity:) }
+  let!(:participant_profile) { create(:npq_participant_profile, user:, npq_application:, npq_lead_provider:, npq_course:) }
+
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:Authorization) { "Bearer #{token}" }
-  let!(:npq_application) { create(:npq_application, :accepted, npq_lead_provider:) }
 
   path "/api/v3/participants/npq" do
     get "<b>Note, this endpoint includes updated specifications.</b><br/>Retrieve multiple NPQ participants" do
@@ -36,6 +41,17 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 required: false,
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of NPQ participants."
+
+      parameter name: :sort,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/NPQParticipantsSort",
+                },
+                style: :form,
+                explode: false,
+                required: false,
+                description: "Sort NPQ participants being returned.",
+                example: "sort=-updated_at"
 
       response "200", "A list of NPQ participants" do
         schema({ "$ref": "#/components/schemas/MultipleNPQParticipantsResponse" })
@@ -69,7 +85,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 }
 
       response "200", "A single NPQ participant" do
-        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:id) { npq_application.participant_identity.user_id }
 
         schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
 
@@ -77,7 +93,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
       end
 
       response "401", "Unauthorized" do
-        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:id) { npq_application.participant_identity.user_id }
         let(:Authorization) { "Bearer invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
@@ -85,7 +101,9 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         run_test!
       end
 
-      response "404", "Not Found" do
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "unknown-id" }
+
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
@@ -101,22 +119,22 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                   :with_default_schedules do
     let(:participant) { npq_application }
     let(:profile)     { npq_application.profile }
-    let(:new_schedule) do
-      if Finance::Schedule::NPQLeadership::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_leadership_schedule)
-      elsif Finance::Schedule::NPQSpecialist::IDENTIFIERS.include?(profile.npq_course.identifier)
-        create(:npq_specialist_schedule)
-      else
-        create(:npq_aso_schedule)
-      end
-    end
+    let(:schedule) { create(:npq_leadership_schedule, schedule_identifier: "npq-aso-june", name: "NPQ ASO June") }
 
     let(:attributes) do
       {
-        schedule_identifier: new_schedule.schedule_identifier,
+        schedule_identifier: schedule.schedule_identifier,
         course_identifier: npq_application.npq_course.identifier,
-        cohort: new_schedule.cohort.start_year,
+        cohort: schedule.cohort.start_year,
       }
+    end
+
+    before do
+      declaration = profile.participant_declarations.first
+      schedule
+        .milestones
+        .find_by!(declaration_type: declaration.declaration_type)
+        .update!(start_date: declaration.declaration_date - 1.day)
     end
   end
 
@@ -143,7 +161,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
     let(:attributes) { { course_identifier: npq_application.npq_course.identifier } }
     before do
       DeferParticipant.new(
-        participant_id: npq_application.participant_identity.external_identifier,
+        participant_id: npq_application.participant_identity.user_id,
         reason: ParticipantProfile::DEFERRAL_REASONS.sample,
         course_identifier: npq_application.npq_course.identifier,
         cpd_lead_provider:,
@@ -176,7 +194,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 }
 
       response "200", "The NPQ participant being withdrawn" do
-        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:id) { npq_application.participant_identity.user_id }
         let(:attributes) do
           {
             reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample,
@@ -187,18 +205,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:params) do
           {
             "data": {
-              "type": "participant",
+              "type": "participant-withdraw",
               "attributes": attributes,
             },
           }
-        end
-
-        before do
-          participant_profile = npq_application.profile
-          user = npq_application.user
-          course_identifier = npq_application.npq_course.identifier
-
-          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
         end
 
         schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
@@ -213,10 +223,11 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                   value: JSON.parse({
                     data: {
                       id: "db3a7848-7308-4879-942a-c4a70ced400a",
-                      type: "participant",
+                      type: "npq-participant",
                       attributes: {
                         "full_name": "Isabelle MacDonald",
                         "teacher_reference_number": "1234567",
+                        "updated_at": "2021-05-31T02:22:32.000Z",
                         "npq_enrolments": [
                           {
                             "email": "isabelle.macdonald2@some-school.example.com",
@@ -232,11 +243,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                               reason: "insufficient-capacity",
                               date: "2022-12-09T16:07:38Z",
                             },
-                            "deferral": null,
+                            "deferral": nil,
                             "created_at": "2021-05-31T02:22:32.000Z",
                           },
                         ],
-                        "updated_at": "2021-05-31T02:22:32.000Z",
                       },
                     },
                   }.to_json, symbolize_names: true),
@@ -247,12 +257,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
           example.metadata[:response][:content] = content.deep_merge(example_spec)
         end
-
-        run_test!
       end
 
       response "422", "Unprocessable entity" do
-        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:id) { npq_application.participant_identity.user_id }
         let(:attributes) do
           {
             reason: ParticipantProfile::NPQ::WITHDRAW_REASONS.sample,
@@ -263,7 +271,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:params) do
           {
             "data": {
-              "type": "participant",
+              "type": "participant-withdraw",
               "attributes": attributes,
             },
           }
@@ -301,7 +309,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 }
 
       response "200", "The NPQ participant being deferred" do
-        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:id) { npq_application.participant_identity.user_id }
         let(:attributes) do
           {
             reason: ParticipantProfile::NPQ::DEFERRAL_REASONS.sample,
@@ -312,18 +320,10 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:params) do
           {
             "data": {
-              "type": "participant",
+              "type": "participant-defer",
               "attributes": attributes,
             },
           }
-        end
-
-        before do
-          participant_profile = npq_application.profile
-          user = npq_application.user
-          course_identifier = npq_application.npq_course.identifier
-
-          create(:npq_participant_declaration, participant_profile:, course_identifier:, user:)
         end
 
         schema({ "$ref": "#/components/schemas/NPQParticipantResponse" })
@@ -342,6 +342,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                       attributes: {
                         "full_name": "Isabelle MacDonald",
                         "teacher_reference_number": "1234567",
+                        "updated_at": "2021-05-31T02:22:32.000Z",
                         "npq_enrolments": [
                           {
                             "email": "isabelle.macdonald2@some-school.example.com",
@@ -361,7 +362,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                             "created_at": "2021-05-31T02:22:32.000Z",
                           },
                         ],
-                        "updated_at": "2021-05-31T02:22:32.000Z",
                       },
                     },
                   }.to_json, symbolize_names: true),
@@ -377,7 +377,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
       end
 
       response "422", "Unprocessable entity" do
-        let(:id) { npq_application.participant_identity.external_identifier }
+        let(:id) { npq_application.participant_identity.user_id }
         let(:attributes) do
           {
             reason: ParticipantProfile::NPQ::DEFERRAL_REASONS.sample,
@@ -388,7 +388,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:params) do
           {
             "data": {
-              "type": "participant",
+              "type": "participant-defer",
               "attributes": attributes,
             },
           }

@@ -14,13 +14,13 @@ properties:
     type: string
     example: "1234567"
     nullable: true
-  npq_enrolments:
-    description: "Information about the course(s) the participant is enroled in"
-    type: array
-    items:
-      $ref: "#/components/schemas/NPQEnrolment"
   updated_at:
     description: "The date the NPQ participant was last updated"
     type: string
     format: date-time
     example: "2021-05-31T02:22:32.000Z"
+  npq_enrolments:
+    description: "Information about the course(s) the participant is enroled in"
+    type: array
+    items:
+      $ref: "#/components/schemas/NPQEnrolment"

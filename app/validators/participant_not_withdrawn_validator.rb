@@ -19,7 +19,7 @@ private
   def latest_participant_state(record)
     record.participant_profile
       .participant_profile_states
-      .where(cpd_lead_provider: record.cpd_lead_provider)
+      .for_lead_provider(record.cpd_lead_provider)
       .most_recent
       .first
   end
