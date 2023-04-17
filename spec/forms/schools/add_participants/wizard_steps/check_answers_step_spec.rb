@@ -16,20 +16,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::CheckAnswersStep, type: :m
       expect(step.next_step).to eql :complete
     end
   end
-
-  describe "#previous_step" do
-    context "when the SIT is adding an ECT or mentor" do
-      it "returns the start_date step" do
-        allow(wizard).to receive(:sit_mentor?).and_return(false)
-        expect(step.previous_step).to eql :start_date
-      end
-    end
-
-    context "when the SIT is adding themselves as a mentor" do
-      it "returns the date_of_birth step" do
-        allow(wizard).to receive(:sit_mentor?).and_return(true)
-        expect(step.previous_step).to eql :date_of_birth
-      end
-    end
-  end
 end

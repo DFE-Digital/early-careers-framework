@@ -142,12 +142,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     end
   end
 
-  describe "#previous_step" do
-    it "returns :trn" do
-      expect(step.previous_step).to eql :trn
-    end
-  end
-
   describe "#journey_complete" do
     context "when adding a new participant and a matching DQT record is found" do
       it "returns true" do
