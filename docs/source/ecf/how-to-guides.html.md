@@ -635,7 +635,7 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## How to view, submit and update partnerships with schools and delivery partners
+## How to view, submit and update partnerships
 
 The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
 
