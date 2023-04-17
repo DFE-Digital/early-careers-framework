@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Importers
-  class CreateCallOffContracts
+  class CreateCallOffContract
     def call
       LeadProvider.all.each do |lp|
         [cohort_2021, cohort_2022, cohort_2023].each do |cohort|
