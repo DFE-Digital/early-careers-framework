@@ -6,14 +6,21 @@ module Admin
       skip_after_action :verify_authorized, only: :index
 
       def index
-        suppliers_search = delivery_partners_search + lead_providers_search
         @query = params[:query]
+        @type = params[:type]
         @pagy, @suppliers = pagy_array(suppliers_search, page: params[:page], items: 20)
         @page = @pagy.page
         @total_pages = @pagy.pages
       end
 
     private
+
+      def suppliers_search
+        return delivery_partners_search if params[:type] == "delivery_partner"
+        return lead_providers_search if params[:type] == "lead_provider"
+
+        delivery_partners_search + lead_providers_search
+      end
 
       def delivery_partners_search
         ::DeliveryPartners::SearchQuery
