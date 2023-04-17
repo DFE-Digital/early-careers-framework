@@ -17,7 +17,7 @@ Providers must [submit declarations](LINK NEEDED) ahead of milestone dates (dead
 | Schedule    | The expected timeframe in which a participant will complete their ECF-based training, which determine the defined milestone dates      |
 | Standard schedule  | The default training schedule for participants completing a standard 2 year induction, starting in September, January or April  |
 | Extended schedule   | A non-standard training schedule for participants who expect to complete the induction over a period greater than 2 years. Examples include part-time ECTs, or ECTs whose induction period is extended by their appropriate body  |
-| Reduced schedule   | A non-standard training schedule for participants who expect to complete the induction over a period less than 2 years, e.g. those with previous experience  |
+| Reduced schedule   | A non-standard training schedule for participants who expect to complete the induction over a period less than 2 years.  Examples include those with previous experience  |
 | Replacement schedule  | A non-standard training schedule for mentors that are replacing a previous mentor for an ECT that is part way through their training  |
 | Milestone   | Contractual retention periods during which providers must submit relevant declarations evidencing ECF-based training delivery and participant retention     |
 | Milestone dates    | The deadline date a valid declaration can be made for a given milestone in order for the DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule       |
@@ -35,10 +35,12 @@ The payment model is such that for each of the 6 terms a provider is supporting 
 
 Declarations submitted for participants in standard schedules will be validated (accepted or rejected) against the 6 milestone dates. [View details on milestone validation for standard training schedules](LINK NEEDED).
 
+{inset-text}
 Providers should note: 
 
 * All participants will be registered by default to a standard schedule starting in September
 * Providers must [notify DfE a participant has changed their training schedule] if this is inaccurate for the given participant
+{/inset-text}
 
 
 ### Dates for standard schedule starting in September
@@ -213,51 +215,97 @@ The API will perform milestone validation to reject a declaration if:
 * it is submitted before or after the milestone date. For example, an `ecf-standard-september` schedule allows `started` declarations between 19 November to 30 November. A declaration submitted outside of these dates will be rejected, unless its `declaration_date` is backdated accordingly.
 * it corresponds to a participant's [updated schedule](LINK NEEDED), but the participant has previously submitted declarations corresponding to the former schedule (which have not yet been voided).
 
+## Non-standard training schedules and dates
+
+A standard 2 year induction training schedule covers 6 terms (3 in each academic year), and therefore has 6 milestones. However, a participant can choose to follow a non-standard schedule: extended, reduced or replacement.  
+
+The payment model for non-standard schedules follows the same principles; DfE will pay the equivalent of 1 output payment (according to valid declarations submitted) for each of the 6 terms a provider is supporting a participant.
+
+{inset-text}
+Providers should note: 
+
+* All participants will be registered by default to a standard schedule starting in September
+* Providers must [notify DfE a participant has changed their training schedule] if this is inaccurate for the given participant
+* Providers will need to evidence any declarations and why a participant is following a non-standard induction
+* Replacement schedules should only be used where a new mentor takes the place of a previous mentor (in supporting an ECT’s training), but where the new mentor is not also mentoring any other ECTs.
+* Replacement schedules should not be used if a mentor is already mentoring an ECT and takes on an additional role replacing a mentor for a second ECT. A mentor’s first ECT should take precedence in determining their schedule. 
+{/inset-text}
 
 
-### Non-standard induction
-Following the same principles of those on a standard induction, providers will be paid the equivalent of one milestone payment for each of the terms they are supporting a participant. Non-standard schedules will not be subject to milestone validation.
+### Dates for extended, reduced and replacement schedules starting in September
 
-Under a non-standard schedule, the API will accept any declarations once the first milestone period for the schedule has started. For example, if a participant is on an ecf-extended-september schedule, the API will accept any type of declaration, such as a start, retention-1 or completion, from 1 September 2021. Providers will still be expected to evidence any declarations and why a participant is following a non-standard induction.
+A standard 2 year induction training schedule covers 6 terms (3 in each academic year), and therefore has 6 milestones. However, a participant can choose to follow a non-standard schedule: extended, reduced, or replacement.  
 
-We are allowing functionality for providers to switch participants onto the following non-standard schedules:
+The payment model for non-standard schedules follows the same principles; DfE will pay the equivalent of 1 output payment (according to valid declarations submitted) for each of the 6 terms a provider is supporting a participant.
 
-* `ecf-extended-september`
-* `ecf-extended-january`
-* `ecf-extended-april`
-* `ecf-reduced-september`
-* `ecf-reduced-january`
-* `ecf-reduced-april`
-* `ecf-replacement-september`
-* `cf-replacement-january`
-* `ecf-replacement-april`
+Declarations submitted for participants in non-standard schedules do not need API milestone validation. 
 
-The non-standard induction schedules are detailed below.
+Providers should note: 
 
-### Extended schedule
-For participants that expect to complete their induction over a period greater than two years, with the schedule reflecting the month when the participant starts. For example, part time ECTs:
+* All participants will be registered by default to a standard schedule starting in September. Providers must [notify DfE a participant has changed their training schedule] if this is inaccurate for the given participant
+* Providers will need to evidence any declarations and why a participant is following a non-standard induction
 
-* `ecf-extended-september`
-* `ecf-extended-january`
-* `ecf-extended-april`
+### Extended schedules
 
-### Reduced schedule
-For participants that expect to complete their induction over a period less than 2 years, with the schedule reflecting the month when the participant starts:
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF call-off contracts. 
 
-* `ecf-reduced-september`
-* `ecf-reduced-january`
-* `ecf-reduced-april`
+Contact ECF contract managers via email for more information on exact dates.
 
-### Replacement mentors
-For mentors that are replacing a mentor for an ECT that is part way through their training with the schedule reflecting the month when the replacement starts:
+For participants who expect to complete their ECF-based training in more than 2 years, providers [should confirm the schedule](LINK NEEDED): 
 
-* `ecf-replacement-september`
-* `ecf-replacement-january`
-* `ecf-replacement-april`
+```
+ "schedule_identifier": "ecf-extended-september"
+```
 
-Where a mentor is already mentoring an ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
+```
+ "schedule_identifier": "ecf-extended-january"
+```
 
-The DfE expects that a replacement mentor's training, and therefore any declarations a provider submits for them, will align with the ECT they are mentoring. Say a replacement mentor begins mentoring an ECT part way through the ECT’s induction. The provider has already submitted a start declaration for the previous mentor. Now, the provider makes a retention-1 declaration for the ECT. The department would expect that any declaration made for the replacement mentor in the same milestone period as that made for the ECT would also be a retention-1 declaration.
+```
+ "schedule_identifier": "ecf-extended-april"
+```
 
+### Reduced schedules
 
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF call-off contracts. 
 
+Contact ECF contract managers via email for more information on exact dates.
+
+For participants who expect to complete their ECF-based training in less than 2 years, providers [should confirm one of the following schedules](LINK NEEDED)
+
+```
+ "schedule_identifier": "ecf-reduced-september"
+```
+
+```
+ "schedule_identifier": "ecf-reduced-january"
+```
+
+```
+ "schedule_identifier": "ecf-reduced-april"
+```
+
+### Replacement schedules 
+
+While the API will accept any declarations submitted after the first milestone start date (1 September, 1 January, 1 April each year), providers must submit declarations according to the terms outlined in the ECF call-off contracts. 
+
+Contact ECF contract managers via email for more information on exact dates.
+
+Mentors that are not already training ECTs and are replacing a mentor must be [confirmed by providers onto one of the following replacement schedules](LINK NEEDED). 
+
+```
+ "schedule_identifier": "ecf-replacement-september"
+```
+
+```
+ "schedule_identifier": "ecf-replacement-january"
+```
+
+```
+ "schedule_identifier": "ecf-replacement-april"
+```
+
+Providers should note: 
+
+* Replacement schedules should only be used where a new mentor takes the place of a previous mentor (in supporting an ECT’s training), but where the new mentor is not also mentoring any other ECTs.
+* Replacement schedules should not be used if a mentor is already mentoring an ECT and takes on an additional role replacing a mentor for a second ECT. A mentor’s first ECT should take precedence in determining their schedule. 
