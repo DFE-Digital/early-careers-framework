@@ -7,9 +7,9 @@ weight: 2
 
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](LINK NEEDED) is not detailed.
 
-{inset-text}This guidance is writen for API v3, and therefore all endpoints reference `v3`. Providers should amend this according to the API version their systems are integrated with where appropriate. For example `v2`.{/inset-text}
+{inset-text}This guidance is written for [API version 3.0.0](/api-reference/reference-v3.html), and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.{/inset-text}
 
-## When to use the API throughout a participant’s training
+## Overview of API requests
 
 1. For a given cohort, providers will submit confirmations via the API of their partnerships with a school, including confirmation who their delivery partners will be. Note, this only applies to providers integrated with API v3 onwards 
 2. School induction tutors will register participants for ECF-based training via the DfE online service
