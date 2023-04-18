@@ -11,7 +11,7 @@ RSpec.describe StatusTags::SchoolParticipantStatusTag, :with_training_record_sta
     context "when :#{key} is the determined state" do
       before { allow(component).to receive(:record_state).and_return(key) }
       it { is_expected.to have_text value[:label] }
-      it { is_expected.to have_text Array.wrap(value[:description]).join("\n  ").gsub("%{contact_us}", "contact us\n") }
+      it { is_expected.to have_text Array.wrap(value[:description]).join("\n ").gsub("%{contact_us}", "contact us\n") }
     end
   end
 end
