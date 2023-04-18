@@ -179,10 +179,12 @@ module Participants
       current_induction_record = participant_profile.current_induction_record
       participant_cohort = current_induction_record.cohort
       dqt_cohort = Cohort.containing_date(dqt_induction_start_date)
+      return false if dqt_cohort.nil?
+
       # check cohort against DQT induction start date
       if dqt_cohort == participant_cohort
         participant_profile.update!(induction_start_date: dqt_induction_start_date)
-        return true
+        true
       else
         ActiveRecord::Base.transaction do
           # change participant cohort
@@ -194,7 +196,7 @@ module Participants
             participant_profile.update!(induction_start_date: dqt_induction_start_date)
             # update participant profile flag
             return true
-          # else
+            # else
             # flag participant (and save error message amend_cohort.errors?)
           end
         end
