@@ -2,7 +2,6 @@
 
 module Participants
   class SyncDqtInductionStartDate < BaseService
-
     def initialize(dqt_induction_start_date, participant_profile)
       @dqt_induction_start_date = dqt_induction_start_date
       @participant_profile = participant_profile
