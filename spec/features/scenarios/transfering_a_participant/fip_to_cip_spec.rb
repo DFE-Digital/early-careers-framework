@@ -79,7 +79,7 @@ RSpec.feature "FIP to CIP - Transfer a participant",
 
         travel_to(milestone_started.milestone_date - 2.months) do
           Importers::CreateCohort.new(path_to_csv: Rails.root.join("db/data/cohorts/cohorts.csv")).call
-          Importers::CreateCallOffContracts.new.call
+          Importers::CreateCallOffContract.new.call
           Importers::CreateStatement.new(path_to_csv: Rails.root.join("db/data/statements/statements.csv")).call
         end
 

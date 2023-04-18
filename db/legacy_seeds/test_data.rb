@@ -763,5 +763,5 @@ end
 Importers::CreateNPQContract.new(path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2021.csv")).call
 Importers::CreateNPQContract.new(path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2022.csv")).call
 Importers::CreateNPQContract.new(path_to_csv: Rails.root.join("db/data/npq_contracts/fake-2023.csv")).call
-Importers::CreateCallOffContracts.new.call
+Importers::CreateCallOffContract.new.call
 Importers::CreateStatement.new(path_to_csv: Rails.root.join("db/data/statements/statements.csv")).call
