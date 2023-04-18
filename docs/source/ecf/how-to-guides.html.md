@@ -295,7 +295,7 @@ Providers can view data participants who have transferred:
 GET /api/v3/participants/ecf/transfers
 ```
 
-Successful requests will return a response body with information about the school and provider participants are transferring to and from. An example response body is listed below. 
+An example response body is listed below. Successful requests will return a response body with information about the school and provider participants are transferring to and from. 
 
 For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
 
