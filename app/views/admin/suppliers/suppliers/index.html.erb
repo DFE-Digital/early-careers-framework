@@ -1,7 +1,23 @@
 <% content_for :title, "Suppliers" %>
+
 <%= render "layout", locals = { page: "suppliers" } %>
 
-<p class="govuk-body-l">Manage your lead providers and delivery partners supplying training.</p>
+<%= render SearchBox.new(
+  query: @query,
+  title: "Search suppliers",
+  hint: "Enter the name of the lead provider or delivery partner",
+  filters: [
+    {
+      field: :type,
+      value: @type,
+      options: [
+        OpenStruct.new(id: "", name: ""),
+        OpenStruct.new(id: "delivery_partner", name: "Delivery partner"),
+        OpenStruct.new(id: "lead_provider", name: "Lead provider"),
+      ],
+    },
+  ]
+) %>
 
 <%= govuk_button_link_to "Add a new delivery partner", choose_name_admin_delivery_partners_path %>
 
