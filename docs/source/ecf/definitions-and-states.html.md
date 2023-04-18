@@ -37,40 +37,40 @@ A participant’s `training_status` value will determine whether a provider can:
 | `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/how-to-guides/#notify-dfe-a-participant-has-resumed-training)     |
 | `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
 
-Find more detailed specifications for the [ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
+View more detailed specifications for the [ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
 
 ### Declaration states
 
 Declaration states are defined by the `state` attribute. 
 
-Providers must submit declarations via the API to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered to this participant.
+Providers must [submit declarations](/api-reference/ecf/how-to-guides/#how-to-submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
 
 | state | Definition | Action |
 | -------- | -------- | -------- |
-| `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can [submit, view and void declarations](LINK NEEDED)     |
-| `eligible`     | A declaration associated with a participant who has been confirmed to be eligible for funding     | Providers can [view and void declarations](LINK NEEDED)    |
-| `ineligible`     | A declaration associated with 1) a participant who is not eligible for funding 2) a duplicate submission for a given participant    | [Providers can [view and void declarations](LINK NEEDED)     |
-| `payable`     | A declaration that has been approved and is ready for payment by DfE    | Providers can [view and void declarations](LINK NEEDED)     |
-| `voided`     | A declaration that has been retracted by a provider    | Providers can [view declarations](LINK NEEDED)    |
-| `paid`     | A declaration that has been paid for by DfE    | [How to submit, view and void declarations](LINK NEEDED)     |
-| `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can [view and void declarations](LINK NEEDED)     |
-| `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can [view and void declarations](LINK NEEDED)     |
+| `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can submit, view and void `submitted` declarations    |
+| `eligible`     | A declaration associated with a participant who has been confirmed to be eligible for funding     | Providers can view and void `eligible` declarations    |
+| `ineligible`     | A declaration associated with 1) a participant who is not eligible for funding 2) a duplicate submission for a given participant    | Providers can view and void `ineligible` declarations     |
+| `payable`     | A declaration that has been approved and is ready for payment by DfE    | Providers can view and void `payable` declarations     |
+| `voided`     | A declaration that has been retracted by a provider    | Providers can **only** view `voided` declarations   |
+| `paid`     | A declaration that has been paid for by DfE    | Providers can view and void `paid` declarations     |
+| `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can **only** view `awaiting_clawback` declarations     |
+| `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
 
 
-Find more detailed specifications for the [declaration schema](/api-reference/reference-v1.html#schema-participantdeclarationattributes).
+View more detailed specifications for the [declaration schema](/api-reference/reference-v3.html#schema-ecfparticipantdeclarationattributes).
 
 
 ### Partnership states 
 
 Partnership states are defined by the `status` attribute. 
 
-Providers must confirm partnerships with schools for each cohort via the API. Once a partnership has been established the `status` value will reflect this (`active`) and providers will have access to participant information via the API.
+Providers must [confirm their partnerships with schools](/api-reference/ecf/how-to-guides/#how-to-view-submit-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
 
-Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details. 
+Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details.
 
 | status | Definition | Action |
 | -------- | -------- | -------- |
-| `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can [view, confirm and update active partnerships](LINK NEEDED)     |
-| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can [view challenged partnerships](LINK NEEDED)    |
+| `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can view, confirm and update `active` partnerships     |
+| `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can **only** view `challenged` partnerships    |
 
-Find more detailed specifications for the [partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
+View more detailed specifications for the [partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
