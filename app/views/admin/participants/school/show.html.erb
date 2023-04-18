@@ -36,6 +36,11 @@
       row.value(text: @participant_presenter.delivery_partner_name)
     end
 
+    sl.row do |row|
+      row.key(text: "Appropriate body")
+      row.value(text: @participant_presenter.appropriate_body_name)
+    end
+
     if @participant_profile.ect?
       sl.row do |row|
         row.key(text: "Mentor")

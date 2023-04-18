@@ -117,6 +117,16 @@ RSpec.describe(Admin::ParticipantPresenter, :with_default_schedules) do
           expect(subject.delivery_partner_name).to eql(dummy_dp.name)
         end
       end
+
+      describe "#appropriate_body_name" do
+        let(:dummy_ab) { FactoryBot.build(:seed_appropriate_body) }
+
+        before { allow_any_instance_of(SchoolCohort).to receive(:appropriate_body).and_return(dummy_ab) }
+
+        it "returns the appropiate_body_name via induction record and school cohort" do
+          expect(subject.appropriate_body_name).to eql(dummy_ab.name)
+        end
+      end
     end
 
     describe "#induction_records" do
