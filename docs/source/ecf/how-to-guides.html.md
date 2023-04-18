@@ -382,10 +382,11 @@ For more detailed information see the specifications for this [view a participan
 }
 ```
 
-
 ## How to submit, view and void declarations
 
-Providers must submit declarations in line with ECF contractual [schedules and milestone dates](LINK NEEDED). These declarations will trigger payment from DfE to providers. 
+Providers must submit declarations in line with ECF contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates). 
+
+These declarations will trigger payment from DfE to providers. 
 
 ### Test the ability to submit declarations in sandbox ahead of time 
 
@@ -393,7 +394,7 @@ Providers must submit declarations in line with ECF contractual [schedules and m
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
 
-It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.
+{inset-text}It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.{/inset-text}
 
 To test declaration submission functionality, include: 
 
@@ -406,17 +407,21 @@ X-With-Server-Date: 2022-01-10T10:42:00Z
 
 ### Submit a declaration to notify DfE a participant has started training
 
-To notify DfE that a participant has started ECF-based training, providers must submit a `started` declaration in line with [milestone 1 dates](LINK NEEDED).
-
-Confirm a participant has started training by using the endpoint: 
+Notify the DfE that a participant has started ECF-based training by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
  POST /api/v3/participant-declarations
 ```
 
-Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. An example request body is listed below.
+Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. 
 
-Successful requests will return a response body with declaration data. An example response body is listed below. Any attempts to submit duplicate declarations will return an error message.
+An example request body is listed below.
+
+An example response body is listed below. Successful requests will return a response body with declaration data. 
+
+Any attempts to submit duplicate declarations will return an error message.
+
+{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
@@ -462,8 +467,6 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-
-{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
 
 ### Submit a declation to notify DfE a participant has been retained in training
 
