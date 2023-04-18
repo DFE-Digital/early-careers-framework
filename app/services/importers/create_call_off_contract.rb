@@ -1,13 +1,19 @@
 # frozen_string_literal: true
 
+require "csv"
+
 module Importers
   class CreateCallOffContract
     def call
+      logger.info "CreateCallOffContract: Started!"
+
       if path_to_csv.present?
         create_call_off_contracts_from_csv
       else
         create_default_call_off_contracts
       end
+
+      logger.info "CreateCallOffContract: Finished!"
     end
 
   private
@@ -20,7 +26,7 @@ module Importers
     end
 
     def create_default_call_off_contracts
-      raise "Do not seed default call off contracts in Production!" if Rails.env.production?
+      raise "Do not seed default Call off Contracts in Production!" if Rails.env.production?
 
       LeadProvider.all.each do |lead_provider|
         [cohort_current, cohort_previous, cohort_next].each do |cohort|
@@ -51,12 +57,15 @@ module Importers
     end
 
     def create_call_off_contract_and_bands(lead_provider:, cohort:, contract_data:)
+      logger.info "CreateCallOffContract: Adding Call off Contract for Lead Provider: #{lead_provider.name} in cohort: #{cohort.start_year}"
       call_off_contract = create_call_off_contract!(lead_provider:, contract_data:, cohort:)
 
+      logger.info "CreateCallOffContract: Adding bands to Call off Contract for Lead Provider: #{lead_provider.name} in cohort: #{cohort.start_year}"
       %i[band_a band_b band_c band_d].each do |band|
         band_data = contract_data[band]
         create_participant_band!(call_off_contract:, band_data:, band_d: band == :band_d)
       end
+      logger.info "CreateCallOffContract: Added Call off Contract and bands for Lead Provider: #{lead_provider.name} in cohort: #{cohort.start_year} successfully!"
     end
 
     def check_headers!
