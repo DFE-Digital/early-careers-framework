@@ -530,17 +530,19 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Submit a declaration to notify DfE a participant has completed training
 
-To notify DfE that a participant has completed their training, providers must submit a `completed` declaration in line with [milestone dates](LINK NEEDED).
-
-Confirm a participant has completed training by using the endpoint:
+Notify the DfE that a participant has completed their training by submitting a `completed` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
 POST /api/v{n}/participant-declarations
 ```
 
-Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value. An example request body is listed below.
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value. 
 
-Successful requests will return a response body with declaration data. An example response body is listed below. Any attempts to submit duplicate declarations will return an error message.
+An example response body is listed below. Successful requests will return a response body with declaration data. 
+
+Any attempts to submit duplicate declarations will return an error message.
+
+{inset-text}Note, providers should store the returned ECF participant declaration ID for future management tasks.{/inset-text}
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
@@ -586,8 +588,6 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-
-{inset-text}Note, providers should store the returned ECF participant declaration ID for future management tasks.{/inset-text}
 
 ### View all previously submitted declarations 
 
