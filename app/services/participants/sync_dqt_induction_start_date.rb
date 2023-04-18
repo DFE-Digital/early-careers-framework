@@ -26,9 +26,8 @@ module Participants
           # change participant cohort
           source_cohort_start_year = participant_cohort.start_year
           target_cohort_start_year = dqt_cohort.start_year
-          amend_cohort = Induction::AmendParticipantCohort.new(participant_profile:, source_cohort_start_year:, target_cohort_start_year:)
+          amend_cohort = Induction::AmendParticipantCohort.new(participant_profile: @participant_profile, source_cohort_start_year:, target_cohort_start_year:)
           if amend_cohort.save
-            # update participant profile induction start date
             @participant_profile.update!(induction_start_date: @dqt_induction_start_date)
             # update participant profile flag
             return true
