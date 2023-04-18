@@ -18,6 +18,8 @@ RSpec.describe Participants::FindByTrainingRecordState, :with_training_record_st
       ect_on_fip_pupil_premium_uplift, # valid
       ect_on_fip_no_uplift, # valid
       ect_on_fip_manual_check_active_flags,
+      ect_on_fip_ineligible_active_flags,
+      mentor_ero_on_fip,
     ]
   end
 
@@ -87,9 +89,13 @@ RSpec.describe Participants::FindByTrainingRecordState, :with_training_record_st
           ect_on_fip_pupil_premium_uplift,
           ect_on_fip_no_uplift,
           ect_on_fip_manual_check_active_flags,
+          ect_on_fip_ineligible_active_flags,
+          mentor_ero_on_fip,
         ]
       end
     end
+
+    # :checks_not_complete
 
     context "when looking for profiles where active flags have been found on the TRA record" do
       let(:record_state) { :active_flags }
@@ -97,6 +103,26 @@ RSpec.describe Participants::FindByTrainingRecordState, :with_training_record_st
       it "finds the correct profile" do
         is_expected.to match [
           ect_on_fip_manual_check_active_flags,
+        ]
+      end
+    end
+
+    context "when looking for profiles where active flags have been found on the TRA record" do
+      let(:record_state) { :not_allowed }
+
+      it "finds the correct profile" do
+        is_expected.to match [
+          ect_on_fip_ineligible_active_flags,
+        ]
+      end
+    end
+
+    context "when looking for profiles where active flags have been found on the TRA record" do
+      let(:record_state) { :eligible_for_mentor_training_ero }
+
+      it "finds the correct profile" do
+        is_expected.to match [
+          mentor_ero_on_fip,
         ]
       end
     end

@@ -32,6 +32,12 @@ class Participants::FindByTrainingRecordState < BaseService
     when :active_flags
       merge(include_active_flags)
 
+    when :not_allowed
+      merge(include_not_allowed)
+
+    when :eligible_for_mentor_training_ero
+      merge(include_eligible_for_mentor_training_ero)
+
     else
       raise "unknown record state: #{@record_state}"
 
@@ -146,6 +152,24 @@ private
       .where(match_manual_check_active_flags)
   end
 
+  def include_not_allowed
+    ParticipantProfile.left_joins(
+      :ecf_participant_validation_data,
+      :teacher_profile,
+      :ecf_participant_eligibility,
+    )
+    .where(match_manual_not_allowed)
+  end
+
+  def include_eligible_for_mentor_training_ero
+    ParticipantProfile::Mentor.left_joins(
+      :ecf_participant_validation_data,
+      :teacher_profile,
+      :ecf_participant_eligibility,
+    )
+    .where(match_ineligible_previous_participation)
+  end
+
   # matchers
 
   def match_no_trn
@@ -166,5 +190,13 @@ private
 
   def match_manual_check_active_flags
     { ecf_participant_eligibility: { status: "manual_check", reason: "active_flags" } }
+  end
+
+  def match_manual_not_allowed
+    { ecf_participant_eligibility: { status: "ineligible", reason: "active_flags" } }
+  end
+
+  def match_ineligible_previous_participation
+    { ecf_participant_eligibility: { status: "ineligible", reason: "previous_participation" } }
   end
 end
