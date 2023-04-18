@@ -692,19 +692,18 @@ For more detailed information see the specifications for this [view specific dec
 
 ### Void or clawback a declaration
 
-Providers can void specific declarations which have been submitted in error.
-
-Once voided, the [declaration `state`](LINK NEEDED) value will become: 
-* `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
-* `awaiting_clawback` if it had been  `paid` 
-
-Void a declaration by using the endpoint:
+Void specific declarations which have been submitted in error. 
 
 ```
 PUT /api/v3/participant-declarations/{id}/void
 ```
 
-Successful requests will return a response body including updates. An example response body is listed below. 
+An example response body is listed below. Successful requests will return a response body including updates to the declaration `state`, which will become: 
+
+* `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
+* `awaiting_clawback` if it had been `paid` 
+
+View more information on [declaration states](/api-reference/ecf/definitions-and-states/#declaration-states) 
 
 For more detailed information see the specifications for this [void declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-void-put)
 
