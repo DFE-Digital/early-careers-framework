@@ -591,9 +591,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### View all previously submitted declarations 
 
-Providers can view all declarations which they have submitted to date. They can check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
-
-View all previously submitted declarations by using the endpoint:
+View all declarations which have been submitted to date. Check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
 ```
 GET /api/v3/participant-declarations
@@ -655,9 +653,7 @@ For more detailed information see the specifications for this [view all declarat
 
 ### View a specific previously submitted declaration
 
-Providers can view specific declarations which have previously been submitted. They can check declaration details and void or clawback those which have been submitted in error.
-
-View all specific declaration by using the endpoint:
+View a specific declaration which has been previously submitted. Check declaration details and void or clawback those which have been submitted in error.
 
 ```
 GET /api/v3/participant-declarations/{id}
