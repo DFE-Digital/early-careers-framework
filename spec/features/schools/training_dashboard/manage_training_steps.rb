@@ -1065,7 +1065,7 @@ module ManageTrainingSteps
 
   def then_i_can_view_participant_with_status(status_key)
     status = I18n.t("schools.participants.status.#{status_key}")
-    expect(page).to have_text(status[:header].upcase)
+    expect(page).to have_text(status[:label].upcase)
     expect(page).to have_text(Array.wrap(status[:content]).first)
   end
 
