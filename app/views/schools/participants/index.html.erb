@@ -44,9 +44,12 @@
                                                                       school_id: @school),
                                              no_visited_state: true),
                          classes: ["govuk-!-font-weight-regular"]) %>
-              <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
-                                                                          induction_record: mentor,
-                                                                          has_mentees: true))) %>
+              <% row.value(
+                   text: render(StatusTags::SchoolParticipantStatusTag.new(
+                     participant_profile: mentor.participant_profile,
+                     induction_record: mentor,
+                     school: @school,
+                     display_description: false))) %>
             <% end %>
           <% end %>
 
@@ -62,9 +65,13 @@
                                                                         school_id: @school),
                                                no_visited_state: true),
                            classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
-                <% row.value(text: render(ParticipantStatusTagComponent.new(profile: ect.participant_profile,
-                                                                            induction_record: ect)),
-                             classes: ["govuk-\!-padding-bottom-static-0"]) %>
+                <% row.value(
+                     text: render(StatusTags::SchoolParticipantStatusTag.new(
+                       participant_profile: ect.participant_profile,
+                       induction_record: ect,
+                       school: @school,
+                       display_description: false)),
+                     classes: ["govuk-\!-padding-bottom-static-0"]) %>
               <% end %>
             <% end %>
           <% end %>
@@ -85,9 +92,13 @@
                                                                       school_id: @school),
                                              no_visited_state: true),
                          classes: ["govuk-!-font-weight-regular", "govuk-\!-padding-bottom-static-0"]) %>
-              <% row.value(text: render(ParticipantStatusTagComponent.new(profile: mentor.participant_profile,
-                                                                          induction_record: mentor)),
-                           classes: ["govuk-\!-padding-bottom-static-0"]) %>
+              <% row.value(
+                   text: render(StatusTags::SchoolParticipantStatusTag.new(
+                     participant_profile: mentor.participant_profile,
+                     induction_record: mentor,
+                     school: @school,
+                     display_description: false)),
+                   classes: ["govuk-\!-padding-bottom-static-0"]) %>
             <% end %>
           <% end %>
         <% end %>

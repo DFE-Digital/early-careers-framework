@@ -1,4 +1,6 @@
 <p class="govuk-body"><%= label %></p>
-<% description.each do |paragraph| %>
-  <p class="govuk-body"><%= paragraph %></p>
+<% if display_description %>
+  <% description.each do |paragraph| %>
+    <p class="govuk-body"><%= paragraph %></p>
+  <% end %>
 <% end %>

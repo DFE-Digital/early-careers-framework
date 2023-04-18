@@ -2,14 +2,20 @@
 
 module StatusTags
   class SchoolParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, school: nil)
+    def initialize(participant_profile:, induction_record: nil, school: nil, display_description: true)
       @participant_profile = participant_profile
       @school = school
       @induction_record = induction_record
+      @display_description = display_description
     end
 
     def label
-      t :label, scope: translation_scope
+      if FeatureFlag.active?(:cohortless_dashboard)
+        govuk_tag(text: t(:label, scope: translation_scope),
+                  colour: t(:colour, scope: translation_scope))
+      else
+        t(:label, scope: translation_scope)
+      end
     end
 
     def description
@@ -24,7 +30,7 @@ module StatusTags
 
   private
 
-    attr_reader :participant_profile, :induction_record, :school
+    attr_reader :participant_profile, :induction_record, :school, :display_description
 
     def translation_scope
       @translation_scope ||= "status_tags.school_participant_status.#{record_state}"
