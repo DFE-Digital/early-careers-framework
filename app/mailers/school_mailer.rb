@@ -21,7 +21,6 @@ class SchoolMailer < ApplicationMailer
   REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE = "63f9fe5b-aff1-4cf7-9593-6843b80d4044"
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
-  ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE = "08d45879-1f94-48a2-88c1-108f596fa59e"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
   PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
@@ -353,20 +352,6 @@ class SchoolMailer < ApplicationMailer
         sign_in: new_user_session_url(**campaign_tracking),
       },
     ).tag(:fifth_request_to_add_ects_and_mentors).associate_with(induction_coordinator, as: :induction_coordinator_profile)
-  end
-
-  def year2020_add_participants_confirmation(recipient:, school_name:, teacher_name_list:)
-    template_mail(
-      ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE,
-      to: recipient,
-      rails_mailer: mailer_name,
-      rails_mail_template: action_name,
-      personalisation: {
-        subject: "2020 to 2021 NQTs cohort: support materials confirmation",
-        school_name:,
-        teacher_name_list:,
-      },
-    )
   end
 
   def nqt_plus_one_sitless_invite(recipient:, start_url:)
