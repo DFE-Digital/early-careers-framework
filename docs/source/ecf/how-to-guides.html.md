@@ -752,17 +752,15 @@ Providers must confirm to the DfE that they have agreed to enter into a partners
 
 ### Confirm a partnership with a school and delivery partner
 
-Confirm a partnership with a school and delivery partner by using the endpoint:
-
 ```
  POST /api/v3/partnerships/ecf
 ```
 
-Request bodies must include all necessary data attributes, namely `cohort`, `school_id` and `delivery_partner_id`. An example request body is listed below.
+An example request body is listed below. Request bodies must include all necessary data attributes, namely `cohort`, `school_id` and `delivery_partner_id`. 
 
-Successful requests will return a response body with updates included. An example response body is listed below.
+An example response body is listed below. Successful requests will return a response body with updates included.
 
-For more detailed information see the specifications for this [confirm an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post).
+For more detailed information see the specifications for this [confirm an ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post)
 
 #### Example request body:
 
