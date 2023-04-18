@@ -286,16 +286,16 @@ Where this occurs, providers should:
 
 ### View data for all participants who have transferred 
 
-Providers can view data participants who have transferred: 
+Providers can view data for participants who have transferred: 
 
-* **from** a school they are in partnership with 
-* **to** a school they are in partnership with 
+* **from** schools they are in partnership with 
+* **to** schools they are in partnership with 
 
 ```
 GET /api/v3/participants/ecf/transfers
 ```
 
-An example response body is listed below. Successful requests will return a response body with information about the school and provider participants are transferring to and from. 
+An example response body is listed below. Successful requests will return a response body with information about the providers and schools the participants are transferring to and from. 
 
 For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
 
@@ -333,6 +333,54 @@ For more detailed information see the specifications for this [view participant 
 }
 ```
 
+### View data for a specific participant who has transferred 
+
+Providers can view data for a specific participant who has transferred: 
+
+* **from** a school they are in partnership with 
+* **to** a school they are in partnership with 
+
+```
+GET /api/v3/participants/ecf/{id}/transfers
+```
+
+An example response body is listed below. Successful requests will return a response body with information about the provider and school the participant is transferring to and from.
+
+For more detailed information see the specifications for this [view a participant transfer endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-transfers-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "participant-transfer",
+      "attributes": {
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "transfers": [
+          {
+            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+            "transfer_type": "new_provider",
+            "status": "complete",
+            "leaving": {
+              "school_urn": "123456",
+              "provider": "Old Institute",
+              "date": "2021-05-31"
+            },
+            "joining": {
+              "school_urn": "654321",
+              "provider": "New Institute",
+              "date": "2021-06-01"
+            },
+            "created_at": "2021-05-31T02:22:32.000Z"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
 
 
 ## How to submit, view and void declarations
