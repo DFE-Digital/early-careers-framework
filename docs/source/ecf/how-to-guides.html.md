@@ -157,6 +157,8 @@ A participant can choose to take a break from ECF-based training at any time if 
 
 An example request body is listed below. 
 
+Successful requests will return a response body including updates to the `training_status` attribute.
+
 For more detailed information see the specifications for this [notify DfE that an ECF participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-defer-put).
 
 #### Example request body:
@@ -175,15 +177,15 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Notify DfE a participant has resumed training
 
-A participant can choose to resume their ECF-based training at any time if they had previously deferred. 
-
-Notify DfE a participant has resumed training by using the endpoint:
+A participant can choose to resume their ECF-based training at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
  /api/v{n}/participants/ecf/{id}/resume
 ```
 
-An example request body is listed below. Successful requests will return a response body including updates.
+An example request body is listed below. 
+
+Successful requests will return a response body including updates to the `training_status` attribute.
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-resume-put).
 
@@ -202,15 +204,15 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ###  Notify DfE a participant has withdrawn from training
 
-A participant can choose to withdraw from ECF-based training at any time.
-
-Notify DfE a participant has withdrawn from training by using the endpoint: 
+A participant can choose to withdraw from ECF-based training at any time. Providers must notify DfE of this via the API.
 
 ```
  PUT /api/v{n}/participants/ecf/{id}/withdraw
 ```
 
-An example request body is listed below. Successful requests will return a response body including updates to the `training_status` attribute.
+An example request body is listed below. 
+
+Successful requests will return a response body including updates to the `training_status` attribute.
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-withdraw-put).
 
@@ -231,23 +233,25 @@ For more detailed information see the specifications for this [notify DfE that a
 {inset-text}
 #### Providers should note: 
 
-* The API will not allow withdrawals for participants who have not had a started declaration submitted against them. If a participant withdraws before a started declaration has been submitted, providers should inform their contract manager who can advise
-* DfE will only pay for participants who have had, at a minimum, a started declaration submitted against them
-* If a participant is withdrawn later in their training, DfE will pay providers for any declarations submitted where the declaration_date is before the date of the withdrawal
-* The amount DfE will pay depends on which milestones have been reached and declarations submitted before the participant withdraws. [View ECF schedules and milestone dates](LINK NEEDED)
+* The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
+* DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
+* If a participant is withdrawn later in their training, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
+* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View ECF schedules and milestone dates](/api-reference/ecf/schedules_and-milestone-dates)
 {/inset-text}
 
 ### Notify DfE a participant has changed their training schedule
 
-Participants can choose to follow [standard or non-standard training schedules](LINK NEEDED). Providers must notify the DfE of any schedule change.
+Participants can choose to follow standard or non-standard training schedules. 
 
-Notify DfE a participant has changed their training schedule by using the endpoint:
+All participants will be registered by default to a standard schedule starting in September. Providers must notify the DfE of any schedule change.
 
 ```
  PUT /api/v3/participants/ecf/{id}/change-schedule
 ```
 
-An example request body is listed below. Successful requests will return a response body including updates to the `schedule_identifier` attribute.
+An example request body is listed below. 
+
+Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
 For more detailed information see the specifications for this [notify that an ECF participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
@@ -270,7 +274,7 @@ For more detailed information see the specifications for this [notify that an EC
 {inset-text}
 #### Providers should note: 
 
-Milestone validation applies. The API will reject a schedule change request if any previously submitted declarations (`eligible`, `payable` or `paid`) have a `declaration_date` which does not align with the new schedule’s milestone dates. 
+Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
 
 Where this occurs, providers should:
 
@@ -278,6 +282,58 @@ Where this occurs, providers should:
 2. change the participant’s training schedule 
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
 {/inset-text}
+
+
+### View data for all participants who have transferred 
+
+Providers can view data participants who have transferred: 
+
+* **from** a school they are in partnership with 
+* **to** a school they are in partnership with 
+
+```
+GET /api/v3/participants/ecf/transfers
+```
+
+Successful requests will return a response body with information about the school and provider participants are transferring to and from. An example response body is listed below. 
+
+For more detailed information see the specifications for this [view participant transfers endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-transfers-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "participant-transfer",
+      "attributes": {
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "transfers": [
+          {
+            "training_record_id": "000a97ff-d2a9-4779-a397-9bfd9063072e",
+            "transfer_type": "new_provider",
+            "status": "complete",
+            "leaving": {
+              "school_urn": "123456",
+              "provider": "Old Institute",
+              "date": "2021-05-31"
+            },
+            "joining": {
+              "school_urn": "654321",
+              "provider": "New Institute",
+              "date": "2021-06-01"
+            },
+            "created_at": "2021-05-31T02:22:32.000Z"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+
 
 ## How to submit, view and void declarations
 
