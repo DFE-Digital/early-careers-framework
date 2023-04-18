@@ -54,6 +54,14 @@ module Schools
         schools_dashboard_path(school_id: school.slug)
       end
 
+      def dashboard_path
+        if FeatureFlag.active? :cohortless_dashboard
+          schools_dashboard_path(school_id: school.slug)
+        else
+          schools_participants_path(school_id: school.slug, cohort_id: school_cohort.cohort.start_year)
+        end
+      end
+
       def previous_step_path
         if changing_answer?
           show_path_for(step: return_point)
@@ -338,7 +346,9 @@ module Schools
 
       # NOTE: not preventing registration here just determining where to put the participant
       def cohort_to_place_participant
-        if induction_start_date.present?
+        if transfer?
+          existing_participant_cohort || existing_participant_profile&.schedule&.cohort
+        elsif induction_start_date.present?
           Cohort.containing_date(date: induction_start_date)
         elsif Cohort.current == Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
@@ -472,6 +482,8 @@ module Schools
           complete
           history_stack
           last_visited_step
+          school_cohort_id
+          school_id
         ].each do |key|
           data_store.set(key, nil)
         end

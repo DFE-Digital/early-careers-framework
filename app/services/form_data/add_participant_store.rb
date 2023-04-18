@@ -15,6 +15,10 @@ module FormData
       get :school_id
     end
 
+    def school_cohort_id
+      get :school_cohort_id
+    end
+
     def full_name
       get :full_name
     end
