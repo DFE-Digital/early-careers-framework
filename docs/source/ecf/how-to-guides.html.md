@@ -45,13 +45,15 @@ Providers can then update data to confirm participants have:
 
 ### View all participant data
 
-View all ECF participant records by using the endpoint: 
-
 ```
  GET /api/v{n}/participants/ecf
 ```
 
-Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
+Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: 
+
+```
+GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z
+```
 
 An example response body is listed below. 
 
@@ -98,8 +100,6 @@ For more detailed information see the specifications for this [view multiple ECF
 ```
 
 ### View a single participant's data
-
-View a participant’s data by using the endpoint:
 
 ```
  GET /api/v{n}/participants/ecf/{id}
@@ -149,9 +149,7 @@ For more detailed information see the specifications for this [view a single ECF
 
 ### Notify DfE a participant has taken a break (deferred) from training
 
-A participant can choose to take a break from ECF-based training at any time if they plan to resume training at a later date. 
-
-Confirm a participant has deferred training by using the endpoint: 
+A participant can choose to take a break from ECF-based training at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
 
 ```
  PUT /api/v{n}/participants/ecf/{id}/defer
