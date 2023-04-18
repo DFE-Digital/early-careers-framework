@@ -27,15 +27,15 @@ Participant states are defined by the `training_status` attribute.
 
 A participant’s `training_status` value will determine whether a provider can: 
 
-* update their details. For example, notifying DfE that a participant has withdrawn from training 
-* submit a declaration. For example, notifying DfE that a participant has started their training
+* [update their details](/api-reference/ecf/how-to-guides/#how-to-view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training 
+* [submit a declaration](/api-reference/ecf/how-to-guides/#how-to-submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
 
 
 | training_status | Definition | Action |
 | -------- | -------- | -------- |
-| `active`     | Participants currently in training     | Providers can [update participant data](/api-reference/ecf/how-to-guides/#how-to-view-and-update-participant-data) and [submit declarations](/api-reference/ecf/how-to-guides/#how-to-submit-view-and-void-declarations) for `active` participants     |
+| `active`     | Participants currently in training     | Providers can update participant data and submit declarations for `active` participants     |
 | `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/how-to-guides/#notify-dfe-a-participant-has-resumed-training)     |
-| `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** [submit declarations](/api-reference/ecf/how-to-guides/#how-to-submit-view-and-void-declarations) for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
+| `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
 
 Find more detailed specifications for the [ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
 
