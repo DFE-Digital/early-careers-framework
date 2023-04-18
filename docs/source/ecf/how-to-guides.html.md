@@ -803,9 +803,7 @@ For more detailed information see the specifications for this [confirm an ECF pa
 
 ### View all details for all existing partnership
 
-Providers can view details for all existing partnerships to check  information is correct and whether any have had their status challenged by schools. [Find out more about partnership statuses.](LINK NEEDED). 
-
-View existing partnership details by using the endpoint: 
+View details for all existing partnerships to check information is correct and whether any have had their status challenged by schools. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 
 ```
 GET /api/v3/partnerships/ecf
