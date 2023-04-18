@@ -413,9 +413,7 @@ Notify the DfE that a participant has started ECF-based training by submitting a
  POST /api/v3/participant-declarations
 ```
 
-Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. 
-
-An example request body is listed below.
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. 
 
 An example response body is listed below. Successful requests will return a response body with declaration data. 
 
@@ -470,19 +468,21 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Submit a declation to notify DfE a participant has been retained in training
 
-To notify DfE that a participant has reached a given retention point in their training, providers must submit a `retained` declaration in line with [milestone dates](LINK NEEDED).
-
-Confirm a participant has been retained in training by using the endpoint:
+Notify the DfE that a participant has reached a given retention point in their training by submitting a `retained` declaration in line with [milestone dates](/api-reference/ecf/schedules-and-milestone-dates).
 
 ```
 POST /api/v{n}/participant-declarations
 ```
 
-Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`. An example request body is listed below.
+An example request body is listed below. Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`. 
 
-Successful requests will return a response body with declaration data. An example response body is listed below. Any attempts to submit duplicate declarations will return an error message.
+An example response body is listed below. Successful requests will return a response body with declaration data. 
 
-For more detailed information see the specifications for this [notify DfE that an ECF participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+Any attempts to submit duplicate declarations will return an error message.
+
+{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
+
+For more detailed information see the specifications for this [notify DfE that an ECF participant has been retained in training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
 #### Example request body:
 
@@ -527,8 +527,6 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-
-{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
 
 ### Submit a declaration to notify DfE a participant has completed training
 
