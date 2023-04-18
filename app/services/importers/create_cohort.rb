@@ -31,11 +31,17 @@ module Importers
       start_year = row["start-year"].to_i
       logger.info "CreateCohort: Creating cohort for starting year #{start_year}"
 
-      Cohort.find_or_create_by!(start_year:) do |c|
-        c.registration_start_date = safe_parse(row["registration-start-date"])
-        c.academic_year_start_date = safe_parse(row["academic-year-start-date"])
-        c.npq_registration_start_date = safe_parse(row["npq-registration-start-date"])
-      end
+      Cohort.upsert(
+        {
+          start_year:,
+          registration_start_date: safe_parse(row["registration-start-date"]),
+          academic_year_start_date: safe_parse(row["academic-year-start-date"]),
+          npq_registration_start_date: safe_parse(row["npq-registration-start-date"]),
+          created_at: Time.zone.now,
+          updated_at: Time.zone.now,
+        },
+        unique_by: :start_year,
+      )
 
       logger.info "CreateCohort: Cohort for starting year #{start_year} successfully created"
     end
