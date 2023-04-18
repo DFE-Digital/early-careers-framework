@@ -64,6 +64,10 @@ class Admin::ParticipantPresenter
     school_cohort&.delivery_partner&.name
   end
 
+  def appropriate_body_name
+    school_cohort&.appropriate_body&.name
+  end
+
   def historical_induction_records
     induction_records[1..]
   end
