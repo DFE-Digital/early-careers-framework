@@ -742,13 +742,13 @@ For more detailed information see the specifications for this [void declarations
 
 {inset-text}The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.{/inset-text}
 
-Providers must notify DfE to confirm they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
+Providers must confirm to the DfE that they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
 
-#### Providers should note: 
+**Providers should note:**
 
-* Once a partnership for a given cohort is confirmed, it will enable default training provided to participants who are registered for training at that school. For example, a provider confirms partnership for the 2022 cohort with school and delivery partner. Any participants that are registered (by the induction tutor) will default to training with the provider.
-* Not all participants at a given school need to be registered to the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. For example, if a participant who has begun training with A provider and B delivery partner transfers to a new school which is partnered with Y provider and Z delivery partner, the participant can choose to remain with their existing training providers (A and B). In this case, Y provider will not receive data for this participant. 
-* Providers may receive data for participants at schools where they do not have a confirmed partnership. For example, a X participant begins training at school 1 which is partnered with Y provider and Z delivery partner, and then transfers to school 2. They choose to remain with their existing training providers (Y and Z). Therefore Y provider will continue to receive data for X participant, despite not being partnered with school 2. 
+* Once a partnership for a given cohort is confirmed, it will enable default training provided to participants who are registered for training at that school. For example, once a provider confirms partnership for the 2022 cohort, any participants that are registered (by the school induction tutor) will default to training with the provider
+* Not all participants at a given school will be registered to receive traing through the (default) partnership. Therefore providers may not receive data for all participants at schools they have partnered with. For example, if a participant who has begun training with provider A and delivery partner B transfers to a new school which is partnered with provider Y and delivery partner Z, the participant can choose to remain with their existing training providers (A and B). In this case, provider Y will not receive data for this participant
+* Providers may receive data for participants at schools that they do not have a partnership with. For example, a participant X begins training at school 1 which is partnered with provider Y and delivery partner Z. They transfer to school 2 and choose to remain with their existing training providers (Y and Z). Therefore provider Y will continue to receive data for participant X, despite not being partnered with school 2
 
 ### Confirm a partnership with a school and delivery partner
 
