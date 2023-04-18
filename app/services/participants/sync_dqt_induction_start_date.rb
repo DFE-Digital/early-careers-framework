@@ -8,6 +8,7 @@ module Participants
     end
 
     def call
+      return false unless FeatureFlag.active?(:cohortless_dashboard)
       return false if @dqt_induction_start_date.nil?
       return false if @participant_profile.induction_start_date.present?
 
