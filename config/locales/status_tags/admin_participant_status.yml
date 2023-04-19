@@ -73,6 +73,10 @@ en:
         label: "Eligible to start"
         colour: "turquoise"
 
+      not_yet_mentoring:
+        label: "Eligible to start"
+        colour: "turquoise"
+
       registered_for_mentor_no_partner:
         label: "Eligible to start: No partnership"
         colour: "turquoise"
@@ -122,6 +126,10 @@ en:
         colour: "turquoise"
 
       active_cip_training:
+        label: "Eligible to start"
+        colour: "turquoise"
+
+      active_mentoring:
         label: "Eligible to start"
         colour: "turquoise"
 

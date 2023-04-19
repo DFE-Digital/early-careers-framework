@@ -105,6 +105,11 @@ en:
         description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
         colour: "turquoise"
 
+      not_yet_mentoring:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
+        colour: "turquoise"
+
       registered_for_mentor_no_partner:
         label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
@@ -158,6 +163,11 @@ en:
       active_cip_training:
         label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
+        colour: "turquoise"
+
+      active_mentoring:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
         colour: "turquoise"
 
       leaving:
