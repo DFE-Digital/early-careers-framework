@@ -36,14 +36,14 @@ Providers can view data to find out whether participants:
 * have valid teacher reference numbers (TRN) 
 * have achieved qualified teacher status (QTS)
 * are eligible for funding
-* have transferred to or from a school you are partnered with 
+* have [transferred to or from a school you are partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
 
 Providers can then update data to confirm participants have: 
 
-* deferred training 
-* resumed training 
-* withdrawn from training 
-* changed their training schedule
+* [deferred training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training ) 
+* [resumed training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)  
+* [withdrawn from training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-withdrawn-from-training) 
+* [changed their training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
 
 ### View all participant data
 
