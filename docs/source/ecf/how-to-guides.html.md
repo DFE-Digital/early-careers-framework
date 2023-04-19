@@ -1,9 +1,9 @@
 ---
-title: How to guides
+title: Guidance
 weight: 2
 ---
 
-# How to guides
+# Guidance
 
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](LINK NEEDED) is not detailed.
 
