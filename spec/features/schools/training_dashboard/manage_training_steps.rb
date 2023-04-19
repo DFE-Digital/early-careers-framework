@@ -13,6 +13,17 @@ module ManageTrainingSteps
     @school_cohort.update!(default_induction_programme: @induction_programme)
   end
 
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_2022_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    @cohort22 = Cohort.find_or_create_by!(start_year: 2022)
+    @partnership22 = @partnership.dup
+    @partnership22.cohort = @cohort22
+    @partnership22.save!
+    @school_cohort22 = create(:school_cohort, :fip, school: @school, cohort: @cohort22)
+    @induction_programme22 = create(:induction_programme, :fip, school_cohort: @school_cohort22, partnership: @partnership22)
+    @school_cohort22.update!(default_induction_programme: @induction_programme22)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
     given_there_is_a_school_that_has_chosen_fip_for_2021
     @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
@@ -1110,6 +1121,7 @@ module ManageTrainingSteps
       email: "sally@school.com",
       nino: "AB123456A",
       start_date: Date.new(2022, 9, 1),
+      start_term: "summer",
     }
   end
 

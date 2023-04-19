@@ -174,6 +174,13 @@ module Pages
       self
     end
 
+    def add_start_term(start_term)
+      choose start_term
+      click_on "Continue"
+
+      self
+    end
+
     def choose_a_mentor(mentor_full_name)
       choose mentor_full_name
       click_on "Continue"

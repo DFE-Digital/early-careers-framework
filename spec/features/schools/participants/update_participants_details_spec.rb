@@ -3,11 +3,11 @@
 require "rails_helper"
 require_relative "../training_dashboard/manage_training_steps"
 
-RSpec.describe "Update participants details", js: true do
+RSpec.shared_context "Changing participant details from check answers", with_default_schedules: true do
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_2022_and_partnered
     and_i_have_added_an_ect
     and_i_am_signed_in_as_an_induction_coordinator
     when_i_navigate_to_participants_dashboard
@@ -30,7 +30,14 @@ RSpec.describe "Update participants details", js: true do
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-    and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
+
+    if FeatureFlag.active?(:cohortless_dashboard)
+      # FIXME: only before 2023 cohort
+      and_i_add_start_term_to_the_school_add_participant_wizard @participant_data[:start_term] if Cohort.within_next_registration_period?
+    else
+      and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
+    end
+
     and_i_choose_mentor_later_on_the_school_add_participant_wizard
     then_i_am_taken_to_check_details_page
 
@@ -41,10 +48,12 @@ RSpec.describe "Update participants details", js: true do
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
 
-    when_i_click_change_induction_start_date
-    when_i_add_a_start_date
-    when_i_click_on_continue
-    then_i_am_taken_to_check_details_page
+    unless FeatureFlag.active? :cohortless_dashboard
+      when_i_click_change_induction_start_date
+      when_i_add_a_start_date
+      when_i_click_on_continue
+      then_i_am_taken_to_check_details_page
+    end
 
     when_i_click_on_change_mentor
     when_i_choose_assign_mentor_later
@@ -69,7 +78,14 @@ RSpec.describe "Update participants details", js: true do
     and_i_add_teacher_reference_number_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:trn]
     and_i_add_date_of_birth_to_the_school_add_participant_wizard @participant_data[:date_of_birth]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-    and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
+
+    if FeatureFlag.active?(:cohortless_dashboard)
+      # FIXME: only before 2023 cohort
+      and_i_add_start_term_to_the_school_add_participant_wizard @participant_data[:start_term] if Cohort.within_next_registration_period?
+    else
+      and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
+    end
+
     then_i_am_taken_to_add_mentor_page
     then_the_page_should_be_accessible
 
@@ -85,6 +101,18 @@ RSpec.describe "Update participants details", js: true do
     when_i_click_on_continue
     then_i_am_taken_to_check_details_page
     then_i_can_view_assign_mentor_later_status
+  end
+end
+
+RSpec.describe "Changing participant details from the dashboard", type: :feature, js: true do
+  include ManageTrainingSteps
+
+  before do
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    and_i_have_added_an_ect
+    and_i_am_signed_in_as_an_induction_coordinator
+    when_i_navigate_to_participants_dashboard
+    and_i_have_added_a_mentor
   end
 
   scenario "withdrawn participants" do
@@ -218,5 +246,19 @@ RSpec.describe "Update participants details", js: true do
       then_i_see_appropriate_body(appropriate_body)
       and_i_can_change_the_appropriate_body
     end
+  end
+end
+
+RSpec.describe "Updating participant details", type: :feature, js: true do
+  before do
+    [2022, 2023].each { |start_year| Cohort.find_or_create_by!(start_year:) }
+  end
+
+  context "using cohort add journey" do
+    include_context "Changing participant details from check answers"
+  end
+
+  context "using cohortless add journey", with_feature_flags: { cohortless_dashboard: "active" } do
+    include_context "Changing participant details from check answers"
   end
 end

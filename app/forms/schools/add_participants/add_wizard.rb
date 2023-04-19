@@ -91,8 +91,9 @@ module Schools
       end
 
       def needs_to_confirm_start_term?
-        # FIXME: just testing
-        true
+        # are we in the period for registrations for the next cohort prior to
+        # the next academic year start?
+        Cohort.within_next_registration_period?
       end
 
       # check answers helpers
