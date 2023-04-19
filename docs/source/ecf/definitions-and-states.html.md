@@ -27,14 +27,14 @@ Participant states are defined by the `training_status` attribute.
 
 A participant’s `training_status` value will determine whether a provider can: 
 
-* [update their details](/api-reference/ecf/how-to-guides/#how-to-view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training 
-* [submit a declaration](/api-reference/ecf/how-to-guides/#how-to-submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
+* [update their details](/api-reference/ecf/guidance/#how-to-view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training 
+* [submit a declaration](/api-reference/ecf/guidance/#how-to-submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
 
 
 | training_status | Definition | Action |
 | -------- | -------- | -------- |
 | `active`     | Participants currently in training     | Providers can update participant data and submit declarations for `active` participants     |
-| `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/how-to-guides/#notify-dfe-a-participant-has-resumed-training)     |
+| `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)     |
 | `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
 
 View more detailed specifications for the [ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
@@ -43,7 +43,7 @@ View more detailed specifications for the [ECF participant schema](/api-referenc
 
 Declaration states are defined by the `state` attribute. 
 
-Providers must [submit declarations](/api-reference/ecf/how-to-guides/#how-to-submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
+Providers must [submit declarations](/api-reference/ecf/guidance/#how-to-submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
 
 | state | Definition | Action |
 | -------- | -------- | -------- |
@@ -64,7 +64,7 @@ View more detailed specifications for the [declaration schema](/api-reference/re
 
 Partnership states are defined by the `status` attribute. 
 
-Providers must [confirm their partnerships with schools](/api-reference/ecf/how-to-guides/#how-to-confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
+Providers must [confirm their partnerships with schools](/api-reference/ecf/guidance/#how-to-confirm-view-and-update-partnerships) for each cohort. Once a partnership has been established the `status` value will become `active` and providers will receive participant information via the API.
 
 Schools can challenge existing partnerships at any time. Once a partnership `status` becomes `challenged`, providers will no longer be able to update partnership details.
 

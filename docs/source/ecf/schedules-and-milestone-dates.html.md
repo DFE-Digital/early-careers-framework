@@ -292,7 +292,7 @@ While the API will accept any declarations submitted after the first milestone s
 
 Contact ECF contract managers via email for more information on exact dates.
 
-Mentors that are not already training ECTs and are replacing a mentor must be [confirmed by providers onto one of the following replacement schedules.](/api-reference/ecf/how-to-guides/#notify-dfe-a-participant-has-changed-their-training-schedule) 
+Mentors that are not already training ECTs and are replacing a mentor must be [confirmed by providers onto one of the following replacement schedules.](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) 
 
 ```
  "schedule_identifier": "ecf-replacement-september"

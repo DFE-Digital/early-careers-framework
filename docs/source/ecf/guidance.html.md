@@ -5,7 +5,7 @@ weight: 2
 
 # Guidance
 
-The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](LINK NEEDED) is not detailed.
+The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](#connect-to-the-API) is not detailed.
 
 {inset-text}This guidance is written for [API version 3.0.0](/api-reference/reference-v3.html), and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.{/inset-text}
 
@@ -914,7 +914,7 @@ For more detailed information see the specifications for this [update an ECF par
 
 ### Find delivery partner IDs 
 
-Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/how-to-guides/#update-a-partnership-with-a-new-delivery-partner).
+Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/guidance/#update-a-partnership-with-a-new-delivery-partner).
 
 ```
 GET /api/v3/delivery-partners

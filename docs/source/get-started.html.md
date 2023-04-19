@@ -77,7 +77,7 @@ API v3:
 https://ecf-sandbox.london.cloudapps.digital/api/v3
 ```
 
-{inset-text}Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/how-to-guides/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq).{/inset-text}
+{inset-text}Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq).{/inset-text}
 
 ## Rate limits
 
