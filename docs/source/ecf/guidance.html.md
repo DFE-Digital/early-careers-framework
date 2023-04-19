@@ -28,7 +28,7 @@ The focus of the following guidance is on business logic only. Critical details 
 
 Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to update relevant data using the API. 
 
-## How to view and update participant data
+## View and update participant data
 
 Providers can view data to find out whether participants:
 

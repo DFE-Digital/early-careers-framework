@@ -13,7 +13,7 @@ Find guidance on:
 
 * [data used by the API](/api-reference/ecf/defintions-and-states)
 * [states and what they mean](/api-reference/ecf/defintions-and-states/#data-states-and-what-they-mean)
-* [how to view and update participant data](/api-reference/ecf/guidance/#how-to-view-and-update-participant-data)
+* [how to view and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
 * [how to submit and void declarations](/api-reference/ecf/guidance/#how-to-submit-view-and-void-declarations)
 * [how to view and submit partnerships](/api-reference/ecf/guidance/#how-to-view-submit-and-update-partnerships)
 * [upcoming schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates)
