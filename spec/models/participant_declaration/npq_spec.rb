@@ -52,4 +52,67 @@ RSpec.describe ParticipantDeclaration::NPQ, :with_default_schedules, type: :mode
       end
     end
   end
+
+  describe "#uplift_paid?" do
+    let(:declaration_state) { "paid" }
+    let(:course_identifier) { "npq-leading-teaching" }
+    let(:npq_course) { create(:npq_course, identifier: course_identifier) }
+    let!(:participant_declaration) do
+      create(
+        :npq_participant_declaration,
+        profile_traits: [:targeted_delivery_funding_eligibility],
+        declaration_type: "started",
+        npq_course:,
+        state: declaration_state,
+      )
+    end
+
+    %w[
+      npq-leading-teaching
+      npq-leading-behaviour-culture
+      npq-leading-teaching-development
+      npq-senior-leadership
+      npq-headship
+      npq-executive-leadership
+      npq-early-years-leadership
+      npq-leading-literacy
+    ].each do |course|
+      %w[paid awaiting_clawback clawed_back].each do |state|
+        context "started - #{course} - #{state}" do
+          let(:declaration_state) { state }
+          let(:course_identifier) { course }
+
+          it "should be true" do
+            expect(participant_declaration.uplift_paid?).to eql(true)
+          end
+        end
+      end
+    end
+
+    %w[npq-additional-support-offer npq-early-headship-coaching-offer].each do |course|
+      context "started - #{course} - paid" do
+        let(:course_identifier) { course }
+
+        it "should be false" do
+          expect(subject.uplift_paid?).to eql(false)
+        end
+      end
+    end
+
+    context "targeted_delivery_funding_eligibility is false" do
+      let!(:participant_declaration) do
+        create(
+          :npq_participant_declaration,
+          profile_traits: [],
+          declaration_type: "started",
+          npq_course:,
+          state: declaration_state,
+        )
+      end
+
+      it "should be false" do
+        expect(subject.uplift_paid?).to eql(false)
+      end
+    end
+  end
 end

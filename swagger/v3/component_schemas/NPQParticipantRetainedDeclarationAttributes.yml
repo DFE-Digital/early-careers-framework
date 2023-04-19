@@ -102,3 +102,8 @@ properties:
       - training-event-attended
       - self-study-material-completed
       - other
+  has_passed:
+    description: Whether the participant has failed or passed
+    type: boolean
+    example: nil
+    nullable: true

@@ -3165,6 +3165,11 @@
               "other"
             ],
             "example": "unknown"
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": null
           }
         }
       },
@@ -5334,6 +5339,11 @@
               "other"
             ],
             "example": "unknown"
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": true
           }
         }
       },
@@ -5846,6 +5856,11 @@
               "other"
             ],
             "example": "unknown"
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": null
           }
         }
       },
@@ -5973,6 +5988,11 @@
               "other"
             ],
             "example": "unknown"
+          },
+          "has_passed": {
+            "description": "Whether the participant has failed or passed",
+            "type": "boolean",
+            "example": null
           }
         }
       },
