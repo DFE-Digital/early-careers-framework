@@ -53,9 +53,9 @@ RSpec.describe Importers::CreateCallOffContract do
       context "when lead provider does not exist" do
         let!(:cohort_2021) { create(:cohort, start_year: 2021) }
         before do
-          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -68,9 +68,9 @@ RSpec.describe Importers::CreateCallOffContract do
       context "when cohort does not exist" do
         let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute") }
         before do
-          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -84,9 +84,9 @@ RSpec.describe Importers::CreateCallOffContract do
         let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: []) }
         let!(:cohort_2021) { create(:cohort, start_year: 2021) }
         before do
-          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -101,9 +101,9 @@ RSpec.describe Importers::CreateCallOffContract do
         let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: [cohort_2021]) }
         let!(:call_off_contract) { create(:call_off_contract, cohort: cohort_2021, lead_provider:) }
         before do
-          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -121,9 +121,9 @@ RSpec.describe Importers::CreateCallOffContract do
         let!(:cohort_2021) { create(:cohort, start_year: 2021) }
         let!(:lead_provider) { create(:lead_provider, name: "Ambition Institute", cohorts: [cohort_2021]) }
         before do
-          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+          csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
           csv.write "\n"
-          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
+          csv.write "Ambition Institute,2021,0.44,200,4600,4790,0,2300,0,90,895,91,199,700,200,299,600,300,400,500"
           csv.write "\n"
           csv.close
         end
@@ -146,6 +146,7 @@ RSpec.describe Importers::CreateCallOffContract do
             recruitment_target: 4600,
             revised_target: 4790,
             set_up_fee: 0,
+            monthly_service_fee: 2300,
           )
         end
 
