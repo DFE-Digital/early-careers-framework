@@ -740,7 +740,7 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## How to confirm, view and update partnerships
+## Confirm, view and update partnerships
 
 {inset-text}The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.{/inset-text}
 
