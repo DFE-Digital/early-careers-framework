@@ -20,6 +20,7 @@ class FeatureFlag
     api_v3
     appropriate_bodies
     prevent_2023_ect_registrations
+    school_participant_status_language
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|

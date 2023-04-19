@@ -7,11 +7,24 @@ RSpec.describe StatusTags::SchoolParticipantStatusTag, :with_training_record_sta
 
   subject(:label) { render_inline component }
 
-  I18n.t("status_tags.school_participant_status").each do |key, value|
-    context "when :#{key} is the determined state" do
-      before { allow(component).to receive(:record_state).and_return(key) }
-      it { is_expected.to have_text value[:label] }
-      it { is_expected.to have_text Array.wrap(value[:description]).join("\n  ").gsub("%{contact_us}", "contact us\n") }
+  context "When the feature flag :school_participant_status_language is not active" do
+    I18n.t("status_tags.school_participant_status").each do |key, value|
+      context "and :#{key} is the determined state" do
+        before { allow(component).to receive(:record_state).and_return(key) }
+        it { is_expected.to have_text value[:label] }
+        it { is_expected.to have_text Array.wrap(value[:description]).join("\n  ").gsub("%{contact_us}", "contact us\n") }
+      end
+    end
+  end
+
+  context "When the feature flag :school_participant_status_language is active", with_feature_flags: { school_participant_status_language: "active" } do
+    I18n.t("status_tags.school_participant_status_detailed").each do |key, value|
+      context "and :#{key} is the determined state" do
+        before { allow(component).to receive(:record_state).and_return(key) }
+        it { is_expected.to have_text value[:label] }
+        it { is_expected.to have_selector(".govuk-tag.govuk-tag--#{value[:colour]}", exact_text: value[:label]) }
+        it { is_expected.to have_text Array.wrap(value[:description]).join("\n  ").gsub("%{contact_us}", "contact us\n") }
+      end
     end
   end
 end
