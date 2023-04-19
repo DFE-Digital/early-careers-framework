@@ -1301,7 +1301,7 @@ RSpec.describe DetermineTrainingRecordState, :with_training_record_state_example
         include_examples "determines states as",
                          :valid,
                          :eligible_for_mentor_training,
-                         :ineligible_duplicate,
+                         :ineligible_secondary,
                          :active_cip_mentoring,
                          :active_cip_mentoring
       end
