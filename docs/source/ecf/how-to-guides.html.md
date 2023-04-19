@@ -813,6 +813,8 @@ Note, providers can also filter results by adding a `cohort` filter to the param
 
 An example response body is listed below. 
 
+For more detailed information see the specifications for this [view all ECF partnerships endpoint.](api-reference/reference-v3.html#api-v3-partnerships-ecf-get)
+
 #### Example response body:
 
 ```
@@ -842,15 +844,15 @@ An example response body is listed below.
 
 ### View details for a specific existing partnership
 
-Providers can view details for a specific existing partnership to check information is correct and whether the status has been challenged by the school. [Find out more about partnership statuses.](LINK NEEDED). 
-
-View existing partnership details by using the endpoint: 
+View details for an existing partnership to check information is correct and whether the status has been challenged by the school. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states) 
 
 ```
 GET /api/v3/partnerships/ecf/{id}
 ```
 
 An example response body is listed below. 
+
+For more detailed information see the specifications for this [view a single ECF partnership endpoint.](api-reference/reference-v3.html#api-v3-partnerships-ecf-id-get)
 
 #### Example response body:
 
@@ -881,17 +883,13 @@ An example response body is listed below.
 
 ### Update a partnership with a new delivery partner
 
-Providers can update a partnership with new delivery partner details for a given cohort. 
-
-Update existing partnership details by using the endpoint: 
+Update an existing partnership with new delivery partner details for a given cohort.
 
 ```
  PUT /api/v3/partnerships/ecf/{id}
 ```
 
-Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](LINK NEEDED). 
-
-An example request body is listed below.
+An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](LINK NEEDED). 
 
 {inset-text}Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](LINK NEEDED).{/inset-text}
 
