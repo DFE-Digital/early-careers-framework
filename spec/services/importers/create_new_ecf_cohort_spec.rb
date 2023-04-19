@@ -26,7 +26,7 @@ RSpec.describe Importers::CreateNewECFCohort do
 
     let(:contract_csv) do
       csv = Tempfile.new("contract_csv_data.csv")
-      csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
+      csv.write "lead-provider-name,cohort-start-year,uplift-target,uplift-amount,recruitment-target,revised-target,set-up-fee,monthly-service-fee,band-a-min,band-a-max,band-a-per-participant,band-b-min,band-b-max,band-b-per-participant,band-c-min,band-c-max,band-c-per-participant,band-d-min,band-d-max,band-d-per-participant"
       csv.write "\n"
       csv.write "Ambition Institute,2023,0.44,200,4600,4790,0,0,90,895,91,199,700,200,299,600,300,400,500"
       csv.write "\n"

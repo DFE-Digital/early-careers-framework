@@ -69,7 +69,7 @@ module Importers
     end
 
     def check_headers!
-      unless %w[lead-provider-name cohort-start-year uplift-target uplift-amount recruitment-target revised-target set-up-fee band-a-min band-a-max band-a-per-participant band-b-min band-b-max band-b-per-participant band-c-min band-c-max band-c-per-participant band-d-min band-d-max band-d-per-participant].all? { |header| rows.headers.include?(header) }
+      unless %w[lead-provider-name cohort-start-year uplift-target uplift-amount recruitment-target revised-target set-up-fee monthly-service-fee band-a-min band-a-max band-a-per-participant band-b-min band-b-max band-b-per-participant band-c-min band-c-max band-c-per-participant band-d-min band-d-max band-d-per-participant].all? { |header| rows.headers.include?(header) }
         raise NameError, "Invalid headers"
       end
     end
@@ -87,6 +87,7 @@ module Importers
         recruitment_target: contract_data[:recruitment_target],
         revised_target: contract_data[:revised_target],
         set_up_fee: contract_data[:set_up_fee],
+        monthly_service_fee: contract_data[:monthly_service_fee],
         raw: contract_data.to_json,
       )
     end
@@ -122,6 +123,7 @@ module Importers
         recruitment_target: 4500,
         revised_target: (4500 * 1.02).to_i,
         set_up_fee: 0,
+        monthly_service_fee: 0,
         band_a: {
           min: 0,
           max: 10,
@@ -152,6 +154,7 @@ module Importers
         recruitment_target: row["recruitment-target"],
         revised_target: row["revised-target"],
         set_up_fee: row["set-up-fee"],
+        monthly_service_fee: row["monthly-service-fee"],
         band_a: {
           min: row["band-a-min"],
           max: row["band-a-max"],
