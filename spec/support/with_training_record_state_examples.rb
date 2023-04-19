@@ -239,18 +239,6 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .participant_profile
   end
 
-  let(:ect_on_fip_ineligible_previous_participation) do
-    school_cohort = fip_school.school_cohort
-
-    NewSeeds::Scenarios::Participants::Ects::Ect
-      .new(school_cohort:)
-      .build
-      .with_validation_data
-      .with_eligibility(previous_participation: true, status: "ineligible", reason: "previous_participation")
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme)
-      .participant_profile
-  end
-
   let(:ect_on_fip_no_eligibility_checks) do
     school_cohort = fip_school.school_cohort
 
@@ -652,18 +640,6 @@ RSpec.shared_context "with Training Record state examples", shared_context: :met
       .build
       .with_validation_data
       .with_eligibility(previous_induction: true, status: "ineligible", reason: "previous_induction")
-      .with_induction_record(induction_programme: school_cohort.default_induction_programme)
-      .participant_profile
-  end
-
-  let(:ect_on_cip_ineligible_previous_participation) do
-    school_cohort = cip_school.school_cohort
-
-    NewSeeds::Scenarios::Participants::Ects::Ect
-      .new(school_cohort:)
-      .build
-      .with_validation_data
-      .with_eligibility(previous_participation: true, status: "ineligible", reason: "previous_participation")
       .with_induction_record(induction_programme: school_cohort.default_induction_programme)
       .participant_profile
   end
