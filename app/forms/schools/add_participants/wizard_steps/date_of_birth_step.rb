@@ -4,6 +4,8 @@ module Schools
   module AddParticipants
     module WizardSteps
       class DateOfBirthStep < ::WizardStep
+        include WhoToAddParticipantChecks
+
         attr_accessor :date_of_birth
 
         validate :date_of_birth_is_present_and_correct
@@ -15,29 +17,7 @@ module Schools
         end
 
         def next_step
-          if wizard.participant_exists?
-            if wizard.existing_participant_is_a_different_type?
-              if wizard.ect_participant?
-                # trying to add an ECT who is already a mentor
-                :cannot_add_ect_because_already_a_mentor
-              else
-                # trying to add a mentor who is already an ECT
-                :cannot_add_mentor_because_already_an_ect
-              end
-            elsif wizard.already_enrolled_at_school?
-              :cannot_add_already_enrolled_at_school
-            elsif wizard.ect_participant?
-              :confirm_transfer
-            else
-              :confirm_mentor_transfer
-            end
-          elsif wizard.dqt_record_has_different_name?
-            :known_by_another_name
-          elsif wizard.found_participant_in_dqt? || wizard.sit_mentor?
-            :none
-          else
-            :cannot_find_their_details
-          end
+          next_step_after_participant_check
         end
 
         def journey_complete?

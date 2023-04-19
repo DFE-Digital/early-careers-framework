@@ -53,7 +53,11 @@ module Schools
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
           elsif dqt_record(force_recheck: true).present?
-            show_path_for(step: form.next_step)
+            if form.journey_complete?
+              next_journey_path
+            else
+              show_path_for(step: form.next_step)
+            end
           else
             show_path_for(step: :cannot_find_their_details)
           end

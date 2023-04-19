@@ -4,6 +4,8 @@ module Schools
   module AddParticipants
     module WizardSteps
       class NinoStep < ::WizardStep
+        include WhoToAddParticipantChecks
+
         attr_accessor :nino
 
         validates :nino, national_insurance_number: true
@@ -15,16 +17,11 @@ module Schools
         end
 
         def next_step
-          if wizard.participant_exists?
-            if wizard.already_enrolled_at_school?
-              :already_enrolled_at_school
-            else
-              :confirm_transfer
-            end
-          elsif wizard.found_participant_in_dqt? || wizard.sit_mentor?
-            :none
-          else
+          step = next_step_after_participant_check
+          if step == :cannot_find_their_details
             :still_cannot_find_their_details
+          else
+            step
           end
         end
 
