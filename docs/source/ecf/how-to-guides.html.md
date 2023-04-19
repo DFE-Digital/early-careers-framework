@@ -891,11 +891,11 @@ Update an existing partnership with new delivery partner details for a given coh
 
 An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](LINK NEEDED). 
 
-{inset-text}Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](LINK NEEDED).{/inset-text}
+{inset-text}Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states){/inset-text}
 
 Successful requests will return a response body with updates included. 
 
-For more detailed information see the specifications for this [confirm an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post).
+For more detailed information see the specifications for this [update an ECF partnership endpoint](/api-reference/reference-v3.html#api-v3-partnerships-ecf-id-put).
 
 #### Example request body:
 
@@ -912,17 +912,21 @@ For more detailed information see the specifications for this [confirm an ECF pa
 
 ### Find delivery partner IDs 
 
-Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required by providers when [confirming partnerships with a school and delivery partner](LINK NEEDED).
-
-Find delivery partner IDs by using the endpoint:
+Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is required when [confirming partnerships with a school and delivery partner](/api-reference/ecf/how-to-guides/#update-a-partnership-with-a-new-delivery-partner).
 
 ```
 GET /api/v3/delivery-partners
 ```
 
-Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: 
 
-Successful requests will return a response body including delivery partner details. An example response body is listed below. 
+```
+GET /api/v3/delivery-partners?filter[cohort]=2022
+```
+
+An example response body is listed below. Successful requests will return a response body including delivery partner details.  
+
+For more detailed information see the specifications for this [find delivery parter IDs endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-get).
 
 #### Example response body:
 
@@ -947,7 +951,7 @@ Successful requests will return a response body including delivery partner detai
 
 ### View details for a specific delivery partner
 
-Providers can view details for specific delivery partners to check whether they have been registered to deliver training for a given cohort. 
+View details for specific delivery partners to check whether they have been registered to deliver training for a given cohort. 
 
 View details for a specific delivery partner by using the endpoint: 
 
