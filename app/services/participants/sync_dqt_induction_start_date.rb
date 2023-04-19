@@ -13,7 +13,7 @@ module Participants
       return false if @participant_profile.induction_start_date.present?
 
       # Get participant profile cohort and DQT cohort
-      current_induction_record = @participant_profile.current_induction_record
+      current_induction_record = @participant_profile.induction_records.latest
       participant_cohort = current_induction_record.cohort
       dqt_cohort = Cohort.containing_date(@dqt_induction_start_date)
       return false if dqt_cohort.nil?
