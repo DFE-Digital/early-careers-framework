@@ -11,18 +11,20 @@ The focus of the following guidance is on business logic only. Critical details 
 
 ## Overview of API requests
 
-1. For a given cohort, providers will submit confirmations via the API of their partnerships with a school, including confirmation who their delivery partners will be. Note, this only applies to providers integrated with API v3 onwards 
-2. School induction tutors will register participants for ECF-based training via the DfE online service
-3. Providers will view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not been validated by DfE 
-4. Providers will train participants as per details set out in their contract
-5. Providers will submit a `started` declaration via the API to notify DfE that training has begun 
-6. DfE will pay providers output payments for `started` declarations
-7. Providers continue to train participants as per details set out in the contract
-8. Providers will submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
-9. DfE will pay providers output payments for `retained` declarations
-10. Providers complete training participants as per details set out in the contract
-11. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training
-12. DfE will pay providers output payments for `completed` declarations
+1. For a given cohort, providers confirm partnerships with schools via the API, including confirmation who their delivery partners will be. Note, this only applies to providers integrated with API v3 onwards 
+2. School induction tutors register participants for ECF-based training via the DfE online service
+3. Providers view participant data via the API, using it to onboard participants to their learning management systems. Note, the API will not present any data for participants whose details have not yet been validated by DfE 
+4. If necessary, providers will update the participant's training schedule
+5. Providers will train participants as per details set out in their contract
+6. Providers will submit a `started` declaration via the API to notify DfE that training has begun 
+7. DfE will pay providers output payments for `started` declarations
+8. Providers will check via the API to see whether any participants have transferred to or from schools they are in partnership with. Note, this only applies to providers integrated with API v3 onwards 
+9. Providers continue to train participants as per details set out in the contract
+10. Providers will submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
+11. DfE will pay providers output payments for `retained` declarations
+12. Providers complete training participants as per details set out in the contract
+13. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training
+14. DfE will pay providers output payments for `completed` declarations
 
 Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to update relevant data using the API. 
 
@@ -738,7 +740,7 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## How to view, submit and update partnerships
+## How to confirm, view and update partnerships
 
 {inset-text}The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.{/inset-text}
 
