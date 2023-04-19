@@ -1042,8 +1042,6 @@ An example response body is listed below.Successful requests will return a respo
 
 For more detailed information see the specifications for this [view a school’s details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-id-get).
 
-
-
 #### Example response body:
 
 ```
