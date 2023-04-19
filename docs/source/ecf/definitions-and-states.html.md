@@ -28,7 +28,7 @@ Participant states are defined by the `training_status` attribute.
 A participant’s `training_status` value will determine whether a provider can: 
 
 * [update their details](/api-reference/ecf/guidance/#view-and-update-participant-data). For example, notifying DfE that a participant has withdrawn from training 
-* [submit a declaration](/api-reference/ecf/guidance/#how-to-submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
+* [submit a declaration](/api-reference/ecf/guidance/#submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
 
 
 | training_status | Definition | Action |
@@ -43,7 +43,7 @@ View more detailed specifications for the [ECF participant schema](/api-referenc
 
 Declaration states are defined by the `state` attribute. 
 
-Providers must [submit declarations](/api-reference/ecf/guidance/#how-to-submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
+Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
 
 | state | Definition | Action |
 | -------- | -------- | -------- |

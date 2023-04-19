@@ -388,7 +388,7 @@ For more detailed information see the specifications for this [view a participan
 }
 ```
 
-## How to submit, view and void declarations
+## Submit, view and void declarations
 
 Providers must submit declarations in line with ECF contractual [schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates). 
 
