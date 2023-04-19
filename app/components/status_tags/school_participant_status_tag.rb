@@ -27,7 +27,11 @@ module StatusTags
     attr_reader :participant_profile, :induction_record, :school
 
     def translation_scope
-      @translation_scope ||= "status_tags.school_participant_status.#{record_state}"
+      @translation_scope ||= if FeatureFlag.active?(:school_participant_status_language)
+                               "status_tags.school_participant_status_detailed.#{record_state}"
+                             else
+                               "status_tags.school_participant_status.#{record_state}"
+                             end
     end
 
     def record_state
