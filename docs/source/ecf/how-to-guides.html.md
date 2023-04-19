@@ -951,15 +951,15 @@ For more detailed information see the specifications for this [find delivery par
 
 ### View details for a specific delivery partner
 
-View details for specific delivery partners to check whether they have been registered to deliver training for a given cohort. 
-
-View details for a specific delivery partner by using the endpoint: 
+View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.  
 
 ```
 GET //api/v3/delivery-partners/{id}
 ```
 
-Successful requests will return a response body with the delivery partner details. An example response body is listed below. 
+An example response body is listed below. Successful requests will return a response body with the delivery partner details. 
+
+For more detailed information see the specifications for this [find a delivery parter ID endpoint](/api-reference/reference-v3.html#api-v3-delivery-partners-id-get).
 
 #### Example response body:
 
