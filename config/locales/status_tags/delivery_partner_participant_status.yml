@@ -101,6 +101,11 @@ en:
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
+      not_yet_mentoring:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
       registered_for_mentor_no_partner:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
@@ -152,6 +157,11 @@ en:
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
       active_cip_training:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
+      active_mentoring:
         id: "training_or_eligible_for_training"
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
