@@ -981,3 +981,84 @@ For more detailed information see the specifications for this [find a delivery p
   ]
 }
 ```
+
+### Find schools delivering ECF-based training in a given cohort 
+
+View details for schools providing ECF-based training in a given cohort. Check details on the type of training programme schools have chosen to deliver, and whether they have confirmed partnerships in place. 
+
+```
+GET /api/v3/partnerships/ecf?filter[cohort]={year}`
+```
+
+{inset-text} The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. {/inset-text}
+
+Providers can also filter results by school URN. For example:  
+
+```
+GET /api/v3/partnerships/ecf?filter[cohort]=2021&filter[urn]=123456
+```
+
+An example response body is listed below. Successful requests will return a response body with school details.
+
+For more detailed information see the specifications for this [view school details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "school",
+      "attributes": {
+        "name": "School Example",
+        "urn": "123456",
+        "cohort": 2021,
+        "in_partnership": "false",
+        "induction_programme_choice": "not_yet_known",
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+
+### View details for specific a school in a given cohort
+
+Providers can view details for a specific school providing ECF-based training in a given cohort. They can check details on the type of training programme the school has chosen to deliver, and whether they have a confirmed partnership in place. 
+
+
+```
+GET /api/v3/schools/ecf/{id}
+GET /api/v3/schools/ecf/{id}?filter[cohort]={year}
+```
+
+{inset-text} The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. {/inset-text}
+
+An example response body is listed below.Successful requests will return a response body with school details.
+
+For more detailed information see the specifications for this [view a school’s details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-id-get).
+
+
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "school",
+      "attributes": {
+        "name": "School Example",
+        "urn": "123456",
+        "cohort": 2021,
+        "in_partnership": "false",
+        "induction_programme_choice": "not_yet_known",
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
