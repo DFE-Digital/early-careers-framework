@@ -9,10 +9,19 @@ class UpdateInductionTutorReminder
   end
 
   def send!
+    if received_email_recently?
+      Rails.logger.warn("#{school.name} (#{school.urn}) has been sent a nomination email reminder since #{@repeat_email_cutoff}")
+
+      return false
+    end
+
     sit_name = school&.induction_tutor&.full_name
 
-    return if sit_name.blank?
-    return if received_email_recently?
+    if sit_name.blank?
+      Rails.logger.error("no valid recipient for nomination reminder email to #{school.name} (#{school.urn})")
+
+      return false
+    end
 
     SchoolMailer.remind_to_update_school_induction_tutor_details(
       school:,
@@ -32,7 +41,7 @@ private
   end
 
   def nomination_link
-    Rails
+    @nomination_link ||= Rails
       .application
       .routes
       .url_helpers
