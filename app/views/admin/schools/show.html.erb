@@ -1,6 +1,16 @@
 <% content_for :title, "School detail: overview" %>
 
 <h1 class="govuk-heading-xl"><%= @school.name %></h1>
+
+<% if FeatureFlag.active?(:cohortless_dashboard, for: @school) %>
+  <p class="govuk-body-m">
+    <%= govuk_tag do %>
+      <%= tag.span("#{@school.name} is", class: "govuk-visually-hidden") %>
+      Active in cohortless dashboard pilot
+    <% end %>
+  </p>
+<% end %>
+
 <%= render partial: "admin/schools/shared/navigation" %>
 <h2 class="govuk-heading-l">Overview</h2>
 
