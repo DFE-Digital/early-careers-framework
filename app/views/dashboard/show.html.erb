@@ -3,7 +3,7 @@
     <% if current_user.lead_provider? %>
       <%= render partial: "navigation" %>
       <h1 class="govuk-heading-xl"><%= @lead_provider.name %></h1>
-      <% @lead_provider.cohorts.each do |cohort| %>
+      <% @lead_provider.cohorts.where(start_year: ..Cohort.active_registration_cohort.start_year).each do |cohort| %>
         <h2 class="govuk-heading-m">
           <%= govuk_link_to "Confirm your schools for the #{cohort.description} academic year", lead_providers_report_schools_start_path(cohort: cohort) %>
         </h2>
