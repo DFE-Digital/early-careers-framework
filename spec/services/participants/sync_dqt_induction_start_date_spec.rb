@@ -11,7 +11,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       expect {
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
-             .and not_change(participant_profile, :induction_start_date)
+       .and not_change(participant_profile, :induction_start_date)
     end
   end
 
@@ -23,7 +23,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       expect {
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
-             .and not_change(participant_profile, :induction_start_date)
+       .and not_change(participant_profile, :induction_start_date)
 
       expect(participant_profile.induction_start_date).to eql(Date.new(2021, 9, 1))
     end
@@ -38,7 +38,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       expect {
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
-             .and not_change(participant_profile, :induction_start_date)
+       .and not_change(participant_profile, :induction_start_date)
     end
   end
 
@@ -66,7 +66,26 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       expect {
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to change(participant_profile, :induction_start_date).to(dqt_induction_start_date)
-       .and change { participant_profile.induction_records.latest.cohort }
+       .and change { participant_profile.induction_records.latest.cohort.start_year }.to(2023)
+    end
+  end
+
+  context "when 'cohortless_dashboard' feature flag is disabled" do
+    let(:dqt_induction_start_date) { Date.new(2023, 10, 2) }
+    let(:participant_profile) { create(:ect_participant_profile, induction_start_date: nil) }
+    let!(:induction_record) { create(:induction_record, participant_profile:) }
+    let!(:cohort) { create(:cohort, start_year: 2023) }
+    let!(:school_cohort) { create(:school_cohort, :with_induction_programme, :with_ecf_standard_schedule, cohort:, school: induction_record.school) }
+
+    before do
+      FeatureFlag.deactivate(:cohortless_dashboard)
+    end
+
+    it "does not change the participant" do
+      expect {
+        described_class.call(dqt_induction_start_date, participant_profile)
+      }.to not_change(participant_profile, :updated_at)
+             .and not_change(participant_profile, :induction_start_date)
     end
   end
 end
