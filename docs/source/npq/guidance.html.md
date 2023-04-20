@@ -83,7 +83,7 @@ For more detailed information see the specifications for this [view multiple NPQ
 
 ### Accept an application 
 
-Providers should accept applications for those they want to register for the NPQ. Reasons to accept applications include (but are not limited to) the participant: 
+Providers should accept applications for those they want to register for an NPQ. Reasons to accept applications include (but are not limited to) the participant: 
 
 * having funding confirmed
 * being suitable for their chosen NPQ course
@@ -139,19 +139,68 @@ For more detailed information see the specifications for this [accept an NPQ app
 }
 ```
 
-### Reject an NPQ application
+{inset-text} Providers must inform applicants of the outcome of their successful NPQ application. {/inset-text}
 
-This scenario begins after a participant has been added to the service by registering for an NPQ course.
+### Reject an application
 
-#### Provider rejects an NPQ application
+Providers should reject applications for those they do not want to register for an NPQ. Reasons to reject applications include (but are not limited to) the participant: 
 
-You will need to reject someone if you will be unable to train them. For example they have failed the rest of their application, have decided against studying an NPQ or are unable to secure funding.
+* having been unsuccessful in their application process
+* not having secured funding
+* wanting to use another provider
+* wanting to take on another course
+* no longer wants to take the course 
 
 ```
-POST /api/v1/npq-applications/{id}/reject
+POST /api/v3/npq-applications/{id}/reject
+```
+The request parameter must include the `id` of the corresponding NPQ application. 
+
+An example response body is listed below. Successful requests will return a response body including updates `status` attribute. 
+
+For more detailed information see the specifications for this [accept an NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-reject-post).
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "npq_application",
+    "attributes": {
+      "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+      "full_name": "Isabelle MacDonald",
+      "email": "isabelle.macdonald2@some-school.example.com",
+      "email_validated": true,
+      "teacher_reference_number": "1234567",
+      "teacher_reference_number_validated": true,
+      "works_in_school": true,
+      "employer_name": "Some Company Ltd",
+      "employment_role": "Director",
+      "school_urn": "106286",
+      "private_childcare_provider_urn": "EY944860",
+      "school_ukprn": "10079319",
+      "headteacher_status": "no",
+      "eligible_for_funding": true,
+      "funding_choice": "trust",
+      "course_identifier": "npq-leading-teaching",
+      "status": "rejected",
+      "created_at": "2021-05-31T02:21:32.000Z",
+      "updated_at": "2021-05-31T02:22:32.000Z",
+      "ineligible_for_funding_reason": "establishment-ineligible",
+      "cohort": "2022",
+      "targeted_delivery_funding_eligibility": true,
+      "teacher_catchment": true,
+      "teacher_catchment_country": "France",
+      "teacher_catchment_iso_country_code": "FRA",
+      "lead_mentor": true,
+      "itt_provider": "University of Southampton"
+    }
+  }
+}
 ```
 
-Where `{id}` is the `id` of the corresponding NPQ application. This returns an [NPQ application record](/api-reference/reference-v1#schema-npqapplicationresponse).
+{inset-text} Providers must inform applicants of the outcome of their unsuccessful NPQ application. {/inset-text}
 
 ### Handling deferrals
 
