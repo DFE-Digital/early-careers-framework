@@ -222,25 +222,13 @@ A standard 2 year induction training schedule covers 6 terms (3 in each academic
 
 The payment model for non-standard schedules follows the same principles; DfE will pay the equivalent of 1 output payment (according to valid declarations submitted) for each of the 6 terms a provider is supporting a participant.
 
+Declarations submitted for participants in non-standard schedules do not need API milestone validation. 
+
 {inset-text}
 **Providers should note:**
 
 * All participants will be registered by default to a standard schedule starting in September
 * Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
-* Providers will need to evidence any declarations and why a participant is following a non-standard induction
-
-
-### Dates for extended, reduced and replacement schedules starting in September
-
-A standard 2 year induction training schedule covers 6 terms (3 in each academic year), and therefore has 6 milestones. However, a participant can choose to follow a non-standard schedule: extended, reduced, or replacement.  
-
-The payment model for non-standard schedules follows the same principles; DfE will pay the equivalent of 1 output payment (according to valid declarations submitted) for each of the 6 terms a provider is supporting a participant.
-
-Declarations submitted for participants in non-standard schedules do not need API milestone validation. 
-
-Providers should note: 
-
-* All participants will be registered by default to a standard schedule starting in September. Providers must [notify DfE a participant has changed their training schedule] if this is inaccurate for the given participant
 * Providers will need to evidence any declarations and why a participant is following a non-standard induction
 
 ### Extended schedules
