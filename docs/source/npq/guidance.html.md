@@ -5,41 +5,79 @@ weight: 2
 
 # Guidance
 
-## Continuing the NPQ registration process
+## Overview of API requests
+1. A person submits an application for an NPQ course via the DfE online service
+2. Providers view NPQ application data via the API 
+3. Providers complete their own suitability and application processes 
+4. Providers accept or reject applications via the API and onboarding participants onto their systems
+5. Providers train participants as per details set out in the contract
+6. Providers submit `started` declarations via the API to notify DfE that participants have started their courses
+7. DfE pay providers output payments for `started` declarations
+8. Providers continue to train participants as per details set out in the contract
+9. Providers submit `retained` declarations via the API to notify DfE participants have continued in training for a given milestone
+10. DfE pays providers output payments for `retained` declarations
+12. Providers complete training participants as per details set out in the contract
+12. Providers will submit `completed` declarations via the API, including participant outcomes, to notify DfE participants have completed the course
+13. DfE will pay providers output payments for `completed` declarations
 
-This scenario begins when a participant has been added to the service by registering for an NPQ course via the register for a national professional qualification (NPQ) service.
+Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers will need to update relevant data using the API.
 
-When the participant has completed the registration process the NPQ application record will show:
+{inset-text} Note, DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training). [Find out more about declaration states](api-reference/npq/definitions-and-states/#declaration-states) {/inset-text}
 
-* whether the email address has been validated
-* whether the TRN is valid
-* whether the participant is eligible for funding
+## View, accept or reject NPQ applications
 
-Once someone has progressed through the GOV.UK registration process, providers are then able to pull this information and initiate their own suitability and application processes.
+Providers can view application data to find out whether NPQ applicants:
 
-### Provider retrieves NPQ application records
+* have a valid email address
+* have a valid TRN
+* are eligible for funding
 
-Get the NPQ application records.
+Providers can then accept or reject applications to NPQ courses.
+
+### View all NPQ applications
 
 ```
-GET /api/v1/npq-applications
+ GET /api/v3/npq-applications
 ```
 
-This will return [multiple NPQ application records](/api-reference/reference-v1#schema-multiplenpqapplicationsresponse).
-
-See [retrieve multiple NPQ applications](api-reference/reference-v1#api-v1-npq-applications-get) endpoint.
-
-### Provider refreshes NPQ application records
-
-Get updated NPQ application records.
+Note, providers can also filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: 
 
 ```
-GET /api/v1/npq-applications?filter[updated_since]=2021-05-13T11:21:55Z
+GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z
 ```
 
-This will return [multiple NPQ application records](/api-reference/reference-v1#schema-multiplenpqapplicationsresponse) with the updates to the record included.
+An example response body is listed below. 
 
-See [retrieve multiple NPQ applications](/api-reference/reference-v1#api-v1-npq-applications-get) endpoint.
+For more detailed information see the specifications for this [view multiple NPQ applications endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "npq_application",
+      "attributes": {
+        "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+        "full_name": "Isabelle MacDonald",
+        "email": "isabelle.macdonald2@some-school.example.com",
+        "email_validated": true,
+        "teacher_reference_number": "1234567",
+        "teacher_reference_number_validated": true,
+        "school_urn": "106286",
+        "school_ukprn": "10079319",
+        "headteacher_status": "no",
+        "eligible_for_funding": true,
+        "funding_choice": "trust",
+        "course_identifier": "npq-leading-teaching",
+        "lead_mentor": null,
+        "itt_provider": "University of Southampton"
+      }
+    }
+  ]
+}
+```
 
 ## About accepting or rejecting an NPQ application
 
