@@ -13,7 +13,6 @@ required:
   - pupil_premium_uplift
   - sparsity_uplift
   - schedule_identifier
-  - validation_status
   - delivery_partner_id
   - created_at
 properties:
@@ -89,6 +88,7 @@ properties:
   validation_status:
     description: Indicates where a participant is in the DfE’s validation and eligibility process. Same detail shown to SITs and Delivery Partners.
     type: string
+    nullable: true
     enum:
       - contacted_for_information
       - dfe_checking_eligibility

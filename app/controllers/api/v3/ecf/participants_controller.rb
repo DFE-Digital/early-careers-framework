@@ -17,6 +17,14 @@ module Api
           render json: serializer_class.new(paginate(participants), params: { cpd_lead_provider: current_user }).serializable_hash.to_json
         end
 
+        # Returns a single of ECF participant
+        # Providers can see a specific ECF participant and its ECF enrolments via this endpoint
+        #
+        # GET /api/v3/participants/ecf/:id
+        def show
+          render json: serializer_class.new(participant, params: { cpd_lead_provider: current_user }).serializable_hash.to_json
+        end
+
       private
 
         def serializer_class
@@ -25,6 +33,10 @@ module Api
 
         def participants
           @participants ||= ecf_participant_query.participants.order(sort_params(params, model: User))
+        end
+
+        def participant
+          @participant ||= ecf_participant_query.participant
         end
 
         def ecf_participant_params

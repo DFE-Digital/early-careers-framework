@@ -100,6 +100,7 @@ module Api
               pupil_premium_uplift: profile.pupil_premium_uplift,
               sparsity_uplift: profile.sparsity_uplift,
               schedule_identifier: profile.schedule&.schedule_identifier,
+              validation_status: nil,
               delivery_partner_id: latest_induction_record&.delivery_partner_id,
               withdrawal: withdrawal(profile:, cpd_lead_provider: params[:cpd_lead_provider], latest_induction_record:),
               deferral: deferral(profile:, cpd_lead_provider: params[:cpd_lead_provider], latest_induction_record:),

@@ -32,7 +32,7 @@ RSpec.describe "API ECF Participants", :with_default_schedules, type: :request, 
   end
 
   let!(:withdrawn_ect_profile_record) { create(:ect, :withdrawn_record, school_cohort:, lead_provider:) }
-  let(:early_career_teacher_profile) { create(:ect, lead_provider:, cohort: cohort_2021) }
+  let(:early_career_teacher_profile) { create(:ect, :eligible_for_funding, school_cohort:) }
 
   describe "GET /api/v3/participants/ecf" do
     context "when authorized" do
@@ -242,6 +242,73 @@ RSpec.describe "API ECF Participants", :with_default_schedules, type: :request, 
         default_headers[:Authorization] = bearer_token
         get "/api/v3/participants/ecf"
         expect(response.status).to eq 403
+      end
+    end
+  end
+
+  describe "GET /api/v3/participants/ecf/:id", :with_default_schedules do
+    let(:parsed_response) { JSON.parse(response.body) }
+
+    before do
+      default_headers[:Authorization] = bearer_token
+      travel_to Time.zone.local(2022, 7, 22, 11, 30, 0) do
+        get "/api/v3/participants/ecf/#{early_career_teacher_profile.user_id}"
+      end
+    end
+
+    context "when authorized" do
+      let(:expected_response) do
+        HashWithIndifferentAccess.new({
+          "data": {
+            "id": early_career_teacher_profile.user_id,
+            "type": "participant",
+            "attributes": {
+              "full_name": early_career_teacher_profile.user.full_name,
+              "teacher_reference_number": early_career_teacher_profile.teacher_profile.trn,
+              "updated_at": Time.zone.local(2022, 7, 22, 11, 30, 0).rfc3339,
+              "ecf_enrolments": [{
+                "training_record_id": early_career_teacher_profile.id,
+                "email": (early_career_teacher_profile.induction_records[0].preferred_identity&.email || early_career_teacher_profile.user.email),
+                "mentor_id": early_career_teacher_profile.mentor_profile&.participant_identity&.external_identifier,
+                "school_urn": early_career_teacher_profile.induction_records[0].school_cohort.school.urn,
+                "participant_type": early_career_teacher_profile.participant_type.to_s,
+                "cohort": early_career_teacher_profile&.cohort&.start_year&.to_s,
+                "training_status": early_career_teacher_profile.induction_records[0].induction_status,
+                "participant_status": early_career_teacher_profile.training_status,
+                "teacher_reference_number_validated": true,
+                "eligible_for_funding": true,
+                "pupil_premium_uplift": early_career_teacher_profile.pupil_premium_uplift,
+                "sparsity_uplift": early_career_teacher_profile.sparsity_uplift,
+                "schedule_identifier": early_career_teacher_profile.induction_records[0].schedule&.schedule_identifier,
+                "validation_status": nil,
+                "delivery_partner_id": early_career_teacher_profile.induction_records[0].delivery_partner_id,
+                "withdrawal": nil,
+                "deferral": nil,
+                "created_at": early_career_teacher_profile.created_at.rfc3339,
+              }],
+            },
+          },
+        })
+      end
+
+      it "returns correct jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "returns 200" do
+        expect(response.status).to eq 200
+      end
+
+      it "returns correct data" do
+        expect(parsed_response).to eq(expected_response)
+      end
+    end
+
+    context "when unauthorized" do
+      let(:token) { "wrong_token" }
+
+      it "returns 401 for invalid bearer token" do
+        expect(response.status).to eq 401
       end
     end
   end

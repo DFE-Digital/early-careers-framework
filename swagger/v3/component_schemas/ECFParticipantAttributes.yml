@@ -3,7 +3,7 @@ type: object
 required:
   - full_name
   - updated_at
-  - npq_enrolments
+  - ecf_enrolments
 properties:
   full_name:
     description: "The full name of this ECF participant"

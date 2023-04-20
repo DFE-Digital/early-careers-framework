@@ -163,7 +163,9 @@ Rails.application.routes.draw do
         end
       end
       resources :ecf_schools, path: "schools/ecf", only: %i[index show], controller: "ecf/schools"
-      resources :ecf_participants, path: "participants/ecf", only: %i[index], controller: "ecf/participants"
+      resources :ecf_participants, path: "participants/ecf", only: %i[index show], controller: "ecf/participants" do
+        concerns :participant_actions
+      end
     end
   end
 
