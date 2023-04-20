@@ -48,7 +48,6 @@
                    text: render(StatusTags::SchoolParticipantStatusTag.new(
                      participant_profile: mentor.participant_profile,
                      induction_record: mentor,
-                     school: @school,
                      display_description: false))) %>
             <% end %>
           <% end %>
@@ -69,7 +68,6 @@
                      text: render(StatusTags::SchoolParticipantStatusTag.new(
                        participant_profile: ect.participant_profile,
                        induction_record: ect,
-                       school: @school,
                        display_description: false)),
                      classes: ["govuk-\!-padding-bottom-static-0"]) %>
               <% end %>
@@ -96,7 +94,6 @@
                    text: render(StatusTags::SchoolParticipantStatusTag.new(
                      participant_profile: mentor.participant_profile,
                      induction_record: mentor,
-                     school: @school,
                      display_description: false)),
                    classes: ["govuk-\!-padding-bottom-static-0"]) %>
             <% end %>
