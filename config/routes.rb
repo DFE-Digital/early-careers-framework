@@ -434,11 +434,13 @@ Rails.application.routes.draw do
 
     namespace :npq do
       resource :applications, only: [] do
-        resources :exports, only: %i[index new create], controller: "applications/exports"
         get "/eligibility_imports/example", to: "applications/eligibility_imports#example", as: :example_csv_file
-        resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
-
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
+
+        resources :change_name, controller: "applications/change_name", only: %i[edit update]
+        resources :change_email, controller: "applications/change_email", only: %i[edit update]
+        resources :exports, only: %i[index new create], controller: "applications/exports"
+        resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
         resources :applications, only: %i[index show]
         resources :edge_cases, controller: "applications/edge_cases", only: %i[index show]
         resources :eligible_for_funding, controller: "applications/eligible_for_funding", only: %i[edit update]
