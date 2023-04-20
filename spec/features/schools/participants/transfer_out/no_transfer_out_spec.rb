@@ -8,6 +8,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
       set_participant_data
       given_two_schools_have_chosen_fip_for_2021
       and_a_participant_has_been_transferred_in_to_another_school
+      travel_to(@participant_data[:end_date] - 1.day)
       and_i_am_signed_in_as_an_induction_coordinator
       and_select_the_most_recent_cohort
     end
@@ -67,7 +68,7 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
 
     def then_i_should_see_the_participants_as_having_transferred
       expect(page).to have_summary_row("Name", @ect.user.full_name)
-      expect(page).to have_text("LEAVING YOUR SCHOOL")
+      expect(page).to have_text("NO LONGER BEING TRAINED")
     end
 
     # and
