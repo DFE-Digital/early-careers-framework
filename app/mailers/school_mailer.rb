@@ -30,6 +30,7 @@ class SchoolMailer < ApplicationMailer
   SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
+  REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
 
   def remind_sit_to_set_mentor_to_ects(sit:, ect_names:, campaign: nil)
     campaign_tracking = campaign ? UTMService.email(campaign, campaign) : {}
@@ -78,6 +79,17 @@ class SchoolMailer < ApplicationMailer
         expiry_date:,
       },
     ).tag(:request_to_nominate_sit).associate_with(school)
+  end
+
+  # This email lets the GIAS contact at a school update their induction tutor
+  def remind_to_update_school_induction_tutor_details(school:, sit_name:, nomination_link:)
+    template_mail(
+      REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE,
+      to: [school.primary_contact_email, school.secondary_contact_email].compact,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: { sit_name:, nomination_link: },
+    ).tag(:remind_to_update_induction_tutor).associate_with(school)
   end
 
   # This email is sent to newly appointed SIT
