@@ -5,7 +5,7 @@ module NewSeeds
     module Participants
       module Transfers
         class FipToFipChangingTrainingProvider < FipToFip
-          def initialize
+          def initialize(lead_provider_from: nil, lead_provider_to: nil)
             Rails.logger.info("################# seeding scenario FipToFipChangingTrainingProvider")
             super
           end
