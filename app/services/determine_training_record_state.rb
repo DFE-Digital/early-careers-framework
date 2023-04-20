@@ -3,13 +3,11 @@
 # noinspection RubyTooManyMethodsInspection, RubyTooManyInstanceVariablesInspection, RubyInstanceMethodNamingConvention
 class DetermineTrainingRecordState < BaseService
   def call
-    OpenStruct.new({
-      validation_state: @validation_state,
-      training_eligibility_state: @training_eligibility_state,
-      fip_funding_eligibility_state: @fip_funding_eligibility_state,
-      training_state: @training_state,
-      record_state: @record_state,
-    })
+    OpenStruct.new(validation_state: @validation_state,
+                   training_eligibility_state: @training_eligibility_state,
+                   fip_funding_eligibility_state: @fip_funding_eligibility_state,
+                   training_state: @training_state,
+                   record_state: @record_state)
   end
 
   def is_record_state?(state)
@@ -63,14 +61,48 @@ private
   end
 
   def record_state
-    return @training_state if %i[withdrawn_programme withdrawn_training deferred_training completed_training].include?(@training_state)
+    return @training_state if stopping_training?
 
-    return @validation_state unless @validation_state == :valid
-    return @training_eligibility_state unless %i[eligible_for_mentor_training eligible_for_mentor_training_ero eligible_for_induction_training].include?(@training_eligibility_state)
+    return @validation_state unless data_validated?
 
-    return @fip_funding_eligibility_state unless on_cip? || %i[eligible_for_mentor_funding eligible_for_fip_funding].include?(@fip_funding_eligibility_state)
+    return @training_eligibility_state unless eligible_for_training?
+
+    return @fip_funding_eligibility_state unless on_cip? || eligible_for_funding?
 
     @training_state
+  end
+
+  def stopping_training?
+    %i[
+      withdrawn_programme
+      withdrawn_training
+      deferred_training
+      completed_training
+      leaving
+      left
+    ].include?(@training_state)
+  end
+
+  def data_validated?
+    @validation_state == :valid
+  end
+
+  def eligible_for_training?
+    %i[
+      eligible_for_mentor_training
+      eligible_for_mentor_training_no_partner
+      eligible_for_induction_training
+      eligible_for_induction_training_no_partner
+      not_yet_mentoring
+    ].include?(@training_eligibility_state)
+  end
+
+  def eligible_for_funding?
+    %i[
+      eligible_for_mentor_funding
+      eligible_for_mentor_funding_primary
+      eligible_for_fip_funding
+    ].include?(@fip_funding_eligibility_state)
   end
 
   def validation_state
@@ -84,7 +116,7 @@ private
     return :validation_not_started if awaiting_validation_data?
 
     return :internal_error if validation_api_failed?
-    return :tra_record_not_found unless tra_record_found?
+    return :tra_record_not_found if no_tra_record_found?
 
     :valid
   end
@@ -95,8 +127,10 @@ private
     return :active_flags if manual_check_active_flags?
     return :not_allowed if ineligible_active_flags?
 
-    if @participant_profile.mentor?
-      return :eligible_for_mentor_training_ero if ineligible_previous_participation?
+    if is_mentor?
+      return :not_yet_mentoring unless is_mentoring?
+
+      return :eligible_for_mentor_training_no_partner if on_fip? && no_partnership?
 
       return :eligible_for_mentor_training
     end
@@ -108,9 +142,10 @@ private
 
     return :exempt_from_induction if ineligible_exempt_from_induction?
     return :previous_induction if ineligible_previous_induction?
-    return :previous_participation if ineligible_previous_participation?
 
-    return :tra_record_not_found unless tra_record_found?
+    return :tra_record_not_found if no_tra_record_found?
+
+    return :eligible_for_induction_training_no_partner if on_fip? && no_partnership?
 
     :eligible_for_induction_training
   end
@@ -119,27 +154,37 @@ private
     return :checks_not_complete if eligibility_not_checked?
 
     # DfE can override everything
-    return :eligible_for_mentor_funding if eligible? && @participant_profile.mentor?
-    return :eligible_for_fip_funding if eligible?
+    return :eligible_for_fip_funding if eligible? && !is_mentor?
 
     # ECTs and Mentors
-    return :active_flags if manual_check_active_flags?
-    return :not_allowed if ineligible_active_flags?
+    unless eligible? && is_mentor?
+      return :active_flags if manual_check_active_flags?
+      return :not_allowed if ineligible_active_flags?
+    end
 
-    # TODO: only if they have a FIP mentee or are already doing the training and have not been funded before
-    return :eligible_for_mentor_funding if @participant_profile.mentor?
+    if is_mentor?
+      if ineligible_previous_participation?
+        return :ineligible_ero_secondary if secondary_profile? || ineligible_duplicate_profile?
+        return :ineligible_ero_primary if primary_profile?
+
+        return :ineligible_ero
+      end
+
+      return :ineligible_secondary if secondary_profile? || ineligible_duplicate_profile?
+      return :eligible_for_mentor_funding_primary if primary_profile?
+
+      return :eligible_for_mentor_funding
+    end
 
     # ECTs only
     return :duplicate_profile if ineligible_duplicate_profile?
-    return :secondary_profile if secondary_profile?
     return :no_induction_start if manual_check_no_induction?
     return :not_qualified if manual_check_no_qts?
 
     return :exempt_from_induction if ineligible_exempt_from_induction?
     return :previous_induction if ineligible_previous_induction?
-    return :previous_participation if ineligible_previous_participation?
 
-    return :tra_record_not_found unless tra_record_found?
+    return :tra_record_not_found if no_tra_record_found?
 
     :eligible_for_fip_funding
   end
@@ -159,28 +204,38 @@ private
     return :left if has_left_school?
     return :joining if is_joining_school?
 
-    if @participant_profile.mentor?
-      if ineligible_previous_participation?
-        return :registered_for_mentor_training_ero_secondary if secondary_profile?
-        return :registered_for_mentor_training_ero_duplicate if ineligible_duplicate_profile?
+    return mentor_training_state if is_mentor?
 
-        return :registered_for_mentor_no_partner if on_fip? && no_partnership?
+    ect_training_state
+  end
 
-        return :registered_for_mentor_training_ero_primary if primary_profile?
+  def mentor_training_state
+    if on_fip?
+      if is_mentoring?
+        return :active_fip_mentoring_no_partner if no_partnership?
+        return :active_fip_mentoring_ero if ineligible_previous_participation?
 
-        return :registered_for_mentor_training_ero
+        return :active_fip_mentoring
       end
 
-      return :registered_for_mentor_training_secondary if secondary_profile?
-      return :registered_for_mentor_training_duplicate if ineligible_duplicate_profile?
+      return :not_yet_mentoring_fip_no_partner if no_partnership?
+      return :not_yet_mentoring_fip_ero if ineligible_previous_participation?
 
-      return :registered_for_mentor_no_partner if on_fip? && no_partnership?
-
-      return :registered_for_mentor_training_primary if primary_profile?
-
-      return :registered_for_mentor_training
+      return :not_yet_mentoring_fip
     end
 
+    if is_mentoring?
+      return :active_cip_mentoring_ero if ineligible_previous_participation?
+
+      return :active_cip_mentoring
+    end
+
+    return :not_yet_mentoring_cip_ero if ineligible_previous_participation?
+
+    :not_yet_mentoring_cip
+  end
+
+  def ect_training_state
     if on_fip?
       return :registered_for_fip_no_partner if no_partnership?
       return :registered_for_fip_training if manual_check_no_induction?
@@ -205,6 +260,14 @@ private
     relevant_induction_programme&.core_induction_programme?
   end
 
+  def is_mentor?
+    @participant_profile.mentor?
+  end
+
+  def is_mentoring?
+    is_mentor? && InductionRecord.current.where(mentor_profile_id: @participant_profile.id).any?
+  end
+
   def primary_profile?
     @participant_profile.primary_profile?
   end
@@ -226,7 +289,7 @@ private
   end
 
   def eligibility_not_checked?
-    tra_record_found? && @participant_profile.ecf_participant_eligibility.blank?
+    @participant_profile.teacher_profile&.trn.present? && @participant_profile.ecf_participant_eligibility.blank?
   end
 
   def eligible?
@@ -301,8 +364,12 @@ private
     @participant_profile.ecf_participant_validation_data&.api_failure || false
   end
 
-  def tra_record_found?
-    @participant_profile.teacher_profile&.trn.present?
+  def no_tra_record_found?
+    if is_mentor?
+      @participant_profile.ecf_participant_validation_data&.trn.present? && @participant_profile.teacher_profile&.trn.nil?
+    else
+      @participant_profile.teacher_profile&.trn.nil?
+    end
   end
 
   def no_partnership?
