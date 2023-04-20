@@ -2,19 +2,23 @@
   sl.row do |row|
     row.key(text: "Full name")
     row.value(text: @participant_presenter.full_name)
-    row.action(
-      href: edit_admin_participant_change_name_path(@participant_profile),
-      visually_hidden_text: "name"
-    )
+    unless @participant_profile.user.get_an_identity_id.present?
+      row.action(
+        href: edit_admin_participant_change_name_path(@participant_profile),
+        visually_hidden_text: "name"
+      )
+    end
   end
 
   sl.row do |row|
     row.key(text: "Email address")
     row.value(text: @participant_presenter.email)
-    row.action(
-      href: edit_admin_participant_change_email_path(@participant_profile),
-      visually_hidden_text: "email"
-    )
+    unless @participant_profile.user.get_an_identity_id.present?
+      row.action(
+        href: edit_admin_participant_change_email_path(@participant_profile),
+        visually_hidden_text: "email"
+      )
+    end
   end
 
   sl.row do |row|
