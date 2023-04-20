@@ -179,7 +179,7 @@ Update an existing partnership with new delivery partner details for a given coh
  PUT /api/v3/partnerships/ecf/{id}
 ```
 
-An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](LINK NEEDED). 
+An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids). 
 
 {inset-text}Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states){/inset-text}
 

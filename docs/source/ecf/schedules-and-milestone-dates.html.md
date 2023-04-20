@@ -9,7 +9,7 @@ The DfE makes payment to providers in line with agreed contractual schedules and
 
 Providers are paid a proportionate sum of money relative to the amount of time they support their participants.
 
-Providers must [submit declarations](LINK NEEDED) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
+Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
 
 ## Key concepts
 
