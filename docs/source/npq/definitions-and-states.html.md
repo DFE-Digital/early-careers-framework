@@ -36,3 +36,21 @@ A participant’s `training_status` value will determine whether a provider can:
 
 View more detailed specifications for the [NPQ participant schema](/api-reference/reference-v3.html#schema-npqparticipant).
 
+### Declaration states
+
+Declaration states are defined by the `state` attribute. 
+
+Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when the DfE will pay providers for the training delivered.
+
+| state | Definition | Action |
+| -------- | -------- | -------- |
+| `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can submit, view and void `submitted` declarations    |
+| `eligible`     | A declaration associated with a participant who has been confirmed to be eligible for funding     | Providers can view and void `eligible` declarations    |
+| `ineligible`     | A declaration associated with 1) a participant who is not eligible for funding 2) a duplicate submission for a given participant    | Providers can view and void `ineligible` declarations     |
+| `payable`     | A declaration that has been approved and is ready for payment by DfE    | Providers can view and void `payable` declarations     |
+| `voided`     | A declaration that has been retracted by a provider    | Providers can **only** view `voided` declarations   |
+| `paid`     | A declaration that has been paid for by DfE    | Providers can view and void `paid` declarations     |
+| `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can **only** view `awaiting_clawback` declarations     |
+| `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
+
+View more detailed specifications for the [declaration schema](/api-reference/reference-v3.html#schema-npqparticipantdeclarationattributes).
