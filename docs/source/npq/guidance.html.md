@@ -34,7 +34,9 @@ Providers can view application data to find out whether NPQ applicants:
 
 Providers can then accept or reject applications to NPQ courses.
 
-### View all NPQ applications
+{inset-text} Providers must accept or reject applications before they start the course. They must inform applicants of the outcome of their NPQ applications, regardless of whether their course application has been accepted or rejected. {/inset-text}
+
+### View all applications
 
 ```
  GET /api/v3/npq-applications
@@ -79,42 +81,63 @@ For more detailed information see the specifications for this [view multiple NPQ
 }
 ```
 
-## About accepting or rejecting an NPQ application
+### Accept an application 
 
-In order for DfE to understand if a person has been successful throughout these processes, we require you to submit an acceptance or rejection status. This will need to be submitted for each participant you wish to train before starting their NPQ course.
+Providers should accept applications for those they want to register for the NPQ. Reasons to accept applications include (but are not limited to) the participant: 
 
-Accepting or rejecting a participant is separate and distinct from a “started declaration”, which will be collected as part of the tracking and payment process. More [information about declarations](#declaring-that-an-npq-participant-has-started-their-course) can be found further down this page. We will only be able to make payments for participants who are in an “application accepted” state.
-
-Providers should accept a participant if they have been successful in their NPQ application and you wish to enroll them on their chosen NPQ course. Reasons may include but not limited to:
-
-* participant has had their funding confirmed
-* participant is suitable for their chosen NPQ course
-* participant has the relevant support from their school
-
-Providers should reject a participant if they have not been successful in their NPQ application. Reasons may include but not limited to:
-
-* participant wishes to go with another provider
-* participant wishes to take on another course
-* participant no longer wishes to take the course
-* participant was not successful in their application process
-
-Regardless of the outcome of the application you must inform the participant of the outcome of their NPQ application. You may wish to provide them with feedback or ideas about next steps.
-
-### Accept an NPQ application
-
-This scenario begins after a participant has been added to the service by registering for an NPQ course
-
-#### Provider accepts an NPQ application
-
-You can accept someone if they have successfully completed all application steps ahead of starting their course.</p>
+* having funding confirmed
+* being suitable for their chosen NPQ course
+* having relevant support from their school
 
 ```
-POST /api/v1/npq-applications/{id}/accept
+POST /api/v3/npq-applications/{id}/accept
 ```
 
-Where `{id}` is the `id` of the corresponding NPQ application. 
+The request parameter must include the `id` of the corresponding NPQ application. 
 
-This returns an [NPQ application record](/api-reference/reference-v1#schema-npqapplicationresponse).
+An example response body is listed below. Successful requests will return a response body including updates `status` attribute. 
+
+For more detailed information see the specifications for this [accept an NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-accept-post).
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "npq_application",
+    "attributes": {
+      "participant_id": "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+      "full_name": "Isabelle MacDonald",
+      "email": "isabelle.macdonald2@some-school.example.com",
+      "email_validated": true,
+      "teacher_reference_number": "1234567",
+      "teacher_reference_number_validated": true,
+      "works_in_school": true,
+      "employer_name": "Some Company Ltd",
+      "employment_role": "Director",
+      "school_urn": "106286",
+      "private_childcare_provider_urn": "EY944860",
+      "school_ukprn": "10079319",
+      "headteacher_status": "no",
+      "eligible_for_funding": true,
+      "funding_choice": "trust",
+      "course_identifier": "npq-leading-teaching",
+      "status": "accepted",
+      "created_at": "2021-05-31T02:21:32.000Z",
+      "updated_at": "2021-05-31T02:22:32.000Z",
+      "ineligible_for_funding_reason": "establishment-ineligible",
+      "cohort": "2022",
+      "targeted_delivery_funding_eligibility": true,
+      "teacher_catchment": true,
+      "teacher_catchment_country": "France",
+      "teacher_catchment_iso_country_code": "FRA",
+      "lead_mentor": true,
+      "itt_provider": "University of Southampton"
+    }
+  }
+}
+```
 
 ### Reject an NPQ application
 
