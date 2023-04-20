@@ -1064,7 +1064,7 @@ module ManageTrainingSteps
   # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - end
 
   def then_i_can_view_participant_with_status(status_key)
-    status = I18n.t("schools.participants.status.#{status_key}")
+    status = I18n.t("status_tags.school_participant_status_detailed.#{status_key}")
     expect(page).to have_text(status[:label].upcase)
     expect(page).to have_text(Array.wrap(status[:content]).first)
   end
