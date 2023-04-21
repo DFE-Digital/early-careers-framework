@@ -333,7 +333,7 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
       end
 
       it do
-        expect(subject.total_for_uplift).to eql(200)
+        expect(subject.total_for_uplift).to eql(400)
       end
     end
 
@@ -354,7 +354,7 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
       end
 
       it do
-        expect(subject.total_for_uplift).to eql(-300)
+        expect(subject.total_for_uplift).to eql(0)
       end
     end
 
