@@ -135,7 +135,7 @@ RSpec.describe ParticipantStatusTagComponent, type: :component do
       let(:participant_profile) { create(:ect_participant_profile, training_status: "withdrawn", school_cohort:) }
       let!(:ecf_participant_eligibility) { create(:ecf_participant_eligibility, participant_profile:) }
       let(:induction_programme) { create(:induction_programme, :fip, school_cohort:) }
-      let!(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
+      let!(:induction_record) { create(:induction_record, participant_profile:, induction_programme:) }
 
       before { render_inline(component) }
 
