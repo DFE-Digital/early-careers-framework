@@ -27,7 +27,7 @@ class UpdateInductionTutorReminder
       school:,
       sit_name:,
       nomination_link:,
-    ).deliver_now
+    ).deliver_later
   end
 
 private
