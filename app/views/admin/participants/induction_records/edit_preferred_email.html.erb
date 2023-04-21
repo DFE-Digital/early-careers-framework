@@ -1,0 +1,18 @@
+<% content_for :before_content, govuk_back_link( text: "Back", href: admin_participant_path(@participant_profile)) %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Change the preferred email for this induction record</h1>
+    <%= form_for @induction_record, url: update_preferred_email_admin_participant_induction_records_path(@participant_profile, @induction_record), method: :put do |f| %>
+
+      <%= f.govuk_collection_select :preferred_identity_id,
+        @participant_identities,
+        :id,
+        :email,
+        label: { text: "Select email" },
+        options: { selected: @induction_record.preferred_identity_id }
+      %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>
