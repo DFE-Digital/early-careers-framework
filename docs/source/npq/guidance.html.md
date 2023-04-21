@@ -34,6 +34,8 @@ Providers can view application data to find out whether NPQ applicants:
 
 Providers can then accept or reject applications to NPQ courses.
 
+While participants can make more than one application for the same course (with one or multiple providers), providers can **only** accept one application for a participant for a given NPQ course.
+
 {inset-text} Providers must accept or reject applications before they start the course. They must inform applicants of the outcome of their NPQ applications, regardless of whether their course application has been accepted or rejected. {/inset-text}
 
 ### View all applications
@@ -205,17 +207,6 @@ For more detailed information see the specifications for this [accept an NPQ app
 ### Handling deferrals
 
 If a participant wishes to defer you can accept the participant to show they are enrolled. You should only send the started declaration once the participant has started the course.
-
-### Handling applications with changes in circumstances
-
-There are many possible reasons why there might be a change in circumstances of an application. These may include:
-
-* participant selected incorrect course during their application
-* participant made a mistake during their application
-* participant now wishes to take another course instead
-* participant now wishes to fund their NPQ differently
-
-If there is a mistake in the application for example where a participant registers for a one NPQ programme but wishes to change to another programme after registration. The provider should reject that participant and ask them to re-register on the NPQ registration service and enter the correct details. Once the new application is available you can then accept.
 
 ### Retrieving the list of NPQ participant records
 
