@@ -62,5 +62,20 @@ RSpec.describe UpdateInductionTutorReminder do
         expect(Rails.logger).to have_received(:error).with(/no valid recipient/)
       end
     end
+
+    context "when the school has no email addresses" do
+      before do
+        allow(Rails.logger).to receive(:warn).with(any_args).and_return(true)
+      end
+
+      let(:school) { FactoryBot.create(:seed_school, primary_contact_email: nil, secondary_contact_email: nil) }
+
+      it "logs there is no SIT and returns false" do
+        result = subject.send!
+
+        expect(result).to be(false)
+        expect(Rails.logger).to have_received(:warn).with(/no contact email addresses/)
+      end
+    end
   end
 end

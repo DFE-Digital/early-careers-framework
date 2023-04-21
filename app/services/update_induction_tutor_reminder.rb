@@ -9,6 +9,12 @@ class UpdateInductionTutorReminder
   end
 
   def send!
+    if no_gias_email_addresses?
+      Rails.logger.warn("#{school.name} (#{school.urn}) has no contact email addresses")
+
+      return false
+    end
+
     if received_email_recently?
       Rails.logger.warn("#{school.name} (#{school.urn}) has been sent a nomination email reminder since #{@repeat_email_cutoff}")
 
@@ -31,6 +37,10 @@ class UpdateInductionTutorReminder
   end
 
 private
+
+  def no_gias_email_addresses?
+    school.primary_contact_email.blank? && school.secondary_contact_email.blank?
+  end
 
   def received_email_recently?
     Email
