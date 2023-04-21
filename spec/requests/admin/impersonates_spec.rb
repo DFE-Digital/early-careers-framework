@@ -15,6 +15,7 @@ RSpec.describe "Admin::Participants", type: :request do
   describe "POST /admin/impersonate" do
     it "sets impersonation session" do
       when_i_impersonate(induction_coordinator)
+      expect(cookies[:impersonation_start_path]).to eql(admin_school_path(induction_coordinator.school))
       expect(session[:impersonated_user_id]).to eql(induction_coordinator.id.to_s)
     end
 
@@ -44,6 +45,7 @@ RSpec.describe "Admin::Participants", type: :request do
 
     it "clears impersonation session" do
       when_i_stop_impersonating(induction_coordinator)
+      expect(cookies[:impersonation_start_path]).to be_blank
       expect(session[:impersonated_user_id]).to be_blank
     end
 
