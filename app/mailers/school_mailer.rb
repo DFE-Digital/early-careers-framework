@@ -85,7 +85,7 @@ class SchoolMailer < ApplicationMailer
   def remind_to_update_school_induction_tutor_details(school:, sit_name:, nomination_link:)
     template_mail(
       REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE,
-      to: [school.primary_contact_email, school.secondary_contact_email].compact,
+      to: [school.primary_contact_email, school.secondary_contact_email].compact.uniq,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: { sit_name:, nomination_link: },
