@@ -67,21 +67,23 @@ module Schools
       end
 
       def show_path_for(step:)
-        show_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                school_id: school_cohort.school.friendly_id,
-                                                step:)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          schools_transfer_show_path(**path_options(step:))
+        else
+          show_schools_transfer_participants_path(**path_options(step:))
+        end
       end
 
       def previous_step_path
-        back_step = form.previous_step
+        back_step = last_visited_step
+        return abort_path if back_step.nil?
 
         if changing_answer? || back_step != :confirm_transfer
           super
+        elsif FeatureFlag.active? :cohortless_dashboard
+          schools_who_to_add_show_path(**path_options(step: back_step)) # previous wizard
         else
-          # return to previous wizard
-          show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                    school_id: school.friendly_id,
-                                                    step: back_step.to_s.dasherize)
+          show_schools_who_to_add_participants_path(**path_options(step: back_step)) # previous wizard
         end
       end
 
@@ -90,9 +92,11 @@ module Schools
       end
 
       def change_path_for(step:)
-        show_change_schools_transfer_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                       school_id: school_cohort.school.friendly_id,
-                                                       step:)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          schools_transfer_show_change_path(**path_options(step:))
+        else
+          show_change_schools_transfer_participants_path(**path_options(step:))
+        end
       end
 
       def needs_to_choose_a_mentor?

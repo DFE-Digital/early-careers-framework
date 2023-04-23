@@ -52,8 +52,12 @@ module Schools
         if changing_answer?
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
-          elsif dqt_record(force_recheck: true).present?
-            next_journey_path
+          elsif dqt_record?
+            if form.journey_complete?
+              next_journey_path
+            else
+              show_path_for(step: form.next_step)
+            end
           else
             show_path_for(step: :cannot_find_their_details)
           end
@@ -65,17 +69,20 @@ module Schools
       end
 
       def next_journey_path
-        path_opts = {
-          cohort_id: school_cohort.cohort.start_year,
-          school_id: school.friendly_id,
-        }
-
-        if transfer?
-          start_schools_transfer_participants_path(**path_opts)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          if transfer?
+            schools_transfer_start_path(**path_options)
+          elsif sit_mentor?
+            schools_add_sit_start_path(**path_options)
+          else
+            schools_add_start_path(**path_options)
+          end
+        elsif transfer?
+          start_schools_transfer_participants_path(**path_options)
         elsif sit_mentor?
-          sit_start_schools_add_participants_path(**path_opts)
+          sit_start_schools_add_participants_path(**path_options)
         else
-          start_schools_add_participants_path(**path_opts)
+          start_schools_add_participants_path(**path_options)
         end
       end
 
@@ -84,9 +91,11 @@ module Schools
       end
 
       def show_path_for(step:)
-        show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                  school_id: school.friendly_id,
-                                                  step: step.to_s.dasherize)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          schools_who_to_add_show_path(**path_options(step:))
+        else
+          show_schools_who_to_add_participants_path(**path_options(step:))
+        end
       end
 
       def change_path_for(step:)
@@ -100,32 +109,20 @@ module Schools
       end
 
       def dqt_record_has_different_name?
-        return false unless check_for_dqt_record?
+        check_for_dqt_record? && !dqt_validation.name_matches?
+      end
 
-        record = dqt_record_check
-        record.present? && record.dqt_record.present? && !record.name_matches && record.total_matched >= 2
+      def participant_has_different_name?
+        !NameMatcher.new(existing_participant_profile.full_name, full_name).matches?
       end
 
       def participant_exists?
         # NOTE: this doesn't differentiate being at this school from being at another school
-        check_for_dqt_record? && dqt_record.present? && existing_participant_profile.present?
+        existing_participant_profile.present?
       end
 
       def existing_participant_is_a_different_type?
         participant_exists? && existing_participant_profile.participant_type != participant_type.to_sym
-      end
-
-    private
-
-      def dqt_record_check(force_recheck: false)
-        @dqt_record_check = nil if force_recheck
-
-        @dqt_record_check ||= DqtRecordCheck.call(
-          full_name:,
-          trn: formatted_trn,
-          date_of_birth:,
-          nino: formatted_nino,
-        )
       end
     end
   end

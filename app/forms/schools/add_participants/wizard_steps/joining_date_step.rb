@@ -18,10 +18,10 @@ module Schools
           :email
         end
 
-        def previous_step
-          # this is the previous "who-to-add" journey
-          :confirm_transfer
-        end
+        # def previous_step
+        #   # this is the previous "who-to-add" journey
+        #   :confirm_transfer
+        # end
 
       private
 

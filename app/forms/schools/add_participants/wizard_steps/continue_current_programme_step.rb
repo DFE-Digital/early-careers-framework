@@ -22,13 +22,13 @@ module Schools
           end
         end
 
-        def previous_step
-          if wizard.ect_participant? && wizard.mentor_options.any?
-            :choose_mentor
-          else
-            :email
-          end
-        end
+        # def previous_step
+        #   if wizard.ect_participant? && wizard.mentor_options.any?
+        #     :choose_mentor
+        #   else
+        #     :email
+        #   end
+        # end
 
         def continue_current_programme?
           continue_current_programme == "yes"

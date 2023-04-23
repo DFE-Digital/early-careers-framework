@@ -28,13 +28,13 @@ module Schools
           end
         end
 
-        def previous_step
-          if wizard.transfer?
-            :email
-          else
-            :start_date
-          end
-        end
+        # def previous_step
+        #   if wizard.transfer?
+        #     :email
+        #   else
+        #     :start_date
+        #   end
+        # end
       end
     end
   end

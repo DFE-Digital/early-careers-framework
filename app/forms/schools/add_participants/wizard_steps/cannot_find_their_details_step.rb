@@ -12,9 +12,9 @@ module Schools
           :nino
         end
 
-        def previous_step
-          :date_of_birth
-        end
+        # def previous_step
+        #   :date_of_birth
+        # end
       end
     end
   end

@@ -8,9 +8,9 @@ module Schools
           :email
         end
 
-        def previous_step
-          :email
-        end
+        # def previous_step
+        #   :email
+        # end
       end
     end
   end

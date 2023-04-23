@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "net/http"
+require_relative "record"
 
 module FullDQT
   class Client
@@ -14,9 +15,7 @@ module FullDQT
         http.request(request)
       end
 
-      if response.code == "200"
-        translate_hash(JSON.parse(response.body))
-      end
+      FullDQT::Record.new(response.code == "200" ? translate_hash(JSON.parse(response.body)) : {})
     end
 
   private

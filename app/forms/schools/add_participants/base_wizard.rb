@@ -7,38 +7,45 @@ module Schools
       include Rails.application.routes.url_helpers
 
       class AlreadyInitialised < StandardError; end
+
       class InvalidStep < StandardError; end
 
-      attr_reader :current_step, :submitted_params, :data_store, :current_user, :school_cohort, :participant_profile
+      attr_reader :current_step, :submitted_params, :data_store, :current_user, :participant_profile
+
+      FIRST_ACADEMIC_DATE_2021 = Date.new(2021, 9, 1)
 
       delegate :before_render, to: :form
       delegate :view_name, to: :form
       delegate :after_render, to: :form
 
       delegate :return_point, :changing_answer?, :transfer?, :participant_type, :trn, :confirmed_trn, :date_of_birth,
-               :start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
+               :induction_start_date, :nino, :ect_participant?, :mentor_id, :continue_current_programme?, :participant_profile,
                :sit_mentor?, :mentor_participant?, :appropriate_body_confirmed?, :appropriate_body_id, :known_by_another_name?,
-               :same_provider?, :was_withdrawn_participant?, :complete?,
-               to: :data_store
+               :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
+               :full_name, to: :data_store
 
-      def initialize(current_step:, data_store:, current_user:, school_cohort:, submitted_params: {})
-        if data_store.store.empty? && !(current_step.to_sym.in? %i[participant_type yourself])
-          raise InvalidStep, "store empty (#{data_store.store.empty?} - current_step: #{current_step})"
-        elsif !data_store.current_user.nil? && data_store.current_user != current_user ||
-            !data_store.school_cohort_id.nil? && data_store.school_cohort_id != school_cohort.id
-          raise AlreadyInitialised, "current_user or school_cohort different"
-        end
-
-        set_current_step(current_step)
+      def initialize(current_step:, data_store:, current_user:, school_cohort: nil, school: nil, submitted_params: {})
         @current_user = current_user
         @data_store = data_store
+        @school = school
         @school_cohort = school_cohort
         @submitted_params = submitted_params
         @participant_profile = nil
         @email_owner = nil
         @return_point = nil
+        @previous_step = nil
 
-        load_current_user_and_cohort_into_data_store
+        set_current_step(current_step)
+
+        check_data_store_state!
+        data_store_should_not_have_a_different_user!
+        if FeatureFlag.active?(:cohortless_dashboard)
+          data_store_should_not_have_a_different_school!
+        else
+          data_store_should_not_have_a_different_school_cohort!
+        end
+
+        load_current_user_and_school_into_data_store
       end
 
       def self.permitted_params_for(step)
@@ -49,11 +56,21 @@ module Schools
         school_participants_path(school_id: school.slug)
       end
 
+      def dashboard_path
+        if FeatureFlag.active?(:cohortless_dashboard)
+          school_participants_path(school_id: school.slug)
+        else
+          schools_participants_path(school_id: school.slug, cohort_id: school_cohort.cohort.start_year)
+        end
+      end
+
       def previous_step_path
         if changing_answer?
           show_path_for(step: return_point)
         else
-          back_step = form.previous_step
+          back_step = last_visited_step
+          return abort_path if back_step.nil?
+
           if back_step == :abort
             abort_path
           else
@@ -67,14 +84,6 @@ module Schools
           "ECT"
         else
           "Mentor"
-        end
-      end
-
-      def full_name
-        if sit_mentor?
-          current_user.full_name
-        else
-          data_store.full_name
         end
       end
 
@@ -96,15 +105,26 @@ module Schools
       end
 
       def school
+        return @school if FeatureFlag.active?(:cohortless_dashboard)
+
         @school ||= school_cohort.school
       end
 
+      def school_cohort
+        if FeatureFlag.active?(:cohortless_dashboard)
+          # determine this based on which cohort to place the participant in
+          @school_cohort ||= school.school_cohorts.find_by(cohort: participant_cohort)
+        else
+          @school_cohort
+        end
+      end
+
       def lead_provider
-        @lead_provider ||= @school_cohort.default_induction_programme&.lead_provider
+        @lead_provider ||= school_cohort.default_induction_programme&.lead_provider
       end
 
       def delivery_partner
-        @delivery_partner ||= @school_cohort.default_induction_programme&.delivery_partner
+        @delivery_partner ||= school_cohort.default_induction_programme&.delivery_partner
       end
 
       def email_in_use?
@@ -138,7 +158,10 @@ module Schools
       end
 
       def existing_participant_profile
-        @existing_participant_profile ||= TeacherProfile.joins(:ecf_profiles).where(trn: formatted_confirmed_trn).first&.ecf_profiles&.first
+        @existing_participant_profile ||= ParticipantProfile::ECF
+                                            .joins(:teacher_profile)
+                                            .where(teacher_profile: { trn: formatted_confirmed_trn })
+                                            .first
       end
 
       def existing_user
@@ -183,7 +206,7 @@ module Schools
 
       ## appropriate bodies
       def needs_to_confirm_appropriate_body?
-        ect_participant? && school_cohort.appropriate_body.present?
+        ect_participant? && school_cohort&.appropriate_body&.present?
       end
 
       def appropriate_body_confirmed=(confirmed)
@@ -228,49 +251,92 @@ module Schools
 
       def set_current_step(step)
         @current_step = self.class.steps.find { |s| s == step.to_sym }
-
         raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
       end
 
+      def update_history
+        previous = history_stack.last
+
+        if changing_answer?
+          # if changing the answer corrects the problem we will move straight on
+          # to the next step so we do not want to keep the return point in the stack
+          history_stack.pop if previous == return_point
+        else
+          if previous != current_step
+            # on a new step
+            if history_stack.second_to_last == current_step
+              # we've gone back
+              history_stack.pop
+              previous = history_stack.second_to_last
+            else
+              # we've moved forward
+              history_stack.push(current_step)
+            end
+          else
+            previous = history_stack.second_to_last
+          end
+          data_store.set(:last_visited_step, previous)
+          data_store.set(:history_stack, history_stack)
+        end
+      end
+
+      def history_stack
+        @history_stack ||= data_store.history_stack
+      end
+
       def check_for_dqt_record?
-        full_name.present? && trn.present? && date_of_birth.present?
+        trn.present? && date_of_birth.present?
       end
 
       def found_participant_in_dqt?
-        check_for_dqt_record? && dqt_record.present?
+        check_for_dqt_record? && dqt_validation.valid?
       end
 
-      def dqt_record(force_recheck: false)
-        @dqt_record = nil if force_recheck
-
-        @dqt_record ||= validate_details
+      def dqt_record?
+        check_for_dqt_record? && dqt_validation(force_recheck: true).valid?(skip_name_validation: true)
       end
 
-      def validate_details
-        record = ParticipantValidationService.validate(
-          full_name:,
-          trn: formatted_trn,
-          date_of_birth:,
-          nino: formatted_nino,
-          config: { check_first_name_only: true },
-        )
-        set_confirmed_trn(record[:trn]) if record
-        record
+      def dqt_validation(force_recheck: false)
+        @dqt_validation = nil if force_recheck
+
+        @dqt_validation ||= ParticipantValidation.new(full_name:,
+                                                      trn: formatted_trn,
+                                                      date_of_birth:,
+                                                      nino: formatted_nino).tap do |validation|
+          set_confirmed_trn_and_induction_start_date(validation)
+        end
       end
 
-      def set_confirmed_trn(trn_value)
-        data_store.set(:confirmed_trn, TeacherReferenceNumber.new(trn_value).formatted_trn)
+      def set_confirmed_trn_and_induction_start_date(validation)
+        if validation.valid?(skip_name_validation: true)
+          data_store.set(:confirmed_trn, TeacherReferenceNumber.new(validation.trn).formatted_trn)
+          data_store.set(:induction_start_date, validation.induction_start_date)
+        else
+          data_store.set(:confirmed_trn, nil)
+          data_store.set(:induction_start_date, nil)
+        end
       end
 
-      def dqt_record_check(force_recheck: false)
-        @dqt_record_check = nil if force_recheck
+      def participant_cohort
+        @participant_cohort ||= cohort_to_place_participant
+      end
 
-        @dqt_record_check ||= DqtRecordCheck.call(
-          full_name:,
-          trn: formatted_trn,
-          date_of_birth:,
-          nino: formatted_nino,
-        )
+      # NOTE: not preventing registration here just determining where to put the participant
+      def cohort_to_place_participant
+        if transfer?
+          existing_participant_cohort || existing_participant_profile&.schedule&.cohort
+        elsif induction_start_date.present?
+          Cohort.containing_date(date: [induction_start_date, FIRST_ACADEMIC_DATE_2021].max)
+        elsif Cohort.current == Cohort.active_registration_cohort
+          # true from 1/9 to next cohort registration start date
+          Cohort.current
+        elsif start_term == "summer"
+          # we're in the registration window prior to 1/9
+          Cohort.current
+        else
+          # we're in the registration window prior to 1/9 and chose autumn or spring the following year
+          Cohort.next
+        end
       end
 
       def formatted_nino
@@ -332,9 +398,13 @@ module Schools
         form_class.new(hash)
       end
 
-      def load_current_user_and_cohort_into_data_store
+      def load_current_user_and_school_into_data_store
         data_store.set(:current_user, current_user)
-        data_store.set(:school_cohort_id, school_cohort.id)
+        if FeatureFlag.active?(:cohortless_dashboard)
+          data_store.set(:school_id, school.slug)
+        else
+          data_store.set(:school_cohort_id, school_cohort.id)
+        end
       end
 
       def load_from_data_store
@@ -356,9 +426,18 @@ module Schools
         "Schools::AddParticipants::WizardSteps::#{step.to_s.camelcase}Step".constantize
       end
 
+      def path_options(step: nil)
+        path_opts = {
+          school_id: school.slug,
+        }
+
+        path_opts[:cohort_id] = school_cohort.cohort.start_year unless FeatureFlag.active?(:cohortless_dashboard)
+        path_opts[:step] = step.to_s.dasherize if step.present?
+        path_opts
+      end
+
       def reset_form
         %i[
-          participant_type
           full_name
           trn
           confirmed_trn
@@ -376,11 +455,37 @@ module Schools
           participant_profile
           same_provider
           complete
+          history_stack
+          last_visited_step
+          school_cohort_id
+          school_id
         ].each do |key|
           data_store.set(key, nil)
         end
+        data_store.set(:full_name, current_user.full_name) if current_step == :yourself
 
-        load_current_user_and_cohort_into_data_store
+        load_current_user_and_school_into_data_store
+      end
+
+      # sanity checks
+      def check_data_store_state!
+        if current_step.in? %i[participant_type yourself]
+          reset_form if submitted_params.empty?
+        elsif data_store.store.empty?
+          raise InvalidStep, "Datastore is empty at [#{step}]"
+        end
+      end
+
+      def data_store_should_not_have_a_different_user!
+        raise AlreadyInitialised, "current_user different" if data_store.current_user.present? && data_store.current_user != current_user
+      end
+
+      def data_store_should_not_have_a_different_school!
+        raise AlreadyInitialised, "school different" if data_store.school_id.present? && data_store.school_id != school.slug
+      end
+
+      def data_store_should_not_have_a_different_school_cohort!
+        raise AlreadyInitialised, "school_cohort different" if data_store.school_cohort_id.present? && data_store.school_cohort_id != school_cohort.id
       end
     end
   end

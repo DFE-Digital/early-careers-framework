@@ -4,9 +4,9 @@ module Schools
   module AddParticipants
     module WizardSteps
       class CannotAddAlreadyEnrolledAtSchoolStep < CannotAddStep
-        def previous_step
-          :date_of_birth
-        end
+        # def previous_step
+        #   :name
+        # end
       end
     end
   end

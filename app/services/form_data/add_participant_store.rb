@@ -11,6 +11,10 @@ module FormData
       get :current_user
     end
 
+    def school_id
+      get :school_id
+    end
+
     def school_cohort_id
       get :school_cohort_id
     end
@@ -31,6 +35,14 @@ module FormData
 
     def date_of_birth
       get_date :date_of_birth
+    end
+
+    def induction_start_date
+      get_date :induction_start_date
+    end
+
+    def start_term
+      get :start_term
     end
 
     def start_date
@@ -62,7 +74,7 @@ module FormData
     end
 
     def return_point
-      (get(:return_point) || "").to_s.dasherize
+      get(:return_point) || ""
     end
 
     def changing_answer?
@@ -111,6 +123,14 @@ module FormData
 
     def complete?
       get(:complete) == true
+    end
+
+    def last_visited_step
+      get(:last_visited_step)
+    end
+
+    def history_stack
+      get(:history_stack) || []
     end
   end
 end

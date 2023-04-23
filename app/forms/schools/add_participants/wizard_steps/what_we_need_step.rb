@@ -5,12 +5,12 @@ module Schools
     module WizardSteps
       class WhatWeNeedStep < ::WizardStep
         def next_step
-          :name
+          :trn
         end
 
-        def previous_step
-          :participant_type
-        end
+        # def previous_step
+        #   :participant_type
+        # end
       end
     end
   end

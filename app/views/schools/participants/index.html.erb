@@ -8,10 +8,10 @@
     <h1 class="govuk-heading-xl">Manage mentors and ECTs</h1>
 
     <div class="wrapper-dashboard-v2 manage-mentors-ects">
-      <%= govuk_button_link_to(
-            "Add ECT or mentor",
-            start_schools_who_to_add_participants_path(cohort_id: @participants.dashboard_school_cohorts.first.start_year),
-          ) %>
+      <%= govuk_button_link_to("Add ECT or mentor", schools_who_to_add_start_path(school_id: @school.slug)) %>
+      <% unless current_user.mentor? %>
+        <%= govuk_button_link_to("Add yourself as mentor", schools_who_to_add_sit_start_path) %>
+      <% end %>
 
       <% if actions?(@participants) %>
         <% if @participants.orphan_ects.any? %>

@@ -16,9 +16,9 @@ module Schools
           :trn
         end
 
-        def previous_step
-          :abort
-        end
+        # def previous_step
+        #   :abort
+        # end
 
         def before_render
           wizard.reset_form
