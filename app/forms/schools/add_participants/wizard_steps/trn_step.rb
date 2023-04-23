@@ -18,13 +18,13 @@ module Schools
           :date_of_birth
         end
 
-        def previous_step
-          if wizard.sit_mentor?
-            :abort
-          else
-            :name
-          end
-        end
+        # def previous_step
+        #   if wizard.sit_mentor?
+        #     :abort
+        #   else
+        #     :what_we_need
+        #   end
+        # end
       end
     end
   end

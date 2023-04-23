@@ -15,38 +15,42 @@ module Schools
         end
 
         def next_step
-          if wizard.participant_exists?
-            if wizard.existing_participant_is_a_different_type?
-              if wizard.ect_participant?
-                # trying to add an ECT who is already a mentor
-                :cannot_add_ect_because_already_a_mentor
+          if wizard.dqt_record?
+            if wizard.participant_exists?
+              if wizard.dqt_record_has_different_name? && wizard.participant_has_different_name?
+                :known_by_another_name
+              elsif wizard.existing_participant_is_a_different_type?
+                if wizard.ect_participant?
+                  # trying to add an ECT who is already a mentor
+                  :cannot_add_ect_because_already_a_mentor
+                else
+                  # trying to add a mentor who is already an ECT
+                  :cannot_add_mentor_because_already_an_ect
+                end
+              elsif wizard.already_enrolled_at_school?
+                :cannot_add_already_enrolled_at_school
+              elsif wizard.ect_participant?
+                :confirm_transfer
               else
-                # trying to add a mentor who is already an ECT
-                :cannot_add_mentor_because_already_an_ect
+                :confirm_mentor_transfer
               end
-            elsif wizard.already_enrolled_at_school?
-              :cannot_add_already_enrolled_at_school
-            elsif wizard.ect_participant?
-              :confirm_transfer
+            elsif wizard.dqt_record_has_different_name?
+              :known_by_another_name
             else
-              :confirm_mentor_transfer
+              :none
             end
-          elsif wizard.dqt_record_has_different_name?
-            :known_by_another_name
-          elsif wizard.found_participant_in_dqt? || wizard.sit_mentor?
-            :none
           else
             :cannot_find_their_details
           end
         end
 
-        def previous_step
-          :trn
-        end
-
         def journey_complete?
           next_step == :none
         end
+
+        # def previous_step
+        #   :trn
+        # end
 
       private
 

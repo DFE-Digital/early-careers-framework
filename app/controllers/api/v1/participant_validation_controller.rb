@@ -6,16 +6,15 @@ module Api
       include ApiTokenAuthenticatable
 
       def create
-        record = ParticipantValidationService.validate(
+        record = ParticipantValidation.new(
           trn: params[:trn],
           full_name: params[:full_name],
           date_of_birth: Date.iso8601(params[:date_of_birth]),
           nino: params[:nino],
-          config: { check_first_name_only: true },
         )
 
-        if record.present?
-          render json: ParticipantValidationSerializer.new(OpenStruct.new(record)).serializable_hash.to_json
+        if record.valid?
+          render json: ParticipantValidationSerializer.new(record).serializable_hash.to_json
         else
           raise ActiveRecord::RecordNotFound
         end

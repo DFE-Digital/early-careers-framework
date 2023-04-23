@@ -26,15 +26,28 @@ module Schools
               :check_answers
             end
           elsif wizard.ect_participant?
-            :start_date
+            # :start_date
+            if FeatureFlag.active?(:cohortless_dashboard)
+              if wizard.needs_to_confirm_start_term?
+                :start_term
+              elsif wizard.needs_to_choose_a_mentor?
+                :choose_mentor
+              elsif wizard.needs_to_confirm_appropriate_body?
+                :confirm_appropriate_body
+              else
+                :check_answers
+              end
+            else
+              :start_date
+            end
           else
             :check_answers
           end
         end
 
-        def previous_step
-          :date_of_birth
-        end
+        # def previous_step
+        #   wizard.sit_mentor? ? :date_of_birth : :name
+        # end
       end
     end
   end

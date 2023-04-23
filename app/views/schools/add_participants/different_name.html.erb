@@ -1,4 +1,4 @@
-<% title = "What other name is #{@wizard.full_name} known by?" %>
+<% title = "What other name #{@wizard.sit_mentor? ? "are you" : "is #{@wizard.full_name}"} known by?" %>
 <% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>

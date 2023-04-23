@@ -7,7 +7,13 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl">Are you sure you want to add yourself as a mentor?</h1>
 
-    <p class="govuk-body">The induction tutor and mentor roles are separate. <%= govuk_link_to "Check what each role needs to do", roles_schools_cohort_path, class: "govuk-link--no-visited-state" %>.</p>
+    <p class="govuk-body">The induction tutor and mentor roles are separate.
+      <% if FeatureFlag.active?(:cohortless_dashboard) %>
+        <%= govuk_link_to "Check what each role needs to do", schools_participant_roles_path, no_visited_state: true %>.
+      <% else %>
+        <%= govuk_link_to "Check what each role needs to do", roles_schools_cohort_path, no_visited_state: true %>.
+      <% end %>
+    </p>
 
     <p class="govuk-body">You should only assign yourself as a mentor in exceptional circumstances. If your school needs you to do this, you should:</p>
 

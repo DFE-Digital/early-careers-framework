@@ -20,17 +20,17 @@ module Schools
           :check_answers
         end
 
-        def previous_step
-          if wizard.ect_participant?
-            if wizard.mentor_options.any?
-              :choose_mentor
-            else
-              :start_date
-            end
-          else
-            :email
-          end
-        end
+        # def previous_step
+        #   if wizard.ect_participant?
+        #     if wizard.mentor_options.any?
+        #       :choose_mentor
+        #     else
+        #       :start_date
+        #     end
+        #   else
+        #     :email
+        #   end
+        # end
       end
     end
   end

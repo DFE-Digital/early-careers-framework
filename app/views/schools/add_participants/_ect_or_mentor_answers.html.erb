@@ -42,12 +42,24 @@
   <% end %>
 
   <% if form.ect_participant? %>
-    <% summary_list.row do |row| %>
-      <% row.key { "Induction start" } %>
-      <% row.value { form.start_date.to_date.to_s(:govuk) } %>
-      <% row.action(text: "Change",
-                    visually_hidden_text: "induction start date",
-                    href: form.change_path_for(step: :start_date)) %>
+    <% if FeatureFlag.active? :cohortless_dashboard %>
+      <% if form.show_start_term? %>
+        <% summary_list.row do |row| %>
+          <% row.key { "Start term" } %>
+          <% row.value { form.start_term_description } %>
+          <% row.action(text: "Change",
+                        visually_hidden_text: "start term",
+                        href: form.change_path_for(step: :start_term)) %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <% summary_list.row do |row| %>
+        <% row.key { "Start date" } %>
+        <% row.value { form.start_date.to_date.to_s(:govuk) } %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "induction start date",
+                      href: form.change_path_for(step: :start_date)) %>
+      <% end %>
     <% end %>
 
     <% summary_list.row do |row| %>
@@ -73,12 +85,12 @@
     <% end %>
   <% end %>
 
-  <% if @school_cohort.default_induction_programme && @school_cohort.default_induction_programme.partnership&.active? %>
+  <% if form.show_default_induction_programme_details? %>
     <% summary_list.row do |row| %>
       <% row.key { "Training with" } %>
       <% row.value do %>
-        <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %></p>
-        <p class="govuk-body"><%= @school_cohort.default_induction_programme.delivery_partner&.name %></p>
+        <p class="govuk-body"><%= form.lead_provider&.name %></p>
+        <p class="govuk-body"><%= form.delivery_partner&.name %></p>
       <% end %>
     <% end %>
   <% end %>

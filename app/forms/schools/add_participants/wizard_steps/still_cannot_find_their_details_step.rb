@@ -12,9 +12,9 @@ module Schools
           :abort
         end
 
-        def previous_step
-          :nino
-        end
+        # def previous_step
+        #   :nino
+        # end
       end
     end
   end

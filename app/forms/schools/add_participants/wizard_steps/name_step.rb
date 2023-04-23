@@ -18,9 +18,9 @@ module Schools
           :trn
         end
 
-        def previous_step
-          :what_we_need
-        end
+        # def previous_step
+        #   :date_of_birth
+        # end
       end
     end
   end

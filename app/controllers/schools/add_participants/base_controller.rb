@@ -3,7 +3,8 @@
 module Schools
   module AddParticipants
     class BaseController < Schools::BaseController
-      before_action :set_school_cohort
+      before_action :set_school, if: -> { FeatureFlag.active?(:cohortless_dashboard) }
+      before_action :set_school_cohort, unless: -> { FeatureFlag.active?(:cohortless_dashboard) }
 
       # where to look for step views
       def self.controller_path
@@ -45,19 +46,14 @@ module Schools
       end
 
       def initialize_wizard
+        school_options = FeatureFlag.active?(:cohortless_dashboard) ? { school: @school } : { school_cohort: @school_cohort }
+        wizard_opts = { current_step: step_name, data_store:, current_user: }.merge!(school_options)
         if request.get? || request.head?
-          @wizard = wizard_class.new(current_step: step_name,
-                                     data_store:,
-                                     current_user:,
-                                     school_cohort: @school_cohort)
-
+          @wizard = wizard_class.new(**wizard_opts)
           @wizard.changing_answer(params["changing_answer"] == "1")
+          @wizard.update_history
         else
-          @wizard = wizard_class.new(current_step: step_name,
-                                     data_store:,
-                                     current_user:,
-                                     school_cohort: @school_cohort,
-                                     submitted_params:)
+          @wizard = wizard_class.new(**wizard_opts.merge!(submitted_params:))
         end
         @form = @wizard.form
       rescue BaseWizard::AlreadyInitialised, BaseWizard::InvalidStep
@@ -66,7 +62,7 @@ module Schools
       end
 
       def abort_path
-        FeatureFlag.active?(:cohortless_dashboard) ? school_participants_path : schools_participants_path
+        school_participants_path(school_id: @school.slug)
       end
 
       def wizard_back_link_path

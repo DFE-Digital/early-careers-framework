@@ -1,4 +1,4 @@
-<% title = "What’s #{@wizard.possessive_name_or_your} teacher reference number (TRN)?" %>
+<% title = "What’s #{@wizard.sit_mentor? ? "your" : "#{@wizard.possessive_name} teacher reference number (TRN)?" %>
 
 <% content_for :title, title %>
 

@@ -125,20 +125,17 @@ module Participants
     end
 
     def check_eligibility!
-      self.dqt_response = ParticipantValidationService.validate(
+      self.dqt_response = ParticipantValidation.new(
         full_name:,
         trn: formatted_trn,
         date_of_birth: dob,
         nino:,
-        config: {
-          check_first_name_only: true,
-        },
       )
 
       self.attempts += 1
       store_analytics!
 
-      return self.eligibility = :no_match if dqt_response.blank?
+      return self.eligibility = :no_match unless dqt_response.valid?
 
       eligibility_record = store_validation_result!
       self.eligibility = eligibility_record.status.to_sym
@@ -155,7 +152,7 @@ module Participants
     end
 
     def store_validation_result!(save_validation_data_without_match: true)
-      return unless dqt_response || save_validation_data_without_match
+      return unless dqt_response.valid? || save_validation_data_without_match
 
       StoreValidationResult.call(
         participant_profile:,
@@ -173,7 +170,7 @@ module Participants
       Analytics::RecordValidationJob.perform_later(
         participant_profile:,
         real_time_attempts: attempts,
-        real_time_success: dqt_response.present?,
+        real_time_success: dqt_response.valid?,
         nino_entered: nino.present?,
       )
     end

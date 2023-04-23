@@ -12,10 +12,10 @@ class StoreValidationResult < BaseService
 
   def call
     store_validation_data!
-    return if dqt_response.blank?
+    return unless dqt_response.valid?
 
     eligibility = store_eligibility_data!(dqt_response)
-    store_trn_on_teacher_profile!(dqt_response[:trn])
+    store_trn_on_teacher_profile!(dqt_response.trn)
     deduplicate_by_trn! if deduplicate
     eligibility
   end
@@ -38,13 +38,13 @@ private
     StoreParticipantEligibility.call(
       participant_profile:,
       eligibility_options: {
-        qts: dqt_data[:qts],
-        active_flags: dqt_data[:active_alert],
-        previous_participation: dqt_data[:previous_participation],
-        previous_induction: dqt_data[:previous_induction],
-        no_induction: dqt_data[:no_induction],
-        exempt_from_induction: dqt_data[:exempt_from_induction],
-        different_trn: different_trn?(dqt_data[:trn]),
+        qts: dqt_data.qts,
+        active_flags: dqt_data.active_alert,
+        previous_participation: dqt_data.previous_participation,
+        previous_induction: dqt_data.previous_induction,
+        no_induction: dqt_data.no_induction,
+        exempt_from_induction: dqt_data.exempt_from_induction,
+        different_trn: different_trn?(dqt_data.trn),
       },
     )
   end

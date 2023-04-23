@@ -26,9 +26,9 @@ module Schools
           end
         end
 
-        def previous_step
-          :email
-        end
+        # def previous_step
+        #   :email
+        # end
 
       private
 

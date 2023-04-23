@@ -1,4 +1,4 @@
-<% content_for :title, "What’s #{@wizard.possessive_name} email address?" %>
+<% content_for :title, "What’s #{@wizard.sit_mentor? ? "your" : @wizard.possessive_name} email address?" %>
 
 <% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
 

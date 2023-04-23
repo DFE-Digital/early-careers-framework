@@ -8,9 +8,9 @@ module Schools
           :none
         end
 
-        def previous_step
-          :none
-        end
+        # def previous_step
+        #   :none
+        # end
       end
     end
   end

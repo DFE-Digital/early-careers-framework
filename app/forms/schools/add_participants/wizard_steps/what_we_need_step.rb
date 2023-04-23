@@ -8,9 +8,9 @@ module Schools
           :name
         end
 
-        def previous_step
-          :participant_type
-        end
+        # def previous_step
+        #   :participant_type
+        # end
       end
     end
   end
