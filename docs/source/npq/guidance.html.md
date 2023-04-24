@@ -105,7 +105,7 @@ The request parameter must include the `id` of the corresponding NPQ application
 
 An example response body is listed below. Successful requests will return a response body including updates `status` attribute. 
 
-{inset-text} Note, the API will prevent more than one provider accepting an application for the same course by automatically updating the application status or returning an error message. {/inset-text}
+{inset-text} Note, the API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message. {/inset-text}
 
 For more detailed information see the specifications for this [accept an NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-accept-post).
 
