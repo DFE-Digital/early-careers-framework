@@ -12,6 +12,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
        .and not_change(participant_profile, :induction_start_date)
+       .and not_change(SyncDqtInductionStartDateError, :count)
     end
   end
 
@@ -24,6 +25,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
        .and not_change(participant_profile, :induction_start_date)
+       .and not_change(SyncDqtInductionStartDateError, :count)
 
       expect(participant_profile.induction_start_date).to eql(Date.new(2021, 9, 1))
     end
@@ -39,6 +41,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
        .and not_change(participant_profile, :induction_start_date)
+       .and not_change(SyncDqtInductionStartDateError, :count)
     end
   end
 
@@ -52,6 +55,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to change(participant_profile, :induction_start_date).to(dqt_induction_start_date)
        .and not_change { participant_profile.induction_records.latest.cohort }
+       .and not_change(SyncDqtInductionStartDateError, :count)
     end
   end
 
@@ -67,6 +71,7 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to change(participant_profile, :induction_start_date).to(dqt_induction_start_date)
        .and change { participant_profile.induction_records.latest.cohort.start_year }.to(2023)
+       .and not_change(SyncDqtInductionStartDateError, :count)
     end
   end
 
@@ -85,7 +90,8 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
       expect {
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to not_change(participant_profile, :updated_at)
-             .and not_change(participant_profile, :induction_start_date)
+       .and not_change(participant_profile, :induction_start_date)
+       .and not_change(SyncDqtInductionStartDateError, :count)
     end
   end
 end
