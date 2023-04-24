@@ -11,10 +11,6 @@
     <p class="govuk-body"><%= @wizard.possessive_name %> induction will not start until the 2023 academic year.</p>
     <p class="govuk-body">Our service is not yet open for registrations.</p>
 
-    <%= govuk_link_to "Return to your ECTs and mentors",
-                      FeatureFlag.active?(:cohortless_dashboard) ?
-                        school_participants_path :
-                        schools_participants_path,
-                      no_visited_state: true %>
+    <%= govuk_link_to "Return to your ECTs and mentors", school_participants_path, no_visited_state: true %>
   </div>
 </div>

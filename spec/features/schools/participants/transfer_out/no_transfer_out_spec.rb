@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: false do
   context "An ECT has been transferred in to another school" do
     before do
       set_participant_data

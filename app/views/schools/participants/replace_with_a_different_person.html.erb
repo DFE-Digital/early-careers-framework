@@ -2,10 +2,8 @@
 
 <% content_for :before_content,
                govuk_back_link(text: "Back",
-                               href: FeatureFlag.active?(:cohortless_dashboard) ?
-                                       school_participant_edit_name_path(participant_id: @profile, selected_reason: @reason) :
-                                       schools_participant_edit_name_path(participant_id: @profile, selected_reason: @reason),
-                               ) %>
+                               href: school_participant_edit_name_path(participant_id: @profile,
+                                                                       selected_reason: @reason)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -34,10 +32,7 @@
 
     <p class="govuk-body">
       <%= govuk_link_to "Add a new #{participant_type(@profile, downcase: true)}",
-                        start_schools_who_to_add_participants_path(
-                          cohort_id: FeatureFlag.active?(:cohortless_dashboard) ? Cohort.current : @school_cohort.start_year,
-                          school_id: @school.slug
-                        ),
+                        start_schools_who_to_add_participants_path(cohort_id: Cohort.current, school_id: @school.slug),
                         class: "govuk-link--no-visited-state" %>
     </p>
   </div>

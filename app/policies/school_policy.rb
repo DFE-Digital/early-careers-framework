@@ -19,11 +19,7 @@ class SchoolPolicy < ApplicationPolicy
     def resolve
       return scope.eligible_or_cip_only if user.admin?
 
-      if FeatureFlag.active?(:cohortless_dashboard)
-        scope.where(id: user.school_ids)
-      else
-        scope.none
-      end
+      scope.where(id: user.school_ids)
     end
   end
 end
