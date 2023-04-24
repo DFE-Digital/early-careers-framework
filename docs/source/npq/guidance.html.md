@@ -328,26 +328,43 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
+###  Notify DfE a participant has withdrawn from training
 
-## Notifying that an NPQ participant has withdrawn from their course
-
-This operation allows the provider to tell the DfE that a participant has withdrawn from their NPQ course.
-
-A participant that withdraws in a given milestone period after the submission of a retained event for the same period, will be paid for that period.
-
-A participant that withdraws before the started milestone cut-off date will not be paid for by the department.
-
-## Provider withdraws a participant
-
-Submit the withdrawal notification to the following endpoint
+A participant can choose to withdraw from an NPQ course at any time. Providers must notify DfE of this via the API.
 
 ```
-PUT /api/v1/participants/npq/{id}/withdraw
+ PUT /api/v3/participants/npq/{id}/withdraw
 ```
 
-This will return an [NPQ participant record](/api-reference/reference.html#schema-npqparticipantresponse) with the updates to the record included.
+An example request body is listed below. 
 
-See [withdraw NPQ participant](/api-reference/reference.html#api-v1-participants-npq-id-withdraw-put) endpoint.
+Successful requests will return a response body including updates to the `training_status` attribute.
+
+For more detailed information see the specifications for this [notify DfE that an NPQ participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-withdraw-put).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-withdraw",
+    "attributes": {
+      "reason": "quality-of-programme-other",
+      "course_identifier": "npq-leading-teaching-development"
+    }
+  }
+}
+```
+
+{inset-text}
+#### Providers should note: 
+
+* The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
+* DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
+* If a participant is withdrawn later in their course, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
+* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View NPQ schedules and milestone dates](/api-reference/npq/schedules_and-milestone-dates)
+{/inset-text}
+
 
 ## Tell the DfE that a participant is changing training schedule on their NPQ course
 
