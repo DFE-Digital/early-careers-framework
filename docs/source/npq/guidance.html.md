@@ -460,6 +460,7 @@ For more detailed information see the specifications for this [notify that an NP
 ```
 
 ### View all participant outcomes
+
 Participants can either pass or fail assessment at the end of their NPQ course. These outcomes are submitted by providers within `completed` declaration submissions.
 
 Note, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
@@ -495,49 +496,78 @@ For more detailed information see the specifications for this [view NPQ outcomes
 }
 ```
 
+### View a specific participant’s outcome
 
+A participant can either pass or fail assessment at the end of their NPQ course. Their outcome will be submitted by providers within `completed` declaration submissions.
 
-
-
-### Provider views outcomes for an NPQ participant
-
-View outcomes for a specific NPQ participant.
+Note, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
 
 ```
-GET /api/v1/participant/npq/{participant_id}/outcomes
+ GET /api/v3/participants/npq/{participant_id}/outcomes
 ```
 
-This will return an [NPQ outcomes response](/api-reference/reference-v1.html#schema-npqoutcomesresponse), including a `state` value to show: 
+An example response body is listed below. Successful requests will return a response body including an outcome `state` value to signify:
 
-* outcomes submitted (`passed` or `failed)
+* the outcome submitted (`passed` or `failed`)
 * if the `completed` declaration has been voided and the outcome retracted (`voided`)
 
-See specifications for the [participant outcome](/api-reference/reference-v1.html#api-v1-participants-npq-participant_id-outcomes-get) endpoint.
+For more detailed information see the specifications for this [view NPQ outcome for a specific participant endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-participant_id-outcomes-get).
 
-## Updating NPQ participant outcomes 
+#### Example response body:
 
-This scenario begins after a provider has submitted a `completed` declaration for a participant, including their course outcome.
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "participant-outcome",
+      "attributes": {
+        "participant_id": "66218835-9430-4d0c-98ef-7caf0bb4a59b",
+        "course_identifier": "npq-leading-teaching",
+        "state": "passed",
+        "completion_date": "2021-05-31",
+        "created_at": "2021-05-31T02:21:32.000Z"
+      }
+    }
+  ]
+}
+```
 
-This operation allows providers to update an NPQ participant's outcome. Providers can also view a list of all [previously submitted declarations](/api-reference/npq-usage.html#checking-all-previously-submitted-declarations).
+### Update a participant’s outcomes
 
-Providers may need to update an outcome if the previously submitted data was inaccurate. For example, a provider should update the outcome if:
-* the reported NPQ outcome was incorrect
+Outcomes may need to be updated if previously submitted data was inaccurate. For example, a provider should update a participant’s outcome if:
+
+* the reported outcome was incorrect
 * the reported date the participant received their outcome was incorrect
-* a participant has retaken their NPQ assessment and their outcome has changed.
-
-### Updating NPQ outcomes 
-
-Submit an updated NPQ outcome.
+* a participant has retaken their NPQ assessment and their outcome has changed
 
 ```
 POST /api/v1/participant/npq/{participant_id}/outcomes
 ```
 
-The request body must contain all attributes described in the [NPQ participant outcome schema](/api-reference/reference-v3.html#schema-npqoutcomerequest-example), including updated values for the `completion_date` and `state` attributes.
+An example request body is listed below. Request bodies must include a new value for the outcome `state` and `completion_date`. 
 
-This returns an [NPQ outcomes response](/api-reference/reference-v3.html#schema-npqoutcomeresponse) including updates to the record.
+Successful requests will return a response body with updates included. 
 
-See specifications for the [NPQ outcomes](/api-reference/reference-v1.html#api-v1-participants-npq-participant_id-outcomes-post) endpoint. 
+For more detailed information see the specifications for this [update an NPQ outcome endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-participant_id-outcomes-post).
+
+#### Example request body: 
+
+```
+{
+  "data": {
+    "type": "npq-outcome-confirmation",
+    "attributes": {
+      "course_identifier": "npq-leading-teaching",
+      "state": "passed",
+      "completion_date": "2021-05-31"
+    }
+  }
+}
+```
+
+
+
 
 
 ## Declaring that an NPQ participant has started their course
