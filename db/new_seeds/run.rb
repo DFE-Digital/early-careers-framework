@@ -40,7 +40,6 @@ end
   "add_feature_flags.rb",
   "add_sit_nominations.rb",
   "add_ects_becoming_mentors.rb",
-  "add_schools_for_cohortless_testing.rb",
 ].each do |file|
   Rails.logger.info("seeding #{file}")
   load_base_file(file)
