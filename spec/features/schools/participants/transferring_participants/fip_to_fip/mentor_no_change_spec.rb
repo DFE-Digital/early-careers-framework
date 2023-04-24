@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", type: :feature, js: true, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "transferring participants", type: :feature, js: true do
   context "Transferring a Mentor to a school" do
     context "Mentor has matching lead provider and delivery partner" do
       before do

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "old and new SIT transferring the same participant", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21), with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "old and new SIT transferring the same participant", type: :feature, js: true, rutabaga: false, travel_to: Time.zone.local(2022, 10, 21) do
   context "Transfer out an ECT that has already been transferred in" do
     before do
       set_participant_data
