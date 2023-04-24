@@ -7,6 +7,7 @@ class Admin::ParticipantPresenter
            :user,
            :participant_identity,
            :training_status,
+           :status,
            :notes,
            :notes?,
            :ect?,
