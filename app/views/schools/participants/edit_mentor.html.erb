@@ -2,9 +2,7 @@
 
 <% content_for :before_content,
                govuk_back_link(text: "Back",
-                               href: FeatureFlag.active?(:cohortless_dashboard) ?
-                                       school_participant_path(id: params[:from_mentor].presence || @profile) :
-                                       schools_participant_path(id: params[:from_mentor].presence || @profile)) %>
+                               href: school_participant_path(id: params[:from_mentor].presence || @profile)) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -12,9 +10,7 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
 
     <%= form_with model: @mentor_form,
-                  url: (FeatureFlag.active?(:cohortless_dashboard) ?
-                          school_participant_update_mentor_path(participant_id: @profile, from_mentor: params[:from_mentor]) :
-                          schools_participant_update_mentor_path(participant_id: @profile)),
+                  url: school_participant_update_mentor_path(participant_id: @profile, from_mentor: params[:from_mentor]),
                   method: :put,
                   id: "school-cohort-participant-update-mentor" do |f| %>
       <%= f.govuk_error_summary %>
@@ -23,11 +19,6 @@
                                          legend: { text: "Who is the mentor for #{@profile.user.full_name}?", tag: 'h1', size: 'xl' } do %>
         <% @mentor_form.available_mentors.each_with_index do |mentor, i| %>
           <%= f.govuk_radio_button :mentor_id, mentor.id, label: { text: mentor.full_name }, link_errors: i == 0 %>
-        <% end %>
-
-        <% unless FeatureFlag.active?(:cohortless_dashboard) %>
-          <%= f.govuk_radio_divider %>
-          <%= f.govuk_radio_button :mentor_id, "later", label: { text: 'Add or assign mentor later' } %>
         <% end %>
       <% end %>
 

@@ -9,11 +9,7 @@ class ParticipantMentorForm
   validate :mentor_exists
 
   def mentor
-    @mentor ||= if FeatureFlag.active?(:cohortless_dashboard)
-                  User.find(mentor_id) if mentor_id
-                else
-                  User.find(mentor_id) unless mentor_id == "later"
-                end
+    @mentor ||= User.find(mentor_id) if mentor_id
   end
 
   def available_mentors

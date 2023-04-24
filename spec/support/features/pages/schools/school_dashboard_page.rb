@@ -20,14 +20,8 @@ module Pages
       element_has_content? self, "Induction tutor #{full_name}"
     end
 
-    # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - start
-    def confirm_has_participants
-      element_has_content? self, "View your early career teacher and mentor details"
-    end
-    # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - end
-
     def confirm_has_no_participants
-      element_has_content?(self, FeatureFlag.active?(:cohortless_dashboard) ? "ECTs0" : "ECTs and mentors0")
+      element_has_content?(self, "ECTs0")
     end
 
     def confirm_will_use_dfe_funded_training_provider
@@ -53,25 +47,13 @@ module Pages
     end
 
     def view_participant_details
-      if FeatureFlag.active?(:cohortless_dashboard)
-        click_on("Manage mentors and ECTs")
-      elsif has_link?("Manage participants")
-        click_on("Manage participants")
-      else
-        click_on("Add participants")
-      end
+      click_on("Manage mentors and ECTs")
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
 
     def add_participant_details
-      if FeatureFlag.active?(:cohortless_dashboard)
-        click_on("Manage mentors and ECTs")
-      elsif has_content?("ECTs and mentors0")
-        click_on("Add participants")
-      else
-        click_on("Manage participants")
-      end
+      click_on("Manage mentors and ECTs")
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end

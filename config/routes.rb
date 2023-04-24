@@ -571,6 +571,7 @@ Rails.application.routes.draw do
           get "check-answers", to: "transfer_out#check_answers"
           put "check-answers", to: "transfer_out#check_answers"
           get "complete", to: "transfer_out#complete"
+<<<<<<< HEAD
         end
       end
     end

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "transferring participants", type: :feature, js: true, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "transferring participants", type: :feature, js: true do
   context "Attempting to transfer an ECT to a school" do
     context "ECT cannot be validated" do
       before do
