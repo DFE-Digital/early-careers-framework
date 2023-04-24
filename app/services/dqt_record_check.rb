@@ -100,7 +100,6 @@ private
 
   def magic_date_range
     magic_results.keys.map { |k| Date.new(1900, 1, k) }
-    # (Date.new(1900, 1, 1)..Date.new(1900, 1, 23))
   end
 
   def magic_response
@@ -111,20 +110,28 @@ private
     {
       # all matches - use birthdate 1/1/1900
       1 => CheckResult.new(magic_dqt_record, true, true, true, true, 4), # dqt_record/TRN/name/DoB/Nino/total matched
+
       # name and nino don't match  - use birthdate 2/1/1900
       2 => CheckResult.new(magic_dqt_record, true, false, true, false, 2),
+
       # did not match - use birthdate 3/1/1900
       3 => check_failure(:no_match_found),
+
       # matched but no QTS - use birthdate 4/1/1900
       4 => CheckResult.new(magic_dqt_record(qts_date: nil), true, true, true, true, 4),
-      # matched but no induction - use birthdate 4/1/1900
+
+      # matched but no induction - use birthdate 5/1/1900
       5 => CheckResult.new(magic_dqt_record(with_induction: false), true, true, true, true, 4),
+
       # matched but active flags - use birthdate 6/1/1900
       6 => CheckResult.new(magic_dqt_record(active_alert: true), true, true, true, true, 4),
+
       # all matches 21 cohort start date - use 21/1/1900
       21 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2021, 9, 1)), true, true, true, true, 4),
+
       # all matches 22 cohort start date - use 22/1/1900
       22 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2022, 9, 1)), true, true, true, true, 4),
+
       # all matches 23 cohort start date - use 23/1/1900
       23 => CheckResult.new(magic_dqt_record(induction_start_date: Date.new(2023, 9, 1)), true, true, true, true, 4),
     }
