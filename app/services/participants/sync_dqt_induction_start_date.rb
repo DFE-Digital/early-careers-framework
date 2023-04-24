@@ -72,7 +72,7 @@ module Participants
       amend_cohort.save ? update_induction_start_date : save_errors(*amend_cohort.errors.full_messages)
     end
 
-    private
+  private
 
     def save_error_message(amend_cohort)
       SyncDqtInductionStartDateError.create!(participant_profile: @participant_profile,
