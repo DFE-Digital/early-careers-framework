@@ -35,7 +35,7 @@ module Participants
       end
     end
 
-    private
+  private
 
     def save_error_message(amend_cohort)
       SyncDqtInductionStartDateError.create!(participant_profile: @participant_profile,
