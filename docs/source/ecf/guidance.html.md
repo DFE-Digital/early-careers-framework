@@ -361,7 +361,7 @@ Providers can view data to find out whether participants:
 * are eligible for funding
 * have [transferred to or from a school you are partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
 
-Providers can then update data to confirm participants have: 
+Providers can then update data to notify DfE that participants have: 
 
 * [deferred training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training ) 
 * [resumed training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)  
