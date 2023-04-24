@@ -301,23 +301,33 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
+### Notify DfE a participant has resumed training
 
-
-## Notifying that an NPQ participant is resuming their course
-
-This functionality allows the provider to inform the DfE that a participant has resumed an NPQ course.
-
-### Provider resumes an NPQ participant
-
-Submit the resumed notification to the following endpoint
+A participant can choose to resume their NPQ course at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
-PUT /api/v1/participants/npq/{id}/resume
+ PUT /api/v3/participants/npq/{id}/resume
 ```
 
-This will return an [NPQ participant record](/api-reference/reference-v1#schema-npqparticipantresponse) with the updates to the record included.
+An example request body is listed below. 
 
-See [resume NPQ participant](/api-reference/reference-v1.html#api-v1-participants-id-resume-put) endpoint.
+Successful requests will return a response body including updates to the `training_status` attribute.
+
+For more detailed information see the specifications for this [notify DfE that an NPQ participant has resumed training endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-resume-put).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-resume",
+    "attributes": {
+      "course_identifier": "npq-leading-teaching-development"
+    }
+  }
+}
+```
+
 
 ## Notifying that an NPQ participant has withdrawn from their course
 
