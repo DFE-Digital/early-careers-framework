@@ -505,7 +505,7 @@ For more detailed information see the specifications for this [notify DfE that a
 A participant can choose to resume their ECF-based training at any time if they had previously deferred. Providers must notify DfE of this via the API.
 
 ```
- /api/v{n}/participants/ecf/{id}/resume
+ PUT /api/v{n}/participants/ecf/{id}/resume
 ```
 
 An example request body is listed below. 
