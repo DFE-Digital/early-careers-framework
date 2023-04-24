@@ -556,12 +556,9 @@ For more detailed information see the specifications for this [notify DfE that a
 ```
 
 {inset-text}
-#### Providers should note: 
-
-* The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
+#### Providers should note:
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
-* If a participant is withdrawn later in their training, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
-* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View ECF schedules and milestone dates](/api-reference/ecf/schedules_and-milestone-dates)
+* DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
 {/inset-text}
 
 ### Notify DfE a participant has changed their training schedule

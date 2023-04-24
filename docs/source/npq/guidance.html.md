@@ -566,83 +566,170 @@ For more detailed information see the specifications for this [update an NPQ out
 }
 ```
 
+### Notify DfE a participant has started training
 
-
-
-
-## Declaring that an NPQ participant has started their course
-
-This scenario begins after it has been confirmed that an NPQ participant is ready to begin their induction training.
-
-### Provider confirms an NPQ participant has started
-
-onfirm an NPQ participant has started their induction training before Milestone 1.
+Notify the DfE that a participant has started an NPQ course by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/npq/schedules-and-milestone-dates).
 
 ```
-POST /api/v1/participant-declarations
+ POST /api/v3/participant-declarations
 ```
 
-With a [request body containing an NPQ participant declaration](/api-reference/reference-v1#schema-npqparticipantstarteddeclaration).
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `started` value. 
 
-This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+An example response body is listed below. Successful requests will return a response body with declaration data. 
 
-This endpoint is idempotent - submitting exact copy of a request will return the same response body as submitting it the first time.
+Any attempts to submit duplicate declarations will return an error message.
 
-See [confirm NPQ participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
+{inset-text}Note, providers should store the returned NPQ participant declaration ID for management tasks.{/inset-text}
 
-### Provider records the NPQ participant declaration ID
+For more detailed information see the specifications for this [notify DfE that an NPQ participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
-Store the returned NPQ participant declaration ID for future management tasks.
-
-## Declaring that an NPQ participant has reached a retained milestone
-
-This scenario begins after it has been confirmed that an NPQ participant has completed enough of their course to meet a milestone.
-
-### Provider confirms an NPQ participant has been retained
-
-Confirm an NPQ participant has been retained by the appropriate number of months for this retained event on their NPQ course.
-
-An explicit `retained-x` declaration is required to trigger output payments. You should declare this when a participant has reached a particular milestone in line with contractual reporting requirements.
+#### Example request body:
 
 ```
-POST /api/v1/participant-declarations
+{
+  "data": {
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "declaration_type": "started",
+      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "course_identifier": "npq-leading-teaching"
+    }
+  }
+}
 ```
 
-With a [request body containing an NPQ participant retained declaration](/api-reference/reference-v1#schema-npqparticipantretaineddeclaration).
-
-This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
-
-See [confirm NPQ participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
-
-### Provider records the NPQ participant declaration ID 
-
-Store the returned NPQ participant declaration ID for future management tasks.
-
-## Declaring that an NPQ participant has completed their course
-
-This scenario begins after it has been confirmed that an NPQ participant has completed their course.
-
-Providers should declare this when a participant has reached their final milestone and completed their NPQ course with a pass or fail outcome.
-
-An explicit `completed` declaration is required to trigger output payments.
-
-### Provider confirms an NPQ participant has completed their course
-
-Confirm a participant has completed their NPQ course.
+#### Example response body:
 
 ```
-POST /api/v1/participant-declarations
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+      "declaration_type": "started",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "npq-leading-teaching",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": null,
+      "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": null,
+      "uplift_paid": true,
+      "evidence_held": null
+    }
+  }
+}
 ```
 
-The request body must contain all attributes described in the [NPQ participant completed declaration](/api-reference/reference-v1.html#schema-npqparticipantdeclarationcompletedattributesrequest), including a value in the `has_passed` attribute.
+### Notify DfE a participant has been retained in training
 
-This returns [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+Notify the DfE that a participant has reached a given retention point in their course by submitting a `retained` declaration in line with [milestone dates](/api-reference/npq/schedules-and-milestone-dates).
 
-See specifications for the [confirm NPQ participant declarations](/api-reference/reference-v1#api-v1-participant-declarations-post) endpoint.
+```
+POST /api/v{n}/participant-declarations
+```
 
-### Provider records the NPQ participant declaration ID
+An example request body is listed below. Request bodies must include the necessary data attributes, including the appropriate `declaration_type` attribute value, for example `retained-1`. 
 
-Store the returned NPQ participant declaration ID for future management tasks.
+An example response body is listed below. Successful requests will return a response body with declaration data. 
+
+Any attempts to submit duplicate declarations will return an error message.
+
+{inset-text}Note, providers should store the returned NPQ participant declaration ID for management tasks.{/inset-text}
+
+For more detailed information see the specifications for this [notify DfE that an NPQ participant has been retained in training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+
+#### Example request body:
+
+```
+{
+  “data”: {
+    “type”: “participant-declaration”,
+    “attributes”: {
+      "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "declaration_type": "retained-1",
+      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "course_identifier": "npq-headship"
+    }
+  }
+}
+```
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+      "declaration_type": "retained-1",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "npq-leading-teaching",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": null,
+      "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": null,
+      "uplift_paid": true,
+      "evidence_held": null
+    }
+  }
+}
+```
+
+### Notify DfE a participant has completed training
+
+Notify the DfE that a participant has completed their course by submitting a `completed` declaration in line with [milestone dates](/api-reference/npq/schedules-and-milestone-dates).
+
+```
+POST /api/v{n}/participant-declarations
+```
+
+An example request body is listed below. Request bodies must include the necessary data attributes, including the `declaration_type` attribute with a `completed` value, and the`has_passed` attribute with a `true` or `false` value.
+
+An example response body is listed below. Successful requests will return a response body with declaration data. 
+
+Any attempts to submit duplicate declarations will return an error message.
+
+{inset-text}Note, providers should store the returned NPQ participant declaration ID for future management tasks.{/inset-text}
+
+For more detailed information see the specifications for this [notify DfE that an NPQ participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
+
+#### Example request body:
+
+```
+{
+  “data”: {
+    “type”: “participant-declaration”,
+    “attributes”: {
+      "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "declaration_type": "completed",
+      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "course_identifier": "npq-leading-teaching",
+      "has_passed": true
+    }
+  }
+}
+```
+
+#### Example response body:
+
+```
+```
+
+
+
 
 ## Removing a declaration submitted in error
 
