@@ -29,6 +29,7 @@ class ParticipantValidation
 
   alias_method :active_alert, :active_alert?
   alias_method :no_induction, :no_induction?
+  alias_method :exempt_from_induction, :exempt_from_induction?
   alias_method :previous_induction, :previous_induction?
   alias_method :qts, :qts?
 
@@ -39,7 +40,7 @@ class ParticipantValidation
   def previous_participation?
     return @previous_participation if instance_variable_defined?(:@previous_participation)
 
-    @previous_participation = ECFIneligibleParticipant.participated.find_by(trn:).exists?
+    @previous_participation = ECFIneligibleParticipant.participated.where(trn:).exists?
   end
   alias_method :previous_participation, :previous_participation?
 

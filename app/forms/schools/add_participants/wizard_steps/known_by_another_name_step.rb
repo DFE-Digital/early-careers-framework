@@ -26,10 +26,6 @@ module Schools
           end
         end
 
-        # def previous_step
-        #   wizard.sit_mentor? ? :date_of_birth : :name
-        # end
-
         def known_by_another_name?
           known_by_another_name == "yes"
         end

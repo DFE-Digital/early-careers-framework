@@ -11,10 +11,6 @@ module Schools
         def next_step
           :abort
         end
-
-        # def previous_step
-        #   :nino
-        # end
       end
     end
   end

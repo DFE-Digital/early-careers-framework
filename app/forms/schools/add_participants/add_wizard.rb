@@ -45,7 +45,7 @@ module Schools
         back_step = last_visited_step
         return abort_path if back_step.nil?
 
-        if changing_answer? || %i[name different_name].exclude?(back_step)
+        if changing_answer? || %i[date_of_birth different_name].exclude?(back_step)
           super
         else
           schools_who_to_add_show_path(**path_options(step: back_step)) # previous wizard

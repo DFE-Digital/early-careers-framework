@@ -266,7 +266,7 @@ module Schools
       end
 
       def check_for_dqt_record?
-        trn.present? && date_of_birth.present?
+        date_of_birth.present? && [trn.present? || nino.present?]
       end
 
       def found_participant_in_dqt?
@@ -404,7 +404,10 @@ module Schools
       end
 
       def path_options(step: nil)
-        path_opts = { school_id: school.slug }
+        path_opts = {
+          school_id: school.slug,
+        }
+
         path_opts[:step] = step.to_s.dasherize if step.present?
         path_opts
       end

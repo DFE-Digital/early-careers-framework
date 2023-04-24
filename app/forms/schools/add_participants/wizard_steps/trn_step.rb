@@ -15,7 +15,15 @@ module Schools
         end
 
         def next_step
-          :date_of_birth
+          if wizard.changing_answer?
+            if wizard.nino
+              :still_cannot_find_their_details
+            else
+              :cannot_find_their_details
+            end
+          else
+            :date_of_birth
+          end
         end
 
         # def previous_step

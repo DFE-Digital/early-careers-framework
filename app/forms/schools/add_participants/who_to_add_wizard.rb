@@ -49,22 +49,40 @@ module Schools
       end
 
       def next_step_path
-        if changing_answer?
-          if form.revisit_next_step?
-            change_path_for(step: form.next_step)
-          elsif dqt_record?
-            if form.journey_complete?
-              next_journey_path
-            else
-              show_path_for(step: form.next_step)
-            end
-          else
-            show_path_for(step: :cannot_find_their_details)
-          end
-        elsif form.journey_complete?
+        next_step = form.next_step
+
+        if next_step == :done
           next_journey_path
+        elsif changing_answer?
+          change_path_for(step: next_step)
         else
-          show_path_for(step: form.next_step)
+          show_path_for(step: next_step)
+        end
+      end
+
+      def next_step_from_record_check
+        if participant_exists?
+          if dqt_record_has_different_name? && participant_has_different_name?
+            :known_by_another_name
+          elsif existing_participant_is_a_different_type?
+            if ect_participant?
+              # trying to add an ECT who is already a mentor
+              :cannot_add_ect_because_already_a_mentor
+            else
+              # trying to add a mentor who is already an ECT
+              :cannot_add_mentor_because_already_an_ect
+            end
+          elsif already_enrolled_at_school?
+            :cannot_add_already_enrolled_at_school
+          elsif ect_participant?
+            :confirm_transfer
+          else
+            :confirm_mentor_transfer
+          end
+        elsif dqt_record_has_different_name?
+          :known_by_another_name
+        else
+          :done
         end
       end
 
@@ -87,9 +105,7 @@ module Schools
       end
 
       def change_path_for(step:)
-        show_change_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                         school_id: school_cohort.school.friendly_id,
-                                                         step:)
+        schools_who_to_add_show_change_path(school_id: school_cohort.school.friendly_id, step:)
       end
 
       def reset_known_by_another_name_response

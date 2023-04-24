@@ -10,11 +10,11 @@
       <span class="govuk-caption-xl"><%= @school.name %></span>
       <h1 class="govuk-heading-xl"><%= title %></h1>
 
-      <%= govuk_inset_text(text: @school_cohort.appropriate_body.name) %>
+      <%= govuk_inset_text(text: @wizard.school_cohort.appropriate_body.name) %>
 
       <%= govuk_link_to "They have a different appropriate body", url_for({ action: :change_appropriate_body }) %>
 
-      <%= form_with model: @form, url: update_schools_add_participants_path, scope: "add_participant_wizard", method: :put do |f| %>
+      <%= form_with model: @form, url: url_for(action: :update), scope: "add_participant_wizard", method: :put do |f| %>
         <%= f.govuk_error_summary %>
         <%= f.hidden_field :appropriate_body_confirmed, value: "1" %>
         <%= f.govuk_submit "Confirm", classes: "govuk-!-margin-top-6" %>

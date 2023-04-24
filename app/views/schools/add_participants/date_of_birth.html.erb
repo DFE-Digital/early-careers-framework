@@ -1,4 +1,4 @@
-<% title = "What’s #{@wizard.sit_mentor? ? "your" : "this #{@wizard.ect_or_mentor_label}"} date of birth?" %>
+<% title = "What’s #{@wizard.sit_mentor? ? "your" : @wizard.possessive_name} date of birth?" %>
 
 <% content_for :title, title %>
 
@@ -12,10 +12,10 @@
     <%= form_with model: @form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_date_field :date_of_birth,
-        date_of_birth: true,
-        width: "three-quarters",
-        legend: { text: title, tag: "h1", size: "xl" },
-        hint: { text: "For example, 14 7 1990" } %>
+                             date_of_birth: true,
+                             width: "three-quarters",
+                             legend: { text: title, tag: "h1", size: "xl" },
+                             hint: { text: "For example, 14 7 1990" } %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>
