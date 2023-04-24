@@ -211,6 +211,29 @@ For more detailed information see the specifications for this [accept an NPQ app
 
 {inset-text} Providers must inform applicants of the outcome of their unsuccessful NPQ application. {/inset-text}
 
+### Update an application due to a change in circumstance
+
+There are several reasons why there might be a change in circumstance for an NPQ application, including where a participant:
+
+* made a mistake during their application
+* selected the incorrect course during their application
+* now wants to take another course instead
+* now wants to fund their NPQ differently
+
+Where there has been a change in circumstance, providers should: 
+* reject the application if the application `status` is `pending`
+* contact the DfE if the application `status` is `accepted` 
+
+For example, if a participant registers for an NPQ course but then decides to change to another course, the provider should: 
+
+1. reject that participant’s application
+2. ask the participant to re-register on the NPQ registration service, entering the correct NPQ course details
+3. accept the new application once it is available via the API
+
+## View and update participant records
+
+
+
 ### Handling deferrals
 
 If a participant wishes to defer you can accept the participant to show they are enrolled. You should only send the started declaration once the participant has started the course.
