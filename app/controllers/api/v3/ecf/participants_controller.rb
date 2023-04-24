@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "csv"
-
 module Api
   module V3
     module ECF
@@ -50,6 +48,19 @@ module Api
             lead_provider:,
             params: ecf_participant_params,
           )
+        end
+
+        def render_from_service(service, serializer, params: {})
+          if service.valid?
+            induction_record = service.call
+            render json: serializer.new(induction_record.user, params:).serializable_hash
+          else
+            render json: Api::V1::ActiveModelErrorsSerializer.from(service), status: :unprocessable_entity
+          end
+        end
+
+        def serialized_response_for(service)
+          render_from_service(service, serializer_class, params: { cpd_lead_provider: current_user })
         end
       end
     end

@@ -312,4 +312,32 @@ RSpec.describe "API ECF Participants", :with_default_schedules, type: :request, 
       end
     end
   end
+
+  it_behaves_like "JSON Participant Change schedule endpoint" do
+    let(:url) { "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/change-schedule" }
+  end
+
+  it_behaves_like "JSON Participant Deferral endpoint", "participant" do
+    let(:url) { "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/defer" }
+    let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } } }
+    let(:withdrawal_url) { "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+    let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+  end
+
+  it_behaves_like "JSON Participant Resume endpoint", "participant" do
+    let(:url) { "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/resume" }
+    let(:withdrawal_url) { "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+    let(:params)            { { data: { attributes: { course_identifier: "ecf-induction" } } } }
+    let(:withdrawal_params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "left-teaching-profession" } } } }
+
+    before do
+      put "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/defer",
+          params: { data: { attributes: { course_identifier: "ecf-induction", reason: "career-break" } } }
+    end
+  end
+
+  it_behaves_like "JSON Participant Withdrawal endpoint" do
+    let(:url) { "/api/v3/participants/ecf/#{early_career_teacher_profile.user.id}/withdraw" }
+    let(:params) { { data: { attributes: { course_identifier: "ecf-induction", reason: "moved-school" } } } }
+  end
 end

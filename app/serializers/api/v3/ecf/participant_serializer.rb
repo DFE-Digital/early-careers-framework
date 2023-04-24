@@ -10,6 +10,11 @@ module Api
         include JSONAPI::Serializer::Instrumentation
 
         class << self
+          def ecf_participant_profiles(record)
+            @ecf_participant_profiles ||= {}
+            @ecf_participant_profiles[record.id] ||= record.participant_profiles.select { |pp| [ParticipantProfile::ECT.name, ParticipantProfile::Mentor.name].include?(pp.type) }
+          end
+
           def trn(record)
             record.teacher_profile&.trn || record.ecf_participant_validation_data&.trn
           end
@@ -77,11 +82,16 @@ module Api
         end
 
         attribute(:updated_at) do |object|
-          object.updated_at.rfc3339
+          [
+            ecf_participant_profiles(object).map(&:updated_at),
+            object.updated_at,
+            object.participant_identities.map(&:updated_at),
+            ecf_participant_profiles(object).map(&:induction_records).flatten.map(&:updated_at),
+          ].flatten.compact.max.rfc3339
         end
 
         attribute(:ecf_enrolments) do |object, params|
-          object.participant_profiles.select { |pp| [ParticipantProfile::ECT.name, ParticipantProfile::Mentor.name].include?(pp.type) }.map { |profile|
+          ecf_participant_profiles(object).map { |profile|
             latest_induction_record = profile.induction_records.first
 
             next unless params[:cpd_lead_provider] && latest_induction_record.present? && latest_induction_record.induction_programme&.partnership&.lead_provider&.cpd_lead_provider == params[:cpd_lead_provider]

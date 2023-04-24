@@ -113,7 +113,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
     end
   end
 
-  path "/api/v3/participants/ecf/{id}/defer", api_v3: true do
+  path "/api/v3/participants/ecf/{id}/defer" do
     put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is taking a break from their course" do
       operationId "ecf_participant_defer"
       tags "ECF Participant"
@@ -146,7 +146,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
               type: "participant",
               attributes: {
                 reason: "career-break",
-                course_identifier: "ecf-mentor",
+                course_identifier: "ecf-induction",
               },
             },
           }
@@ -154,7 +154,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
-        # TODO: replace with actual implementation once implemented
         after do |example|
           content = example.metadata[:response][:content] || {}
           example_spec = {
@@ -207,7 +206,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
     end
   end
 
-  path "/api/v3/participants/ecf/{id}/resume", api_v3: true do
+  path "/api/v3/participants/ecf/{id}/resume" do
     put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant is resuming their course" do
       operationId "ecf_participant_resume"
       tags "ECF Participant"
@@ -232,17 +231,13 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
                 }
 
       response "200", "The ECF participant being resumed" do
-        let!(:mentor_induction_record_deferred) { create(:induction_record, induction_programme:, participant_profile: deferred_mentor_profile, training_status: "deferred") }
-
-        let(:participant) { deferred_mentor_profile }
         let(:id) { participant.id }
-
         let(:params) do
           {
             data: {
               type: "participant",
               attributes: {
-                course_identifier: "ecf-mentor",
+                course_identifier: "ecf-induction",
               },
             },
           }
@@ -250,12 +245,21 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
+        before do
+          DeferParticipant.new(
+            participant_id: id,
+            reason: ParticipantProfile::DEFERRAL_REASONS.sample,
+            course_identifier: "ecf-induction",
+            cpd_lead_provider:,
+          ).call
+        end
+
         run_test!
       end
     end
   end
 
-  path "/api/v3/participants/ecf/{id}/withdraw", api_v3: true do
+  path "/api/v3/participants/ecf/{id}/withdraw" do
     put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF participant has withdrawn from their course" do
       operationId :participant
       tags "ECF Participant"
@@ -281,7 +285,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
         let(:attributes) do
           {
             reason: "left-teaching-profession",
-            course_identifier: "ecf-mentor",
+            course_identifier: "ecf-induction",
           }
         end
 
@@ -296,7 +300,6 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
-        # TODO: replace with actual implementation once implemented
         after do |example|
           content = example.metadata[:response][:content] || {}
           example_spec = {
@@ -349,7 +352,7 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
     end
   end
 
-  path "/api/v3/participants/ecf/{id}/change-schedule", api_v3: true do
+  path "/api/v3/participants/ecf/{id}/change-schedule" do
     put "<b>Note, this endpoint includes updated specifications.</b><br/>Notify that an ECF Participant is changing training schedule" do
       operationId "ecf_participant_change_schedule"
       tags "ECF Participant"
@@ -380,14 +383,18 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
             "data": {
               "type": "participant",
               "attributes": {
-                schedule_identifier: "ecf-standard-september",
-                course_identifier: "ecf-mentor",
+                schedule_identifier: "ecf-january-standard-2023",
+                course_identifier: "ecf-induction",
               },
             },
           }
         end
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
+        before do
+          create(:schedule, schedule_identifier: "ecf-january-standard-2023", name: "ECF January standard 2023", cohort:)
+        end
 
         run_test!
       end

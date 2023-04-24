@@ -26,7 +26,8 @@ module Api
                    )
 
           scope = User
-                    .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, { induction_programme: { partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort] } }] }])
+                    .select(*necessary_fields)
+                    .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, { induction_programme: { partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort] } }, { mentor_profile: :participant_identity }] }])
                     .eager_load(participant_profiles: [:induction_records])
                     .joins(left_outer_join_preferred_identities)
                     .joins(left_outer_join_participant_profiles)
@@ -111,6 +112,89 @@ module Api
           "LEFT OUTER JOIN participant_profile_states pps on participant_profiles.id = pps.participant_profile_id AND pps.id = (
             SELECT id from participant_profile_states _pps WHERE _pps.participant_profile_id = participant_profiles.id AND _pps.state = latest_induction_records.training_status ORDER BY created_at desc LIMIT 1
           )"
+        end
+
+        def necessary_fields
+          user_fields +
+            participant_profile_fields +
+            participant_identity_fields +
+            induction_record_fields +
+            ecf_participant_eligibily_fields +
+            school_fields +
+            teacher_profile_fields +
+            ecf_participant_validation_fields +
+            cohort_fields +
+            participant_profile_state_fields
+        end
+
+        def school_fields
+          ["schools.urn AS schools_urn"]
+        end
+
+        def teacher_profile_fields
+          ["teacher_profiles.trn AS teacher_profile_trn"]
+        end
+
+        def ecf_participant_validation_fields
+          ["ecf_participant_validation_data.trn AS ecf_participant_validation_data_trn"]
+        end
+
+        def cohort_fields
+          ["cohorts.start_year AS start_year"]
+        end
+
+        def ecf_participant_eligibily_fields
+          [
+            "ecf_participant_eligibilities.reason AS ecf_participant_eligibility_reason",
+            "ecf_participant_eligibilities.status AS ecf_participant_eligibility_status",
+          ]
+        end
+
+        def user_fields
+          [
+            "users.full_name AS full_name",
+            "users.email AS user_email",
+            "users.created_at as user_created_at",
+            "users.updated_at AS user_updated_at",
+          ]
+        end
+
+        def participant_identity_fields
+          [
+            "participant_identities.user_id as user_id",
+            "participant_identities.updated_at AS participant_identity_updated_at",
+            "preferred_identities.email AS preferred_identity_email",
+            "participant_identities_mentor_profiles.user_id AS mentor_user_id",
+          ]
+        end
+
+        def participant_profile_fields
+          [
+            "participant_profiles.sparsity_uplift AS sparsity_uplift",
+            "participant_profiles.pupil_premium_uplift AS pupil_premium_uplift",
+            "participant_profiles.id AS participant_profile_id",
+            "participant_profiles.updated_at AS participant_profile_updated_at",
+            "participant_profiles.type AS participant_profile_type",
+          ]
+        end
+
+        def induction_record_fields
+          [
+            "induction_records.induction_programme_id",
+            "induction_records.induction_status",
+            "induction_records.mentor_profile_id",
+            "induction_records.participant_profile_id",
+            "induction_records.preferred_identity_id",
+            "induction_records.schedule_id",
+            "induction_records.training_status",
+            "induction_records.updated_at",
+          ]
+        end
+
+        def participant_profile_state_fields
+          [
+            "participant_profile_states.state",
+          ]
         end
       end
     end
