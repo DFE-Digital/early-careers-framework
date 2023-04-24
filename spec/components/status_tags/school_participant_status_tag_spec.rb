@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe StatusTags::SchoolParticipantStatusTag, :with_training_record_state_examples, type: :component do
+RSpec.describe StatusTags::SchoolParticipantStatusTag, type: :component do
   let(:participant_profile) { ect_on_fip }
 
   let(:component) { described_class.new participant_profile: }

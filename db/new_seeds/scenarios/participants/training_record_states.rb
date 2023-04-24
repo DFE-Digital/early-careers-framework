@@ -10,7 +10,7 @@ module NewSeeds
         include ActiveSupport::Testing::TimeHelpers
 
         def cohort
-          @cohort ||= Cohort.current || create(:cohort, :current)
+          @cohort ||= Cohort.current || FactoryBot.create(:cohort, :current)
         end
 
         def fip_school
