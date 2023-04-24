@@ -53,9 +53,12 @@ class SchoolCohort < ApplicationRecord
     end
   end
 
-  def self.dashboard_cohorts
+  def self.dashboard_for_school(school)
+    last_year = FeatureFlag.active?(:cohortless_dashboard, for: school) ? Date.current.year : 2022
+
     joins(:cohort)
-      .merge(Cohort.between_2021_and(Time.zone.now.year))
+      .where(school:)
+      .merge(Cohort.between_2021_and(last_year))
       .order(start_year: :desc)
       .limit(3)
   end

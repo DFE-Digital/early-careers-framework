@@ -23,11 +23,11 @@ module Dashboard
       @orphan_mentors ||= induction_records.select(&:mentor?) - mentors.keys
     end
 
-  private
-
     def dashboard_school_cohorts
-      school.school_cohorts.dashboard_cohorts
+      SchoolCohort.dashboard_for_school(school)
     end
+
+  private
 
     # List of relevant (current or transferring_in or transferred) induction record of each of the participant of
     # the school in the cohorts displayed by the dashboard
