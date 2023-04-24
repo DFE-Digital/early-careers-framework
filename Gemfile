@@ -26,7 +26,7 @@ gem "lograge", "~> 0.12.0"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.4"
+gem "pg", "~> 1.5"
 
 # Use UUIDs as db primary key by default
 gem "ar-uuid", "~> 0.2.3"
