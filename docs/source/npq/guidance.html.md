@@ -273,16 +273,51 @@ For more detailed information see the specifications for this [view a single NPQ
 
 [ADD ONCE CHECKED]
 
+### Notify DfE a participant has taken a break (deferred) from training
+
+A participant can choose to take a break from their NPQ course at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
+
+```
+ PUT /api/v{n}/participants/npq/{id}/defer
+```
+
+An example request body is listed below. 
+
+Successful requests will return a response body including updates to the `training_status` attribute.
+
+For more detailed information see the specifications for this [notify DfE that an NPQ participant is taking a break from their course endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-defer-put).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-defer",
+    "attributes": {
+      "reason": "parental-leave",
+      "course_identifier": "npq-senior-leadership"
+    }
+  }
+}
+```
 
 
-### Handling deferrals
 
-If a participant wishes to defer you can accept the participant to show they are enrolled. You should only send the started declaration once the participant has started the course.
+## Notifying that an NPQ participant is resuming their course
 
-### Retrieving the list of NPQ participant records
+This functionality allows the provider to inform the DfE that a participant has resumed an NPQ course.
 
-This scenario begins after an NPQ participant has been added to the service by a participant and then has their application accepted by the provider.
+### Provider resumes an NPQ participant
 
+Submit the resumed notification to the following endpoint
+
+```
+PUT /api/v1/participants/npq/{id}/resume
+```
+
+This will return an [NPQ participant record](/api-reference/reference-v1#schema-npqparticipantresponse) with the updates to the record included.
+
+See [resume NPQ participant](/api-reference/reference-v1.html#api-v1-participants-id-resume-put) endpoint.
 
 ## Notifying that an NPQ participant has withdrawn from their course
 
@@ -304,40 +339,6 @@ This will return an [NPQ participant record](/api-reference/reference.html#schem
 
 See [withdraw NPQ participant](/api-reference/reference.html#api-v1-participants-npq-id-withdraw-put) endpoint.
 
-## Notifying that an NPQ participant is taking a break from their course
-
-This operation allows the provider to tell the DfE that a participant has deferred from their NPQ course.
-
-A participant is deemed to have deferred from an NPQ course if he or she will be resuming it at a later date.
-
-### Provider defers a participant
-
-Submit the deferral notification to the following endpoint
-
-```
-PUT /api/v1/participants/npq/{id}/defer
-```
-
-This will return an [NPQ participant record](/api-reference/reference-v1#schema-npqparticipantresponse) with the updates to the record included.
-
-See [defer an NPQ participant](/api-reference/reference.html#api-v1-participants-npq-id-defer-put) endpoint.
-
-## Notifying that an NPQ participant is resuming their course
-
-This functionality allows the provider to inform the DfE that a participant has resumed an NPQ course.
-
-### Provider resumes an NPQ participant
-
-Submit the resumed notification to the following endpoint
-
-```
-PUT /api/v1/participants/npq/{id}/resume
-```
-
-This will return an [NPQ participant record](/api-reference/reference-v1#schema-npqparticipantresponse) with the updates to the record included.
-
-See [resume NPQ participant](/api-reference/reference-v1.html#api-v1-participants-id-resume-put) endpoint.
-
 ## Tell the DfE that a participant is changing training schedule on their NPQ course
 
 Submit a change of schedule notification to the following endpoint
@@ -351,6 +352,8 @@ This will return an [NPQ participant response](/api-reference/reference-v1.html#
 Read change schedule of [NPQ participant endpoint](/api-reference/reference-v1.html#api-v1-participants-npq-id-change-schedule-put).
 
 The provider needs to show the DfE evidence of any declarations they submit and why a participant is following a particular schedule.
+
+
 
 ## Declaring that an NPQ participant has started their course
 
