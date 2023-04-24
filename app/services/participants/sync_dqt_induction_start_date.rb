@@ -71,5 +71,26 @@ module Participants
       clear_participant_sync_errors
       amend_cohort.save ? update_induction_start_date : save_errors(*amend_cohort.errors.full_messages)
     end
+
+    private
+
+    def save_error_message(amend_cohort)
+      SyncDqtInductionStartDateError.create!(participant_profile: @participant_profile,
+                                             error_message: amend_cohort.errors.full_messages.join(", "))
+    end
+
+    def delete_sync_error
+      SyncDqtInductionStartDateError.where(participant_profile: @participant_profile).destroy_all
+    end
+
+    def amend_cohort_form(dqt_cohort, participant_cohort)
+      Induction::AmendParticipantCohort.new(participant_profile: @participant_profile,
+                                            source_cohort_start_year: participant_cohort.start_year,
+                                            target_cohort_start_year: dqt_cohort.start_year)
+    end
+
+    def update_induction_start_date
+      @participant_profile.update!(induction_start_date: @dqt_induction_start_date)
+    end
   end
 end
