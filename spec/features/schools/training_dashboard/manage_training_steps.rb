@@ -105,15 +105,8 @@ module ManageTrainingSteps
 
   def given_i_am_taken_to_fip_induction_dashboard
     expect(page).to have_selector("h1", text: "Manage your training")
-    if FeatureFlag.active?(:cohortless_dashboard)
-      expect(page).to have_summary_row("Lead provider", @school_cohort.lead_provider.name)
-      expect(page).to have_summary_row("Delivery partner", @school_cohort.delivery_partner.name)
-    else
-      expect(page).to have_text("Training provider")
-      expect(page).to have_text(@school_cohort.lead_provider.name)
-      expect(page).to have_text("Delivery partner")
-      expect(page).to have_text(@school_cohort.delivery_partner.name)
-    end
+    expect(page).to have_summary_row("Lead provider", @school_cohort.lead_provider.name)
+    expect(page).to have_summary_row("Delivery partner", @school_cohort.delivery_partner.name)
   end
 
   def given_the_ect_has_been_validated
@@ -141,12 +134,8 @@ module ManageTrainingSteps
     expect(page).to have_summary_row_action("Appropriate body", "Change")
   end
 
-  def and_i_can_manage_ects_and_mentors(action: "Manage participants")
-    if FeatureFlag.active?(:cohortless_dashboard)
-      expect(page).to have_link("Manage mentors and ECTs")
-    else
-      expect(page).to have_summary_row_action("ECTs and mentors", action)
-    end
+  def and_i_can_manage_ects_and_mentors
+    expect(page).to have_link("Manage mentors and ECTs")
   end
 
   alias_method :then_i_can_manage_ects_and_mentors, :and_i_can_manage_ects_and_mentors
@@ -695,14 +684,9 @@ module ManageTrainingSteps
     click_on "Manage #{name}"
   end
 
-  def when_i_navigate_to_participants_dashboard(action: "Manage")
-    if FeatureFlag.active?(:cohortless_dashboard)
-      click_on("Manage mentors and ECTs")
-      then_i_am_taken_to_manage_mentors_and_ects_page
-    else
-      when_i_click_on_summary_row_action("ECTs and mentors", action)
-      then_i_am_taken_to_your_ect_and_mentors_page
-    end
+  def when_i_navigate_to_participants_dashboard
+    click_on("Manage mentors and ECTs")
+    then_i_am_taken_to_manage_mentors_and_ects_page
   end
 
   def when_i_change_ect_email
@@ -732,14 +716,6 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Check what each person needs to do in the early career teacher training programme")
     expect(page).to have_text("An induction tutor should only assign themself as a mentor in exceptional circumstances")
   end
-
-  # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - start
-  def then_i_am_taken_to_your_ect_and_mentors_page
-    expect(page).to have_selector("h1", text: "Your ECTs and mentors")
-    expect(page).to have_link("Add an ECT or mentor")
-    expect(page).to have_link("Add yourself as a mentor")
-  end
-  # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - end
 
   def then_i_am_taken_to_manage_mentors_and_ects_page
     expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
@@ -952,116 +928,8 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_view_details_page
-    if FeatureFlag.active?(:cohortless_dashboard)
-      expect(page).to have_title("ECT or mentor details - Manage training for early career teachers")
-    else
-      expect(page).to have_text("Name")
-    end
+    expect(page).to have_title("ECT or mentor details - Manage training for early career teachers")
   end
-
-  # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - start
-  def then_i_can_view_ineligible_participant_status
-    expect(page).to have_text("This person is not eligible for this programme.")
-  end
-
-  def then_i_can_view_eligible_fip_partnered_ect_status
-    expect(page).to have_text("We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly.")
-  end
-
-  def then_i_can_view_eligible_fip_unpartnered_status
-    expect(page).to have_text("We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly.")
-  end
-
-  def then_i_can_view_contacted_for_info_status
-    expect(page).to have_text("We’ve asked this person to use our service to provide some information. We need this to check their eligibility with the Teaching Regulation Agency.")
-  end
-
-  def then_i_can_view_contacted_for_info_bounced_email_status
-    expect(page).to have_text("We could not send an email to this address. Please check it’s correct.")
-  end
-
-  def then_i_can_view_details_being_checked_status
-    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
-  end
-
-  def then_i_can_view_no_qts_status
-    expect(page).to have_text("Our checks show this person does not have qualified teacher status (QTS). Their status should be up to date if they completed their ITT in 2021.")
-  end
-
-  def then_i_can_view_details_being_checked_mentor_status
-    expect(page).to have_text("We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
-  end
-
-  def then_i_can_view_eligible_cip_status
-    expect(page).to have_text("We’ve confirmed this person is eligible for this programme. They have access to their materials.")
-  end
-
-  def then_i_can_see_ero_status
-    expect(page).to have_text("This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms.")
-  end
-
-  def then_i_can_view_ineligible_participants
-    expect(page).to have_text("Not eligible for funded training")
-    expect(page).to have_text("We’ve checked these people’s details and found they’re not eligible for this programme.")
-  end
-
-  def then_the_action_required_is_none
-    expect(page).to have_text("None")
-  end
-
-  def then_the_action_required_is_check_email_address
-    expect(page).to have_text("Check email address")
-  end
-
-  def then_the_action_required_is_remind_them
-    expect(page).to have_text("Remind them")
-  end
-
-  def then_i_can_view_fip_unpartnered_eligible_participants
-    expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. Once you choose a training provider, they’ll contact your ECTs and mentors directly.")
-  end
-
-  def then_i_can_view_details_being_checked_participants
-    expect(page).to have_text("DfE checking eligibility")
-    expect(page).to have_text("We’re checking these people’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon.")
-  end
-
-  def then_i_can_view_no_qts_ects
-    expect(page).to have_text("Checking QTS")
-    expect(page).to have_text("These ECTs do not have qualified teacher status (QTS) yet.")
-  end
-
-  def then_i_can_view_no_qts_mentors
-    expect(page).to have_text("Checking QTS")
-    expect(page).to have_text("These mentors do not have qualified teacher status (QTS) yet.")
-  end
-
-  def then_i_can_view_eligible_participants
-    expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly.")
-  end
-
-  def then_i_can_view_cip_eligible_participants
-    expect(page).to have_text("Eligible to start")
-    expect(page).to have_text("We’ve confirmed these people are eligible for this programme. They have access to their materials.")
-  end
-
-  def then_i_can_view_contacted_for_info_participants
-    expect(page).to have_text("Contacted for information")
-    expect(page).to have_text("We need this to check their eligibility with the Teaching Regulation Agency.")
-  end
-
-  def then_i_can_view_transferred_from_your_school_participants
-    expect(page).to have_text("Transferred from your school")
-    expect(page).to have_text("You told us these people moved to a new school.")
-  end
-
-  def then_i_am_taken_to_fip_induction_dashboard_without_provider
-    expect(page).to have_selector("h1", text: "Manage your training")
-    expect(page).to have_text("Training provider")
-  end
-  # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - end
 
   def then_i_can_view_participant_with_status(status_key)
     status = I18n.t("status_tags.school_participant_status_detailed.#{status_key}")
@@ -1100,7 +968,7 @@ module ManageTrainingSteps
     expect(page).to have_selector("h1", text: "Manage your training")
     expect(page).to have_summary_row("Programme", "Use a training provider funded by the DfE")
     expect(page).to have_summary_row_action("Programme", "Change induction programme choice")
-    expect(page).to have_text(FeatureFlag.active?(:cohortless_dashboard) ? "Lead provider" : "Training provider")
+    expect(page).to have_text("Lead provider")
     expect(page).to have_text(@school_cohort.lead_provider.name)
     expect(page).to have_text("Delivery partner")
     expect(page).to have_text(@school_cohort.delivery_partner.name)
