@@ -18,6 +18,23 @@ weight: 1
 | `declaration`    | The notification submitted by providers via the API as the sole means for triggering output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period      |
 | `statement`    | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes     |
 
+### Application states
+
+Application states are defined by the `status` attribute. 
+
+A application’s `status` value will determine whether a provider can: 
+
+* [accept or reject applications](/LINK NEEDED)
+* [submit a declaration](/api-reference/npq/guidance/#submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
+
+| status | Definition | Action |
+| -------- | -------- | -------- |
+| `pending`     | Applications which have been made for an NPQ course     | Providers can **only** accept or reject `pending` applications     |
+| `accepted`     | Applications which have been accepted by a provider    | Providers can submit declarations and update participant data **only** for those who have had their application `accepted`    |
+| `rejected`     | Applications which have been rejected by a provider, or which have been accepted by another provider     | Providers **cannot** submit any API requests for participants who have had their application `rejected`     |
+
+View more detailed specifications for the [NPQ application schema](/api-reference/reference-v3.html#schema-npqapplicationattributes).
+
 ### Participant states
 
 Participant states are defined by the `training_status` attribute. 
