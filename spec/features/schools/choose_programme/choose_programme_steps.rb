@@ -124,11 +124,7 @@ module ChooseProgrammeSteps
   end
 
   def then_i_see_black_lp_and_dp_names
-    if FeatureFlag.active?(:cohortless_dashboard)
-      expect(page).to have_summary_row("Lead provider", "")
-    else
-      expect(page).to have_summary_row("Training provider", "")
-    end
+    expect(page).to have_summary_row("Lead provider", "")
     expect(page).to have_summary_row("Delivery partner", "")
   end
 
@@ -201,20 +197,11 @@ module ChooseProgrammeSteps
   end
 
   def and_i_see_add_ects_link
-    expect(page).to have_link("Add",
-                              href: if FeatureFlag.active?(:cohortless_dashboard)
-                                      school_participants_path(school_id: @school)
-                                    else
-                                      schools_participants_path(cohort_id: @cohort.start_year, school_id: @school)
-                                    end)
+    expect(page).to have_link("Add", href: school_participants_path(school_id: @school))
   end
 
   def and_i_see_training_provider_to_be_confirmed
-    if FeatureFlag.active?(:cohortless_dashboard)
-      expect(page).to have_summary_row("Lead provider", "To be confirmed")
-    else
-      expect(page).to have_summary_row("Training provider", "To be confirmed")
-    end
+    expect(page).to have_summary_row("Lead provider", "To be confirmed")
   end
 
   def and_i_see_delivery_partner_to_be_confirmed
@@ -228,11 +215,7 @@ module ChooseProgrammeSteps
 
   def and_i_see_training_partner_to_be_the_previous_one
     name = @school_cohort.lead_provider.name
-    if FeatureFlag.active?(:cohortless_dashboard)
-      expect(page).to have_summary_row("Lead provider", name)
-    else
-      expect(page).to have_summary_row("Training provider", name)
-    end
+    expect(page).to have_summary_row("Lead provider", name)
   end
 
   def and_i_see_programme_to_dfe_accredited_materials

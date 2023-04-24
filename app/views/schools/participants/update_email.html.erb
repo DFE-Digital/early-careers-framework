@@ -10,12 +10,10 @@
 
     <ul class="govuk-list">
       <li><%= govuk_link_to "Return to their details",
-                            FeatureFlag.active?(:cohortless_dashboard) ?
-                              school_participant_path(id: @profile) :
-                              schools_participant_path(id: @profile),
+                            school_participant_path(id: @profile),
                             class: "govuk-link--no-visited-state" %></li>
-      <li><%= govuk_link_to FeatureFlag.active?(:cohortless_dashboard) ? "Return to manage mentors and ECTs" : "Return to your ECTs and mentors",
-                            FeatureFlag.active?(:cohortless_dashboard) ? school_participants_path : schools_participants_path,
+      <li><%= govuk_link_to "Return to manage mentors and ECTs",
+                            school_participants_path,
                             class: "govuk-link--no-visited-state" %></li>
     </ul>
   </div>

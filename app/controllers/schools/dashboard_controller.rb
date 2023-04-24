@@ -22,7 +22,6 @@ class Schools::DashboardController < Schools::BaseController
       @report_mistake_link = challenge_partnership_path(partnership: @partnership)
       @mistake_link_expiry = @partnership.challenge_deadline&.to_date&.to_s(:govuk)
     end
-    render :cohorted_show unless FeatureFlag.active?(:cohortless_dashboard)
   end
 
 private
