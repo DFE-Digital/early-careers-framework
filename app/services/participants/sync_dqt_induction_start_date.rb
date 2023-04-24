@@ -18,22 +18,42 @@ module Participants
       return false if dqt_cohort.nil?
 
       if dqt_cohort == participant_cohort
-        @participant_profile.update!(induction_start_date: @dqt_induction_start_date)
+        update_induction_start_date
         true
       else
         ActiveRecord::Base.transaction do
-          amend_cohort = Induction::AmendParticipantCohort.new(participant_profile: @participant_profile,
-                                                               source_cohort_start_year: participant_cohort.start_year,
-                                                               target_cohort_start_year: dqt_cohort.start_year)
+          amend_cohort = amend_cohort_form(dqt_cohort, participant_cohort)
           if amend_cohort.save
-            @participant_profile.update!(induction_start_date: @dqt_induction_start_date)
-            # update participant profile flag
+            update_induction_start_date
+            delete_sync_error
             return true
-            # else
-            # flag participant (and save error message amend_cohort.errors?)
+          else
+            save_error_message(amend_cohort)
+            return false
           end
         end
       end
+    end
+
+    private
+
+    def save_error_message(amend_cohort)
+      SyncDqtInductionStartDateError.create!(participant_profile: @participant_profile,
+                                             error_message: amend_cohort.errors.full_messages.join(", "))
+    end
+
+    def delete_sync_error
+      SyncDqtInductionStartDateError.where(participant_profile: @participant_profile).destroy_all
+    end
+
+    def amend_cohort_form(dqt_cohort, participant_cohort)
+      Induction::AmendParticipantCohort.new(participant_profile: @participant_profile,
+                                            source_cohort_start_year: participant_cohort.start_year,
+                                            target_cohort_start_year: dqt_cohort.start_year)
+    end
+
+    def update_induction_start_date
+      @participant_profile.update!(induction_start_date: @dqt_induction_start_date)
     end
   end
 end
