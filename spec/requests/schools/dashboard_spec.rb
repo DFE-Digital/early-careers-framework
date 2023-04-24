@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Schools::Dashboard", type: :request, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "Schools::Dashboard", type: :request do
   let(:user) { create(:user, :induction_coordinator) }
   let(:school) { user.schools.first }
 

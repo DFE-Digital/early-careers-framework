@@ -155,11 +155,6 @@ class InductionRecord < ApplicationRecord
   # participant_ineligible_but_not_duplicated_or_previously_participated?
   delegate :ineligible_but_not_duplicated_or_previously_participated?, to: :participant_profile, allow_nil: true, prefix: :participant
 
-  # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - start
-  # participant_is_a_mentor?
-  delegate :mentor?, to: :participant_profile, allow_nil: true, prefix: :participant_is_a
-  # Remove this code when we remove FeatureFlag.active?(:cohortless_dashboard) - end
-
   # participant_manual_check_needed?
   delegate :manual_check_needed?, to: :participant_profile, allow_nil: true, prefix: :participant
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Schools::Participants", :with_default_schedules, type: :request, js: true, with_feature_flags: { eligibility_notifications: "active", cohortless_dashboard: "active" } do
+RSpec.describe "Schools::Participants", :with_default_schedules, type: :request, js: true, with_feature_flags: { eligibility_notifications: "active" } do
   let(:user) { create(:user, :induction_coordinator, school_ids: [school.id]) }
   let!(:lead_provider) { create(:cpd_lead_provider, :with_lead_provider, name: "Lead Provider").lead_provider }
 
