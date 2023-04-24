@@ -573,7 +573,7 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
-      scope "participants", module: :add_participants, constraints: ->(_request) { FeatureFlag.active?(:cohortless_dashboard) } do
+      scope "participants", module: :add_participants do
         wizard_scope :who_to_add, path: "who" do
           get "/", to: "who_to_add#show", as: :start, step: "participant-type"
           get "/sit-mentor", to: "who_to_add#show", as: :sit_start, step: "yourself"
@@ -645,31 +645,6 @@ Rails.application.routes.draw do
             get "complete", to: "setup_school_cohort#complete"
           end
 
-          resources :participants, only: [] do
-            constraints ->(_request) { !FeatureFlag.active?(:cohortless_dashboard) } do
-              collection do
-                scope module: :add_participants do
-                  wizard_scope :who_to_add, path: "who" do
-                    get "/", to: "who_to_add#show", as: :start, step: "participant-type"
-                    get "/sit-mentor", to: "who_to_add#show", as: :sit_start, step: "yourself"
-                  end
-
-                  wizard_scope :transfer do
-                    get "/", to: "transfer#show", as: :start, step: "joining-date"
-                    get "/same-provider", to: "transfer#show", as: :start_same_provider, step: "email"
-                  end
-
-                  wizard_scope :add do
-                    get "/", to: "add#show", as: :start, step: "email"
-                    get "/sit-mentor", to: "add#show", as: :sit_start, step: "check-answers"
-                    appropriate_body_selection_routes :add
-                    get :change_appropriate_body, path: "change-appropriate-body", controller: :add
-                  end
-                end
-              end
-            end
-          end
-
           namespace :core_programme, path: "core-programme" do
             resource :materials, only: %i[edit update show] do
               get :info
@@ -701,29 +676,27 @@ Rails.application.routes.draw do
   end
 
   resources :schools, only: [] do
-    constraints(->(_request) { FeatureFlag.active?(:cohortless_dashboard) }) do
-      resources :participants, only: %i[index show destroy], module: :schools do
-        get :remove
-        get :edit_name, path: "edit-name"
-        put :update_name, path: "update-name"
-        get :edit_email, path: "edit-email"
-        put :update_email, path: "update-email"
-        get :email_used, path: "email-used"
-        get :edit_mentor, path: "edit-mentor"
-        put :update_mentor, path: "update-mentor"
-        get :add_appropriate_body, path: "add-appropriate-body"
-        get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
-        appropriate_body_selection_routes :participants
+    resources :participants, only: %i[index show destroy], module: :schools do
+      get :remove
+      get :edit_name, path: "edit-name"
+      put :update_name, path: "update-name"
+      get :edit_email, path: "edit-email"
+      put :update_email, path: "update-email"
+      get :email_used, path: "email-used"
+      get :edit_mentor, path: "edit-mentor"
+      put :update_mentor, path: "update-mentor"
+      get :add_appropriate_body, path: "add-appropriate-body"
+      get :appropriate_body_confirmation, path: "appropriate-body-confirmation"
+      appropriate_body_selection_routes :participants
 
-        resource :transfer_out, path: "transfer-out", only: [] do
-          collection do
-            get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
-            get "teacher-end-date", to: "transfer_out#teacher_end_date"
-            put "teacher-end-date", to: "transfer_out#teacher_end_date"
-            get "check-answers", to: "transfer_out#check_answers"
-            put "check-answers", to: "transfer_out#check_answers"
-            get "complete", to: "transfer_out#complete"
-          end
+      resource :transfer_out, path: "transfer-out", only: [] do
+        collection do
+          get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
+          get "teacher-end-date", to: "transfer_out#teacher_end_date"
+          put "teacher-end-date", to: "transfer_out#teacher_end_date"
+          get "check-answers", to: "transfer_out#check_answers"
+          put "check-answers", to: "transfer_out#check_answers"
+          get "complete", to: "transfer_out#complete"
         end
       end
     end

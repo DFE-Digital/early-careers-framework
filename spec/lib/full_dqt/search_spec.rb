@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe DqtRecordCheck do
+RSpec.describe FullDQT::Search do
   shared_context "build fake DQT response" do
     before do
       allow_any_instance_of(FullDQT::Client).to(receive(:get_record).and_return(fake_api_response || default_api_response))

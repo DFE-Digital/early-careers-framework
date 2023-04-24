@@ -47,27 +47,17 @@ module Schools
 
         if changing_answer? || %i[name different_name].exclude?(back_step)
           super
-        elsif FeatureFlag.active?(:cohortless_dashboard)
-          schools_who_to_add_show_path(**path_options(step: back_step)) # previous wizard
         else
-          show_schools_who_to_add_participants_path(**path_options(step: back_step)) # previous wizard
+          schools_who_to_add_show_path(**path_options(step: back_step)) # previous wizard
         end
       end
 
       def show_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_add_show_path(**path_options(step:))
-        else
-          show_schools_add_participants_path(**path_options(step:))
-        end
+        schools_add_show_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_add_show_change_path(**path_options(step:))
-        else
-          show_change_schools_add_participants_path(**path_options(step:))
-        end
+        schools_add_show_change_path(**path_options(step:))
       end
 
       def participant_exists?

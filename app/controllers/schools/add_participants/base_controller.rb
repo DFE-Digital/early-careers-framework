@@ -3,8 +3,7 @@
 module Schools
   module AddParticipants
     class BaseController < Schools::BaseController
-      before_action :set_school, if: -> { FeatureFlag.active?(:cohortless_dashboard) }
-      before_action :set_school_cohort, unless: -> { FeatureFlag.active?(:cohortless_dashboard) }
+      before_action :set_school
 
       # where to look for step views
       def self.controller_path
@@ -46,8 +45,7 @@ module Schools
       end
 
       def initialize_wizard
-        school_options = FeatureFlag.active?(:cohortless_dashboard) ? { school: @school } : { school_cohort: @school_cohort }
-        wizard_opts = { current_step: step_name, data_store:, current_user: }.merge!(school_options)
+        wizard_opts = { current_step: step_name, data_store:, current_user:, school: @school }
         if request.get? || request.head?
           @wizard = wizard_class.new(**wizard_opts)
           @wizard.changing_answer(params["changing_answer"] == "1")

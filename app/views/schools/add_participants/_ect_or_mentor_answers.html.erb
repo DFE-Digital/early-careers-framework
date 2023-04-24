@@ -42,23 +42,13 @@
   <% end %>
 
   <% if form.ect_participant? %>
-    <% if FeatureFlag.active? :cohortless_dashboard %>
-      <% if form.show_start_term? %>
-        <% summary_list.row do |row| %>
-          <% row.key { "Start term" } %>
-          <% row.value { form.start_term_description } %>
-          <% row.action(text: "Change",
-                        visually_hidden_text: "start term",
-                        href: form.change_path_for(step: :start_term)) %>
-        <% end %>
-      <% end %>
-    <% else %>
+    <% if form.show_start_term? %>
       <% summary_list.row do |row| %>
-        <% row.key { "Start date" } %>
-        <% row.value { form.start_date.to_date.to_s(:govuk) } %>
+        <% row.key { "Start term" } %>
+        <% row.value { form.start_term_description } %>
         <% row.action(text: "Change",
-                      visually_hidden_text: "induction start date",
-                      href: form.change_path_for(step: :start_date)) %>
+                      visually_hidden_text: "start term",
+                      href: form.change_path_for(step: :start_term)) %>
       <% end %>
     <% end %>
 
