@@ -34,9 +34,15 @@ Providers can view application data to find out whether NPQ applicants:
 
 Providers can then accept or reject applications to NPQ courses.
 
-While participants can make more than one application for the same course (with one or multiple providers), providers can **only** accept one application for a participant for a given NPQ course.
+While people can make multiple applications for the same course, with one or multiple providers, **only** one provider can accept an application from a participant for an NPQ course. 
+
+To prevent a participant registering for the same course with more than one provider the API will: 
+
+* **automatically update the `status` to `rejected` for all other applications:** If someone has made multiple applications with different providers and a provider accepts one, the API will update the `status` of all other applications with other providers to `rejected` 
+* **return an error message for new applications:** If a participant has had an application accepted by a provider, but then makes a new application for the same course with a new provider, the API will return an error message if the new provider tries to accept the new application
 
 {inset-text} Providers must accept or reject applications before they start the course. They must inform applicants of the outcome of their NPQ applications, regardless of whether their course application has been accepted or rejected. {/inset-text}
+
 
 ### View all applications
 
