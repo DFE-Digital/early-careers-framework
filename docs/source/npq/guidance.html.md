@@ -232,6 +232,47 @@ For example, if a participant registers for an NPQ course but then decides to ch
 
 ## View and update participant records
 
+Once a provider has accepted an application, they can view and update data to notify DfE that a participant has: 
+
+* [deferred training](LINK NEEDED)
+* [resumed training](LINK NEEDED)
+* [withdrawn from training](LINK NEEDED)
+* [changed their training schedule](LINK NEEDED)
+
+### View all participant data
+
+```
+GET /api/v3/participants/npq
+```
+
+Note, providers can also filter results by adding `updated_since` filters to the parameter. For example: 
+
+```
+GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z
+```
+
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view multiple NPQ participants endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-get).
+
+#### Example response body:
+
+
+### View a single participant’s data
+
+```
+ GET /api/v3/participants/npq/{id}
+```
+
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view a single NPQ participant endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-get).
+
+
+#### Example response body:
+
+[ADD ONCE CHECKED]
+
 
 
 ### Handling deferrals
@@ -242,29 +283,6 @@ If a participant wishes to defer you can accept the participant to show they are
 
 This scenario begins after an NPQ participant has been added to the service by a participant and then has their application accepted by the provider.
 
-#### Provider retrieves NPQ participant records
-
-Get the NPQ participant records.
-
-```
-GET /api/v1/participants/npq
-```
-
-This will return [multiple NPQ participant records](/api-reference/reference-v1#schema-multiplenpqparticipantsresponse).
-
-See [retrieve multiple NPQ participants](/api-reference/reference-v1#api-v1-participants-npq-get) endpoint.
-
-#### Provider refreshes NPQ participant records
-
-Get filtered NPQ participant records.
-
-```
-GET /api/v1/participants/npq?filter[updated_since]=2021-05-13T11:21:55Z
-```
-
-This will return [multiple NPQ participant records](/api-reference/reference-v1#schema-multiplenpqparticipantsresponse) with the updates to the record included.
-
-See [retrieve multiple NPQ participants](/api-reference/reference-v1#api-v1-participants-npq-get) endpoint.
 
 ## Notifying that an NPQ participant has withdrawn from their course
 
