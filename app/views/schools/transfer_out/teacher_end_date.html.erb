@@ -2,11 +2,7 @@
 
 <% content_for :title, title %>
 
-<% if FeatureFlag.active? :cohortless_dashboard %>
-  <% content_for :before_content, govuk_back_link(text: "Back", href: check_transfer_school_participant_transfer_out_path) %>
-<% else %>
-  <% content_for :before_content, govuk_back_link(text: "Back", href: schools_transfer_out_participant_check_transfer_path) %>
-<% end %>
+<% content_for :before_content, govuk_back_link(text: "Back", href: check_transfer_school_participant_transfer_out_path) %>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">

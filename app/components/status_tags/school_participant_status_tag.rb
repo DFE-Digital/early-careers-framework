@@ -10,12 +10,7 @@ module StatusTags
     end
 
     def label
-      if FeatureFlag.active?(:cohortless_dashboard)
-        govuk_tag(text: t(:label, scope: translation_scope),
-                  colour: t(:colour, scope: translation_scope))
-      else
-        t(:label, scope: translation_scope)
-      end
+      govuk_tag(text: t(:label, scope: translation_scope), colour: t(:colour, scope: translation_scope))
     end
 
     def description
@@ -36,11 +31,7 @@ module StatusTags
     attr_reader :participant_profile, :induction_record, :school, :display_description
 
     def translation_scope
-      @translation_scope ||= if FeatureFlag.active?(:cohortless_dashboard)
-                               "status_tags.school_participant_status_detailed.#{record_state}"
-                             else
-                               "status_tags.school_participant_status.#{record_state}"
-                             end
+      @translation_scope ||= "status_tags.school_participant_status_detailed.#{record_state}"
     end
 
     def record_state

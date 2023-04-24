@@ -3,7 +3,7 @@
 require "rails_helper"
 require_relative "./manage_training_steps"
 
-RSpec.describe "Manage CIP training", js: true, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "Manage CIP training", js: true do
   include ManageTrainingSteps
 
   scenario "CIP Induction Mentor without materials chosen" do

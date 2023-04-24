@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true, with_feature_flags: { cohortless_dashboard: "active" } do
+RSpec.describe "Adding ECT with appropriate body", type: :feature, js: true do
   let!(:cohort) { Cohort.current || create(:cohort, :current) }
   let!(:school) { create :school, name: "Fip School" }
   let!(:appropriate_body) { create :appropriate_body_national_organisation }
