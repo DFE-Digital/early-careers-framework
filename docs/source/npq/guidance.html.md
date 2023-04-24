@@ -234,10 +234,11 @@ For example, if a participant registers for an NPQ course but then decides to ch
 
 Once a provider has accepted an application, they can view and update data to notify DfE that a participant has: 
 
-* [deferred training](LINK NEEDED)
-* [resumed training](LINK NEEDED)
-* [withdrawn from training](LINK NEEDED)
-* [changed their training schedule](LINK NEEDED)
+* [deferred their course](LINK NEEDED)
+* [resumed their course](LINK NEEDED)
+* [withdrawn from their course](LINK NEEDED)
+* [changed their course schedule](LINK NEEDED)
+* [an updated course outcome](LINK NEEDED)
 
 ### View all participant data
 
@@ -257,6 +258,37 @@ For more detailed information see the specifications for this [view multiple NPQ
 
 #### Example response body:
 
+```
+{
+  "data": [
+    {
+      "id": "ac3d1243-7308-4879-942a-c4a70ced400a",
+      "type": "npq-participant",
+      "attributes": {
+        "full_name": "Isabelle MacDonald",
+        "teacher_reference_number": "1234567",
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "npq_enrolments": [
+          {
+            "email": "isabelle.macdonald2@some-school.example.com",
+            "course_identifier": "npq-senior-leadership",
+            "schedule_identifier": "npq-leadership-autumn",
+            "cohort": "2021",
+            "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+            "eligible_for_funding": true,
+            "training_status": "active",
+            "school_urn": "123456",
+            "targeted_delivery_funding_eligibility": true,
+            "withdrawal": null
+            "deferral": null
+            "created_at": "2021-05-31T02:22:32.000Z"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
 
 ### View a single participant’s data
 
@@ -271,7 +303,38 @@ For more detailed information see the specifications for this [view a single NPQ
 
 #### Example response body:
 
-[ADD ONCE CHECKED]
+
+```
+{
+  "data": [
+    {
+      "id": "ac3d1243-7308-4879-942a-c4a70ced400a",
+      "type": "npq-participant",
+      "attributes": {
+        "full_name": "Isabelle MacDonald",
+        "teacher_reference_number": "1234567",
+        "updated_at": "2021-05-31T02:22:32.000Z",
+        "npq_enrolments": [
+          {
+            "email": "isabelle.macdonald2@some-school.example.com",
+            "course_identifier": "npq-senior-leadership",
+            "schedule_identifier": "npq-leadership-autumn",
+            "cohort": "2021",
+            "npq_application_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+            "eligible_for_funding": true,
+            "training_status": "active",
+            "school_urn": "123456",
+            "targeted_delivery_funding_eligibility": true,
+            "withdrawal": null
+            "deferral": null
+            "created_at": "2021-05-31T02:22:32.000Z"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
 
 ### Notify DfE a participant has taken a break (deferred) from training
 
@@ -365,20 +428,38 @@ For more detailed information see the specifications for this [notify DfE that a
 * The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View NPQ schedules and milestone dates](/api-reference/npq/schedules_and-milestone-dates)
 {/inset-text}
 
+### Notify DfE a participant has changed their training schedule
 
-## Tell the DfE that a participant is changing training schedule on their NPQ course
+Participants follow leadership or specialist training schedules. 
 
-Submit a change of schedule notification to the following endpoint
+All participants will be registered by default schedule depending on when their application is accepted. Providers must notify the DfE of any schedule change.
 
 ```
-PUT /api/v1/participants/npq/{id}/change-schedule
+ PUT /api/v3/participants/npq/{id}/change-schedule
 ```
 
-This will return an [NPQ participant response](/api-reference/reference-v1.html#schema-npqparticipant) with the updates to the record included.
+An example request body is listed below. 
 
-Read change schedule of [NPQ participant endpoint](/api-reference/reference-v1.html#api-v1-participants-npq-id-change-schedule-put).
+Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
-The provider needs to show the DfE evidence of any declarations they submit and why a participant is following a particular schedule.
+For more detailed information see the specifications for this [notify that an NPQ participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-change-schedule-put).
+
+#### Example request body:
+
+```
+{
+  "data": {
+    "type": "participant-change-schedule",
+    "attributes": {
+      "schedule_identifier": "npq-leadership-autumn",
+      "course_identifier": "npq-leading-teaching",
+      "cohort": "2021"
+    }
+  }
+}
+```
+
+
 
 
 
