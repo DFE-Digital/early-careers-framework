@@ -90,7 +90,7 @@ For more detailed information see the specifications for this [view multiple NPQ
 
 ### Accept an application 
 
-Providers should accept applications for those they want to register for an NPQ. Reasons to accept applications include (but are not limited to) the participant: 
+Providers should accept applications for those they want to enrol onto a course. Reasons to accept applications include (but are not limited to) the participant: 
 
 * having funding confirmed
 * being suitable for their chosen NPQ course
@@ -152,7 +152,7 @@ For more detailed information see the specifications for this [accept an NPQ app
 
 ### Reject an application
 
-Providers should reject applications for those they do not want to register for an NPQ. Reasons to reject applications include (but are not limited to) the participant: 
+Providers should reject applications for those they do not want to enrol onto a course. Reasons to reject applications include (but are not limited to) the participant: 
 
 * having been unsuccessful in their application process
 * not having secured funding
