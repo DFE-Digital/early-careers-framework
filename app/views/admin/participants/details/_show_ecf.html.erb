@@ -21,6 +21,13 @@
     end
   end
 
+  if current_user.admin_profile.super_user?
+    sl.row do |row|
+      row.key(text: "Participant identity")
+      row.value(text: @participant_presenter.participant_identity.email)
+    end
+  end
+
   sl.row do |row|
     row.key(text: "Date of birth")
     row.value(text: @participant_presenter&.ecf_participant_validation_data&.date_of_birth&.to_s(:govuk))
