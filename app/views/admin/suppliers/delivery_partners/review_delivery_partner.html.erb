@@ -15,7 +15,7 @@
       <%= @delivery_partner_form.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to choose_name_admin_delivery_partners_path(continue: true), class: "govuk-link--no-visited-state" do %>
+      <%= govuk_link_to choose_name_admin_delivery_partners_path(continue: true), no_visited_state: true do %>
         Change<span class="govuk-visually-hidden"> name</span>
       <% end %>
     </dd>
@@ -34,7 +34,7 @@
 
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to choose_lps_admin_delivery_partners_path, class: "govuk-link--no-visited-state" do %>
+      <%= govuk_link_to choose_lps_admin_delivery_partners_path, no_visited_state: true do %>
         Change<span class="govuk-visually-hidden"> lead providers and cohorts</span>
       <% end %>
     </dd>
