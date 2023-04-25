@@ -11,7 +11,9 @@ Providers are paid a proportionate sum of money relative to the amount of time t
 
 NPQ courses can vary in length, and so can each have a different number of milestones. The API will automatically assign schedules to participants depending on when course applications are accepted by providers. 
 
-Providers must [submit declarations](/api-reference/npq/guidance/#submit-view-and-void-declarations) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
+Milestone validation is not applied to NPQ schedules. The API will accept any declarations submitted after the first milestone period has started for a given schedule.
+
+For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) after the schedule start date.
 
 Note, we advise providers to keep schedule data independent from any experience logic in their systems. Schedules and cohorts are financial concepts specific to the CPD service and payments. 
 
@@ -28,23 +30,110 @@ Note, we advise providers to keep schedule data independent from any experience 
 | Milestone validation    | The API's process to validate declarations submitted by providers for participants in standard training schedules       |
 
 
-## Specialist and leadership schedules
+## Specialist NPQ schedules
 
-The API will automatically assign schedules to participants on leadership or specialist courses depending on when applications are accepted by providers.
+The API will automatically assign schedules to participants on specialist NPQ courses depending on when applications are accepted by providers. 
 
 NPQs in specialist areas of teaching will be assigned to one of the following: 
 
 * `npq-specialist-autumn`
 * `npq-specialist-spring`
 
+### Dates for schedules starting in autumn 
+
+#### 2023 cohort
+
+Participants starting their specialist NPQ course before 31 December 2023 should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-specialist-autumn"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Oct 2023     | N/A      | `started`    | 1 Nov 2023      | 
+| Retention Point 1      | 1 Oct 2023     | N/A     | `retained-1`    | 1 Nov 2023       | 
+| Participant Completion      | 1 Oct 2023     | N/A      | `completed`    | 1 Nov 2023      | 
+
+#### 2022 cohort
+
+Participants starting their specialist NPQ course before 31 December 2022 should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-specialist-autumn"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Oct 2022     | N/A      | `started`    | 1 Nov 2022      | 
+| Retention Point 1      | 1 Oct 2022     | N/A     | `retained-1`    | 1 Nov 2022       | 
+| Participant Completion      | 1 Oct 2022     | N/A      | `completed`    | 1 Nov 2022      |
+
+#### 2021 cohort
+
+Participants starting their specialist NPQ course before 31 December 2021 should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-specialist-autumn"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Nov 2021     | N/A      | `started`    | 1 Nov 2021      | 
+| Retention Point 1      | 1 Nov 2021     | N/A     | `retained-1`    | 1 Nov 2021       | 
+| Participant Completion      | 1 Nov 2021     | N/A      | `completed`    | 1 Nov 2021      | 
+
+
+### Dates for schedules starting in spring 
+
+#### 2023 cohort
+
+Participants starting their specialist NPQ course after 1 January 2024, should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-specialist-spring"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2024     | N/A      | `started`    | 1 Jan 2024      | 
+| Retention Point 1      | 1 Jan 2024     | N/A     | `retained-1`    | 1 Jan 2024       | 
+| Participant Completion      | 1 Jan 2024     | N/A      | `completed`    | 1 Jan 2024      | 
+
+#### 2022 cohort
+
+Participants starting their specialist NPQ course after 1 January 2023, should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-specialist-spring"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2022     | N/A      | `started`    | 1 Jan 2023      | 
+| Retention Point 1      | 1 Jan 2022     | N/A     | `retained-1`    | 1 Jan 2023       | 
+| Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2023      | 
+#### 2021 cohort
+
+Participants starting their specialist NPQ course after 1 January 2022, should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-specialist-spring"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2022     | N/A      | `started`    | 1 Jan 2022      | 
+| Retention Point 1      | 1 Jan 2022     | N/A     | `retained-1`    | 1 Jan 2022       | 
+| Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2022      | 
+
+
+### Leadership schedules 
+
 Leadership NPQs will be assigned to one of the following:
 
 * `npq-leadership-autumn`
 * `npq-leadership-spring`
-
-Milestone validation is not applied to NPQ schedules. The API will accept any declarations submitted after the first milestone period has started for a given schedule.
-
-For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) after the schedule start date.
 
 ## Early headship coaching offer (EHCO) schedules 
 
