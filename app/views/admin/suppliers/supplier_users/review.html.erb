@@ -15,7 +15,7 @@
       <%= @supplier_user_form.full_name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to admin_new_supplier_user_details_path, class: "govuk-link--no-visited-state" do %>
+      <%= govuk_link_to admin_new_supplier_user_details_path, no_visited_state: true do %>
         Change<span class="govuk-visually-hidden"> name</span>
       <% end %>
     </dd>
@@ -28,7 +28,7 @@
       <%= @supplier_user_form.email %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to admin_new_supplier_user_details_path, class: "govuk-link--no-visited-state" do %>
+      <%= govuk_link_to admin_new_supplier_user_details_path, no_visited_state: true do %>
         Change<span class="govuk-visually-hidden"> email</span>
       <% end %>
     </dd>
@@ -41,7 +41,7 @@
       <%= @supplier_user_form.chosen_supplier.name %>
     </dd>
     <dd class="govuk-summary-list__actions">
-      <%= govuk_link_to new_admin_supplier_user_path(continue: true), class: "govuk-link--no-visited-state" do %>
+      <%= govuk_link_to new_admin_supplier_user_path(continue: true), no_visited_state: true do %>
         Change<span class="govuk-visually-hidden"> supplier</span>
       <% end %>
     </dd>

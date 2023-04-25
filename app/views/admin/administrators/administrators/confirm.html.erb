@@ -19,7 +19,7 @@
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to(
                 new_admin_administrator_path(continue: true),
-                class: "govuk-link--no-visited-state",
+                no_visited_state: true,
               ) do %>
             Change<span class="govuk-visually-hidden"> name</span>
           <% end %>
@@ -35,7 +35,7 @@
         <dd class="govuk-summary-list__actions">
           <%= govuk_link_to(
                 new_admin_administrator_path(continue: true),
-                class: "govuk-link--no-visited-state",
+                no_visited_state: true,
               ) do %>
           Change<span class="govuk-visually-hidden"> email</span>
           <% end %>
