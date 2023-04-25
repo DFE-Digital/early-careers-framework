@@ -4,7 +4,9 @@
         <dt class="govuk-summary-list__key">Name</dt>
         <dd class="govuk-summary-list__value"><%= school.name %></dd>
         <dd class="govuk-summary-list__actions">
-            <%= govuk_link_to "Change", choose_location_request_nomination_invite_path, class: "govuk-link--no-visited-state", "data-test": "change-school" %>
+            <%= govuk_link_to "Change", choose_location_request_nomination_invite_path,
+                              no_visited_state: true,
+                              "data-test": "change-school" %>
             <span class="govuk-visually-hidden"> school</span>
         </dd>
     </div>
