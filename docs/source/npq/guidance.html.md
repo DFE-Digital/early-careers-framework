@@ -608,6 +608,7 @@ For more detailed information see the specifications for this [notify DfE that a
 #### Example response body:
 
 ```
+{
   "data": {
     "id": "db3a7848-7308-4879-942a-c4a70ced400a",
     "type": "participant-declaration",
@@ -671,6 +672,7 @@ For more detailed information see the specifications for this [notify DfE that a
 #### Example response body:
 
 ```
+{
   "data": {
     "id": "db3a7848-7308-4879-942a-c4a70ced400a",
     "type": "participant-declaration",
@@ -733,6 +735,7 @@ For more detailed information see the specifications for this [notify DfE that a
 #### Example response body:
 
 ```
+{
  "data": {
     "id": "db3a7848-7308-4879-942a-c4a70ced400a",
     "type": "participant-declaration",
@@ -757,53 +760,131 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
+### View all previously submitted declarations 
 
-## Removing a declaration submitted in error
-
-This scenario begins when a provider needs to correct participant data that may have been submitted in error.
-
-This operation allows the provider to void a declaration that has been previously submitted.
-
-### Provider voids a declaration
-
-Void an NPQ participant declaration
+View all declarations which have been submitted to date. Check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
 ```
-PUT /api/v1/participant-declarations/{id}/void
+GET /api/v3/participant-declarations
 ```
 
-This will return a [participant declaration record](/api-reference/reference-v1#schema-participantdeclarationresponse) with the updates to the record included.
+Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
-If providers void `completed` declarations where a participant had passed the assessment (`"has_passed": true`), then this outcome will also be retracted and the participants will be notified.
+An example response body is listed below. 
 
-See specifications for the [void participant declaration](/api-reference/reference-v1#api-v1-participant-declarations-id-void-put) endpoint.
+For more detailed information see the specifications for this [view all declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-get)
 
-
-
-
-
-## Listing participant declaration submissions 
-This is how you see all the declarations you have made. This functionality allows the provider to check declaration submissions and identify any that are missing.
-
-If declarations are missing, following other guidance by going to [Declaring that an NPQ participant started their course](#declaring-that-an-ecf-participant-has-started-their-course).
-
-### Checking all previously submitted declarations
-This section lets you review all of the declarations you have made.
-
-All of your submitted declarations are listed.
+#### Example response body:
 
 ```
-GET /api/v1/participant-declarations
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+      "declaration_type": "started",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "npq-leading-teaching",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": null,
+      "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": null,
+      "uplift_paid": true,
+      "evidence_held": null
+      "has_passed": null
+    }
+  }
+}
 ```
 
-This returns [participant declarations](/api-reference/reference-v1#schema-participantdeclarationresponse).
+### View a specific previously submitted declaration
 
-### Checking a single previously submitted declaration 
-
-This section lets you review a single declaration you have made.
+View a specific declaration which has been previously submitted. Check declaration details and void or clawback those which have been submitted in error.
 
 ```
-GET /api/v1/participant-declarations/{id}
+GET /api/v3/participant-declarations/{id}
 ```
 
-This returns a [participant declaration](/api-reference/reference-v1#schema-singleparticipantdeclarationresponse).
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view specific declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-get)
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+      "declaration_type": "started",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "npq-leading-teaching",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": null,
+      "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": null,
+      "uplift_paid": true,
+      "evidence_held": null
+      "has_passed": null
+    }
+  }
+}
+```
+
+### Void or clawback a declaration
+
+Void specific declarations which have been submitted in error. 
+
+```
+PUT /api/v3/participant-declarations/{id}/void
+```
+
+An example response body is listed below. Successful requests will return a response body including updates to the declaration `state`, which will become: 
+
+* `voided` if it had been  `submitted`, `ineligible`, `eligible`, or `payable`
+* `awaiting_clawback` if it had been `paid` 
+
+View more information on [declaration states](/api-reference/npq/definitions-and-states/#declaration-states) 
+
+Note, , if a provider voids a `completed` declaration, the outcome (indicating whether they have passed or failed) will be retracted. The `has_passed` value will revert to `null`.
+
+For more detailed information see the specifications for this [void declarations endpoint.](/api-reference/reference-v3.html#api-v3-participant-declarations-id-void-put)
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
+      "declaration_type": "completed",
+      "declaration_date": "2020-11-13T11:21:55Z",
+      "course_identifier": "npq-leading-teaching",
+      "state": "voided",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": null,
+      "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": null,
+      "uplift_paid": true,
+      "evidence_held": null
+      "has_passed": null
+    }
+  }
+}
+```
