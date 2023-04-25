@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2023_04_19_084407) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
+    t.boolean "super_user", default: false
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end

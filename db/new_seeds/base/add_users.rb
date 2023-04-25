@@ -5,6 +5,12 @@ NewSeeds::Scenarios::Users::AdminUser
   .new(email: "admin@example.com", full_name: "Admin user")
   .build
 
+Rails.logger.info("Adding a super-user")
+NewSeeds::Scenarios::Users::AdminUser
+  .new(email: "super-user@example.com", full_name: "Super user")
+  .build
+  .with_super_user
+
 Rails.logger.info("Adding a finance user")
 NewSeeds::Scenarios::Users::FinanceUser
   .new(email: "finance@example.com", full_name: "Finance user")
