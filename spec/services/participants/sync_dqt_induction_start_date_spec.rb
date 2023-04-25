@@ -100,10 +100,11 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
     let(:participant_profile) { create(:ect_participant_profile, induction_start_date: nil) }
     let!(:induction_record) { create(:induction_record, participant_profile:) }
     let!(:cohort) { create(:cohort, start_year: 2023) }
-    let!(:school_cohort) { create(:school_cohort, :with_induction_programme, :with_ecf_standard_schedule, cohort:, school: induction_record.school) }
     let!(:error) { SyncDqtInductionStartDateError.create!(participant_profile:, error_message: "test message") }
 
     it "delete the error if the participant is successfully processed" do
+      create(:school_cohort, :with_induction_programme, :with_ecf_standard_schedule, cohort:, school: induction_record.school)
+
       expect {
         described_class.call(dqt_induction_start_date, participant_profile)
       }.to change(participant_profile, :induction_start_date).to(dqt_induction_start_date)
@@ -111,6 +112,17 @@ RSpec.describe Participants::SyncDqtInductionStartDate, with_feature_flags: { co
 
       error = SyncDqtInductionStartDateError.find_by(participant_profile:)
       expect(error).not_to be_present
+    end
+
+    it "updates the error if the process fails" do
+      expect {
+        described_class.call(dqt_induction_start_date, participant_profile)
+      }.to not_change(participant_profile, :induction_start_date)
+       .and not_change { participant_profile.induction_records.latest.cohort.start_year }
+
+      error = SyncDqtInductionStartDateError.find_by(participant_profile:)
+      expect(error).to be_present
+      expect(error.error_message).not_to eql("test message")
     end
   end
 
