@@ -7,11 +7,11 @@ RSpec.describe "Add participants", js: true do
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_and_partnered
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
     and_i_am_signed_in_as_an_induction_coordinator
-    and_i_click_on("2021 to 2022")
+    and_i_click_on(@cohort.description)
     then_i_am_taken_to_fip_induction_dashboard
     set_dqt_validation_with_nino
   end
@@ -27,7 +27,6 @@ RSpec.describe "Add participants", js: true do
     and_i_confirm_details_and_continue_on_the_school_add_participant_wizard
     and_i_add_nino_to_the_school_add_participant_wizard @participant_data[:full_name], @participant_data[:nino]
     and_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", @participant_data[:email]
-    and_i_add_start_date_to_the_school_add_participant_wizard @participant_data[:start_date]
     and_i_choose_a_mentor_on_the_school_add_participant_wizard @participant_profile_mentor.full_name
     and_i_confirm_and_add_on_the_school_add_participant_wizard
 

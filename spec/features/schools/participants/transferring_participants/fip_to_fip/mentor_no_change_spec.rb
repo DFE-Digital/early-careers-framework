@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.shared_context "Mentor has matching lead provider and delivery partner" do
+RSpec.describe "Transferring a mentor weith matching lead provider and delivery partner", type: :feature, js: true do
   before do
     allow_participant_transfer_mailers
     set_participant_data
@@ -134,11 +134,7 @@ RSpec.shared_context "Mentor has matching lead provider and delivery partner" do
   end
 
   def then_i_am_taken_to_a_dashboard_page
-    if FeatureFlag.active? :cohortless_dashboard
-      expect(page).to have_selector("h1", text: "Manage your training")
-    else
-      then_i_am_taken_to_your_ect_and_mentors_page
-    end
+    expect(page).to have_selector("h1", text: "Manage your training")
   end
 
   def then_i_should_be_on_what_we_need_page
@@ -269,15 +265,5 @@ RSpec.shared_context "Mentor has matching lead provider and delivery partner" do
       date_of_birth: Date.new(1990, 10, 24),
       email: "sally-mentor@example.com",
     }
-  end
-end
-
-RSpec.describe "transferring participants", type: :feature, js: true do
-  context "Transferring a Mentor to a school", with_feature_flags: { cohortless_dashboard: "inactive" } do
-    include_context "Mentor has matching lead provider and delivery partner"
-  end
-
-  context "Transferring a Mentor to a school cohortlessly", with_feature_flags: { cohortless_dashboard: "active" } do
-    include_context "Mentor has matching lead provider and delivery partner"
   end
 end

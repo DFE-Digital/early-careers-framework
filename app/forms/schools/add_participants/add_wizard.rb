@@ -41,35 +41,22 @@ module Schools
       end
 
       def previous_step_path
-        # back_step = form.previous_step
         back_step = last_visited_step
         return abort_path if back_step.nil?
 
         if changing_answer? || back_step != :date_of_birth
           super
-        elsif FeatureFlag.active? :cohortless_dashboard
-          # raise "back step mismatch" if last_visited_step.present? && last_visited_step != back_step
-          schools_who_to_add_show_path(**path_options(step: back_step))
-        # return to previous wizard
         else
-          show_schools_who_to_add_participants_path(**path_options(step: back_step))
+          schools_who_to_add_show_path(**path_options(step: back_step))
         end
       end
 
       def show_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_add_show_path(**path_options(step:))
-        else
-          show_schools_add_participants_path(**path_options(step:))
-        end
+        schools_add_show_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_add_show_change_path(**path_options(step:))
-        else
-          show_change_schools_add_participants_path(**path_options(step:))
-        end
+        schools_add_show_change_path(**path_options(step:))
       end
 
       def found_participant_in_dqt?

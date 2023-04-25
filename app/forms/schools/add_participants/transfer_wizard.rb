@@ -67,26 +67,17 @@ module Schools
       end
 
       def show_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_transfer_show_path(**path_options(step:))
-        else
-          show_schools_transfer_participants_path(**path_options(step:))
-        end
+        schools_transfer_show_path(**path_options(step:))
       end
 
       def previous_step_path
-        # back_step = form.previous_step
         back_step = last_visited_step
         return abort_path if back_step.nil?
 
         if changing_answer? || back_step != :confirm_transfer
           super
-        elsif FeatureFlag.active? :cohortless_dashboard
-          # raise "back step mismatch" if last_visited_step.present? && last_visited_step != back_step
-          schools_who_to_add_show_path(**path_options(step: back_step))
-        # return to previous wizard
         else
-          show_schools_who_to_add_participants_path(**path_options(step: back_step))
+          schools_who_to_add_show_path(**path_options(step: back_step))
         end
       end
 
@@ -95,11 +86,7 @@ module Schools
       end
 
       def change_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_transfer_show_change_path(**path_options(step:))
-        else
-          show_change_schools_transfer_participants_path(**path_options(step:))
-        end
+        schools_transfer_show_change_path(**path_options(step:))
       end
 
       def needs_to_choose_a_mentor?

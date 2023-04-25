@@ -143,8 +143,8 @@ private
     click_on "Continue"
     fill_in "add_participant_wizard[email]", with: "ect@email.gov.uk"
     click_on "Continue"
-    fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
-    click_on "Continue"
+    # fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
+    # click_on "Continue"
   end
 
   def valid_dqt_response
@@ -178,6 +178,7 @@ private
   def when_i_check_the_ect_details
     click_on "Confirm and add"
     click_on "View your ECTs and mentors"
+    click_on "Manage participants"
     click_on "George ECT"
   end
 

@@ -77,37 +77,31 @@ RSpec.describe Schools::AddParticipants::WizardSteps::EmailStep, type: :model do
         allow(wizard).to receive(:needs_to_confirm_appropriate_body?).and_return(confirm_appropriate_body)
       end
 
-      it "returns :start_date" do
-        expect(step.next_step).to eql :start_date
+      it "returns :check_answers" do
+        expect(step.next_step).to eql :check_answers
       end
 
-      context "when cohortless is active", with_feature_flags: { cohortless_dashboard: "active" } do
-        it "returns :check_answers" do
-          expect(step.next_step).to eql :check_answers
+      context "when the SIT needs to confirm the start term" do
+        let(:confirm_start_term) { true }
+
+        it "returns :start_term" do
+          expect(step.next_step).to eql :start_term
         end
+      end
 
-        context "when the SIT needs to confirm the start term" do
-          let(:confirm_start_term) { true }
+      context "when a mentor can be chosen" do
+        let(:choose_mentor) { true }
 
-          it "returns :start_term" do
-            expect(step.next_step).to eql :start_term
-          end
+        it "returns :choose_mentor" do
+          expect(step.next_step).to eql :choose_mentor
         end
+      end
 
-        context "when a mentor can be chosen" do
-          let(:choose_mentor) { true }
+      context "when an appropriate body needs to be confirmed" do
+        let(:confirm_appropriate_body) { true }
 
-          it "returns :choose_mentor" do
-            expect(step.next_step).to eql :choose_mentor
-          end
-        end
-
-        context "when an appropriate body needs to be confirmed" do
-          let(:confirm_appropriate_body) { true }
-
-          it "returns :confirm_appropriate_body" do
-            expect(step.next_step).to eql :confirm_appropriate_body
-          end
+        it "returns :confirm_appropriate_body" do
+          expect(step.next_step).to eql :confirm_appropriate_body
         end
       end
     end

@@ -10,16 +10,16 @@
   <% end %>
 
   <% if form.trn %>
-   <% summary_list.row do |row| %>
-       <% row.key { "TRN" } %>
-       <% row.value { form.trn } %>
-       <% unless form.found_participant_in_dqt? %>
-         <% row.action(text: "Change",
-                       visually_hidden_text: "TRN",
-                       href: form.change_path_for(step: :trn)) %>
-       <% end %>
-     <% end %>
-   <% end %>
+    <% summary_list.row do |row| %>
+      <% row.key { "TRN" } %>
+      <% row.value { form.trn } %>
+      <% unless form.found_participant_in_dqt? %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "TRN",
+                      href: form.change_path_for(step: :trn)) %>
+      <% end %>
+    <% end %>
+  <% end %>
 
   <% if form.date_of_birth %>
     <% summary_list.row do |row| %>
@@ -42,25 +42,16 @@
   <% end %>
 
   <% if form.ect_participant? %>
-    <% if FeatureFlag.active? :cohortless_dashboard %>
-      <% if form.show_start_term? %>
-        <% summary_list.row do |row| %>
-          <% row.key { "Start term" } %>
-          <% row.value { form.start_term_description } %>
-          <% row.action(text: "Change",
-                        visually_hidden_text: "start term",
-                        href: form.change_path_for(step: :start_term)) %>
-        <% end %>
-      <% end %>
-    <% else %>
+    <% if form.show_start_term? %>
       <% summary_list.row do |row| %>
-        <% row.key { "Start date" } %>
-        <% row.value { form.start_date.to_date.to_s(:govuk) } %>
+        <% row.key { "Start term" } %>
+        <% row.value { form.start_term_description } %>
         <% row.action(text: "Change",
-                      visually_hidden_text: "induction start date",
-                      href: form.change_path_for(step: :start_date)) %>
+                      visually_hidden_text: "start term",
+                      href: form.change_path_for(step: :start_term)) %>
       <% end %>
     <% end %>
+
     <% summary_list.row do |row| %>
       <% row.key { "Mentor" } %>
       <% row.value { form.mentor.present? ? form.mentor.full_name : "Add later" } %>

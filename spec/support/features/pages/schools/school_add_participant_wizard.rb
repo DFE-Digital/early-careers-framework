@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolAddParticipantWizard < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/who"
+    set_url "/schools/{slug}/participants/who"
     set_primary_heading "Who do you want to add?"
 
     def add_participant(participant_type, full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)

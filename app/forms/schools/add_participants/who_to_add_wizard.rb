@@ -35,8 +35,8 @@ module Schools
 
       # has this school got a cohort set up for training that matches the incoming transfer
       def need_training_setup?
-        transfer_cohort = school.school_cohorts.find_by(cohort: existing_participant_cohort)
-        transfer_cohort.blank? || !transfer_cohort.full_induction_programme?
+        destination_cohort = school.school_cohorts.find_by(cohort: cohort_to_place_participant)
+        destination_cohort.blank? || !destination_cohort.full_induction_programme?
       end
 
       # path to the most appropriate start point to set up training for the transfer
@@ -69,20 +69,12 @@ module Schools
       end
 
       def next_journey_path
-        if FeatureFlag.active? :cohortless_dashboard
-          if transfer?
-            schools_transfer_start_path(**path_options)
-          elsif sit_mentor?
-            schools_add_sit_start_path(**path_options)
-          else
-            schools_add_start_path(**path_options)
-          end
-        elsif transfer?
-          start_schools_transfer_participants_path(**path_options)
+        if transfer?
+          schools_transfer_start_path(**path_options)
         elsif sit_mentor?
-          sit_start_schools_add_participants_path(**path_options)
+          schools_add_sit_start_path(**path_options)
         else
-          start_schools_add_participants_path(**path_options)
+          schools_add_start_path(**path_options)
         end
       end
 
@@ -91,19 +83,11 @@ module Schools
       end
 
       def show_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_who_to_add_show_path(**path_options(step:))
-        else
-          show_schools_who_to_add_participants_path(**path_options(step:))
-        end
+        schools_who_to_add_show_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_who_to_add_show_change_path(**path_options(step:))
-        else
-          show_change_schools_who_to_add_participants_path(**path_options(step:))
-        end
+        schools_who_to_add_show_change_path(**path_options(step:))
       end
 
       def reset_known_by_another_name_response

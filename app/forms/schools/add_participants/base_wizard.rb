@@ -9,7 +9,7 @@ module Schools
       class AlreadyInitialised < StandardError; end
       class InvalidStep < StandardError; end
 
-      attr_reader :current_step, :submitted_params, :data_store, :current_user, :participant_profile
+      attr_reader :current_step, :submitted_params, :data_store, :current_user, :participant_profile, :school
 
       delegate :before_render, to: :form
       delegate :view_name, to: :form
@@ -21,11 +21,10 @@ module Schools
                :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                to: :data_store
 
-      def initialize(current_step:, data_store:, current_user:, school_cohort: nil, school: nil, submitted_params: {})
+      def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
         @current_user = current_user
         @data_store = data_store
         @school = school
-        @school_cohort = school_cohort
         @submitted_params = submitted_params
         @participant_profile = nil
         @email_owner = nil
@@ -36,12 +35,7 @@ module Schools
 
         check_data_store_state!
         data_store_should_not_have_a_different_user!
-
-        if FeatureFlag.active? :cohortless_dashboard
-          data_store_should_not_have_a_different_school!
-        else
-          data_store_should_not_have_a_different_school_cohort!
-        end
+        data_store_should_not_have_a_different_school!
 
         load_current_user_and_school_into_data_store
       end
@@ -55,22 +49,15 @@ module Schools
       end
 
       def dashboard_path
-        if FeatureFlag.active? :cohortless_dashboard
-          schools_dashboard_path(school_id: school.slug)
-        else
-          schools_participants_path(school_id: school.slug, cohort_id: school_cohort.cohort.start_year)
-        end
+        schools_dashboard_path(school_id: school.slug)
       end
 
       def previous_step_path
         if changing_answer?
           show_path_for(step: return_point)
         else
-          # back_step = form.previous_step
           back_step = last_visited_step
           return abort_path if back_step.nil?
-
-          # raise "back step mismatch" if last_visited_step.present? && last_visited_step != back_step
 
           if back_step == :abort
             abort_path
@@ -113,21 +100,9 @@ module Schools
         data_store.get(:known_by_another_name) == "no"
       end
 
-      def school
-        if FeatureFlag.active? :cohortless_dashboard
-          @school
-        else
-          @school ||= school_cohort.school
-        end
-      end
-
       def school_cohort
-        if FeatureFlag.active? :cohortless_dashboard
-          # determine this based on which cohort to place the participant in
-          @school_cohort ||= school.school_cohorts.find_by(cohort: participant_cohort)
-        else
-          @school_cohort
-        end
+        # determine this based on which cohort to place the participant in
+        @school_cohort ||= school.school_cohorts.find_by(cohort: participant_cohort)
       end
 
       def lead_provider
@@ -349,7 +324,7 @@ module Schools
       def cohort_to_place_participant
         if transfer?
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
-        elsif induction_start_date.present?
+        elsif ect_participant? && induction_start_date.present?
           Cohort.containing_date(date: induction_start_date)
         elsif Cohort.current == Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
@@ -357,9 +332,12 @@ module Schools
         elsif start_term == "summer"
           # we're in the registration window prior to 1/9
           Cohort.current
-        else
+        elsif start_term.in? %w[autumn spring]
           # we're in the registration window prior to 1/9 and chose autumn or spring the following year
           Cohort.next
+        else
+          # default to now (new mentor/sit mentor)
+          Cohort.current
         end
       end
 
@@ -424,12 +402,7 @@ module Schools
 
       def load_current_user_and_school_into_data_store
         data_store.set(:current_user, current_user)
-
-        if FeatureFlag.active? :cohortless_dashboard
-          data_store.set(:school_id, school.slug)
-        else
-          data_store.set(:school_cohort_id, school_cohort.id)
-        end
+        data_store.set(:school_id, school.slug)
       end
 
       def load_from_data_store
@@ -456,7 +429,6 @@ module Schools
           school_id: school.slug,
         }
 
-        path_opts[:cohort_id] = school_cohort.cohort.start_year unless FeatureFlag.active?(:cohortless_dashboard)
         path_opts[:step] = step.to_s.dasherize if step.present?
         path_opts
       end
@@ -507,10 +479,6 @@ module Schools
 
       def data_store_should_not_have_a_different_school!
         raise AlreadyInitialised, "school different" if data_store.school_id.present? && data_store.school_id != school.slug
-      end
-
-      def data_store_should_not_have_a_different_school_cohort!
-        raise AlreadyInitialised, "school_cohort different" if data_store.school_cohort_id.present? && data_store.school_cohort_id != school_cohort.id
       end
     end
   end

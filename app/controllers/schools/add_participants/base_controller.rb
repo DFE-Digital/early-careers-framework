@@ -44,44 +44,10 @@ module Schools
       end
 
       def set_school
-        if FeatureFlag.active? :cohortless_dashboard
-          @school = policy_scope(School).friendly.find(params[:school_id])
-        else
-          set_school_cohort
-        end
+        @school = policy_scope(School).friendly.find(params[:school_id])
       end
 
       def initialize_wizard
-        if FeatureFlag.active? :cohortless_dashboard
-          initialize_wizard_cohortless
-        else
-          initialize_wizard_with_cohort
-        end
-      end
-
-      def initialize_wizard_with_cohort
-        if request.get? || request.head?
-          @wizard = wizard_class.new(current_step: step_name,
-                                     data_store:,
-                                     current_user:,
-                                     school_cohort: @school_cohort)
-
-          @wizard.changing_answer(params["changing_answer"] == "1")
-          @wizard.update_history
-        else
-          @wizard = wizard_class.new(current_step: step_name,
-                                     data_store:,
-                                     current_user:,
-                                     school_cohort: @school_cohort,
-                                     submitted_params:)
-        end
-        @form = @wizard.form
-      rescue BaseWizard::AlreadyInitialised, BaseWizard::InvalidStep
-        remove_session_data
-        redirect_to abort_path
-      end
-
-      def initialize_wizard_cohortless
         if request.get? || request.head?
           @wizard = wizard_class.new(current_step: step_name,
                                      data_store:,
