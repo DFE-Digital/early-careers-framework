@@ -2,7 +2,4 @@
   <%= render Admin::Participants::NPQValidationStatusTag.new(profile: participant_profile) %>
 <% else %>
   <%= govuk_tag(text: label, colour:) %>
-  <% description.each do |paragraph| %>
-    <p class="govuk-body"><%= paragraph %></p>
-  <% end %>
 <% end %>
