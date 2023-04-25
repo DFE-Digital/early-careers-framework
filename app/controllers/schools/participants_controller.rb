@@ -68,7 +68,7 @@ class Schools::ParticipantsController < Schools::BaseController
       induction_record = @profile.induction_records.for_school(@school).latest
       new_mentor_profile = @mentor_form.mentor&.mentor_profile
       Induction::ChangeMentor.call(induction_record:, mentor_profile: new_mentor_profile)
-      @message = "#{@profile.full_name} has been assigned to #{new_mentor_profile.full_name}"
+      @message = "#{new_mentor_profile.full_name} has been assigned to #{@profile.full_name}"
       render :mentor_change_confirmation
     else
       render :edit_mentor
