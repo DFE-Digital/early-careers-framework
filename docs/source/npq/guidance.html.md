@@ -608,7 +608,6 @@ For more detailed information see the specifications for this [notify DfE that a
 #### Example response body:
 
 ```
-{
   "data": {
     "id": "db3a7848-7308-4879-942a-c4a70ced400a",
     "type": "participant-declaration",
@@ -627,6 +626,7 @@ For more detailed information see the specifications for this [notify DfE that a
       "mentor_id": null,
       "uplift_paid": true,
       "evidence_held": null
+      "has_passed": null
     }
   }
 }
@@ -668,8 +668,9 @@ For more detailed information see the specifications for this [notify DfE that a
 
 #### Example response body:
 
+#### Example response body:
+
 ```
-{
   "data": {
     "id": "db3a7848-7308-4879-942a-c4a70ced400a",
     "type": "participant-declaration",
@@ -677,7 +678,7 @@ For more detailed information see the specifications for this [notify DfE that a
       "participant_id": "bf3c6251-f2a0-4690-a859-0fbecc6ed151",
       "declaration_type": "retained-1",
       "declaration_date": "2020-11-13T11:21:55Z",
-      "course_identifier": "npq-leading-teaching",
+      "course_identifier": "npq-headship",
       "state": "eligible",
       "updated_at": "2020-11-13T11:21:55Z",
       "created_at": "2020-11-13T11:21:55Z",
@@ -688,6 +689,7 @@ For more detailed information see the specifications for this [notify DfE that a
       "mentor_id": null,
       "uplift_paid": true,
       "evidence_held": null
+      "has_passed": null
     }
   }
 }
@@ -731,9 +733,29 @@ For more detailed information see the specifications for this [notify DfE that a
 #### Example response body:
 
 ```
+ "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "participant-declaration",
+    "attributes": {
+      "participant_id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "declaration_type": "completed",
+      "declaration_date": "2021-05-31T02:21:32.000Z",
+      "course_identifier": "npq-leading-teaching",
+      "state": "eligible",
+      "updated_at": "2020-11-13T11:21:55Z",
+      "created_at": "2020-11-13T11:21:55Z",
+      "delivery_partner_id": null,
+      "statement_id": "1cceffd7-0efd-432a-aedc-7be2d6cc72a2",
+      "clawback_statement_id": null,
+      "ineligible_for_funding_reason": null,
+      "mentor_id": null,
+      "uplift_paid": true,
+      "evidence_held": null
+      "has_passed": true
+    }
+  }
+}
 ```
-
-
 
 
 ## Removing a declaration submitted in error
