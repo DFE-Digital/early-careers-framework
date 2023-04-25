@@ -114,8 +114,9 @@ module Pages
     end
 
     def choose_to_add_self_as_mentor
-      click_on "Add yourself as a mentor"
+      choose "Yourself as a mentor"
       click_on "Continue"
+      click_on "Confirm"
 
       self
     end

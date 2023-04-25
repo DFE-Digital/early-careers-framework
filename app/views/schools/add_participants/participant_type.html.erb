@@ -13,8 +13,16 @@
         <p class="govuk-body govuk-!-margin-top-4">
           This could be a new teacher or a teacher transferring from another school where they’ve started ECF-based training or mentoring.
         </p>
+        <% if @wizard.sit_can_become_a_mentor? %>
+          <p class="govuk-body">
+            You can also add yourself as a mentor.
+          </p>
+        <% end %>
         <%= f.govuk_radio_button :participant_type, :ect, label: { text: "ECT" } %>
         <%= f.govuk_radio_button :participant_type, :mentor, label: { text: "Mentor" } %>
+        <% if @wizard.sit_can_become_a_mentor? %>
+          <%= f.govuk_radio_button :participant_type, :self, label: { text: "Yourself as a mentor" } %>
+        <% end %>
       <% end %>
       <%= f.govuk_submit "Continue" %>
     <% end %>

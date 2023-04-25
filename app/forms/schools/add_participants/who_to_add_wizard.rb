@@ -33,6 +33,10 @@ module Schools
         save_progress!
       end
 
+      def sit_can_become_a_mentor?
+        !current_user.mentor?
+      end
+
       # has this school got a cohort set up for training that matches the incoming transfer
       def need_training_setup?
         destination_cohort = school.school_cohorts.find_by(cohort: cohort_to_place_participant)

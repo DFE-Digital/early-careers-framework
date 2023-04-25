@@ -466,7 +466,7 @@ module Schools
 
       # sanity checks
       def check_data_store_state!
-        if current_step.in? %i[participant_type yourself]
+        if current_step.in? %i[participant_type]
           reset_form if submitted_params.empty?
         elsif data_store.store.empty?
           raise InvalidStep, "Datastore is empty at [#{step}]"

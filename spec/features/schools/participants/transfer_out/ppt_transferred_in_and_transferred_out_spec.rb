@@ -102,7 +102,6 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
     def then_i_am_taken_to_your_ect_and_mentors_page
       expect(page).to have_selector("h1", text: "Your ECTs and mentors")
       expect(page).to have_text("Add an ECT or mentor")
-      expect(page).to have_text("Add yourself as a mentor")
     end
 
     def then_i_should_still_see_the_participant_in_my_active_participants

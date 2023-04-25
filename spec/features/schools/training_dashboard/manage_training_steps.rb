@@ -523,13 +523,14 @@ module ManageTrainingSteps
     click_on("Add a new mentor")
   end
 
+  def when_i_choose_to_add_yourself_as_a_mentor
+    choose("Yourself as a mentor", allow_label_click: true)
+  end
+
   def when_i_click_to_add_a_new_ect_or_mentor
     click_on "Add an ECT or mentor"
   end
-
-  def when_i_click_on_add_myself_as_mentor
-    click_on("Add yourself as a mentor")
-  end
+  alias_method :when_i_click_to_add_a_new_participant, :when_i_click_to_add_a_new_ect_or_mentor
 
   def when_i_select_to_add_a(participant_type)
     choose(participant_type, allow_label_click: true)
@@ -705,7 +706,6 @@ module ManageTrainingSteps
   def then_i_am_taken_to_your_ect_and_mentors_page
     expect(page).to have_selector("h1", text: "Your ECTs and mentors")
     expect(page).to have_link("Add an ECT or mentor")
-    expect(page).to have_link("Add yourself as a mentor")
   end
 
   def then_i_am_taken_to_are_you_sure_page
