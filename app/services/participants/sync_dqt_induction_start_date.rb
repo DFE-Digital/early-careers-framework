@@ -38,7 +38,7 @@ module Participants
   private
 
     def save_error_message(amend_cohort)
-      error = SyncDqtInductionStartDateError.find_or_create_by(participant_profile: @participant_profile)
+      error = SyncDqtInductionStartDateError.find_or_create_by(participant_profile: @participant_profile) # rubocop:disable Rails/SaveBang
       error.error_message = amend_cohort.errors.full_messages.join(", ")
       error.save!
     end
