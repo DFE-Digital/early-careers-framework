@@ -107,6 +107,17 @@ RSpec.describe Participants::SyncDqtInductionStartDate, :with_default_schedules,
         expect(participant_profile.induction_start_date).to eq(dqt_induction_start_date)
       end
     end
+
+    it "updates the error if the process fails" do
+      expect {
+        described_class.call(dqt_induction_start_date, participant_profile)
+      }.to not_change(participant_profile, :induction_start_date)
+       .and not_change { participant_profile.induction_records.latest.cohort.start_year }
+
+      error = SyncDqtInductionStartDateError.find_by(participant_profile:)
+      expect(error).to be_present
+      expect(error.error_message).not_to eql("test message")
+    end
   end
 
   context "when the participant was added to the service from 1st Jun 2023" do
