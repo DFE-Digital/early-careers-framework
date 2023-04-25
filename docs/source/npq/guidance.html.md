@@ -571,6 +571,29 @@ For more detailed information see the specifications for this [update an NPQ out
 }
 ```
 
+## Submit, view and void declarations
+
+Providers must submit declarations in line with NPQ contractual [schedules and milestone dates](/api-reference/npq/schedules-and-milestone-dates). 
+
+These declarations will trigger payment from DfE to providers. 
+
+### Test the ability to submit declarations in sandbox ahead of time 
+
+`X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
+
+The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
+
+{inset-text}It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.{/inset-text}
+
+To test declaration submission functionality, include: 
+
+* the header `X-With-Server-Date` as part of declaration submission request
+* the value of your chosen date in ISO8601 Date with time and Timezone (i.e. RFC3339 format). For example: 
+
+```
+X-With-Server-Date: 2022-01-10T10:42:00Z
+```
+
 ### Notify DfE a participant has started training
 
 Notify the DfE that a participant has started an NPQ course by submitting a `started` declaration in line with [milestone 1 dates](/api-reference/npq/schedules-and-milestone-dates).
@@ -666,8 +689,6 @@ For more detailed information see the specifications for this [notify DfE that a
   }
 }
 ```
-
-#### Example response body:
 
 #### Example response body:
 
