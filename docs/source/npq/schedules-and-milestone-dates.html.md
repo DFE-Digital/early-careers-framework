@@ -128,12 +128,108 @@ Participants starting their specialist NPQ course after 1 January 2022, should b
 | Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2022      | 
 
 
-### Leadership schedules 
+## Leadership NPQ schedules
+
+The API will automatically assign schedules to participants on leadership NPQ courses depending on when applications are accepted by providers.
 
 Leadership NPQs will be assigned to one of the following:
 
 * `npq-leadership-autumn`
 * `npq-leadership-spring`
+
+### Dates for schedules starting in autumn 
+
+#### 2023 cohort
+
+Participants starting their specialist NPQ course before 31 December 2023 should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-leadership-autumn"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Oct 2023     | N/A      | `started`    | 1 Nov 2023      | 
+| Retention Point 1      | 1 Oct 2023     | N/A     | `retained-1`    | 1 Nov 2023       | 
+| Retention Point 2      | 1 Oct 2023     | N/A     | `retained-2`    | 1 Nov 2023       |
+| Participant Completion      | 1 Oct 2023     | N/A      | `completed`    | 1 Nov 2023      | 
+
+#### 2022 cohort
+
+Participants starting their specialist NPQ course before 31 December 2022 should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-leadership-autumn"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Oct 2022     | N/A      | `started`    | 1 Nov 2022      | 
+| Retention Point 1      | 1 Oct 2022     | N/A     | `retained-1`    | 1 Nov 2022       | 
+| Retention Point 2      | 1 Oct 2022     | N/A     | `retained-2`    | 1 Nov 2022       |
+| Participant Completion      | 1 Oct 2022     | N/A      | `completed`    | 1 Nov 2022      | 
+
+#### 2021 cohort
+
+Participants starting their specialist NPQ course before 31 December 2021 should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-leadership-autumn"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Nov 2021     | N/A      | `started`    | 1 Nov 2021      | 
+| Retention Point 1      | 1 Nov 2021     | N/A     | `retained-1`    | 1 Nov 2021       | 
+| Retention Point 2      | 1 Oct 2021     | N/A     | `retained-2`    | 1 Nov 2021       |
+| Participant Completion      | 1 Nov 2021     | N/A      | `completed`    | 1 Nov 2021      | 
+
+### Dates for schedules starting in spring 
+
+#### 2023 cohort
+
+Participants starting their specialist NPQ course after 1 January 2024, should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-leadership-spring"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2024     | N/A      | `started`    | 1 Jan 2024      | 
+| Retention Point 1      | 1 Jan 2024     | N/A     | `retained-1`    | 1 Jan 2024       | 
+| Retention Point 2      | 1 Jan 2024     | N/A     | `retained-2`    | 1 Jan 2024       | 
+| Participant Completion      | 1 Jan 2024     | N/A      | `completed`    | 1 Jan 2024      | 
+
+#### 2022 cohort
+
+Participants starting their specialist NPQ course after 1 January 2023, should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-leadership-spring"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2023     | N/A      | `started`    | 1 Jan 2023      | 
+| Retention Point 1      | 1 Jan 2023     | N/A     | `retained-1`    | 1 Jan 2023       | 
+| Retention Point 2      | 1 Jan 2023     | N/A     | `retained-2`    | 1 Jan 2023       | 
+| Participant Completion      | 1 Jan 2023     | N/A      | `completed`    | 1 Jan 2023      | 
+#### 2021 cohort
+
+Participants starting their specialist NPQ course after 1 January 2022, should be assigned with the schedule: 
+
+```
+ "schedule_identifier": "npq-leadership-spring"
+```
+
+| Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
+| -------- | --------  | -------- | --------  | -------- | 
+| Participant Start      | 1 Jan 2022     | N/A      | `started`    | 1 Jan 2022      | 
+| Retention Point 1      | 1 Jan 2022     | N/A     | `retained-1`    | 1 Jan 2022       | 
+| Retention Point 2      | 1 Jan 2022     | N/A     | `retained-2`    | 1 Jan 2022       | 
+| Participant Completion      | 1 Jan 2022     | N/A      | `completed`    | 1 Jan 2022      | 
+
 
 ## Early headship coaching offer (EHCO) schedules 
 
