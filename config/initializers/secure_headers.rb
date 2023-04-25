@@ -19,13 +19,13 @@ SecureHeaders::Configuration.default do |config|
     https://*.zopim.com
     https://zendesk-eu.my.sentry.io
     wss://teachercpdhelp.zendesk.com
-    wss://*.zopim.com;
+    wss://*.zopim.com
   ]
 
   zendesk_img = %w[
     https://v2assets.zopim.io
     https://static.zdassets.com
-    data:;
+    data:
   ]
 
   config.csp = SecureHeaders::OPT_OUT
