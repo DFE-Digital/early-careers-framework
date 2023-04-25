@@ -11,13 +11,20 @@
   end
 
   sl.row do |row|
-    row.key(text: "Email address")
+    row.key(text: "User email address")
     row.value(text: @participant_presenter.email)
     unless @participant_profile.user.get_an_identity_id.present?
       row.action(
         href: edit_admin_participant_change_email_path(@participant_profile),
         visually_hidden_text: "email"
       )
+    end
+  end
+
+  if current_user.admin_profile.super_user?
+    sl.row do |row|
+      row.key(text: "Participant identity")
+      row.value(text: @participant_presenter.participant_identity.email)
     end
   end
 
