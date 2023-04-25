@@ -2,7 +2,7 @@
   <% if ineligible_participant? && !mentor_in_early_rollout? %>
     <td class="govuk-table__cell govuk-!-width-three-quarters"><%= govuk_link_to induction_record.participant_full_name,
                                                                                  school_participant_path(id: induction_record.participant_profile_id, **path_ids),
-                                                                                 class: "govuk-link--no-visited-state" %></td>
+                                                                                 { no_visited_state: true } %></td>
     <td class="govuk-table__cell govuk-!-width-one-quarter">Remove</td>
 
   <% elsif transferred? %>
