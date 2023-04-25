@@ -11,10 +11,10 @@
     <ul class="govuk-list">
       <li><%= govuk_link_to "Return to their details",
                             school_participant_path(id: @profile),
-                            class: "govuk-link--no-visited-state" %></li>
+                            no_visited_state: true %></li>
       <li><%= govuk_link_to "Return to manage mentors and ECTs",
                             school_participants_path,
-                            class: "govuk-link--no-visited-state" %></li>
+                            no_visited_state: true %></li>
     </ul>
   </div>
 </div>
