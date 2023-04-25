@@ -5,23 +5,28 @@ weight: 3
 
 # Schedules and milestone dates
 
-### NPQ schedules and dates
+The DfE makes payment to providers in line with agreed contractual schedules and training criteria. 
 
-NPQ participants start their courses at different times throughout the school year. The DfE has developed schedules to account for these different start dates, which are sometimes called ‘cohorts’.
+Providers are paid a proportionate sum of money relative to the amount of time they support their participants.
 
-Currently, the DfE expects NPQ participants to start an NPQ course in ‘autumn’ or ‘spring’.
+NPQ courses can vary in length, and so can each have a different number of milestones. The API will automatically assign schedules to participants depending on when course applications are accepted by providers. 
 
-Participants that start their course in November/December 2021 should be on autumn schedules, while participants that start their course in January/February 2022 are on spring schedules.
+Providers must [submit declarations](/api-reference/npq/guidance/#submit-view-and-void-declarations) ahead of milestone dates (deadlines) to ensure payments are made for a given milestone. 
 
-The DfE automatically assigns an NPQ participant to a schedule when the participant registers. The schedule assigned depends on the date when the participant registers, with the following logic:
-* assigned participants who registered and were accepted before  25 December 2021 to an autumn schedule
-* assigned participants who registered and were accepted after 25 December 2021 to a spring schedule
+Note, we advise providers to keep schedule data independent from any experience logic in their systems. Schedules and cohorts are financial concepts specific to the CPD service and payments. 
 
-### NPQ cohort attribute
+## Key concepts
 
-The NPQ participant [change schedule attributes](/api-reference/reference-v1.html#schema-npqparticipantchangescheduleattributes) includes the attribute ‘cohort’.
+| Concept      | Definition| 
+| -------- | --------  |
+| Schedule    | The timeframe in which a participant starts a particular NPQ course, which determines milestone dates      |
+| Milestone   | Contractual retention periods during which providers must submit relevant declarations evidencing ECF-based training delivery and participant retention     |
+| Milestone dates    | The deadline date a valid declaration can be made for a given milestone in order for the DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule       |
+| Milestone period    | The period of time between the milestone start date and deadline date       |
+| Output payment    | The sum of money paid by DfE to providers per valid declaration     |
+| Payment date    | The date the DfE will make payment for valid declarations submitted by providers for a given milestone     |
+| Milestone validation    | The API's process to validate declarations submitted by providers for participants in standard training schedules       |
 
-The DfE uses the attribute cohort to record the academic year in which a teacher creates an application for an NPQ. Currently the only available cohort is 2021, representing any NPQ application made in the academic year 2021/22. The DfE will expand this in future years.
 
 ### NPQ schedules and courses
 

@@ -430,9 +430,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Notify DfE a participant has changed their training schedule
 
-Participants follow schedules depending on their NPQ course and start date. 
-
-All participants will be registered by default to a schedule depending on when their application is accepted. Providers must notify the DfE of any schedule change.
+The API will automatically assign schedules to participants depending on when course applications are accepted by providers. Providers must notify the DfE of any schedule change.
 
 ```
  PUT /api/v3/participants/npq/{id}/change-schedule
