@@ -28,59 +28,57 @@ Note, we advise providers to keep schedule data independent from any experience 
 | Milestone validation    | The API's process to validate declarations submitted by providers for participants in standard training schedules       |
 
 
-### NPQ schedules and courses
+## Specialist and leadership schedules
 
-NPQ courses (for example. npq-leading-teaching) can vary in their length and the number of milestones they comprise. To account for this, and avoid schedules for each and every NPQ course, the DfE have developed schedule types that cover common courses.
+The API will automatically assign schedules to participants on leadership or specialist courses depending on when applications are accepted by providers.
 
-For example, if a participant is starting their NPQ in Specialist Leadership in February 2022, the provider needs to make sure the participant’s schedule is npq-leadership-spring and the cohort is 2021.
+NPQs in specialist areas of teaching will be assigned to one of the following: 
 
-<table>
-  <thead>
-    <tr><th>NPQ course</th><th>Available schedules</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        NPQSL<br/>
-        NPQH<br/>
-        NPQEL
-      </td>
-      <td>
-        npq-leadership-autumn<br/>
-        npq-leadership-spring
-      </td>
-    </tr>
-    <tr>
-      <td>
-          NPQLTD<br/>
-          NPQLT<br/>
-          NPQLBC
-      </td>
-      <td>
-        npq-specialist-autumn<br/>
-        npq-specialist-spring
-      </td>
-    </tr>
-  </tbody>
-</table>
+* `npq-specialist-autumn`
+* `npq-specialist-spring`
 
-### Additional Support Offer (ASO) schedule
+Leadership NPQs will be assigned to one of the following:
 
-The DfE has developed schedules for participants taking up the additional support offer.
+* `npq-leadership-autumn`
+* `npq-leadership-spring`
 
-The provider should make sure the ASO schedule aligns with when a participant starts their ASO. Unlike NPQs, ASO schedules include calendar months.
+Milestone validation is not applied to NPQ schedules. The API will accept any declarations submitted after the first milestone period has started for a given schedule.
 
-For example, for a participant starting their ASO in December 2021, the provider should make sure the participant is on the npq-aso-december schedule and the cohort is 2021.
+For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) after the schedule start date.
 
-The available ASO schedules are:
+## Early headship coaching offer (EHCO) schedules 
 
-* npq-aso-november
-* npq-aso-december
-* npq-aso-march
-* npq-aso-june
+EHCO participant schedules must reflect the month the participant starts their course. 
 
-### Milestone validation
+For example, for participants starting an EHCO in December 2021, providers must make sure they are assigned the `npq-aso-december` schedule.
 
-For NPQ schedules, the DfE does not apply any milestone validation. The API will accept any and all declarations once the first milestone period for the schedule has started.
+EHCO schedules include: 
 
-For example, if a participant is on an npq-leadership-autumn schedule, the API will accept any type of declaration, such as a start, retention-1 or completion, from 1 November 2021.
+* `npq-ehco-november`
+* `npq-ehco-december`
+* `npq-ehco-march`
+* `npq-ehco-june`
+
+### 2023 cohort 
+
+
+### 2022 cohort 
+
+
+### 2021 cohort 
+
+
+## Additional support offer (ASO) schedules  
+
+ASO participant schedules must reflect the month the participant starts their course. 
+
+For example, for participants starting their ASO in December 2021, providers must make sure they are assigned the `npq-aso-december` schedule.
+
+ASO schedules are only available for the 2021 cohort, and include: 
+
+* `npq-aso-november`
+* `npq-aso-december`
+* `npq-aso-march`
+* `npq-aso-june`
+
+### 2021 cohort
