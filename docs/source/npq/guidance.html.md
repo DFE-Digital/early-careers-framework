@@ -430,9 +430,9 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### Notify DfE a participant has changed their training schedule
 
-Participants follow leadership or specialist training schedules. 
+Participants follow leadership or specialist NPQ schedules. 
 
-All participants will be registered by default schedule depending on when their application is accepted. Providers must notify the DfE of any schedule change.
+All participants will be registered by default to a schedule depending on when their application is accepted. Providers must notify the DfE of any schedule change.
 
 ```
  PUT /api/v3/participants/npq/{id}/change-schedule
@@ -441,6 +441,10 @@ All participants will be registered by default schedule depending on when their 
 An example request body is listed below. 
 
 Successful requests will return a response body including updates to the `schedule_identifier` attribute.
+
+Note, the API will reject a schedule change if any `submitted`, `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
+
+For example, a participant is in the 2022 cohort on an `npq-specialist-autumn` schedule. Their provider has submitted a `started` declaration dated 1 October 2022. The provider tries to change the schedule to `npq-specialist-spring`. The API will reject the change because a spring schedule does not start until January, which is after the declaration date. The API returns an error message with instructions to void existing declarations first.
 
 For more detailed information see the specifications for this [notify that an NPQ participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-change-schedule-put).
 
@@ -458,6 +462,7 @@ For more detailed information see the specifications for this [notify that an NP
   }
 }
 ```
+
 
 ### View all participant outcomes
 
