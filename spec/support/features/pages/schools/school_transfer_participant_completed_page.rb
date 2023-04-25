@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolTransferParticipantCompletedPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/transfer/complete"
+    set_url "/schools/{slug}/participants/transfer/complete"
     set_primary_heading(/^.* has been added as (an ECT|a mentor)$/)
 
     def confirm_has_full_name(full_name)

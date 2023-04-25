@@ -43,14 +43,14 @@ module Pages
     #   end
     # end
 
-    def add_ect(full_name, trn, date_of_birth, email_address, start_date, mentor_full_name = nil)
+    def add_ect(full_name, trn, date_of_birth, email_address, _start_date, mentor_full_name = nil)
       choose_to_add_a_new_ect
 
       add_full_name full_name
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
       add_email_address full_name, email_address
-      add_start_date start_date
+      # add_start_date start_date
       choose_a_mentor mentor_full_name if mentor_full_name.present?
 
       confirm_and_add
