@@ -11,7 +11,7 @@
   end
 
   sl.row do |row|
-    row.key(text: "Email address")
+    row.key(text: "User email address")
     row.value(text: @participant_presenter.email)
     unless @participant_profile.user.get_an_identity_id.present?
       row.action(
