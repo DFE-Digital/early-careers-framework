@@ -62,7 +62,8 @@ class Schools::ParticipantsController < Schools::BaseController
       render :edit_mentor and return
     end
 
-    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id))
+    @mentor_form = ParticipantMentorForm.new(participant_mentor_form_params.merge(school_id: @school.id,
+                                                                                  user: @profile.user))
 
     if @mentor_form.valid?
       induction_record = @profile.induction_records.for_school(@school).latest
@@ -101,7 +102,9 @@ private
   end
 
   def build_mentor_form
-    @mentor_form = ParticipantMentorForm.new(mentor_id: @profile.mentor&.id, school_id: @school.id)
+    @mentor_form = ParticipantMentorForm.new(mentor_id: @profile.mentor&.id,
+                                             school_id: @school.id,
+                                             user: @profile.user)
   end
 
   def set_participant

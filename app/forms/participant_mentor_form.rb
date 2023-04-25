@@ -3,9 +3,10 @@
 class ParticipantMentorForm
   include ActiveModel::Model
 
-  attr_accessor :mentor_id, :school_id, :user_id
+  attr_accessor :mentor_id, :school_id, :user
 
   validates :mentor_id, presence: { message: I18n.t("errors.mentor.blank") }
+  validates :user, presence: true
   validate :mentor_exists
 
   def mentor
@@ -13,7 +14,7 @@ class ParticipantMentorForm
   end
 
   def available_mentors
-    school.mentors
+    @available_mentors ||= school.mentors - [user]
   end
 
 private
