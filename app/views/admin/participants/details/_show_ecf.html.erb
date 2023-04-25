@@ -67,7 +67,7 @@
 
   sl.row do |row|
     row.key(text: "Associated email addresses")
-    row.value(text: html_list(all_emails_associated_with_a_user(@user)))
+    row.value(text: html_list(all_emails_associated_with_a_user(@participant_profile.user)))
   end
 
   sl.row do |row|
