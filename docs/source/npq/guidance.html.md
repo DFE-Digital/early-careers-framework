@@ -220,7 +220,8 @@ There are several reasons why there might be a change in circumstance for an NPQ
 * now wants to take another course instead
 * now wants to fund their NPQ differently
 
-Where there has been a change in circumstance, providers should: 
+Where there has been a change in circumstance, providers should:
+
 * reject the application if the application `status` is `pending`
 * contact the DfE if the application `status` is `accepted` 
 
