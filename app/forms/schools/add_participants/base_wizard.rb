@@ -352,7 +352,7 @@ module Schools
         if transfer?
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
-          ::Cohort.containing_date(date: induction_start_date)
+          ::Cohort.containing_date(induction_start_date)
         elsif ::Cohort.current == ::Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
           ::Cohort.current
