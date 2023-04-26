@@ -11,7 +11,9 @@ module Admin
 
     def create
       impersonate_user(@user)
+      Rails.logger.info("Request referer: #{request.referer.inspect}")
       cookies[:impersonation_start_path] = request.referer
+      Rails.logger.info("Impersonation start path set in cookies as #{cookies[:impersonation_start_path]}")
       redirect_to after_sign_in_path_for(@user)
     end
 
