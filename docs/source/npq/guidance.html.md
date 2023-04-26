@@ -90,7 +90,9 @@ For more detailed information see the specifications for this [view multiple NPQ
 
 ### Accept an application 
 
-Providers should accept applications for those they want to enrol onto a course. Reasons to accept applications include (but are not limited to) the participant: 
+Providers should accept applications for those they want to enrol onto a course. Providers must inform applicants of the outcome of their successful NPQ application. 
+
+Reasons to accept applications include (but are not limited to) the participant: 
 
 * having funding confirmed
 * being suitable for their chosen NPQ course
@@ -148,11 +150,11 @@ For more detailed information see the specifications for this [accept an NPQ app
 }
 ```
 
-<div class="govuk-inset-text"> Providers must inform applicants of the outcome of their successful NPQ application. </div>
-
 ### Reject an application
 
-Providers should reject applications for those they do not want to enrol onto a course. Reasons to reject applications include (but are not limited to) the participant: 
+Providers should reject applications for those they do not want to enrol onto a course. Providers must inform applicants of the outcome of their unsuccessful NPQ application.
+
+Reasons to reject applications include (but are not limited to) the participant: 
 
 * having been unsuccessful in their application process
 * not having secured funding
@@ -208,8 +210,6 @@ For more detailed information see the specifications for this [accept an NPQ app
   }
 }
 ```
-
-<div class="govuk-inset-text"> Providers must inform applicants of the outcome of their unsuccessful NPQ application. </div>
 
 ### Update an application due to a change in circumstance
 
