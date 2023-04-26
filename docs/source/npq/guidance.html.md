@@ -104,7 +104,7 @@ POST /api/v3/npq-applications/{id}/accept
 
 The request parameter must include the `id` of the corresponding NPQ application. 
 
-An example response body is listed below. Successful requests will return a response body including updates `status` attribute. 
+An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute. 
 
 <div class="govuk-inset-text"> Note, the API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message. </div>
 
@@ -167,7 +167,7 @@ POST /api/v3/npq-applications/{id}/reject
 ```
 The request parameter must include the `id` of the corresponding NPQ application. 
 
-An example response body is listed below. Successful requests will return a response body including updates `status` attribute. 
+An example response body is listed below. Successful requests will return a response body including updates to the `status` attribute. 
 
 For more detailed information see the specifications for this [accept an NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-reject-post).
 
