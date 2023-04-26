@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Wizard
+class WizardRouter
   module RouteMappingExtension
     def wizard_scope(controller, route_key: controller, path: route_key.to_s.dasherize, &block)
       scope(as: route_key, controller:, path:) do

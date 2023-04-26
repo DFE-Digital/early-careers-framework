@@ -23,6 +23,7 @@ en:
     change_delivery_partner: the school wants to stay with %{lead_provider_name} but change their delivery partner, %{delivery_partner_name}
     change_to_core_induction_programme: the school wants to deliver their own programme using DfE-accredited materials
     change_to_design_our_own: the school wants to design and deliver their own programme based on the early career framework (ECF)
+    change_to_school_funded_fip: the school wants to design and deliver their own programme
 
   # Errors
   fail: "FAIL"
