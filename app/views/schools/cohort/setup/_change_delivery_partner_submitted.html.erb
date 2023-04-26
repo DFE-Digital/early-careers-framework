@@ -1,0 +1,15 @@
+<h2 class="govuk-heading-m">What happens next</h2>
+<p class="govuk-body">We’ll let <%= @wizard.previous_delivery_partner&.name %> know that your school wants to make a change for ECTs and
+  mentors starting in the 2022 to 2023 academic year.</p>
+<p class="govuk-body">They may contact you to confirm this.</p>
+
+<h2 class="govuk-heading-m">What to do next</h2>
+<p>As soon as possible:</p>
+<ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+  <li>confirm the change with your new lead provider</li>
+  <% unless @wizard.appropriate_body_appointed? %>
+    <li>tell us which appropriate body you’ve appointed for your ECTs</li>
+  <% end %>
+  <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
+  <li>use this service to tell us which mentor has been assigned to each ECT</li>
+</ul>

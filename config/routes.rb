@@ -603,6 +603,12 @@ Rails.application.routes.draw do
         get "roles", to: "roles#show", as: :participant_roles
       end
 
+      scope "cohorts/:cohort_id", as: :cohort, module: :cohort do
+        wizard_scope :setup, path: :setup do
+          get "/", to: "setup#show", as: :start, step: :what_we_need
+        end
+      end
+
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice
@@ -618,41 +624,6 @@ Rails.application.routes.draw do
 
           resources :partnerships, only: :index
           resource :programme, only: %i[edit], controller: "choose_programme"
-
-          resource :setup_school_cohort, path: "register-programme" do
-            get "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects", as: :expect_any_ects
-            put "does-your-school-expect-any-ects", to: "setup_school_cohort#expect_any_ects"
-
-            get "no-expected-ects", to: "setup_school_cohort#no_expected_ects"
-            get "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
-            put "how-will-you-run-training", to: "setup_school_cohort#how_will_you_run_training"
-
-            get "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
-            put "programme-confirmation", to: "setup_school_cohort#programme_confirmation"
-
-            get "training-confirmation", to: "setup_school_cohort#training_confirmation"
-
-            get "change-provider", to: "setup_school_cohort#change_provider"
-            put "change-provider", to: "setup_school_cohort#change_provider"
-
-            get "what-changes", to: "setup_school_cohort#what_changes"
-            put "what-changes", to: "setup_school_cohort#what_changes"
-
-            get "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
-            put "provider-relation-invalid", to: "setup_school_cohort#provider_relation_invalid"
-
-            get "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
-            put "use-different-delivery-partner", to: "setup_school_cohort#use_different_delivery_partner"
-
-            get "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
-            put "what-changes-confirmation", to: "setup_school_cohort#what_changes_confirmation"
-
-            get "what-changes-submitted", to: "setup_school_cohort#what_changes_submitted"
-
-            appropriate_body_selection_routes :setup_school_cohort
-
-            get "complete", to: "setup_school_cohort#complete"
-          end
 
           resources :transfer_out_participant, path: "transfer-out", only: [] do
             get "is-teacher-transferring", to: "transfer_out#check_transfer", as: :check_transfer
