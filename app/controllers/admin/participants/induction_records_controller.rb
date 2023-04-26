@@ -2,6 +2,7 @@
 
 module Admin::Participants
   class InductionRecordsController < Admin::BaseController
+    include Pundit::Authorization
     include RetrieveProfile
 
     before_action :load_induction_record, only: %i[edit_preferred_email update_preferred_email]
@@ -16,10 +17,14 @@ module Admin::Participants
     end
 
     def edit_preferred_email
+      authorize @induction_record
+
       @participant_identities = @participant_profile.user.participant_identities
     end
 
     def update_preferred_email
+      authorize @induction_record
+
       if @induction_record.update(induction_params)
         set_success_message(heading: "The induction records has been updated")
         redirect_to admin_participant_induction_records_path(@participant_profile)
