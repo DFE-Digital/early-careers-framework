@@ -223,15 +223,11 @@ The payment model for non-standard schedules follows the same principles; DfE wi
 
 Declarations submitted for participants in non-standard schedules do not need API milestone validation. 
 
-<div class="govuk-inset-text">
-
 **Providers should note:**
 
 * All participants will be registered by default to a standard schedule starting in September
 * Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
 * Providers will need to evidence any declarations and why a participant is following a non-standard induction 
-
-</div>
 
 ### Extended schedules
 
@@ -279,14 +275,10 @@ While the API will accept any declarations submitted after the first milestone s
 
 Contact ECF contract managers via email for more information on exact dates.
 
-<div class="govuk-inset-text">
-
-**Providers should note:**
+#### Providers should note:
 
 * Replacement schedules should only be used where a new mentor takes the place of a previous mentor (in supporting an ECT’s training), but where the new mentor is not also mentoring any other ECTs.
 * Replacement schedules should not be used if a mentor is already mentoring an ECT and takes on an additional role replacing a mentor for a second ECT. A mentor’s first ECT should take precedence in determining their schedule.
-
-</div>
 
 Mentors that are not already training ECTs and are replacing a mentor must be should have their [schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) to one for the following: 
 

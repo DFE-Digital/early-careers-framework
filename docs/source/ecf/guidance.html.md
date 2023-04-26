@@ -557,13 +557,10 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-<div class="govuk-inset-text">
-
 #### Providers should note:
+
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
-
-</div>
 
 ### Notify DfE a participant has changed their training schedule
 
@@ -596,9 +593,6 @@ For more detailed information see the specifications for this [notify that an EC
 }
 ```
 
-
-<div class="govuk-inset-text">
-
 #### Providers should note: 
 
 Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
@@ -608,9 +602,6 @@ Where this occurs, providers should:
 1. void the existing declarations (where declaration_date does not align with the new schedule)
 2. change the participant’s training schedule 
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
-
-</div>
-
 
 ### View data for all participants who have transferred 
 
