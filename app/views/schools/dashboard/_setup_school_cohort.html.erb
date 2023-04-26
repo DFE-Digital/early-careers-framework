@@ -20,4 +20,4 @@
     <p class="govuk-body">Do not include ECTs who started their training in the <%= Cohort.active_registration_cohort.previous.description %> academic year.</p>
     <p class="govuk-body">You can manage their training in the ‘<%= Cohort.active_registration_cohort.previous.description %>’ tab.</p>
 </div>
-<%= govuk_button_link_to("Start now", expect_any_ects_schools_setup_school_cohort_path(cohort_id: cohort.start_year)) %>
+<%= govuk_button_link_to("Start now", schools_cohort_setup_start_path(cohort_id: cohort.start_year)) %>

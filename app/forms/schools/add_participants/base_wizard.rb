@@ -114,7 +114,7 @@ module Schools
 
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
-        if cohort_to_place_participant == Cohort.active_registration_cohort
+        if cohort_to_place_participant == ::Cohort.active_registration_cohort
           expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         else
           schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
@@ -215,7 +215,7 @@ module Schools
       def needs_to_confirm_start_term?
         # are we in the next registration period (or pre-registration period) and the participant does not have
         # an induction start date
-        (mentor_participant? || induction_start_date.blank?) && !Cohort.within_automatic_assignment_period?
+        (mentor_participant? || induction_start_date.blank?) && !::Cohort.within_automatic_assignment_period?
       end
 
       ## appropriate bodies
@@ -352,21 +352,21 @@ module Schools
         if transfer?
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
-          Cohort.containing_date(date: induction_start_date)
-        elsif Cohort.current == Cohort.active_registration_cohort
+          ::Cohort.containing_date(date: induction_start_date)
+        elsif ::Cohort.current == ::Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
-          Cohort.current
+          ::Cohort.current
         # elsif mentor_participant? || sit_mentor?
-        #   Cohort.current
+        #   ::Cohort.current
         elsif start_term == "summer"
-          Cohort.current
+          ::Cohort.current
         # we're in the registration window prior to 1/9
         elsif start_term.in? %w[autumn spring]
           # we're in the registration window prior to 1/9 and chose autumn or spring the following year
-          Cohort.next
+          ::Cohort.next
         else
           # default to now - but should ask the start_term question if not already asked
-          Cohort.current
+          ::Cohort.current
         end
       end
 
