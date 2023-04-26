@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_19_084407) do
+ActiveRecord::Schema.define(version: 2023_04_20_082729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -59,7 +59,6 @@ ActiveRecord::Schema.define(version: 2023_04_19_084407) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
-    t.boolean "super_user", default: false
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
@@ -652,7 +651,7 @@ ActiveRecord::Schema.define(version: 2023_04_19_084407) do
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying])::text[]))"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text, ('clawed_back'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
@@ -1244,5 +1243,155 @@ ActiveRecord::Schema.define(version: 2023_04_19_084407) do
               WHEN (((latest_induction_records.training_status)::text <> 'active'::text) AND ((latest_induction_records.induction_status)::text = 'active'::text)) THEN 3
               ELSE 4
           END)), participant_profiles.created_at DESC;
+  SQL
+  create_view "training_record_states", materialized: true, sql_definition: <<-SQL
+      SELECT training_record_states.participant_profile_id,
+      training_record_states.induction_record_id,
+      training_record_states.school_id,
+      training_record_states.lead_provider_id,
+      training_record_states.delivery_partner_id,
+      min(training_record_states.changed_at) AS changed_at,
+      training_record_states.validation_state,
+      training_record_states.training_eligibility_state,
+      training_record_states.fip_funding_eligibility_state,
+      training_record_states.training_state,
+          CASE
+              WHEN (training_record_states.training_state = ANY (ARRAY['withdrawn_programme'::text, 'withdrawn_training'::text, 'deferred_training'::text, 'completed_training'::text, 'leaving'::text, 'left'::text])) THEN training_record_states.training_state
+              WHEN (training_record_states.validation_state <> 'valid'::text) THEN training_record_states.validation_state
+              WHEN (NOT (training_record_states.training_eligibility_state = ANY (ARRAY['eligible_for_mentor_training'::text, 'eligible_for_mentor_training_no_partner'::text, 'eligible_for_induction_training'::text, 'eligible_for_induction_training_no_partner'::text, 'not_yet_mentoring'::text]))) THEN training_record_states.training_eligibility_state
+              WHEN (((training_record_states.training_programme)::text = 'full_induction_programme'::text) AND (NOT (training_record_states.fip_funding_eligibility_state = ANY (ARRAY['eligible_for_mentor_funding'::text, 'eligible_for_mentor_funding_primary'::text, 'eligible_for_fip_funding'::text])))) THEN training_record_states.fip_funding_eligibility_state
+              ELSE training_record_states.training_state
+          END AS record_state
+     FROM ( SELECT participant_profiles.id AS participant_profile_id,
+              induction_records.id AS induction_record_id,
+                  CASE
+                      WHEN (partnerships.school_id IS NOT NULL) THEN partnerships.school_id
+                      ELSE school_cohorts.school_id
+                  END AS school_id,
+              partnerships.lead_provider_id,
+              partnerships.delivery_partner_id,
+              induction_programmes.training_programme,
+              ( SELECT max(v.x) AS max
+                     FROM ( VALUES (induction_records.start_date), (participant_profiles.updated_at), (ecf_participant_eligibilities.updated_at), (ecf_participant_validation_data.updated_at), (teacher_profiles.updated_at), (emails.updated_at)) v(x)) AS changed_at,
+                  CASE
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'different_trn'::text)) THEN 'different_trn'::text
+                      WHEN ((teacher_profiles.trn IS NULL) AND (ecf_participant_validation_data.* IS NULL)) THEN
+                      CASE
+                          WHEN ((emails.status)::text = 'delivered'::text) THEN 'request_for_details_delivered'::text
+                          WHEN ((emails.status)::text = ANY (ARRAY['permanent-failure'::text, 'technical-failure'::text, 'temporary-failure'::text])) THEN 'request_for_details_failed'::text
+                          WHEN ((emails.status)::text = 'submitted'::text) THEN 'request_for_details_submitted'::text
+                          ELSE 'validation_not_started'::text
+                      END
+                      WHEN (ecf_participant_validation_data.api_failure = true) THEN 'internal_error'::text
+                      WHEN (teacher_profiles.trn IS NULL) THEN 'tra_record_not_found'::text
+                      ELSE 'valid'::text
+                  END AS validation_state,
+                  CASE
+                      WHEN ((((participant_profiles.type)::text = 'ParticipantProfile::ECT'::text) AND (ecf_participant_eligibilities.* IS NULL)) OR ((teacher_profiles.trn IS NOT NULL) AND (ecf_participant_eligibilities.* IS NULL))) THEN 'checks_not_complete'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'active_flags'::text)) THEN 'active_flags'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'active_flags'::text)) THEN 'not_allowed'::text
+                      WHEN ((participant_profiles.type)::text = 'ParticipantProfile::Mentor'::text) THEN
+                      CASE
+                          WHEN ((mentees.total > 0) AND ((induction_programmes.training_programme)::text = 'full_induction_programme'::text) AND (partnerships.lead_provider_id IS NULL)) THEN 'eligible_for_mentor_training_no_partner'::text
+                          WHEN (mentees.total > 0) THEN 'eligible_for_mentor_training'::text
+                          ELSE 'not_yet_mentoring'::text
+                      END
+                      WHEN ((participant_profiles.profile_duplicity)::text = 'secondary'::text) THEN 'secondary_profile'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'duplicate_profile'::text)) THEN 'duplicate_profile'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'no_qts'::text)) THEN 'not_qualified'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'exempt_from_induction'::text)) THEN 'exempt_from_induction'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'previous_induction'::text)) THEN 'previous_induction'::text
+                      WHEN ((((participant_profiles.type)::text = 'ParticipantProfile::Mentor'::text) AND (ecf_participant_validation_data.trn IS NOT NULL) AND (teacher_profiles.trn IS NULL)) OR (((participant_profiles.type)::text = 'ParticipantProfile::ECT'::text) AND (teacher_profiles.trn IS NULL))) THEN 'tra_record_not_found'::text
+                      WHEN (((induction_programmes.training_programme)::text = 'full_induction_programme'::text) AND (partnerships.lead_provider_id IS NULL)) THEN 'eligible_for_induction_training_no_partner'::text
+                      ELSE 'eligible_for_induction_training'::text
+                  END AS training_eligibility_state,
+                  CASE
+                      WHEN ((((participant_profiles.type)::text = 'ParticipantProfile::ECT'::text) AND (ecf_participant_eligibilities.* IS NULL)) OR ((teacher_profiles.trn IS NOT NULL) AND (ecf_participant_eligibilities.* IS NULL))) THEN 'checks_not_complete'::text
+                      WHEN (((participant_profiles.type)::text = 'ParticipantProfile::ECT'::text) AND ((ecf_participant_eligibilities.status)::text = 'eligible'::text)) THEN 'eligible_for_fip_funding'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'active_flags'::text)) THEN 'active_flags'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'active_flags'::text)) THEN 'not_allowed'::text
+                      WHEN (((participant_profiles.type)::text = 'ParticipantProfile::Mentor'::text) AND ((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'previous_participation'::text)) THEN
+                      CASE
+                          WHEN ((participant_profiles.profile_duplicity)::text = 'secondary'::text) THEN 'ineligible_ero_secondary'::text
+                          WHEN ((participant_profiles.profile_duplicity)::text = 'primary'::text) THEN 'ineligible_ero_primary'::text
+                          WHEN ((ecf_participant_eligibilities.reason)::text = 'duplicate_profile'::text) THEN 'ineligible_ero_secondary'::text
+                          ELSE 'ineligible_ero'::text
+                      END
+                      WHEN ((participant_profiles.type)::text = 'ParticipantProfile::Mentor'::text) THEN
+                      CASE
+                          WHEN ((participant_profiles.profile_duplicity)::text = 'secondary'::text) THEN 'ineligible_secondary'::text
+                          WHEN ((participant_profiles.profile_duplicity)::text = 'primary'::text) THEN 'eligible_for_mentor_funding_primary'::text
+                          WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'duplicate_profile'::text)) THEN 'ineligible_secondary'::text
+                          ELSE 'eligible_for_mentor_funding'::text
+                      END
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'no_induction'::text)) THEN 'no_induction_start'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'no_qts'::text)) THEN 'not_qualified'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'duplicate_profile'::text)) THEN 'duplicate_profile'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'exempt_from_induction'::text)) THEN 'exempt_from_induction'::text
+                      WHEN (((ecf_participant_eligibilities.status)::text = 'ineligible'::text) AND ((ecf_participant_eligibilities.reason)::text = 'previous_induction'::text)) THEN 'previous_induction'::text
+                      WHEN ((((participant_profiles.type)::text = 'ParticipantProfile::Mentor'::text) AND (ecf_participant_validation_data.trn IS NOT NULL) AND (teacher_profiles.trn IS NULL)) OR (((participant_profiles.type)::text = 'ParticipantProfile::ECT'::text) AND (teacher_profiles.trn IS NULL))) THEN 'tra_record_not_found'::text
+                      ELSE 'eligible_for_fip_funding'::text
+                  END AS fip_funding_eligibility_state,
+                  CASE
+                      WHEN (((induction_records.induction_status)::text = 'withdrawn'::text) OR ((induction_records.* IS NULL) AND (participant_profiles.status = 'withdrawn'::text))) THEN 'withdrawn_programme'::text
+                      WHEN (((induction_records.training_status)::text = 'withdrawn'::text) OR ((induction_records.* IS NULL) AND ((participant_profiles.training_status)::text = 'withdrawn'::text))) THEN 'withdrawn_training'::text
+                      WHEN (((induction_records.training_status)::text = 'deferred'::text) OR ((induction_records.* IS NULL) AND ((participant_profiles.training_status)::text = 'deferred'::text))) THEN 'deferred_training'::text
+                      WHEN (((induction_records.induction_status)::text = 'completed'::text) OR ((induction_records.* IS NULL) AND (participant_profiles.status = 'completed'::text))) THEN 'completed_training'::text
+                      WHEN ((induction_records.induction_status)::text = 'changed'::text) THEN 'no_longer_involved'::text
+                      WHEN (((induction_records.induction_status)::text = 'leaving'::text) AND (induction_records.end_date >= CURRENT_DATE)) THEN 'leaving'::text
+                      WHEN (((induction_records.induction_status)::text = 'leaving'::text) AND (induction_records.end_date < CURRENT_DATE)) THEN 'left'::text
+                      WHEN (((induction_records.induction_status)::text = 'active'::text) AND (induction_records.start_date > CURRENT_DATE)) THEN 'joining'::text
+                      WHEN ((participant_profiles.type)::text = 'ParticipantProfile::Mentor'::text) THEN
+                      CASE
+                          WHEN ((induction_programmes.training_programme)::text = 'full_induction_programme'::text) THEN
+                          CASE
+                              WHEN ((mentees.total > 0) AND (partnerships.lead_provider_id IS NULL)) THEN 'active_fip_mentoring_no_partner'::text
+                              WHEN ((mentees.total > 0) AND ((ecf_participant_eligibilities.reason)::text = 'previous_participation'::text)) THEN 'active_fip_mentoring_ero'::text
+                              WHEN (mentees.total > 0) THEN 'active_fip_mentoring'::text
+                              WHEN (partnerships.lead_provider_id IS NULL) THEN 'not_yet_mentoring_fip_no_partner'::text
+                              WHEN ((ecf_participant_eligibilities.reason)::text = 'previous_participation'::text) THEN 'not_yet_mentoring_fip_ero'::text
+                              ELSE 'not_yet_mentoring_fip'::text
+                          END
+                          ELSE
+                          CASE
+                              WHEN ((mentees.total > 0) AND ((ecf_participant_eligibilities.reason)::text = 'previous_participation'::text)) THEN 'active_cip_mentoring_ero'::text
+                              WHEN (mentees.total > 0) THEN 'active_cip_mentoring'::text
+                              WHEN ((ecf_participant_eligibilities.reason)::text = 'previous_participation'::text) THEN 'not_yet_mentoring_cip_ero'::text
+                              ELSE 'not_yet_mentoring_cip'::text
+                          END
+                      END
+                      ELSE
+                      CASE
+                          WHEN (((induction_programmes.training_programme)::text = 'full_induction_programme'::text) AND (partnerships.lead_provider_id IS NULL)) THEN 'registered_for_fip_no_partner'::text
+                          WHEN (((induction_programmes.training_programme)::text = 'full_induction_programme'::text) AND ((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'no_induction'::text)) THEN 'registered_for_fip_training'::text
+                          WHEN ((induction_programmes.training_programme)::text = 'full_induction_programme'::text) THEN 'active_fip_training'::text
+                          WHEN (((induction_programmes.training_programme)::text = 'core_induction_programme'::text) AND ((ecf_participant_eligibilities.status)::text = 'manual_check'::text) AND ((ecf_participant_eligibilities.reason)::text = 'no_induction'::text)) THEN 'registered_for_cip_training'::text
+                          WHEN ((induction_programmes.training_programme)::text = 'core_induction_programme'::text) THEN 'active_cip_training'::text
+                          ELSE 'active_diy_training'::text
+                      END
+                  END AS training_state
+             FROM (((((((((((participant_profiles
+               LEFT JOIN induction_records ON ((induction_records.participant_profile_id = participant_profiles.id)))
+               LEFT JOIN induction_programmes ON ((induction_programmes.id = induction_records.induction_programme_id)))
+               LEFT JOIN appropriate_bodies ON ((appropriate_bodies.id = induction_records.appropriate_body_id)))
+               LEFT JOIN partnerships ON ((partnerships.id = induction_programmes.partnership_id)))
+               LEFT JOIN school_cohorts ON ((school_cohorts.id = induction_programmes.school_cohort_id)))
+               LEFT JOIN ecf_participant_validation_data ON ((ecf_participant_validation_data.participant_profile_id = participant_profiles.id)))
+               LEFT JOIN ecf_participant_eligibilities ON ((ecf_participant_eligibilities.participant_profile_id = participant_profiles.id)))
+               LEFT JOIN teacher_profiles ON ((teacher_profiles.id = participant_profiles.teacher_profile_id)))
+               LEFT JOIN email_associations ON (((email_associations.object_id = participant_profiles.id) AND ((email_associations.object_type)::text = 'ParticipantProfile'::text))))
+               LEFT JOIN emails ON (((emails.id = email_associations.email_id) AND ('request_for_details'::text = ANY ((emails.tags)::text[])))))
+               LEFT JOIN ( SELECT induction_records_1.mentor_profile_id,
+                      count(*) AS total
+                     FROM induction_records induction_records_1
+                    GROUP BY induction_records_1.mentor_profile_id, induction_records_1.participant_profile_id) mentees ON ((mentees.mentor_profile_id = participant_profiles.id)))) training_record_states
+    GROUP BY training_record_states.participant_profile_id, training_record_states.induction_record_id, training_record_states.school_id, training_record_states.lead_provider_id, training_record_states.delivery_partner_id, training_record_states.validation_state, training_record_states.training_eligibility_state, training_record_states.fip_funding_eligibility_state, training_record_states.training_state,
+          CASE
+              WHEN (training_record_states.training_state = ANY (ARRAY['withdrawn_programme'::text, 'withdrawn_training'::text, 'deferred_training'::text, 'completed_training'::text, 'leaving'::text, 'left'::text])) THEN training_record_states.training_state
+              WHEN (training_record_states.validation_state <> 'valid'::text) THEN training_record_states.validation_state
+              WHEN (NOT (training_record_states.training_eligibility_state = ANY (ARRAY['eligible_for_mentor_training'::text, 'eligible_for_mentor_training_no_partner'::text, 'eligible_for_induction_training'::text, 'eligible_for_induction_training_no_partner'::text, 'not_yet_mentoring'::text]))) THEN training_record_states.training_eligibility_state
+              WHEN (((training_record_states.training_programme)::text = 'full_induction_programme'::text) AND (NOT (training_record_states.fip_funding_eligibility_state = ANY (ARRAY['eligible_for_mentor_funding'::text, 'eligible_for_mentor_funding_primary'::text, 'eligible_for_fip_funding'::text])))) THEN training_record_states.fip_funding_eligibility_state
+              ELSE training_record_states.training_state
+          END;
   SQL
 end

@@ -41,6 +41,7 @@ class ParticipantProfile < ApplicationRecord
   has_many :participant_profile_schedules
   has_many :participant_profile_states
   has_many :validation_decisions, class_name: "ProfileValidationDecision"
+  has_many :training_record_states, inverse_of: :participant_profile
 
   has_one :ecf_participant_eligibility
   has_one :ecf_participant_validation_data

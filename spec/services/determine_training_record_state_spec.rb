@@ -74,8 +74,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "validation_not_started",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_fip_training",
                          "validation_not_started"
       end
@@ -85,8 +85,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "request_for_details_submitted",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_fip_training",
                          "request_for_details_submitted"
       end
@@ -96,8 +96,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "request_for_details_failed",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_fip_training",
                          "request_for_details_failed"
       end
@@ -107,8 +107,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "request_for_details_delivered",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_fip_training",
                          "request_for_details_delivered"
       end
@@ -118,8 +118,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "internal_error",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_fip_training",
                          "internal_error"
       end
@@ -129,8 +129,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "tra_record_not_found",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_fip_training",
                          "tra_record_not_found"
       end
@@ -454,8 +454,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "validation_not_started",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_cip_training",
                          "validation_not_started"
       end
@@ -465,8 +465,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "request_for_details_submitted",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_cip_training",
                          "request_for_details_submitted"
       end
@@ -476,8 +476,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "request_for_details_failed",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_cip_training",
                          "request_for_details_failed"
       end
@@ -487,8 +487,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "request_for_details_delivered",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_cip_training",
                          "request_for_details_delivered"
       end
@@ -498,8 +498,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "internal_error",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_cip_training",
                          "internal_error"
       end
@@ -509,8 +509,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
 
         include_examples "determines states as",
                          "tra_record_not_found",
-                         "tra_record_not_found",
-                         "tra_record_not_found",
+                         "checks_not_complete",
+                         "checks_not_complete",
                          "active_cip_training",
                          "tra_record_not_found"
       end
@@ -946,8 +946,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
-                         "active_fip_mentoring",
-                         "active_fip_mentoring"
+                         "active_fip_mentoring_ero",
+                         "active_fip_mentoring_ero"
       end
 
       context "and they have had no eligibility checks performed yet" do
@@ -1326,8 +1326,8 @@ RSpec.describe DetermineTrainingRecordState, :with_default_schedules do
                          "valid",
                          "eligible_for_mentor_training",
                          "eligible_for_mentor_funding",
-                         "active_cip_mentoring",
-                         "active_cip_mentoring"
+                         "active_cip_mentoring_ero",
+                         "active_cip_mentoring_ero"
       end
 
       context "and they have had no eligibility checks performed yet" do
