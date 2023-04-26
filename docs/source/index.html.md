@@ -7,15 +7,11 @@ weight: 1
 
 The Department of Education (DfE) has developed an API for the Manage teacher continuing professional development service. 
 
-The API enables lead providers to view, submit and update data associated with Early Career Framework (ECF) based training and national professional qualifications (NPQs). 
+The API lets lead providers view, submit and update data associated with Early Career Framework (ECF) based training and national professional qualifications (NPQs). The data submitted is used to facilitate payment from the DfE to providers.
 
-The data submitted is used to facilitate appropriate payment from the DfE to providers.
+Once an ECF or NPQ participant has been registered to the service, data associated with them becomes available via the API.
 
-## What does the API do? 
-
-Once an ECF or NPQ participant has been registered to the service, data associated with them becomes available via the API. 
-
-Providers can integrate with the API to view, submit and update various kinds of data. For example, providers can view and update participant details, or notify DfE that they have completed training by submitting a declaration.
+Once integrated with the API, providers can, for example, view and update participant details, or notify DfE that they have completed training by submitting a declaration.
 
 ## API versions and updates
 
