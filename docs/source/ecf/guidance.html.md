@@ -181,7 +181,9 @@ Update an existing partnership with new delivery partner details for a given coh
 
 An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids). 
 
-<div class="govuk-inset-text">Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)</div>
+<div class="govuk-inset-text">Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. </div>
+
+[Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 
 Successful requests will return a response body with updates included. 
 
