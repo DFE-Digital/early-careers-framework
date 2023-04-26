@@ -40,7 +40,6 @@ RSpec.describe Participants::SyncDqtInductionStartDate, :with_default_schedules,
                               .and not_change(participant_profile, :induction_start_date)
                                      .and not_change(SyncDqtInductionStartDateError, :count)
     end
-  end
 
   context "when the participant is a mentor" do
     let(:dqt_induction_start_date) { Date.new(2021, 8, 31) }
@@ -108,17 +107,17 @@ RSpec.describe Participants::SyncDqtInductionStartDate, :with_default_schedules,
       end
     end
 
-    it "updates the error if the process fails" do
-      expect {
-        described_class.call(dqt_induction_start_date, participant_profile)
-      }.to not_change(participant_profile, :induction_start_date)
-       .and not_change { participant_profile.induction_records.latest.cohort.start_year }
+    context "when the DQT induction start date's related cohort and the participant's cohort are the same" do
+      let(:dqt_induction_start_date) { Date.new(2022, 10, 2) }
+      let(:participant_cohort_start_year) { 2022 }
 
-      error = SyncDqtInductionStartDateError.find_by(participant_profile:)
-      expect(error).to be_present
-      expect(error.error_message).not_to eql("test message")
+      it "changes the participant's induction start date only" do
+        expect { subject }.to change(participant_profile, :induction_start_date)
+                                .to(dqt_induction_start_date)
+                                .and not_change { participant_profile.induction_records.latest.cohort }
+                                       .and not_change(SyncDqtInductionStartDateError, :count)
+      end
     end
-  end
 
   context "when the participant was added to the service from 1st Jun 2023" do
     let(:participant_created_at) { Date.new(2023, 6, 1) }
