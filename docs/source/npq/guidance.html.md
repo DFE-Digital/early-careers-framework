@@ -41,7 +41,7 @@ To prevent a participant being enrolled onto the same course with more than one 
 * **automatically update the `status` to `rejected` for all other applications:** If someone has made multiple applications with different providers (within a given cohort) and a provider accepts one, the API will update the `status` of all other applications with other providers to `rejected`
 * **return an error message for new applications:** If a participant has had an application accepted by a provider, but then makes a new application for the same course with a new provider, the API will return an error message if the new provider tries to accept the new application
 
-<div class="govuk-inset-text"> Providers must accept or reject applications before they start the course. They must inform applicants of the outcome of their NPQ applications, regardless of whether their course application has been accepted or rejected. </div>
+<div class="govuk-inset-text"> Providers must accept or reject applications before participants start a course. Providers must inform applicants of the outcome regardless of whether the application has been accepted or rejected. </div>
 
 ### View all applications
 
