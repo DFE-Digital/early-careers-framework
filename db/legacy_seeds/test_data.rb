@@ -96,11 +96,12 @@ School.find_or_create_by!(urn: "000005") do |school|
   school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Test Delivery Partner")
   partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner:, school:, lead_provider:, challenge_deadline: 2.weeks.from_now)
-  InductionProgramme.find_or_create_by!(
+  ip = InductionProgramme.find_or_create_by!(
     school_cohort:,
     partnership:,
     training_programme: "full_induction_programme",
   )
+  school_cohort.update!(default_induction_programme: ip)
   PartnershipNotificationEmail.find_or_create_by!(
     partnership:,
     sent_to: "cpd-test+tutor-2#{DOMAIN}",
@@ -156,11 +157,13 @@ end
     school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "full_induction_programme")
     delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
     partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner:, school:, lead_provider:, challenge_deadline: 2.weeks.from_now)
-    InductionProgramme.find_or_create_by!(
+    ip = InductionProgramme.find_or_create_by!(
       school_cohort:,
       partnership:,
       training_programme: "full_induction_programme",
     )
+    school_cohort.update!(default_induction_programme: ip)
+
     PartnershipNotificationEmail.find_or_create_by!(
       partnership:,
       sent_to: "cpd-test+tutor-3#{DOMAIN}",
@@ -193,11 +196,13 @@ School.find_or_create_by!(urn: "000006") do |school|
   school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "full_induction_programme")
   delivery_partner = DeliveryPartner.find_or_create_by!(name: "Mega Delivery Partner")
   partnership = Partnership.find_or_create_by!(cohort: Cohort.current, delivery_partner:, school:, lead_provider:)
-  InductionProgramme.find_or_create_by!(
+  ip = InductionProgramme.find_or_create_by!(
     school_cohort:,
     partnership:,
     training_programme: "full_induction_programme",
   )
+  school_cohort.update!(default_induction_programme: ip)
+
   PartnershipNotificationEmail.find_or_create_by!(
     partnership:,
     sent_to: "cpd-test+tutor-3#{DOMAIN}",
@@ -454,11 +459,12 @@ Induction::Enrol.call(participant_profile:, induction_programme:)
     school_cohort = SchoolCohort.find_or_create_by!(cohort: Cohort.current, school:, induction_programme_choice: "core_induction_programme")
     partnership = Partnership.find_or_create_by!(cohort: school_cohort.cohort, school:, lead_provider:, delivery_partner:)
 
-    InductionProgramme.find_or_create_by!(
+    ip = InductionProgramme.find_or_create_by!(
       school_cohort:,
       partnership:,
       training_programme: "full_induction_programme",
     )
+    school_cohort.update!(default_induction_programme: ip)
   end
 end
 

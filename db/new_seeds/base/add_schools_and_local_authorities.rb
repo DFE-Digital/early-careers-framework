@@ -11,7 +11,20 @@ def add_school_to_local_authority(school:, local_authority:, nomination_email: f
     FactoryBot.create(:seed_induction_coordinator_profiles_school, induction_coordinator_profile:, school:)
 
     @cohorts.sample(@cohorts.length).each do |cohort|
-      FactoryBot.create(:seed_school_cohort, school:, cohort:)
+      school_cohort = FactoryBot.create(:seed_school_cohort, school:, cohort:)
+      if school_cohort.fip?
+        induction_programme = NewSeeds::Scenarios::InductionProgrammes::Fip.new(school_cohort:)
+          .build
+          .with_partnership
+          .induction_programme
+        school_cohort.update!(default_induction_programme: induction_programme)
+      elsif school_cohort.cip?
+        induction_programme = NewSeeds::Scenarios::InductionProgrammes::Cip.new(school_cohort:)
+          .build
+          .with_core_induction_programme
+          .induction_programme
+        school_cohort.update!(default_induction_programme: induction_programme)
+      end
     end
 
     @lead_providers.sample.tap do |lead_provider|
