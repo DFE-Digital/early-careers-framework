@@ -28,7 +28,7 @@ Application states are defined by the `status` attribute.
 
 A application’s `status` value will determine whether a provider can: 
 
-* [accept or reject applications](/LINK NEEDED)
+* [accept or reject applications](/api-reference/npq/guidance/#view-accept-or-reject-npq-applications)
 * [submit a declaration](/api-reference/npq/guidance/#submit-view-and-void-declarations). For example, notifying DfE that a participant has started their training
 
 | status | Definition | Action |

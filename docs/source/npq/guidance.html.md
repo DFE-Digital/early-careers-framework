@@ -234,11 +234,11 @@ For example, if a participant registers for an NPQ course but then decides to ch
 
 Once a provider has accepted an application, they can view and update data to notify DfE that a participant has: 
 
-* [deferred their course](LINK NEEDED)
-* [resumed their course](LINK NEEDED)
-* [withdrawn from their course](LINK NEEDED)
-* [changed their course schedule](LINK NEEDED)
-* [an updated course outcome](LINK NEEDED)
+* [deferred their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-taken-a-break-deferred-from-training)
+* [resumed their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-resumed-training)
+* [withdrawn from their course](/api-reference/npq/guidance/#notify-dfe-a-participant-has-withdrawn-from-training)
+* [changed their course schedule](/api-reference/npq/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
+* [an updated course outcome](/api-reference/npq/guidance/#update-a-participants-outcomes)
 
 ### View all participant data
 
@@ -462,7 +462,6 @@ For more detailed information see the specifications for this [notify that an NP
   }
 }
 ```
-
 
 ### View all participant outcomes
 
