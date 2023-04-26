@@ -169,6 +169,7 @@ Participants starting their specialist NPQ course after 1 January should be assi
 | Retention Point 1      | 1 Jan 2023     | N/A     | `retained-1`    | 1 Jan 2023       | 
 | Retention Point 2      | 1 Jan 2023     | N/A     | `retained-2`    | 1 Jan 2023       | 
 | Participant Completion      | 1 Jan 2023     | N/A      | `completed`    | 1 Jan 2023      | 
+
 #### 2021 cohort
 
 | Milestone      | Start date     | Milestone date      | Declaration type    | Payment date      | 
