@@ -70,16 +70,6 @@ RSpec.describe Induction::AmendParticipantCohort do
       end
     end
 
-    context "when the target_cohort_start_year equals the source_cohort_start_year" do
-      let(:target_cohort_start_year) { source_cohort_start_year }
-
-      it "returns false and set errors" do
-        expect(form.save).to be_falsey
-        expect(form.errors.first.attribute).to eq(:target_cohort_start_year)
-        expect(form.errors.first.message).to eq("Invalid value. Must be different to #{source_cohort_start_year}")
-      end
-    end
-
     context "when the target cohort has not been setup in the service" do
       it "returns false and set errors" do
         expect(form.save).to be_falsey
@@ -104,7 +94,7 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                     programme_choice: source_school_cohort.induction_programme_choice)
       end
 
-      context "when their is no participant" do
+      context "when there is no participant" do
         let(:participant_profile) {}
 
         it "returns false and set errors" do
@@ -178,7 +168,7 @@ RSpec.describe Induction::AmendParticipantCohort do
                                                       programme_choice: target_school_cohort.induction_programme_choice)
         end
 
-        context "when the transfer cannot be persisted" do
+        context "when the cohort change cannot be persisted" do
           before do
             allow(form).to receive(:start_date)
           end
@@ -223,6 +213,50 @@ RSpec.describe Induction::AmendParticipantCohort do
             it "executes the transfer, returns true and set no errors" do
               expect(form.save).to be_truthy
               expect(form.errors).to be_empty
+            end
+          end
+        end
+
+        context "when some of the historical records are not in the target cohort" do
+          let(:historical_school_source_cohort) { create(:school_cohort, cohort: source_cohort) }
+          let(:historical_school) { historical_school_source_cohort.school }
+          let!(:induction_programme) { create(:induction_programme, school_cohort: historical_school_source_cohort) }
+          let!(:historical_record) { create(:induction_record, participant_profile:, induction_programme:) }
+
+          context "when the historical school has not setup the target cohort" do
+            it "returns false and set errors" do
+              expect(form.save).to be_falsey
+              expect(form.errors.first.attribute).to eq(:historical_records)
+              expect(form.errors.first.message)
+                .to eq("#{target_cohort_start_year} academic year not setup by school #{historical_school.name}")
+            end
+          end
+
+          context "when the historical school has not setup default induction programme for the target cohort" do
+            let!(:historical_school_target_cohort) do
+              create(:school_cohort, cohort: target_cohort, school: historical_school)
+            end
+
+            it "returns false and set errors" do
+              expect(form.save).to be_falsey
+              expect(form.errors.first.attribute).to eq(:historical_records)
+              expect(form.errors.first.message)
+                .to eq("No default induction programme set for #{target_cohort_start_year} academic year by school #{historical_school.name}")
+            end
+          end
+
+          context "when the historical school is all setup for the target cohort" do
+            let!(:historical_school_target_cohort) do
+              create(:school_cohort, :with_induction_programme, cohort: target_cohort, school: historical_school)
+            end
+
+            it "moves all the historical records to the target cohort" do
+              expect(form.save).to be_truthy
+              expect(form.errors).to be_empty
+
+              participant_profile.reload.induction_records.each do |induction_record|
+                expect(induction_record.cohort_start_year).to eq(target_cohort_start_year)
+              end
             end
           end
         end

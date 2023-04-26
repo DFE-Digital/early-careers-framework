@@ -277,6 +277,24 @@ en:
               invalid: "Please enter a valid end date"
               in_future: "End date cannot be in the future"
               before_start_date: "End date must be after start date"
+        induction/amend_participant_cohort:
+          attributes:
+            historical_records:
+              no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
+              school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
+            participant_declarations:
+              exist: "The participant must have no declarations"
+              billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
+              completed: "The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome"
+            participant_profile:
+              blank: "Not registered"
+              not_active: "Not active"
+            source_cohort_start_year:
+              invalid: "Invalid value. Must be an integer between %{start} and %{end}"
+            target_cohort_start_year:
+              excluded: "Invalid value. Must be different to %{year}"
+              invalid: "Invalid value. Must be an integer between %{start} and %{end}"
+
         nominate_induction_tutor_form:
           attributes:
             email:

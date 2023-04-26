@@ -1,3 +1,5 @@
+<% content_for :before_content, govuk_back_link(text: "Back", href: admin_participant_cohorts_path) %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for(@amend_participant_cohort, url: admin_participant_change_cohort_path(@participant_profile), method: "put") do |f| %>
