@@ -14,7 +14,7 @@
 
       <%= govuk_link_to "They have a different appropriate body", url_for({ action: :change_appropriate_body }) %>
 
-      <%= form_with model: @form, url: url_for(action: :update), scope: "add_participant_wizard", method: :put do |f| %>
+      <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.form_scope, method: :put do |f| %>
         <%= f.govuk_error_summary %>
         <%= f.hidden_field :appropriate_body_confirmed, value: "1" %>
         <%= f.govuk_submit "Confirm", classes: "govuk-!-margin-top-6" %>

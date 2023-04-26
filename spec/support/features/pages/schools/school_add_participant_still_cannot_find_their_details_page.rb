@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolAddParticipantStillCannotFindTheirDetailsPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/still-cannot-find-their-details"
+    set_url "/schools/{slug}/participants/who/still-cannot-find-their-details"
     set_primary_heading(/\AWe still cannot find (.*)’s record\z/)
 
     def cant_add_participant

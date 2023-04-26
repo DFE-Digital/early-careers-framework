@@ -24,11 +24,10 @@ module Schools
                :same_provider?, :was_withdrawn_participant?, :complete?, :start_date, :start_term, :last_visited_step,
                :full_name, to: :data_store
 
-      def initialize(current_step:, data_store:, current_user:, school_cohort: nil, school: nil, submitted_params: {})
+      def initialize(current_step:, data_store:, current_user:, school:, submitted_params: {})
         @current_user = current_user
         @data_store = data_store
         @school = school
-        @school_cohort = school_cohort
         @submitted_params = submitted_params
         @participant_profile = nil
         @email_owner = nil
@@ -40,6 +39,7 @@ module Schools
         check_data_store_state!
         data_store_should_not_have_a_different_user!
         data_store_should_not_have_a_different_school!
+
         load_current_user_and_school_into_data_store
       end
 
@@ -306,7 +306,7 @@ module Schools
       def cohort_to_place_participant
         if transfer?
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
-        elsif induction_start_date.present?
+        elsif ect_participant? && induction_start_date.present?
           Cohort.containing_date(date: [induction_start_date, FIRST_ACADEMIC_DATE_2021].max)
         elsif Cohort.current == Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
@@ -314,9 +314,12 @@ module Schools
         elsif start_term == "summer"
           # we're in the registration window prior to 1/9
           Cohort.current
-        else
+        elsif start_term.in? %w[autumn spring]
           # we're in the registration window prior to 1/9 and chose autumn or spring the following year
           Cohort.next
+        else
+          # default to now (new mentor/sit mentor)
+          Cohort.current
         end
       end
 
@@ -445,7 +448,7 @@ module Schools
 
       # sanity checks
       def check_data_store_state!
-        if current_step.in? %i[participant_type yourself]
+        if current_step.in? %i[participant_type]
           reset_form if submitted_params.empty?
         elsif data_store.store.empty?
           raise InvalidStep, "Datastore is empty at [#{step}]"
@@ -458,10 +461,6 @@ module Schools
 
       def data_store_should_not_have_a_different_school!
         raise AlreadyInitialised, "school different" if data_store.school_id.present? && data_store.school_id != school.slug
-      end
-
-      def data_store_should_not_have_a_different_school_cohort!
-        raise AlreadyInitialised, "school_cohort different" if data_store.school_cohort_id.present? && data_store.school_cohort_id != school_cohort.id
       end
     end
   end

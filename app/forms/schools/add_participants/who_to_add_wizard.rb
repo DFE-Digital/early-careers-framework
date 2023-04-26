@@ -33,10 +33,14 @@ module Schools
         save_progress!
       end
 
+      def sit_can_become_a_mentor?
+        !current_user.mentor?
+      end
+
       # has this school got a cohort set up for training that matches the incoming transfer
       def need_training_setup?
-        transfer_cohort = school.school_cohorts.find_by(cohort: existing_participant_cohort)
-        transfer_cohort.blank? || !transfer_cohort.full_induction_programme?
+        destination_cohort = school.school_cohorts.find_by(cohort: cohort_to_place_participant)
+        destination_cohort.blank? || !destination_cohort.full_induction_programme?
       end
 
       # path to the most appropriate start point to set up training for the transfer
@@ -105,7 +109,7 @@ module Schools
       end
 
       def change_path_for(step:)
-        schools_who_to_add_show_change_path(school_id: school_cohort.school.friendly_id, step:)
+        schools_who_to_add_show_change_path(**path_options(step:))
       end
 
       def reset_known_by_another_name_response

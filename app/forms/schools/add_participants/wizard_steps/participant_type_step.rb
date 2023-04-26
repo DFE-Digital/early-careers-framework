@@ -15,16 +15,12 @@ module Schools
         end
 
         def next_step
-          :what_we_need
+          if participant_type == "self"
+            :yourself
+          else
+            :what_we_need
+          end
         end
-
-        # def previous_step
-        #   :abort
-        # end
-        #
-        # def before_render
-        #   wizard.reset_form
-        # end
       end
     end
   end

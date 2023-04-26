@@ -11,11 +11,6 @@ class WizardStep
     []
   end
 
-  # probably not used now we have history_stack
-  # def previous_step
-  #   raise NotImplementedError
-  # end
-
   def next_step
     raise NotImplementedError
   end

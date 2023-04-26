@@ -3,15 +3,15 @@
 require "rails_helper"
 require_relative "../../training_dashboard/manage_training_steps"
 
-RSpec.describe "Add participants", js: true do
+RSpec.describe "Add participants", type: :feature, js: true, with_default_schedules: true do
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_and_partnered
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
     and_i_am_signed_in_as_an_induction_coordinator
-    and_i_click_on("2021 to 2022")
+    and_i_click_on(@cohort.description)
     then_i_am_taken_to_fip_induction_dashboard
     set_dqt_blank_validation_result
   end

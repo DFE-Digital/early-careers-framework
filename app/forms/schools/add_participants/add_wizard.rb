@@ -41,7 +41,6 @@ module Schools
       end
 
       def previous_step_path
-        # back_step = form.previous_step
         back_step = last_visited_step
         return abort_path if back_step.nil?
 

@@ -3,23 +3,25 @@
 require "rails_helper"
 require_relative "../../../training_dashboard/manage_training_steps"
 
-RSpec.describe "Add participants", js: true do
+RSpec.describe "Add participants", type: :feature, js: true, with_default_schedules: true do
   include ManageTrainingSteps
 
   before do
-    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_and_partnered
     set_sit_data
     and_i_have_added_an_ect
     and_i_have_added_a_mentor
     and_i_am_signed_in_as_an_induction_coordinator
-    and_i_click_on("2021 to 2022")
+    and_i_click_on(@cohort.description)
     then_i_am_taken_to_fip_induction_dashboard
     set_sit_dqt_validation_result
   end
 
   xscenario "Induction tutor can add themselves as a mentor and validates" do
     when_i_navigate_to_participants_dashboard
-    when_i_click_on_add_myself_as_mentor
+    when_i_click_to_add_a_new_participant
+    when_i_choose_to_add_yourself_as_a_mentor
+    click_on "Continue"
     then_i_am_taken_to_are_you_sure_page
     then_the_page_should_be_accessible
 
@@ -45,7 +47,7 @@ RSpec.describe "Add participants", js: true do
     when_i_sign_back_in
     and_i_choose_induction_coordinator_and_mentor_role
 
-    and_i_click_on("2021 to 2022")
+    and_i_click_on(@cohort.description)
     then_i_am_taken_to_fip_induction_dashboard
     then_the_page_should_be_accessible
   end

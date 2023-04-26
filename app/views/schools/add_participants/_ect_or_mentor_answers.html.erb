@@ -10,16 +10,16 @@
   <% end %>
 
   <% if form.trn %>
-   <% summary_list.row do |row| %>
-       <% row.key { "TRN" } %>
-       <% row.value { form.trn } %>
-       <% unless form.found_participant_in_dqt? %>
-         <% row.action(text: "Change",
-                       visually_hidden_text: "TRN",
-                       href: form.change_path_for(step: :trn)) %>
-       <% end %>
-     <% end %>
-   <% end %>
+    <% summary_list.row do |row| %>
+      <% row.key { "TRN" } %>
+      <% row.value { form.trn } %>
+      <% unless form.found_participant_in_dqt? %>
+        <% row.action(text: "Change",
+                     visually_hidden_text: "TRN",
+                     href: form.change_path_for(step: :trn)) %>
+      <% end %>
+    <% end %>
+  <% end %>
 
   <% if form.date_of_birth %>
     <% summary_list.row do |row| %>
