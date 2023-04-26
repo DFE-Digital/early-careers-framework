@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_10_225308) do
+ActiveRecord::Schema.define(version: 2023_04_28_093636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -849,6 +849,8 @@ ActiveRecord::Schema.define(version: 2023_05_10_225308) do
   create_table "pupil_premiums", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "school_id", null: false
     t.integer "start_year", limit: 2, null: false
+    t.integer "total_pupils", null: false
+    t.integer "eligible_pupils", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "pupil_premium_incentive", default: false, null: false
@@ -1015,14 +1017,6 @@ ActiveRecord::Schema.define(version: 2023_05_10_225308) do
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
 
-  create_table "sync_dqt_induction_start_date_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "participant_profile_id", null: false
-    t.text "message"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["participant_profile_id"], name: "dqt_sync_participant_profile_id"
-  end
-
   create_table "teacher_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "trn"
     t.uuid "school_id"
@@ -1155,7 +1149,6 @@ ActiveRecord::Schema.define(version: 2023_05_10_225308) do
   add_foreign_key "school_mentors", "participant_profiles"
   add_foreign_key "school_mentors", "schools"
   add_foreign_key "schools", "networks"
-  add_foreign_key "sync_dqt_induction_start_date_errors", "participant_profiles"
   add_foreign_key "teacher_profiles", "schools"
   add_foreign_key "teacher_profiles", "users"
 
