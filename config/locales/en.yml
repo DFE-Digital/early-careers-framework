@@ -158,9 +158,11 @@ en:
     appropriate_body:
       blank: "Choose an appropriate body"
     cohort:
-      blank: "Cohort starting on %{year} not setup on %{where}"
+      blank: "starting on %{year} not setup on %{where}"
       excluded_start_year: "Invalid value. Must be different to %{year}"
       invalid_start_year: "Invalid value. Must be an integer between %{start} and %{end}"
+    induction_programme:
+      blank: "default for %{year} not setup on %{school}"
     induction_record:
       blank: "The participant is not enrolled on the cohort starting on %{year}"
     participant_declarations:

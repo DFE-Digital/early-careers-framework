@@ -1017,8 +1017,9 @@ ActiveRecord::Schema.define(version: 2023_04_28_093636) do
     t.index ["cpd_lead_provider_id"], name: "index_statements_on_cpd_lead_provider_id"
   end
 
-  create_table "sync_dqt_induction_start_date_errors", primary_key: "participant_profile_id", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "error_message"
+  create_table "sync_dqt_induction_start_date_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.text "message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_profile_id"], name: "dqt_sync_participant_profile_id"

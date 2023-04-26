@@ -75,7 +75,7 @@ RSpec.describe Induction::AmendParticipantCohort do
         expect(form.save).to be_falsey
         expect(form.errors.first.attribute).to eq(:target_cohort)
         expect(form.errors.first.message)
-          .to eq("Cohort starting on #{target_cohort_start_year} not setup on the service")
+          .to eq("starting on #{target_cohort_start_year} not setup on the service")
       end
     end
 
@@ -154,11 +154,27 @@ RSpec.describe Induction::AmendParticipantCohort do
           expect(form.save).to be_falsey
           expect(form.errors.first.attribute).to eq(:target_school_cohort)
           expect(form.errors.first.message)
-            .to eq("Cohort starting on #{target_cohort_start_year} not setup on #{school.name}")
+            .to eq("starting on #{target_cohort_start_year} not setup on #{school.name}")
         end
       end
 
-      context "when the school has setup the target cohort" do
+      context "when the school has not setup a default induction programme for the target cohort" do
+        let!(:target_school_cohort) { create(:school_cohort, :fip, cohort: target_cohort, school:) }
+
+        before do
+          Induction::Enrol.call(participant_profile:,
+                                induction_programme: source_school_cohort.default_induction_programme)
+        end
+
+        it "returns false and set errors" do
+          expect(form.save).to be_falsey
+          expect(form.errors.first.attribute).to eq(:induction_programme)
+          expect(form.errors.first.message)
+            .to eq("default for #{target_cohort_start_year} not setup on #{school.name}")
+        end
+      end
+
+      context "when the school has setup the target cohort with default induction programme" do
         let!(:target_school_cohort) { create(:school_cohort, :fip, cohort: target_cohort, school:) }
 
         before do

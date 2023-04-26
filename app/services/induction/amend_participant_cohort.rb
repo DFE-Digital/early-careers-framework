@@ -53,6 +53,11 @@ module Induction
                 message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: form.school&.name) },
               }
 
+    validates :induction_programme,
+              presence: {
+                message: ->(form, _) { I18n.t("errors.induction_programme.blank", year: form.target_cohort_start_year, school: form.school&.name) },
+              }
+
     delegate :school, to: :induction_record, allow_nil: true
 
     def save
@@ -119,7 +124,7 @@ module Induction
     end
 
     def induction_programme
-      @induction_programme ||= target_school_cohort.default_induction_programme
+      @induction_programme ||= target_school_cohort&.default_induction_programme
     end
 
     def induction_record
