@@ -143,8 +143,6 @@ private
     click_on "Continue"
     fill_in "add_participant_wizard[email]", with: "ect@email.gov.uk"
     click_on "Continue"
-    # fill_in_date("What’s George ECT’s induction start date?", with: 1.year.from_now.at_beginning_of_year.to_date)
-    # click_on "Continue"
   end
 
   def valid_dqt_response
