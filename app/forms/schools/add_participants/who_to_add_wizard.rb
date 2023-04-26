@@ -42,9 +42,9 @@ module Schools
       def registration_open_for_participant_cohort?
         desired_cohort = cohort_to_place_participant
 
-        return true if desired_cohort.start_year <= Cohort.current.start_year
+        return true if desired_cohort.start_year <= ::Cohort.current.start_year
 
-        if Cohort.within_next_registration_period? && desired_cohort == Cohort.next
+        if ::Cohort.within_next_registration_period? && desired_cohort == ::Cohort.next
           FeatureFlag.active?(:cohortless_dashboard, for: school)
         else
           false
