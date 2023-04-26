@@ -22,7 +22,7 @@ weight: 2
 
 Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers will need to update relevant data using the API.
 
-{inset-text} Note, DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training). [Find out more about declaration states](api-reference/npq/definitions-and-states/#declaration-states) {/inset-text}
+<div class="govuk-inset-text"> Note, DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training). [Find out more about declaration states](api-reference/npq/definitions-and-states/#declaration-states) </div>
 
 ## View, accept or reject NPQ applications
 
@@ -41,7 +41,7 @@ To prevent a participant being enrolled onto the same course with more than one 
 * **automatically update the `status` to `rejected` for all other applications:** If someone has made multiple applications with different providers (within a given cohort) and a provider accepts one, the API will update the `status` of all other applications with other providers to `rejected`
 * **return an error message for new applications:** If a participant has had an application accepted by a provider, but then makes a new application for the same course with a new provider, the API will return an error message if the new provider tries to accept the new application
 
-{inset-text} Providers must accept or reject applications before they start the course. They must inform applicants of the outcome of their NPQ applications, regardless of whether their course application has been accepted or rejected. {/inset-text}
+<div class="govuk-inset-text"> Providers must accept or reject applications before they start the course. They must inform applicants of the outcome of their NPQ applications, regardless of whether their course application has been accepted or rejected. </div>
 
 ### View all applications
 
@@ -104,7 +104,7 @@ The request parameter must include the `id` of the corresponding NPQ application
 
 An example response body is listed below. Successful requests will return a response body including updates `status` attribute. 
 
-{inset-text} Note, the API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message. {/inset-text}
+<div class="govuk-inset-text"> Note, the API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message. </div>
 
 For more detailed information see the specifications for this [accept an NPQ application endpoint](/api-reference/reference-v3.html#api-v3-npq-applications-id-accept-post).
 
@@ -148,7 +148,7 @@ For more detailed information see the specifications for this [accept an NPQ app
 }
 ```
 
-{inset-text} Providers must inform applicants of the outcome of their successful NPQ application. {/inset-text}
+<div class="govuk-inset-text"> Providers must inform applicants of the outcome of their successful NPQ application. </div>
 
 ### Reject an application
 
@@ -209,7 +209,7 @@ For more detailed information see the specifications for this [accept an NPQ app
 }
 ```
 
-{inset-text} Providers must inform applicants of the outcome of their unsuccessful NPQ application. {/inset-text}
+<div class="govuk-inset-text"> Providers must inform applicants of the outcome of their unsuccessful NPQ application. </div>
 
 ### Update an application due to a change in circumstance
 
@@ -419,14 +419,16 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-{inset-text}
+<div class="govuk-inset-text">
+
 #### Providers should note: 
 
 * The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * If a participant is withdrawn later in their course, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
 * The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View NPQ schedules and milestone dates](/api-reference/npq/schedules_and-milestone-dates)
-{/inset-text}
+
+</div>
 
 ### Notify DfE a participant has changed their training schedule
 
@@ -581,7 +583,7 @@ These declarations will trigger payment from DfE to providers.
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
 
-{inset-text}It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.{/inset-text}
+<div class="govuk-inset-text">It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
 
 To test declaration submission functionality, include: 
 
@@ -606,7 +608,7 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-{inset-text}Note, providers should store the returned NPQ participant declaration ID for management tasks.{/inset-text}
+<div class="govuk-inset-text">Note, providers should store the returned NPQ participant declaration ID for management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an NPQ participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
@@ -668,7 +670,7 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-{inset-text}Note, providers should store the returned NPQ participant declaration ID for management tasks.{/inset-text}
+<div class="govuk-inset-text">Note, providers should store the returned NPQ participant declaration ID for management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an NPQ participant has been retained in training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
@@ -730,7 +732,7 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-{inset-text}Note, providers should store the returned NPQ participant declaration ID for future management tasks.{/inset-text}
+<div class="govuk-inset-text">Note, providers should store the returned NPQ participant declaration ID for future management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an NPQ participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 

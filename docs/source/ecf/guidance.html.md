@@ -7,7 +7,7 @@ weight: 2
 
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](#connect-to-the-API) is not detailed.
 
-{inset-text}This guidance is written for [API version 3.0.0](/api-reference/reference-v3.html), and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.{/inset-text}
+<div class="govuk-inset-text">This guidance is written for [API version 3.0.0](/api-reference/reference-v3.html), and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.</div>
 
 ## Overview of API requests
 
@@ -30,7 +30,7 @@ Changes can happen during training; some participants may not complete their tra
 
 ## Confirm, view and update partnerships
 
-{inset-text}The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.{/inset-text}
+<div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
 Providers must confirm to the DfE that they have agreed to enter into a partnership with a school and delivery partner to deliver ECF-based training.
 
@@ -181,7 +181,7 @@ Update an existing partnership with new delivery partner details for a given coh
 
 An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids). 
 
-{inset-text}Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states){/inset-text}
+<div class="govuk-inset-text">Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)</div>
 
 Successful requests will return a response body with updates included. 
 
@@ -280,7 +280,7 @@ View details for schools providing ECF-based training in a given cohort. Check d
 GET /api/v3/partnerships/ecf?filter[cohort]={year}`
 ```
 
-{inset-text} The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. {/inset-text}
+<div class="govuk-inset-text"> The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. </div>
 
 Providers can also filter results by school URN. For example:  
 
@@ -324,7 +324,7 @@ GET /api/v3/schools/ecf/{id}
 GET /api/v3/schools/ecf/{id}?filter[cohort]={year}
 ```
 
-{inset-text} The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. {/inset-text}
+<div class="govuk-inset-text"> The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. </div>
 
 An example response body is listed below.Successful requests will return a response body with school details.
 
@@ -555,11 +555,13 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-{inset-text}
+<div class="govuk-inset-text">
+
 #### Providers should note:
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
-{/inset-text}
+
+</div>
 
 ### Notify DfE a participant has changed their training schedule
 
@@ -593,7 +595,8 @@ For more detailed information see the specifications for this [notify that an EC
 ```
 
 
-{inset-text}
+<div class="govuk-inset-text">
+
 #### Providers should note: 
 
 Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
@@ -603,12 +606,13 @@ Where this occurs, providers should:
 1. void the existing declarations (where declaration_date does not align with the new schedule)
 2. change the participant’s training schedule 
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
-{/inset-text}
+
+</div>
 
 
 ### View data for all participants who have transferred 
 
-{inset-text}This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.{/inset-text}
+<div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
 Providers can view data for participants who have transferred: 
 
@@ -659,7 +663,7 @@ For more detailed information see the specifications for this [view participant 
 
 ### View data for a specific participant who has transferred 
 
-{inset-text}This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.{/inset-text}
+<div class="govuk-inset-text">This endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
 Providers can view data for a specific participant who has transferred: 
 
@@ -720,7 +724,7 @@ These declarations will trigger payment from DfE to providers.
 
 The `X-With-Server-Date` header lets providers simulate future dates, and therefore allows providers to test declaration submissions for future milestone dates. 
 
-{inset-text}It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.{/inset-text}
+<div class="govuk-inset-text">It is only valid in the sandbox environment. Attempts to submit future declarations in the production environment (or without this header in sandbox) will be rejected as part of milestone validation.</div>
 
 To test declaration submission functionality, include: 
 
@@ -745,7 +749,7 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
+<div class="govuk-inset-text">Note, providers should store the returned ECF participant declaration ID for management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has started training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
@@ -806,7 +810,7 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-{inset-text}Note, providers should store the returned ECF participant declaration ID for management tasks.{/inset-text}
+<div class="govuk-inset-text">Note, providers should store the returned ECF participant declaration ID for management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has been retained in training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
@@ -868,7 +872,7 @@ An example response body is listed below. Successful requests will return a resp
 
 Any attempts to submit duplicate declarations will return an error message.
 
-{inset-text}Note, providers should store the returned ECF participant declaration ID for future management tasks.{/inset-text}
+<div class="govuk-inset-text">Note, providers should store the returned ECF participant declaration ID for future management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an ECF participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 

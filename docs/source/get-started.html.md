@@ -41,7 +41,7 @@ The API is available via production (live) and sandbox (testing) environments.
 
 The production environment is the live environment which processes real data.  
 
-{inset-text} Do not perform testing in the production environment as real participant and payment data may be affected.{/inset-text}
+<div class="govuk-inset-text"> Do not perform testing in the production environment as real participant and payment data may be affected.</div>
 
 ```
 API v1: 
@@ -77,7 +77,7 @@ API v3:
 https://ecf-sandbox.london.cloudapps.digital/api/v3
 ```
 
-{inset-text}Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq).{/inset-text}
+<div class="govuk-inset-text">Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq).</div>
 
 ## Rate limits
 
