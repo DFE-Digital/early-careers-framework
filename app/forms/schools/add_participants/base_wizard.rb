@@ -359,7 +359,7 @@ module Schools
           ::Cohort.containing_date(induction_start_date)
         elsif ::Cohort.within_automatic_assignment_period?
           # true from 1/9 to end of automatic assignment period
-          Cohort.current
+          ::Cohort.current
         # elsif mentor_participant? || sit_mentor?
         #   ::Cohort.current
         elsif start_term == "summer"
