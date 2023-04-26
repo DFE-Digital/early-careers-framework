@@ -23,6 +23,8 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
     let(:different_name) { false }
     let(:found_dqt_record) { false }
     let(:sit_mentor) { false }
+    let(:registration_open) { false }
+    let(:need_setup) { false }
 
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
@@ -32,6 +34,8 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
       allow(wizard).to receive(:dqt_record_has_different_name?).and_return(different_name)
       allow(wizard).to receive(:found_participant_in_dqt?).and_return(found_dqt_record)
       allow(wizard).to receive(:sit_mentor?).and_return(sit_mentor)
+      allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
+      allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
     end
 
     context "when the participant exists in the service" do
@@ -89,16 +93,44 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
     context "when a matching dqt record has been found" do
       let(:found_dqt_record) { true }
 
-      it "returns :none" do
-        expect(step.next_step).to eql :none
+      context "when registration is not open" do
+        it "returns :cannot_add_registration_not_yet_open" do
+          expect(step.next_step).to eql :cannot_add_registration_not_yet_open
+        end
+      end
+
+      context "when registration is open" do
+        let(:registration_open) { true }
+
+        it "returns :none" do
+          expect(step.next_step).to eql :none
+        end
+
+        context "when the cohort needs to be set up" do
+          let(:need_setup) { true }
+
+          it "returns :need_training_setup" do
+            expect(step.next_step).to eql :need_training_setup
+          end
+        end
       end
     end
 
     context "when adding a sit_mentor" do
       let(:sit_mentor) { true }
+      # SIT mentor always added to current cohort
+      let(:registration_open) { true }
 
       it "returns :none" do
         expect(step.next_step).to eql :none
+      end
+
+      context "when the cohort needs to be set up" do
+        let(:need_setup) { true }
+
+        it "returns :need_training_setup" do
+          expect(step.next_step).to eql :need_training_setup
+        end
       end
     end
 

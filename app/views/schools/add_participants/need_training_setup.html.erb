@@ -8,9 +8,12 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
-    <p class="govuk-body">Before you can register <%= @wizard.full_name %> for ECF-based training at your school,
-      you’ll need to set up training for the <%= @wizard.existing_participant_cohort.description %> academic year.
-      This is because they started training in that year at a previous school.</p>
+    <p class="govuk-body">Before you can register <%= @wizard.full_name_or_yourself %> for ECF-based training at your school,
+      you’ll need to set up training for the <%= @wizard.cohort_to_place_participant.description %> academic year.
+      <% if @wizard.transfer? %>
+        This is because they started training in that year at a previous school.
+      <% end %>
+    </p>
 
     <%= render GovukComponent::InsetTextComponent.new(text: "The name, TRN and date of birth you have entered will not be saved.
           You will need to enter this information again once you have set up the training.") %>

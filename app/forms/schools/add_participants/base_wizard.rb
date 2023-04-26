@@ -353,6 +353,14 @@ module Schools
         TeacherReferenceNumber.new(trn).formatted_trn
       end
 
+      def full_name_or_yourself
+        if sit_mentor?
+          "yourself"
+        else
+          full_name
+        end
+      end
+
       def possessive_name_or_your
         if sit_mentor?
           "your"

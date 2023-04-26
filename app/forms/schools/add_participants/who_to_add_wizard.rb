@@ -26,6 +26,7 @@ module Schools
           cannot_add_mismatch
           cannot_add_mentor_at_multiple_schools
           cannot_add_already_enrolled_at_school
+          cannot_add_registration_not_yet_open
         ]
       end
 
@@ -37,18 +38,29 @@ module Schools
         !current_user.mentor?
       end
 
+      def registration_open_for_participant_cohort?
+        Cohort.current == cohort_to_place_participant ||
+          FeatureFlag.active?(:cohortless_dashboard, for: school) && Cohort.next == cohort_to_place_participant
+      end
+
       # has this school got a cohort set up for training that matches the incoming transfer
-      def need_training_setup?
+      def need_training_setup?(must_be_fip: true)
         destination_cohort = school.school_cohorts.find_by(cohort: cohort_to_place_participant)
-        destination_cohort.blank? || !destination_cohort.full_induction_programme?
+        return true if destination_cohort.blank?
+
+        if must_be_fip
+          !destination_cohort.full_induction_programme?
+        else
+          !(destination_cohort.full_induction_programme? || destination_cohort.core_induction_programme?)
+        end
       end
 
       # path to the most appropriate start point to set up training for the transfer
       def need_training_path
-        if existing_participant_cohort == Cohort.active_registration_cohort
-          expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: existing_participant_cohort)
+        if cohort_to_place_participant == Cohort.active_registration_cohort
+          expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         else
-          schools_choose_programme_path(school_id: school.slug, cohort_id: existing_participant_cohort)
+          schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
         end
       end
 
