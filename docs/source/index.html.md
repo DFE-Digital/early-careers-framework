@@ -39,5 +39,5 @@ This guidance has been created for ECF and NPQ providers who have systems integr
 
 It is reviewed and updated as necessary. 
 
-* [How to use the API for ECF](/api-reference/ecf) 
-* [How to use the API for NPQ](/api-reference/npq)
+* [Guidance on how to use the API for ECF](/api-reference/ecf) 
+* [Guidance on how to use the API for NPQ](/api-reference/npq)
