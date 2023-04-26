@@ -36,15 +36,11 @@ The payment model is such that for each of the 6 terms a provider is supporting 
 
 Declarations submitted for participants in standard schedules will be validated (accepted or rejected) against the 6 milestone dates. [View details on milestone validation for standard training schedules](/api-reference/ecf/schedules-and-milestone-dates/#validating-declarations-against-milestones).
 
-<div class="govuk-inset-text">
+<div class="govuk-inset-text">Note, all participants will be registered by default to a standard schedule starting in September. </div>
 
-**Providers should note: **
+Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule). Contact ECF contract managers via email for additional support or information. 
 
-* All participants will be registered by default to a standard schedule starting in September
-* Providers must [notify DfE if the participant is following any other standard or non-standard training schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule)
-* For additional support or information, contact ECF contract managers via email 
 
-</div>
 
 ### Dates for standard schedule starting in September
 
