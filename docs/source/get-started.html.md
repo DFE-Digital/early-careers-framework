@@ -62,6 +62,11 @@ https://manage-training-for-early-career-teachers.education.gov.uk/api/v3
 
 The sandbox environment is used to test API integrations without affecting real data. 
 
+<div class="govuk-inset-text"> Note, there are some custom API headers that can only be used in sandbox. </div>
+
+Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time). 
+
+
 ```
 API v1: 
 https://ecf-sandbox.london.cloudapps.digital/api/v1
@@ -76,8 +81,6 @@ https://ecf-sandbox.london.cloudapps.digital/api/v2
 API v3: 
 https://ecf-sandbox.london.cloudapps.digital/api/v3
 ```
-
-<div class="govuk-inset-text">Note, there are some custom API headers that can only be used in sandbox. Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq).</div>
 
 ## Rate limits
 
