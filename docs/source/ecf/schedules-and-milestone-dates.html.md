@@ -137,7 +137,7 @@ Participants starting their ECF-based training between 1 January and 31 March 20
 
 #### 2021 cohort
 
-For participants starting their course on or before 1 December 2021, and who are expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+For participants starting their course on or before 1 December 2021, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-january"
@@ -191,7 +191,7 @@ Participants starting their ECF-based training between 1 April and 31 July 2023,
 
 #### 2021 cohort
 
-For participants starting their course on or before 1 February 2022, and who are expected to complete their training over 2 academic years, providers [should confirm the schedule](LINK NEEDED): 
+For participants starting their course on or before 1 February 2022, and who are expected to complete their training over 2 academic years, providers [should have their schedule updated](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule) by providers to: 
 
 ```
  "schedule_identifier": "ecf-standard-april"
