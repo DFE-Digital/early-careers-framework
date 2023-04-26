@@ -4,7 +4,7 @@ require_relative "../../base_page"
 
 module Pages
   class SchoolFundedFipTrainingSubmittedPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/register-programme/training-confirmation"
+    set_url "/schools/{slug}/cohorts/{cohort}/setup/complete"
     set_primary_heading(/\AYou’ve submitted your training information\z/)
 
     def can_get_guidance_about_an_arrangement_with_a_training_provider

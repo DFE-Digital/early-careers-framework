@@ -62,8 +62,11 @@ module ManageTrainingSteps
   end
 
   def given_there_is_a_school_that_has_chosen(induction_programme_choice:)
-    @school_cohort = create :school_cohort, induction_programme_choice:, school: create(:school, name: "Test School")
-    create(:school_cohort, school: @school_cohort.school, cohort: Cohort.previous || create(:cohort, :previous))
+    @school_cohort = create(:school_cohort, induction_programme_choice:, school: create(:school, name: "Test School"))
+    create(:school_cohort,
+           school: @school_cohort.school,
+           cohort: Cohort.previous || create(:cohort, :previous),
+           induction_programme_choice: :design_our_own)
   end
 
   def given_there_are_multiple_schools_and_an_induction_coordinator
@@ -308,6 +311,7 @@ module ManageTrainingSteps
   def then_i_can_change_the_programme_to_design_your_own
     expect(page).to have_text("Your school has told us you do not expect any ECTs")
     click_on "Tell us if this has changed"
+    click_on "Continue"
     choose "Yes"
     click_on "Continue"
     choose("Design and deliver you own programme based on the early career framework (ECF)")
@@ -767,7 +771,8 @@ module ManageTrainingSteps
   end
 
   def then_i_am_taken_to_setup_my_programme
-    expect(page).to have_selector("h1", text: "Does your school expect any new ECTs")
+    expect(page).to have_content(@school.name)
+    expect(page).to have_content("Tell us if any new ECTs will start training at your school in the")
   end
 
   def then_i_am_taken_to_check_details_page
@@ -1108,7 +1113,7 @@ module ManageTrainingSteps
   end
 
   def then_i_am_on_the_expect_any_ects_page
-    expect(page).to have_text("Does your school expect any new ECTs in the 2022 to 2023 academic year?")
+    expect(page).to have_text("Tell us if any new ECTs will start training at your school in the 2022 to 2023 academic year")
   end
 
   def then_i_am_taken_to_the_what_we_need_from_you_page
