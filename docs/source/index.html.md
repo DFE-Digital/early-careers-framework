@@ -23,17 +23,15 @@ When the DfE publishes a new API version, only one previous version will remain 
 
 Note, there will be an exception to this rule for API `v3`. DfE will support `v1` for an extended period whilst working with providers on transition plans.
 
-When non-breaking updates (sometimes referred to as backwards compatible updates) are made to the API, it will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
+When non-breaking updates (sometimes referred to as backwards compatible updates) are made, the API will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
 
 Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
 
 All API requests are available in JSON and CSV formats.
 
-## Who is this guidance for?
+## About this guidance
 
-This guidance has been created for ECF and NPQ providers who have systems integrated with the API. 
+This guidance has been created for ECF and NPQ providers who have systems integrated with the API. It is reviewed and updated as necessary. 
 
-It is reviewed and updated as necessary. 
+<div class="govuk-inset-text">The guidance is written for providers integrated with [API version 3.0.0](/api-reference/reference-v3.html). All endpoints reference `v3`. Providers can view specifications for the API version their systems are integrated with.</div>
 
-* [Guidance on how to use the API for ECF](/api-reference/ecf) 
-* [Guidance on how to use the API for NPQ](/api-reference/npq)
