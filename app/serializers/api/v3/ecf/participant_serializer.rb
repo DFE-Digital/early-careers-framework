@@ -32,7 +32,7 @@ module Api
           end
 
           def withdrawal(profile:, cpd_lead_provider:, latest_induction_record:)
-            if latest_induction_record&.training_status_withdrawn?
+            if latest_induction_record.training_status_withdrawn?
               latest_participant_profile_state = profile.participant_profile_states.sort { |a, b| b.created_at <=> a.created_at }.find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
@@ -44,7 +44,7 @@ module Api
           end
 
           def deferral(profile:, cpd_lead_provider:, latest_induction_record:)
-            if latest_induction_record&.training_status_deferred?
+            if latest_induction_record.training_status_deferred?
               latest_participant_profile_state = profile.participant_profile_states.sort { |a, b| b.created_at <=> a.created_at }.find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
@@ -92,14 +92,14 @@ module Api
 
         attribute(:ecf_enrolments) do |object, params|
           ecf_participant_profiles(object).map { |profile|
-            latest_induction_record = profile.induction_records.first
+            latest_induction_record = params[:induction_record].presence || profile.induction_records.first
 
             next unless params[:cpd_lead_provider] && latest_induction_record.present? && latest_induction_record.induction_programme&.partnership&.lead_provider&.cpd_lead_provider == params[:cpd_lead_provider]
 
             {
               training_record_id: profile.id,
               email: latest_induction_record.preferred_identity&.email.presence || object.email,
-              mentor_id: latest_induction_record.participant_profile.ect? ? latest_induction_record.mentor_profile&.participant_identity&.user_id : nil,
+              mentor_id: latest_induction_record.participant_profile&.ect? ? latest_induction_record.mentor_profile&.participant_identity&.user_id : nil,
               school_urn: latest_induction_record.induction_programme&.school_cohort&.school&.urn,
               participant_type: profile.ect? ? :ect : :mentor,
               cohort: latest_induction_record.induction_programme&.school_cohort&.cohort&.start_year&.to_s,
@@ -109,7 +109,7 @@ module Api
               eligible_for_funding: eligible_for_funding?(profile),
               pupil_premium_uplift: profile.pupil_premium_uplift,
               sparsity_uplift: profile.sparsity_uplift,
-              schedule_identifier: profile.schedule&.schedule_identifier,
+              schedule_identifier: latest_induction_record.schedule&.schedule_identifier,
               validation_status: nil,
               delivery_partner_id: latest_induction_record&.delivery_partner_id,
               withdrawal: withdrawal(profile:, cpd_lead_provider: params[:cpd_lead_provider], latest_induction_record:),

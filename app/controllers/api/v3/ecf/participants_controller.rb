@@ -53,7 +53,7 @@ module Api
         def render_from_service(service, serializer, params: {})
           if service.valid?
             induction_record = service.call
-            render json: serializer.new(induction_record.user, params:).serializable_hash
+            render json: serializer.new(induction_record.user, params: params.merge(induction_record:)).serializable_hash
           else
             render json: Api::V1::ActiveModelErrorsSerializer.from(service), status: :unprocessable_entity
           end
