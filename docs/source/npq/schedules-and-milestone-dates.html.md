@@ -72,7 +72,7 @@ Participants starting their specialist NPQ course before 31 December should be a
 
 ### Dates for schedules starting in spring 
 
-Participants starting their specialist NPQ course after 1 January, should be assigned with the schedule: 
+Participants starting their specialist NPQ course after 1 January should be assigned with the schedule: 
 
 ```
  "schedule_identifier": "npq-specialist-spring"
@@ -146,7 +146,7 @@ Participants starting their specialist NPQ course before 31 December should be a
 
 ### Dates for schedules starting in spring 
 
-Participants starting their specialist NPQ course after 1 January, should be assigned with the schedule: 
+Participants starting their specialist NPQ course after 1 January should be assigned with the schedule: 
 
 ```
  "schedule_identifier": "npq-leadership-spring"
