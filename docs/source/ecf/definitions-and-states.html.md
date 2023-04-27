@@ -17,7 +17,7 @@ weight: 1
 | `partnership`     | The relationship created between schools, delivery partners and providers who work together to deliver ECF-based training to participants      |
 | `statement`    | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes     |
 
-## Data states and what they mean
+## Data states
 
 The API service uses a ‘state’ model to reflect the ECF participant journey, meet contractual requirements for how providers should report participants’ training and how the DfE will pay for this training.
 
