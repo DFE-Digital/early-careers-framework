@@ -125,7 +125,7 @@ en:
       # FIP mentors
 
       not_yet_mentoring_fip_ero:
-        label: "Eligible to start: not_yet_mentoring_ero"
+        label: "Eligible to start"
         description: "This person is ready to mentor ECTs this year. Our checks show they’re already receiving funded mentor training as part of the early roll-out of the early career framework (ECF) reforms."
 
       not_yet_mentoring_fip_no_partner:
@@ -133,7 +133,7 @@ en:
         description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
 
       not_yet_mentoring_fip:
-        label: "Eligible to start: not_yet_mentoring"
+        label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. Your training provider will contact them directly."
 
       active_fip_mentoring_ero:
@@ -151,7 +151,7 @@ en:
       # CIP mentors
 
       not_yet_mentoring_cip_ero:
-        label: "Eligible to start: not_yet_mentoring_ero_cip"
+        label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       active_cip_mentoring_ero:
@@ -159,10 +159,14 @@ en:
         description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       not_yet_mentoring_cip:
-        label: "Eligible to start: not_yet_mentoring_cip"
+        label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
       active_cip_mentoring:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
+
+      not_yet_mentoring:
         label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. They have access to their materials."
 
@@ -189,6 +193,10 @@ en:
         description: "We’re checking this person’s details with the Teaching Regulation Agency to make sure they’re eligible for funding. We’ll confirm this soon."
 
       left:
+        label: "Eligible to start"
+        description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
+
+      no_longer_involved:
         label: "Eligible to start"
         description: "We’ve confirmed this person is eligible for this programme. Once you choose a training provider, they’ll contact this person directly."
 

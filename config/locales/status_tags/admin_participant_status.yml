@@ -144,6 +144,10 @@ en:
         label: "Eligible to start"
         colour: "turquoise"
 
+      not_yet_mentoring:
+        label: "Eligible to start"
+        colour: "turquoise"
+
       # CIP mentors
 
       not_yet_mentoring_cip_ero:
@@ -185,6 +189,10 @@ en:
         colour: "orange"
 
       left:
+        label: "No longer being trained"
+        colour: "orange"
+
+      no_longer_involved:
         label: "No longer being trained"
         colour: "orange"
 

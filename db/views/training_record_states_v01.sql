@@ -85,8 +85,6 @@ FROM (
                      ELSE
                          'not_yet_mentoring'
                      END
-             WHEN "participant_profiles"."profile_duplicity" = 'secondary'
-                 THEN 'secondary_profile'
              WHEN "ecf_participant_eligibilities"."status" = 'ineligible' AND "ecf_participant_eligibilities"."reason" = 'duplicate_profile'
                  THEN 'duplicate_profile'
              WHEN "ecf_participant_eligibilities"."status" = 'manual_check' AND "ecf_participant_eligibilities"."reason" = 'no_qts'

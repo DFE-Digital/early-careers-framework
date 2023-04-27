@@ -198,6 +198,11 @@ en:
         description: "The participant is currently mentoring ECTs."
         colour: "turquoise"
 
+      not_yet_mentoring:
+        label: "NOT MENTORING"
+        description: "The participant is not currently mentoring any ECTs."
+        colour: "turquoise"
+
       # changes of circumstance
 
       leaving:
@@ -226,6 +231,11 @@ en:
         colour: "grey"
 
       left:
+        label: "NO LONGER BEING TRAINED"
+        description: "The participant left your school." # on xx/xx/xxxx."
+        colour: "grey"
+
+      no_longer_involved:
         label: "NO LONGER BEING TRAINED"
         description: "The participant left your school." # on xx/xx/xxxx."
         colour: "grey"

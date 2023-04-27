@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe StatusTags::DeliveryPartnerParticipantStatusTag, type: :component do
-  let(:participant_profile) { ect_on_fip }
-
-  let(:component) { described_class.new participant_profile: }
+  let(:component) { described_class.new participant_profile: ParticipantProfile.new }
 
   subject(:label) { render_inline component }
+
+  context "The language file" do
+    TrainingRecordState.record_states.each_keys do |key|
+      it "includes :#{key} as a language entry" do
+        expect(I18n.t("status_tags.delivery_partner_participant_status").keys).to include key.to_sym
+      end
+    end
+  end
 
   I18n.t("status_tags.delivery_partner_participant_status").each do |key, value|
     context "when :#{key} is the determined state" do

@@ -203,6 +203,11 @@ en:
         label: "Training or eligible for training"
         description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
 
+      not_yet_mentoring:
+        id: "training_or_eligible_for_training"
+        label: "Training or eligible for training"
+        description: "We’ve confirmed these people are eligible for this programme. Your training provider will contact them directly."
+
       # changes of circumstance
 
       leaving:
@@ -231,6 +236,11 @@ en:
         description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
 
       left:
+        id: "no_longer_being_trained"
+        label: "No longer being trained"
+        description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
+
+      no_longer_involved:
         id: "no_longer_being_trained"
         label: "No longer being trained"
         description: "Your provider reported that they’re not training the people listed below. If this is wrong, contact the relevant provider."
