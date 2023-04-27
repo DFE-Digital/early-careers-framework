@@ -5,6 +5,14 @@ weight: 3
 
 # ECF-based training management
 
+## Contents
+
+* [Data definitions and statesI](/api-reference/ecf/definitions-and-states)
+* [Confirm, view and update partnerships](/api-reference/ecf/guidance/#view-submit-and-update-partnerships)
+* [View and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
+* [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
+* [Schedules and milestone dates ](/api-reference/ecf/schedules-and-milestone-dates)
+
 Once integrated with the API, providers can view, submit and update data. 
 
 The data enables providers to manage and deliver ECF-based training, and receive appropriate payment from DfE.
@@ -15,11 +23,3 @@ While this guidance includes reference to `v3` endpoints, providers can view pre
 
 * [Lead provider API - 1.0.0](api-reference/reference-v1)
 * [Lead provider API - 2.0.0](api-reference/reference-v2)
-
-## Contents
-
-* [Data definitions and statesI](/api-reference/ecf/definitions-and-states)
-* [Confirm, view and update partnerships](/api-reference/ecf/guidance/#view-submit-and-update-partnerships)
-* [View and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
-* [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
-* [Schedules and milestone dates ](/api-reference/ecf/schedules-and-milestone-dates)
