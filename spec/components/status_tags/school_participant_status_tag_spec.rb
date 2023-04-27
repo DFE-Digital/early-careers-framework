@@ -7,7 +7,7 @@ RSpec.describe StatusTags::SchoolParticipantStatusTag, type: :component do
 
   context "When the feature flag :school_participant_status_language is not active" do
     context "The language file" do
-      TrainingRecordState.record_states.each_keys do |key|
+      TrainingRecordState.record_states.each_key do |key|
         it "includes :#{key} as a language entry" do
           expect(I18n.t("status_tags.school_participant_status").keys).to include key.to_sym
         end
@@ -25,7 +25,7 @@ RSpec.describe StatusTags::SchoolParticipantStatusTag, type: :component do
 
   context "When the feature flag :school_participant_status_language is active", with_feature_flags: { school_participant_status_language: "active" } do
     context "The language file" do
-      TrainingRecordState.record_states.each_keys do |key|
+      TrainingRecordState.record_states.each_key do |key|
         it "includes :#{key} as a language entry" do
           expect(I18n.t("status_tags.school_participant_status_detailed").keys).to include key.to_sym
         end
