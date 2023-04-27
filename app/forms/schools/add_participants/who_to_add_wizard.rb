@@ -39,8 +39,8 @@ module Schools
       end
 
       def registration_open_for_participant_cohort?
-        Cohort.current == cohort_to_place_participant ||
-          FeatureFlag.active?(:cohortless_dashboard, for: school) && Cohort.next == cohort_to_place_participant
+        Cohort.current.start_year >= cohort_to_place_participant.start_year ||
+          (FeatureFlag.active?(:cohortless_dashboard, for: school) && cohort_to_place_participant == Cohort.next)
       end
 
       # has this school got a cohort set up for training that matches the incoming transfer
