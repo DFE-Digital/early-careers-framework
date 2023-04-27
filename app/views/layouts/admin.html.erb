@@ -23,6 +23,11 @@
         Appropriate bodies
       <% end %>
     <% end %>
+    <% if current_user&.admin_profile&.super_user? %>
+      <%= component.nav_item(path: admin_super_user_path) do %>
+        Super users
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
 

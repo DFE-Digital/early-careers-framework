@@ -168,5 +168,27 @@ RSpec.describe Partnerships::Create do
         expect(partnership.school_id).to eq(school.id)
       end
     end
+
+    context "existing 'relationship=true' partnership with delivery_partner2" do
+      let(:delivery_partner2) { create(:delivery_partner, name: "Second Delivery Partner") }
+      let!(:provider_relationship2) { create(:provider_relationship, lead_provider:, delivery_partner: delivery_partner2, cohort:) }
+      let!(:partnership2) { create(:partnership, school:, cohort:, delivery_partner: delivery_partner2, lead_provider:, relationship: true) }
+
+      let(:params) do
+        {
+          cohort: cohort.start_year,
+          school_id: school.id,
+          lead_provider_id: lead_provider.id,
+          delivery_partner_id: delivery_partner2.id,
+        }
+      end
+
+      it "returns errors" do
+        expect(Partnership.count).to eql(1)
+        expect(service).to be_invalid
+
+        expect(service.errors.messages_for(:delivery_partner_id)).to include("We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support.")
+      end
+    end
   end
 end

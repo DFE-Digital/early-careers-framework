@@ -38,6 +38,20 @@ module Api
           render_from_service(service, serializer_class)
         end
 
+        # Updates a specific ECF partnership given its ID
+        # Providers can see update a partnership with new delivery partner via this endpoint
+        #
+        # PUT /api/v3/partnerships/ecf/:id
+        #
+        def update
+          service = ::Partnerships::Update.new(
+            partnership: ecf_partnership,
+            delivery_partner_id: partnership_params[:delivery_partner_id],
+          )
+
+          render_from_service(service, serializer_class)
+        end
+
       private
 
         def lead_provider

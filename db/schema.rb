@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_28_155851) do
+ActiveRecord::Schema.define(version: 2023_04_19_084407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2023_03_28_155851) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
+    t.boolean "super_user", default: false
     t.index ["discarded_at"], name: "index_admin_profiles_on_discarded_at"
     t.index ["user_id"], name: "index_admin_profiles_on_user_id"
   end
@@ -651,7 +652,7 @@ ActiveRecord::Schema.define(version: 2023_03_28_155851) do
     t.boolean "sparsity_uplift"
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
-    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text, ('clawed_back'::character varying)::text]))"
+    t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY ((ARRAY['submitted'::character varying, 'eligible'::character varying, 'payable'::character varying, 'paid'::character varying])::text[]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
     t.index ["delivery_partner_id"], name: "index_participant_declarations_on_delivery_partner_id"
@@ -716,6 +717,8 @@ ActiveRecord::Schema.define(version: 2023_03_28_155851) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "cpd_lead_provider_id"
     t.index ["cpd_lead_provider_id"], name: "index_participant_profile_states_on_cpd_lead_provider_id"
+    t.index ["participant_profile_id", "cpd_lead_provider_id"], name: "index_on_profile_and_lead_provider"
+    t.index ["participant_profile_id", "state", "cpd_lead_provider_id"], name: "index_on_profile_and_state_and_lead_provider"
     t.index ["participant_profile_id"], name: "index_participant_profile_states_on_participant_profile_id"
   end
 

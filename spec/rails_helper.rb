@@ -23,6 +23,11 @@ require "sidekiq/testing"
 # require features_helper after support files have been loaded
 require "features_helper"
 
+# require new seed scenarios to build complex sets of related objects
+Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
+  require scenario
+end
+
 Capybara.server = :puma, { Silent: true }
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

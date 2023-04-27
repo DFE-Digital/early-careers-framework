@@ -3,11 +3,9 @@
 module Admin::Participants
   class DetailsController < Admin::BaseController
     include RetrieveProfile
-    include FindInductionRecords
 
     def show
-      @latest_induction_record = latest_induction_record
-      @user = @participant_profile.user
+      @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
       add_breadcrumb(school.name, admin_school_participants_path(school)) if school.present?
     end

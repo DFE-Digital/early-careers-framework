@@ -26,6 +26,14 @@ RSpec.describe "Admin::Participants::NPQ::ChangeFullNameController", :with_defau
       expect(response.body).to match(/<input.*"admin_participants_npq_change_full_name_form\[full_name\]/)
       expect(response.body).to match(/<button.*class="govuk-button"/)
     end
+
+    context "when the user has a get an identity id" do
+      let(:user) { create :user, get_an_identity_id: SecureRandom.uuid }
+
+      it "redirects to the participants page" do
+        expect(response).to redirect_to(admin_participants_path)
+      end
+    end
   end
 
   describe "PUT /admin/participants/:participant_id/npq_change_full_name/" do

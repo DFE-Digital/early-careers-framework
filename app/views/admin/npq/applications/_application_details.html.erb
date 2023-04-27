@@ -33,11 +33,21 @@
     sl.row do |row|
       row.key(text: 'Email')
       row.value(text: application.user.email)
+      unless application.user.get_an_identity_id.present?
+        row.action(
+          href: edit_admin_npq_applications_change_email_path(application),
+        )
+      end
     end
 
     sl.row do |row|
       row.key(text: 'Preferred name')
       row.value(text: application.user.full_name)
+      unless application.user.get_an_identity_id.present?
+        row.action(
+          href: edit_admin_npq_applications_change_name_path(application),
+        )
+      end
     end
 
     sl.row do |row|

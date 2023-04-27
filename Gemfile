@@ -26,7 +26,7 @@ gem "lograge", "~> 0.12.0"
 gem "logstash-event"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.4"
+gem "pg", "~> 1.5"
 
 # Use UUIDs as db primary key by default
 gem "ar-uuid", "~> 0.2.3"
@@ -168,7 +168,7 @@ group :test do
   gem "capybara", "~> 3.39"
   gem "jsonapi-rspec"
   gem "launchy"
-  gem "pundit-matchers", "~> 1.8.4"
+  gem "pundit-matchers", "~> 1.9.0"
   gem "rails-controller-testing", "~> 1.0.5"
   gem "rspec-default_http_header", "~> 0.0.6"
   gem "selenium-webdriver"
@@ -180,5 +180,5 @@ group :test do
   gem "with_model"
 end
 
-gem "countries", "~> 5.3"
+gem "countries", "~> 5.4"
 gem "scenic", "~> 1.7"

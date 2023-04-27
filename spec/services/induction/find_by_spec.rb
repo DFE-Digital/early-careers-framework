@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-Dir.glob(Rails.root.join("db/new_seeds/scenarios/**/*.rb")).each do |scenario|
-  require scenario
-end
-
 RSpec.describe Induction::FindBy, :with_default_schedules do
   let(:cohort) { Cohort.current }
   let(:current_year) { cohort.start_year }

@@ -66,8 +66,8 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
         allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
       end
 
-      it "does not include uplift adjustments" do
-        expect(subject.adjustments_total).to eql(0)
+      it "includes uplift adjustments" do
+        expect(subject.adjustments_total).to eql(-200)
       end
     end
 
@@ -167,6 +167,105 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
         expect(subject.adjustments_total).to eql(-288)
       end
     end
+
+    context "when there are uplifts and clawbacks" do
+      let(:uplift_breakdown) do
+        {
+          previous_count: 0,
+          count: 2,
+          additions: 4,
+          subtractions: 2,
+        }
+      end
+
+      let(:banding_breakdown) do
+        [
+          {
+            band: :a,
+            min: 1,
+            max: 2,
+
+            previous_started_count: 1,
+            started_count: 1,
+            started_additions: 1,
+            started_subtractions: 0,
+
+            previous_retained_1_count: 1,
+            retained_1_count: 1,
+            retained_1_additions: 1,
+            retained_1_subtractions: 0,
+
+            previous_retained_2_count: 1,
+            retained_2_count: 1,
+            retained_2_additions: 1,
+            retained_2_subtractions: 0,
+
+            previous_retained_3_count: 1,
+            retained_3_count: 1,
+            retained_3_additions: 1,
+            retained_3_subtractions: 0,
+
+            previous_retained_4_count: 1,
+            retained_4_count: 1,
+            retained_4_additions: 1,
+            retained_4_subtractions: 0,
+
+            previous_completed_count: 1,
+            completed_count: 1,
+            completed_additions: 1,
+            completed_subtractions: 0,
+          },
+          {
+            band: :b,
+            min: 3,
+            max: 4,
+
+            previous_started_count: 0,
+            started_count: 1,
+            started_additions: 2,
+            started_subtractions: 1,
+
+            previous_retained_1_count: 0,
+            retained_1_count: 1,
+            retained_1_additions: 2,
+            retained_1_subtractions: 1,
+
+            previous_retained_2_count: 0,
+            retained_2_count: 1,
+            retained_2_additions: 2,
+            retained_2_subtractions: 1,
+
+            previous_retained_3_count: 0,
+            retained_3_count: 1,
+            retained_3_additions: 2,
+            retained_3_subtractions: 1,
+
+            previous_retained_4_count: 0,
+            retained_4_count: 1,
+            retained_4_additions: 2,
+            retained_4_subtractions: 1,
+
+            previous_completed_count: 0,
+            completed_count: 1,
+            completed_additions: 2,
+            completed_subtractions: 1,
+          },
+        ]
+      end
+
+      let(:output_calculator) { instance_double("Finance::ECF::OutputCalculator", uplift_breakdown:, banding_breakdown:) }
+
+      let!(:contract) { create(:call_off_contract, lead_provider:) }
+
+      before do
+        allow(Finance::ECF::OutputCalculator).to receive(:new).and_return(output_calculator)
+        allow(output_calculator).to receive(:fee_for_declaration).and_return(48)
+      end
+
+      it "includes clawback and uplift adjustments" do
+        expect(subject.adjustments_total).to eql(-488)
+      end
+    end
   end
 
   describe "#additions_for_started" do
@@ -234,7 +333,7 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
       end
 
       it do
-        expect(subject.total_for_uplift).to eql(200)
+        expect(subject.total_for_uplift).to eql(400)
       end
     end
 
@@ -255,7 +354,7 @@ RSpec.describe Finance::ECF::StatementCalculator, :with_default_schedules do
       end
 
       it do
-        expect(subject.total_for_uplift).to eql(-300)
+        expect(subject.total_for_uplift).to eql(0)
       end
     end
 

@@ -23,6 +23,25 @@ RSpec.describe SchoolMailer, type: :mailer do
     end
   end
 
+  describe "#remind_to_update_school_induction_tutor_details" do
+    let(:school) { instance_double School, name: "Great Ouse Academy", primary_contact_email: "hello@example.com", secondary_contact_email: "goodbye@example.com" }
+    let(:sit_name) { "Mrs SIT" }
+    let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
+
+    let(:nomination_email) do
+      SchoolMailer.remind_to_update_school_induction_tutor_details(
+        nomination_link:,
+        school:,
+        sit_name:,
+      ).deliver_now
+    end
+
+    it "renders the right headers" do
+      expect(nomination_email.from).to eq(["mail@example.com"])
+      expect(nomination_email.to).to eq([school.primary_contact_email, school.secondary_contact_email])
+    end
+  end
+
   describe "#cip_only_invite_email" do
     let(:primary_contact_email) { "contact@example.com" }
     let(:nomination_url) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }

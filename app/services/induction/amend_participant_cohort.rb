@@ -23,48 +23,100 @@ module Induction
                 only_integer: true,
                 greater_than_or_equal_to: ECF_FIRST_YEAR,
                 less_than_or_equal_to: Date.current.year,
-                message: I18n.t("errors.cohort.invalid_start_year", start: ECF_FIRST_YEAR, end: Date.current.year),
+                message: :invalid,
+                start: ECF_FIRST_YEAR,
+                end: Date.current.year,
               }
     validates :target_cohort_start_year,
               numericality: {
                 only_integer: true,
                 greater_than_or_equal_to: ECF_FIRST_YEAR,
                 less_than_or_equal_to: Date.current.year,
-                message: I18n.t("errors.cohort.invalid_start_year", start: ECF_FIRST_YEAR, end: Date.current.year),
-              },
-              exclusion: {
-                within: ->(form) { [form.source_cohort_start_year.to_s, form.source_cohort_start_year.to_i] },
-                message: ->(form, _) { I18n.t("errors.cohort.excluded_start_year", year: form.source_cohort_start_year) },
+                message: :invalid,
+                start: ECF_FIRST_YEAR,
+                end: Date.current.year,
               }
     validates :target_cohort,
               presence: {
-                message: lambda do |form, _|
-                  I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service")
-                end,
+                message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: "the service") },
               }
     validates :participant_profile,
-              presence: { message: I18n.t("errors.participant_profile.blank") },
+              presence: true,
               participant_profile_active: true
-    validates :participant_declarations, absence: { message: I18n.t("errors.participant_declarations.billable_or_submitted") }
+    validates :participant_declarations, absence: { message: :billable_or_submitted }
     validates :induction_record,
               presence: {
-                message: lambda do |form, _|
-                  I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year)
-                end,
+                message: ->(form, _) { I18n.t("errors.induction_record.blank", year: form.source_cohort_start_year) },
               }
     validates :target_school_cohort,
               presence: {
-                message: lambda do |form, _|
-                  I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: form.school&.name)
-                end,
+                message: ->(form, _) { I18n.t("errors.cohort.blank", year: form.target_cohort_start_year, where: form.school&.name) },
               }
+
     delegate :school, to: :induction_record, allow_nil: true
 
     def save
-      valid? && persisted?
+      valid? && current_induction_record_changed? && historical_records_changed?
     end
 
   private
+
+    def current_induction_record_changed?
+      return true if in_target_cohort?(induction_record)
+
+      ActiveRecord::Base.transaction do
+        induction_record.update!(induction_programme:, start_date:, schedule:)
+        participant_profile.update!(school_cohort: target_school_cohort, schedule:)
+      rescue ActiveRecord::RecordInvalid
+        errors.add(:induction_record, induction_record.errors.full_messages.first) if induction_record.errors.any?
+        errors.add(:participant_profile, participant_profile.errors.full_messages.first) if participant_profile.errors.any?
+        false
+      end
+    end
+
+    def historical_records_changed?
+      historical_records.all? do |historical_record|
+        next true if in_target_cohort?(historical_record)
+
+        begin
+          historical_record.update!(induction_programme: historical_default_induction_programme(historical_record),
+                                    start_date:,
+                                    schedule:)
+        rescue ActiveRecord::RecordInvalid
+          false
+        end
+      end
+    end
+
+    def historical_records
+      return [] unless participant_profile
+
+      @historical_records ||= participant_profile.induction_records.order(created_at: :desc)
+    end
+
+    def historical_default_induction_programme(historical_record)
+      historical_target_school_cohort(historical_record.school).default_induction_programme.tap do |induction_programme|
+        if induction_programme.nil?
+          errors.add(:historical_records,
+                     :no_default_induction_programme,
+                     start_academic_year: target_cohort_start_year,
+                     school_name: historical_record.school.name)
+          raise ActiveRecord::RecordInvalid
+        end
+      end
+    end
+
+    def historical_target_school_cohort(school)
+      school.school_cohorts.for_year(target_cohort_start_year).first.tap do |school_cohort|
+        if school_cohort.nil?
+          errors.add(:historical_records,
+                     :school_cohort_not_setup,
+                     start_academic_year: target_cohort_start_year,
+                     school_name: school.name)
+          raise ActiveRecord::RecordInvalid
+        end
+      end
+    end
 
     def induction_programme
       @induction_programme ||= target_school_cohort.default_induction_programme
@@ -81,6 +133,10 @@ module Induction
                                                .latest
     end
 
+    def in_target_cohort?(induction_record)
+      induction_record.cohort_start_year == target_cohort_start_year.to_i
+    end
+
     def participant_declarations
       return false unless participant_profile
 
@@ -89,17 +145,6 @@ module Induction
                                       .billable_or_changeable
                                       .declared_as_between(source_cohort_start_date, source_cohort_end_date)
                                       .exists?
-    end
-
-    def persisted?
-      ActiveRecord::Base.transaction do
-        induction_record.update!(induction_programme:, start_date:, schedule:)
-        participant_profile.update!(school_cohort: target_school_cohort, schedule:)
-      rescue ActiveRecord::RecordInvalid
-        errors.add(:induction_record, induction_record.errors.full_messages.first) if induction_record.errors.any?
-        errors.add(:participant_profile, participant_profile.errors.full_messages.first) if participant_profile.errors.any?
-        false
-      end
     end
 
     def schedule

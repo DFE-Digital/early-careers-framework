@@ -6,13 +6,18 @@
   sl.row do |row|
     row.key(text: "Participant name")
     row.value(text: user_full_name)
-    row.action(text: "Change", href: edit_admin_participant_npq_change_full_name_path(profile), visually_hidden_text: "participant name")
+    unless npq_application.user.get_an_identity_id.present?
+    row.action(text: "Change",
+      href: edit_admin_participant_npq_change_full_name_path(profile),visually_hidden_text: "participant name")
+  end
   end
 
   sl.row do |row|
     row.key(text: "Participant email")
     row.value(text: user_email)
+    unless npq_application.user.get_an_identity_id.present?
     row.action(text: "Change", href: edit_admin_participant_npq_change_email_path(profile), visually_hidden_text: "participant email address")
+  end
   end
 
   if profile_pending?

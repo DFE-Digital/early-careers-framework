@@ -21,7 +21,6 @@ class SchoolMailer < ApplicationMailer
   REMIND_FIP_TO_ADD_ECTS_AND_MENTORS_EMAIL_TEMPLATE = "63f9fe5b-aff1-4cf7-9593-6843b80d4044"
   NQT_PLUS_ONE_SITLESS_EMAIL_TEMPLATE = "c10392e4-9d75-402d-a7fd-47df16fa6082"
   NQT_PLUS_ONE_SIT_EMAIL_TEMPLATE = "9e01b5ac-a94c-4c71-a38d-6502d7c4c2e7"
-  ADD_2020_PARTICIPANT_CONFIRMATION_TEMPLATE = "08d45879-1f94-48a2-88c1-108f596fa59e"
   DIY_WORDPRESS_NOTIFICATION_TEMPLATE = "e1067a2f-b027-45a6-8e51-668e170090d1"
   PARTNERED_SCHOOL_INVITE_SIT_EMAIL_TEMPLATE = "8cac177e-b094-4a00-9179-94fadde8ced0"
   UNPARTNERED_CIP_SIT_ADD_PARTICIPANTS_EMAIL_TEMPLATE = "ebc96223-c2ea-416e-8d3e-1f591bbd2f98"
@@ -30,6 +29,7 @@ class SchoolMailer < ApplicationMailer
   SCHOOL_PRETERM_REMINDER = "a7cc4d19-c0cb-4187-a71b-1b1ea029924f"
   PARTICIPANT_WITHDRAWN_BY_PROVIDER = "29f94916-8c3a-4c5a-9e33-bdf3f5d7249a"
   REMIND_TO_SETUP_MENTOR_TO_ECTS = "604ca80f-b152-4682-9295-9cf1d30f74c1"
+  REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE = "88cdad72-386c-40fb-be2e-11d4ae9dcdee"
 
   def remind_sit_to_set_mentor_to_ects
     sit = params[:sit]
@@ -90,6 +90,17 @@ class SchoolMailer < ApplicationMailer
         expiry_date:,
       },
     ).tag(:request_to_nominate_sit).associate_with(school)
+  end
+
+  # This email lets the GIAS contact at a school update their induction tutor
+  def remind_to_update_school_induction_tutor_details(school:, sit_name:, nomination_link:)
+    template_mail(
+      REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE,
+      to: [school.primary_contact_email, school.secondary_contact_email].compact.uniq,
+      rails_mailer: mailer_name,
+      rails_mail_template: action_name,
+      personalisation: { sit_name:, nomination_link: },
+    ).tag(:remind_to_update_induction_tutor).associate_with(school)
   end
 
   # This email is sent to newly appointed SIT

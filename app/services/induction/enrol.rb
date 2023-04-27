@@ -5,6 +5,8 @@ class Induction::Enrol < BaseService
     ActiveRecord::Base.transaction do
       record_active_profile_participant_state!
 
+      participant_profile.training_status_active!
+
       participant_profile.induction_records.create!(
         induction_programme:,
         start_date:,

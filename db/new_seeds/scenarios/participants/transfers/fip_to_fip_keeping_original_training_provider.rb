@@ -17,11 +17,16 @@ module NewSeeds
                                              school: school_to,
                                              lead_provider: induction_programme_from.lead_provider,
                                              delivery_partner: induction_programme_from.delivery_partner)
-            @induction_programme_to ||= NewSeeds::Scenarios::SchoolCohorts::Fip
-                                          .new(cohort:, school: school_to)
-                                          .build
-                                          .add_programme(default_induction_programme: false, partnership: relationship)
+            # really want the destination school to have a properly set up school_cohort and induction programme
             setup
+
+            # create an additional induction programme as non-default with a relationship
+            @induction_programme_to = NewSeeds::Scenarios::InductionProgrammes::Fip
+              .new(school_cohort: school_cohort_to)
+              .build(default_induction_programme: false)
+              .with_partnership(partnership: relationship)
+              .induction_programme
+
             Rails.logger.info("seeded transfer of #{participant_profile.full_name} from #{school_from.name} to #{school_to.name} while keeping their original training provider")
 
             create_induction_record_to

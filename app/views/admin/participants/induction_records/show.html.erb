@@ -7,10 +7,10 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<% if @all_induction_records.present? %>
+<% if @participant_presenter.all_induction_records.present? %>
   <h2 class="govuk-heading-m">Induction records</h2>
 
-  <% @all_induction_records.each do |induction_record| %>
+  <% @participant_presenter.all_induction_records.each do |induction_record| %>
     <%= tag.h3(induction_record.id, class: "govuk-heading-s") %>
 
     <%=
@@ -103,5 +103,5 @@
     %>
   <% end %>
 <% else %>
-  <p>No induction records for <%= @participant_profile.full_name %>.</p>
+  <p>No induction records for <%= @participant_presenter.full_name %>.</p>
 <% end %>

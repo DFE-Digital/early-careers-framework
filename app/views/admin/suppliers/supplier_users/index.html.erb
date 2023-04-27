@@ -1,6 +1,14 @@
 <% content_for :title, "Users" %>
 <%= render "admin/suppliers/suppliers/layout", locals = { page: "users" } %>
+
+<%= render SearchBox.new(
+  query: @query,
+  title: "Search supplier users",
+  hint: "Enter the user's name, email address or supplier",
+) %>
+
 <%= govuk_button_link_to "Add a new user", new_admin_supplier_user_path %>
+
 <table class="govuk-table">
   <thead>
     <tr class="govuk-table__row">
@@ -10,7 +18,7 @@
     </tr>
   </thead>
   <tbody class="govuk-table__body">
-    <% @users.each do |user| %>
+    <% @lead_providers.map(&:user).each do |user| %>
       <tr class="govuk-table__row">
         <td class="govuk-table__cell"><%= govuk_link_to user.full_name, admin_edit_user_path(user), "data-test": "edit-supplier-user-link" %></td>
         <td class="govuk-table__cell"><%= user.email %></td>
@@ -19,4 +27,5 @@
     <% end %>
   </tbody>
 </table>
+
 <%== govuk_pagination(pagy: @pagy) %>

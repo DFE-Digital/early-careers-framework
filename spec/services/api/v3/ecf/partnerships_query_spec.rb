@@ -89,6 +89,15 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
         end
       end
     end
+
+    describe "ignore relationships" do
+      let(:relationship_cohort) { create(:cohort, start_year: "2051") }
+      let!(:relationship_partnership) { create(:partnership, cohort: relationship_cohort, lead_provider:, relationship: true) }
+
+      it "does not return relationship" do
+        expect(subject.partnerships).to match_array([partnership, another_partnership])
+      end
+    end
   end
 
   describe "#partnership" do
@@ -121,6 +130,15 @@ RSpec.describe Api::V3::ECF::PartnershipsQuery do
       let(:params) { {} }
 
       it "raises an exception" do
+        expect { subject.partnership }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    describe "ignore relationships" do
+      let!(:partnership) { create(:partnership, cohort:, lead_provider:, relationship: true) }
+      let(:params) { { id: partnership.id } }
+
+      it "does not return relationship" do
         expect { subject.partnership }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end

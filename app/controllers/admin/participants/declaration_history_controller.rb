@@ -5,9 +5,7 @@ module Admin::Participants
     include RetrieveProfile
 
     def show
-      @participant_declarations = @participant_profile.participant_declarations
-                                                      .includes(:cpd_lead_provider, :delivery_partner)
-                                                      .order(created_at: :desc)
+      @participant_presenter = Admin::ParticipantPresenter.new(@participant_profile)
 
       add_breadcrumb(
         school.name,

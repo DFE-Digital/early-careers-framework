@@ -17,6 +17,15 @@ RSpec.describe Induction::Enrol do
       expect { subject.call(participant_profile:, induction_programme:) }.to change { ParticipantProfileState.count }.by(1)
     end
 
+    context "when the participant profile training_status is withdrawn" do
+      let(:participant_profile) { create(:ect_participant_profile, training_status: :withdrawn) }
+
+      it "it changes it to active" do
+        service.call(participant_profile:, induction_programme:)
+        expect(participant_profile.training_status).to eql "active"
+      end
+    end
+
     context "without optional params" do
       let(:induction_record) do
         service.call(participant_profile:, induction_programme:)

@@ -6,7 +6,8 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
   let(:email_address) { "test-lead-provider@example.com" }
   let(:lead_provider_name) { "Test Lead Provider" }
 
-  let!(:cohort) { create :cohort, start_year: 2021 }
+  let!(:cohort) { create :cohort, start_year: 2021, registration_start_date: 1.day.ago }
+  let!(:cohort_next) { create :cohort, start_year: 2022, registration_start_date: 1.day.from_now }
   let!(:ecf_lead_provider) do
     ecf_lead_provider = create(:lead_provider, name: lead_provider_name)
     create :cpd_lead_provider, lead_provider: ecf_lead_provider, name: lead_provider_name
@@ -32,6 +33,7 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
   scenario "Confirming schools" do
     given_i_sign_in_as_the_user_with_the_email email_address
     and_i_am_on_the_lead_provider_dashboard
+    and_i_do_not_see_next_cohort_schools_confirmation
 
     when_i_confirm_schools_from_the_lead_provider_dashboard
 
@@ -44,5 +46,9 @@ RSpec.feature "Lead Provider Dashboard", type: :feature, js: true, rutabaga: fal
     when_i_check_schools_from_the_lead_provider_dashboard
 
     then_i_am_on_the_check_schools_page
+  end
+
+  def and_i_do_not_see_next_cohort_schools_confirmation
+    expect(page).not_to have_content("Confirm your schools for the 2022 to 2023 academic year")
   end
 end

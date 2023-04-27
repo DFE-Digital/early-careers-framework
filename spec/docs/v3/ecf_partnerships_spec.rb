@@ -200,15 +200,28 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         end
       end
     end
-  end
 
-  context "with API V3 feature flag disabled", api_v3: true do
     path "/api/v3/partnerships/ecf/{id}" do
       put "<b>Note, this endpoint is new.</b><br/>Update a partnership’s delivery partner in an existing partnership in a cohort" do
         operationId :partnerships_ecf_put
         tags "ECF partnerships"
         security [bearerAuth: []]
         consumes "application/json"
+
+        let!(:partnership) { create(:partnership, school:, cohort:, delivery_partner:, lead_provider:) }
+        let(:delivery_partner2) { create(:delivery_partner, name: "Second Delivery Partner") }
+        let!(:provider_relationship2) { create(:provider_relationship, lead_provider:, delivery_partner: delivery_partner2, cohort:) }
+
+        let(:params) do
+          {
+            "data": {
+              "type": "ecf-partnership-update",
+              "attributes": {
+                "delivery_partner_id": delivery_partner2.id,
+              },
+            },
+          }
+        end
 
         parameter name: :id,
                   in: :path,
@@ -228,9 +241,9 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
                   }
 
         response "200", "Update an ECF partnership" do
+          let(:id) { partnership.id }
           schema({ "$ref": "#/components/schemas/ECFPartnershipResponse" })
 
-          # TODO: replace with actual implementation once implemented
           after do |example|
             content = example.metadata[:response][:content] || {}
 
@@ -271,6 +284,7 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
 
         response "401", "Unauthorized" do
           let(:Authorization) { "Bearer invalid" }
+          let(:id) { partnership.id }
 
           schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
@@ -278,7 +292,27 @@ RSpec.describe "API", type: :request, swagger_doc: "v3/api_spec.json" do
         end
 
         response "422", "Unprocessable entity" do
+          let(:params) do
+            {
+              "data": {
+                "type": "ecf-partnership-update",
+                "attributes": {
+                  "delivery_partner_id": nil,
+                },
+              },
+            }
+          end
+          let(:id) { partnership.id }
+
           schema({ "$ref": "#/components/schemas/ECFPartnershipRequestErrorResponse" })
+
+          run_test!
+        end
+
+        response "404", "Not Found", exceptions_app: true do
+          let(:id) { "test" }
+
+          schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
           run_test!
         end

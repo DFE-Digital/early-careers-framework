@@ -14,13 +14,13 @@
 <%= govuk_summary_list do |sl|
   sl.row do |row|
     row.key(text: "Cohort (via induction record)")
-    row.value(text: @latest_induction_record&.cohort&.start_year)
+    row.value(text: @participant_presenter.start_year)
   end
 
   sl.row do |row|
     row.key(text: "Cohort (via schedule)")
-    row.value(text: @latest_induction_record&.schedule&.cohort&.start_year)
+    row.value(text: @participant_presenter&.relevant_induction_record&.schedule&.cohort&.start_year)
   end
 end %>
 
-<%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@latest_induction_record.participant_profile), secondary: true) %>
+<%= govuk_button_link_to("Change cohort", edit_admin_participant_change_cohort_path(@participant_presenter.participant_profile), secondary: true) %>

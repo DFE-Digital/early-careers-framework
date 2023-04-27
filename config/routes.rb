@@ -153,8 +153,9 @@ Rails.application.routes.draw do
     namespace :v3, constraints: ->(_request) { FeatureFlag.active?(:api_v3) } do
       resources :statements, only: %i[index show], controller: "finance/statements"
       resources :delivery_partners, only: %i[index show], path: "delivery-partners"
-      resources :partnerships, path: "partnerships/ecf", only: %i[show index create], controller: "ecf/partnerships"
-      resources :npq_participants, only: [], path: "participants/npq" do
+      resources :partnerships, path: "partnerships/ecf", only: %i[show index create update], controller: "ecf/partnerships"
+      resources :npq_participants, only: %i[index show], path: "participants/npq" do
+        concerns :participant_actions
         collection do
           resources :outcomes, only: %i[index], controller: "provider_outcomes"
           get ":participant_id/outcomes", to: "participant_outcomes#index"
@@ -433,11 +434,13 @@ Rails.application.routes.draw do
 
     namespace :npq do
       resource :applications, only: [] do
-        resources :exports, only: %i[index new create], controller: "applications/exports"
         get "/eligibility_imports/example", to: "applications/eligibility_imports#example", as: :example_csv_file
-        resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
-
         get "/analysis", to: "applications/analysis#invalid_payments_analysis", as: :analysis
+
+        resources :change_name, controller: "applications/change_name", only: %i[edit update]
+        resources :change_email, controller: "applications/change_email", only: %i[edit update]
+        resources :exports, only: %i[index new create], controller: "applications/exports"
+        resources :eligibility_imports, only: %i[index new create show], controller: "applications/eligibility_imports"
         resources :applications, only: %i[index show]
         resources :edge_cases, controller: "applications/edge_cases", only: %i[index show]
         resources :eligible_for_funding, controller: "applications/eligible_for_funding", only: %i[edit update]
@@ -445,6 +448,8 @@ Rails.application.routes.draw do
         resources :notes, controller: "applications/notes", only: %i[edit update]
       end
     end
+
+    resource :super_user, only: %i[show], path: "super-user"
   end
 
   namespace :finance do

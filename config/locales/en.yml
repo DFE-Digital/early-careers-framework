@@ -277,6 +277,24 @@ en:
               invalid: "Please enter a valid end date"
               in_future: "End date cannot be in the future"
               before_start_date: "End date must be after start date"
+        induction/amend_participant_cohort:
+          attributes:
+            historical_records:
+              no_default_induction_programme: "No default induction programme set for %{start_academic_year} academic year by school %{school_name}"
+              school_cohort_not_setup: "%{start_academic_year} academic year not setup by school %{school_name}"
+            participant_declarations:
+              exist: "The participant must have no declarations"
+              billable_or_submitted: "The participant has billable or submitted declarations in the current cohort"
+              completed: "The participant has not not had a 'completed' declaration submitted against them. Therefore you cannot update their outcome"
+            participant_profile:
+              blank: "Not registered"
+              not_active: "Not active"
+            source_cohort_start_year:
+              invalid: "Invalid value. Must be an integer between %{start} and %{end}"
+            target_cohort_start_year:
+              excluded: "Invalid value. Must be different to %{year}"
+              invalid: "Invalid value. Must be an integer between %{start} and %{end}"
+
         nominate_induction_tutor_form:
           attributes:
             email:
@@ -470,6 +488,17 @@ en:
               blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
               invalid: "The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations."
               no_relationship: "The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
+              duplicate_delivery_partner: "We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
+        partnerships/update:
+          attributes:
+            partnership:
+              blank: "The attribute '#/partnership' must be included as part of partnership confirmations."
+            delivery_partner_id:
+              blank: "The attribute '#/delivery_partner_id' must be included as part of partnership confirmations."
+              invalid: "The '#/delivery_partner_id' you have entered is invalid. Enter a valid '#/delivery_partner_id' attribute in the request body for partnership confirmations."
+              no_relationship: "The delivery partner that has been specified is not recognised to be working in partnership with you for the given cohort. Contact the DfE for more information."
+              partnership_challenged: "Your update cannot be made as this partnership has been challenged by the school. If this partnership has been challenged in error, you can submit a new confirmation of partnership using the endpoint POST /api/v3/partnerships/ecf."
+              duplicate_delivery_partner: "We are unable to process this request. You are already confirmed to be in partnership with the entered delivery partner. Contact the DfE for support."
 
   page_titles:
     lead_providers:

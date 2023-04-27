@@ -5,7 +5,11 @@ module NewSeeds
     module Participants
       module Ects
         class Ect
-          attr_reader :participant_profile
+          attr_reader :participant_profile,
+                      :participant_identity,
+                      :school_cohort,
+                      :teacher_profile,
+                      :user
 
           def initialize(school_cohort:, full_name: nil, email: nil)
             @school_cohort = school_cohort
@@ -96,11 +100,7 @@ module NewSeeds
 
         private
 
-          attr_reader :new_user_attributes,
-                      :school_cohort,
-                      :teacher_profile,
-                      :participant_identity,
-                      :user
+          attr_reader :new_user_attributes
         end
       end
     end

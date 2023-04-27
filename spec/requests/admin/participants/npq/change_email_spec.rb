@@ -26,6 +26,15 @@ RSpec.describe "Admin::Participants::NPQ::ChangeEmailController", :with_default_
       expect(response.body).to match(/<input.*"admin_participants_npq_change_email_form\[email\]/)
       expect(response.body).to match(/<button.*class="govuk-button"/)
     end
+
+    context "when the user has a get an identity id" do
+      let(:user) { create :user, get_an_identity_id: SecureRandom.uuid }
+
+      it "redirects to the participants page" do
+        expect(npq_profile.user.get_an_identity_id.present?).to be true
+        expect(response).to redirect_to(admin_participants_path)
+      end
+    end
   end
 
   describe "PUT /admin/participants/:participant_id/npq_change_email/" do
@@ -38,7 +47,7 @@ RSpec.describe "Admin::Participants::NPQ::ChangeEmailController", :with_default_
       put("/admin/participants/#{npq_profile.id}/npq_change_email", params:)
 
       expect(npq_profile.user.reload.email).to eql(new_email)
-      expect(response).to redirect_to(admin_participant_path(npq_profile))
+      expect(response).to redirect_to(admin_participant_path)
     end
 
     context "when validation fails" do

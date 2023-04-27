@@ -10,8 +10,8 @@ module Admin
       before_action :form_from_session, only: %i[user_details review create]
 
       def index
-        sorted_users = User.for_lead_provider.sort_by(&:full_name)
-        @pagy, @users = pagy_array(sorted_users, page: params[:page], items: 20)
+        @query = params[:query]
+        @pagy, @lead_providers = pagy_array(scoped_lead_providers, page: params[:page], items: 20)
         @page = @pagy.page
         @total_pages = @pagy.pages
       end
@@ -81,6 +81,14 @@ module Admin
 
       def form_from_session
         @supplier_user_form = SupplierUserForm.new(session[:supplier_user_form])
+      end
+
+      def scoped_lead_providers
+        return policy_scope(LeadProviderProfile).includes(:user).order("users.full_name asc") if params[:query].blank?
+
+        ::LeadProviderProfiles::SearchQuery
+          .new(query: params[:query], scope: policy_scope(LeadProviderProfile))
+          .call
       end
     end
   end

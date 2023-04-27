@@ -959,6 +959,18 @@
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of NPQ participants."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/NPQParticipantsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort NPQ participants being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -1146,6 +1158,7 @@
                         "attributes": {
                           "full_name": "Isabelle MacDonald",
                           "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
                           "npq_enrolments": [
                             {
                               "email": "isabelle.macdonald2@some-school.example.com",
@@ -1164,8 +1177,7 @@
                               },
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
-                          ],
-                          "updated_at": "2021-05-31T02:22:32.000Z"
+                          ]
                         }
                       }
                     }
@@ -1278,6 +1290,7 @@
                         "attributes": {
                           "full_name": "Isabelle MacDonald",
                           "teacher_reference_number": "1234567",
+                          "updated_at": "2021-05-31T02:22:32.000Z",
                           "npq_enrolments": [
                             {
                               "email": "isabelle.macdonald2@some-school.example.com",
@@ -1296,8 +1309,7 @@
                               "deferral": null,
                               "created_at": "2021-05-31T02:22:32.000Z"
                             }
-                          ],
-                          "updated_at": "2021-05-31T02:22:32.000Z"
+                          ]
                         }
                       }
                     }
@@ -4752,12 +4764,14 @@
           },
           "withdrawal": {
             "nullable": true,
+            "type": "object",
             "anyOf": [
               { "$ref": "#/components/schemas/NPQWithdrawal" }
             ]
           },
           "deferral": {
             "nullable": true,
+            "type": "object",
             "anyOf": [
               { "$ref": "#/components/schemas/NPQDeferral" }
             ]
@@ -5035,18 +5049,18 @@
             "example": "1234567",
             "nullable": true
           },
+          "updated_at": {
+            "description": "The date the NPQ participant was last updated",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-05-31T02:22:32.000Z"
+          },
           "npq_enrolments": {
             "description": "Information about the course(s) the participant is enroled in",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NPQEnrolment"
             }
-          },
-          "updated_at": {
-            "description": "The date the NPQ participant was last updated",
-            "type": "string",
-            "format": "date-time",
-            "example": "2021-05-31T02:22:32.000Z"
           }
         }
       },
@@ -5923,6 +5937,19 @@
             ],
             "example": "unknown"
           }
+        }
+      },
+      "NPQParticipantsSort": {
+        "description": "Sort NPQ participants being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "-created_at",
+            "updated_at",
+            "-updated_at"
+          ]
         }
       },
       "NPQParticipantWithdraw": {

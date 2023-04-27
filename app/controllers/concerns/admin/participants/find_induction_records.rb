@@ -5,8 +5,8 @@ module Admin
     module FindInductionRecords
       extend ActiveSupport::Concern
 
-      def latest_induction_record
-        induction_records.first
+      def relevant_induction_record
+        Induction::FindBy.new(participant_profile: @participant_profile).call
       end
 
       def historical_induction_records

@@ -7,14 +7,14 @@
 
 <%= render partial: "admin/participants/nav" %>
 
-<% if @latest_induction_record.present? %>
+<% if @relevant_induction_record.present? %>
   <h2 class="govuk-heading-m">Key events</h2>
 
   <%= govuk_summary_list(
     rows: [
       {
         key: { text: "Added to the service" },
-        value: { text: @latest_induction_record.user.created_at.to_date.to_s(:govuk) }
+        value: { text: @participant_presenter.user_created_at }
       }
     ]
   ) %>
@@ -22,7 +22,7 @@
   <%= govuk_table(
     caption: "School transfers",
     head: ["School name", "Induction programme", "Start date", "End date"],
-    rows: @historical_induction_records.map do |r|
+    rows: @participant_presenter.map do |r|
       [
         r.school_cohort.school.name,
         r.induction_programme.training_programme.humanize,
@@ -32,5 +32,5 @@
     end,
   ) %>
 <% else %>
-  <p>No key events for <%= @participant_profile.full_name %>.</p>
+  <p>No key events for <%= @participant_presenter.full_name %>.</p>
 <% end %>
