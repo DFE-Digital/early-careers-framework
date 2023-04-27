@@ -901,7 +901,7 @@ For more detailed information see the specifications for this [notify DfE that a
 
 ### View all previously submitted declarations 
 
-View all declarations which have been submitted to date. Check declaration submissions, identify if any are missing, and void or clawback those which have been submitted in error.
+View all declarations which have been submitted to date. Check submissions, identify if any are missing, and void or clawback those which have been submitted in error.
 
 ```
 GET /api/v3/participant-declarations
