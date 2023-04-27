@@ -43,27 +43,6 @@ module Schools
           (FeatureFlag.active?(:cohortless_dashboard, for: school) && cohort_to_place_participant == Cohort.next)
       end
 
-      # has this school got a cohort set up for training that matches the incoming transfer
-      def need_training_setup?(must_be_fip: true)
-        destination_cohort = school.school_cohorts.find_by(cohort: cohort_to_place_participant)
-        return true if destination_cohort.blank?
-
-        if must_be_fip
-          !destination_cohort.full_induction_programme?
-        else
-          !(destination_cohort.full_induction_programme? || destination_cohort.core_induction_programme?)
-        end
-      end
-
-      # path to the most appropriate start point to set up training for the transfer
-      def need_training_path
-        if cohort_to_place_participant == Cohort.active_registration_cohort
-          expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
-        else
-          schools_choose_programme_path(school_id: school.slug, cohort_id: cohort_to_place_participant)
-        end
-      end
-
       def next_step_path
         if changing_answer?
           if form.revisit_next_step?

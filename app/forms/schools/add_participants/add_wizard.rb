@@ -10,6 +10,7 @@ module Schools
           start_date
           start_term
           cannot_add_registration_not_yet_open
+          need_training_setup
           choose_mentor
           confirm_appropriate_body
           check_answers
