@@ -7,7 +7,7 @@ weight: 3
 
 ## Contents
 
-* [Data definitions and statesI](/api-reference/ecf/definitions-and-states)
+* [Data definitions and states](/api-reference/ecf/definitions-and-states)
 * [Confirm, view and update partnerships](/api-reference/ecf/guidance/#view-submit-and-update-partnerships)
 * [View and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
 * [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
