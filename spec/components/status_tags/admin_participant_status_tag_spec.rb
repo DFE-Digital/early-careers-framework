@@ -6,7 +6,7 @@ RSpec.describe StatusTags::AdminParticipantStatusTag, type: :component do
   subject(:label) { render_inline component }
 
   context "The language file" do
-    TrainingRecordState.record_states.each_keys do |key|
+    TrainingRecordState.record_states.each_key do |key|
       it "includes :#{key} as a language entry" do
         expect(I18n.t("status_tags.admin_participant_status").keys).to include key.to_sym
       end
