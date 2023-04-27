@@ -33,6 +33,10 @@ module Api
           end
         end
 
+        def user
+          users.find(params[:participant_id])
+        end
+
       private
 
         attr_accessor :lead_provider, :params

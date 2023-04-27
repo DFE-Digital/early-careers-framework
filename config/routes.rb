@@ -167,6 +167,7 @@ Rails.application.routes.draw do
         concerns :participant_actions
         collection do
           resources :transfers, only: %i[index], controller: "ecf/transfers"
+          get ":participant_id/transfers", to: "ecf/transfers#show"
         end
       end
     end

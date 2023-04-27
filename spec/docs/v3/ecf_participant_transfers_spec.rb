@@ -58,44 +58,43 @@ describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_sp
     end
   end
 
-  describe "/api/v3/participants/ecf/{id}/transfers", api_v3: true do
-    path "/api/v3/participants/ecf/{id}/transfers" do
-      get "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers" do
-        operationId :participant_transfers
-        tags "participant transfers"
-        security [bearerAuth: []]
+  path "/api/v3/participants/ecf/{id}/transfers" do
+    get "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers" do
+      operationId :participant_transfers
+      tags "participant transfers"
+      security [bearerAuth: []]
 
-        parameter name: :id,
-                  in: :path,
-                  required: true,
-                  example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                  description: "The ID of the ECF participant.",
-                  schema: {
-                    type: "string",
-                  }
+      parameter name: :id,
+                in: :path,
+                required: true,
+                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                description: "The ID of the ECF participant.",
+                schema: {
+                  type: "string",
+                }
 
-        response "200", "A single participant's transfers" do
-          let(:id) { mentor_profile.user.id }
+      response "200", "A single participant's transfers" do
+        let(:id) { transfer.preferred_identity.user.id }
 
-          schema({ "$ref": "#/components/schemas/ECFParticipantTransferResponse" })
+        schema({ "$ref": "#/components/schemas/ECFParticipantTransferResponse" })
 
-          run_test!
-        end
+        run_test!
+      end
 
-        response "401", "Unauthorized" do
-          let(:id) { mentor_profile.user.id }
-          let(:Authorization) { "Bearer invalid" }
+      response "401", "Unauthorized" do
+        let(:id) { transfer.preferred_identity.user.id }
+        let(:Authorization) { "Bearer invalid" }
 
-          schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
-          run_test!
-        end
+        run_test!
+      end
 
-        response "404", "Not Found" do
-          schema({ "$ref": "#/components/schemas/NotFoundResponse" })
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "wrong-id" }
+        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
-          run_test!
-        end
+        run_test!
       end
     end
   end

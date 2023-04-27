@@ -43,6 +43,11 @@ RSpec.describe "API ECF transfers", :with_default_schedules, type: :request, wit
             ).exactly)
         end
 
+        it "returns the correct participant transfers" do
+          get "/api/v3/participants/ecf/transfers"
+          expect(parsed_response["data"][0]["attributes"]["transfers"].size).to eq(1)
+        end
+
         context "pagination" do
           let!(:another_transfer) do
             NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
@@ -107,6 +112,49 @@ RSpec.describe "API ECF transfers", :with_default_schedules, type: :request, wit
         default_headers[:Authorization] = bearer_token
         get "/api/v3/participants/ecf/transfers"
         expect(response.status).to eq 403
+      end
+    end
+  end
+
+  describe "GET /api/v3/participants/ecf/:id/transfers" do
+    let!(:transfer) do
+      NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
+        .new(lead_provider_from: cpd_lead_provider.lead_provider)
+        .build
+    end
+    let(:user) { transfer.preferred_identity.user }
+
+    before do
+      get "/api/v3/participants/ecf/#{user.id}/transfers"
+    end
+
+    context "when authorized" do
+      it "returns correct jsonapi content type header" do
+        expect(response.headers["Content-Type"]).to eql("application/vnd.api+json")
+      end
+
+      it "returns correct type" do
+        expect(parsed_response["data"]).to have_type("participant-transfer")
+      end
+
+      it "has correct attributes" do
+        expect(parsed_response["data"])
+          .to(have_jsonapi_attributes(
+            :updated_at,
+            :transfers,
+          ).exactly)
+      end
+
+      it "returns the correct participant transfers" do
+        expect(parsed_response["data"]["attributes"]["transfers"].size).to eq(1)
+      end
+    end
+
+    context "when unauthorized" do
+      let(:token) { "wrong_token" }
+
+      it "returns 401 for invalid bearer token" do
+        expect(response.status).to eq 401
       end
     end
   end

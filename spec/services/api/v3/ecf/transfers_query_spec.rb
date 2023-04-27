@@ -173,4 +173,35 @@ RSpec.describe Api::V3::ECF::TransfersQuery do
       end
     end
   end
+
+  describe "#user" do
+    let!(:induction_record) do
+      NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
+        .new(lead_provider_from: lead_provider)
+        .build
+    end
+
+    let(:user) { induction_record.preferred_identity.user }
+    let(:params) { { participant_id: user.id } }
+
+    it "returns the user with the id" do
+      expect(subject.user).to eq(user)
+    end
+
+    context "with non-existing ID" do
+      let(:params) { { participant_id: "does-not-exist" } }
+
+      it "raises an exception" do
+        expect { subject.user }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "with no ID" do
+      let(:params) { {} }
+
+      it "raises an exception" do
+        expect { subject.user }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 end
