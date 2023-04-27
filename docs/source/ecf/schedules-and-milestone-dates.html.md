@@ -28,7 +28,7 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 | Milestone validation    | The API's process to validate declarations submitted by providers for participants in standard training schedules        |
 
 
-## Standard training schedules and dates
+## Standard schedules and dates
 
 A default 2 year induction training schedule covers 6 terms (3 in each academic year), and therefore has 6 milestones. 
 
@@ -215,7 +215,7 @@ The API will perform milestone validation to reject a declaration if:
 * it is submitted before or after the milestone date. For example, an `ecf-standard-september` schedule allows `started` declarations between 19 November to 30 November. A declaration submitted outside of these dates will be rejected, unless its `declaration_date` is backdated accordingly
 * it corresponds to a participant's [updated schedule](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-changed-their-training-schedule), but the participant has previously submitted declarations corresponding to the former schedule (which have not yet been voided).
 
-## Non-standard training schedules and dates
+## Non-standard schedules and dates
 
 A standard 2 year induction training schedule covers 6 terms (3 in each academic year), and therefore has 6 milestones. However, a participant can choose to follow a non-standard schedule: extended, reduced or replacement.  
 
