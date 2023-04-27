@@ -2,10 +2,17 @@
 
 require "swagger_helper"
 
-describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
+  let!(:cohort) { create(:cohort, :current) }
+  let!(:transfer) do
+    NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
+      .new(lead_provider_from: cpd_lead_provider.lead_provider)
+      .build
+  end
 
   path "/api/v3/participants/ecf/transfers" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers" do
@@ -51,42 +58,44 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
     end
   end
 
-  path "/api/v3/participants/ecf/{id}/transfers" do
-    get "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers" do
-      operationId :participant_transfers
-      tags "participant transfers"
-      security [bearerAuth: []]
+  describe "/api/v3/participants/ecf/{id}/transfers", api_v3: true do
+    path "/api/v3/participants/ecf/{id}/transfers" do
+      get "<b>Note, this endpoint is new.</b><br/>Get a single participant's transfers" do
+        operationId :participant_transfers
+        tags "participant transfers"
+        security [bearerAuth: []]
 
-      parameter name: :id,
-                in: :path,
-                required: true,
-                example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
-                description: "The ID of the ECF participant.",
-                schema: {
-                  type: "string",
-                }
+        parameter name: :id,
+                  in: :path,
+                  required: true,
+                  example: "28c461ee-ffc0-4e56-96bd-788579a0ed75",
+                  description: "The ID of the ECF participant.",
+                  schema: {
+                    type: "string",
+                  }
 
-      response "200", "A single participant's transfers" do
-        let(:id) { mentor_profile.user.id }
+        response "200", "A single participant's transfers" do
+          let(:id) { mentor_profile.user.id }
 
-        schema({ "$ref": "#/components/schemas/ECFParticipantTransferResponse" })
+          schema({ "$ref": "#/components/schemas/ECFParticipantTransferResponse" })
 
-        run_test!
-      end
+          run_test!
+        end
 
-      response "401", "Unauthorized" do
-        let(:id) { mentor_profile.user.id }
-        let(:Authorization) { "Bearer invalid" }
+        response "401", "Unauthorized" do
+          let(:id) { mentor_profile.user.id }
+          let(:Authorization) { "Bearer invalid" }
 
-        schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
+          schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
-        run_test!
-      end
+          run_test!
+        end
 
-      response "404", "Not Found" do
-        schema({ "$ref": "#/components/schemas/NotFoundResponse" })
+        response "404", "Not Found" do
+          schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
-        run_test!
+          run_test!
+        end
       end
     end
   end
