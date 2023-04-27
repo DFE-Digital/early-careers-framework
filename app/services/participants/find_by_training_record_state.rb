@@ -3,40 +3,42 @@
 # noinspection RubyInstanceMethodNamingConvention
 class Participants::FindByTrainingRecordState < BaseService
   def call
+    TrainingRecordState.refresh
+
     case @record_state
 
     when :different_trn
-      merge(include_different_trn)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_different_trn)
 
     when :request_for_details_submitted
-      merge(include_request_for_details_submitted)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_request_for_details_submitted)
 
     when :request_for_details_failed
-      merge(include_request_for_details_failed)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_request_for_details_failed)
 
     when :request_for_details_delivered
-      merge(include_request_for_details_delivered)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_request_for_details_delivered)
 
     when :validation_not_started
-      merge(include_validation_not_started)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_validation_not_started)
 
     when :internal_error
-      merge(include_internal_error)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_internal_error)
 
     when :tra_record_not_found
-      merge(include_tra_record_not_found)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_tra_record_not_found)
 
     when :valid
-      merge(include_valid)
+      @base_query = @base_query.merge(ParticipantProfile.validation_state_valid)
 
     when :active_flags
-      merge(include_active_flags)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_active_flags)
 
     when :not_allowed
-      merge(include_not_allowed)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_not_allowed)
 
     when :eligible_for_mentor_training_ero
-      merge(include_eligible_for_mentor_training_ero)
+      @base_query = @base_query.merge(ParticipantProfile.record_state_eligible_for_mentor_training_ero)
 
     else
       raise "unknown record state: #{@record_state}"
@@ -55,148 +57,12 @@ private
     @record_state = record_state
   end
 
-  def merge(filter)
-    @base_query = @base_query.merge(filter)
-  end
+  def merge(*filters)
+    first_filter = filters.pop
+    @base_query = @base_query.merge(first_filter)
 
-  def include_request_for_details_submitted
-    include_request_for_details_email(%w[submitted])
-  end
-
-  def include_request_for_details_failed
-    include_request_for_details_email(%w[permanent-failure temporary-failure technical-failure])
-  end
-
-  def include_request_for_details_delivered
-    include_request_for_details_email(%w[delivered])
-  end
-
-  def include_request_for_details_email(status)
-    emailed_participants =
-      Email::Association.joins(:email)
-                        .where(emails: { status: }, object_type: "ParticipantProfile")
-                        .where("? = ANY (emails.tags)", %w[request_for_details])
-                        .pluck(:object_id)
-
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where.missing(:ecf_participant_validation_data, :ecf_participant_eligibility)
-    .where(id: emailed_participants)
-  end
-
-  def include_validation_not_started
-    emailed_participants =
-      Email::Association.joins(:email)
-                        .where(object_type: "ParticipantProfile")
-                        .where("? = ANY (emails.tags)", %w[request_for_details])
-                        .pluck(:object_id)
-
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where.missing(:ecf_participant_validation_data, :ecf_participant_eligibility)
-    .where.not(id: emailed_participants)
-  end
-
-  def include_internal_error
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where.missing(:ecf_participant_eligibility)
-    .where(match_validation_api_failed)
-  end
-
-  def include_tra_record_not_found
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where.missing(:ecf_participant_eligibility)
-    .where(match_validation_api_success)
-    .where(match_no_trn)
-  end
-
-  def include_different_trn
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where(match_manual_check_different_trn)
-  end
-
-  def include_valid
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where.not(match_manual_check_different_trn)
-    .where.not(match_no_trn)
-  end
-
-  def include_active_flags
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-      .where(match_manual_check_active_flags)
-  end
-
-  def include_not_allowed
-    ParticipantProfile.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where(match_manual_not_allowed)
-  end
-
-  def include_eligible_for_mentor_training_ero
-    ParticipantProfile::Mentor.left_joins(
-      :ecf_participant_validation_data,
-      :teacher_profile,
-      :ecf_participant_eligibility,
-    )
-    .where(match_ineligible_previous_participation)
-  end
-
-  # matchers
-
-  def match_no_trn
-    { teacher_profile: { trn: nil } }
-  end
-
-  def match_validation_api_success
-    { ecf_participant_validation_data: { api_failure: false } }
-  end
-
-  def match_validation_api_failed
-    { ecf_participant_validation_data: { api_failure: true } }
-  end
-
-  def match_manual_check_different_trn
-    { ecf_participant_eligibility: { status: "manual_check", reason: "different_trn" } }
-  end
-
-  def match_manual_check_active_flags
-    { ecf_participant_eligibility: { status: "manual_check", reason: "active_flags" } }
-  end
-
-  def match_manual_not_allowed
-    { ecf_participant_eligibility: { status: "ineligible", reason: "active_flags" } }
-  end
-
-  def match_ineligible_previous_participation
-    { ecf_participant_eligibility: { status: "ineligible", reason: "previous_participation" } }
+    filters.each do |filter|
+      @base_query = @base_query.or(filter)
+    end
   end
 end

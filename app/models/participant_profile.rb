@@ -57,6 +57,21 @@ class ParticipantProfile < ApplicationRecord
   scope :mentors, -> { where(type: Mentor.name) }
   scope :npqs, -> { where(type: NPQ.name) }
 
+  # search by record state
+  scope :record_state_different_trn, -> { joins(:training_record_states).where(training_record_states: { record_state: "different_trn" }) }
+  scope :record_state_request_for_details_delivered, -> { joins(:training_record_states).where(training_record_states: { record_state: "request_for_details_delivered" }) }
+  scope :record_state_request_for_details_failed, -> { joins(:training_record_states).where(training_record_states: { record_state: "request_for_details_failed" }) }
+  scope :record_state_request_for_details_submitted, -> { joins(:training_record_states).where(training_record_states: { record_state: "request_for_details_submitted" }) }
+  scope :record_state_validation_not_started, -> { joins(:training_record_states).where(training_record_states: { record_state: "validation_not_started" }) }
+  scope :record_state_internal_error, -> { joins(:training_record_states).where(training_record_states: { record_state: "internal_error" }) }
+  scope :record_state_tra_record_not_found, -> { joins(:training_record_states).where(training_record_states: { record_state: "tra_record_not_found" }) }
+  scope :record_state_active_flags, -> { joins(:training_record_states).where(training_record_states: { record_state: "active_flags" }) }
+  scope :record_state_not_allowed, -> { joins(:training_record_states).where(training_record_states: { record_state: "not_allowed" }) }
+  scope :record_state_eligible_for_mentor_training_ero, -> { joins(:training_record_states).where(training_record_states: { record_state: "eligible_for_mentor_training_ero" }) }
+
+  # search by validation state
+  scope :validation_state_valid, -> { joins(:training_record_states).where(training_record_states: { validation_state: "valid" }) }
+
   # Instance Methods
   def approved?
     false
