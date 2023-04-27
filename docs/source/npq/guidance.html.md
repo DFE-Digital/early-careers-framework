@@ -24,9 +24,9 @@ The focus of the following guidance is on business logic only. Critical details 
 12. Providers will submit `completed` declarations via the API, including participant outcomes, to notify DfE participants have completed the course
 13. DfE will pay providers output payments for `completed` declarations
 
-Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers will need to update relevant data using the API.
+Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers must update relevant data using the API. 
 
-<div class="govuk-inset-text"> Note, DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training). [Find out more about declaration states](api-reference/npq/definitions-and-states/#declaration-states) </div>
+<div class="govuk-inset-text"> Note, DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training). </div>
 
 ## View, accept or reject NPQ applications
 

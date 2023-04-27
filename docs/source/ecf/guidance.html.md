@@ -5,7 +5,7 @@ weight: 2
 
 # Guidance
 
-The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](#connect-to-the-API) is not detailed.
+The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](/api-reference/get-started/#connect-to-the-API) is not detailed.
 
 <div class="govuk-inset-text">This guidance is written for API version 3.0.0, and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.</div>
 
@@ -26,7 +26,7 @@ The focus of the following guidance is on business logic only. Critical details 
 13. Providers will submit `completed` declarations via the API to notify DfE the participant has completed training
 14. DfE will pay providers output payments for `completed` declarations
 
-Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers will need to update relevant data using the API. 
+Changes can happen during training; some participants may not complete their training within the standard schedule, or at all. Providers must update relevant data using the API. 
 
 ## Confirm, view and update partnerships
 
