@@ -15,15 +15,13 @@ A unique authentication token is needed to connect to the API. Each token is ass
 
 ### Request an authentication token
 
-Providers should [contact us](/api-reference/help) to request a token for production and sandbox environments.
+Providers must [contact us](/api-reference/help) to request a token for production and sandbox environments.
 
 DfE will send a unique authentication token via secure email.
 
 ### How to use an authentication token
 
-An authentication token must be included in all requests to the API. 
-
-All requests must contain an `Authorization` request header (not as part of the URL) in the following format:  
+Include an authentication token in all requests to the API by adding an `Authorization` request header (not as part of the URL) in the following format: 
 
 ```
 Authorization: Bearer {token}
@@ -60,11 +58,6 @@ https://manage-training-for-early-career-teachers.education.gov.uk/api/v3
 
 The sandbox environment is used to test API integrations without affecting real data. 
 
-<div class="govuk-inset-text"> Note, there are some custom API headers that can only be used in sandbox. </div>
-
-Find guidance on how to test declaration submissions in sandbox ahead of time for [ECF](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time) and [NPQ](/api-reference/npq/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time). 
-
-
 ```
 API v1: 
 https://ecf-sandbox.london.cloudapps.digital/api/v1
@@ -79,6 +72,11 @@ https://ecf-sandbox.london.cloudapps.digital/api/v2
 API v3: 
 https://ecf-sandbox.london.cloudapps.digital/api/v3
 ```
+
+<div class="govuk-inset-text"> Note, there are some custom API headers that can only be used in sandbox. </div>
+
+* [Test the ability to submit ECF declarations in sandbox ahead of time](/api-reference/ecf/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
+* [Test the ability to submit NPQ declarations in sandbox ahead of time](/api-reference/npq/guidance/#test-the-ability-to-submit-declarations-in-sandbox-ahead-of-time)
 
 ## Rate limits
 
