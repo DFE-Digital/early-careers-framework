@@ -13,6 +13,8 @@ weight: 3
 * [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
 * [Schedules and milestone dates ](/api-reference/ecf/schedules-and-milestone-dates)
 
+## Overview 
+
 Once integrated with the API, providers can view, submit and update data. 
 
 The data enables providers to manage and deliver ECF-based training, and receive appropriate payment from DfE.

@@ -11,9 +11,7 @@ Provider development teams can access the OpenAPI spec [in YAML format](/lead-pr
 
 ## Connect to the API
 
-Providers will need a unique authentication token to connect to the API. 
-
-Each token is associated with a single provider. The authentication token will grant providers access to CPD participant data. 
+A unique authentication token is needed to connect to the API. Each token is associated with a single provider and will give providers access to CPD participant data.
 
 ### Request an authentication token
 
