@@ -76,8 +76,8 @@ For more detailed information see the specifications for this [confirm an ECF pa
     "attributes": {
       "cohort": 2021,
       "urn": "123456",
-      "school_id": "dd4a11347-7308-4879-942a-c4a70ced400v",
-      "delivery_partner_id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "school_id": "24b61d1c-ad95-4000-aee0-afbdd542294a",
+      "delivery_partner_id": "db2fbf67-b7b7-454f-a1b7-0020411e2314",
       "delivery_partner_name": "Delivery Partner Example",
       "status": "active",
       "challenged_reason": null,
@@ -181,7 +181,7 @@ Update an existing partnership with new delivery partner details for a given coh
 
 An example request body is listed below. Request bodies must include a new value for the `delivery_partner_id` attribute. If unsure, providers can [find delivery partner IDs](/api-reference/ecf/guidance/#find-delivery-partner-ids). 
 
-<div class="govuk-inset-text">Note, providers can **only** update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. </div>
+<div class="govuk-inset-text">Note, providers can only update partnerships where the `status` attribute is `active`. Any requests to update `challenged` partnerships will return an error. </div>
 
 [Find out more about partnership statuses.](/api-reference/ecf/definitions-and-states/#partnership-states)
 
@@ -210,11 +210,7 @@ Delivery partners are assigned a unique ID by DfE. This `delivery_partner_id` is
 GET /api/v3/delivery-partners
 ```
 
-Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: 
-
-```
-GET /api/v3/delivery-partners?filter[cohort]=2022
-```
+Note, providers can also filter results by adding a `cohort` filter to the parameter. For example: `GET /api/v3/delivery-partners?filter[cohort]=2022`
 
 An example response body is listed below. Successful requests will return a response body including delivery partner details.  
 
@@ -284,11 +280,8 @@ GET /api/v3/partnerships/ecf?filter[cohort]={year}`
 
 <div class="govuk-inset-text"> The `cohort` filter must be included as a parameter. The API will reject requests which do not include the `cohort` filter. </div>
 
-Providers can also filter results by school URN. For example:  
+Providers can also filter results by school URN. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2021&filter[urn]=123456`
 
-```
-GET /api/v3/partnerships/ecf?filter[cohort]=2021&filter[urn]=123456
-```
 
 An example response body is listed below. Successful requests will return a response body with school details.
 
@@ -376,11 +369,7 @@ Providers can then update data to notify DfE that participants have:
  GET /api/v{n}/participants/ecf
 ```
 
-Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: 
-
-```
-GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z
-```
+Note, providers can also filter results by adding `cohort` and `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below. 
 
@@ -560,11 +549,11 @@ For more detailed information see the specifications for this [notify DfE that a
 * DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
 * DfE will pay providers for declarations submitted where the `declaration_date` is before the date of the withdrawal
 
-### Notify DfE a participant has changed their training schedule
+### Notify DfE of a participant's training schedule
+
+<div class="govuk-inset-text">All participants will be registered by default to a standard schedule starting in September. Providers must notify the DfE of any other schedule.</div>
 
 Participants can choose to follow standard or non-standard training schedules. 
-
-All participants will be registered by default to a standard schedule starting in September. Providers must notify the DfE of any schedule change.
 
 ```
  PUT /api/v3/participants/ecf/{id}/change-schedule
