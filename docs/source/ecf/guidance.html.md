@@ -563,6 +563,16 @@ An example request body is listed below.
 
 Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
+#### Providers should note: 
+
+Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
+
+Where this occurs, providers should:
+
+1. void the existing declarations (where declaration_date does not align with the new schedule)
+2. change the participant’s training schedule 
+3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
+
 For more detailed information see the specifications for this [notify that an ECF participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
 #### Example request body:
@@ -579,16 +589,6 @@ For more detailed information see the specifications for this [notify that an EC
   }
 }
 ```
-
-#### Providers should note: 
-
-Milestone validation applies. The API will reject a schedule change if any previously submitted `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
-
-Where this occurs, providers should:
-
-1. void the existing declarations (where declaration_date does not align with the new schedule)
-2. change the participant’s training schedule 
-3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
 
 ### View data for all participants who have transferred 
 
