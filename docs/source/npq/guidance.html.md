@@ -5,6 +5,10 @@ weight: 2
 
 # Guidance
 
+The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](/api-reference/get-started/#connect-to-the-API) is not detailed.
+
+<div class="govuk-inset-text">This guidance is written for API version 3.0.0, and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.</div>
+
 ## Overview of API requests
 1. A person submits an application for an NPQ course via the DfE online service
 2. Providers view NPQ application data via the API 

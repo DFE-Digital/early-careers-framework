@@ -7,7 +7,7 @@ weight: 2
 
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, [authentication](#connect-to-the-API) is not detailed.
 
-<div class="govuk-inset-text">This guidance is written for [API version 3.0.0](/api-reference/reference-v3.html), and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.</div>
+<div class="govuk-inset-text">This guidance is written for API version 3.0.0, and therefore all endpoints reference `v3`. Providers should view specifications for the API version their systems are integrated as appropriate.</div>
 
 ## Overview of API requests
 
