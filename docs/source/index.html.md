@@ -13,6 +13,8 @@ Once an ECF or NPQ participant has been registered to the service, data associat
 
 Once integrated with the API, providers can, for example, view and update participant details, or notify DfE that they have completed training by submitting a declaration.
 
+Guidance is reviewed and updated as necessary.
+
 ## API versions and updates
 
 The DfE works to continually improve the API service and new functionality occasionally becomes available. 
@@ -28,10 +30,3 @@ When non-breaking updates (sometimes referred to as backwards compatible updates
 Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
 
 All API requests are available in JSON and CSV formats.
-
-## About this guidance
-
-This guidance has been created for ECF and NPQ providers who have systems integrated with the API. It is reviewed and updated as necessary. 
-
-<div class="govuk-inset-text">The guidance is written for providers integrated with [API version 3.0.0](/api-reference/reference-v3.html). All endpoints reference `v3`. Providers can view specifications for the API version their systems are integrated with.</div>
-

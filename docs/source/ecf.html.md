@@ -7,13 +7,19 @@ weight: 3
 
 Once integrated with the API, providers can view, submit and update data. 
 
-This data will ensure providers are able to manage and deliver ECF-based training, and receive appropriate payment from DfE.
+The data enables providers to manage and deliver ECF-based training, and receive appropriate payment from DfE.
 
-Find guidance on: 
+<div class="govuk-inset-text">The following guidance has been written for ECF providers who have integrated systems with API version 3.0.0. onwards. </div>
 
-* [data used by the API](/api-reference/ecf/defintions-and-states)
-* [states and what they mean](/api-reference/ecf/defintions-and-states/#data-states-and-what-they-mean)
-* [how to view and submit partnerships](/api-reference/ecf/guidance/#confirm-view-and-update-partnerships)
-* [how to view and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
-* [how to submit and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
-* [upcoming schedules and milestone dates](/api-reference/ecf/schedules-and-milestone-dates)
+While this guidance includes reference to `v3` endpoints, providers can view previous API version specifications:
+
+* [Lead provider API - 1.0.0](api-reference/reference-v1)
+* [Lead provider API - 2.0.0](api-reference/reference-v2)
+
+## Contents
+
+* [Data definitions and statesI](/api-reference/ecf/definitions-and-states)
+* [Confirm, view and update partnerships](/api-reference/ecf/guidance/#view-submit-and-update-partnerships)
+* [View and update participant data](/api-reference/ecf/guidance/#view-and-update-participant-data)
+* [Submit, view and void declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
+* [Schedules and milestone dates ](/api-reference/ecf/schedules-and-milestone-dates)
