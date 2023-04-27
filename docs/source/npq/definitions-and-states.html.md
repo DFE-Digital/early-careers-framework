@@ -37,7 +37,7 @@ A application’s `status` value will determine whether a provider can:
 | `accepted`     | Applications which have been accepted by a provider    | Providers can submit declarations and update participant data **only** for those who have had their application `accepted`    |
 | `rejected`     | Applications which have been rejected by a provider, or which have been accepted by another provider     | Providers **cannot** submit any API requests for participants who have had their application `rejected`     |
 
-View more detailed specifications for the [NPQ application schema](/api-reference/reference-v3.html#schema-npqapplicationattributes).
+[View more detailed specifications for the NPQ application schema](/api-reference/reference-v3.html#schema-npqapplicationattributes).
 
 ### Participant states
 
@@ -55,7 +55,7 @@ A participant’s `training_status` value will determine whether a provider can:
 | `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
 | `completed`     | Participants who have withdrawn from training     | Providers **cannot** update participant data or submit declarations for `completed` participants    |
 
-View more detailed specifications for the [NPQ participant schema](/api-reference/reference-v3.html#schema-npqparticipant).
+[View more detailed specifications for the NPQ participant schema](/api-reference/reference-v3.html#schema-npqparticipant).
 
 ### Declaration states
 
@@ -74,4 +74,4 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 | `awaiting_clawback`     | A `paid` declaration that has since been voided by a provider    | Providers can **only** view `awaiting_clawback` declarations     |
 | `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
 
-View more detailed specifications for the [declaration schema](/api-reference/reference-v3.html#schema-npqparticipantdeclarationattributes).
+[View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-npqparticipantdeclarationattributes).

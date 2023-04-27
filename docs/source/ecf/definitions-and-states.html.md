@@ -37,7 +37,7 @@ A participant’s `training_status` value will determine whether a provider can:
 | `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)     |
 | `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
 
-View more detailed specifications for the [ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
+[View more detailed specifications for the ECF participant schema](/api-reference/reference-v3.html#schema-ecfparticipantattributes).
 
 ### Declaration states
 
@@ -57,7 +57,7 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 | `clawed_back`     | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider     | Providers can **only** view `clawed_back` declarations     |
 
 
-View more detailed specifications for the [declaration schema](/api-reference/reference-v3.html#schema-ecfparticipantdeclarationattributes).
+[View more detailed specifications for the declaration schema](/api-reference/reference-v3.html#schema-ecfparticipantdeclarationattributes).
 
 
 ### Partnership states 
@@ -73,4 +73,4 @@ Schools can challenge existing partnerships at any time. Once a partnership `sta
 | `active`     | A partnership between a provider, school and delivery partner has been agreed and confirmed by the provider    | Providers can view, confirm and update `active` partnerships     |
 | `challenged`     | A partnership between a provider, school and delivery partner has been changed or dissolved by the school     | Providers can **only** view `challenged` partnerships    |
 
-View more detailed specifications for the [partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
+[View more detailed specifications for the partnerships schema](/api-reference/reference-v3.html#schema-ecfpartnershipattributes).
