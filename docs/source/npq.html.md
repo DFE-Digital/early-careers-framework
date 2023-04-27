@@ -15,9 +15,7 @@ weight: 4
 
 ## Overview 
 
-Once integrated with the API, providers can view, submit and update data. 
-
-This data will ensure providers are able to manage and deliver NPQ courses, and receive appropriate payment from DfE.
+Once integrated with the API, providers can view, submit and update data. The data enables providers to manage and deliver NPQ courses, and receive appropriate payment from DfE.
 
 <div class="govuk-inset-text">The following guidance has been written for NPQ providers who have integrated systems with API version 3.0.0. onwards. </div>
 
