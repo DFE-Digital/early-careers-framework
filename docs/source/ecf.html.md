@@ -21,7 +21,8 @@ The data enables providers to manage and deliver ECF-based training, and receive
 
 <div class="govuk-inset-text">The following guidance has been written for ECF providers who have integrated systems with API version 3.0.0. onwards. </div>
 
-While this guidance includes reference to `v3` endpoints, providers can view previous API version specifications:
+While this guidance includes reference to `v3` endpoints, providers can view specifications for the API version their systems are integrated with:
 
 * [Lead provider API - 1.0.0](api-reference/reference-v1)
 * [Lead provider API - 2.0.0](api-reference/reference-v2)
+* [Lead provider API - 3.0.0](api-reference/reference-v3)
