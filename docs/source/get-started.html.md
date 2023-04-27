@@ -5,11 +5,11 @@ weight: 2
 
 # Get started
 
+## Connect to the API
+
 Connect to the API by integrating local provider CRM systems with it.
 
 Provider development teams can access the OpenAPI spec [in YAML format](/lead-providers/api-docs/v1/api_spec.yml).
-
-## Connect to the API
 
 A unique authentication token is needed to connect to the API. Each token is associated with a single provider and will give providers access to CPD participant data.
 
