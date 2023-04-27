@@ -23,6 +23,7 @@ The focus of the following guidance is on business logic only. Critical details 
 12. Providers complete training participants as per details set out in the contract
 12. Providers will submit `completed` declarations via the API, including participant outcomes, to notify DfE participants have completed the course
 13. DfE will pay providers output payments for `completed` declarations
+14. Providers view financial statements via the API
 
 Changes can happen during training; some participants may not complete their course within the standard schedule, or at all. Providers must update relevant data using the API. 
 
@@ -901,3 +902,38 @@ For more detailed information see the specifications for this [void declarations
   }
 }
 ```
+
+## View financial statements
+
+<div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
+
+Providers can view financial statements via the API to check up to date payment cut-off and payment dates. 
+
+### View all statements
+
+```
+GET /api/v3/statements
+```
+
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view all statements endpoint.](api-reference/reference-v3.html#api-v3-statements-get)
+
+#### Example response body:
+
+[INSERT ONCE CLARIFIED]
+
+
+### View a specific statement
+
+```
+GET /api/v3/statements/{id}
+```
+
+An example response body is listed below. 
+
+For more detailed information see the specifications for this [view a specific statement endpoint.](/api-reference/reference-v3.html#api-v3-statements-id-get)
+
+#### Example response body:
+
+[INSERT ONCE CLARIFIED]
