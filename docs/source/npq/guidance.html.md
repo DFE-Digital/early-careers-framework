@@ -45,7 +45,7 @@ To prevent a participant being enrolled onto the same course with more than one 
 * **automatically update the `status` to `rejected` for all other applications:** If someone has made multiple applications with different providers (within a given cohort) and a provider accepts one, the API will update the `status` of all other applications with other providers to `rejected`
 * **return an error message for new applications:** If a participant has had an application accepted by a provider, but then makes a new application for the same course with a new provider, the API will return an error message if the new provider tries to accept the new application
 
-<div class="govuk-inset-text"> Providers must accept or reject applications before participants start a course. Providers must inform applicants of the outcome regardless of whether the application has been accepted or rejected. </div>
+<div class="govuk-inset-text"> Providers must accept or reject applications before participants start a course and inform applicants of the outcome regardless of whether the application has been accepted or rejected. </div>
 
 ### View all applications
 
@@ -53,11 +53,7 @@ To prevent a participant being enrolled onto the same course with more than one 
  GET /api/v3/npq-applications
 ```
 
-Note, providers can also filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: 
-
-```
-GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z
-```
+Note, providers can also filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below. 
 
@@ -251,11 +247,7 @@ Once a provider has accepted an application, they can view and update data to no
 GET /api/v3/participants/npq
 ```
 
-Note, providers can also filter results by adding `updated_since` filters to the parameter. For example: 
-
-```
-GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z
-```
+Note, providers can also filter results by adding `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below. 
 
@@ -408,6 +400,13 @@ An example request body is listed below.
 
 Successful requests will return a response body including updates to the `training_status` attribute.
 
+#### Providers should note: 
+
+* The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
+* DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
+* If a participant is withdrawn later in their course, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
+* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View NPQ schedules and milestone dates](/api-reference/npq/schedules_and-milestone-dates)
+
 For more detailed information see the specifications for this [notify DfE that an NPQ participant has withdrawn from training endpoint](/api-reference/reference-v3.html#api-v3-participants-npq-id-withdraw-put).
 
 #### Example request body:
@@ -424,17 +423,6 @@ For more detailed information see the specifications for this [notify DfE that a
 }
 ```
 
-<div class="govuk-inset-text">
-
-#### Providers should note: 
-
-* The API will **not** allow withdrawals for participants who have not had a `started` declaration submitted against them. If a participant withdraws before a `started` declaration has been submitted, providers should inform their contract manager who can advise
-* DfE will **only** pay for participants who have had, at a minimum, a `started` declaration submitted against them
-* If a participant is withdrawn later in their course, DfE will pay providers for any declarations submitted where the `declaration_date` is before the date of the withdrawal
-* The amount DfE will pay depends on which milestones have been reached with declarations submitted before withdrawal. [View NPQ schedules and milestone dates](/api-reference/npq/schedules_and-milestone-dates)
-
-</div>
-
 ### Notify DfE a participant has changed their training schedule
 
 The API will automatically assign schedules to participants depending on when course applications are accepted by providers. Providers must notify the DfE of any schedule change.
@@ -447,7 +435,7 @@ An example request body is listed below.
 
 Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
-Note, the API will reject a schedule change if any `submitted`, `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
+**Note**, the API will reject a schedule change if any `submitted`, `eligible`, `payable` or `paid` declarations have a `declaration_date` which does not align with the new schedule’s milestone dates. 
 
 For example, a participant is in the 2022 cohort on an `npq-specialist-autumn` schedule. Their provider has submitted a `started` declaration dated 1 October 2022. The provider tries to change the schedule to `npq-specialist-spring`. The API will reject the change because a spring schedule does not start until January, which is after the declaration date. The API returns an error message with instructions to void existing declarations first.
 
@@ -472,7 +460,7 @@ For more detailed information see the specifications for this [notify that an NP
 
 Participants can either pass or fail assessment at the end of their NPQ course. These outcomes are submitted by providers within `completed` declaration submissions.
 
-Note, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
+**Note**, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
 
 ```
  GET /api/v3/participants/npq/outcomes
@@ -509,7 +497,7 @@ For more detailed information see the specifications for this [view NPQ outcomes
 
 A participant can either pass or fail assessment at the end of their NPQ course. Their outcome will be submitted by providers within `completed` declaration submissions.
 
-Note, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
+**Note**, outcomes are sent to the Database of Qualified Teachers (DQT) who issue certificates to participants who have passed.
 
 ```
  GET /api/v3/participants/npq/{participant_id}/outcomes
@@ -734,9 +722,9 @@ An example request body is listed below. Request bodies must include the necessa
 
 An example response body is listed below. Successful requests will return a response body with declaration data. 
 
-Any attempts to submit duplicate declarations will return an error message.
+**Note**, any attempts to submit duplicate declarations will return an error message.
 
-<div class="govuk-inset-text">Note, providers should store the returned NPQ participant declaration ID for future management tasks.</div>
+<div class="govuk-inset-text">Providers should store the returned NPQ participant declaration ID for future management tasks.</div>
 
 For more detailed information see the specifications for this [notify DfE that an NPQ participant has completed training endpoint](/api-reference/reference-v3.html#api-v3-participant-declarations-post).
 
