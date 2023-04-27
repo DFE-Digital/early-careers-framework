@@ -573,6 +573,8 @@ Where this occurs, providers should:
 2. change the participant’s training schedule 
 3. resubmit backdated declarations (where declaration_date aligns with the new schedule)
 
+For replacement mentors, view [guidance on updating a replacement mentor’s schedule.](/api-reference/ecf/guidance/#update-a-replacement-mentors-schedule)
+
 For more detailed information see the specifications for this [notify that an ECF participant has changed their training schedule endpoint](/api-reference/reference-v3.html#api-v3-participants-ecf-id-change-schedule-put).
 
 #### Example request body:
@@ -691,6 +693,25 @@ For more detailed information see the specifications for this [view a participan
   ]
 }
 ```
+
+###  Update a replacement mentor’s schedule
+ 
+A new mentor can be assigned to an ECT part way through training, replacing the ECT’s original mentor. 
+
+[Providers must notify the DfE of replacement mentors by updating their training schedule.](/api-reference/ecf/guidance/#notify-dfe-of-a-participants-training-schedule)
+
+Note, if a replacement mentor is already mentoring another ECT and they replace a mentor for a second ECT, the first ECT takes precedence. In this instance, the provider should not change the mentor’s schedule.
+
+Providers must include a `schedule_identifier` reflecting when the replacement mentor starts. 
+
+* `ecf-replacement-september`
+* `ecf-replacement-january`
+* `ecf-replacement-april`
+
+For API v3 onwards, a replacement mentor's schedule, and any associated declaration submissions, do not need to align with the ECT they are mentoring.
+
+Previously for API v1 and v2, a replacement mentor could start mentoring an ECT part way through their training. The provider had already submitted a `start` declaration for the previous mentor (in line with the ECT). If the provider were to submit a `retention-1` declaration for the ECT, then any declaration submitted for the new replacement mentor in the same milestone period would also have to be a retention-1 declaration. This is no longer the case for API v3.
+
 
 ## Submit, view and void declarations
 
