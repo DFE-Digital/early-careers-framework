@@ -713,6 +713,9 @@ For API v3 onwards, a replacement mentor's schedule, and any associated declarat
 
 Previously for API v1 and v2, a replacement mentor could start mentoring an ECT part way through their training. The provider had already submitted a `start` declaration for the previous mentor (in line with the ECT). If the provider were to submit a `retention-1` declaration for the ECT, then any declaration submitted for the new replacement mentor in the same milestone period would also have to be a retention-1 declaration. This is no longer the case for API v3.
 
+### [PLACEHOLDER FOR UNFUNDED MENTOR ENDPOINTS] 
+
+[PLACEHOLDER COPY]
 
 ## Submit, view and void declarations
 
