@@ -39,8 +39,15 @@ module Schools
       end
 
       def registration_open_for_participant_cohort?
-        Cohort.current.start_year >= cohort_to_place_participant.start_year ||
-          (FeatureFlag.active?(:cohortless_dashboard, for: school) && cohort_to_place_participant == Cohort.next)
+        desired_cohort = cohort_to_place_participant
+
+        return true if desired_cohort.start_year <= Cohort.current.start_year
+
+        if Cohort.within_next_registration_period? && desired_cohort == Cohort.next
+          FeatureFlag.active?(:cohortless_dashboard, for: school)
+        else
+          false
+        end
       end
 
       def next_step_path
