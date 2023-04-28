@@ -170,6 +170,7 @@ Rails.application.routes.draw do
           get ":participant_id/transfers", to: "ecf/transfers#show"
         end
       end
+      resources :ecf_unfunded_mentors, path: "unfunded-mentors/ecf", only: %i[index show], controller: "ecf/unfunded_mentors"
     end
   end
 

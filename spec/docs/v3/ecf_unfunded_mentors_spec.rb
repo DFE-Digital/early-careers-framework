@@ -2,8 +2,10 @@
 
 require "swagger_helper"
 
-describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
+  let!(:mentor_profile) { create(:mentor, :eligible_for_funding) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
@@ -34,6 +36,17 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 required: false,
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of unfunded mentors."
+
+      parameter name: :sort,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/ECFUnfundedMentorsSort",
+                },
+                style: :form,
+                explode: false,
+                required: false,
+                description: "Sort unfunded mentors being returned.",
+                example: "sort=-updated_at"
 
       response "200", "A list of unfunded mentors" do
         schema({ "$ref": "#/components/schemas/MultipleUnfundedMentorsResponse" })
@@ -83,7 +96,9 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
         run_test!
       end
 
-      response "404", "Not Found" do
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "test" }
+
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
