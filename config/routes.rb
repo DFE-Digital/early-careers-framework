@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   direct :feedback_form do
-    "https://docs.google.com/forms/d/e/1FAIpQLSdjpB1VMwZlcQxOoTzfW_bw7mnnKbGHek24_uZRhIRDid9f-Q/viewform?usp=sf_link"
+    "https://forms.office.com/e/3xCevHRKXx"
   end
 
   scope :pages, controller: "pages" do
