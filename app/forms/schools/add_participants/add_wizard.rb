@@ -78,12 +78,6 @@ module Schools
         ect_participant? && mentor_id.blank? && mentor_options.any?
       end
 
-      def needs_to_confirm_start_term?
-        # are we in the period for registrations for the next cohort prior to
-        # the next academic year start?
-        Cohort.within_next_registration_period?
-      end
-
       # check answers helpers
       def show_default_induction_programme_details?
         !!(school_cohort&.default_induction_programme && school_cohort.default_induction_programme&.partnership&.active?)

@@ -36,6 +36,10 @@ class Cohort < ApplicationRecord
     starting_within(Date.current - 2.years + 1.day, Date.current - 1.year)
   end
 
+  def self.within_automatic_assignment_period?
+    Time.zone.now <= Cohort.current.automatic_assignment_period_end_date
+  end
+
   def self.within_next_registration_period?
     current != active_registration_cohort
   end

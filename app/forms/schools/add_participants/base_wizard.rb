@@ -212,6 +212,16 @@ module Schools
         data_store.set(:same_provider, using_same_provider)
       end
 
+      def needs_to_confirm_start_term?
+        # are we in the period for registrations for the next cohort prior to
+        # the next academic year start?
+        return false unless ect_participant?
+
+        # are we in the next registration period (or pre-registration period) and the participant does not have
+        # an induction start date
+        induction_start_date.blank? && !Cohort.within_automatic_assignment_period?
+      end
+
       ## appropriate bodies
       def needs_to_confirm_appropriate_body?
         # Slim possiblity that school_cohort could be nil early on
@@ -350,14 +360,16 @@ module Schools
         elsif Cohort.current == Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
           Cohort.current
-        elsif start_term == "summer"
-          # we're in the registration window prior to 1/9
+        elsif mentor_participant? || sit_mentor?
           Cohort.current
+        elsif start_term == "summer"
+          Cohort.current
+        # we're in the registration window prior to 1/9
         elsif start_term.in? %w[autumn spring]
           # we're in the registration window prior to 1/9 and chose autumn or spring the following year
           Cohort.next
         else
-          # default to now (new mentor/sit mentor)
+          # default to now - but should ask the start_term question if not already asked
           Cohort.current
         end
       end
@@ -473,6 +485,7 @@ module Schools
           email
           mentor_id
           start_date
+          start_term
           appropriate_body_id
           appropriate_body_confirmed
           continue_current_programme

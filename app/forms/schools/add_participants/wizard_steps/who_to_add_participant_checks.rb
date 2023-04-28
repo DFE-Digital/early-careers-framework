@@ -24,8 +24,12 @@ module Schools
           elsif wizard.dqt_record_has_different_name?
             :known_by_another_name
           elsif wizard.found_participant_in_dqt? || wizard.sit_mentor?
-            # check that it's not for the next cohort (this would be if induction start date is set in the next cohort)
-            if !wizard.registration_open_for_participant_cohort?
+            if wizard.needs_to_confirm_start_term?
+              # we're not sure at this point which cohort is needed
+              # so allow to procedd at this point
+              :none
+            elsif !wizard.registration_open_for_participant_cohort?
+              # we know the cohort at this point (only if induction start date set)
               :cannot_add_registration_not_yet_open
             elsif wizard.need_training_setup?(must_be_fip: false)
               # check that there is a school_cohort to join (can be FIP or CIP)

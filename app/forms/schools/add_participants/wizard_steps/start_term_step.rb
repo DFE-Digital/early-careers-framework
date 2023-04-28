@@ -15,7 +15,7 @@ module Schools
         end
 
         def next_step
-          if start_term_is_out_of_registration_scope?
+          if !start_term_in_registration_scope?
             :cannot_add_registration_not_yet_open
           elsif wizard.need_training_setup?
             :need_training_setup
@@ -40,15 +40,15 @@ module Schools
 
       private
 
-        def start_term_is_out_of_registration_scope?
-          # prior to registration start for the next cohort and not chosen the current cohort (summer)
-          if FeatureFlag.active?(:cohortless_dashboard, for: wizard.school)
-            false
-          elsif Cohort.within_next_registration_period? && start_term != "summer"
-            true
-          else
-            false
-          end
+        def start_term_in_registration_scope?
+          return true if Cohort.within_next_registration_period? && FeatureFlag.active?(:cohortless_dashboard, for: wizard.school)
+          return true if cannot_automatically_determine_cohort? && start_term == "summer"
+
+          false
+        end
+
+        def cannot_automatically_determine_cohort?
+          !Cohort.within_automatic_assignment_period?
         end
       end
     end

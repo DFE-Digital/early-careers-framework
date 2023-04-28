@@ -25,6 +25,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
     let(:sit_mentor) { false }
     let(:registration_open) { false }
     let(:need_setup) { false }
+    let(:confirm_start_term) { false }
 
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
@@ -36,6 +37,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
       allow(wizard).to receive(:sit_mentor?).and_return(sit_mentor)
       allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
       allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
+      allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
     end
 
     context "when the participant exists in the service" do
@@ -104,6 +106,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::NinoStep, type: :model do
 
         it "returns :none" do
           expect(step.next_step).to eql :none
+        end
+
+        context "when the participant will be asked the start_term question" do
+          let(:confirm_start_term) { true }
+
+          it "returns :none" do
+            expect(step.next_step).to eql :none
+          end
         end
 
         context "when the cohort needs to be set up" do

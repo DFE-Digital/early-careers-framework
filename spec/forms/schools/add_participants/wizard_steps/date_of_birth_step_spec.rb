@@ -44,6 +44,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
     let(:found_in_dqt) { false }
     let(:registration_open) { false }
     let(:need_setup) { false }
+    let(:confirm_start_term) { false }
 
     before do
       allow(wizard).to receive(:participant_exists?).and_return(participant_exists)
@@ -55,6 +56,7 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
       allow(wizard).to receive(:found_participant_in_dqt?).and_return(found_in_dqt)
       allow(wizard).to receive(:registration_open_for_participant_cohort?).and_return(registration_open)
       allow(wizard).to receive(:need_training_setup?).and_return(need_setup)
+      allow(wizard).to receive(:needs_to_confirm_start_term?).and_return(confirm_start_term)
     end
 
     context "when participant already exists" do
@@ -121,6 +123,14 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DateOfBirthStep, type: :mo
 
         it "returns :none" do
           expect(step.next_step).to eql :none
+        end
+
+        context "when the participant will be asked the start_term question" do
+          let(:confirm_start_term) { true }
+
+          it "returns :none" do
+            expect(step.next_step).to eql :none
+          end
         end
 
         context "when the cohort needs to be set up" do
