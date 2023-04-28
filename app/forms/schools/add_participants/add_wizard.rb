@@ -31,6 +31,8 @@ module Schools
         if changing_answer?
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
+          elsif form.evaluate_next_step_on_change? # the change has produced a hard stop
+            show_path_for(step: form.next_step)
           elsif email.present?
             show_path_for(step: :check_answers)
           else

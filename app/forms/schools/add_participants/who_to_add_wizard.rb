@@ -54,6 +54,8 @@ module Schools
         if changing_answer?
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
+          elsif form.evaluate_next_step_on_change?
+            show_path_for(step: form.next_step)
           elsif dqt_record(force_recheck: true).present?
             if form.journey_complete?
               next_journey_path

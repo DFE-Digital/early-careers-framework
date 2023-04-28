@@ -26,6 +26,13 @@ class WizardStep
     false
   end
 
+  # provide ability to have valid end of journey paths
+  # if choice made when changing a value does not permit continuing
+  # to the return point
+  def evaluate_next_step_on_change?
+    false
+  end
+
   def before_render; end
 
   def view_name
