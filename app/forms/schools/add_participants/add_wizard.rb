@@ -86,7 +86,7 @@ module Schools
       # only relevant when we are in the registration period before the next cohort starts
       # and the participant doesn't have an induction start date registered with DQT
       def show_start_term?
-        induction_start_date.blank? && start_term.present?
+        (mentor_participant? || induction_start_date.blank?) && start_term.present?
       end
 
       def start_term_description

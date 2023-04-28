@@ -41,17 +41,17 @@
                  href: form.change_path_for(step: :email)) %>
   <% end %>
 
-  <% if form.ect_participant? %>
-    <% if form.show_start_term? %>
-      <% summary_list.row do |row| %>
-        <% row.key { "Start term" } %>
-        <% row.value { form.start_term_description } %>
-        <% row.action(text: "Change",
-                      visually_hidden_text: "start term",
-                      href: form.change_path_for(step: :start_term)) %>
-      <% end %>
+  <% if form.show_start_term? %>
+    <% summary_list.row do |row| %>
+      <% row.key { "Start term" } %>
+      <% row.value { form.start_term_description } %>
+      <% row.action(text: "Change",
+                    visually_hidden_text: "start term",
+                    href: form.change_path_for(step: :start_term)) %>
     <% end %>
+  <% end %>
 
+  <% if form.ect_participant? %>
     <% summary_list.row do |row| %>
       <% row.key { "Mentor" } %>
       <% row.value { form.mentor.present? ? form.mentor.full_name : "Add later" } %>

@@ -213,13 +213,9 @@ module Schools
       end
 
       def needs_to_confirm_start_term?
-        # are we in the period for registrations for the next cohort prior to
-        # the next academic year start?
-        return false unless ect_participant?
-
         # are we in the next registration period (or pre-registration period) and the participant does not have
         # an induction start date
-        induction_start_date.blank? && !Cohort.within_automatic_assignment_period?
+        (mentor_participant? || induction_start_date.blank?) && !Cohort.within_automatic_assignment_period?
       end
 
       ## appropriate bodies
@@ -360,8 +356,8 @@ module Schools
         elsif Cohort.current == Cohort.active_registration_cohort
           # true from 1/9 to next cohort registration start date
           Cohort.current
-        elsif mentor_participant? || sit_mentor?
-          Cohort.current
+        # elsif mentor_participant? || sit_mentor?
+        #   Cohort.current
         elsif start_term == "summer"
           Cohort.current
         # we're in the registration window prior to 1/9

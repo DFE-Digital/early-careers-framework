@@ -25,16 +25,12 @@ module Schools
             else
               :check_answers
             end
-          elsif wizard.ect_participant?
-            if wizard.needs_to_confirm_start_term?
-              :start_term
-            elsif wizard.needs_to_choose_a_mentor?
-              :choose_mentor
-            elsif wizard.needs_to_confirm_appropriate_body?
-              :confirm_appropriate_body
-            else
-              :check_answers
-            end
+          elsif wizard.needs_to_confirm_start_term?
+            :start_term
+          elsif wizard.needs_to_choose_a_mentor?
+            :choose_mentor
+          elsif wizard.needs_to_confirm_appropriate_body?
+            :confirm_appropriate_body
           else
             :check_answers
           end
