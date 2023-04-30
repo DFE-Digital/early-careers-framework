@@ -15,6 +15,6 @@ module Pages
       click_on "Return to your ECTs and mentors"
 
       element_has_content?(self, "Manage your training")
-      s    end
+    end
   end
 end
