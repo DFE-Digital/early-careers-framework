@@ -5,6 +5,7 @@ class Schools::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :ensure_school_user
+  before_action :check_cohort_year
   before_action :set_paper_trail_whodunnit
   after_action :verify_authorized
   after_action :verify_policy_scoped
@@ -12,6 +13,20 @@ class Schools::BaseController < ApplicationController
   layout "school_cohort"
 
 private
+
+  # Redirect to school dashboard if the user is requesting an action for a future cohort not for a pilot school.
+  def check_cohort_year
+    return if params[:cohort_id].blank?
+
+    max_cohort_year = [
+      Cohort.latest&.start_year,
+      Cohort.next&.start_year,
+      Cohort.active_registration_cohort.start_year.to_i +
+        (FeatureFlag.active?(:cohortless_dashboard, for: active_school) ? 1 : 0),
+    ].compact.min
+
+    redirect_to schools_dashboard_path if params[:cohort_id].to_i > max_cohort_year
+  end
 
   def ensure_school_user
     raise Pundit::NotAuthorizedError, I18n.t(:forbidden) unless current_user.induction_coordinator?
