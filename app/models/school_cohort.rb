@@ -54,7 +54,11 @@ class SchoolCohort < ApplicationRecord
   end
 
   def self.dashboard_for_school(school)
-    last_year = FeatureFlag.active?(:cohortless_dashboard, for: school) ? Date.current.year : 2022
+    last_year = if FeatureFlag.active?(:cohortless_dashboard, for: school)
+                  Date.current.year
+                else
+                  Cohort.active_registration_cohort.start_year
+                end
 
     joins(:cohort)
       .where(school:)
