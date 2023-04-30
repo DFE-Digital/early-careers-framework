@@ -38,7 +38,7 @@ private
   end
 
   def set_up_new_cohort?
-    @school.school_cohorts.find_by(cohort: Cohort.active_registration_cohort).blank?
+    !@school.chosen_programme?(Cohort.active_registration_cohort)
   end
 
   def previous_school_cohort

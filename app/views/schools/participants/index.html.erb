@@ -10,7 +10,7 @@
     <div class="wrapper-dashboard-v2 manage-mentors-ects">
       <%= govuk_button_link_to(
             "Add ECT or mentor",
-            start_schools_who_to_add_participants_path(cohort_id: @participants.dashboard_school_cohorts.first.start_year),
+            schools_who_to_add_start_path(school_id: @school.slug), no_visited_state: true,
           ) %>
 
       <% if actions?(@participants) %>

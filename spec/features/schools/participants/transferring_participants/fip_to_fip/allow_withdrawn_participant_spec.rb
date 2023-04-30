@@ -134,6 +134,11 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
 
   # then
 
+  def then_i_am_taken_to_manage_mentors_and_ects_page
+    expect(page).to have_selector("h1", text: "Manage mentors and ECTs")
+    expect(page).to have_text("Add ECT or mentor")
+  end
+
   def then_i_am_taken_to_a_dashboard_page
     expect(page).to have_selector("h1", text: "Manage your training")
   end
