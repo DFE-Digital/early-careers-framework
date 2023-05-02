@@ -79,8 +79,8 @@
     <% summary_list.row do |row| %>
       <% row.key { "Training with" } %>
       <% row.value do %>
-        <p class="govuk-body"><%= form.lead_provider&.name %></p>
-        <p class="govuk-body"><%= form.delivery_partner&.name %></p>
+        <%= tag.p(form.lead_provider.name, class: "govuk-body") if form.lead_provider.present? %>
+        <%= tag.p(form.delivery_partner.name, class: "govuk-body") if form.delivery_partner.present? %>
       <% end %>
     <% end %>
   <% end %>

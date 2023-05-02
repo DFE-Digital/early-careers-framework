@@ -11,7 +11,8 @@
       <%= f.govuk_collection_radio_buttons(
         :start_term,
         @wizard.form.start_term_options,
-        :id, :name,
+        :id,
+        :name,
         legend: { text: title, tag: 'h1', size: 'xl' },
         caption: { text: @school.name, size: "xl" },
         hint: { text: "This is when #{@wizard.full_name} will start their induction and begin ECF-based training at your school." }) %>
