@@ -8,10 +8,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::CannotAddStep, type: :mode
       expect(step.next_step).to eql :none
     end
   end
-
-  describe "#previous_step" do
-    it "returns the previous step" do
-      expect(step.previous_step).to eql :confirm_transfer
-    end
-  end
 end

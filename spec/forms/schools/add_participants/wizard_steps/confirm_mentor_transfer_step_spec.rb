@@ -46,12 +46,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmMentorTransferStep,
     end
   end
 
-  describe "#previous_step" do
-    it "returns :date_of_birth" do
-      expect(step.previous_step).to eql :date_of_birth
-    end
-  end
-
   describe "#journey_complete?" do
     context "when the transfer isn't confirmed" do
       it "returns false" do

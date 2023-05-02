@@ -11,10 +11,6 @@ class WizardStep
     []
   end
 
-  def previous_step
-    raise NotImplementedError
-  end
-
   def next_step
     raise NotImplementedError
   end
@@ -27,6 +23,13 @@ class WizardStep
   # when changing an answer from a check-answers page, sometimes it is desirable to
   # revisit the subsequent step and not return immediately on submission
   def revisit_next_step?
+    false
+  end
+
+  # provide ability to have valid end of journey paths
+  # if choice made when changing a value does not permit continuing
+  # to the return point
+  def evaluate_next_step_on_change?
     false
   end
 

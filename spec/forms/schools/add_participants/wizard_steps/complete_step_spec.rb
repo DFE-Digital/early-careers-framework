@@ -8,10 +8,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::CompleteStep, type: :model
       expect(step.next_step).to eql :none
     end
   end
-
-  describe "#previous_step" do
-    it "should be none" do
-      expect(step.previous_step).to eql :none
-    end
-  end
 end

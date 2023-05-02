@@ -26,6 +26,7 @@ module Schools
           cannot_add_mismatch
           cannot_add_mentor_at_multiple_schools
           cannot_add_already_enrolled_at_school
+          cannot_add_registration_not_yet_open
         ]
       end
 
@@ -33,18 +34,19 @@ module Schools
         save_progress!
       end
 
-      # has this school got a cohort set up for training that matches the incoming transfer
-      def need_training_setup?
-        transfer_cohort = school.school_cohorts.find_by(cohort: existing_participant_cohort)
-        transfer_cohort.blank? || !transfer_cohort.full_induction_programme?
+      def sit_can_become_a_mentor?
+        !current_user.mentor?
       end
 
-      # path to the most appropriate start point to set up training for the transfer
-      def need_training_path
-        if existing_participant_cohort == Cohort.active_registration_cohort
-          expect_any_ects_schools_setup_school_cohort_path(school_id: school.slug, cohort_id: existing_participant_cohort)
+      def registration_open_for_participant_cohort?
+        desired_cohort = cohort_to_place_participant
+
+        return true if desired_cohort.start_year <= Cohort.current.start_year
+
+        if Cohort.within_next_registration_period? && desired_cohort == Cohort.next
+          FeatureFlag.active?(:cohortless_dashboard, for: school)
         else
-          schools_choose_programme_path(school_id: school.slug, cohort_id: existing_participant_cohort)
+          false
         end
       end
 
@@ -52,8 +54,14 @@ module Schools
         if changing_answer?
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
+          elsif form.evaluate_next_step_on_change?
+            show_path_for(step: form.next_step)
           elsif dqt_record(force_recheck: true).present?
-            next_journey_path
+            if form.journey_complete?
+              next_journey_path
+            else
+              show_path_for(step: form.next_step)
+            end
           else
             show_path_for(step: :cannot_find_their_details)
           end
@@ -65,17 +73,12 @@ module Schools
       end
 
       def next_journey_path
-        path_opts = {
-          cohort_id: school_cohort.cohort.start_year,
-          school_id: school.friendly_id,
-        }
-
         if transfer?
-          start_schools_transfer_participants_path(**path_opts)
+          schools_transfer_start_path(**path_options)
         elsif sit_mentor?
-          sit_start_schools_add_participants_path(**path_opts)
+          schools_add_sit_start_path(**path_options)
         else
-          start_schools_add_participants_path(**path_opts)
+          schools_add_start_path(**path_options)
         end
       end
 
@@ -84,15 +87,11 @@ module Schools
       end
 
       def show_path_for(step:)
-        show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                  school_id: school.friendly_id,
-                                                  step: step.to_s.dasherize)
+        schools_who_to_add_show_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        show_change_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                         school_id: school_cohort.school.friendly_id,
-                                                         step:)
+        schools_who_to_add_show_change_path(**path_options(step:))
       end
 
       def reset_known_by_another_name_response
@@ -108,24 +107,11 @@ module Schools
 
       def participant_exists?
         # NOTE: this doesn't differentiate being at this school from being at another school
-        check_for_dqt_record? && dqt_record.present? && existing_participant_profile.present?
+        check_for_dqt_record? && dqt_record(force_recheck: true).present? && existing_participant_profile.present?
       end
 
       def existing_participant_is_a_different_type?
         participant_exists? && existing_participant_profile.participant_type != participant_type.to_sym
-      end
-
-    private
-
-      def dqt_record_check(force_recheck: false)
-        @dqt_record_check = nil if force_recheck
-
-        @dqt_record_check ||= DqtRecordCheck.call(
-          full_name:,
-          trn: formatted_trn,
-          date_of_birth:,
-          nino: formatted_nino,
-        )
       end
     end
   end

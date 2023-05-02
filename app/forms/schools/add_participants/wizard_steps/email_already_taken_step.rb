@@ -7,10 +7,6 @@ module Schools
         def next_step
           :email
         end
-
-        def previous_step
-          :email
-        end
       end
     end
   end

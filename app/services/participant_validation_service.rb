@@ -28,6 +28,7 @@ class ParticipantValidationService
       previous_induction: previous_induction?(validated_record),
       no_induction: validated_record.induction_start_date.nil?,
       exempt_from_induction: validated_record.exempt?,
+      induction_start_date: validated_record.induction_start_date,
     }
   end
 

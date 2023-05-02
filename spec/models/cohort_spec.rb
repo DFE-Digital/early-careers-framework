@@ -79,6 +79,45 @@ RSpec.describe Cohort, type: :model do
     end
   end
 
+  describe ".containing_date" do
+    it "returns the cohort which contains the given date" do
+      expect(Cohort.containing_date(date: Date.new(2021, 9, 1))).to eq cohort_2021
+      expect(Cohort.containing_date(date: Date.new(2022, 10, 10))).to eq cohort_2022
+      expect(Cohort.containing_date(date: Date.new(2023, 1, 10))).to eq cohort_2022
+      expect(Cohort.containing_date(date: Date.new(2024, 3, 22))).to eq cohort_2023
+    end
+
+    context "when outside the currently added cohorts" do
+      let(:oob_date) { Date.new(Cohort.maximum(:start_year) + 1, 9, 1) }
+
+      it "returns nil" do
+        expect(Cohort.containing_date(date: oob_date)).to be_nil
+      end
+    end
+  end
+
+  describe ".within_next_registration_period?" do
+    before do
+      cohort_2023.update!(registration_start_date: Date.new(2023, 6, 1), academic_year_start_date: Date.new(2023, 9, 1))
+    end
+
+    context "when the current time is after the registration start date for then next cohort" do
+      it "returns true" do
+        Timecop.freeze(Date.new(2023, 7, 1)) do
+          expect(Cohort).to be_within_next_registration_period
+        end
+      end
+    end
+
+    context "when the active_registration_cohort and the current cohort are the same" do
+      it "returns false" do
+        Timecop.freeze(Date.new(2023, 9, 1)) do
+          expect(Cohort).not_to be_within_next_registration_period
+        end
+      end
+    end
+  end
+
   describe "#academic_year" do
     it "displays the years covered by the academic year" do
       expect(cohort_2021.academic_year).to eq("2021/22")

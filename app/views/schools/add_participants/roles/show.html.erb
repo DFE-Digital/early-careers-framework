@@ -1,0 +1,7 @@
+<%= render partial: "shared/roles" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= govuk_button_link_to "Continue", schools_dashboard_path(school_id: @school.slug) %>
+  </div>
+</div>

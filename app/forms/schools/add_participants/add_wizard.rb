@@ -8,7 +8,9 @@ module Schools
           email
           email_already_taken
           start_date
+          start_term
           cannot_add_registration_not_yet_open
+          need_training_setup
           choose_mentor
           confirm_appropriate_body
           check_answers
@@ -29,6 +31,8 @@ module Schools
         if changing_answer?
           if form.revisit_next_step?
             change_path_for(step: form.next_step)
+          elsif form.evaluate_next_step_on_change? # the change has produced a hard stop
+            show_path_for(step: form.next_step)
           elsif email.present?
             show_path_for(step: :check_answers)
           else
@@ -40,28 +44,22 @@ module Schools
       end
 
       def previous_step_path
-        back_step = form.previous_step
+        back_step = last_visited_step
+        return abort_path if back_step.nil?
 
         if changing_answer? || back_step != :date_of_birth
           super
         else
-          # return to previous wizard
-          show_schools_who_to_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                    school_id: school.friendly_id,
-                                                    step: back_step.to_s.dasherize)
+          schools_who_to_add_show_path(**path_options(step: back_step))
         end
       end
 
       def show_path_for(step:)
-        show_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                           school_id: school.friendly_id,
-                                           step: step.to_s.dasherize)
+        schools_add_show_path(**path_options(step:))
       end
 
       def change_path_for(step:)
-        show_change_schools_add_participants_path(cohort_id: school_cohort.cohort.start_year,
-                                                  school_id: school_cohort.school.friendly_id,
-                                                  step:)
+        schools_add_show_change_path(**path_options(step:))
       end
 
       def found_participant_in_dqt?
@@ -82,6 +80,21 @@ module Schools
         ect_participant? && mentor_id.blank? && mentor_options.any?
       end
 
+      # check answers helpers
+      def show_default_induction_programme_details?
+        !!(school_cohort&.default_induction_programme && school_cohort.default_induction_programme&.partnership&.active?)
+      end
+
+      # only relevant when we are in the registration period before the next cohort starts
+      # and the participant doesn't have an induction start date registered with DQT
+      def show_start_term?
+        (mentor_participant? || induction_start_date.blank?) && start_term.present?
+      end
+
+      def start_term_description
+        "#{start_term.capitalize} #{start_term == 'spring' ? Time.zone.now.year + 1 : Time.zone.now.year}"
+      end
+
     private
 
       def add_participant!
@@ -91,7 +104,7 @@ module Schools
           profile = if ect_participant?
                       EarlyCareerTeachers::Create.call(**participant_create_args)
                     else
-                      Mentors::Create.call(**participant_create_args)
+                      Mentors::Create.call(**participant_create_args.except(:induction_start_date))
                     end
 
           store_validation_result!(profile)
@@ -115,7 +128,7 @@ module Schools
       end
 
       def send_added_and_validated_email(profile)
-        ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school_cohort.school.name).deliver_later
+        ParticipantMailer.sit_has_added_and_validated_participant(participant_profile: profile, school_name: school.name).deliver_later
       end
 
       def participant_create_args
@@ -124,9 +137,9 @@ module Schools
           email:,
           school_cohort:,
           mentor_profile_id: mentor_profile&.id,
-          start_date:,
           sit_validation: true,
           appropriate_body_id:,
+          induction_start_date:,
         }
       end
     end

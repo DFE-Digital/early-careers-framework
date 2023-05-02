@@ -15,6 +15,8 @@ require "rails_helper"
 RSpec.describe "Reporting participants with a known TRN", type: :feature, js: true do
   let!(:cohort) { Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021) }
   let!(:next_cohort) { Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022) }
+  let!(:current_cohort) { Cohort.current || create(:cohort, :current) }
+
   let!(:privacy_policy) do
     privacy_policy = create(:privacy_policy)
     PrivacyPolicy::Publish.call
@@ -102,10 +104,6 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
 
     when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
     click_on "Continue"
-    then_i_see_an_error_message "Enter the teacher’s induction start date"
-
-    when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
-    click_on "Continue"
     then_i_see_an_error_message "Choose a mentor"
   end
 
@@ -132,9 +130,6 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
     when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
     then_the_page_is_accessible
 
-    when_i_add_start_date_to_the_school_add_participant_wizard participant_data[:start_date]
-    then_the_page_is_accessible
-
     when_i_choose_a_mentor_from_the_school_add_participant_wizard "Billy Mentor"
     then_the_page_is_accessible
 
@@ -146,27 +141,57 @@ RSpec.describe "Reporting participants with a known TRN", type: :feature, js: tr
     and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "ECT"
   end
 
-  scenario "Adding a Mentor is accessible" do
-    given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
-    when_i_view_participant_details_from_the_school_dashboard_page
+  scenario "Adding a Mentor is accessible in automatic assignment period" do
+    inside_auto_assignment_window do
+      given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
+      when_i_view_participant_details_from_the_school_dashboard_page
 
-    when_i_choose_to_add_an_ect_or_mentor_from_the_school_participants_dashboard_page
-    and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
-    then_the_page_is_accessible
+      when_i_choose_to_add_an_ect_or_mentor_from_the_school_participants_dashboard_page
+      and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
 
-    when_i_add_mentor_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
-    when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
-    when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
+      when_i_add_mentor_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
+      when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
+      when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
 
-    when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
-    then_the_page_is_accessible
+      when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
+      then_the_page_is_accessible
 
-    when_i_confirm_and_add_on_the_school_add_participant_wizard
-    then_the_page_is_accessible
+      when_i_confirm_and_add_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
 
-    then_i_am_on_the_school_add_participant_completed_page
-    and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]
-    and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "Mentor"
+      then_i_am_on_the_school_add_participant_completed_page
+      and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]
+      and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "Mentor"
+    end
+  end
+
+  scenario "Adding a Mentor is accessible outside automatic assignment period" do
+    outside_auto_assignment_window do
+      given_i_sign_in_as_the_user_with_the_full_name "Fip induction tutor"
+      when_i_view_participant_details_from_the_school_dashboard_page
+
+      when_i_choose_to_add_an_ect_or_mentor_from_the_school_participants_dashboard_page
+      and_i_choose_to_add_a_new_mentor_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
+
+      when_i_add_mentor_full_name_to_the_school_add_participant_wizard participant_data[:full_name]
+      when_i_add_teacher_reference_number_to_the_school_add_participant_wizard participant_data[:full_name], participant_data[:trn]
+      when_i_add_date_of_birth_to_the_school_add_participant_wizard participant_data[:date_of_birth]
+
+      when_i_add_email_address_to_the_school_add_participant_wizard "Sally Teacher", participant_data[:email]
+      then_the_page_is_accessible
+
+      when_i_choose_summer_term_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
+
+      when_i_confirm_and_add_on_the_school_add_participant_wizard
+      then_the_page_is_accessible
+
+      then_i_am_on_the_school_add_participant_completed_page
+      and_i_confirm_has_full_name_on_the_school_add_participant_completed_page participant_data[:full_name]
+      and_i_confirm_has_participant_type_on_the_school_add_participant_completed_page "Mentor"
+    end
   end
 
   def valid_dqt_response(participant_data)

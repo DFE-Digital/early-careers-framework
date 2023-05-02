@@ -30,10 +30,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :known_by_another_name
-        end
-
         def journey_complete?
           next_step == :none
         end

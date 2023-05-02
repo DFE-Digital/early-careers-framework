@@ -78,12 +78,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::DifferentNameStep, type: :
     end
   end
 
-  describe "#previous_step" do
-    it "returns :known_by_another_name" do
-      expect(step.previous_step).to eql :known_by_another_name
-    end
-  end
-
   describe "#journey_complete?" do
     context "when the #next_step returns :none" do
       it "returns true" do

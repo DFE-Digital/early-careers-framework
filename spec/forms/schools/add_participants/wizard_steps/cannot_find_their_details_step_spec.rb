@@ -16,10 +16,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::CannotFindTheirDetailsStep
       expect(step.next_step).to eql :nino
     end
   end
-
-  describe "#previous_step" do
-    it "returns the previous step" do
-      expect(step.previous_step).to eql :date_of_birth
-    end
-  end
 end

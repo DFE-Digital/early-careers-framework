@@ -22,10 +22,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :continue_current_programme
-        end
-
         def join_school_programme?
           join_school_programme == "yes"
         end

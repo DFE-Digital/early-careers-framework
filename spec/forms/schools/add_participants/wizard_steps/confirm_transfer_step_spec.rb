@@ -30,12 +30,6 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmTransferStep, type:
     end
   end
 
-  describe "#previous_step" do
-    it "returns :date_of_birth" do
-      expect(step.previous_step).to eql :date_of_birth
-    end
-  end
-
   describe "#journey_complete?" do
     context "when there isn't a training programme" do
       it "returns false" do
