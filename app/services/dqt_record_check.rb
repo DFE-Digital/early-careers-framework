@@ -52,7 +52,7 @@ private
     return check_failure(:found_but_not_active) unless dqt_record.active?
 
     trn_matches = dqt_record.trn == padded_trn
-    name_matches = name_matches?(name: dqt_record.name)
+    name_matches = name_matches?(dqt_name: dqt_record.name)
     dob_matches = dqt_record.dob == date_of_birth
     nino_matches = nino.present? && nino.downcase == dqt_record.ni_number&.downcase
 
@@ -68,11 +68,11 @@ private
     CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
   end
 
-  def name_matches?(name:)
+  def name_matches?(dqt_name:)
     if check_first_name_only?
-      extract_first_name(full_name).downcase == extract_first_name(name).downcase
+      extract_first_name(full_name).downcase == extract_first_name(dqt_name).downcase
     else
-      strip_title_prefix(full_name).downcase == strip_title_prefix(name).downcase
+      strip_title_prefix(full_name).downcase == strip_title_prefix(dqt_name).downcase
     end
   end
 
