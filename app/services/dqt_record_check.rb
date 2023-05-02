@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DqtRecordCheck < ::BaseService
+  TITLES = %w[mr mrs miss ms dr prof rev].freeze
+
   CheckResult = Struct.new(
     :dqt_record,
     :trn_matches,
@@ -26,7 +28,7 @@ private
 
   def initialize(trn:, full_name:, date_of_birth:, nino: nil, check_first_name_only: true)
     @trn = trn
-    @full_name = full_name
+    @full_name = full_name&.strip
     @date_of_birth = date_of_birth
     @nino = nino
     @check_first_name_only = check_first_name_only
@@ -69,16 +71,22 @@ private
   end
 
   def name_matches?(dqt_name:)
+    return false if full_name.blank?
+    return false if full_name.in?(TITLES)
+    return false if dqt_name.blank?
+
+    full_name_without_prefix = strip_title_prefix(full_name).downcase
+
     if check_first_name_only?
-      extract_first_name(full_name).downcase == extract_first_name(dqt_name).downcase
+      extract_first_name(full_name_without_prefix) == extract_first_name(dqt_name).downcase
     else
-      strip_title_prefix(full_name).downcase == strip_title_prefix(dqt_name).downcase
+      full_name_without_prefix == strip_title_prefix(dqt_name).downcase
     end
   end
 
   def strip_title_prefix(str)
     parts = str.split(" ")
-    if parts.first.downcase =~ /^(mr|mrs|miss|ms|dr|prof|rev)/
+    if parts.first.downcase =~ /^#{Regexp.union(TITLES)}/
       parts.drop(1).join(" ")
     else
       str
