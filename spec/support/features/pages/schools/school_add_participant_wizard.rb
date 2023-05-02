@@ -121,6 +121,13 @@ module Pages
       self
     end
 
+    def choose_summer_term
+      choose option: "summer", allow_label_click: true
+      click_on "Continue"
+
+      self
+    end
+
     def add_full_name(participant_name)
       # TODO: is this label correct? it is visually hidden, but pretty sure it should be proper english
       fill_in "What’s this ECT’s full name?", with: participant_name
