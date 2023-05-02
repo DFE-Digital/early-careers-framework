@@ -1,0 +1,9 @@
+<h2 class="govuk-heading-m">What to do next</h2>
+<p class="govuk-body">As soon as possible:</p>
+<ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+  <% unless @wizard.appropriate_body_appointed? %>
+    <li>tell us which appropriate body you’ve appointed for your ECTs</li>
+  <% end %>
+  <li>add the new ECTs and mentors to this service so we can check their eligibility for DfE funding</li>
+  <li>use this service to tell us which mentor has been assigned to each ECT</li>
+</ul>

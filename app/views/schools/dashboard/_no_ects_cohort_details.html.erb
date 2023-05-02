@@ -1,2 +1,2 @@
 <p class="govuk-body">Your school has told us you do not expect any ECTs to join you in the <%= school_cohort.description %> academic year.</p>
-<%= govuk_link_to 'Tell us if this has changed', expect_any_ects_schools_setup_school_cohort_path(cohort_id: school_cohort.cohort), class: "govuk-link govuk-link--no-visited-state" %>
+<%= govuk_link_to 'Tell us if this has changed', schools_cohort_setup_start_path(cohort_id: school_cohort.cohort), class: "govuk-link govuk-link--no-visited-state" %>

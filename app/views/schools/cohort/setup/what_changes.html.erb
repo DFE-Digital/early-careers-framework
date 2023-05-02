@@ -1,0 +1,49 @@
+<% title = "What changes would you like to make?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-xl"><%= @school.name %></span>
+
+        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+
+            <%= f.govuk_collection_radio_buttons(
+                :what_changes,
+                @wizard.form.choices,
+                :id,
+                :name,
+                legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+                <p class="govuk-body">The change will only apply for ECTs and mentors starting in the <% @cohort.description %> academic year.</p>
+            <% end %>
+
+            <p class="govuk-body govuk-!-margin-top-4">If you’re not sure which option to choose, see
+                <%= govuk_link_to "delivery options for ECF-based training (opens in new tab)",
+                                  "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview",
+                                  target: :_blank,
+                                  rel: "noopener noreferrer",
+                                  no_visited_state: true %>
+            </p>
+            <p class="govuk-body">You can also contact your
+                <% unless @school.cip_only? %>
+                    <%= govuk_link_to "local teaching school hub (opens in a new tab)",
+                                      "https://www.gov.uk/guidance/teaching-school-hubs#find-a-teaching-school-hub",
+                                      target: :_blank,
+                                      rel: "noopener noreferrer",
+                                      no_visited_state: true %>
+                    or
+                <% end %>
+                <%= govuk_link_to "appropriate body (opens in new tab)",
+                                  "https://www.gov.uk/government/publications/appropriate-bodies-guidance-induction-and-the-early-career-framework",
+                                  target: :_blank,
+                                  rel: "noopener noreferrer",
+                                  no_visited_state: true %>.
+            </p>
+
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+    </div>
+</div>

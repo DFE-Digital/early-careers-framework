@@ -1,0 +1,19 @@
+<% academic_year = Cohort.active_registration_cohort.description %>
+
+<% content_for :title, "What happens next" %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <%= govuk_panel title_text: "Your information has been saved", classes: "govuk-!-margin-bottom-7" do %>
+        Academic year
+        <br/><strong><%= academic_year %></strong>
+        <% end %>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+        <p class="govuk-body">We’ll contact <%= @school.name %> in the next academic year.</p>
+        <p class="govuk-body">If you do employ ECTs later this academic year, you can sign in to this service to let us know.</p>
+        <%= govuk_link_to "Return to manage your training", schools_dashboard_path, class: "govuk-link govuk-link--no-visited-state" %>
+
+    </div>
+</div>

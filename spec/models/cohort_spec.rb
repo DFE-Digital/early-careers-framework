@@ -81,17 +81,17 @@ RSpec.describe Cohort, type: :model do
 
   describe ".containing_date" do
     it "returns the cohort which contains the given date" do
-      expect(Cohort.containing_date(date: Date.new(2021, 9, 1))).to eq cohort_2021
-      expect(Cohort.containing_date(date: Date.new(2022, 10, 10))).to eq cohort_2022
-      expect(Cohort.containing_date(date: Date.new(2023, 1, 10))).to eq cohort_2022
-      expect(Cohort.containing_date(date: Date.new(2024, 3, 22))).to eq cohort_2023
+      expect(Cohort.containing_date(Date.new(2021, 9, 1))).to eq cohort_2021
+      expect(Cohort.containing_date(Date.new(2022, 10, 10))).to eq cohort_2022
+      expect(Cohort.containing_date(Date.new(2023, 1, 10))).to eq cohort_2022
+      expect(Cohort.containing_date(Date.new(2024, 3, 22))).to eq cohort_2023
     end
 
     context "when outside the currently added cohorts" do
       let(:oob_date) { Date.new(Cohort.maximum(:start_year) + 1, 9, 1) }
 
       it "returns nil" do
-        expect(Cohort.containing_date(date: oob_date)).to be_nil
+        expect(Cohort.containing_date(oob_date)).to be_nil
       end
     end
   end

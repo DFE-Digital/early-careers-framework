@@ -1,0 +1,28 @@
+<% title = "Does your school expect any new ECTs in the new academic year?" %>
+
+<% content_for :title, title %>
+
+<% content_for :before_content, govuk_back_link(text: "Back", href: wizard_back_link_path) %>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-xl"><%= @wizard.school.name %></span>
+
+        <%= form_with model: @wizard.form, url: url_for(action: :update), scope: @wizard.to_key, method: :put do |f| %>
+            <%= f.govuk_error_summary %>
+
+            <%= f.govuk_collection_radio_buttons(
+                :expect_any_ects,
+                simple_yes_no_options,
+                :id,
+                :name,
+                legend: { text: title, tag: 'h1', size: 'xl' }) do %>
+                <p class="govuk-body govuk-!-margin-top-4">ECTs are teachers who have finished their initial teacher training.</p>
+                <p class="govuk-body">Do not include ECTs who started training before
+                    <%= @wizard.cohort.academic_year_start_date.to_date.to_s(:govuk) %>.</p>
+            <% end %>
+
+            <%= f.govuk_submit "Continue" %>
+        <% end %>
+    </div>
+</div>

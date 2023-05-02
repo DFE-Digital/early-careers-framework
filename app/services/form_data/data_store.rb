@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class FormData::DataStore
-  attr_reader :store
-
   def initialize(session:, form_key:)
     @session = session
     @form_key = form_key
-    @store = session[form_key] ||= {}
+  end
+
+  def store
+    session[form_key] ||= {}
   end
 
   def set(key, value)
@@ -32,7 +33,20 @@ class FormData::DataStore
     end
   end
 
+  def clean
+    @session[@form_key] = {}
+  end
+
   def destroy
     @session.delete(@form_key)
   end
+
+  def to_s
+    values = []
+    store.map { |k, v| values << "#{k}->#{v}" }.join("\n")
+  end
+
+private
+
+  attr_reader :session, :form_key
 end

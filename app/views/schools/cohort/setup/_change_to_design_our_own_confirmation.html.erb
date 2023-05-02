@@ -1,0 +1,20 @@
+<span class="govuk-caption-xl"><%= @school.name %></span>
+<h1 class="govuk-heading-xl">Are you sure you want to run your own training programme?</h1>
+
+<p class="govuk-body">
+  You’re choosing to design and deliver your own programme based on the early career
+  framework (ECF).
+</p>
+<p class="govuk-body">
+  You’ll need to design a 2-year programme of support and training that covers every 'learn that' and
+  'learn how to' statement in the
+  <%= govuk_link_to 'early career framework (ECF) (opens in new tab)', "https://www.gov.uk/government/publications/early-career-framework",
+  target: :_blank,
+  rel: "noopener noreferrer" %>
+</p>
+<p class="govuk-body govuk-!-margin-bottom-7">
+  <%= govuk_link_to 'See you statutory guidance (opens in new tab)', "https://www.gov.uk/government/publications/early-career-framework-reforms-overview/early-career-framework-reforms-overview#schools-designing-and-delivering-their-own-ecf-based-induction",
+  target: :_blank,
+  rel: "noopener noreferrer" %>
+  for information about funding, time off timetable, and roles.
+</p>
