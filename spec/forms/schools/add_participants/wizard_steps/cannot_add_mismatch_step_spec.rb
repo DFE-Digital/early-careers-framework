@@ -8,10 +8,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::CannotAddMismatchStep, typ
       expect(step.next_step).to eql :none
     end
   end
-
-  describe "#previous_step" do
-    it "returns the previous step" do
-      expect(step.previous_step).to eql :known_by_another_name
-    end
-  end
 end

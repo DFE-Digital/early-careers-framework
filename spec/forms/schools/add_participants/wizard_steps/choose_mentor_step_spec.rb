@@ -64,21 +64,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ChooseMentorStep, type: :m
       end
     end
   end
-
-  describe "#previous_step" do
-    context "when transferring an ECT" do
-      let(:wizard) { instance_double(Schools::AddParticipants::TransferWizard) }
-
-      it "returns :email" do
-        allow(wizard).to receive(:transfer?).and_return(true)
-        expect(step.previous_step).to eql :email
-      end
-    end
-    context "when adding an ECT" do
-      it "returns :start_date" do
-        allow(wizard).to receive(:transfer?).and_return(false)
-        expect(step.previous_step).to eql :start_date
-      end
-    end
-  end
 end

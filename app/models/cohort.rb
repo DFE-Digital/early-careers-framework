@@ -20,6 +20,10 @@ class Cohort < ApplicationRecord
     where(npq_registration_start_date: ..Date.current).order(start_year: :desc).first.presence || current
   end
 
+  def self.containing_date(date:)
+    starting_within(date - 1.year + 1.day, date)
+  end
+
   def self.current
     starting_within(Date.current - 1.year + 1.day, Date.current)
   end
@@ -30,6 +34,14 @@ class Cohort < ApplicationRecord
 
   def self.previous
     starting_within(Date.current - 2.years + 1.day, Date.current - 1.year)
+  end
+
+  def self.within_automatic_assignment_period?
+    Time.zone.now <= Cohort.current.automatic_assignment_period_end_date
+  end
+
+  def self.within_next_registration_period?
+    current != active_registration_cohort
   end
 
   def self.starting_within(start_date, end_date)

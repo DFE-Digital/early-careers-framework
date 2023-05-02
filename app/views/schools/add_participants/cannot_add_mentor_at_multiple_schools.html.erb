@@ -14,6 +14,6 @@
 
     <p class="govuk-body">Contact us for help to register this mentor at your school: <%= render MailToSupportComponent.new %></p>
 
-    <%= govuk_link_to "Return to your ECTs and mentors", schools_participants_path, no_visited_state: true %>
+    <%= govuk_link_to "Return to your ECTs and mentors", @wizard.dashboard_path, no_visited_state: true %>
   </div>
 </div>

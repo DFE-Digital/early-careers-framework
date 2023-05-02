@@ -11,39 +11,22 @@ SecureHeaders::Configuration.default do |config|
 
   google_analytics = %w[*.google-analytics.com ssl.google-analytics.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
 
-  zendesk = %w[
-    https://static.zdassets.com
-    https://ekr.zdassets.com
-    https://ekr.zendesk.com
-    https://teachercpdhelp.zendesk.com
-    https://*.zopim.com
-    https://zendesk-eu.my.sentry.io
-    wss://teachercpdhelp.zendesk.com
-    wss://*.zopim.com
-  ]
-
-  zendesk_img = %w[
-    https://v2assets.zopim.io
-    https://static.zdassets.com
-    data:
-  ]
-
   config.csp = SecureHeaders::OPT_OUT
 
   config.csp_report_only = {
-    default_src: %w['none'] + zendesk,
+    default_src: %w['none'],
     base_uri: %w['self'],
     block_all_mixed_content: true, # see http://www.w3.org/TR/mixed-content/
     child_src: %w['self'],
-    connect_src: %W['self' *.ingest.sentry.io] + google_analytics + zendesk,
+    connect_src: %W['self' *.ingest.sentry.io] + google_analytics,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
     form_action: %w['self'],
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
-    img_src: %W['self' data: *.gov.uk online.swagger.io validator.swagger.io] + google_analytics + zendesk_img,
+    img_src: %W['self' data: *.gov.uk online.swagger.io validator.swagger.io] + google_analytics,
     manifest_src: %w['self'],
     media_src: %w['self'],
-    script_src: %W['self' 'unsafe-inline' 'unsafe-eval' *.gov.uk] + google_analytics + zendesk,
+    script_src: %W['self' 'unsafe-inline' 'unsafe-eval' *.gov.uk] + google_analytics,
     style_src: %w['self' 'unsafe-inline' *.gov.uk fonts.googleapis.com] + google_analytics,
     worker_src: %w['self'],
     # upgrade_insecure_requests: !Rails.env.development?, # see https://www.w3.org/TR/upgrade-insecure-requests/

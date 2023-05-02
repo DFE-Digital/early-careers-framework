@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   direct :feedback_form do
-    "https://docs.google.com/forms/d/e/1FAIpQLSdjpB1VMwZlcQxOoTzfW_bw7mnnKbGHek24_uZRhIRDid9f-Q/viewform?usp=sf_link"
+    "https://forms.office.com/e/3xCevHRKXx"
   end
 
   scope :pages, controller: "pages" do
@@ -546,6 +546,27 @@ Rails.application.routes.draw do
     resources :dashboard, controller: :dashboard, only: %i[index show], path: "/", param: :school_id
 
     scope "/:school_id" do
+      scope "participants", module: :add_participants do
+        wizard_scope :who_to_add, path: "who" do
+          get "/", to: "who_to_add#show", as: :start, step: "participant-type"
+          get "/sit-mentor", to: "who_to_add#show", as: :sit_start, step: "yourself"
+        end
+
+        wizard_scope :transfer do
+          get "/", to: "transfer#show", as: :start, step: "joining-date"
+          get "/same-provider", to: "transfer#show", as: :start_same_provider, step: "email"
+        end
+
+        wizard_scope :add do
+          get "/", to: "add#show", as: :start, step: "email"
+          get "/sit-mentor", to: "add#show", as: :sit_start, step: "check-answers"
+          appropriate_body_selection_routes :add
+          get :change_appropriate_body, path: "change-appropriate-body", controller: :add
+        end
+
+        get "roles", to: "roles#show", as: :participant_roles
+      end
+
       resources :cohorts, only: :show, param: :cohort_id do
         member do
           get "programme-choice", as: :programme_choice
@@ -607,27 +628,6 @@ Rails.application.routes.draw do
           end
 
           resources :participants, only: %i[index show destroy] do
-            collection do
-              scope module: :add_participants do
-                wizard_scope :who_to_add, path: "who" do
-                  get "/", to: "who_to_add#show", as: :start, step: "participant-type"
-                  get "/sit-mentor", to: "who_to_add#show", as: :sit_start, step: "yourself"
-                end
-
-                wizard_scope :transfer do
-                  get "/", to: "transfer#show", as: :start, step: "joining-date"
-                  get "/same-provider", to: "transfer#show", as: :start_same_provider, step: "email"
-                end
-
-                wizard_scope :add do
-                  get "/", to: "add#show", as: :start, step: "email"
-                  get "/sit-mentor", to: "add#show", as: :sit_start, step: "check-answers"
-                  appropriate_body_selection_routes :add
-                  get :change_appropriate_body, path: "change-appropriate-body", controller: :add
-                end
-              end
-            end
-
             get :remove
             get :edit_name, path: "edit-name"
             put :update_name, path: "update-name"

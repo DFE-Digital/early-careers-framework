@@ -1,4 +1,4 @@
-<% title = "You cannot add #{@wizard.full_name}" %>
+<% title = "You cannot add #{@wizard.full_name} yet" %>
 <% content_for :title, title %>
 
 <% content_for :before_content, govuk_back_link( text: "Back", href: wizard_back_link_path) %>
@@ -8,9 +8,9 @@
     <span class="govuk-caption-xl"><%= @school.name %></span>
     <h1 class="govuk-heading-xl"><%= title %></h1>
 
-    <p class="govuk-body"><%= @wizard.possessive_name %> induction will not start until the 2023 academic year.</p>
-    <p class="govuk-body">Our service is not yet open for registrations.</p>
+    <p class="govuk-body">Our service is not open for registrations so you cannot add this participant yet.</p>
+    <p class="govuk-body">We will contact you when registrations are open.</p>
 
-    <%= govuk_link_to "Return to your ECTs and mentors", schools_participants_path, no_visited_state: true %>
+    <%= govuk_button_link_to "Return to manage your training", @wizard.dashboard_path %>
   </div>
 </div>

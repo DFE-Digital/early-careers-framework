@@ -7,14 +7,6 @@ module Schools
         def next_step
           :none
         end
-
-        def previous_step
-          if wizard.ect_participant?
-            :confirm_transfer
-          else
-            :confirm_mentor_transfer
-          end
-        end
       end
     end
   end

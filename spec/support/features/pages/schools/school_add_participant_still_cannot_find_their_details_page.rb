@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolAddParticipantStillCannotFindTheirDetailsPage < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/{participant_id}/still-cannot-find-their-details"
+    set_url "/schools/{slug}/participants/who/still-cannot-find-their-details"
     set_primary_heading(/\AWe still cannot find (.*)’s record\z/)
 
     def cant_add_participant
@@ -14,7 +14,7 @@ module Pages
     def can_view_my_etcs_and_mentors
       click_on "Return to your ECTs and mentors"
 
-      element_has_content?(self, "Your ECTs and mentors")
+      element_has_content?(self, "Manage your training")
     end
   end
 end

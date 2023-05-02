@@ -26,10 +26,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :date_of_birth
-        end
-
         def journey_complete?
           next_step == :none
         end

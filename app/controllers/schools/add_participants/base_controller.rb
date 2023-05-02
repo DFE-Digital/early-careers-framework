@@ -3,7 +3,7 @@
 module Schools
   module AddParticipants
     class BaseController < Schools::BaseController
-      before_action :set_school_cohort
+      before_action :set_school
 
       # where to look for step views
       def self.controller_path
@@ -21,7 +21,6 @@ module Schools
       def update
         if @form.valid?
           @wizard.save!
-
           redirect_to @wizard.next_step_path
         else
           render @wizard.current_step
@@ -44,19 +43,24 @@ module Schools
         raise NotImplementedError
       end
 
+      def set_school
+        @school = policy_scope(School).friendly.find(params[:school_id])
+      end
+
       def initialize_wizard
         if request.get? || request.head?
           @wizard = wizard_class.new(current_step: step_name,
                                      data_store:,
                                      current_user:,
-                                     school_cohort: @school_cohort)
+                                     school: @school)
 
           @wizard.changing_answer(params["changing_answer"] == "1")
+          @wizard.update_history
         else
           @wizard = wizard_class.new(current_step: step_name,
                                      data_store:,
                                      current_user:,
-                                     school_cohort: @school_cohort,
+                                     school: @school,
                                      submitted_params:)
         end
         @form = @wizard.form
@@ -66,7 +70,7 @@ module Schools
       end
 
       def abort_path
-        schools_participants_path
+        schools_dashboard_path(school_id: @school.slug)
       end
 
       def wizard_back_link_path

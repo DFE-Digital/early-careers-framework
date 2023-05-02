@@ -5,12 +5,35 @@ module ManageTrainingSteps
 
   # Given_steps
 
+  def given_there_is_a_school_that_has_chosen_fip_and_partnered
+    @cohort = Cohort.current || create(:cohort, :current)
+    @school = create(:school, name: "Fip School")
+    @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
+    @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
+    @school_cohort.update!(default_induction_programme: @induction_programme)
+    @lead_provider = create(:lead_provider, name: "Big Provider Ltd")
+    @delivery_partner = create(:delivery_partner, name: "Amazing Delivery Team")
+    @partnership = create(:partnership, school: @school, lead_provider: @lead_provider, delivery_partner: @delivery_partner, cohort: @cohort, challenge_deadline: 2.weeks.ago)
+    @induction_programme.update!(partnership: @partnership)
+  end
+
   def given_there_is_a_school_that_has_chosen_fip_for_2021
     @cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
     @school = create(:school, name: "Fip School")
     @school_cohort = create(:school_cohort, school: @school, cohort: @cohort, induction_programme_choice: "full_induction_programme")
     @induction_programme = create(:induction_programme, :fip, school_cohort: @school_cohort, partnership: nil)
     @school_cohort.update!(default_induction_programme: @induction_programme)
+  end
+
+  def given_there_is_a_school_that_has_chosen_fip_for_2021_and_2022_and_partnered
+    given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
+    @cohort22 = Cohort.find_or_create_by!(start_year: 2022)
+    @partnership22 = @partnership.dup
+    @partnership22.cohort = @cohort22
+    @partnership22.save!
+    @school_cohort22 = create(:school_cohort, :fip, school: @school, cohort: @cohort22)
+    @induction_programme22 = create(:induction_programme, :fip, school_cohort: @school_cohort22, partnership: @partnership22)
+    @school_cohort22.update!(default_induction_programme: @induction_programme22)
   end
 
   def given_there_is_a_school_that_has_chosen_fip_for_2021_and_partnered
@@ -500,13 +523,14 @@ module ManageTrainingSteps
     click_on("Add a new mentor")
   end
 
+  def when_i_choose_to_add_yourself_as_a_mentor
+    choose("Yourself as a mentor", allow_label_click: true)
+  end
+
   def when_i_click_to_add_a_new_ect_or_mentor
     click_on "Add an ECT or mentor"
   end
-
-  def when_i_click_on_add_myself_as_mentor
-    click_on("Add yourself as a mentor")
-  end
+  alias_method :when_i_click_to_add_a_new_participant, :when_i_click_to_add_a_new_ect_or_mentor
 
   def when_i_select_to_add_a(participant_type)
     choose(participant_type, allow_label_click: true)
@@ -682,7 +706,6 @@ module ManageTrainingSteps
   def then_i_am_taken_to_your_ect_and_mentors_page
     expect(page).to have_selector("h1", text: "Your ECTs and mentors")
     expect(page).to have_link("Add an ECT or mentor")
-    expect(page).to have_link("Add yourself as a mentor")
   end
 
   def then_i_am_taken_to_are_you_sure_page
@@ -1110,6 +1133,7 @@ module ManageTrainingSteps
       email: "sally@school.com",
       nino: "AB123456A",
       start_date: Date.new(2022, 9, 1),
+      start_term: "summer",
     }
   end
 

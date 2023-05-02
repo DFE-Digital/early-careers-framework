@@ -26,10 +26,6 @@ module Schools
           end
         end
 
-        def previous_step
-          :email
-        end
-
       private
 
         def start_date_is_out_of_registration_scope?

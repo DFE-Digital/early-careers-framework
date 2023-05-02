@@ -10,16 +10,16 @@
   <% end %>
 
   <% if form.trn %>
-   <% summary_list.row do |row| %>
-       <% row.key { "TRN" } %>
-       <% row.value { form.trn } %>
-       <% unless form.found_participant_in_dqt? %>
-         <% row.action(text: "Change",
-                       visually_hidden_text: "TRN",
-                       href: form.change_path_for(step: :trn)) %>
-       <% end %>
-     <% end %>
-   <% end %>
+    <% summary_list.row do |row| %>
+      <% row.key { "TRN" } %>
+      <% row.value { form.trn } %>
+      <% unless form.found_participant_in_dqt? %>
+        <% row.action(text: "Change",
+                      visually_hidden_text: "TRN",
+                      href: form.change_path_for(step: :trn)) %>
+      <% end %>
+    <% end %>
+  <% end %>
 
   <% if form.date_of_birth %>
     <% summary_list.row do |row| %>
@@ -41,15 +41,17 @@
                  href: form.change_path_for(step: :email)) %>
   <% end %>
 
-  <% if form.ect_participant? %>
+  <% if form.show_start_term? %>
     <% summary_list.row do |row| %>
-      <% row.key { "Induction start" } %>
-      <% row.value { form.start_date.to_date.to_s(:govuk) } %>
+      <% row.key { "Start term" } %>
+      <% row.value { form.start_term_description } %>
       <% row.action(text: "Change",
-                    visually_hidden_text: "induction start date",
-                    href: form.change_path_for(step: :start_date)) %>
+                    visually_hidden_text: "start term",
+                    href: form.change_path_for(step: :start_term)) %>
     <% end %>
+  <% end %>
 
+  <% if form.ect_participant? %>
     <% summary_list.row do |row| %>
       <% row.key { "Mentor" } %>
       <% row.value { form.mentor.present? ? form.mentor.full_name : "Add later" } %>
@@ -73,12 +75,12 @@
     <% end %>
   <% end %>
 
-  <% if @school_cohort.default_induction_programme && @school_cohort.default_induction_programme.partnership&.active? %>
+  <% if form.show_default_induction_programme_details? %>
     <% summary_list.row do |row| %>
       <% row.key { "Training with" } %>
       <% row.value do %>
-        <p class="govuk-body"><%= @school_cohort.default_induction_programme.lead_provider&.name %></p>
-        <p class="govuk-body"><%= @school_cohort.default_induction_programme.delivery_partner&.name %></p>
+        <%= tag.p(form.lead_provider.name, class: "govuk-body") if form.lead_provider.present? %>
+        <%= tag.p(form.delivery_partner.name, class: "govuk-body") if form.delivery_partner.present? %>
       <% end %>
     <% end %>
   <% end %>

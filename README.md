@@ -185,6 +185,24 @@ Review apps are automatically created when a PR is opened. A link to the app wil
 The database of the review app will be truncated and reseeded on each commit and subsequent deploy.
 This is to aid in manual testing using scenarios set up using seeds.
 
+### Magic birthdates
+To further aid manual testing and review of certain circumstances and behaviours, there are a number of magic values
+that can be used in the __date of birth__ field when adding or validating an ECT or mentor participant. Using these values
+returns a "spoofed" response from the DQT API integration that enables us to proceed without calling the API or needing to know
+exactly what and how their test data is configured. These magic values are only available in development environments.
+
+| Date of birth | Validation response |
+|---------------|---------------------|
+| 1/1/1900 | All data matches and eligible participants |
+| 2/1/1900 | Participant found but the Name and NiNo do not match |
+| 3/1/1900 | No match found |
+| 4/1/1900 | Participant matched but no QTS date recorded |
+| 5/1/1900 | Participant matched but no induction recorded |
+| 6/1/1900 | Participant matched but active alerts present |
+| 21/1/1900 | Participant matched and has a 2021 cohort induction start date |
+| 22/1/1900 | Participant matched and has a 2022 cohort induction start date |
+| 23/1/1900 | Participant matched and has a 2023 cohort induction start date |
+
 ## Deployment infrastructure
 
 Aside from review apps (above), we have four deployed environments:

@@ -124,7 +124,6 @@ RSpec.describe "transferring participants", type: :feature, js: true do
       def then_i_am_taken_to_your_ect_and_mentors_page
         expect(page).to have_selector("h1", text: "Your ECTs and mentors")
         expect(page).to have_text("Add an ECT or mentor")
-        expect(page).to have_text("Add yourself as a mentor")
       end
 
       def then_i_should_be_on_what_we_need_page

@@ -7,10 +7,6 @@ module Schools
         def next_step
           :none
         end
-
-        def previous_step
-          :none
-        end
       end
     end
   end

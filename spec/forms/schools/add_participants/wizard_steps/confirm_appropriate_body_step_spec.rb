@@ -22,38 +22,4 @@ RSpec.describe Schools::AddParticipants::WizardSteps::ConfirmAppropriateBodyStep
       expect(step.next_step).to eql :check_answers
     end
   end
-
-  describe "#previous_step" do
-    context "when participant is an ECT" do
-      let(:wizard) { instance_double(Schools::AddParticipants::TransferWizard) }
-
-      before do
-        allow(wizard).to receive(:ect_participant?).and_return(true)
-      end
-
-      context "when there are mentors available to assign" do
-        let(:mentors) { create_list(:seed_mentor_participant_profile, 2, :valid) }
-
-        it "returns :choose_mentor" do
-          allow(wizard).to receive(:mentor_options).and_return(mentors)
-          expect(step.previous_step).to eql :choose_mentor
-        end
-      end
-
-      context "when there are no mentors available" do
-        let(:mentors) { [] }
-
-        it "returns :start_date" do
-          allow(wizard).to receive(:mentor_options).and_return(mentors)
-          expect(step.previous_step).to eql :start_date
-        end
-      end
-    end
-    context "when participant is a mentor" do
-      it "returns :email" do
-        allow(wizard).to receive(:ect_participant?).and_return(false)
-        expect(step.previous_step).to eql :email
-      end
-    end
-  end
 end

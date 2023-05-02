@@ -4,7 +4,7 @@ require_relative "../base_page"
 
 module Pages
   class SchoolAddParticipantWizard < ::Pages::BasePage
-    set_url "/schools/{slug}/cohorts/{cohort}/participants/who"
+    set_url "/schools/{slug}/participants/who"
     set_primary_heading "Who do you want to add?"
 
     def add_participant(participant_type, full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
@@ -43,14 +43,14 @@ module Pages
     #   end
     # end
 
-    def add_ect(full_name, trn, date_of_birth, email_address, start_date, mentor_full_name = nil)
+    def add_ect(full_name, trn, date_of_birth, email_address, _start_date, mentor_full_name = nil)
       choose_to_add_a_new_ect
 
       add_full_name full_name
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
       add_email_address full_name, email_address
-      add_start_date start_date
+      # add_start_date start_date
       choose_a_mentor mentor_full_name if mentor_full_name.present?
 
       confirm_and_add
@@ -114,7 +114,15 @@ module Pages
     end
 
     def choose_to_add_self_as_mentor
-      click_on "Add yourself as a mentor"
+      choose "Yourself as a mentor"
+      click_on "Continue"
+      click_on "Confirm"
+
+      self
+    end
+
+    def choose_summer_term
+      choose option: "summer", allow_label_click: true
       click_on "Continue"
 
       self
@@ -169,6 +177,13 @@ module Pages
       fill_in "Day", with: start_date.day
       fill_in "Month", with: start_date.month
       fill_in "Year", with: start_date.year
+      click_on "Continue"
+
+      self
+    end
+
+    def add_start_term(start_term)
+      choose start_term
       click_on "Continue"
 
       self
