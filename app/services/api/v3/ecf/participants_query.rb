@@ -25,13 +25,10 @@ module Api
                    )
 
           scope = User
-                    .includes(:participant_identities, :teacher_profile, participant_profiles: [:participant_profile_states, :schedule, :teacher_profile, :ecf_participant_eligibility, :ecf_participant_validation_data, { induction_records: [:preferred_identity, :schedule, :delivery_partner, { induction_programme: { partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort] } }, { mentor_profile: :participant_identity }] }])
-                    .eager_load(participant_profiles: [:induction_records])
-                    .joins(left_outer_join_preferred_identities)
+                    .includes(:participant_identities, :teacher_profile, participant_profiles: %i[participant_profile_states schedule teacher_profile ecf_participant_eligibility ecf_participant_validation_data])
+                    .eager_load(participant_profiles: :induction_records)
                     .joins(left_outer_join_participant_profiles)
                     .joins(left_outer_join_participant_identities)
-                    .joins(left_outer_join_mentor_profiles)
-                    .joins(left_outer_join_mentor_participant_identities)
                     .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
                     .joins(left_outer_join_participant_profile_states)
                     .distinct
@@ -86,24 +83,12 @@ module Api
           SQL
         end
 
-        def left_outer_join_preferred_identities
-          "LEFT OUTER JOIN participant_identities preferred_identities ON preferred_identities.id = induction_records.preferred_identity_id"
-        end
-
         def left_outer_join_participant_profiles
           "LEFT OUTER JOIN participant_profiles ON participant_profiles.id = induction_records.participant_profile_id"
         end
 
         def left_outer_join_participant_identities
           "LEFT OUTER JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id"
-        end
-
-        def left_outer_join_mentor_profiles
-          "LEFT OUTER JOIN participant_profiles mentor_profiles ON mentor_profiles.id = induction_records.mentor_profile_id"
-        end
-
-        def left_outer_join_mentor_participant_identities
-          "LEFT OUTER JOIN participant_identities participant_identities_mentor_profiles ON participant_identities_mentor_profiles.id = mentor_profiles.participant_identity_id"
         end
 
         def left_outer_join_participant_profile_states

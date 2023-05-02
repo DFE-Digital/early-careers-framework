@@ -33,7 +33,7 @@ module Api
 
           def withdrawal(profile:, cpd_lead_provider:, latest_induction_record:)
             if latest_induction_record.training_status_withdrawn?
-              latest_participant_profile_state = profile.participant_profile_states.sort { |a, b| b.created_at <=> a.created_at }.find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+              latest_participant_profile_state = profile.participant_profile_states.sort_by(&:created_at).reverse!.find { |pps| pps.state == ParticipantProfileState.states[:withdrawn] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
                   reason: latest_participant_profile_state.reason,
@@ -45,7 +45,7 @@ module Api
 
           def deferral(profile:, cpd_lead_provider:, latest_induction_record:)
             if latest_induction_record.training_status_deferred?
-              latest_participant_profile_state = profile.participant_profile_states.sort { |a, b| b.created_at <=> a.created_at }.find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+              latest_participant_profile_state = profile.participant_profile_states.sort_by(&:created_at).find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
                   reason: latest_participant_profile_state.reason,
@@ -92,9 +92,9 @@ module Api
 
         attribute(:ecf_enrolments) do |object, params|
           ecf_participant_profiles(object).map { |profile|
-            latest_induction_record = params[:induction_record].presence || profile.induction_records.first
+            latest_induction_record = profile.induction_records.includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]]).where(induction_programme: { partnerships: { lead_provider: params[:cpd_lead_provider].lead_provider } }).latest
 
-            next unless params[:cpd_lead_provider] && latest_induction_record.present? && latest_induction_record.induction_programme&.partnership&.lead_provider&.cpd_lead_provider == params[:cpd_lead_provider]
+            next unless params[:cpd_lead_provider] && latest_induction_record.present?
 
             {
               training_record_id: profile.id,
