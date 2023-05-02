@@ -25,7 +25,7 @@ module Api
         attr_reader :cpd_lead_provider, :induction_records
 
         def build_transfers
-          sorted_induction_records.sort_by(&:created_at).each do |induction_record|
+          sorted_induction_records.each do |induction_record|
             next unless induction_record.induction_status == "leaving"
 
             ## set leaving induction record and mark as traversed
