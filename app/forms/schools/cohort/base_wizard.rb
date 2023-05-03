@@ -16,10 +16,9 @@ module Schools
 
       attr_reader :cohort, :school
 
-      def initialize(cohort:, school:, **opts)
-        super
-        store_cohort!(cohort)
-        store_school!(school)
+      def after_initialize(**opts)
+        store_cohort!(opts[:cohort])
+        store_school!(opts[:school])
       end
 
       def path_options(step: nil)

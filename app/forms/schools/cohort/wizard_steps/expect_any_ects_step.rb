@@ -12,6 +12,14 @@ module Schools
           %i[expect_any_ects]
         end
 
+        def expected?
+          true
+        end
+
+        def complete?
+          !expect_any_ects?
+        end
+
         def expect_any_ects?
           expect_any_ects == "yes"
         end
@@ -22,10 +30,6 @@ module Schools
           return :keep_providers if wizard.provider_relationship_is_valid?
 
           :providers_relationship_has_changed
-        end
-
-        def complete?
-          !expect_any_ects?
         end
       end
     end

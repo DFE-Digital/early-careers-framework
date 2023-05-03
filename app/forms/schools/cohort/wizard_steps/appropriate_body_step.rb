@@ -12,12 +12,16 @@ module Schools
           %i[appropriate_body_id]
         end
 
+        def choices
+          @choices ||= AppropriateBody.where(body_type: wizard.appropriate_body_type)
+        end
+
         def complete?
           true
         end
 
-        def choices
-          @choices ||= AppropriateBody.where(body_type: wizard.appropriate_body_type)
+        def expected?
+          wizard.appropriate_body_type.present?
         end
 
         def next_step

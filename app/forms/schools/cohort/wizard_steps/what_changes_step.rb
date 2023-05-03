@@ -20,6 +20,12 @@ module Schools
           ]
         end
 
+        def expected?
+          return true if wizard.no_keep_providers?
+
+          expect_any_ects? && wizard.previously_fip? && wizard.provider_relationship_is_valid?
+        end
+
         def next_step
           :what_changes_confirmation
         end
