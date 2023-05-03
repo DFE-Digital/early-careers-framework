@@ -93,13 +93,16 @@ class SchoolMailer < ApplicationMailer
   end
 
   # This email lets the GIAS contact at a school update their induction tutor
-  def remind_to_update_school_induction_tutor_details(school:, sit_name:, nomination_link:)
+  def remind_to_update_school_induction_tutor_details
+    school = params[:school]
+    personalisation = params.slice(:nomination_link, :sit_name)
+
     template_mail(
       REMIND_GIAS_CONTACT_TO_UPDATE_INDUCTION_TUTOR_DETAILS_TEMPLATE,
       to: [school.primary_contact_email, school.secondary_contact_email].compact.uniq,
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
-      personalisation: { sit_name:, nomination_link: },
+      personalisation:,
     ).tag(:remind_to_update_induction_tutor).associate_with(school)
   end
 

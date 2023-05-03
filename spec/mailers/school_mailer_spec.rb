@@ -29,11 +29,11 @@ RSpec.describe SchoolMailer, type: :mailer do
     let(:nomination_link) { "https://ecf-dev.london.cloudapps/nominations?token=abc123" }
 
     let(:nomination_email) do
-      SchoolMailer.remind_to_update_school_induction_tutor_details(
+      SchoolMailer.with(
         nomination_link:,
         school:,
         sit_name:,
-      ).deliver_now
+      ).remind_to_update_school_induction_tutor_details.deliver_now
     end
 
     it "renders the right headers" do
