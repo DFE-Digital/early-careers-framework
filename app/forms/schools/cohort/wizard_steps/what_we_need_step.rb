@@ -4,6 +4,10 @@ module Schools
   module Cohort
     module WizardSteps
       class WhatWeNeedStep < ::WizardStep
+        def expected?
+          true
+        end
+
         def next_step
           :expect_any_ects
         end

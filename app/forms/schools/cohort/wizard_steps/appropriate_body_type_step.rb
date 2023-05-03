@@ -22,6 +22,10 @@ module Schools
           APPROPRIATE_BODY_TYPE_CHOICES.map { |id, name| OpenStruct.new(id:, name:) }
         end
 
+        def expected?
+          wizard.appropriate_body_appointed?
+        end
+
         def next_step
           :appropriate_body
         end

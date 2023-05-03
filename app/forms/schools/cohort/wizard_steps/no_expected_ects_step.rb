@@ -4,6 +4,10 @@ module Schools
   module Cohort
     module WizardSteps
       class NoExpectedEctsStep < ::WizardStep
+        def expected?
+          wizard.no_expect_any_ects?
+        end
+
         def next_step
           :none
         end

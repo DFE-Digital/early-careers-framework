@@ -20,7 +20,7 @@ class Wizard
   delegate :changing_answer?, :complete?, :last_visited_step, :return_point,
            to: :data_store
 
-  def initialize(session:, current_step:, current_user:, default_step_name:, submitted_params: {}, **_opts)
+  def initialize(session:, current_step:, current_user:, default_step_name:, submitted_params: {}, **opts)
     @current_user = current_user
     @default_step_name = default_step_name
     @data_store = data_store_class.new(session:, form_key: to_key)
@@ -30,6 +30,8 @@ class Wizard
     set_current_step(current_step)
     check_data_store!
     store_current_user!
+    after_initialize(**opts)
+    check_step_expected!
   end
 
   def abort?
@@ -39,6 +41,8 @@ class Wizard
   def abort_path
     raise NotImplementedError
   end
+
+  def after_initialize(*); end
 
   def change_path_for(step:)
     raise NotImplementedError
@@ -50,6 +54,10 @@ class Wizard
 
   def check_data_store!
     clean_data_store_at_start! || forbid_unexpected_start_of_journey!
+  end
+
+  def check_step_expected!
+    raise(InvalidStep, "Previous steps not visited!") unless form.expected?
   end
 
   def clean_data_store_at_start!

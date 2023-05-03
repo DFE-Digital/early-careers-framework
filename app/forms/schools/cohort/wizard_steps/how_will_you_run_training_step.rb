@@ -37,6 +37,10 @@ module Schools
           end
         end
 
+        def expected?
+          wizard.expect_any_ects? && !wizard.previously_fip?
+        end
+
         def next_step
           :programme_confirmation
         end
