@@ -92,7 +92,7 @@ module Api
 
         attribute(:ecf_enrolments) do |object, params|
           ecf_participant_profiles(object).map { |profile|
-            latest_induction_record = profile.induction_records.includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]]).where(induction_programme: { partnerships: { lead_provider: params[:cpd_lead_provider].lead_provider } }).latest
+            latest_induction_record = profile.induction_records.includes(:preferred_identity, :schedule, :delivery_partner, :participant_profile, mentor_profile: :participant_identity, induction_programme: [partnership: [lead_provider: :cpd_lead_provider], school_cohort: %i[school cohort]]).where(induction_programme: { partnerships: { lead_provider: params[:cpd_lead_provider].lead_provider, challenged_at: nil, challenge_reason: nil } }).latest
 
             next unless params[:cpd_lead_provider] && latest_induction_record.present?
 

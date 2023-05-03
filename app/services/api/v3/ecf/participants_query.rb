@@ -33,11 +33,8 @@ module Api
                     .joins(left_outer_join_participant_profile_states)
                     .distinct
 
-          if updated_since.present?
-            scope.where(users: { updated_at: updated_since.. }).order("users.updated_at ASC")
-          else
-            scope.order("users.created_at ASC")
-          end
+          scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
+          params[:sort].blank? ? scope.order("users.updated_at ASC") : scope
         end
 
         def participant
