@@ -20,6 +20,10 @@ module Schools
           !appropriate_body_appointed?
         end
 
+        def expected?
+          wizard.keep_providers? || wizard.what_changes.present? || wizard.how_will_you_run_training.present?
+        end
+
         def next_step
           appropriate_body_appointed? ? :appropriate_body_type : :complete
         end

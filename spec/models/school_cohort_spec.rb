@@ -97,7 +97,7 @@ RSpec.describe SchoolCohort, type: :model, with_feature_flag: { cohortless_dashb
     end
 
     it "returns cohorts from the current year up to 2 years in the past" do
-      Feature.create!(name: :cohortless_dashboard, active: true)
+      Feature.find_or_create_by!(name: :cohortless_dashboard, active: false)
              .selected_objects.create!(object: school)
 
       travel_to Date.new(2024, 5, 15)
