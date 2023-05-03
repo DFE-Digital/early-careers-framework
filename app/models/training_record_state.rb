@@ -2,6 +2,7 @@
 
 class TrainingRecordState < ApplicationRecord
   belongs_to :participant_profile, inverse_of: :training_record_states
+  belongs_to :school, inverse_of: :training_record_states
 
   enum validation_state: {
     different_trn: "different_trn",
@@ -133,7 +134,7 @@ class TrainingRecordState < ApplicationRecord
 
   def self.for(participant_profile:, induction_record: nil, delivery_partner: nil, school: nil)
     if school.present?
-      where(participant_profile:, school_id: school.id)
+      where(participant_profile:, school:)
     elsif delivery_partner.present?
       where(participant_profile:, delivery_partner_id: delivery_partner.id)
     elsif induction_record.present?

@@ -99,6 +99,7 @@ FactoryBot.define do
     trait :email_bounced do
       after(:create) do |profile, _evaluator|
         create :email, associated_with: profile, status: "permanent-failure", tags: [:request_for_details]
+        profile.teacher_profile.update!(trn: nil)
       end
     end
 
