@@ -158,12 +158,12 @@ module Schools
       end
 
       previous_partnership.lead_provider.users.each do |lead_provider_user|
-        LeadProviderMailer.programme_changed_email(
+        LeadProviderMailer.with(
           partnership: previous_partnership,
           user: lead_provider_user,
           cohort_year: school_cohort.academic_year,
           what_changes_choice: @setup_school_cohort_form.what_changes_choice,
-        ).deliver_later
+        ).programme_changed_email.deliver_later
       end
     end
 

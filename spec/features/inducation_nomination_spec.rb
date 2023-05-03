@@ -10,11 +10,11 @@ RSpec.feature "Nominating tutors", :with_default_schedules, :js do
     let!(:nomination_email)       { create(:nomination_email, :email_address_already_used_for_another_school, token: "foo-bar-baz") }
     let(:ect_participant_profile) { create(:ect, school_cohort:) }
     let(:different_user)          { create(:user, email: "different-user-type@example.com") }
-    let(:mailer)                  { double(SchoolMailer, deliver_later: nil) }
+    let(:mailer)                  { double(SchoolMailer, deliver_later: nil, nomination_confirmation_email: double(ActionMailer::MessageDelivery, deliver_later: true)) }
 
     before do
       create(:ect, user: different_user)
-      allow(SchoolMailer).to receive(:nomination_confirmation_email).and_return(mailer)
+      allow(SchoolMailer).to receive(:with).with(any_args).and_return(mailer)
     end
 
     it "shows error messages" do
@@ -65,7 +65,7 @@ RSpec.feature "Nominating tutors", :with_default_schedules, :js do
       and_the_page_should_be_accessible
 
       expect(SchoolMailer)
-        .to have_received(:nomination_confirmation_email)
+        .to have_received(:with)
         .with(
           sit_profile: User.find_by(email: "john-smith@example.com").induction_coordinator_profile,
           school: nomination_email.school,

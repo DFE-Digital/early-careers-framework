@@ -1,5 +1,5 @@
 # To use or update to a ruby version, change {BASE_RUBY_IMAGE}
-ARG BASE_RUBY_IMAGE=ruby:3.1.3-alpine3.17
+ARG BASE_RUBY_IMAGE=ruby:3.2.2-alpine3.17
 # BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES will default to early-careers-framework-gems-node-modules
 # building all layers above it if a value is not specidied during the build
 ARG BASE_RUBY_IMAGE_WITH_GEMS_AND_NODE_MODULES=early-careers-framework-gems-node-modules
@@ -33,7 +33,7 @@ RUN apk -U upgrade && \
     gem update --system && \
     find / -wholename '*default/bundler-*.gemspec' -delete && \
     rm -rf /usr/local/bin/bundle && \
-    gem install bundler -v 2.3.9 && \
+    gem install bundler -v 2.4.6 && \
     bundler -v && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \

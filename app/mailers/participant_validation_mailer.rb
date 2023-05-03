@@ -11,72 +11,76 @@ class ParticipantValidationMailer < ApplicationMailer
 
   STATUTORY_GUIDANCE_LINK = "https://www.gov.uk/government/publications/induction-for-early-career-teachers-england"
 
-  def ects_to_add_validation_information_email(recipient:, school_name:, start_url:)
+  def ects_to_add_validation_information_email
     template_mail(
       ECTS_TO_ADD_VALIDATIN_INFO_TEMPLATE,
-      to: recipient,
+      to: params[:recipient],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name:,
-        participant_start: start_url,
+        school_name: params[:school_name],
+        participant_start: params[:start_url],
       },
     )
   end
 
-  def mentors_to_add_validation_information_email(recipient:, school_name:, start_url:)
+  def mentors_to_add_validation_information_email
     template_mail(
       MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
-      to: recipient,
+      to: params[:recipient],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name:,
-        participant_start: start_url,
+        school_name: params[:school_name],
+        participant_start: params[:start_url],
       },
     )
   end
 
-  def induction_coordinators_who_are_mentors_to_add_validation_information_email(recipient:, school_name:, start_url:)
+  def induction_coordinators_who_are_mentors_to_add_validation_information_email
     template_mail(
       INDUCTION_COORDINATORS_WHO_ARE_MENTORS_TO_ADD_VALIDATION_EMAIL_TEMPLATE,
-      to: recipient,
+      to: params[:recipient],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        school_name:,
-        participant_start: start_url,
+        school_name: params[:school_name],
+        participant_start: params[:start_url],
       },
     )
   end
 
-  def induction_coordinators_we_asked_ects_and_mentors_for_information_email(recipient:, sign_in:, start_url:, induction_coordinator_profile:)
+  def induction_coordinators_we_asked_ects_and_mentors_for_information_email
     template_mail(
       INDUCTION_COORDINATOR_WE_ASKED_YOUR_ECTS_AND_MENTORS_TEMPLATE,
-      to: recipient,
+      to: params[:recipient],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        sign_in:,
-        participant_start: start_url,
+        sign_in: params[:sign_in],
+        participant_start: params[:start_url],
       },
-    ).tag(:sit_unvalidated_participants_reminder).associate_with(induction_coordinator_profile, as: :induction_coordinator_profile)
+    ).tag(:sit_unvalidated_participants_reminder).associate_with(params[:induction_coordinator_profile], as: :induction_coordinator_profile)
   end
 
-  def induction_coordinator_participant_email_bounced_email(recipient:, sign_in_url:, participant_profile:)
+  def induction_coordinator_participant_email_bounced_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       INDUCTION_COORDINATOR_PARTICIPANT_EMAIL_BOUNCED_TEMPLATE,
-      to: recipient,
+      to: params[:recipient],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        sign_in: sign_in_url,
+        sign_in: params[:sign_in_url],
         participant_name: participant_profile.user.full_name,
       },
     ).tag(:sit_participant_email_bounced).associate_with(participant_profile, as: :participant_profile)
   end
 
-  def fip_participant_validation_deadline_reminder_email(participant_profile:, participant_start_url:)
+  def fip_participant_validation_deadline_reminder_email
+    participant_profile = params[:participant_profile]
+
     template_mail(
       FIP_PARTICIPANT_VALIDATION_DEADLINE_REMINDER_TEMPLATE,
       to: participant_profile.user.email,
@@ -85,7 +89,7 @@ class ParticipantValidationMailer < ApplicationMailer
       personalisation: {
         name: participant_profile.user.full_name,
         school_name: participant_profile.school.name,
-        participant_start: participant_start_url,
+        participant_start: params[:participant_start_url],
       },
     ).tag(:fip_participant_validation_deadline).associate_with(participant_profile, as: :participant_profile)
   end

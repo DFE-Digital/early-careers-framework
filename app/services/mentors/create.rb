@@ -32,7 +32,7 @@ module Mentors
       end
 
       unless sit_validation
-        ParticipantMailer.participant_added(participant_profile: mentor_profile).deliver_later
+        ParticipantMailer.with(participant_profile: mentor_profile).participant_added.deliver_later
         mentor_profile.update_column(:request_for_details_sent_at, Time.zone.now)
         ParticipantDetailsReminderJob.schedule(mentor_profile)
       end

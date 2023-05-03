@@ -76,10 +76,10 @@ private
 
   def send_now_eligible_email
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
-      IneligibleParticipantMailer.ect_now_eligible_previous_induction_email(
+      IneligibleParticipantMailer.with(
         induction_tutor:,
         participant_profile:,
-      ).deliver_later
+      ).ect_now_eligible_previous_induction_email.deliver_later
     end
   end
 
@@ -87,17 +87,19 @@ private
     participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
       break unless ineligible_notification_email_for_induction_coordinator
 
-      IneligibleParticipantMailer.send(
+      IneligibleParticipantMailer.with(
+        induction_tutor_email: induction_tutor.email,
+        participant_profile:,
+      ).send(
         ineligible_notification_email_for_induction_coordinator,
-        **{ induction_tutor_email: induction_tutor.email, participant_profile: },
       ).deliver_later
     end
 
     if @participant_eligibility.reason.to_sym == :exempt_from_induction
       if participant_profile.participant_declarations.any? && @previous_status == "eligible"
-        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect_previously_eligible(participant_profile:).deliver_later
+        IneligibleParticipantMailer.with(participant_profile:).ect_exempt_from_induction_email_to_ect_previously_eligible.deliver_later
       elsif @previous_status != "eligible"
-        IneligibleParticipantMailer.ect_exempt_from_induction_email_to_ect(participant_profile:).deliver_later
+        IneligibleParticipantMailer.with(participant_profile:).ect_exempt_from_induction_email_to_ect.deliver_later
       end
     end
   end
@@ -139,7 +141,7 @@ private
   def send_manual_check_notification_email
     if @participant_eligibility.reason.to_sym == :no_induction
       participant_profile.school_cohort.school.induction_coordinators.each do |induction_tutor|
-        IneligibleParticipantMailer.ect_no_induction_email(induction_tutor_email: induction_tutor.email, participant_profile:).deliver_later
+        IneligibleParticipantMailer.with(induction_tutor_email: induction_tutor.email, participant_profile:).ect_no_induction_email.deliver_later
       end
     end
   end

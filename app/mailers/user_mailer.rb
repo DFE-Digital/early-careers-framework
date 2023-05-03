@@ -3,7 +3,9 @@
 class UserMailer < ApplicationMailer
   SIGN_IN_EMAIL_TEMPLATE = "7ab8db5b-9842-4bc3-8dbb-f590a3198d9e"
 
-  def test_email(user:)
+  def test_email
+    user = params[:user]
+
     template_mail(
       "aef364b0-8eed-4a7f-89d8-e9af64f09c07",
       to: user.email,
@@ -16,16 +18,16 @@ class UserMailer < ApplicationMailer
     ).tag(:test_email)
   end
 
-  def sign_in_email(email:, full_name:, url:, token_expiry:)
+  def sign_in_email
     template_mail(
       SIGN_IN_EMAIL_TEMPLATE,
-      to: email,
+      to: params[:email],
       rails_mailer: mailer_name,
       rails_mail_template: action_name,
       personalisation: {
-        full_name:,
-        sign_in: url,
-        token_expiry:,
+        full_name: params[:full_name],
+        sign_in: params[:url],
+        token_expiry: params[:token_expiry],
         subject: "Link to sign in",
       },
     ).tag(:sign_in)

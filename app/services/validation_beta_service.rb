@@ -10,11 +10,11 @@ class ValidationBetaService
       school.induction_coordinator_profiles.each do |sit|
         next if sit.reminder_email_sent_at.present?
 
-        email = SchoolMailer.remind_induction_coordinator_to_setup_cohort_email(
+        email = SchoolMailer.with(
           induction_coordinator_profile: sit,
           school_name: school.name,
           campaign: :sit_to_complete_steps,
-        )
+        ).remind_induction_coordinator_to_setup_cohort_email
 
         ActiveRecord::Base.transaction do
           sit.update_column(:reminder_email_sent_at, Time.zone.now)
@@ -34,11 +34,11 @@ class ValidationBetaService
       school.induction_coordinator_profiles.each do |sit|
         next if Email.associated_with(sit).tagged_with(:fifth_request_to_add_ects_and_mentors).any?
 
-        SchoolMailer.remind_fip_induction_coordinators_to_add_ects_and_mentors_email(
+        SchoolMailer.with(
           induction_coordinator: sit,
           school_name: school.name,
           campaign: :remind_fip_sit_to_complete_steps,
-        ).deliver_later
+        ).remind_fip_induction_coordinators_to_add_ects_and_mentors_email.deliver_later
       end
     end
   end
@@ -51,11 +51,11 @@ class ValidationBetaService
       **UTMService.email(campaign, campaign),
     )
 
-    email = ParticipantValidationMailer.ects_to_add_validation_information_email(
+    email = ParticipantValidationMailer.with(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
-    )
+    ).ects_to_add_validation_information_email
 
     ActiveRecord::Base.transaction do
       email.deliver_later
@@ -71,11 +71,11 @@ class ValidationBetaService
       **UTMService.email(campaign, campaign),
     )
 
-    email = ParticipantValidationMailer.mentors_to_add_validation_information_email(
+    email = ParticipantValidationMailer.with(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
-    )
+    ).mentors_to_add_validation_information_email
 
     ActiveRecord::Base.transaction do
       email.deliver_later
@@ -91,11 +91,11 @@ class ValidationBetaService
       **UTMService.email(campaign, campaign),
     )
 
-    email = ParticipantValidationMailer.induction_coordinators_who_are_mentors_to_add_validation_information_email(
+    email = ParticipantValidationMailer.with(
       recipient: profile.user.email,
       school_name: school.name,
       start_url: participant_validation_start_url,
-    )
+    ).induction_coordinators_who_are_mentors_to_add_validation_information_email
 
     ActiveRecord::Base.transaction do
       email.deliver_later
@@ -150,12 +150,12 @@ class ValidationBetaService
         **UTMService.email(campaign, campaign),
       )
 
-      ParticipantValidationMailer.induction_coordinators_we_asked_ects_and_mentors_for_information_email(
+      ParticipantValidationMailer.with(
         recipient: sit.user.email,
         start_url: participant_validation_start_url,
         sign_in: sign_in_url,
         induction_coordinator_profile: sit,
-      ).deliver_later
+      ).induction_coordinators_we_asked_ects_and_mentors_for_information_email.deliver_later
     end
   end
 
@@ -205,18 +205,18 @@ class ValidationBetaService
 
           participant_name_list = participant_name_markdown_list(participants)
 
-          SchoolMailer.sit_fip_participant_validation_deadline_reminder_email(
+          SchoolMailer.with(
             induction_coordinator_profile: sit,
             participant_name_list:,
             participant_start_url:,
             sign_in_url:,
-          ).deliver_later
+          ).sit_fip_participant_validation_deadline_reminder_email.deliver_later
 
           participants.each do |participant_profile|
-            ParticipantValidationMailer.fip_participant_validation_deadline_reminder_email(
+            ParticipantValidationMailer.with(
               participant_profile:,
               participant_start_url:,
-            ).deliver_later
+            ).fip_participant_validation_deadline_reminder_email.deliver_later
           end
         end
       end
@@ -241,11 +241,11 @@ class ValidationBetaService
       if sit.present?
         next if sit_ids.include?(sit.id) || Email.associated_with(sit).tagged_with(:sit_new_ambition_participants_added).any?
 
-        SchoolMailer.sit_new_ambition_ects_and_mentors_added_email(
+        SchoolMailer.with(
           induction_coordinator_profile: sit,
           school_name: user.school.name,
           sign_in_url:,
-        ).deliver_later
+        ).sit_new_ambition_ects_and_mentors_added_email.deliver_later
         sit_ids << sit.id
       else
         Rails.logger.warn("Not sending email to SIT of #{participant_email}")
@@ -262,10 +262,10 @@ class ValidationBetaService
       next unless eligibility.participant_profile.school_cohort.full_induction_programme?
 
       tutor_email = eligibility.participant_profile.school.contact_email
-      IneligibleParticipantMailer.ect_previous_induction_email(
+      IneligibleParticipantMailer.with(
         induction_tutor_email: tutor_email,
         participant_profile: eligibility.participant_profile,
-      ).deliver_later
+      ).ect_previous_induction_email.deliver_later
       sent += 1
       break if sent >= batch_size
     end
@@ -298,11 +298,11 @@ class ValidationBetaService
       next if Email.associated_with(participant_profile).tagged_with(:sit_participant_email_bounced).any?
 
       tutor_email = participant_profile.school.contact_email
-      ParticipantValidationMailer.induction_coordinator_participant_email_bounced_email(
+      ParticipantValidationMailer.with(
         recipient: tutor_email,
         sign_in_url:,
         participant_profile:,
-      ).deliver_later
+      ).induction_coordinator_participant_email_bounced_email.deliver_later
     end
   end
 

@@ -24,11 +24,14 @@ RSpec.describe ContactSchool do
 
   describe "#sit_email_address_check" do
     it "sends the reminder email" do
-      expect(ParticipantMailer).to receive(:sit_contact_address_bounce).with(
-        hash_including(induction_coordinator_profile:, school:),
-      ).and_call_original
-
-      subject.sit_email_address_check([induction_coordinator_profile.user.email])
+      expect { subject.sit_email_address_check([induction_coordinator_profile.user.email]) }
+        .to have_enqueued_mail(ParticipantMailer, :sit_contact_address_bounce)
+          .with(
+            params: {
+              induction_coordinator_profile:, school:
+            },
+            args: [],
+          )
     end
 
     context "the induction coordinator has multiple schools" do
@@ -37,15 +40,31 @@ RSpec.describe ContactSchool do
       end
 
       it "sends a reminder to each school" do
-        expect(ParticipantMailer).to receive(:sit_contact_address_bounce).and_call_original.twice
+        expect { subject.sit_email_address_check([induction_coordinator_profile.user.email]) }
+          .to have_enqueued_mail(ParticipantMailer, :sit_contact_address_bounce)
+            .with(
+              params: {
+                induction_coordinator_profile:,
+                school:,
+              },
+              args: [],
+            )
 
-        subject.sit_email_address_check([induction_coordinator_profile.user.email])
+        expect { subject.sit_email_address_check([induction_coordinator_profile.user.email]) }
+          .to have_enqueued_mail(ParticipantMailer, :sit_contact_address_bounce)
+            .with(
+              params: {
+                induction_coordinator_profile:,
+                school: school_two,
+              },
+              args: [],
+            )
       end
     end
 
     it "does not send unless the user is an induction coordinator" do
-      expect(ParticipantMailer).not_to receive(:sit_contact_address_bounce).and_call_original
-      subject.sit_email_address_check([user.email])
+      expect { subject.sit_email_address_check([user.email]) }
+        .not_to have_enqueued_mail(ParticipantMailer, :sit_contact_address_bounce)
     end
 
     context "SIT does not have any schools associated with them" do
@@ -54,8 +73,8 @@ RSpec.describe ContactSchool do
       end
 
       it "it does not try to send an email" do
-        expect(ParticipantMailer).not_to receive(:sit_contact_address_bounce).and_call_original
-        subject.sit_email_address_check([induction_coordinator_profile.user.email])
+        expect { subject.sit_email_address_check([induction_coordinator_profile.user.email]) }
+          .not_to have_enqueued_mail(ParticipantMailer, :sit_contact_address_bounce)
       end
     end
   end

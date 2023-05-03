@@ -5,7 +5,11 @@ class LeadProviderMailer < ApplicationMailer
   PARTNERSHIP_CHALLENGED_TEMPLATE_ID = "01c1ab30-1a45-4ce7-b994-e4df8334f23b"
   PROGRAMME_CHANGED_TEMPLATE_ID = "821c3b28-27a7-4ed4-9d1f-58e8f341dac7"
 
-  def welcome_email(user:, lead_provider_name:, start_url:)
+  def welcome_email
+    user = params[:user]
+    lead_provider_name = params[:lead_provider_name]
+    start_url = params[:start_url]
+
     template_mail(
       WELCOME_EMAIL_TEMPLATE,
       to: user.email,
@@ -20,7 +24,10 @@ class LeadProviderMailer < ApplicationMailer
     ).tag(:lead_provider_account_created)
   end
 
-  def partnership_challenged_email(partnership:, user:)
+  def partnership_challenged_email
+    partnership = params[:partnership]
+    user = params[:user]
+
     reason = I18n.t(partnership.challenge_reason, scope: "partnerships.challenge_reasons")
     lead_provider_name = partnership.lead_provider.name
 
@@ -41,7 +48,12 @@ class LeadProviderMailer < ApplicationMailer
     ).tag(:partnership_challenged).associate_with(partnership)
   end
 
-  def programme_changed_email(partnership:, user:, cohort_year:, what_changes_choice:)
+  def programme_changed_email
+    partnership = params[:partnership]
+    user = params[:user]
+    cohort_year = params[:cohort_year]
+    what_changes_choice = params[:what_changes_choice]
+
     lead_provider_name = partnership.lead_provider.name
     delivery_partner_name = partnership.delivery_partner.name
 

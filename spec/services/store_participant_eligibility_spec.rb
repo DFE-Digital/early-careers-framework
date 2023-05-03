@@ -66,8 +66,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
           service.call(participant_profile: ect_profile, eligibility_options:)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
-            induction_tutor_email: induction_tutor.email,
-            participant_profile: ect_profile,
+            params: {
+              induction_tutor_email: induction_tutor.email,
+              participant_profile: ect_profile,
+            },
+            args: [],
           )
       end
 
@@ -78,8 +81,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
           service.call(participant_profile: ect_profile, eligibility_options:)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
-            induction_tutor_email: induction_tutor.email,
-            participant_profile: ect_profile,
+            params: {
+              induction_tutor_email: induction_tutor.email,
+              participant_profile: ect_profile,
+            },
+            args: [],
           )
       end
 
@@ -90,8 +96,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
           service.call(participant_profile: ect_profile, eligibility_options:)
         }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_induction_email)
           .with(
-            induction_tutor_email: induction_tutor.email,
-            participant_profile: ect_profile,
+            params: {
+              induction_tutor_email: induction_tutor.email,
+              participant_profile: ect_profile,
+            },
+            args: [],
           )
       end
 
@@ -122,8 +131,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email)
               .with(
-                induction_tutor_email: induction_tutor.email,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
                 participant_profile: ect_profile,
+                },
+                args: [],
               )
           end
 
@@ -134,8 +146,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_previous_induction_email_previously_eligible)
               .with(
-                induction_tutor_email: induction_tutor.email,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
                 participant_profile: ect_profile,
+                },
+                args: [],
               )
           end
 
@@ -148,8 +163,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_no_qts_email)
               .with(
-                induction_tutor_email: induction_tutor.email,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
                 participant_profile: ect_profile,
+                },
+                args: [],
               )
           end
 
@@ -162,8 +180,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_active_flags_email)
               .with(
-                induction_tutor_email: induction_tutor.email,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
                 participant_profile: ect_profile,
+                },
+                args: [],
               )
           end
 
@@ -177,15 +198,24 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
               .with(
-                induction_tutor_email: induction_tutor.email,
-                participant_profile: ect_profile,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: ect_profile,
+                },
+                args: [],
               ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email)
                   .with(
-                    induction_tutor_email: additional_induction_coordinator.email,
-                    participant_profile: ect_profile,
+                    params: {
+                      induction_tutor_email: additional_induction_coordinator.email,
+                      participant_profile: ect_profile,
+                    },
+                    args: [],
                   ).and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect)
                       .with(
-                        participant_profile: ect_profile,
+                        params: {
+                          participant_profile: ect_profile,
+                        },
+                        args: [],
                       ).once
           end
 
@@ -201,17 +231,26 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: ect_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
              .with(
-               induction_tutor_email: induction_tutor.email,
-               participant_profile: ect_profile,
+               params: {
+                 induction_tutor_email: induction_tutor.email,
+                 participant_profile: ect_profile,
+               },
+               args: [],
              )
              .and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_previously_eligible)
              .with(
-               induction_tutor_email: additional_induction_coordinator.email,
-               participant_profile: ect_profile,
+               params: {
+                 induction_tutor_email: additional_induction_coordinator.email,
+                 participant_profile: ect_profile,
+               },
+               args: [],
              )
              .and have_enqueued_mail(IneligibleParticipantMailer, :ect_exempt_from_induction_email_to_ect_previously_eligible)
              .with(
-               participant_profile: ect_profile,
+               params: {
+                 participant_profile: ect_profile,
+               },
+               args: [],
              ).once
           end
 
@@ -245,8 +284,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: mentor_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_no_qts_email)
               .with(
-                induction_tutor_email: induction_tutor.email,
-                participant_profile: mentor_profile,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: mentor_profile,
+                },
+                args: [],
               )
           end
 
@@ -259,8 +301,11 @@ RSpec.describe StoreParticipantEligibility, :with_default_schedules do
               service.call(participant_profile: mentor_profile, eligibility_options:)
             }.to have_enqueued_mail(IneligibleParticipantMailer, :mentor_active_flags_email)
               .with(
-                induction_tutor_email: induction_tutor.email,
-                participant_profile: mentor_profile,
+                params: {
+                  induction_tutor_email: induction_tutor.email,
+                  participant_profile: mentor_profile,
+                },
+                args: [],
               )
           end
         end

@@ -37,7 +37,7 @@ RSpec.describe AppropriateBodyProfile, type: :model do
       allow(AppropriateBodyProfileMailer).to receive(:welcome).and_call_original
       AppropriateBodyProfile.create_appropriate_body_user(name, email, appropriate_body)
 
-      expect(AppropriateBodyProfileMailer).to have_received(:welcome).with(appropriate_body_profile: created_appropriate_body_profile)
+      expect(AppropriateBodyProfileMailer).to have_received(:welcome).with(created_appropriate_body_profile)
     end
   end
 end

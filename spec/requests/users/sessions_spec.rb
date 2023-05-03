@@ -29,7 +29,7 @@ RSpec.describe "Users::Sessions", type: :request do
     let(:token_expiry_regex) { /\d\d:\d\d/ }
 
     before do
-      allow(UserMailer).to receive(:sign_in_email).and_call_original
+      allow(UserMailer).to receive(:with).and_call_original
     end
 
     it "renders the login_email_sent template regardless of email match" do
@@ -41,7 +41,7 @@ RSpec.describe "Users::Sessions", type: :request do
       let!(:participant_identity) { create(:participant_identity, user:, email: "id2@example.com") }
 
       it "sends login email to participant identity email" do
-        expect(UserMailer).to receive(:sign_in_email).with(
+        expect(UserMailer).to receive(:with).with(
           hash_including(
             email: "id2@example.com",
             full_name: user.full_name,
@@ -59,14 +59,14 @@ RSpec.describe "Users::Sessions", type: :request do
       end
 
       it "sends a log_in email request to User Mailer" do
-        expect(UserMailer).to receive(:sign_in_email).with(
+        expect(UserMailer).to receive(:with).with(
           hash_including(
             email: user.email,
             full_name: user.full_name,
             url: login_url_regex,
             token_expiry: token_expiry_regex,
           ),
-        )
+        ).and_call_original
         post "/users/sign_in", params: { user: { email: randomize_case(user.email) } }
       end
     end

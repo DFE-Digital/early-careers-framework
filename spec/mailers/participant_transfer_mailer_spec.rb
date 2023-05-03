@@ -9,9 +9,9 @@ RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer
 
   describe "#participant_transfer_in_notification" do
     let(:participant_transfer_in_notification) do
-      ParticipantTransferMailer.participant_transfer_in_notification(
+      ParticipantTransferMailer.with(
         induction_record:,
-      )
+      ).participant_transfer_in_notification
     end
 
     it "renders the right headers" do
@@ -25,9 +25,9 @@ RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer
     let(:induction_programme) { create(:induction_programme) }
     let(:induction_record) { Induction::Enrol.call(participant_profile:, induction_programme:) }
     let(:participant_transfer_out_notification) do
-      ParticipantTransferMailer.participant_transfer_out_notification(
+      ParticipantTransferMailer.with(
         induction_record:,
-      )
+      ).participant_transfer_out_notification
     end
 
     it "renders the right headers" do
@@ -38,10 +38,10 @@ RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer
 
   describe "#provider_transfer_in_notification" do
     let(:provider_transfer_in_notification) do
-      ParticipantTransferMailer.provider_transfer_in_notification(
+      ParticipantTransferMailer.with(
         induction_record:,
         lead_provider_profile:,
-      )
+      ).provider_transfer_in_notification
     end
 
     it "renders the right headers" do
@@ -52,10 +52,10 @@ RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer
 
   describe "#provider_transfer_out_notification" do
     let(:provider_transfer_out_notification) do
-      ParticipantTransferMailer.provider_transfer_out_notification(
+      ParticipantTransferMailer.with(
         induction_record:,
         lead_provider_profile:,
-      )
+      ).provider_transfer_out_notification
     end
 
     it "renders the right headers" do
@@ -66,10 +66,10 @@ RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer
 
   describe "#provider_new_school_transfer_notification" do
     let(:provider_new_school_transfer_notification) do
-      ParticipantTransferMailer.provider_new_school_transfer_notification(
+      ParticipantTransferMailer.with(
         induction_record:,
         lead_provider_profile:,
-      )
+      ).provider_new_school_transfer_notification
     end
 
     it "renders the right headers" do
@@ -80,10 +80,10 @@ RSpec.describe ParticipantTransferMailer, :with_default_schedules, type: :mailer
 
   describe "#provider_existing_school_transfer_notification" do
     let(:provider_existing_school_transfer_notification) do
-      ParticipantTransferMailer.provider_existing_school_transfer_notification(
+      ParticipantTransferMailer.with(
         induction_record:,
         lead_provider_profile:,
-      )
+      ).provider_existing_school_transfer_notification
     end
 
     it "renders the right headers" do

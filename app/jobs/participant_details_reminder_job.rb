@@ -12,13 +12,13 @@ class ParticipantDetailsReminderJob < ApplicationJob
     return if !profile || profile.withdrawn_record? || profile.completed_validation_wizard? || profile.training_status_withdrawn?
 
     ActiveRecord::Base.transaction do
-      ParticipantMailer.add_details_reminder(participant_profile: profile).deliver_later
+      ParticipantMailer.with(participant_profile: profile).add_details_reminder.deliver_later
       profile.update_column(:request_for_details_sent_at, Time.zone.now)
       ParticipantDetailsReminderJob.schedule(profile)
     end
   end
 
   def send_reminder(profile)
-    ParticipantMailer.add_details_reminder(participant_profile: profile).deliver_later
+    ParticipantMailer.with(participant_profile: profile).add_details_reminder.deliver_later
   end
 end

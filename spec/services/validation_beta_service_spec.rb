@@ -15,9 +15,12 @@ RSpec.describe ValidationBetaService, :with_default_schedules do
         validation_beta_service.remind_fip_induction_coordinators_to_add_ect_and_mentors
       }.to have_enqueued_mail(SchoolMailer, :remind_fip_induction_coordinators_to_add_ects_and_mentors_email)
              .with(
-               induction_coordinator:,
-               school_name: school.name,
-               campaign: :remind_fip_sit_to_complete_steps,
+               params: {
+                 induction_coordinator:,
+                 school_name: school.name,
+                 campaign: :remind_fip_sit_to_complete_steps,
+               },
+               args: [],
              )
     end
 
@@ -70,11 +73,13 @@ RSpec.describe ValidationBetaService, :with_default_schedules do
           validation_beta_service.sit_with_unvalidated_participants_reminders
         }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
                .with(
-                 hash_including(
+                 params: {
                    recipient: sit.user.email,
                    start_url: expected_start_url,
                    sign_in: expected_sign_in_url,
-                 ),
+                   induction_coordinator_profile: sit,
+                 },
+                 args: [],
                )
       end
     end
@@ -94,11 +99,13 @@ RSpec.describe ValidationBetaService, :with_default_schedules do
           validation_beta_service.sit_with_unvalidated_participants_reminders
         }.to have_enqueued_mail(ParticipantValidationMailer, :induction_coordinators_we_asked_ects_and_mentors_for_information_email)
                .with(
-                 hash_including(
+                 params: {
                    recipient: sit.user.email,
                    start_url: expected_start_url,
                    sign_in: expected_sign_in_url,
-                 ),
+                   induction_coordinator_profile: sit,
+                 },
+                 args: [],
                )
       end
 
@@ -156,9 +163,12 @@ RSpec.describe ValidationBetaService, :with_default_schedules do
         validation_beta_service.send_sit_new_ambition_ects_and_mentors_added(path_to_csv: csv_file)
       }.to have_enqueued_mail(SchoolMailer, :sit_new_ambition_ects_and_mentors_added_email)
              .with(
-               induction_coordinator_profile: sit_profile,
-               school_name: school.name,
-               sign_in_url: "http://www.example.com/users/sign_in",
+               params: {
+                 induction_coordinator_profile: sit_profile,
+                 school_name: school.name,
+                 sign_in_url: "http://www.example.com/users/sign_in",
+               },
+               args: [],
              )
     end
   end

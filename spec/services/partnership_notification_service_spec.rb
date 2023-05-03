@@ -32,13 +32,11 @@ RSpec.describe PartnershipNotificationService do
       end
 
       it "emails the school primary contact" do
-        expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
-          hash_including(
-            partnership:,
-            nominate_url: String,
-            challenge_url: String,
-            recipient: contact_email,
-          ),
+        expect(SchoolMailer).to receive(:with).with(
+          partnership:,
+          nominate_url: String,
+          challenge_url: String,
+          recipient: contact_email,
         ).and_call_original
         allow_any_instance_of(Mail::TestMailer).to receive_message_chain(:response, :id) { notify_id }
 
@@ -63,7 +61,7 @@ RSpec.describe PartnershipNotificationService do
       end
 
       it "emails the induction coordinator" do
-        expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:with).with(
           hash_including(
             partnership:,
             coordinator:,
@@ -95,7 +93,7 @@ RSpec.describe PartnershipNotificationService do
       end
 
       it "emails the school primary contact" do
-        expect(SchoolMailer).to receive(:school_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:with).with(
           hash_including(
             partnership:,
             nominate_url: String,
@@ -125,7 +123,7 @@ RSpec.describe PartnershipNotificationService do
       end
 
       it "emails the induction coordinator" do
-        expect(SchoolMailer).to receive(:coordinator_partnership_notification_email).with(
+        expect(SchoolMailer).to receive(:with).with(
           hash_including(
             partnership:,
             coordinator:,
@@ -160,7 +158,7 @@ RSpec.describe PartnershipNotificationService do
     end
 
     it "emails schools that are fip partnered with no SIT, and extends the challenge deadline by 2 weeks" do
-      expect(SchoolMailer).to receive(:partnered_school_invite_sit_email).with(
+      expect(SchoolMailer).to receive(:with).with(
         hash_including(
           school:,
           lead_provider_name: partnership.lead_provider.name,

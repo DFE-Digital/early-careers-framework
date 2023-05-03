@@ -33,7 +33,7 @@ private
   end
 
   def notify_participant
-    ParticipantMailer.participant_removed_by_sit(participant_profile:, sit_name:).deliver_later
+    ParticipantMailer.with(participant_profile:, sit_name:).participant_removed_by_sit.deliver_later
   end
 
   def notify?
