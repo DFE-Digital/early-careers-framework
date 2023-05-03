@@ -73,7 +73,7 @@ module StatusTags
         registered_for_mentor_training_secondary_ero
         registered_for_mentor_training_duplicate
         registered_for_mentor_training_duplicate_ero
-      ].include?(record_state)
+      ].include?(record_state.to_sym)
     end
   end
 end
