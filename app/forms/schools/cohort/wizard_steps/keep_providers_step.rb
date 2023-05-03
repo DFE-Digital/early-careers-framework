@@ -12,6 +12,10 @@ module Schools
           %i[keep_providers]
         end
 
+        def expected?
+          wizard.expect_any_ects? && wizard.previously_fip? && wizard.provider_relationship_is_valid?
+        end
+
         def keep_providers?
           keep_providers == "yes"
         end
