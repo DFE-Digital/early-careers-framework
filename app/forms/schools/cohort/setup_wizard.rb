@@ -6,8 +6,9 @@ module Schools
       include Success
 
       delegate :appropriate_body_id, :appropriate_body_type, :appropriate_body_appointed?,
-               :expect_any_ects?, :how_will_you_run_training, :keep_providers?, :what_changes,
-               to: :data_store
+               :expect_any_ects?, :how_will_you_run_training, :keep_providers?,
+               :no_appropriate_body_appointed?, :no_expect_any_ects?, :no_keep_providers?,
+               :what_changes, to: :data_store
 
       def abort_path
         show_path_for(step: default_step_name)
@@ -50,6 +51,8 @@ module Schools
       end
 
       def provider_relationship_is_valid?
+        return false unless previous_lead_provider && previous_delivery_partner
+
         ProviderRelationship.where(lead_provider: previous_lead_provider,
                                    delivery_partner: previous_delivery_partner,
                                    cohort:).exists?

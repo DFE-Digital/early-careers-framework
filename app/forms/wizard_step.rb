@@ -19,7 +19,14 @@ class WizardStep
   def before_render; end
   def before_save; end
 
+  # If the execution (POST request) of this step completes the journey.
+  # Note that there might be a final next step to visit (only GET).
   def complete?
+    false
+  end
+
+  # Check the requirements to determine if this step is a valid successor of the last visited.
+  def expected?
     false
   end
 
