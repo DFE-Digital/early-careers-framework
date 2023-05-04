@@ -1,23 +1,18 @@
 name,type
-Independent Schools Teacher Induction Panel (IStip),national
-National Teacher Accreditation (NTA),national
-Barnsley and Doncaster Teaching School Hub,teaching_school_hub
 Derby,local_authority
 Derbyshire,local_authority
 Doncaster,local_authority
 DRET Teaching School Hub,teaching_school_hub
 East Riding of Yorkshire,local_authority
+Exchange Teaching School Hub,teaching_school_hub
 Flying High Teaching School Hub,teaching_school_hub
-Kingston upon Hull,local_authority
 L.E.A.D. Teaching School Hub Lincolnshire,teaching_school_hub
 Leicester,local_authority
-Leicester & Leicestershire TSH,teaching_school_hub
+Leicester and Leicestershire TSH,teaching_school_hub
 Leicestershire,local_authority
-Leicestershire & Rutland TS Hub,teaching_school_hub
+Leicestershire and Rutland TS Hub,teaching_school_hub
 North Lincolnshire,local_authority
-Nottingham,local_authority
 Nottinghamshire,local_authority
-Pathfinder Teaching School Hub,teaching_school_hub
 Potentia TSH,teaching_school_hub
 Redhill Teaching Hub,teaching_school_hub
 Rotherham,local_authority
@@ -35,7 +30,7 @@ Essex,local_authority
 Hackney,local_authority
 Haringey,local_authority
 Havering,local_authority
-Inspiration Teaching School Hub,teaching_school_hub
+Inspiration Teaching School Hub (partnered with NTA),teaching_school_hub
 London District East Teaching School Hub,teaching_school_hub
 Newham,local_authority
 Norfolk,local_authority
@@ -50,18 +45,16 @@ Thurrock,local_authority
 Tower Hamlets,local_authority
 Unity Teaching School Hub,teaching_school_hub
 Waltham Forest,local_authority
-Blackburn with Darwen,local_authority
 Blackpool,local_authority
 Bolton,local_authority
 Bradford,local_authority
-Bright Futures Teaching School Hub - Manchester & Stockport,teaching_school_hub
-Bright Futures Teaching School Hub - Salford & Trafford,teaching_school_hub
-Calderdale,local_authority
+Bright Futures Teaching School Hub - Manchester and Stockport,teaching_school_hub
+Bright Futures Teaching School Hub - Salford and Trafford,teaching_school_hub
 Calderdale and Kirklees Teaching School Hub,teaching_school_hub
 Embrace Teaching School Hub (SW Lancashire),teaching_school_hub
 Exceed Teaching School Hub,teaching_school_hub
+Exchange Teaching Hub,teaching_school_hub
 Generate Teaching Hub,teaching_school_hub
-Halton,local_authority
 Inspire Learning Teaching School Hub NW,teaching_school_hub
 Kirklees,local_authority
 Knowsley,local_authority
@@ -69,17 +62,16 @@ Lancashire,local_authority
 Leeds,local_authority
 Leeds Teaching School Hub,teaching_school_hub
 Liverpool,local_authority
-Manchester,local_authority
 Rainbow Teaching School Hub,teaching_school_hub
 Rochdale,local_authority
 Salford,local_authority
 Sefton,local_authority
-Selby and Wakefield Teaching School Hub,teaching_school_hub
 St Helens,local_authority
 "Star Teaching School Hub Bolton, Bury, Rochdale",teaching_school_hub
 Star Teaching School Hub North West Lancashire,teaching_school_hub
 Star Teaching School Hub Pennine Lancashire,teaching_school_hub
 Stockport,local_authority
+TES,local_authority
 The East Manchester Teaching Hub,teaching_school_hub
 Trafford,local_authority
 Wakefield,local_authority
@@ -95,6 +87,7 @@ North Yorkshire,local_authority
 Northern Lights TSH: South Tyne & Wear,teaching_school_hub
 Northumberland,local_authority
 One Cumbria Teaching School Hub,teaching_school_hub
+Pathfinder Teaching School Hub,teaching_school_hub
 Red Kite Teaching School Hub,teaching_school_hub
 Redcar and Cleveland,local_authority
 South Tyneside,local_authority
@@ -113,7 +106,6 @@ Camden,local_authority
 Central Bedfordshire,local_authority
 Central London Teaching School Hub,teaching_school_hub
 Chiltern Teaching School Hub,teaching_school_hub
-City of Westminster,local_authority
 Ealing,local_authority
 Enfield,local_authority
 Hammersmith and Fulham,local_authority
@@ -134,6 +126,7 @@ Teach West London,teaching_school_hub
 TSH Berkshire,teaching_school_hub
 West Berkshire,local_authority
 West Northamptonshire,local_authority
+Westminster,local_authority
 Windsor and Maidenshead,local_authority
 Wokingham,local_authority
 Bexley,local_authority
@@ -145,14 +138,13 @@ Hampshire,local_authority
 Harris City Academy Crystal Palace Teaching School Hub,teaching_school_hub
 HISP Teaching School Hub,teaching_school_hub
 Kent,local_authority
-Kent Teaching School hub,teaching_school_hub
+Kent Teaching School Hub,teaching_school_hub
 Kingston upon Thames,local_authority
 Lambeth,local_authority
 Lewisham,local_authority
 London South Teaching School Hub,teaching_school_hub
 Medway,local_authority
 Merton,local_authority
-Portsmouth,local_authority
 Richmond upon Thames,local_authority
 SFET Teaching School Hub,teaching_school_hub
 Southwark,local_authority
@@ -168,7 +160,6 @@ Balcarras,teaching_school_hub
 Bristol,local_authority
 Colyton Teaching School Hub,teaching_school_hub
 Devon,local_authority
-Dorset,local_authority
 Five Counties Teaching School Hub - South Gloucestershire and Bath and North East Somerset,teaching_school_hub
 Five Counties Teaching School Hubs Alliance (Bristol/North Somerset),teaching_school_hub
 Five Counties Teaching School Hubs Alliance (Somerset),teaching_school_hub
@@ -181,7 +172,6 @@ Plymouth,local_authority
 Somerset,local_authority
 South Central Teaching School Hub,teaching_school_hub
 South Gloucestershire,local_authority
-Swindon,local_authority
 Swindon and Wiltshire Teaching School Hub,teaching_school_hub
 Wiltshire,local_authority
 Ark Teaching School Hub,teaching_school_hub
