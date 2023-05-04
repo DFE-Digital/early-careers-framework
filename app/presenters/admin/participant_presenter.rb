@@ -94,7 +94,7 @@ class Admin::ParticipantPresenter
   end
 
   def user_created_at
-    user&.created_at&.to_date&.to_s(:govuk)
+    user&.created_at&.to_date&.to_fs(:govuk)
   end
 
   def mentees_by_school

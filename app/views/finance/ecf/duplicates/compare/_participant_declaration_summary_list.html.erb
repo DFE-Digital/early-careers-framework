@@ -17,7 +17,7 @@
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Declaration date" }
-    row.value { participant_declaration.declaration_date.to_s(:govuk) }
+    row.value { participant_declaration.declaration_date.to_fs(:govuk) }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Course" }
@@ -37,10 +37,10 @@
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Updated at" }
-    row.value { participant_declaration.updated_at.to_s(:govuk) }
+    row.value { participant_declaration.updated_at.to_fs(:govuk) }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Created at" }
-    row.value { participant_declaration.created_at.to_s(:govuk) }
+    row.value { participant_declaration.created_at.to_fs(:govuk) }
   end
 end %>

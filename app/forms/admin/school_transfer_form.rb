@@ -205,7 +205,7 @@ private
       errors.add(:start_date, :invalid)
     # elsif @start_date < participant_profile.schedule.milestones.first.start_date
     elsif @start_date < latest_induction_record.start_date
-      errors.add(:start_date, :before_start, date: latest_induction_record.start_date.to_date.to_s(:govuk))
+      errors.add(:start_date, :before_start, date: latest_induction_record.start_date.to_date.to_fs(:govuk))
     end
   end
 

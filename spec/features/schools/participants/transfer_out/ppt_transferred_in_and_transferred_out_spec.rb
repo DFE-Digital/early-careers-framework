@@ -128,7 +128,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       date = @participant_data[:end_date]
       expect(page).to have_selector("h1", text: "Check your answers")
       expect(page).to have_selector("dd", text: @participant_data[:full_name])
-      expect(page).to have_selector("dd", text: date.to_date.to_s(:govuk))
+      expect(page).to have_selector("dd", text: date.to_date.to_fs(:govuk))
     end
 
     def then_i_should_be_on_the_complete_page
@@ -141,7 +141,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       expect(page).to have_selector("h2", text: "Transferring from your school")
       within(:xpath, "//table[@data-test='transferring_out']/tbody/tr[1]") do
         expect(page).to have_xpath(".//td[1]", text: @participant_data[:full_name])
-        expect(page).to have_xpath(".//td[4]", text: date.to_date.to_s(:govuk))
+        expect(page).to have_xpath(".//td[4]", text: date.to_date.to_fs(:govuk))
       end
     end
 
@@ -150,7 +150,7 @@ RSpec.describe "old and new SIT transferring the same participant", type: :featu
       expect(page).to have_selector("h2", text: "Transferred from your school")
       within(:xpath, "//table[@data-test='transferred']/tbody/tr[1]") do
         expect(page).to have_xpath(".//td[1]", text: @participant_data[:full_name])
-        expect(page).to have_xpath(".//td[2]", text: date.to_date.to_s(:govuk))
+        expect(page).to have_xpath(".//td[2]", text: date.to_date.to_fs(:govuk))
       end
     end
 

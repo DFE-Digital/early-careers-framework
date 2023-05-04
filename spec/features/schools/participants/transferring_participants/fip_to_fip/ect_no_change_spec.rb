@@ -295,7 +295,7 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
   end
 
   def then_i_should_see_start_date_must_be_after_error_message
-    expect(page).to have_text("Start date must be after #{@mentor.induction_records.first.schedule.milestones.first.start_date.to_date.to_s(:govuk)}")
+    expect(page).to have_text("Start date must be after #{@mentor.induction_records.first.schedule.milestones.first.start_date.to_date.to_fs(:govuk)}")
   end
 
   def then_i_should_see_blank_email_date_error_message

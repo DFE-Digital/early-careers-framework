@@ -17,11 +17,11 @@
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key { "Starts on" }
-    row.value { induction_record.start_date.to_s(:govuk) }
+    row.value { induction_record.start_date.to_fs(:govuk) }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key    { "Ends on" }
-    row.value  { induction_record.end_date&.to_s(:govuk) }
+    row.value  { induction_record.end_date&.to_fs(:govuk) }
   end
   summary_list.row(classes: "govuk-body-s") do |row|
     row.key    { "Preferred email" }

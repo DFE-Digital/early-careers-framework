@@ -35,7 +35,7 @@
 
   sl.row do |row|
     row.key(text: "Date of birth")
-    row.value(text: @participant_presenter.validation_data.date_of_birth&.to_s(:govuk))
+    row.value(text: @participant_presenter.validation_data.date_of_birth&.to_fs(:govuk))
     if can_be_updated
       row.action(
         href: date_of_birth_admin_participant_validation_data_path(@participant_presenter.validation_data.participant_profile),
