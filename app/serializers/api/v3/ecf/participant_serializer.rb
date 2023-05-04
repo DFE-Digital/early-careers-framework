@@ -45,7 +45,7 @@ module Api
 
           def deferral(profile:, cpd_lead_provider:, latest_induction_record:)
             if latest_induction_record.training_status_deferred?
-              latest_participant_profile_state = profile.participant_profile_states.sort_by(&:created_at).find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
+              latest_participant_profile_state = profile.participant_profile_states.sort_by(&:created_at).reverse!.find { |pps| pps.state == ParticipantProfileState.states[:deferred] && pps.cpd_lead_provider_id == cpd_lead_provider.id }
               if latest_participant_profile_state.present?
                 {
                   reason: latest_participant_profile_state.reason,
