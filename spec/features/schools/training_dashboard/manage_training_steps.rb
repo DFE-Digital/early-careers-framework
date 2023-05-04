@@ -1198,4 +1198,8 @@ module ManageTrainingSteps
       end
     end
   end
+
+  def and_training_record_states_refreshed
+    TrainingRecordState.refresh
+  end
 end

@@ -238,14 +238,4 @@ module ParticipantSteps
   def and_the_page_title_should_be(expected_title)
     expect(page.title).to start_with(expected_title)
   end
-
-  def when_i_click_change_preferred_identity_link
-    within(page.find("dt", text: /^Preferred email$/).ancestor(".govuk-summary-list__row").find_all("dd")[1]) do
-      click_on("Change")
-    end
-  end
-
-  def then_i_should_see_all_the_user_participant_identities
-    expect(page).to have_select("Select email", options: @participant_profile_ect.user.participant_identities.map(&:email))
-  end
 end
