@@ -356,6 +356,8 @@ module Steps
     def then_sit_can_see_participant_in_school_portal(sit_name, scenario)
       given_i_sign_in_as_the_user_with_the_full_name sit_name
 
+      TrainingRecordState.refresh
+
       when_i_view_participant_details_from_the_school_dashboard_page
       and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
       and_i_confirm_the_participant_on_the_school_participant_details_page_with_name "The Participant"
@@ -367,6 +369,8 @@ module Steps
 
     def then_sit_can_see_not_training_in_school_portal(sit_name, scenario)
       given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+      TrainingRecordState.refresh
 
       when_i_view_participant_details_from_the_school_dashboard_page
       and_i_visit_participant_from_the_school_participants_dashboard_page "The Participant"
@@ -481,6 +485,9 @@ module Steps
       course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
 
       and_i_am_on_the_finance_portal
+
+      TrainingRecordState.refresh
+
       and_i_view_participant_drilldown_from_the_finance_portal
       when_i_find_from_the_finance_participant_drilldown_search participant_name
 
@@ -501,6 +508,9 @@ module Steps
       allow(Finance::Statement::ECF).to receive(:current).and_return(Finance::Statement::ECF.find_by(cohort: Cohort.current, cpd_lead_provider: CpdLeadProvider.find_by(name: lead_provider_name), name: statement_name))
 
       when_i_am_on_the_finance_portal
+
+      TrainingRecordState.refresh
+
       and_i_view_payment_breakdown_from_the_finance_portal
       and_i_complete_from_the_finance_payment_breakdown_report_wizard lead_provider_name
       and_i_select_statment_from_the_finance_payment_breakdown_report statement_name
@@ -528,6 +538,9 @@ module Steps
       given_i_sign_in_as_an_admin_user
 
       and_i_am_on_the_admin_support_portal
+
+      TrainingRecordState.refresh
+
       and_i_view_participant_list_from_the_admin_support_portal
       and_i_view_participant_from_the_admin_support_participant_list "The Participant"
 
