@@ -3,7 +3,6 @@
 # noinspection RubyTooManyMethodsInspection, RubyTooManyInstanceVariablesInspection, RubyInstanceMethodNamingConvention
 class DetermineTrainingRecordState < BaseService
   def call
-    TrainingRecordState.refresh
     @participant_profile.training_record_states.latest_for(participant_profile: @participant_profile, induction_record: @induction_record, delivery_partner: @delivery_partner, school: @school)
   end
 

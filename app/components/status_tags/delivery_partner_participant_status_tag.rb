@@ -39,7 +39,7 @@ module StatusTags
         participant_profile:,
         induction_record:,
         delivery_partner:,
-      ).record_state
+      )&.record_state || :no_longer_involved
     end
   end
 end

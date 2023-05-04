@@ -158,4 +158,8 @@ class TrainingRecordState < ApplicationRecord
   def readonly?
     true
   end
+
+  def default
+    TrainingRecordState.new
+  end
 end

@@ -2,22 +2,18 @@
 
 module StatusTags
   class SchoolParticipantStatusTag < BaseComponent
-    def initialize(participant_profile:, induction_record: nil, school: nil, display_description: true)
+    def initialize(participant_profile:, induction_record: nil, school: nil)
       @participant_profile = participant_profile
       @school = school
       @induction_record = induction_record
-      @display_description = display_description
     end
 
     def label
-      govuk_tag(text: t(:label, scope: translation_scope), colour: t(:colour, scope: translation_scope))
+      t :label, scope: translation_scope
     end
 
     def description
-      Array.wrap(t(:description,
-                   scope: translation_scope,
-                   contact_us: render(MailToSupportComponent.new("contact us"))))
-           .map(&:html_safe)
+      Array.wrap(t(:description, scope: translation_scope, contact_us: render(MailToSupportComponent.new("contact us")))).map(&:html_safe)
     rescue I18n::MissingTranslationData
       []
     end
@@ -28,29 +24,40 @@ module StatusTags
 
   private
 
-    attr_reader :participant_profile, :induction_record, :school, :display_description
+    attr_reader :participant_profile, :induction_record, :school
 
     def translation_scope
-      @translation_scope ||= "status_tags.school_participant_status_detailed.#{record_state}"
+      @translation_scope ||= if FeatureFlag.active?(:school_participant_status_language)
+                               "status_tags.school_participant_status_detailed.#{record_state}"
+                             else
+                               "status_tags.school_participant_status.#{record_state}"
+                             end
     end
 
     def record_state
       @record_state ||= determine_record_state
     end
 
-    # Schools logic states that we show eligible for CIP participants whether that is correct or not
     def determine_record_state
-      DetermineTrainingRecordState.call(participant_profile:, induction_record:, school:)
-                                  .record_state.tap do |record_state|
-        return :active_cip_training if on_cip? && ignored_for_cip?(record_state)
+      record_state = DetermineTrainingRecordState.call(
+        participant_profile:,
+        induction_record:,
+        school:,
+      ).record_state
+
+      # Schools logic states that we show eligible for CIP participants whether that is correct or not
+      if on_cip? && is_ignored_for_cip?(record_state)
+        return :active_cip_training
       end
+
+      record_state
     end
 
     def on_cip?
-      @induction_record&.enrolled_in_cip? || @participant_profile.school_cohort&.core_induction_programme?
+      @induction_record&.induction_programme&.core_induction_programme? || @participant_profile.school_cohort&.core_induction_programme?
     end
 
-    def ignored_for_cip?(record_state)
+    def is_ignored_for_cip?(record_state)
       %i[
         internal_error
         tra_record_not_found

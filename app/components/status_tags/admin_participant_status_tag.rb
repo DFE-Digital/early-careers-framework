@@ -38,7 +38,7 @@ module StatusTags
         participant_profile:,
         induction_record:,
         school:,
-      ).record_state
+      )&.record_state || :no_longer_involved
     end
   end
 end
