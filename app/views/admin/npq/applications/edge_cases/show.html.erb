@@ -15,6 +15,11 @@
     end
 
     sl.row do |row|
+      row.key(text: "Email")
+      row.value(text: @npq_application.user.email)
+    end
+
+    sl.row do |row|
       row.key(text: "NPQ course name")
       row.value(text: @npq_application.npq_course_name)
     end
