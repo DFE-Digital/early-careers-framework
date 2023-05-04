@@ -24,5 +24,5 @@ RSpec.describe Admin::NPQ::Applications::Analysis::TableRow, :with_default_sched
   it { is_expected.to have_content "Last Declaration\n    started" }
   it { is_expected.to have_content "Lead Provider\n    #{npq_lead_provider.cpd_lead_provider.name}" }
   it { is_expected.to have_content "Status\n    paid" }
-  it { is_expected.to have_content "Date\n    #{npq_application.profile.participant_declarations.first.created_at.to_date.to_s(:govuk_short)}" }
+  it { is_expected.to have_content "Date\n    #{npq_application.profile.participant_declarations.first.created_at.to_date.to_fs(:govuk_short)}" }
 end

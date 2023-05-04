@@ -24,7 +24,7 @@
 
       <% summary_list.row do |row| %>
         <% row.key { "Date of birth" } %>
-        <% row.value { @wizard.date_of_birth.to_date.to_s(:govuk) } %>
+        <% row.value { @wizard.date_of_birth.to_date.to_fs(:govuk) } %>
         <% row.action(text: "Change",
                       visually_hidden_text: "date of birth",
                       href: @wizard.change_path_for(step: :date_of_birth)) %>

@@ -23,7 +23,7 @@
           row.cell(text: application.employment_type&.humanize || '-')
           row.cell(text: application.employer_name || '-')
           row.cell(text: application.employment_role&.humanize&.downcase || '-')
-          row.cell(text: application.created_at.to_s(:govuk_short))
+          row.cell(text: application.created_at.to_fs(:govuk_short))
         end
       end
     end

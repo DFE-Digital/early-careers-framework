@@ -39,7 +39,7 @@
 
       <% summary_list.row do |row| %>
         <% row.key { "Start date" } %>
-        <% row.value { @school_transfer_form.start_date.to_date.to_s(:govuk) } %>
+        <% row.value { @school_transfer_form.start_date.to_date.to_fs(:govuk) } %>
         <% row.action(text: "Change",
                       visually_hidden_text: "start date at new school",
                       href: url_for({ action: :start_date})) %>

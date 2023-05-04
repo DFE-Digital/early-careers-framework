@@ -28,7 +28,7 @@
   <% if form.date_of_birth %>
     <% summary_list.row do |row| %>
       <% row.key { "Date of birth" } %>
-      <% row.value { form.date_of_birth.to_date.to_s(:govuk) } %>
+      <% row.value { form.date_of_birth.to_date.to_fs(:govuk) } %>
       <% unless form.found_participant_in_dqt? %>
         <% row.action(text: "Change",
                       visually_hidden_text: "date of birth",

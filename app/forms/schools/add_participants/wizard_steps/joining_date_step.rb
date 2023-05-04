@@ -30,7 +30,7 @@ module Schools
               if start_date > Date.current + 1.year
                 errors.add(:start_date, :invalid)
               elsif start_date < wizard.existing_induction_start_date
-                errors.add(:start_date, I18n.t("errors.start_date.before_schedule_start_date", date: wizard.existing_induction_start_date.to_date.to_s(:govuk)))
+                errors.add(:start_date, I18n.t("errors.start_date.before_schedule_start_date", date: wizard.existing_induction_start_date.to_date.to_fs(:govuk)))
               end
             rescue Date::Error
               errors.add(:start_date, :invalid)

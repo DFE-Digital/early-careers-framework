@@ -40,8 +40,8 @@ module Finance
         row.cell(text: participant_profile.training_status)
         row.cell(text: participant_profile.provider_name)
         row.cell(text: participant_profile.school_name)
-        row.cell(text: participant_profile.start_date.to_s(:govuk))
-        row.cell(text: participant_profile.end_date&.to_s(:govuk))
+        row.cell(text: participant_profile.start_date.to_fs(:govuk))
+        row.cell(text: participant_profile.end_date&.to_fs(:govuk))
         row.cell(text: participant_profile.declaration_count)
       end
 

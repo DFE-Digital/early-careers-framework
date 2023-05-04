@@ -73,12 +73,12 @@
 
     sl.row do |row|
       row.key(text: "Created at")
-      row.value(text: @npq_application.created_at.to_s(:govuk_short))
+      row.value(text: @npq_application.created_at.to_fs(:govuk_short))
     end
 
     sl.row do |row|
       row.key(text: "Updated at")
-      row.value(text: @npq_application.updated_at.to_s(:govuk_short))
+      row.value(text: @npq_application.updated_at.to_fs(:govuk_short))
     end
 
     sl.row do |row|

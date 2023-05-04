@@ -11,7 +11,7 @@
 
   <% summary_list.row do |row| %>
     <% row.key { "Declaration date" } %>
-    <% row.value { declaration.declaration_date.to_s(:govuk) } %>
+    <% row.value { declaration.declaration_date.to_fs(:govuk) } %>
   <% end %>
 
   <% summary_list.row do |row| %>
@@ -36,12 +36,12 @@
 
   <% summary_list.row do |row| %>
     <% row.key { "Created at" } %>
-    <% row.value { declaration.created_at.to_s(:govuk) } %>
+    <% row.value { declaration.created_at.to_fs(:govuk) } %>
   <% end %>
 
   <% summary_list.row do |row| %>
     <% row.key { "Updated at" } %>
-    <% row.value { declaration.updated_at.to_s(:govuk) } %>
+    <% row.value { declaration.updated_at.to_fs(:govuk) } %>
   <% end %>
 <% end %>
 
@@ -61,7 +61,7 @@
       declaration.declaration_states.each do |declaration_state|
         body.with_row do |row|
           row.with_cell(text: declaration_state.state)
-          row.with_cell(text: declaration_state.created_at.to_s(:govuk))
+          row.with_cell(text: declaration_state.created_at.to_fs(:govuk))
           row.with_cell(text: declaration_state.state_reason || 'N/A', numeric: true)
         end
       end
