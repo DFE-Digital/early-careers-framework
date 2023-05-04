@@ -16,12 +16,10 @@ class FeatureFlag
 
   # Short-lived feature flags
   TEMPORARY_FEATURE_FLAGS = %i[
-    cohortless_dashboard
     eligibility_notifications
     api_v3
     appropriate_bodies
     prevent_2023_ect_registrations
-    cohortless_dashboard
   ].freeze
 
   FEATURES = (PERMANENT_SETTINGS + TEMPORARY_FEATURE_FLAGS).index_with { |name|
