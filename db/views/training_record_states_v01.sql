@@ -35,15 +35,14 @@ FROM (
          "partnerships"."delivery_partner_id"        as "delivery_partner_id",
          "induction_programmes"."training_programme" as "training_programme",
 
-         (SELECT MAX(x)
-          FROM (VALUES
-                    ("induction_records"."start_date"),
-                    ("participant_profiles"."updated_at"),
-                    ("ecf_participant_eligibilities"."updated_at"),
-                    ("ecf_participant_validation_data"."updated_at"),
-                    ("teacher_profiles"."updated_at"),
-                    ("emails"."updated_at")
-               ) AS v (x))                           as "changed_at",
+         GREATEST(
+               "induction_records"."start_date",
+               "participant_profiles"."updated_at",
+               "ecf_participant_eligibilities"."updated_at",
+               "ecf_participant_validation_data"."updated_at",
+               "teacher_profiles"."updated_at",
+               "emails"."updated_at"
+        )                                            as changed_at
 
          CASE
              WHEN "ecf_participant_eligibilities"."status" = 'manual_check' AND "ecf_participant_eligibilities"."reason" = 'different_trn'
