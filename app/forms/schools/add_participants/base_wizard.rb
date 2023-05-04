@@ -136,7 +136,7 @@ module Schools
 
       def email_in_use?
         @email_owner ||= Identity.find_user_by(email: data_store.email)
-        return false if @email_owner.nil?
+        return false if @email_owner.nil? || !@email_owner.participant?
         return true unless transfer?
 
         @email_owner != existing_user
