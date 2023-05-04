@@ -27,7 +27,12 @@ module Api
               attributes: {
                 full_name: participant.full_name,
                 teacher_reference_number: participant.teacher_profile.trn,
-                updated_at: participant.updated_at.rfc3339,
+                updated_at: [
+                  ect_profile.updated_at,
+                  participant.updated_at,
+                  participant.participant_identities.map(&:updated_at),
+                  ect_profile.induction_records.map(&:updated_at),
+                ].flatten.compact.max.rfc3339,
                 ecf_enrolments:
                   [
                     {

@@ -11,8 +11,7 @@ module Api
 
         class << self
           def ecf_participant_profiles(record)
-            @ecf_participant_profiles ||= {}
-            @ecf_participant_profiles[record.id] ||= record.participant_profiles.select { |pp| [ParticipantProfile::ECT.name, ParticipantProfile::Mentor.name].include?(pp.type) }
+            record.participant_profiles.select { |pp| [ParticipantProfile::ECT.name, ParticipantProfile::Mentor.name].include?(pp.type) }
           end
 
           def trn(record)

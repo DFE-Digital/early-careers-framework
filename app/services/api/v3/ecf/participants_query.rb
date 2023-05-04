@@ -89,9 +89,7 @@ module Api
         end
 
         def left_outer_join_participant_profile_states
-          "LEFT OUTER JOIN participant_profile_states pps on participant_profiles.id = pps.participant_profile_id AND pps.id = (
-            SELECT id from participant_profile_states _pps WHERE _pps.participant_profile_id = participant_profiles.id AND _pps.state = latest_induction_records.training_status ORDER BY created_at desc LIMIT 1
-          )"
+          "LEFT OUTER JOIN participant_profile_states pps on participant_profiles.id = pps.participant_profile_id"
         end
       end
     end
