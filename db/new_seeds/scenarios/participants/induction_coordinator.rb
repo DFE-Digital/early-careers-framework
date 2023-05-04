@@ -15,6 +15,7 @@ module NewSeeds
 
       def build
         @school_cohort = FactoryBot.create(:seed_school_cohort, induction_programme, :valid)
+        @school_cohort.update!(default_induction_programme: FactoryBot.create(:seed_induction_programme, induction_programme, school_cohort:))
         @user = FactoryBot.create(:user, email:, **user_args)
         @induction_coordinator_profile = FactoryBot.create(:seed_induction_coordinator_profile, user:)
 
