@@ -27,6 +27,8 @@ class InductionRecord < ApplicationRecord
   belongs_to :preferred_identity, class_name: "ParticipantIdentity", optional: true
   belongs_to :schedule, class_name: "Finance::Schedule"
 
+  has_one :training_record_state, inverse_of: :induction_record
+
   has_one :cpd_lead_provider, through: :induction_programme
   has_one :mentor, through: :mentor_profile, source: :user
   has_one :partnership, through: :induction_programme

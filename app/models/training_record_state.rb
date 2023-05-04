@@ -3,6 +3,9 @@
 class TrainingRecordState < ApplicationRecord
   belongs_to :participant_profile, inverse_of: :training_record_states
   belongs_to :school, inverse_of: :training_record_states
+  belongs_to :lead_provider, inverse_of: :training_record_states
+  belongs_to :delivery_partner, inverse_of: :training_record_states
+  belongs_to :induction_record, inverse_of: :training_record_state
 
   enum validation_state: {
     different_trn: "different_trn",
@@ -136,9 +139,9 @@ class TrainingRecordState < ApplicationRecord
     if school.present?
       where(participant_profile:, school:)
     elsif delivery_partner.present?
-      where(participant_profile:, delivery_partner_id: delivery_partner.id)
+      where(participant_profile:, delivery_partner:)
     elsif induction_record.present?
-      where(participant_profile:, induction_record_id: induction_record.id)
+      where(participant_profile:, induction_record:)
     else
       where(participant_profile:)
     end
