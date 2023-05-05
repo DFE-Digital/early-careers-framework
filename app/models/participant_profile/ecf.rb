@@ -50,7 +50,7 @@ class ParticipantProfile::ECF < ParticipantProfile
   end
 
   def self.ransackable_associations(_auth_object = nil)
-    %w[cohort participant_identity school]
+    %w[cohort participant_identity school user teacher_profile induction_records]
   end
 
   # Instance Methods

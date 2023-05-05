@@ -53,6 +53,10 @@ class User < ApplicationRecord
     %w[id full_name email]
   end
 
+  def self.ransackable_associations(_auth_object = nil)
+    %w[participant_identities participant_profiles schools lead_provider delivery_partner teacher_profile]
+  end
+
   # changed from has_many :npq_applications as these now live on participant_identities
   # and it is possible that there are applications on one or more of the user's
   # participant_identity records

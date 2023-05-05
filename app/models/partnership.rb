@@ -29,10 +29,6 @@ class Partnership < ApplicationRecord
 
   after_save :update_analytics
 
-  def challenged?
-    challenge_reason.present?
-  end
-
   scope :in_year, ->(year) { joins(:cohort).where(cohort: { start_year: year }) }
   scope :unchallenged, -> { where(challenged_at: nil, challenge_reason: nil) }
   scope :active, -> { unchallenged.where(pending: false) }
@@ -40,6 +36,18 @@ class Partnership < ApplicationRecord
 
   delegate :name, to: :lead_provider, allow_nil: true, prefix: true
   delegate :name, to: :delivery_partner, allow_nil: true, prefix: true
+
+  def self.ransackable_attributes(_auth_object = nil)
+    []
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[lead_provider school delivery_partner]
+  end
+
+  def challenged?
+    challenge_reason.present?
+  end
 
   # NOTE: challenge! has been moved to a service Partnerships::Challenge as there
   # are now many side affects that need to be considered.

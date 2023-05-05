@@ -39,6 +39,14 @@ class InductionProgramme < ApplicationRecord
   # core_induction_programme_name
   delegate :name, to: :core_induction_programme, allow_nil: true, prefix: true
 
+  def self.ransackable_attributes(_auth_object = nil)
+    []
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[partnership]
+  end
+
   def delivery_partner_name
     delivery_partner&.name unless partnership&.challenged?
   end
