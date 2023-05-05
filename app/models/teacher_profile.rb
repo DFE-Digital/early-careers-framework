@@ -25,4 +25,8 @@ class TeacherProfile < ApplicationRecord
 
     where("teacher_profiles.trn like ?", "%#{search_term}%")
   end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[trn]
+  end
 end

@@ -15,7 +15,7 @@ RSpec.describe "API Users", :with_default_schedules, type: :request do
     let(:user_id) { user.id }
 
     let(:get_an_identity_id) { SecureRandom.uuid }
-    let(:email) { Faker::Internet.safe_email }
+    let(:email) { Faker::Internet.email }
     let(:full_name) { Faker::Name.name }
 
     let(:request_body) do
