@@ -49,6 +49,10 @@ class User < ApplicationRecord
 
   self.filter_attributes += %i[email full_name]
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id full_name email]
+  end
+
   # changed from has_many :npq_applications as these now live on participant_identities
   # and it is possible that there are applications on one or more of the user's
   # participant_identity records

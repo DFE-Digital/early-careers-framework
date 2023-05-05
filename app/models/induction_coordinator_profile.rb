@@ -8,4 +8,8 @@ class InductionCoordinatorProfile < ApplicationRecord
   has_many :schools, through: :induction_coordinator_profiles_schools
 
   delegate :full_name, to: :user
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[email urn name postcode]
+  end
 end

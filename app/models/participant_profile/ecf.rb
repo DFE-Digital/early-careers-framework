@@ -44,6 +44,15 @@ class ParticipantProfile::ECF < ParticipantProfile
   after_save :update_analytics
   after_update :sync_status_with_induction_record
 
+  # Class methods
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[cohort participant_identity school]
+  end
+
   # Instance Methods
   def contacted_for_info?
     ecf_participant_validation_data.nil?
