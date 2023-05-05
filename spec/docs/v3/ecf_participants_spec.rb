@@ -2,7 +2,16 @@
 
 require "swagger_helper"
 
-describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:school) { create(:school) }
+  let(:cohort) { create(:cohort, :current) }
+  let(:delivery_partner) { create(:delivery_partner) }
+  let(:school_cohort) { create(:school_cohort, :fip, :with_induction_programme, delivery_partner:, school:, cohort:, lead_provider: cpd_lead_provider.lead_provider) }
+  let!(:provider_relationship) { create(:provider_relationship, cohort:, delivery_partner:, lead_provider: cpd_lead_provider.lead_provider) }
+  let(:participant) { create(:user) }
+  let!(:ect_profile) { create(:ect, :eligible_for_funding, school_cohort:, user: participant) }
+
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
@@ -34,6 +43,17 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 required: false,
                 example: CGI.unescape({ page: { page: 1, per_page: 5 } }.to_param),
                 description: "Pagination options to navigate through the list of ECF participants."
+
+      parameter name: :sort,
+                in: :query,
+                schema: {
+                  "$ref": "#/components/schemas/ECFParticipantsSort",
+                },
+                style: :form,
+                explode: false,
+                required: false,
+                description: "Sort ECF participants being returned.",
+                example: "sort=-updated_at"
 
       response "200", "A list of ECF participants" do
         schema({ "$ref": "#/components/schemas/MultipleECFParticipantsResponse" })
@@ -67,7 +87,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 }
 
       response "200", "A single ECF participant" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { participant.id }
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
@@ -75,7 +95,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       end
 
       response "401", "Unauthorized" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { participant.id }
         let(:Authorization) { "Bearer invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
@@ -83,7 +103,9 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
         run_test!
       end
 
-      response "404", "Not Found" do
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "unknown-id" }
+
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
@@ -116,7 +138,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 }
 
       response "200", "The ECF participant being deferred" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { participant.id }
 
         let(:params) do
           {
@@ -124,7 +146,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
               type: "participant",
               attributes: {
                 reason: "career-break",
-                course_identifier: "ecf-mentor",
+                course_identifier: "ecf-induction",
               },
             },
           }
@@ -132,7 +154,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
-        # TODO: replace with actual implementation once implemented
         after do |example|
           content = example.metadata[:response][:content] || {}
           example_spec = {
@@ -210,23 +231,28 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 }
 
       response "200", "The ECF participant being resumed" do
-        let!(:mentor_induction_record_deferred) { create(:induction_record, induction_programme:, participant_profile: deferred_mentor_profile, training_status: "deferred") }
-
-        let(:participant) { deferred_mentor_profile }
-        let(:id) { participant.participant_identity.external_identifier }
-
+        let(:id) { participant.id }
         let(:params) do
           {
             data: {
               type: "participant",
               attributes: {
-                course_identifier: "ecf-mentor",
+                course_identifier: "ecf-induction",
               },
             },
           }
         end
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
+        before do
+          DeferParticipant.new(
+            participant_id: id,
+            reason: ParticipantProfile::DEFERRAL_REASONS.sample,
+            course_identifier: "ecf-induction",
+            cpd_lead_provider:,
+          ).call
+        end
 
         run_test!
       end
@@ -255,11 +281,11 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 }
 
       response "200", "The ECF participant being withdrawn" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { participant.id }
         let(:attributes) do
           {
             reason: "left-teaching-profession",
-            course_identifier: "ecf-mentor",
+            course_identifier: "ecf-induction",
           }
         end
 
@@ -274,7 +300,6 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
 
-        # TODO: replace with actual implementation once implemented
         after do |example|
           content = example.metadata[:response][:content] || {}
           example_spec = {
@@ -352,21 +377,24 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 }
 
       response "200", "The ECF Participant changing schedule" do
-        let(:participant) { mentor_profile }
-        let(:id) { participant.user.id }
+        let(:id) { participant.id }
         let(:params) do
           {
             "data": {
               "type": "participant",
               "attributes": {
-                schedule_identifier: "ecf-standard-september",
-                course_identifier: "ecf-mentor",
+                schedule_identifier: "ecf-january-standard-2023",
+                course_identifier: "ecf-induction",
               },
             },
           }
         end
 
         schema({ "$ref": "#/components/schemas/ECFParticipantResponse" })
+
+        before do
+          create(:schedule, schedule_identifier: "ecf-january-standard-2023", name: "ECF January standard 2023", cohort:)
+        end
 
         run_test!
       end

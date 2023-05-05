@@ -37,6 +37,17 @@ Note, providers may need to update IDs held on their systems. The DfE will conta
 
 While the expected volume of future instances is expected to be very low (where single participants are registered with multiple `participant_ids`), providers who identify issues should contact the DfE via existing support channels. The DfE will fix errors by 'retiring' one of the IDs, then associating all records and data under the remaining ID. The DfE will inform providers as to which `participant_id` they will need to record on their systems.
 
+## 14th March 2023
+
+DfE has updated the definition of the cohort attribute in the API guidance and schema definitions for ECF and NPQ. Note, this update is limited to definitions and guidance. There has been no change to API functionality or business rules.
+
+This update ensures API documentation is properly aligned with contractual terms and the way the attribute is used and understood by providers.
+
+Cohorts are now defined as the value indicating which call-off contract funds a given participant’s training. For example, 2021 indicates a participant that has started, or will start, their funded training in the 2021/22 academic year.
+
+* [Read guidance around cohorts for ECF providers](/api-reference/ecf-usage.html#notifying-of-schedule-ecf-cohort-attribute)
+* [Read guidance around cohorts for NPQ providers](/api-reference/npq-usage.html#notifying-of-schedule-npq-cohort-attribute)
+
 ## 28th February 2023
 
 Providers can now review updated draft documentation for API version 3.0.0. Presentations and further feedback sessions on the proposed changes will be arranged with providers directly.

@@ -112,7 +112,7 @@ RSpec.describe "NPQ Participants API", :with_default_schedules, type: :request d
         end
 
         context "when there is a started declaration" do
-          it_behaves_like "a participant withdraw action endpoint" do
+          it_behaves_like "JSON Participant Withdrawal endpoint" do
             it "changes the training status of a participant to withdrawn" do
               put(url, params:)
 

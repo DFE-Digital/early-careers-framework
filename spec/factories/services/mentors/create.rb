@@ -53,17 +53,6 @@ FactoryBot.define do
       end
     end
 
-    trait :deferred do
-      after(:create) do |participant_profile|
-        DeferParticipant.new(
-          participant_id: participant_profile.teacher_profile.user_id,
-          course_identifier: "ecf-mentor",
-          cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
-          reason: "bereavement",
-        ).call
-      end
-    end
-
     trait :withdrawn do
       transient do
         reason { "other" }
@@ -71,8 +60,8 @@ FactoryBot.define do
 
       after(:create) do |participant_profile, evaluator|
         WithdrawParticipant.new(
-          participant_id: participant_profile.teacher_profile.user_id,
-          cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
+          participant_id: participant_profile.participant_identity.user_id,
+          cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
           reason: evaluator.reason,
           course_identifier: "ecf-mentor",
         ).call
@@ -117,9 +106,9 @@ FactoryBot.define do
       end
       after(:create) do |participant_profile, evaluator|
         DeferParticipant.new(
-          participant_id: participant_profile.user_id,
+          participant_id: participant_profile.participant_identity.user_id,
           course_identifier: "ecf-mentor",
-          cpd_lead_provider: participant_profile.current_induction_record.cpd_lead_provider,
+          cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
           reason: evaluator.reason,
         ).call
         participant_profile.reload

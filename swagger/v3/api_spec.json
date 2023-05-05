@@ -1796,6 +1796,18 @@
             "required": false,
             "example": "page[page]=1&page[per_page]=5",
             "description": "Pagination options to navigate through the list of ECF participants."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ECFParticipantsSort"
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Sort ECF participants being returned.",
+            "example": "sort=-updated_at"
           }
         ],
         "responses": {
@@ -2904,7 +2916,7 @@
         "required": [
           "full_name",
           "updated_at",
-          "npq_enrolments"
+          "ecf_enrolments"
         ],
         "properties": {
           "full_name": {
@@ -3392,6 +3404,19 @@
               "course_identifier": "ecf-mentor"
             }
           }
+        }
+      },
+      "ECFParticipantsSort": {
+        "description": "Sort ECF participants being returned",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "-created_at",
+            "updated_at",
+            "-updated_at"
+          ]
         }
       },
       "ECFParticipantTransfer": {

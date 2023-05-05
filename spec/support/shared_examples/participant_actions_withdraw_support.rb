@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a participant withdraw action endpoint" do
+RSpec.shared_examples "JSON Participant Withdrawal endpoint" do
   let(:parsed_response) { JSON.parse(response.body) }
 
   it "returns an error when the participant is already withdrawn" do

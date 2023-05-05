@@ -94,11 +94,15 @@ FactoryBot.define do
     end
 
     trait :deferred do
+      transient do
+        reason { "bereavement" }
+      end
+
       after(:create) do |participant_profile|
         DeferParticipant.new(
           participant_id: participant_profile.teacher_profile.user_id,
           course_identifier: "ecf-induction",
-          cpd_lead_provider: participant_profile.current_induction_records.first.cpd_lead_provider,
+          cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
           reason: "bereavement",
         ).call
       end
@@ -115,7 +119,7 @@ FactoryBot.define do
 
       after(:create) do |participant_profile, evaluator|
         WithdrawParticipant.new(
-          participant_id: participant_profile.participant_identity.external_identifier,
+          participant_id: participant_profile.participant_identity.user_id,
           cpd_lead_provider: participant_profile.induction_records.latest.cpd_lead_provider,
           reason: evaluator.reason,
           course_identifier: "ecf-induction",
