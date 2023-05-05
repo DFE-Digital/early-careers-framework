@@ -97,6 +97,10 @@ class School < ApplicationRecord
     %w[urn name address_line1 postcode ukprn primary_contact_email]
   end
 
+  def self.ransackable_associations(_auth_object = nil)
+    %w[ecf_participant_profiles induction_coordinators induction_coordinator_profiles lead_providers delivery_partners]
+  end
+
   def partnered?(cohort)
     partnerships.detect { |partnership| partnership.challenged_at.nil? && partnership.challenge_reason.nil? && partnership.cohort_id == cohort.id }.present?
   end

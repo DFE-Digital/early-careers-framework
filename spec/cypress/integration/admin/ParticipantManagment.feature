@@ -13,7 +13,7 @@ Feature: Admin user managing participants
 
     When I type "example" into "search box"
     And I press enter in "search box"
-    Then the table should have 5 rows
+    Then the table should have 3 rows
 
     When I clear "search box"
     And I type "Unrelated" into "search box"
