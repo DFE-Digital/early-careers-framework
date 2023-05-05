@@ -33,11 +33,11 @@ RSpec.describe DeliveryPartnerProfile, type: :model do
     end
 
     it "sends an email to the new user" do
-      allow(DeliveryPartnerProfileMailer).to receive(:welcome).and_call_original
+      allow(DeliveryPartnerProfileMailer).to receive(:with).and_call_original
 
-      DeliveryPartnerProfile.create_delivery_partner_user(name, email, delivery_partner)
+      expect { DeliveryPartnerProfile.create_delivery_partner_user(name, email, delivery_partner) }.to have_enqueued_mail(DeliveryPartnerProfileMailer, :welcome)
 
-      expect(DeliveryPartnerProfileMailer).to have_received(:welcome).with(created_delivery_partner_profile)
+      expect(DeliveryPartnerProfileMailer).to have_received(:with).with(delivery_partner_profile: created_delivery_partner_profile)
     end
   end
 end

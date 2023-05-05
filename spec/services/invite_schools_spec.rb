@@ -117,11 +117,9 @@ RSpec.describe InviteSchools do
     let!(:induction_coordinator) { create(:induction_coordinator_profile, schools: [school], user:) }
 
     it "sends the change tutor email" do
-      expect(SchoolMailer).to receive(:school_requested_signin_link_from_gias_email).with(
-        hash_including(
-          school:,
-          nomination_link: String,
-        ),
+      expect(SchoolMailer).to receive(:with).with(
+        school:,
+        nomination_link: String,
       ).and_call_original
 
       invite_schools.perform [school.urn]

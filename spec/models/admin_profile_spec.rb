@@ -25,11 +25,11 @@ RSpec.describe AdminProfile, type: :model do
     end
 
     it "sends an email to the admin" do
-      allow(AdminMailer).to receive(:account_created_email).and_call_original
+      allow(AdminMailer).to receive(:with).and_call_original
 
       AdminProfile.create_admin(name, email, sign_in_url)
 
-      expect(AdminMailer).to have_received(:account_created_email).with(created_user, sign_in_url)
+      expect(AdminMailer).to have_received(:with).with(admin: created_user, url: sign_in_url)
     end
   end
 end

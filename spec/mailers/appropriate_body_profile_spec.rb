@@ -7,9 +7,9 @@ RSpec.describe AppropriateBodyProfileMailer, type: :mailer do
 
   describe "#welcome" do
     let(:welcome_email) do
-      AppropriateBodyProfileMailer.welcome(
-        appropriate_body_profile,
-      ).deliver_now
+      AppropriateBodyProfileMailer.with(
+        appropriate_body_profile:,
+      ).welcome.deliver_now
     end
 
     it "renders the right headers" do

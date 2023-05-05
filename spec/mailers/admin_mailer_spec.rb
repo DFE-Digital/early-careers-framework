@@ -8,7 +8,7 @@ RSpec.describe AdminMailer, type: :mailer do
 
   describe "#account_created_email" do
     let(:account_created_email) do
-      AdminMailer.account_created_email(user, sign_in_link)
+      AdminMailer.with(admin: user, url: sign_in_link).account_created_email.deliver_now
     end
 
     it "renders the right headers" do

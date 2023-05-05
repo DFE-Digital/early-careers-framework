@@ -150,14 +150,12 @@ RSpec.describe "transfer out participants", type: :feature, js: true, rutabaga: 
     end
 
     def and_the_participant_should_be_notified_that_theyre_transferred_out
-      expect(ParticipantTransferMailer).to have_received(:participant_transfer_out_notification)
-                                             .with(hash_including(
-                                                     induction_record: @induction_record,
-                                                   ))
+      expect(ParticipantTransferMailer).to have_received(:with)
+                                             .with(induction_record: @induction_record)
     end
 
     def allow_participant_transfer_mailers
-      allow(ParticipantTransferMailer).to receive(:participant_transfer_out_notification).and_call_original
+      allow(ParticipantTransferMailer).to receive(:with).and_call_original
     end
 
     def set_participant_data
