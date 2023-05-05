@@ -3,7 +3,9 @@
 class DeliveryPartnerProfileMailer < ApplicationMailer
   WELCOME_TEMPLATE_ID = "d477ea16-169b-415e-a87e-1fba314b77e8"
 
-  def welcome(delivery_partner_profile)
+  def welcome
+    delivery_partner_profile = params[:delivery_partner_profile]
+
     template_mail(
       WELCOME_TEMPLATE_ID,
       to: delivery_partner_profile.user.email,

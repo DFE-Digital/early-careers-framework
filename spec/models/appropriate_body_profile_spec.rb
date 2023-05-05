@@ -34,10 +34,10 @@ RSpec.describe AppropriateBodyProfile, type: :model do
     end
 
     it "sends an email to the new user" do
-      allow(AppropriateBodyProfileMailer).to receive(:welcome).and_call_original
+      allow(AppropriateBodyProfileMailer).to receive(:with).and_call_original
       AppropriateBodyProfile.create_appropriate_body_user(name, email, appropriate_body)
 
-      expect(AppropriateBodyProfileMailer).to have_received(:welcome).with(created_appropriate_body_profile)
+      expect(AppropriateBodyProfileMailer).to have_received(:with).with(appropriate_body_profile: created_appropriate_body_profile)
     end
   end
 end

@@ -129,7 +129,10 @@ class SchoolMailer < ApplicationMailer
   end
 
   # This email is sent when induction tutor to be changed
-  def school_requested_signin_link_from_gias_email(school:, nomination_link:)
+  def school_requested_signin_link_from_gias_email
+    school = params[:school]
+    nomination_link = params[:nomination_link]
+
     template_mail(
       SCHOOL_REQUESTED_SIGNIN_LINK_FROM_GIAS,
       to: school.primary_contact_email,

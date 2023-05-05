@@ -12,7 +12,7 @@ class AppropriateBodyProfile < ApplicationRecord
         u.full_name = full_name
       end
       abp = AppropriateBodyProfile.create!(user:, appropriate_body:)
-      AppropriateBodyProfileMailer.welcome(abp).deliver_now
+      AppropriateBodyProfileMailer.with(appropriate_body_profile: abp).welcome.deliver_now
     end
   end
 end

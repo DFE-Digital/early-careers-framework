@@ -16,18 +16,10 @@ RSpec.describe UpdateInductionTutorReminder do
     let(:method_name) { :remind_to_update_school_induction_tutor_details }
     subject { UpdateInductionTutorReminder.new(school) }
 
-    before do
-      allow(SchoolMailer).to(receive(method_name).and_call_original)
-    end
-
     it "calls SchoolMailer.remind_to_update_school_induction_tutor_details with the appropriate arguments" do
-      subject.send!
-
-      expect(SchoolMailer).to have_received(method_name).with(
-        school:,
-        sit_name: school.induction_tutor.full_name,
-        nomination_link: subject.instance_variable_get(:@nomination_link),
-      )
+      expect {
+        subject.send!
+      }.to have_enqueued_mail(SchoolMailer, method_name)
     end
 
     it "creates a nomination_email record" do

@@ -29,11 +29,11 @@ class UpdateInductionTutorReminder
       return false
     end
 
-    SchoolMailer.remind_to_update_school_induction_tutor_details(
+    SchoolMailer.with(
       school:,
       sit_name:,
       nomination_link:,
-    ).deliver_later
+    ).remind_to_update_school_induction_tutor_details.deliver_later
   end
 
 private

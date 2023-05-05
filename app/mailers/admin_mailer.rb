@@ -3,7 +3,10 @@
 class AdminMailer < ApplicationMailer
   ADMIN_ACCOUNT_CREATED_TEMPLATE = "3620d073-d2cc-4d65-9a51-e12770cf25d9"
 
-  def account_created_email(admin, url)
+  def account_created_email
+    admin = params[:admin]
+    url = params[:url]
+
     template_mail(
       ADMIN_ACCOUNT_CREATED_TEMPLATE,
       to: admin.email,
