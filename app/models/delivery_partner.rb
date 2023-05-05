@@ -25,6 +25,10 @@ class DeliveryPartner < DiscardableRecord
     provider_relationships.discard_all
   end
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[name]
+  end
+
   def cohorts_with_provider(lead_provider)
     provider_relationships.joins(:cohort).includes(:cohort).where(lead_provider:).map(&:cohort)
   end

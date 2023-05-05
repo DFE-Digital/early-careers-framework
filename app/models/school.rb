@@ -93,6 +93,10 @@ class School < ApplicationRecord
     SQL
   }
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[urn name address_line1 postcode ukprn primary_contact_email]
+  end
+
   def partnered?(cohort)
     partnerships.detect { |partnership| partnership.challenged_at.nil? && partnership.challenge_reason.nil? && partnership.cohort_id == cohort.id }.present?
   end
