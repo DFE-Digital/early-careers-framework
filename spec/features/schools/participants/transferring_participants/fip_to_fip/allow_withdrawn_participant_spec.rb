@@ -57,8 +57,8 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
     click_on "Confirm and add"
     then_i_should_be_on_the_complete_page
 
-    and_the_participant_should_be_notified_with(:participant_transfer_in_notification)
-    and_the_schools_current_provider_is_notified_with(:provider_transfer_in_notification)
+    and_the_participant_should_be_notified
+    and_the_schools_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
     then_i_am_taken_to_a_dashboard_page
@@ -213,20 +213,15 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
     expect(page).to have_text(@mentor.user.full_name)
   end
 
-  def and_the_participant_should_be_notified_with(notification_method)
-    expect(ParticipantTransferMailer).to have_received(notification_method)
-      .with(hash_including(
-              induction_record: @participant_profile_ect.induction_records.latest,
-            ))
+  def and_the_participant_should_be_notified
+    expect(ParticipantTransferMailer).to have_received(:with)
+      .with(induction_record: @participant_profile_ect.induction_records.latest)
   end
 
-  def and_the_schools_current_provider_is_notified_with(notification_method)
+  def and_the_schools_current_provider_is_notified
     induction_record = @participant_profile_ect.induction_records.latest
-    expect(ParticipantTransferMailer).to have_received(notification_method)
-      .with(hash_including(
-              induction_record:,
-              lead_provider_profile: @lead_provider_profile,
-            ))
+    expect(ParticipantTransferMailer).to have_received(:with)
+      .with(induction_record:, lead_provider_profile: @lead_provider_profile)
   end
 
   def and_i_have_selected_my_cohort_tab
@@ -234,8 +229,7 @@ RSpec.describe "transferring a withdrawn participant", :with_default_schedules, 
   end
 
   def allow_participant_transfer_mailers
-    allow(ParticipantTransferMailer).to receive(:participant_transfer_in_notification).and_call_original
-    allow(ParticipantTransferMailer).to receive(:provider_transfer_in_notification).and_call_original
+    allow(ParticipantTransferMailer).to receive(:with).and_call_original
   end
 
   def set_dqt_validation_result

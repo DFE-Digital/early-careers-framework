@@ -15,7 +15,15 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
   shared_examples "notifying the participant" do
     it "sends a 'particicpant transfter in notification' email to the participant" do
-      expect(ParticipantTransferMailer).to(have_received(:participant_transfer_in_notification).with(induction_record:))
+      expect {
+        subject.call
+      }.to have_enqueued_mail(ParticipantTransferMailer, :participant_transfer_in_notification)
+        .with(
+          params: {
+            induction_record:,
+          },
+          args: [],
+        ).once
     end
   end
 
@@ -41,8 +49,6 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
     }
   end
 
-  before { subject.call }
-
   %i[
     induction_record
     was_withdrawn_participant
@@ -63,10 +69,17 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
     it "sends 'provider transfer in notification' emails to the current lead provider profiles " do
       lead_provider_profiles_in.each do |lead_provider_profile|
-        expect(ParticipantTransferMailer).to(have_received(template).with(induction_record:, lead_provider_profile:))
+        expect {
+          subject.call
+        }.to have_enqueued_mail(ParticipantTransferMailer, template)
+          .with(
+            params: {
+              induction_record:,
+              lead_provider_profile:,
+            },
+            args: [],
+          ).once
       end
-
-      expect(provider_mailer).to have_received(:deliver_later).exactly(lead_provider_profiles_in.size).times
     end
   end
 
@@ -77,10 +90,17 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
     it "sends 'provider transfer in notification' emails to the current lead provider profiles " do
       lead_provider_profiles_in.each do |lead_provider_profile|
-        expect(ParticipantTransferMailer).to(have_received(template).with(induction_record:, lead_provider_profile:))
+        expect {
+          subject.call
+        }.to have_enqueued_mail(ParticipantTransferMailer, template)
+          .with(
+            params: {
+              induction_record:,
+              lead_provider_profile:,
+            },
+            args: [],
+          ).once
       end
-
-      expect(provider_mailer).to have_received(:deliver_later).exactly(lead_provider_profiles_in.size).times
     end
 
     include_examples "notifying the participant"
@@ -95,7 +115,16 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
       it "sends 'provider transfer in notification' emails to the current lead provider profiles " do
         lead_provider_profiles_in.each do |lead_provider_profile|
-          expect(ParticipantTransferMailer).to(have_received(template).with(induction_record:, lead_provider_profile:))
+          expect {
+            subject.call
+          }.to have_enqueued_mail(ParticipantTransferMailer, template)
+            .with(
+              params: {
+                induction_record:,
+                lead_provider_profile:,
+              },
+              args: [],
+            ).once
         end
       end
     end
@@ -105,7 +134,16 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
       it "sends 'provider transfer out notification' emails to the target lead provider profiles " do
         lead_provider_profiles_out.each do |lead_provider_profile|
-          expect(ParticipantTransferMailer).to(have_received(template).with(induction_record:, lead_provider_profile:))
+          expect {
+            subject.call
+          }.to have_enqueued_mail(ParticipantTransferMailer, template)
+            .with(
+              params: {
+                induction_record:,
+                lead_provider_profile:,
+              },
+              args: [],
+            ).once
         end
       end
     end
@@ -118,10 +156,17 @@ RSpec.describe(Induction::SendTransferNotificationEmails) do
 
     it "sends 'provider transfer in notification' emails to the current lead provider profiles " do
       lead_provider_profiles_out.each do |lead_provider_profile|
-        expect(ParticipantTransferMailer).to(have_received(template).with(induction_record:, lead_provider_profile:))
+        expect {
+          subject.call
+        }.to have_enqueued_mail(ParticipantTransferMailer, template)
+          .with(
+            params: {
+              induction_record:,
+              lead_provider_profile:,
+            },
+            args: [],
+          ).once
       end
-
-      expect(provider_mailer).to have_received(:deliver_later).exactly(lead_provider_profiles_out.size).times
     end
 
     include_examples "notifying the participant"
