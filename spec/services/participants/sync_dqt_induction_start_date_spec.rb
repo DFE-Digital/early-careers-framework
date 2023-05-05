@@ -51,6 +51,16 @@ RSpec.describe Participants::SyncDqtInductionStartDate, :with_default_schedules,
     end
   end
 
+  context "when the participant is a mentor" do
+    let(:dqt_induction_start_date) { Date.new(2021, 8, 31) }
+
+    it "update only the mentor's induction start date" do
+      expect { subject }.to change(participant_profile, :induction_start_date)
+                              .to(dqt_induction_start_date)
+                              .and not_change { participant_profile.induction_records.latest.cohort.start_year }
+    end
+  end
+
   context "when DQT induction start date is earlier than 2021/22 cohort" do
     let(:dqt_induction_start_date) { Date.new(2021, 8, 31) }
 
