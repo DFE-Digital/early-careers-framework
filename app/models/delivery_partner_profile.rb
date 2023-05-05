@@ -12,7 +12,7 @@ class DeliveryPartnerProfile < ApplicationRecord
         u.full_name = full_name
       end
       dpp = DeliveryPartnerProfile.create!(user:, delivery_partner:)
-      DeliveryPartnerProfileMailer.with(delivery_partner_profile: dpp).welcome.deliver_now
+      DeliveryPartnerProfileMailer.with(delivery_partner_profile: dpp).welcome.deliver_later
     end
   end
 end

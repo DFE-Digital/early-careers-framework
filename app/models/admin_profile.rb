@@ -11,7 +11,7 @@ class AdminProfile < ApplicationRecord
     ActiveRecord::Base.transaction do
       user.save!
       AdminProfile.create!(user:)
-      AdminMailer.with(admin: user, url: sign_in_url).account_created_email.deliver_now
+      AdminMailer.with(admin: user, url: sign_in_url).account_created_email.deliver_later
     end
   end
 end

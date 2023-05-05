@@ -94,11 +94,11 @@ RSpec.describe "Admin::Administrators::Administrators", type: :request do
 
     it "sends new admin an account created email" do
       url = "http://www.example.com/users/sign_in?utm_campaign=new-admin&utm_medium=email&utm_source=cpdservice"
-      allow(AdminMailer).to receive(:account_created_email).and_call_original
+      allow(AdminMailer).to receive(:with).and_call_original
 
-      given_a_user_is_created
+      expect { given_a_user_is_created }.to have_enqueued_mail(AdminMailer, :account_created_email)
 
-      expect(AdminMailer).to have_received(:account_created_email).with(new_user, url)
+      expect(AdminMailer).to have_received(:with).with(admin: new_user, url:)
     end
   end
 
