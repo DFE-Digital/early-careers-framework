@@ -30,15 +30,11 @@ module Importers
       pupil_premium.pupil_premium_incentive = row.fetch("Pupil Premium Incentive") == "1"
       pupil_premium.sparsity_incentive = row.fetch("Sparsity Incentive") == "1"
 
-      # TODO: remove these columns from DB once data populated
-      pupil_premium.total_pupils = row.fetch("NumberOfPupils")&.to_i || 0
-      pupil_premium.eligible_pupils = 0
-
       pupil_premium.save!
     end
 
     def check_headers!
-      unless ["URN", "Pupil Premium Incentive", "Sparsity Incentive", "NumberOfPupils"].all? { |header| rows.headers.include?(header) }
+      unless ["URN", "Pupil Premium Incentive", "Sparsity Incentive"].all? { |header| rows.headers.include?(header) }
         raise NameError, "Cannot find expected column headers"
       end
     end

@@ -8,8 +8,6 @@ RSpec.describe PupilPremium, type: :model do
       PupilPremium.create(
         school: create(:school),
         start_year: 2021,
-        eligible_pupils: 0,
-        total_pupils: 100,
       )
     }.to change { PupilPremium.count }.by(1)
   end
@@ -21,8 +19,6 @@ RSpec.describe PupilPremium, type: :model do
   describe "#uplift?" do
     it "should be true when pupil_premium_incentive is true" do
       pupil_premium = PupilPremium.new(
-        eligible_pupils: 41,
-        total_pupils: 100,
         pupil_premium_incentive: true,
       )
 
@@ -30,10 +26,7 @@ RSpec.describe PupilPremium, type: :model do
     end
 
     it "should be false when pupil_premium_incentive is false" do
-      pupil_premium = PupilPremium.new(
-        eligible_pupils: 39,
-        total_pupils: 100,
-      )
+      pupil_premium = PupilPremium.new
 
       expect(pupil_premium).not_to be_uplift
     end
@@ -42,8 +35,6 @@ RSpec.describe PupilPremium, type: :model do
   describe "#sparse?" do
     it "should be true when sparsity_incentive is true" do
       pupil_premium = PupilPremium.new(
-        eligible_pupils: 41,
-        total_pupils: 100,
         sparsity_incentive: true,
       )
 
@@ -51,10 +42,7 @@ RSpec.describe PupilPremium, type: :model do
     end
 
     it "should be false when sparsity_incentive is false" do
-      pupil_premium = PupilPremium.new(
-        eligible_pupils: 39,
-        total_pupils: 100,
-      )
+      pupil_premium = PupilPremium.new
 
       expect(pupil_premium).not_to be_sparse
     end
