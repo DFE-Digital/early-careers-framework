@@ -1071,13 +1071,13 @@ For more detailed information see the specifications for this [void declarations
 }
 ```
 
-## View financial statements
+## View financial statement payment dates  
 
 <div class="govuk-inset-text">The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
 
-Providers can view financial statements via the API to check up to date payment cut-off and payment dates. 
+Providers can view up to date payment cut-off dates, upcoming payment dates, and check to see whether output payments have been made by DfE.
 
-### View all statements
+### View all statement payment dates
 
 ```
 GET /api/v3/statements
@@ -1089,8 +1089,25 @@ For more detailed information see the specifications for this [view all statemen
 
 #### Example response body:
 
-[INSERT ONCE CLARIFIED]
-
+```
+{
+  "data": [
+    {
+      "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+      "type": "statement",
+      "attributes": {
+        "month": "5",
+        "year": "2022",
+        "type": "ecf",
+        "cohort": "2021",
+        "cut_off_date": "2022-04-30",
+        "payment_date": "2022-05-25",
+        "paid": true
+      }
+    }
+  ]
+}
+```
 
 ### View a specific statement
 
@@ -1104,4 +1121,21 @@ For more detailed information see the specifications for this [view a specific s
 
 #### Example response body:
 
-[INSERT ONCE CLARIFIED]
+```
+{
+  "data": {
+    "id": "cd3a12347-7308-4879-942a-c4a70ced400a",
+    "type": "statement",
+    "attributes": {
+      "month": "5",
+      "year": "2022",
+      "type": "ecf",
+      "cohort": "2021",
+      "cut_off_date": "2022-04-30",
+      "payment_date": "2022-05-25",
+      "paid": true
+    }
+  }
+}
+```
+
