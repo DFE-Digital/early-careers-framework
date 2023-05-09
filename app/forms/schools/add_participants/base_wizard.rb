@@ -360,8 +360,6 @@ module Schools
         elsif ::Cohort.within_automatic_assignment_period?
           # true from 1/9 to end of automatic assignment period
           ::Cohort.current
-        # elsif mentor_participant? || sit_mentor?
-        #   ::Cohort.current
         elsif start_term == "summer"
           ::Cohort.current
         # we're in the registration window prior to 1/9
