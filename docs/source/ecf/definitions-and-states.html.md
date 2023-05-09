@@ -47,7 +47,7 @@ Providers must [submit declarations](/api-reference/ecf/guidance/#submit-view-an
 
 | state | Definition | Action |
 | -------- | -------- | -------- |
-| `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can submit, view and void `submitted` declarations    |
+| `submitted`     | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding    | Providers can view and void `submitted` declarations    |
 | `eligible`     | A declaration associated with a participant who has been confirmed to be eligible for funding     | Providers can view and void `eligible` declarations    |
 | `ineligible`     | A declaration associated with 1) a participant who is not eligible for funding 2) a duplicate submission for a given participant    | Providers can view and void `ineligible` declarations     |
 | `payable`     | A declaration that has been approved and is ready for payment by DfE    | Providers can view and void `payable` declarations     |
