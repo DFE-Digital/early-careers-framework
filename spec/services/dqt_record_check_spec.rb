@@ -90,6 +90,26 @@ RSpec.describe DqtRecordCheck do
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
         end
+
+        context "when full_name is blank" do
+          let(:full_name) { "" }
+
+          include_context "build fake DQT response" do
+            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+          end
+
+          it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
+        end
+
+        context "when full_name is title" do
+          let(:full_name) { "mr" }
+
+          include_context "build fake DQT response" do
+            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+          end
+
+          it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
+        end
       end
 
       context "when check_first_name_only: false" do
@@ -104,6 +124,26 @@ RSpec.describe DqtRecordCheck do
         context "when first names match but surnames are different" do
           include_context "build fake DQT response" do
             let(:fake_api_response) { default_api_response.merge("name" => "Mr Nelson Piquet") }
+          end
+
+          it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
+        end
+
+        context "when full_name is blank" do
+          let(:full_name) { nil }
+
+          include_context "build fake DQT response" do
+            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
+          end
+
+          it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
+        end
+
+        context "when full_name is title" do
+          let(:full_name) { "mr" }
+
+          include_context "build fake DQT response" do
+            let(:fake_api_response) { default_api_response.merge("name" => "Nelson Muntz") }
           end
 
           it("#name_matches is false") { expect(subject.call.name_matches).to be(false) }
