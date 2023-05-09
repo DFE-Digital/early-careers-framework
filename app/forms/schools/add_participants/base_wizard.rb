@@ -49,7 +49,7 @@ module Schools
       end
 
       def dashboard_path
-        schools_dashboard_path(school_id: school.slug)
+        school_participants_path(school_id: school.slug)
       end
 
       def previous_step_path
