@@ -356,6 +356,7 @@ Providers can view data to find out whether participants:
 * have achieved qualified teacher status (QTS)
 * are eligible for funding
 * have [transferred to or from a school you are partnered with](/api-reference/ecf/guidance/#view-data-for-all-participants-who-have-transferred)
+* have been assigned an [`unfunded mentor`](/api-reference/ecf/guidance/#view-details-for-all-unfunded-mentors)
 
 Note, while participants can enter different email addresses when registering for each training course they apply for, providers will only see the email address associated with a given course registration. For example, a participant may complete their ECF-based training with one associated email address, then register for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
 
@@ -715,9 +716,73 @@ For API v3 onwards, a replacement mentor's schedule, and any associated declarat
 
 Previously for API v1 and v2, a replacement mentor could start mentoring an ECT part way through their training. The provider had already submitted a `start` declaration for the previous mentor (in line with the ECT). If the provider were to submit a `retention-1` declaration for the ECT, then any declaration submitted for the new replacement mentor in the same milestone period would also have to be a retention-1 declaration. This is no longer the case for API v3.
 
-### [PLACEHOLDER FOR UNFUNDED MENTOR ENDPOINTS] 
+### View details for all ‘unfunded mentors’  
 
-[PLACEHOLDER COPY]
+<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
+
+A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs. 
+
+Providers can view the names and email addresses of ‘unfunded mentors’ (mentors who are registered with other providers) assigned to ECTs who they are funded to train. Providers can then give appropriate access to learning platforms.
+
+```
+ GET /api/v3/unfunded-mentors/ecf
+```
+
+An example response body is listed below. Successful requests will return a response body with mentor details. 
+
+For more detailed information see the specifications for this [view all unfunded mentors endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-get).
+
+#### Example response body:
+
+```
+{
+  "data": [
+    {
+      "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+      "type": "unfunded-mentor",
+      "attributes": {
+        "full_name": "Jane Smith",
+        "email": "jane.smith@some-school.example.com",
+        "teacher_reference_number": "1234567",
+        "created_at": "2021-05-31T02:22:32.000Z",
+        "updated_at": "2021-05-31T02:22:32.000Z"
+      }
+    }
+  ]
+}
+```
+
+### View details for a specific unfunded mentor
+
+<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
+
+If a 404 error message is shown when trying to view participant data for the mentor using the endpoint `GET /api/v{n}/participants/ecf/{id}`, providers check to see whether they are an ‘unfunded mentor’. 
+
+```
+ GET /api/v3/unfunded-mentors/ecf/{id}
+```
+
+An example response body is listed below. Successful requests will return a response body with mentor details.  
+
+For more detailed information see the specifications for this [view a specific unfunded mentor endpoint](/api-reference/reference-v3.html#api-v3-unfunded-mentors-ecf-id-get).
+
+#### Example response body:
+
+```
+{
+  "data": {
+    "id": "db3a7848-7308-4879-942a-c4a70ced400a",
+    "type": "unfunded-mentor",
+    "attributes": {
+      "full_name": "Jane Smith",
+      "email": "jane.smith@some-school.example.com",
+      "teacher_reference_number": "1234567",
+      "created_at": "2021-05-31T02:22:32.000Z",
+      "updated_at": "2021-05-31T02:22:32.000Z"
+    }
+  }
+}
+```
 
 ## Submit, view and void declarations
 
