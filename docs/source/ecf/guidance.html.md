@@ -243,7 +243,7 @@ For more detailed information see the specifications for this [find delivery par
 View details for a specific delivery partner to check whether they have been registered to deliver training for a given cohort.  
 
 ```
-GET //api/v3/delivery-partners/{id}
+GET /api/v3/delivery-partners/{id}
 ```
 
 An example response body is listed below. Successful requests will return a response body with the delivery partner details. 
