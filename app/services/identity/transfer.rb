@@ -49,12 +49,11 @@ module Identity
       from_id = from_user.get_an_identity_id
       to_id = to_user.get_an_identity_id
 
-      raise TransferError.new("Identity ids present on both User records: #{from_user.id} -> #{to_user.id}") if from_id.present? && to_id.present?
+      raise TransferError, "Identity ids present on both User records: #{from_user.id} -> #{to_user.id}" if from_id.present? && to_id.present?
 
       if from_id.present?
         # validations prevent changes to this value under normal circumstances
-        from_user.update_attribute(:get_an_identity_id, nil)
-        # from_user.save(validate: false)
+        from_user.update_attribute(:get_an_identity_id, nil) # rubocop:disable Rails/SkipsModelValidations
         to_user.update!(get_an_identity_id: from_id)
       end
     end
