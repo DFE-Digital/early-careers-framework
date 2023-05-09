@@ -48,6 +48,8 @@ To prevent a participant being enrolled onto the same course with more than one 
 
 <div class="govuk-inset-text"> Providers must accept or reject applications before participants start a course and inform applicants of the outcome regardless of whether the application has been accepted or rejected. </div>
 
+Note, while participants can enter different email addresses when applying for training courses, providers will only see the email address associated with a given course application or registration. For example, a participant may complete their ECF-based training with one associated email address, then apply for an NPQ with a different email address, and go on to be an ECT mentor with a third email address. The DfE will share the relevant email address with the relevant course provider.
+
 ### View all applications
 
 ```
@@ -232,7 +234,7 @@ For example, if a participant registers for an NPQ course but then decides to ch
 2. ask the participant to re-register on the NPQ registration service, entering the correct NPQ course details
 3. accept the new application once it is available via the API
 
-## View and update participant records
+## View and update participant data
 
 Once a provider has accepted an application, they can view and update data to notify DfE that a participant has: 
 
