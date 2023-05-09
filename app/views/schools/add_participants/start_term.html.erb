@@ -1,4 +1,4 @@
-<% title = "When will #{@wizard.full_name} start their induction?" %>
+<% title = "When will #{@wizard.full_name} start their #{@wizard.ect_participant? ? 'induction' : 'mentor training'}?" %>
 
 <% content_for :title, title %>
 
@@ -15,10 +15,9 @@
         :name,
         legend: { text: title, tag: 'h1', size: 'xl' },
         caption: { text: @school.name, size: "xl" },
-        hint: { text: "This is when #{@wizard.full_name} will start their induction and begin ECF-based training at your school." }) %>
+        hint: { text: "This is when #{@wizard.full_name} will start their #{@wizard.ect_participant? ? 'induction and begin ECF-based training' : 'ECF-based mentor training'} at your school." }) %>
 
       <%= f.govuk_submit "Continue" %>
     <% end %>
   </div>
 </div>
-
