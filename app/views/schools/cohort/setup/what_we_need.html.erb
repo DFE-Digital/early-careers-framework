@@ -27,7 +27,6 @@
 
         <div class="govuk-inset-text">
             <p class="govuk-body">Do not include ECTs who started their training in the <%= Cohort.active_registration_cohort.previous.description %> academic year.</p>
-            <p class="govuk-body">You can manage their training in the ‘<%= Cohort.active_registration_cohort.previous.description %>’ tab.</p>
         </div>
 
         <%= govuk_button_link_to "Continue", @wizard.next_step_path %>
