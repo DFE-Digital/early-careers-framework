@@ -12,7 +12,7 @@ RSpec.describe "Transferring ECT is with a different lead provider", type: :feat
     and_i_am_signed_in_as_an_induction_coordinator
     and_i_have_selected_my_cohort_tab
     when_i_click_to_view_ects_and_mentors
-    then_i_am_taken_to_manage_mentors_and_ects_page
+    then_i_am_taken_to_your_ect_and_mentors_page
   end
 
   scenario "Induction tutor can transfer an ECT to their schools programme" do
