@@ -353,8 +353,8 @@ module Schools
           existing_participant_cohort || existing_participant_profile&.schedule&.cohort
         elsif ect_participant? && induction_start_date.present?
           Cohort.containing_date(date: induction_start_date)
-        elsif Cohort.current == Cohort.active_registration_cohort
-          # true from 1/9 to next cohort registration start date
+        elsif ::Cohort.within_automatic_assignment_period?
+          # true from 1/9 to end of automatic assignment period
           Cohort.current
         # elsif mentor_participant? || sit_mentor?
         #   Cohort.current

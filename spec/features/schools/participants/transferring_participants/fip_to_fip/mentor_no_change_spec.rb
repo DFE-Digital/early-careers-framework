@@ -56,7 +56,7 @@ RSpec.describe "Transferring a mentor weith matching lead provider and delivery 
     and_the_schools_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
-    then_i_am_taken_to_a_dashboard_page
+    then_i_am_taken_to_manage_mentors_and_ects_page
   end
 
   # given
