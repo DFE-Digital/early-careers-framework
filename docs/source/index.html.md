@@ -26,5 +26,3 @@ Note, there will be an exception to this rule for API `v3`. DfE will support `v1
 When non-breaking updates (sometimes referred to as backwards compatible updates) are made, the API will not be re-versioned. An example of a non-breaking change would be the introduction of a new attribute without removing an existing attribute. 
 
 Summaries of all API updates can be found in the [API release notes](/api-reference/release-notes).
-
-All API requests are available in JSON and CSV formats.
