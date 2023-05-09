@@ -112,7 +112,7 @@ RSpec.describe "ECT has matching lead provider and delivery partner", type: :fea
     and_the_schools_current_provider_is_notified
 
     click_on "View your ECTs and mentors"
-    then_i_am_taken_to_manage_mentors_and_ects_page
+    then_i_am_taken_to_your_ect_and_mentors_page
 
     # click_on "Moving school"
     # then_i_should_see_the_transferring_participant

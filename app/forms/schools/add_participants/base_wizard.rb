@@ -49,7 +49,7 @@ module Schools
       end
 
       def dashboard_path
-        schools_dashboard_path(school_id: school.slug)
+        schools_participants_path(school_id: school.slug, cohort_id: participant_cohort.start_year)
       end
 
       def previous_step_path

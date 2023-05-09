@@ -14,7 +14,7 @@ module Pages
     def can_view_my_etcs_and_mentors
       click_on "Return to your ECTs and mentors"
 
-      element_has_content?(self, "Manage mentors and ECTs")
+      element_has_content?(self, "Your ECTs and mentors")
     end
   end
 end
