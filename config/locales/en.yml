@@ -30,8 +30,6 @@ en:
   forbidden: "Forbidden"
   not_found: "Not Found"
   resource_not_found: "Resource not Found"
-  requested_resource_not_found: "The requested resource was not found"
-  nothing_could_be_found: "Nothing could be found for the provided details"
   unprocessable_entity: "Unprocessable entity"
   internal_server_error: "Internal server error"
   parameter_required: "Parameter is required"

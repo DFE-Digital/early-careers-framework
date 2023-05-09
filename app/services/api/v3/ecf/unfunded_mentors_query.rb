@@ -11,53 +11,40 @@ module Api
 
         def unfunded_mentors
           join = InductionRecord
-                   .select("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id")
+                   .select("DISTINCT FIRST_VALUE(induction_records.id) OVER (#{latest_induction_record_order}) AS latest_id, induction_records.participant_profile_id, induction_records.mentor_profile_id")
                    .joins(:participant_profile, induction_programme: :partnership)
                    .where(
                      induction_programme: {
                        partnerships: {
+                         lead_provider_id: lead_provider.id,
                          challenged_at: nil,
                          challenge_reason: nil,
                        },
                      },
                    )
 
-          funded_mentors = InductionRecord
-                   .select("induction_records.id, induction_records.mentor_profile_id")
-                   .joins(join_mentor_profiles)
-                   .joins(join_mentor_participant_identities)
-                   .joins(join_induction_programme)
+          scope = InductionRecord.distinct
+                   .select(*necessary_fields)
+                   .joins("JOIN participant_profiles ON participant_profiles.id = induction_records.mentor_profile_id")
                    .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
-
-          unfunded_mentors = InductionRecord
-                   .select("induction_records.id, induction_records.participant_profile_id, partnerships.lead_provider_id, induction_records.created_at, induction_records.updated_at, induction_records.preferred_identity_id")
-                   .joins("JOIN participant_profiles ON participant_profiles.id = induction_records.participant_profile_id")
-                   .joins("LEFT OUTER JOIN (#{funded_mentors.to_sql}) AS funded_mentors_induction_records ON funded_mentors_induction_records.id = induction_records.id")
-                   .joins("JOIN (#{join.to_sql}) AS latest_induction_records ON latest_induction_records.latest_id = induction_records.id")
-                   .joins("JOIN induction_programmes on induction_records.induction_programme_id = induction_programmes.id")
+                   .joins("JOIN induction_programmes on induction_programmes.id = induction_records.induction_programme_id")
                    .joins("JOIN partnerships on partnerships.id = induction_programmes.partnership_id")
-                   .where("funded_mentors_induction_records.id is null")
-                   .where("participant_profiles.type = 'ParticipantProfile::Mentor'")
-
-          scope = User
-                    .select(*necessary_fields)
-                    .joins("JOIN teacher_profiles ON users.id = teacher_profiles.user_id")
-                    .joins("JOIN participant_identities ON participant_identities.user_id = users.id")
-                    .joins("JOIN participant_profiles ON participant_profiles.participant_identity_id = participant_identities.id")
-                    .joins("JOIN (#{unfunded_mentors.to_sql}) AS induction_records ON participant_profiles.id = induction_records.participant_profile_id")
-                    .joins("LEFT OUTER JOIN participant_identities preferred_identities ON preferred_identities.id = induction_records.preferred_identity_id")
-                    .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.participant_profile_id")
-                    .where("induction_records.lead_provider_id <> '#{lead_provider.id}'")
-                    .distinct
+                   .joins("JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id")
+                   .joins("JOIN users on users.id = participant_identities.user_id")
+                   .joins("JOIN teacher_profiles ON teacher_profiles.user_id = users.id")
+                   .joins("LEFT OUTER JOIN ecf_participant_validation_data on ecf_participant_validation_data.participant_profile_id = induction_records.mentor_profile_id")
+                   .where("induction_records.mentor_profile_id not in (select distinct participant_profile_id from (#{join.to_sql}) AS latest_induction_records)")
 
           scope = updated_since.present? ? scope.where(users: { updated_at: updated_since.. }) : scope
           params[:sort].blank? ? scope.order("users.updated_at DESC") : scope
         end
 
         def unfunded_mentor
-          unfunded_mentors.find(params[:id])
-        rescue ActiveRecord::RecordNotFound
-          raise Api::Errors::RecordNotFoundError, I18n.t(:nothing_could_be_found)
+          scope = unfunded_mentors
+            .where(participant_profile: { participant_identities: { user_id: params[:id] } })
+          scope = scope.where(participant_profile: { type: "ParticipantProfile::Mentor" }) if scope.size > 1
+
+          scope.first.presence || raise(ActiveRecord::RecordNotFound)
         end
 
       private
@@ -93,34 +80,8 @@ module Api
           SQL
         end
 
-        def left_outer_join_preferred_identities
-          "LEFT OUTER JOIN participant_identities preferred_identities ON preferred_identities.id = induction_records.preferred_identity_id"
-        end
-
-        def left_outer_join_participant_profiles
-          "LEFT OUTER JOIN participant_profiles ON participant_profiles.id = induction_records.participant_profile_id"
-        end
-
-        def left_outer_join_participant_identities
-          "LEFT OUTER JOIN participant_identities ON participant_identities.id = participant_profiles.participant_identity_id"
-        end
-
-        def join_mentor_profiles
-          "JOIN participant_profiles mentor_profiles ON mentor_profiles.id = induction_records.mentor_profile_id"
-        end
-
-        def join_mentor_participant_identities
-          "JOIN participant_identities participant_identities_mentor_profiles ON participant_identities_mentor_profiles.id = mentor_profiles.participant_identity_id"
-        end
-
-        def join_induction_programme
-          "JOIN induction_programmes on induction_records.induction_programme_id = induction_programmes.id
-          JOIN partnerships on partnerships.id = induction_programmes.partnership_id"
-        end
-
         def necessary_fields
-          induction_record_fields +
-            participant_profile_fields +
+          participant_profile_fields +
             participant_identity_fields +
             user_fields +
             teacher_profile_fields +
@@ -147,25 +108,14 @@ module Api
         def participant_identity_fields
           [
             "participant_identities.user_id as user_id",
-            "participant_identities.created_at AS participant_identity_created_at",
-            "participant_identities.updated_at AS participant_identity_updated_at",
-            "preferred_identities.email AS preferred_identity_email",
+            "participant_identities.email AS preferred_identity_email",
           ]
         end
 
         def participant_profile_fields
           [
             "participant_profiles.id AS participant_profile_id",
-            "participant_profiles.created_at AS participant_profile_created_at",
-            "participant_profiles.updated_at AS participant_profile_updated_at",
             "participant_profiles.type AS participant_profile_type",
-          ]
-        end
-
-        def induction_record_fields
-          [
-            "induction_records.created_at",
-            "induction_records.updated_at",
           ]
         end
       end

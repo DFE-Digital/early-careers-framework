@@ -4,13 +4,19 @@ require "rails_helper"
 
 RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :request, with_feature_flags: { api_v3: "active" } do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
+  let(:partnership) { create(:partnership, lead_provider:, cohort:) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+  let!(:mentor_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+  let!(:induction_record) { create(:induction_record, induction_programme:, mentor_profile:) }
+  let!(:unfunded_mentor_profile) { create(:mentor, :eligible_for_funding) }
+  let!(:unfunded_mentor_induction_record) { create(:induction_record, induction_programme:, mentor_profile: unfunded_mentor_profile) }
+  let(:unfunded_mentor_profile_user_id) { unfunded_mentor_profile.user.id }
+
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:parsed_response) { JSON.parse(response.body) }
-
-  let!(:mentor_profile) { create(:mentor, :eligible_for_funding) }
-  let!(:mentor_profile_user_id) { mentor_profile.user.id }
-  let!(:another_mentor_profile) { create(:mentor, :eligible_for_funding, lead_provider: cpd_lead_provider.lead_provider) }
 
   describe "#index" do
     context "when authorized" do
@@ -46,11 +52,12 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
         get "/api/v3/unfunded-mentors/ecf"
 
         expect(parsed_response["data"].size).to eql(1)
-        expect(parsed_response["data"][0]["id"]).to eq(mentor_profile_user_id)
+        expect(parsed_response["data"][0]["id"]).to eq(unfunded_mentor_profile_user_id)
       end
 
       describe "ordering" do
-        let!(:another_mentor_profile) { create(:mentor, :eligible_for_funding) }
+        let!(:another_unfunded_mentor_profile) { create(:mentor, :eligible_for_funding) }
+        let!(:another_unfunded_mentor_induction_record) { create(:induction_record, induction_programme:, mentor_profile: another_unfunded_mentor_profile) }
 
         before { get "/api/v3/unfunded-mentors/ecf", params: { sort: sort_param } }
 
@@ -59,8 +66,8 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
 
           it "returns an ordered list of unfunded mentors" do
             expect(parsed_response["data"].size).to eql(2)
-            expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(mentor_profile.user.full_name)
-            expect(parsed_response.dig("data", 1, "attributes", "full_name")).to eql(another_mentor_profile.user.full_name)
+            expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(unfunded_mentor_profile.user.full_name)
+            expect(parsed_response.dig("data", 1, "attributes", "full_name")).to eql(another_unfunded_mentor_profile.user.full_name)
           end
         end
 
@@ -69,8 +76,8 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
 
           it "returns an ordered list of unfunded mentors" do
             expect(parsed_response["data"].size).to eql(2)
-            expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_mentor_profile.user.full_name)
-            expect(parsed_response.dig("data", 1, "attributes", "full_name")).to eql(mentor_profile.user.full_name)
+            expect(parsed_response.dig("data", 0, "attributes", "full_name")).to eql(another_unfunded_mentor_profile.user.full_name)
+            expect(parsed_response.dig("data", 1, "attributes", "full_name")).to eql(unfunded_mentor_profile.user.full_name)
           end
         end
       end
@@ -130,7 +137,7 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
     context "when authorized" do
       before do
         default_headers[:Authorization] = bearer_token
-        get "/api/v3/unfunded-mentors/ecf/#{mentor_profile_user_id}"
+        get "/api/v3/unfunded-mentors/ecf/#{unfunded_mentor_profile_user_id}"
       end
 
       it "returns correct JSON API content type header" do
@@ -152,18 +159,14 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
       end
 
       it "returns unfunded mentor with the corresponding id" do
-        expect(parsed_response["data"]["id"]).to eq(mentor_profile_user_id)
+        expect(parsed_response["data"]["id"]).to eq(unfunded_mentor_profile_user_id)
       end
 
       context "when user id is incorrect", exceptions_app: true do
-        let(:mentor_profile_user_id) { "incorrect-id" }
+        let(:unfunded_mentor_profile_user_id) { "incorrect-id" }
 
         it "returns 404" do
           expect(response.status).to eq 404
-        end
-
-        it "returns an error message" do
-          expect(parsed_response["errors"][0]["title"]).to eq("The requested resource was not found")
         end
       end
     end
@@ -171,7 +174,7 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
     context "when unauthorized" do
       it "returns 401 for invalid bearer token" do
         default_headers[:Authorization] = "Bearer ugLPicDrpGZdD_w7hhCL"
-        get "/api/v3/unfunded-mentors/ecf/#{mentor_profile.user.id}"
+        get "/api/v3/unfunded-mentors/ecf/#{unfunded_mentor_profile_user_id}"
 
         expect(response.status).to eq(401)
       end
@@ -182,7 +185,7 @@ RSpec.describe "API ECF Unfunded Mentors", :with_default_schedules, type: :reque
 
       it "returns 403 for invalid bearer token" do
         default_headers[:Authorization] = bearer_token
-        get "/api/v3/unfunded-mentors/ecf/#{mentor_profile.user.id}"
+        get "/api/v3/unfunded-mentors/ecf/#{unfunded_mentor_profile_user_id}"
 
         expect(response.status).to eq(403)
       end

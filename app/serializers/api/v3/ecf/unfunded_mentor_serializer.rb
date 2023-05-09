@@ -23,21 +23,11 @@ module Api
         end
 
         attribute :created_at do |user|
-          [
-            user.participant_profile_created_at,
-            user.user_created_at,
-            user.participant_identity_created_at,
-            user.created_at,
-          ].compact.max.rfc3339
+          user.user_created_at.rfc3339
         end
 
         attribute :updated_at do |user|
-          [
-            user.participant_profile_updated_at,
-            user.user_updated_at,
-            user.participant_identity_updated_at,
-            user.updated_at,
-          ].compact.max.rfc3339
+          user.user_updated_at.rfc3339
         end
       end
     end

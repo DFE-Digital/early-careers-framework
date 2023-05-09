@@ -4,8 +4,15 @@ require "swagger_helper"
 
 RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
   let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
+  let(:lead_provider) { cpd_lead_provider.lead_provider }
+  let(:cohort) { Cohort.current || create(:cohort, :current) }
+  let(:partnership) { create(:partnership, lead_provider:, cohort:) }
+  let(:induction_programme) { create(:induction_programme, :fip, partnership:) }
+  let!(:mentor_profile) { create(:mentor, lead_provider: cpd_lead_provider.lead_provider) }
+  let!(:induction_record) { create(:induction_record, induction_programme:, mentor_profile:) }
+  let!(:unfunded_mentor_profile) { create(:mentor, :eligible_for_funding) }
+  let!(:another_induction_record) { create(:induction_record, induction_programme:, mentor_profile: unfunded_mentor_profile) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
-  let!(:mentor_profile) { create(:mentor, :eligible_for_funding) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
 
@@ -80,7 +87,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/
                 }
 
       response "200", "A single unfunded mentor" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { unfunded_mentor_profile.user.id }
 
         schema({ "$ref": "#/components/schemas/UnfundedMentorResponse" })
 
@@ -88,7 +95,7 @@ RSpec.describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/
       end
 
       response "401", "Unauthorized" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { unfunded_mentor_profile.user.id }
         let(:Authorization) { "Bearer invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })

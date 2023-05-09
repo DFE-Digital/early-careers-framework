@@ -9,14 +9,8 @@ module Api
         let(:query_result) { OpenStruct.new(results) }
         let(:results) do
           {
-            participant_profile_created_at: Time.zone.now,
             user_created_at: Time.zone.now,
-            participant_identity_created_at: Time.zone.now,
-            created_at: Time.zone.now,
-            participant_profile_updated_at: Time.zone.now,
             user_updated_at: Time.zone.now,
-            participant_identity_updated_at: Time.zone.now,
-            updated_at: Time.zone.now,
           }.merge(fields)
         end
 
@@ -103,110 +97,26 @@ module Api
         describe "#created_at" do
           let(:fields) do
             {
-              participant_profile_created_at:,
               user_created_at:,
-              participant_identity_created_at:,
-              created_at:,
             }
           end
+          let(:user_created_at) { Time.zone.now }
 
-          context "when induction record touched" do
-            let(:participant_profile_created_at) { Time.zone.now - 3.days }
-            let(:user_created_at) { Time.zone.now - 2.days }
-            let(:participant_identity_created_at) { Time.zone.now - 1.day }
-            let(:created_at) { Time.zone.now }
-
-            it "considers created_at of induction record" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:created_at])).to eq(created_at.rfc3339)
-            end
-          end
-
-          context "when user touched" do
-            let(:participant_profile_created_at) { Time.zone.now - 3.days }
-            let(:user_created_at) { Time.zone.now }
-            let(:participant_identity_created_at) { Time.zone.now - 1.day }
-            let(:created_at) { Time.zone.now - 2.days }
-
-            it "considers created_at of user" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:created_at])).to eq(user_created_at.rfc3339)
-            end
-          end
-
-          context "when profile touched" do
-            let(:participant_profile_created_at) { Time.zone.now }
-            let(:user_created_at) { Time.zone.now - 3.days }
-            let(:participant_identity_created_at) { Time.zone.now - 1.day }
-            let(:created_at) { Time.zone.now - 2.days }
-
-            it "considers created_at of profile" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:created_at])).to eq(participant_profile_created_at.rfc3339)
-            end
-          end
-
-          context "when identity touched" do
-            let(:participant_profile_created_at) { Time.zone.now - 1.day }
-            let(:user_created_at) { Time.zone.now - 3.days }
-            let(:participant_identity_created_at) { Time.zone.now }
-            let(:created_at) { Time.zone.now - 2.days }
-
-            it "considers created_at of identity" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:created_at])).to eq(participant_identity_created_at.rfc3339)
-            end
+          it "returns created_at of user" do
+            expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:created_at])).to eq(user_created_at.rfc3339)
           end
         end
 
         describe "#updated_at" do
           let(:fields) do
             {
-              participant_profile_updated_at:,
               user_updated_at:,
-              participant_identity_updated_at:,
-              updated_at:,
             }
           end
+          let(:user_updated_at) { Time.zone.now }
 
-          context "when induction record touched" do
-            let(:participant_profile_updated_at) { Time.zone.now - 3.days }
-            let(:user_updated_at) { Time.zone.now - 2.days }
-            let(:participant_identity_updated_at) { Time.zone.now - 1.day }
-            let(:updated_at) { Time.zone.now }
-
-            it "considers updated_at of induction record" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to eq(updated_at.rfc3339)
-            end
-          end
-
-          context "when user touched" do
-            let(:participant_profile_updated_at) { Time.zone.now - 3.days }
-            let(:user_updated_at) { Time.zone.now }
-            let(:participant_identity_updated_at) { Time.zone.now - 1.day }
-            let(:updated_at) { Time.zone.now - 2.days }
-
-            it "considers updated_at of user" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to eq(user_updated_at.rfc3339)
-            end
-          end
-
-          context "when profile touched" do
-            let(:participant_profile_updated_at) { Time.zone.now }
-            let(:user_updated_at) { Time.zone.now - 3.days }
-            let(:participant_identity_updated_at) { Time.zone.now - 1.day }
-            let(:updated_at) { Time.zone.now - 2.days }
-
-            it "considers updated_at of profile" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to eq(participant_profile_updated_at.rfc3339)
-            end
-          end
-
-          context "when identity touched" do
-            let(:participant_profile_updated_at) { Time.zone.now - 1.day }
-            let(:user_updated_at) { Time.zone.now - 3.days }
-            let(:participant_identity_updated_at) { Time.zone.now }
-            let(:updated_at) { Time.zone.now - 2.days }
-
-            it "considers updated_at of identity" do
-              expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:updated_at])).to eq(participant_identity_updated_at.rfc3339)
-            end
+          it "returns updated_at of user" do
+            expect(Time.zone.parse(subject.serializable_hash[:data][:attributes][:created_at])).to eq(user_updated_at.rfc3339)
           end
         end
       end
