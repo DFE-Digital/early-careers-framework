@@ -177,7 +177,6 @@ private
   def when_i_check_the_ect_details
     click_on "Confirm and add"
     click_on "View your ECTs and mentors"
-    click_on "Manage mentors and ECTs"
     click_on "George ECT"
   end
 
