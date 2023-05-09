@@ -104,7 +104,7 @@ module Schools
           profile = if ect_participant?
                       EarlyCareerTeachers::Create.call(**participant_create_args)
                     else
-                      Mentors::Create.call(**participant_create_args.except(:induction_start_date))
+                      Mentors::Create.call(**participant_create_args.except(:induction_start_date, :mentor_profile_id))
                     end
 
           store_validation_result!(profile)
