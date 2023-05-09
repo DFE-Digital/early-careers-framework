@@ -316,7 +316,6 @@ Providers can view details for a specific school providing ECF-based training in
 
 
 ```
-GET /api/v3/schools/ecf/{id}
 GET /api/v3/schools/ecf/{id}?filter[cohort]={year}
 ```
 
