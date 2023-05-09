@@ -5,7 +5,7 @@ require "rails_helper"
 module Api
   module V3
     module ECF
-      RSpec.shared_examples "sets an incomplete transfer" do
+      RSpec.shared_examples "sets a leaving transfer" do
         let(:expected_transfer) do
           {
             training_record_id: expected_participant_profile.id,
@@ -24,14 +24,22 @@ module Api
         it "sets correct transfer attributes" do
           expect(transfer).to eq(expected_transfer)
         end
+
+        context "when leaving date is in the past" do
+          let(:end_date) { 1.day.ago }
+
+          it "sets the status to complete" do
+            expect(transfer[:status]).to eq("complete")
+          end
+        end
       end
 
-      RSpec.shared_examples "sets a complete transfer" do
+      RSpec.shared_examples "sets a leaving and joining transfer" do
         let(:expected_transfer) do
           {
             training_record_id: participant_profile.id,
             transfer_type: expected_transfer_type,
-            status: "complete",
+            status: "incomplete",
             created_at: expected_created_at.rfc3339,
             leaving: {
               school_urn: leaving_school_cohort.school.urn,
@@ -64,7 +72,8 @@ module Api
           end
           let(:participant_profile) { leaving_induction_record.participant_profile }
           let(:user) { participant_profile.user }
-          let(:end_date) { Time.zone.now }
+          let(:end_date) { 1.day.from_now }
+          let(:start_date) { end_date }
           let(:transfer) { subject.serializable_hash[:data][:attributes][:transfers].first }
 
           subject { described_class.new(user, params: { cpd_lead_provider: }) }
@@ -86,7 +95,7 @@ module Api
             let(:expected_participant_profile) { participant_profile }
             let(:expected_created_at) { leaving_induction_record.created_at }
 
-            it_behaves_like "sets an incomplete transfer"
+            it_behaves_like "sets a leaving transfer"
           end
 
           context "when joining SIT triggers a FIP transfer with same lead provider" do
@@ -94,7 +103,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:, school_transfer: true)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
             end
             let(:expected_transfer_type) { "new_school" }
             let(:expected_leaving_provider) { lead_provider }
@@ -102,7 +111,34 @@ module Api
             let(:expected_joining_date) { end_date }
             let(:expected_created_at) { leaving_induction_record.created_at }
 
-            it_behaves_like "sets a complete transfer"
+            it_behaves_like "sets a leaving and joining transfer"
+
+            context "when leaving and joining date are in the past" do
+              let(:end_date) { 1.day.ago }
+              let(:start_date) { end_date }
+
+              it "sets the status to complete" do
+                expect(transfer[:status]).to eq("complete")
+              end
+            end
+
+            context "when leaving date is in the past and joining date is in the future" do
+              let(:end_date) { 2.days.ago }
+              let(:start_date) { 1.day.from_now }
+
+              it "sets the status to complete" do
+                expect(transfer[:status]).to eq("incomplete")
+              end
+            end
+
+            context "when both leaving date and joining date are in the future" do
+              let(:end_date) { 1.day.from_now }
+              let(:start_date) { 2.days.from_now }
+
+              it "sets the status to complete" do
+                expect(transfer[:status]).to eq("incomplete")
+              end
+            end
           end
 
           context "when joining SIT triggers a FIP transfer with different lead provider" do
@@ -121,7 +157,7 @@ module Api
             let(:expected_joining_date) { start_date }
             let(:expected_created_at) { leaving_induction_record.created_at }
 
-            it_behaves_like "sets a complete transfer"
+            it_behaves_like "sets a leaving and joining transfer"
           end
 
           context "with FIP to CIP school transfers" do
@@ -137,7 +173,7 @@ module Api
             let(:expected_joining_date) { start_date }
             let(:expected_created_at) { leaving_induction_record.created_at }
 
-            it_behaves_like "sets a complete transfer"
+            it_behaves_like "sets a leaving and joining transfer"
           end
 
           context "with CIP to FIP school transfers" do
@@ -157,7 +193,7 @@ module Api
             let(:expected_joining_date) { start_date }
             let(:expected_created_at) { leaving_induction_record.created_at }
 
-            it_behaves_like "sets a complete transfer"
+            it_behaves_like "sets a leaving and joining transfer"
           end
 
           context "when transferred ECT participant becomes mentor" do
@@ -190,7 +226,7 @@ module Api
               let(:expected_participant_profile) { mentor_profile }
               let(:expected_created_at) { mentor_induction_record.created_at }
 
-              it_behaves_like "sets an incomplete transfer"
+              it_behaves_like "sets a leaving transfer"
             end
           end
 
@@ -279,10 +315,10 @@ module Api
               create(:induction_record, :leaving, :preferred_identity, induction_programme: latest_leaving_induction_programme, start_date: latest_leaving_start_date, end_date: latest_leaving_end_date, participant_profile:)
             end
 
-            let(:start_date) { 3.days.ago }
-            let(:end_date) { 2.days.ago }
-            let(:joining_start_date) { 1.day.ago }
-            let(:latest_leaving_start_date) { Time.zone.now }
+            let(:start_date) { 5.days.ago }
+            let(:end_date) { 4.days.from_now }
+            let(:joining_start_date) { 3.days.from_now }
+            let(:latest_leaving_start_date) { 2.days.from_now }
             let(:latest_leaving_end_date) { 1.day.from_now }
 
             it "surfaces only the lead provider transfer" do
@@ -295,7 +331,7 @@ module Api
             let(:expected_joining_date) { joining_start_date }
             let(:expected_created_at) { leaving_induction_record.created_at }
 
-            it_behaves_like "sets a complete transfer"
+            it_behaves_like "sets a leaving and joining transfer"
 
             context "when other lead provider gets transfers" do
               subject { described_class.new(user, params: { cpd_lead_provider: joining_cpd_lead_provider }) }
@@ -322,11 +358,11 @@ module Api
             end
 
             let(:leaving_induction_record) do
-              travel_to(joining_induction_record.created_at + 1.day) do
+              travel_to(joining_induction_record.created_at + 2.days) do
                 create(:induction_record, :leaving, induction_programme: leaving_induction_programme, start_date: Time.zone.now, end_date:, participant_profile:)
               end
             end
-            let(:end_date) { 1.day.ago }
+            let(:end_date) { 1.day.from_now }
 
             let(:expected_transfer_type) { "new_provider" }
             let(:expected_leaving_provider) { lead_provider }
@@ -338,7 +374,7 @@ module Api
               expect(subject.serializable_hash[:data][:attributes][:updated_at]).to eq(leaving_induction_record.updated_at.rfc3339)
             end
 
-            it_behaves_like "sets a complete transfer"
+            it_behaves_like "sets a leaving and joining transfer"
 
             context "when other lead provider gets transfers" do
               subject { described_class.new(user, params: { cpd_lead_provider: joining_cpd_lead_provider }) }
@@ -349,7 +385,7 @@ module Api
               let(:expected_joining_date) { end_date }
               let(:expected_created_at) { leaving_induction_record.created_at }
 
-              it_behaves_like "sets a complete transfer"
+              it_behaves_like "sets a leaving and joining transfer"
             end
           end
         end

@@ -24,11 +24,16 @@ module Api
             end
           end
 
-          def status_for(joining_induction_record: nil)
-            if joining_induction_record
-              "complete"
-            else
+          def status_for(leaving_induction_record:, joining_induction_record: nil)
+            transfer_date = [
+              leaving_induction_record.end_date,
+              joining_induction_record&.start_date,
+            ].compact.max
+
+            if transfer_date > Time.zone.today
               "incomplete"
+            else
+              "complete"
             end
           end
         end
@@ -53,7 +58,7 @@ module Api
               transfer = {
                 training_record_id: participant_profile.id,
                 transfer_type: transfer_type_for(leaving_induction_record:, joining_induction_record:),
-                status: status_for(joining_induction_record:),
+                status: status_for(leaving_induction_record:, joining_induction_record:),
                 created_at: leaving_induction_record.created_at.rfc3339,
                 leaving: {
                   school_urn: leaving_induction_record.induction_programme&.school_cohort&.school&.urn,
