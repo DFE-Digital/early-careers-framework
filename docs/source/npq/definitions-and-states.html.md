@@ -53,7 +53,6 @@ A participant’s `training_status` value will determine whether a provider can:
 | `active`     | Participants currently in training     | Providers can update participant data and submit declarations for `active` participants     |
 | `deferred`     | Participants who have deferred training     | Providers **cannot** update participant data or submit declarations for `deferred` participants. Providers must [notify DfE when the participant resumes training](/api-reference/ecf/guidance/#notify-dfe-a-participant-has-resumed-training)     |
 | `withdrawn`     | Participants who have withdrawn from training     | Providers **cannot** update participant data for `withdrawn` participants. Providers can **only** submit declarations for `withdrawn` participants if the `declaration_date` is backdated to before the `withdrawal_date`     |
-| `completed`     | Participants who have withdrawn from training     | Providers **cannot** update participant data or submit declarations for `completed` participants    |
 
 [View more detailed specifications for the NPQ participant schema](/api-reference/reference-v3.html#schema-npqparticipant).
 
