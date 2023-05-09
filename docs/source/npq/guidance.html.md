@@ -786,7 +786,7 @@ View all declarations which have been submitted to date. Check declaration submi
 GET /api/v3/participant-declarations
 ```
 
-Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
+Note, providers can also filter results by adding filters to the parameter. For example: `GET /api/v3/participant-declarations?filter[participant_id]=ab3a7848-1208-7679-942a-b4a70eed400a` or `GET /api/v3/participant-declarations?filter[cohort]=2022&filter[updated_since]=2020-11-13T11:21:55Z`
 
 An example response body is listed below. 
 
