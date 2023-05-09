@@ -34,7 +34,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_school_cohort) { create(:school_cohort, cohort:) }
       let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:, school_transfer: true)
       end
       let(:expected_transfer) do
         [leaving_induction_record, joining_induction_record]
@@ -52,7 +52,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_school_cohort) { create(:school_cohort, cohort:) }
       let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
       end
       let(:start_date) { 1.day.from_now }
 
@@ -69,7 +69,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_school_cohort) { create(:school_cohort, cohort:) }
       let(:joining_induction_programme) { create(:induction_programme, :cip, school_cohort: joining_school_cohort) }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
       end
       let(:start_date) { 1.day.from_now }
 
@@ -89,7 +89,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let(:start_date) { 1.day.from_now }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
       end
 
       let(:expected_transfer) do
@@ -109,7 +109,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_school_cohort) { create(:school_cohort, cohort:) }
       let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:, school_transfer: true)
       end
       let(:latest_leaving_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:latest_leaving_induction_record) do
@@ -148,7 +148,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_school_cohort) { create(:school_cohort, cohort:) }
       let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:, school_transfer: true)
       end
       let(:latest_leaving_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:latest_leaving_induction_record) do
@@ -189,7 +189,7 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
       let(:joining_school_cohort) { create(:school_cohort, cohort:) }
       let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
       let!(:joining_induction_record) do
-        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:)
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:, school_transfer: true)
       end
 
       let!(:leaving_induction_record) do
@@ -217,6 +217,43 @@ RSpec.describe Api::V3::ECF::BuildTransfers, :with_default_schedules do
         it "sets the leaving and joining induction_records" do
           expect(subject.call).to contain_exactly(expected_transfer)
         end
+      end
+    end
+
+    context "with out of order FIP to CIP induction records" do
+      let(:end_date) { 3.days.ago }
+      let(:participant_profile) { changing_induction_record.participant_profile }
+      let(:joining_partnership) { create(:partnership, lead_provider:, cohort:) }
+      let(:joining_school_cohort) { create(:school_cohort, cohort:) }
+      let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
+      let!(:changing_induction_record) do
+        create(:induction_record, :preferred_identity, induction_status: "changed", induction_programme: leaving_induction_programme, end_date:)
+      end
+      let!(:leaving_induction_record) do
+        create(:induction_record, :leaving, :preferred_identity, induction_programme: leaving_induction_programme, end_date:, participant_profile:)
+      end
+      let!(:joining_induction_record) do
+        create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:, school_transfer: true)
+      end
+
+      let(:joining_cip_induction_programme) { create(:induction_programme, :cip) }
+      let!(:joining_cip_induction_record) do
+        create(:induction_record, induction_programme: joining_cip_induction_programme, start_date: Time.zone.now, participant_profile:, school_transfer: true)
+      end
+      let!(:leaving_fip_induction_record) do
+        create(:induction_record, :leaving, :preferred_identity, induction_programme: joining_induction_programme, end_date: Time.zone.now, participant_profile:)
+      end
+
+      let(:expected_transfer_1) do
+        [leaving_induction_record, joining_induction_record]
+      end
+
+      let(:expected_transfer_2) do
+        [leaving_fip_induction_record, joining_cip_induction_record]
+      end
+
+      it "sets the leaving and joining induction_records" do
+        expect(subject.call).to contain_exactly(expected_transfer_1, expected_transfer_2)
       end
     end
   end

@@ -94,7 +94,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:, school_transfer: true)
             end
             let(:expected_transfer_type) { "new_school" }
             let(:expected_leaving_provider) { lead_provider }
@@ -112,7 +112,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
             end
             let(:start_date) { 1.day.from_now }
             let(:expected_transfer_type) { "new_provider" }
@@ -128,7 +128,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :cip, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
             end
             let(:start_date) { 1.day.from_now }
             let(:expected_transfer_type) { "new_school" }
@@ -147,7 +147,7 @@ module Api
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let(:start_date) { 1.day.from_now }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date:, participant_profile:, school_transfer: true)
             end
 
             let(:start_date) { 1.day.from_now }
@@ -211,7 +211,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:, school_transfer: true)
             end
             let(:latest_leaving_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:latest_leaving_induction_record) do
@@ -272,7 +272,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: joining_start_date, participant_profile:, school_transfer: true)
             end
             let(:latest_leaving_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:latest_leaving_induction_record) do
@@ -318,7 +318,7 @@ module Api
             let(:joining_school_cohort) { create(:school_cohort, cohort:) }
             let(:joining_induction_programme) { create(:induction_programme, :fip, partnership: joining_partnership, school_cohort: joining_school_cohort) }
             let!(:joining_induction_record) do
-              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:)
+              create(:induction_record, :preferred_identity, induction_programme: joining_induction_programme, start_date: end_date, participant_profile:, school_transfer: true)
             end
 
             let(:leaving_induction_record) do

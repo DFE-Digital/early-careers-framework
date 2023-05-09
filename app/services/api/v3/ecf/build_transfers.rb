@@ -51,7 +51,7 @@ module Api
 
         def select_joining_induction_record
           (sorted_induction_records - @traversed_induction_records).each do |possible_joining_induction_record|
-            next unless possible_joining_induction_record.induction_status != "leaving" && different_school?(possible_joining_induction_record:)
+            next unless possible_joining_induction_record.induction_status != "leaving" && different_school?(possible_joining_induction_record:) && possible_joining_induction_record.school_transfer
 
             @joining_induction_record = possible_joining_induction_record
             @traversed_induction_records << @joining_induction_record
