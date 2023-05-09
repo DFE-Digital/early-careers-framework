@@ -725,6 +725,8 @@ Providers must submit declarations in line with ECF contractual [schedules and m
 
 These declarations will trigger payment from DfE to providers. 
 
+When providers submit declarations, API response bodies will include data about which financial statement the given declaration applies to. Providers can then [view financial statement payment dates](/api-reference/ecf/guidance/#view-financial-statement-payment-dates) to check when the invoicing period, and expected payment date, will be for the given declaration.
+
 ### Test the ability to submit declarations in sandbox ahead of time 
 
 `X-With-Server-Date` is a custom JSON header supported in the sandbox environment. It lets providers test their integrations and ensure they are able to submit declarations for future milestone dates.
@@ -1109,7 +1111,9 @@ For more detailed information see the specifications for this [view all statemen
 }
 ```
 
-### View a specific statement
+### View specific statement payment dates
+
+Providers can find statement IDs within [previously submitted declaration](/api-reference/ecf/guidance/#view-a-specific-previously-submitted-declaration) response bodies.
 
 ```
 GET /api/v3/statements/{id}
@@ -1138,4 +1142,3 @@ For more detailed information see the specifications for this [view a specific s
   }
 }
 ```
-

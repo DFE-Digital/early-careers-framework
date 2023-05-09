@@ -183,7 +183,7 @@ Participants starting their specialist NPQ course after 1 January should be assi
 
 EHCO participant schedules must reflect the month the participant starts their course. 
 
-For example, for participants starting an EHCO in December 2021, providers must make sure they are assigned the `npq-aso-december` schedule.
+For example, for participants starting an EHCO in December 2021, providers must make sure they are assigned the `npq-ehco-december` schedule.
 
 EHCO schedules include: 
 
