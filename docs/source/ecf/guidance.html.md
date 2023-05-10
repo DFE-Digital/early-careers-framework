@@ -466,13 +466,13 @@ For more detailed information see the specifications for this [view a single ECF
 
 ### View all ‘unfunded mentor’ details 
 
-<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
+<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
 A single mentor can be assigned to multiple ECTs, including ECTs who are training with other providers. Mentors may need access to the learning platforms used by their ECTs. 
 
 ‘Unfunded mentors’ are mentors who are registered with other providers. 
 
-Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs who they are funded to train and give appropriate access to learning platforms.
+Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
 
 ```
  GET /api/v3/unfunded-mentors/ecf
@@ -504,9 +504,13 @@ For more detailed information see the specifications for this [view all unfunded
 
 ### View details of a specific 'unfunded mentor'
 
-<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.</div>
+<div class="govuk-inset-text">The following endpoint is only available for systems integrated with API v3 onwards. It will not return data for API v1 or v2.</div>
 
-If a 404 error message is shown when trying to view participant data for the mentor using the endpoint `GET /api/v{n}/participants/ecf/{id}`, providers check to see whether they are an ‘unfunded mentor’. 
+If providers do **not** see any details for mentors when using the endpoint `GET /api/v3/participants/ecf` they can check to see whether they are an ‘unfunded mentor’.
+
+‘Unfunded mentors’ are mentors who are registered with other providers. 
+
+Providers can view the names and email addresses of ‘unfunded mentors’ assigned to ECTs, and give these mentors appropriate access to learning platforms.
 
 ```
  GET /api/v3/unfunded-mentors/ecf/{id}
