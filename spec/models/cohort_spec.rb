@@ -149,7 +149,7 @@ RSpec.describe Cohort, type: :model do
   describe ".active_registration_cohort" do
     describe "when the current date matches the registration start date" do
       it "returns the cohort with start_year the current year" do
-        Timecop.freeze(Date.new(2022, 5, 10)) do
+        Timecop.freeze(cohort_2022.registration_start_date) do
           expect(Cohort.active_registration_cohort).to eq cohort_2022
         end
       end
