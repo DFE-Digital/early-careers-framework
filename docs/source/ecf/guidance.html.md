@@ -53,10 +53,18 @@ GET /api/v3/partnerships/ecf?filter[cohort]={year}`
 
 Providers can also filter results by school URN. For example: `GET /api/v3/partnerships/ecf?filter[cohort]=2021&filter[urn]=123456`
 
-
 An example response body is listed below. Successful requests will return a response body with school details.
 
 For more detailed information see the specifications for this [view school details endpoint](/api-reference/reference-v3.html#api-v3-schools-ecf-get).
+
+#### Providers should note:
+
+**Results are dependent on funding eligibility and partnership history:** The API will only show schools that are eligible for funded ECF-based training programmes. If a school’s eligibility changes from one cohort to the next, results will default according to the latest school eligibility. For example: 
+
+* A school is eligible for funding, becomes available to view via the API, and goes on to form a partnership with a provider in the 2021 cohort
+* The school then becomes ineligible for funding in 2022, so the API **will** continue to show the school for 2021 (with partnership details) but will **not** return a response for 2022
+* However, if the same school **does not** form a partnership with a provider in the 2021 cohort and then become ineligible in 2022 cohort, the school will **no longer** appear in results for **either** 2021 or 2022 cohort
+
 
 #### Example response body:
 
@@ -127,6 +135,17 @@ An example request body is listed below. Request bodies must include all necessa
 An example response body is listed below. Successful requests will return a response body with updates included.
 
 For more detailed information see the specifications for this [confirm an ECF partnership endpoint.](/api-reference/reference-v3.html#api-v3-partnerships-ecf-post)
+
+#### Providers should note: 
+
+**New partnerships will be rejected if a school has not yet confirmed they no longer want to work with their former provider:** While schools can request to change their ECF-training programme delivery or challenge existing partnerships, the API assumes schools intend to work with a given provider for multiple cohorts. In order for a new provider to confirm partnership with them, schools must first notify the DfE that they no longer want to work with their former provider. For example: 
+
+* Provider X confirms a partnership with a school for the 2021 cohort and deliver ECF-based training to ECTs and mentors
+* In preparation for the 2022 cohort, the school has not yet confirmed their chosen programme delivery. Therefore the `induction_programme_choice` value will be `not_yet_known`
+* A new provider Y tries to confirm partnership with the school for the 2022 cohort. The API **will reject** provider Y’s partnership request as the the school has **not yet** notified the DfE that they do not want to continue partnering with provider X for the 2022 cohort
+* The school notifies DfE that they no longer want to work with provider X for the 2022 cohort
+* Once DfE receives this notification, provider Y can confirm the new partnership with the school for the 2022 cohort 
+
 
 #### Example request body:
 
