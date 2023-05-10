@@ -149,6 +149,58 @@ module Steps
       end
     end
 
+    def and_lead_provider_withdraws_participant(lead_provider_name, participant_name, participant_type)
+      participant_profile = find_participant_profile participant_name
+      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+
+      next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
+      travel_to(@timestamp) do
+        withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.load(tokens[lead_provider_name])
+        withdraw_endpoint.post_withdraw_notice participant_profile.user.id, course_identifier, "moved-school"
+
+        withdraw_endpoint.responded_with_full_name? participant_name
+        withdraw_endpoint.responded_with_obfuscated_email?
+        withdraw_endpoint.responded_with_status? "active"
+        withdraw_endpoint.responded_with_training_status? "withdrawn"
+
+        travel_to 1.minute.from_now
+      end
+    end
+
+    def and_lead_provider_defers_participant(lead_provider_name, participant_name, participant_email, participant_type)
+      participant_profile = find_participant_profile participant_name
+      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
+
+      next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
+      travel_to(@timestamp) do
+        defer_endpoint = APIs::ParticipantDeferEndpoint.load(tokens[lead_provider_name])
+        defer_endpoint.post_defer_notice participant_profile.user.id, course_identifier, "career-break"
+
+        defer_endpoint.responded_with_full_name? participant_name
+        defer_endpoint.responded_with_email? participant_email
+        defer_endpoint.responded_with_status? "active"
+        defer_endpoint.responded_with_training_status? "deferred"
+
+        travel_to 1.minute.from_now
+      end
+    end
+
+    def and_developer_withdraws_participant(participant_name)
+      participant_profile = find_participant_profile participant_name
+
+      next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
+      travel_to(@timestamp) do
+        # OLD way
+        participant_profile.withdrawn_record!
+
+        # NEW way
+        current_induction_record = participant_profile.current_induction_records.first
+        current_induction_record.withdrawing! unless current_induction_record.nil?
+
+        travel_to 2.days.from_now
+      end
+    end
+
     def when_school_uses_the_transfer_participant_wizard(sit_name, participant_name, participant_email, participant_trn, participant_dob, same_provider: false)
       participant_profile = find_participant_profile participant_name
 

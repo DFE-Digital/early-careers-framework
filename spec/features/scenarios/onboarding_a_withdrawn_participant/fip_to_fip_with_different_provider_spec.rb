@@ -115,6 +115,10 @@ RSpec.feature "FIP to FIP with different provider - Onboarding a withdrawn parti
                                                             declaration_type
           end
 
+          and_lead_provider_withdraws_participant "Original Lead Provider",
+                                                  "The Participant",
+                                                  scenario.participant_type
+
           when_school_uses_the_transfer_participant_wizard "New SIT",
                                                            "The Participant",
                                                            scenario.participant_email,
