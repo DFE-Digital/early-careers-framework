@@ -4,37 +4,23 @@ module NewSeeds
   module Scenarios
     module Participants
       module Transfers
-        # This class sets up a the background data needed to perform the
-        # transfer of a participant between two schools. The subclasses
-        # FipToFipChangingTrainingProvider and FipToFipKeepingOriginalTrainingProvider
-        # are intended to do the actual transferring part as the induction programme
-        # will vary by case
-        #
-        # Currently only the from_school and to_school (called school_from and
-        # school_to internally to maintain sensible prefixing) are changeable. It
-        # might be worth allowing some other objects to be passed in like:
-        # - the user/participant identity/participant profile
-        # - the delivery partners/lead providers/induction programmes
-        class FipToFip
+        class FipToCip
           COHORT_START_YEAR = 2022
 
           attr_reader :participant_profile,
-                      :induction_programme_to
+                      :induction_programme_to,
+                      :induction_programme_from
 
-          def initialize(from_school: nil, to_school: nil, lead_provider_from: nil, lead_provider_to: nil)
+          def initialize(from_school: nil, to_school: nil, lead_provider_from: nil)
             @school_from = from_school
             @school_to = to_school
             @supplied_lead_provider_from = lead_provider_from
-            @supplied_lead_provider_to = lead_provider_to
           end
 
-          def induction_programme_from
-            @induction_programme_from ||= NewSeeds::Scenarios::Schools::School
-                                            .new
-                                            .build
-                                            .with_partnership_in(cohort:, lead_provider: lead_provider_from)
-                                            .chosen_fip_and_partnered_in(cohort:)
-                                            .induction_programme
+          def build
+            setup
+            Rails.logger.info("seeded transfer of #{participant_profile.full_name} from #{school_from.name} to #{school_to.name}")
+            create_induction_record_to
           end
 
         private
@@ -53,14 +39,6 @@ module NewSeeds
                               school_transfer: true,
                               induction_status: :active,
                               training_status: :active)
-          end
-
-          def email
-            @email ||= "participant-identity-#{SecureRandom.hex(4)}@example.com"
-          end
-
-          def mentor_profile
-            participant_profile.latest_induction_record.mentor_profile
           end
 
           def school_cohort_from
@@ -83,17 +61,18 @@ module NewSeeds
             @lead_provider_from ||= @supplied_lead_provider_from || FactoryBot.create(:seed_lead_provider)
           end
 
-          def lead_provider_to
-            @lead_provider_to ||= @supplied_lead_provider_to || FactoryBot.create(:seed_lead_provider)
-          end
-
           def setup
-            @induction_programme_to ||= NewSeeds::Scenarios::Schools::School
+            @induction_programme_from ||= NewSeeds::Scenarios::Schools::School
                                           .new
                                           .build
-                                          .with_partnership_in(cohort:, lead_provider: lead_provider_to)
+                                          .with_partnership_in(cohort:, lead_provider: lead_provider_from)
                                           .chosen_fip_and_partnered_in(cohort:)
                                           .induction_programme
+            @induction_programme_to ||= NewSeeds::Scenarios::Schools::School
+                                            .new
+                                            .build
+                                            .chosen_cip_with_materials_in(cohort:)
+                                            .induction_programme
             # a teacher to transfer
             @participant_profile = NewSeeds::Scenarios::Participants::Ects::Ect
                                      .new(school_cohort: school_cohort_from)

@@ -165,6 +165,10 @@ Rails.application.routes.draw do
       resources :ecf_schools, path: "schools/ecf", only: %i[index show], controller: "ecf/schools"
       resources :ecf_participants, path: "participants/ecf", only: %i[index show], controller: "ecf/participants" do
         concerns :participant_actions
+        collection do
+          resources :transfers, only: %i[index], controller: "ecf/transfers"
+          get ":participant_id/transfers", to: "ecf/transfers#show"
+        end
       end
     end
   end

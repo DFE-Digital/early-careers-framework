@@ -2,10 +2,17 @@
 
 require "swagger_helper"
 
-describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
+describe "API", :with_default_schedules, type: :request, swagger_doc: "v3/api_spec.json", with_feature_flags: { api_v3: "active" } do
+  let(:cpd_lead_provider) { create(:cpd_lead_provider, :with_lead_provider) }
   let(:token) { LeadProviderApiToken.create_with_random_token!(cpd_lead_provider:) }
   let(:bearer_token) { "Bearer #{token}" }
   let(:Authorization) { bearer_token }
+  let!(:cohort) { create(:cohort, :current) }
+  let!(:transfer) do
+    NewSeeds::Scenarios::Participants::Transfers::FipToFipKeepingOriginalTrainingProvider
+      .new(lead_provider_from: cpd_lead_provider.lead_provider)
+      .build
+  end
 
   path "/api/v3/participants/ecf/transfers" do
     get "<b>Note, this endpoint is new.</b><br/>Retrieve multiple ECF participant transfers" do
@@ -67,7 +74,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
                 }
 
       response "200", "A single participant's transfers" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { transfer.preferred_identity.user.id }
 
         schema({ "$ref": "#/components/schemas/ECFParticipantTransferResponse" })
 
@@ -75,7 +82,7 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
       end
 
       response "401", "Unauthorized" do
-        let(:id) { mentor_profile.user.id }
+        let(:id) { transfer.preferred_identity.user.id }
         let(:Authorization) { "Bearer invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
@@ -83,7 +90,8 @@ describe "API", type: :request, swagger_doc: "v3/api_spec.json", api_v3: true do
         run_test!
       end
 
-      response "404", "Not Found" do
+      response "404", "Not Found", exceptions_app: true do
+        let(:id) { "wrong-id" }
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!
