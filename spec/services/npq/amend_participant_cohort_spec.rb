@@ -38,7 +38,7 @@ RSpec.describe NPQ::AmendParticipantCohort, :with_default_schedules, type: :mode
 
       it "returns an error message" do
         expect(subject).to be_invalid
-        expect(subject.errors.messages_for(:target_cohort)).to include("Cohort starting on 2018 not setup on the service")
+        expect(subject.errors.messages_for(:target_cohort)).to include("starting on 2018 not setup on the service")
       end
     end
 
