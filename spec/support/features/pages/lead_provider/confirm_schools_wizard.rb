@@ -5,7 +5,12 @@ require_relative "../base_page"
 module Pages
   class ConfirmSchoolsWizard < ::Pages::BasePage
     set_url "/lead-providers/report-schools/start"
-    set_primary_heading "You’ve chosen to confirm schools for the 2021 to 2022 academic year"
+    set_primary_heading(/\AYou’ve chosen to confirm schools for the (.*) academic year\z/)
+
+    def confirm_correct_academic_year(academic_year = nil)
+      academic_year ||= Cohort.current
+      element_has_content?(header, "You’ve chosen to confirm schools for the #{academic_year.description} academic year")
+    end
 
     def complete(delivery_partner_name, school_urns)
       click_on "Continue"

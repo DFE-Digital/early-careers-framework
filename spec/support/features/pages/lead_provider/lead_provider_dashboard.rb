@@ -12,8 +12,9 @@ module Pages
       has_primary_heading? lead_provider_name
     end
 
-    def confirm_schools
-      click_on "Confirm your schools for the 2021 to 2022 academic year"
+    def confirm_schools(academic_year = nil)
+      academic_year ||= Cohort.current
+      click_on "Confirm your schools for the #{academic_year.description} academic year"
 
       Pages::ConfirmSchoolsWizard.loaded
     end

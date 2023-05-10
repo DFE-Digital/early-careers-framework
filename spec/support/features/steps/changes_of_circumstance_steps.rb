@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# noinspection RubyInstanceMethodNamingConvention
 module Steps
   module ChangesOfCircumstanceSteps
     include RSpec::Matchers
@@ -33,13 +34,9 @@ module Steps
 
         sign_in_as user
         Pages::SchoolReportProgrammeWizard.loaded
-                                          .complete(programme)
+                                          .complete(programme_type: programme)
+                                          .continue_to_manage_your_training
         sign_out
-
-        if programme == "CIP"
-          school_cohort = school.school_cohorts.where(cohort: Cohort.find_by(start_year: 2021)).first
-          Induction::SetCohortInductionProgramme.call school_cohort:, programme_choice: school_cohort.induction_programme_choice
-        end
 
         travel_to 1.minute.from_now
       end
@@ -56,6 +53,20 @@ module Steps
         Pages::LeadProviderDashboard.loaded
                                     .confirm_schools
                                     .complete(delivery_partner.name, [school.urn])
+        sign_out
+
+        travel_to 1.minute.from_now
+      end
+    end
+
+    def and_sit_reported_cip_materials(sit_name, core_induction_programme_name)
+      next_ideal_time Time.zone.local(2021, 4, 1, 9, 0, 0)
+      travel_to(@timestamp) do
+        given_i_sign_in_as_the_user_with_the_full_name sit_name
+
+        Pages::SchoolDashboardPage.loaded
+                                  .choose_cip_materials(core_induction_programme_name)
+
         sign_out
 
         travel_to 1.minute.from_now
@@ -107,7 +118,7 @@ module Steps
         if participant_type == "ECT"
           wizard.add_ect participant_name, participant_trn, participant_dob, participant_email, participant_start_date
         else
-          wizard.add_mentor participant_name, participant_trn, participant_dob, participant_email
+          wizard.add_mentor participant_name, participant_trn, participant_dob, participant_email, participant_start_date
         end
         sign_out
 
@@ -138,58 +149,6 @@ module Steps
       end
     end
 
-    def and_lead_provider_withdraws_participant(lead_provider_name, participant_name, participant_type)
-      participant_profile = find_participant_profile participant_name
-      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
-
-      next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
-      travel_to(@timestamp) do
-        withdraw_endpoint = APIs::ParticipantWithdrawEndpoint.load(tokens[lead_provider_name])
-        withdraw_endpoint.post_withdraw_notice participant_profile.user.id, course_identifier, "moved-school"
-
-        withdraw_endpoint.responded_with_full_name? participant_name
-        withdraw_endpoint.responded_with_obfuscated_email?
-        withdraw_endpoint.responded_with_status? "active"
-        withdraw_endpoint.responded_with_training_status? "withdrawn"
-
-        travel_to 1.minute.from_now
-      end
-    end
-
-    def and_lead_provider_defers_participant(lead_provider_name, participant_name, participant_email, participant_type)
-      participant_profile = find_participant_profile participant_name
-      course_identifier = participant_type == "ECT" ? "ecf-induction" : "ecf-mentor"
-
-      next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
-      travel_to(@timestamp) do
-        defer_endpoint = APIs::ParticipantDeferEndpoint.load(tokens[lead_provider_name])
-        defer_endpoint.post_defer_notice participant_profile.user.id, course_identifier, "career-break"
-
-        defer_endpoint.responded_with_full_name? participant_name
-        defer_endpoint.responded_with_email? participant_email
-        defer_endpoint.responded_with_status? "active"
-        defer_endpoint.responded_with_training_status? "deferred"
-
-        travel_to 1.minute.from_now
-      end
-    end
-
-    def and_developer_withdraws_participant(participant_name)
-      participant_profile = find_participant_profile participant_name
-
-      next_ideal_time participant_profile.schedule.milestones.first.start_date + 2.days
-      travel_to(@timestamp) do
-        # OLD way
-        participant_profile.withdrawn_record!
-
-        # NEW way
-        current_induction_record = participant_profile.current_induction_records.first
-        current_induction_record.withdrawing! unless current_induction_record.nil?
-
-        travel_to 2.days.from_now
-      end
-    end
-
     def when_school_uses_the_transfer_participant_wizard(sit_name, participant_name, participant_email, participant_trn, participant_dob, same_provider: false)
       participant_profile = find_participant_profile participant_name
 
@@ -208,89 +167,6 @@ module Steps
         end
 
         sign_out
-
-        travel_to 2.days.from_now
-      end
-    end
-
-    def when_developers_transfer_the_active_participant(sit_name, participant_name)
-      school = find_school_for_sit sit_name
-      school_cohort = school.school_cohorts.first
-      participant_profile = find_participant_profile participant_name
-
-      next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
-      travel_to(@timestamp) do
-        # OLD way
-        participant_profile.teacher_profile.update!(school:)
-        participant_profile.active_record!
-        participant_profile.training_status_active!
-        participant_profile.update!(school_cohort:)
-
-        # NEW way
-        current_induction_record = participant_profile.current_induction_records.current.first
-        current_induction_record.changing! unless current_induction_record.nil?
-
-        Induction::Enrol.call participant_profile:,
-                              induction_programme: school_cohort.default_induction_programme,
-                              start_date: 1.day.from_now
-
-        travel_to 2.days.from_now
-      end
-    end
-
-    def when_developers_transfer_the_withdrawn_participant(sit_name, participant_name)
-      school = find_school_for_sit sit_name
-      school_cohort = school.school_cohorts.first
-      participant_profile = find_participant_profile participant_name
-
-      next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
-      travel_to(@timestamp) do
-        # OLD way
-        profile_state = participant_profile.participant_profile_state
-        profile_state.delete
-        participant_profile.reload
-
-        participant_profile.teacher_profile.update!(school:)
-        participant_profile.active_record!
-        participant_profile.training_status_active!
-        participant_profile.update!(school_cohort:)
-
-        # NEW way
-        current_induction_record = participant_profile.current_induction_records.current.first
-        current_induction_record.changing! unless current_induction_record.nil?
-
-        Induction::Enrol.call participant_profile:,
-                              induction_programme: school_cohort.default_induction_programme,
-                              start_date: 1.day.from_now
-
-        travel_to 2.days.from_now
-      end
-    end
-
-    def when_developers_transfer_the_deferred_participant(sit_name, participant_name)
-      school = find_school_for_sit sit_name
-      school_cohort = school.school_cohorts.first
-      participant_profile = find_participant_profile participant_name
-
-      next_ideal_time participant_profile.schedule.milestones.first.start_date + 3.days
-      travel_to(@timestamp) do
-        # OLD way
-        profile_state = participant_profile.participant_profile_state
-        profile_state.delete
-        participant_profile.reload
-
-        participant_profile.teacher_profile.update!(school:)
-        participant_profile.active_record!
-        participant_profile.training_status_active!
-        participant_profile.update!(school_cohort:)
-
-        # NEW way
-        current_induction_record = participant_profile.current_induction_records.current.first
-        current_induction_record.changing! unless current_induction_record.nil?
-
-        Induction::Enrol.call participant_profile:,
-                              induction_programme: school_cohort.default_induction_programme,
-                              start_date: 1.day.from_now
 
         travel_to 2.days.from_now
       end

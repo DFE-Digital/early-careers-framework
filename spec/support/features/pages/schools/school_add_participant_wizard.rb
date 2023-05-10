@@ -10,17 +10,9 @@ module Pages
     def add_participant(participant_type, full_name, email_address, start_date, participant_trn = nil, date_of_birth = nil, mentor_full_name = nil)
       case participant_type
       when "ECT"
-        add_ect full_name,
-                email_address,
-                start_date,
-                participant_trn,
-                date_of_birth,
-                mentor_full_name
+        add_ect full_name, participant_trn, date_of_birth, email_address, start_date, mentor_full_name
       when "Mentor"
-        add_mentor full_name,
-                   email_address,
-                   participant_trn,
-                   date_of_birth
+        add_mentor full_name, participant_trn, date_of_birth, email_address, start_date
       when "SIT"
         choose_to_add_self_as_mentor
       end
@@ -43,30 +35,36 @@ module Pages
     #   end
     # end
 
-    def add_ect(full_name, trn, date_of_birth, email_address, _start_date, mentor_full_name = nil)
+    def add_ect(full_name, trn, date_of_birth, email_address, start_date, mentor_full_name = nil)
       choose_to_add_a_new_ect
 
       add_full_name full_name
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
       add_email_address full_name, email_address
-      # add_start_date start_date
       choose_a_mentor mentor_full_name if mentor_full_name.present?
+
+      choose "Summer term #{start_date.year}"
+      click_on "Continue"
 
       confirm_and_add
     end
 
-    def add_mentor(full_name, trn, date_of_birth, email_address)
+    def add_mentor(full_name, trn, date_of_birth, email_address, start_date)
       choose_to_add_a_new_mentor
+
       add_mentor_full_name full_name
       add_teacher_reference_number full_name, trn
       add_date_of_birth date_of_birth
       add_email_address full_name, email_address
 
+      choose "Summer term #{start_date.year}"
+      click_on "Continue"
+
       confirm_and_add
     end
 
-    def transfer_ect(full_name, email_address, start_date, same_provider, trn, date_of_birth)
+    def transfer_ect(full_name, email_address, start_date, same_provider, trn, date_of_birth, training_provider: :school)
       choose_to_add_a_new_ect
 
       add_full_name full_name
@@ -79,11 +77,21 @@ module Pages
       add_email_address full_name, email_address
       # choose_a_mentor mentor_full_name if mentor_full_name.present?
 
-      choose_schools_current_training_provider unless same_provider
+      unless same_provider
+        case training_provider
+        when :school
+          choose_schools_current_training_provider
+        when :participant
+          choose_participants_current_training_provider
+        else
+          choose_a_new_training_provider
+        end
+      end
+
       confirm_and_transfer
     end
 
-    def transfer_mentor(full_name, email_address, start_date, same_provider, trn, date_of_birth)
+    def transfer_mentor(full_name, email_address, start_date, same_provider, trn, date_of_birth, training_provider: :school)
       choose_to_add_a_new_mentor
       add_mentor_full_name full_name
       add_teacher_reference_number full_name, trn
@@ -92,7 +100,17 @@ module Pages
 
       add_start_date start_date
       add_email_address full_name, email_address
-      choose_schools_current_training_provider unless same_provider
+
+      unless same_provider
+        case training_provider
+        when :school
+          choose_schools_current_training_provider
+        when :participant
+          choose_participants_current_training_provider
+        else
+          choose_a_new_training_provider
+        end
+      end
 
       confirm_and_transfer
     end
@@ -224,6 +242,14 @@ module Pages
       click_on "Continue"
 
       self
+    end
+
+    def choose_participants_current_training_provider
+      full_stop
+    end
+
+    def choose_a_new_training_provider
+      full_stop
     end
 
     def confirm_and_add

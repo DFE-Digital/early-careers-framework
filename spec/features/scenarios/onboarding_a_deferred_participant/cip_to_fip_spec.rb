@@ -25,6 +25,11 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
               end_to_end_scenario: true do
   include Steps::ChangesOfCircumstanceSteps
 
+  # allow us to Add and transfer CIP Participants
+  before do
+    allow_any_instance_of(Schools::AddParticipants::BaseWizard).to receive(:need_training_setup?).and_return(false)
+  end
+
   includes = ENV.fetch("SCENARIOS", "").split(",").map(&:to_i)
 
   fixture_data_path = File.join(File.dirname(__FILE__), "../changes_of_circumstances_fixtures.csv")
@@ -38,17 +43,26 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
     let(:tokens) { {} }
 
     let!(:cohort) do
-      cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
-      allow(Cohort).to receive(:current).and_return(cohort)
-      allow(Cohort).to receive(:next).and_return(cohort)
-      allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
-      allow(cohort).to receive(:next).and_return(cohort)
-      allow(cohort).to receive(:previous).and_return(cohort)
-      cohort
+      previous_cohort = Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) # NQT+1 cohort
+
+      current_cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+      next_cohort = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
+
+      allow(Cohort).to receive(:current).and_return(current_cohort)
+      allow(Cohort).to receive(:next).and_return(next_cohort)
+      allow(Cohort).to receive(:previous).and_return(previous_cohort)
+      allow(Cohort).to receive(:active_registration_cohort).and_return(current_cohort)
+
+      allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
+      allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
+
+      current_cohort
     end
     let!(:schedule) do
       create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort:)
     end
+    let!(:original_cip) { create :core_induction_programme, name: "Original Core Induction Programme" }
+    let!(:new_cip) { create :core_induction_programme, name: "New Core Induction Programme" }
     let!(:milestone_started) do
       create :milestone,
              schedule:,
@@ -85,6 +99,7 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
         end
 
         and_sit_at_pupil_premium_school_reported_programme "Original SIT", "CIP"
+        and_sit_reported_cip_materials "Original SIT", original_cip.name
 
         and_sit_at_pupil_premium_school_reported_programme "New SIT", "FIP"
         and_lead_provider_reported_partnership "New Lead Provider", "New SIT"
@@ -99,8 +114,12 @@ RSpec.feature "CIP to FIP - Onboard a deferred participant",
 
       context when_context(scenario) do
         before do
-          when_developers_transfer_the_deferred_participant "New SIT",
-                                                            "The Participant"
+          when_school_uses_the_transfer_participant_wizard "New SIT",
+                                                           "The Participant",
+                                                           scenario.participant_email,
+                                                           scenario.participant_trn,
+                                                           scenario.participant_dob,
+                                                           same_provider: false
 
           scenario.new_declarations.each do |declaration_type|
             and_lead_provider_has_made_training_declaration "New Lead Provider",

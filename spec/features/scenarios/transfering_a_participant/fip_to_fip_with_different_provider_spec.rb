@@ -37,13 +37,20 @@ RSpec.feature "FIP to FIP with different provider - Transfer a participant",
     let(:tokens) { {} }
 
     let!(:cohort) do
-      cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
-      allow(Cohort).to receive(:current).and_return(cohort)
-      allow(Cohort).to receive(:next).and_return(cohort)
-      allow(Cohort).to receive(:active_registration_cohort).and_return(cohort)
-      allow(cohort).to receive(:next).and_return(cohort)
-      allow(cohort).to receive(:previous).and_return(cohort)
-      cohort
+      previous_cohort = Cohort.find_by(start_year: 2020) || create(:cohort, start_year: 2020) # NQT+1 cohort
+
+      current_cohort = Cohort.find_by(start_year: 2021) || create(:cohort, start_year: 2021)
+      next_cohort = Cohort.find_by(start_year: 2022) || create(:cohort, start_year: 2022)
+
+      allow(Cohort).to receive(:current).and_return(current_cohort)
+      allow(Cohort).to receive(:next).and_return(next_cohort)
+      allow(Cohort).to receive(:previous).and_return(previous_cohort)
+      allow(Cohort).to receive(:active_registration_cohort).and_return(current_cohort)
+
+      allow(Cohort).to receive(:within_automatic_assignment_period?).and_return(false)
+      allow(Cohort).to receive(:within_next_registration_period?).and_return(false)
+
+      current_cohort
     end
     let!(:schedule) do
       create(:ecf_schedule, name: "ECF September standard 2021", schedule_identifier: "ecf-standard-september", cohort:)

@@ -57,5 +57,64 @@ module Pages
 
       Pages::SchoolParticipantsDashboardPage.loaded
     end
+
+    def add_cip_materials(cip_materials_name)
+      click_on "Tell us which materials you’ll use"
+
+      # Pages::SchoolAddCIPMaterialsWizard.loaded
+      click_on "Continue"
+
+      choose cip_materials_name
+      click_on "Continue"
+
+      # Pages::SchoolAddCIPMaterialsCompletedPage.loaded
+      click_on "Return to manage your training"
+
+      SchoolDashboardPage.loaded
+    end
+
+    def choose_cip_materials(cip_materials_name)
+      click_on "Choose materials"
+
+      # Pages::SchoolAddCIPMaterialsWizard.loaded
+      click_on "Continue"
+
+      choose cip_materials_name
+      click_on "Continue"
+
+      # Pages::SchoolAddCIPMaterialsCompletedPage.loaded
+      click_on "Return to manage your training"
+
+      SchoolDashboardPage.loaded
+    end
+
+    def add_appropriate_body(appropriate_body_name, appropriate_body_type)
+      click_on "Add"
+
+      # Pages::SchoolAddAppropriateBodyWizard.loaded
+      #                                      .complete(appropriate_body_name, appropriate_body_type)
+
+      # .with_type(appropriate_body_type)
+      case appropriate_body_type
+      when :local_authority
+        choose "Local authority"
+      when :teaching_school_hub
+        choose "Teaching school hub"
+      when :national
+        choose "National"
+      else
+        choose "Local authority"
+      end
+      click_on "Continue"
+
+      # .with_name(appropriate_body_name)
+      select appropriate_body_name
+      click_on "Continue"
+
+      # Pages::SchoolAddAppropriateBodyCompletedPage.loaded
+      click_on "Return to manage your training"
+
+      SchoolDashboardPage.loaded
+    end
   end
 end
