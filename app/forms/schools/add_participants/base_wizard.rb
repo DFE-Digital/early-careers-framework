@@ -104,8 +104,8 @@ module Schools
         school.school_cohorts.find_by(cohort: cohort_to_place_participant)
       end
 
-      def no_fip_destination_school_cohort?
-        !destination_school_cohort.full_induction_programme?
+      def fip_destination_school_cohort?
+        destination_school_cohort.full_induction_programme?
       end
 
       # has this school got a cohort set up for training that matches the incoming transfer

@@ -13,7 +13,7 @@ module Participants
     def call
       return false unless FeatureFlag.active?(:cohortless_dashboard)
       return false unless dqt_induction_start_date
-      return update_induction_start_date if pre_2021_dqt_induction_start_date? || pre_2023_participant?
+      return update_induction_start_date if mentor? || pre_2021_dqt_induction_start_date? || pre_2023_participant?
       return cohort_missing unless target_cohort
 
       update_participant
@@ -25,7 +25,7 @@ module Participants
 
     attr_reader :dqt_induction_start_date, :participant_profile
 
-    delegate :current_induction_record, to: :participant_profile
+    delegate :current_induction_record, :mentor?, to: :participant_profile
     delegate :cohort, to: :current_induction_record, prefix: :participant
 
     def amend_cohort
