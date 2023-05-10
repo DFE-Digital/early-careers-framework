@@ -5,7 +5,12 @@ module NewSeeds
     module Participants
       module Mentors
         class MentorWithNoEcts
-          attr_reader :participant_profile
+          attr_reader :participant_profile,
+                      :participant_identity,
+                      :new_user_attributes,
+                      :school_cohort,
+                      :teacher_profile,
+                      :user
 
           def initialize(school_cohort: nil, full_name: nil, email: nil, teacher_profile: nil, participant_identity: nil)
             @school_cohort = school_cohort
@@ -86,14 +91,6 @@ module NewSeeds
 
             FactoryBot.create(:seed_ecf_participant_eligibility, **eligibility_data.compact)
           end
-
-        private
-
-          attr_reader :new_user_attributes,
-                      :school_cohort,
-                      :teacher_profile,
-                      :participant_identity,
-                      :user
         end
       end
     end

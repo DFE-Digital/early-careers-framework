@@ -57,6 +57,7 @@ module NewSeeds
               .new(school_cohort:)
               .build
               .with_induction_record(induction_programme:)
+              .with_validation_data
               .participant_profile
           end
 
